@@ -6,15 +6,6 @@
             <field name="domain"></field>
         </record>
 
-        <record id="menu_contactus2" model="website.menu">
-            <field name="name">Contact us</field>
-            <field name="url">/contactus</field>
-            <field name="parent_id" search="[('website_id', '=', ref('website2')), ('parent_id', '=', False)]"/>
-            <field name="sequence" type="int">60</field>
-            <field name="page_id" ref="contactus_page"/>
-            <field name="website_id" ref="website2"/>
-        </record>
-
         <!-- BS Debug Page -->
         <!-- Showcase all (most?) BS components and utilities -->
         <record id="bs_debug_page" model="website.page">

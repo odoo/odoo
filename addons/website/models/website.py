@@ -157,19 +157,42 @@ class Website(models.Model):
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
                                                             ('key', '=', standard_homepage.key)])
-        top_menu = self.env['website.menu'].create({
-            'name': _('Top Menu for website %s') % self.id,
-            'website_id': self.id,
-            'sequence': 0
-        })
-        self.menu_id = top_menu.id
-        self.env['website.menu'].create({
-            'name': _('Home'),
-            'url': '/',
-            'website_id': self.id,
-            'parent_id': top_menu.id,
-            'sequence': 10
-        })
+
+        # Bootstrap default menu hierarchy, create a new minimalist one if no default
+        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        if default_menu:
+            self.copy_menu_hierarchy(default_menu)
+        else:
+            top_menu = self.env['website.menu'].create({
+                'name': _('Top Menu for website %s') % self.id,
+                'website_id': self.id,
+                'sequence': 0,
+            })
+            self.menu_id = top_menu.id
+            self.env['website.menu'].create({
+                'name': _('Home'),
+                'url': '/',
+                'website_id': self.id,
+                'parent_id': top_menu.id,
+                'sequence': 10,
+            })
+
+    @api.model
+    def copy_menu_hierarchy(self, top_menu):
+        def copy_menu(menu, t_menu):
+            new_menu = menu.copy({
+                'parent_id': t_menu.id,
+                'website_id': self.id,
+            })
+            for submenu in menu.child_id:
+                copy_menu(submenu, new_menu)
+        for website in self:
+            new_top_menu = top_menu.copy({
+                'name': _('Top Menu for Website %s') % website.id,
+                'website_id': website.id,
+            })
+            for submenu in top_menu.child_id:
+                copy_menu(submenu, new_top_menu)
 
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
@@ -1066,7 +1089,13 @@ class Menu(models.Model):
             it for every website.
             Note: Particulary useful when installing a module that adds a menu like
                   /shop. So every website has the shop menu.
+                  Be careful to return correct record for ir.model.data xml_id in case
+                  of default main menus creation.
         '''
+        # Only used when creating website_data.xml default menu
+        if vals.get('url') == '/default-main-menu':
+            return super(Menu, self).create(vals)
+
         if vals.get('website_id'):
             return super(Menu, self).create(vals)
         elif self._context.get('website_id'):
@@ -1075,10 +1104,14 @@ class Menu(models.Model):
         else:
             # create for every site
             for website in self.env['website'].search([]):
-                vals.update({
+                w_vals = dict(vals, **{
                     'website_id': website.id,
                     'parent_id': website.menu_id.id,
                 })
+                res = super(Menu, self).create(w_vals)
+            # if creating a default menu, we should also save it as such
+            default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+            if default_menu and vals.get('parent_id') == default_menu.id:
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
 
