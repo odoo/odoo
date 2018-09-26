@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <!--  PDF Viewer Body : contains the canvas, the loader, or the image-->
-                    <div id="PDFSlideViewer" style="position:relative;"
+                    <div class="m-auto" id="PDFSlideViewer" style="position:relative;"
                             t-attf-data-slideid="#{slide.id}"
                             t-attf-data-slideurl="/slides/slide/#{slug(slide)}/pdf_content"
                             t-attf-data-downloadable="#{slide.download_security}"
@@ -102,37 +102,37 @@
                         </t>
                     </div>
                     <!-- Fixed bottom navbar -->
-                    <div class="navbar navbar-default navbar-fixed-bottom" role="navigation" t-if="slide.slide_type in ('presentation', 'document')">
+                    <div class="fixed-bottom" t-if="slide.slide_type in ('presentation', 'document')">
                         <div class="container-fluid oe_slides_panel_footer">
                             <div class="row" style="padding-top:15px;">
-                                <div class="col-xl-2 col-lg-2 col-md-2 col-2 text-left">
+                                <div class="col-2 text-left">
                                     <input type="number" class="text-center" id="page_number"></input> / <span id="page_count"></span>
                                 </div>
-                                <div class="col-xl-8 col-lg-8 col-md-8 col-8 d-none o_slide_navigation_buttons">
-                                    <div class="col-xl-4 col-lg-4 col-md-4 col-4 text-center"></div>
-                                    <div class="col-xl-1 col-lg-1 col-md-1 col-1 text-center">
-                                        <span id="first" title="First slide" role="img" aria-label="First slide">
-                                            <i class="fa fa-step-backward fa-2x"></i>
-                                        </span>
+                                <div class="col-8 d-none o_slide_navigation_buttons">
+                                    <div class="row justify-content-center">
+                                        <div class="col-1">
+                                            <span id="first" title="First slide" role="img" aria-label="First slide">
+                                                <i class="fa fa-step-backward fa-2x"></i>
+                                            </span>
+                                        </div>
+                                        <div class="col-1">
+                                            <a id="previous" title="Previous slide" aria-label="Previous slide"  role="button">
+                                                <i class="fa fa-arrow-circle-left fa-2x"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-1">
+                                            <a id="next" title="Next slide" aria-label="Next slide" role="button">
+                                                <i class="fa fa-arrow-circle-right fa-2x"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-1">
+                                            <a id="last" title="Last slide" aria-label="Last slide" role="button">
+                                                <i class="fa fa-step-forward fa-2x"></i>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="col-xl-1 col-lg-1 col-md-1 col-1 text-center">
-                                        <a id="previous" title="Previous slide" aria-label="Previous slide"  role="button">
-                                            <i class="fa fa-arrow-circle-left fa-2x"></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-xl-1 col-lg-1 col-md-1 col-1 text-center">
-                                        <a id="next" title="Next slide" aria-label="Next slide" role="button">
-                                            <i class="fa fa-arrow-circle-right fa-2x"></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-xl-1 col-lg-1 col-md-1 col-1 text-center">
-                                        <a id="last" title="Last slide" aria-label="Last slide" role="button">
-                                            <i class="fa fa-step-forward fa-2x"></i>
-                                        </a>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-4 col-4 text-center"></div>
                                 </div>
-                                <div class="col-xl-2 col-lg-2 col-md-2 col-2 text-right">
+                                <div class="col-2 text-right">
                                     <a t-if="slide.download_security and not is_embedded" target="_top" t-attf-href="/slides/slide/#{slug(slide)}/download" title="Download" id="download">
                                         <i class="fa fa-download fa-2x" role="img" aria-label="Download"></i>
                                     </a>
