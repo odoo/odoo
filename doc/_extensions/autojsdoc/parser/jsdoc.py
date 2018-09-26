@@ -239,7 +239,7 @@ class ModuleDoc(NSDoc):
         return vars
 
     def __str__(self):
-        s = super().__str__()
+        s = super(ModuleDoc, self).__str__()
         if self['sourcefile']:
             s += " in file " + self['sourcefile']
         return s
