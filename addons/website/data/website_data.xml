@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="default_website" model="website">
-            <field name="name">My Website</field>
-            <field name="domain"></field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="user_id" ref="base.public_user"/>
-            <field name="favicon" type="base64" file="web/static/src/img/favicon.ico"/>
-        </record>
-
+        <!-- Default Menu to store module menus for new website -->
         <record id="main_menu" model="website.menu">
-          <field name="name">Top Menu</field>
-          <field name="website_id" ref="default_website"/>
+          <field name="name">Default Main Menu</field>
+          <field name="url">/default-main-menu</field>
+        </record>
+        <record id="menu_home" model="website.menu">
+            <field name="name">Home</field>
+            <field name="url">/</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+        <record id="menu_contactus" model="website.menu">
+            <field name="name">Contact us</field>
+            <field name="url">/contactus</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">60</field>
         </record>
 
         <!-- split between ir_ui_view & website_page record to keep external_id on ir_ui_view -->
@@ -34,16 +39,6 @@
             <field name="website_published">True</field>
             <field name="url">/</field>
             <field name="view_id" ref="homepage"/>
-        </record>
-        <record id="default_website" model="website">
-            <field name="homepage_id" ref="homepage_page"/>
-        </record>
-        <record id="menu_homepage" model="website.menu">
-            <field name="name">Home</field>
-            <field name="url">/</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">10</field>
-            <field name="page_id" ref="homepage_page"/>
         </record>
 
         <!-- Contact Us page -->
@@ -103,14 +98,6 @@
             <field name="website_published">True</field>
             <field name="view_id" ref="contactus"/>
         </record>
-        <record id="menu_contactus" model="website.menu">
-            <field name="name">Contact us</field>
-            <field name="url">/contactus</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">60</field>
-            <field name="page_id" ref="contactus_page"/>
-            <field name="website_id" ref="default_website"/>
-        </record>
 
         <!-- About Us page -->
         <record id="aboutus" model="ir.ui.view">
@@ -162,6 +149,15 @@
             <field name="website_published">True</field>
             <field name="url">/aboutus</field>
             <field name="view_id" ref="aboutus"/>
+        </record>
+
+        <record id="default_website" model="website">
+            <field name="name">My Website</field>
+            <field name="domain"></field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="user_id" ref="base.public_user"/>
+            <field name="favicon" type="base64" file="web/static/src/img/favicon.ico"/>
+            <field name="homepage_id" ref="homepage_page"/>
         </record>
 
         <!-- Open website on install -->
