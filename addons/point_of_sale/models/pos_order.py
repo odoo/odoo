@@ -464,7 +464,7 @@ class PosOrder(models.Model):
 
     def _filtered_for_reconciliation(self):
         filter_states = ['invoiced', 'done']
-        if self.env['ir.config_parameter'].get_param('point_of_sale.order_reconcile_mode', 'all') == 'partner_only':
+        if self.env['ir.config_parameter'].sudo().get_param('point_of_sale.order_reconcile_mode', 'all') == 'partner_only':
             return self.filtered(lambda order: order.state in filter_states and order.partner_id)
         return self.filtered(lambda order: order.state in filter_states)
 
