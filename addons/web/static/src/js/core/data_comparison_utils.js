@@ -71,7 +71,7 @@ function renderComparison ($node, value, comparisonValue, variation, formatter, 
 	if (!isNaN(variation.magnitude)) {
 		$node.append(
 			$('<div>', {class: 'o_comparison'})
-			.html(formatter(value, field, options) + ' vs ' + formatter(comparisonValue, field, options))
+			.html(formatter(value, field, options) + ' <span>vs</span> ' + formatter(comparisonValue, field, options))
 		);
 	}
 }
