@@ -156,11 +156,10 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
                          help="Launch a python test file.")
-        group.add_option("--test-enable", action="store_true", dest="test_enable",
-                         my_default=False, help="Enable unit tests.")
+        group.add_option("--test-enable", action="callback", callback=self._test_enable_callback,
+                         help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         default=('+standard'),
-                         help="Comma separated list of tags to filter which tests to excute")
+                         help="Comma separated list of tags to filter which tests to excute. Enable unit tests if set.")
 
         parser.add_option_group(group)
 
@@ -426,7 +425,7 @@ class configmanager(object):
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_enable', 'test_tags',
+            'test_file', 'test_tags',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
@@ -483,6 +482,8 @@ class configmanager(object):
             if len(self.options['language']) > 5:
                 raise Exception('ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE')
 
+        self.options['test_enable'] = bool(self.options['test_tags'])
+
         if opt.save:
             self.save()
 
@@ -515,6 +516,10 @@ class configmanager(object):
             ad_paths.append(res)
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
+
+    def _test_enable_callback(self, option, opt, value, parser):
+        if not parser.values.test_tags:
+            parser.values.test_tags = "+standard"
 
     def load(self):
         outdated_options_map = {
