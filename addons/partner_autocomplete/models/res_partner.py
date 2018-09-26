@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import json
 from odoo import api, fields, models, exceptions, _
 from odoo.addons.iap import jsonrpc
 from requests.exceptions import ConnectionError, HTTPError
-from odoo.tools import pycompat
 from odoo.addons.iap.models.iap import InsufficientCreditError
 
 _logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class ResPartner(models.Model):
             company['child_ids'] = child_ids
 
         if company.get('additional_info'):
-            company['additional_info'] = self.env.ref('partner_autocomplete.additional_info_template').render(company.get('additional_info'))
+            company['additional_info'] = json.dumps(company['additional_info'])
 
         return company
 
@@ -166,12 +166,14 @@ class ResPartner(models.Model):
     def create(self, vals_list):
         partners = super(ResPartner, self).create(vals_list)
         if len(vals_list) == 1:
-            for partner, values in pycompat.izip(partners, vals_list):
-                partner._update_autocomplete_data(values.get('vat', False))
-
-                if partner.additional_info:
-                    partner.message_post(body=partner.additional_info)
-                    partner.write({'additional_info': False})
+            partners._update_autocomplete_data(vals_list[0].get('vat', False))
+            if partners.additional_info:
+                partners.message_post_with_view(
+                    'partner_autocomplete.additional_info_template',
+                    values=json.loads(partners.additional_info),
+                    subtype_id=self.env.ref('mail.mt_note').id,
+                )
+                partners.write({'additional_info': False})
 
         return partners
 
