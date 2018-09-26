@@ -114,9 +114,9 @@ class MailActivity(models.Model):
         index=True, ondelete='cascade', required=True)
     res_model = fields.Char(
         'Related Document Model',
-        index=True, related='res_model_id.model', store=True, readonly=True)
+        index=True, related='res_model_id.model', compute_sudo=True, store=True, readonly=True)
     res_name = fields.Char(
-        'Document Name', compute='_compute_res_name', store=True,
+        'Document Name', compute='_compute_res_name', compute_sudo=True, store=True,
         help="Display name of the related document.", readonly=True)
     # activity
     activity_type_id = fields.Many2one(
@@ -288,7 +288,6 @@ class MailActivity(models.Model):
                 valid_doc_ids = self.env[doc_model].browse(doc_ids)._filter_access_rules(doc_operation)
                 valid += remaining.filtered(lambda activity: activity.res_model == doc_model and activity.res_id in valid_doc_ids.ids)
 
-        # return filtered results in current user environment
         return valid
 
     @api.multi
