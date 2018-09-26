@@ -1211,6 +1211,7 @@ class MailThread(models.AbstractModel):
                     # if a new thread is created, parent is irrelevant
                     message_dict.pop('parent_id', None)
                     thread = MessageModel.message_new(message_dict, custom_values)
+                    thread_id = thread.id
             else:
                 if thread_id:
                     raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
