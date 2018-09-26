@@ -286,7 +286,6 @@
         </record>
 
         <!-- Add demo-data for pretty website sales graph (for the sales dashboard) -->
-
         <record id="website_sale_order_1" model="sale.order">
             <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
             <field name="partner_id" ref="base.res_partner_3"/>
@@ -570,6 +569,73 @@
             <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">25.0</field>
         </record>
+
+        <record id="website_sale_order_16" model="sale.order">
+            <field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()-relativedelta(months=1)"/>
+            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=1)"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_16" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_16"/>
+            <field name="name">Large Desk</field>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">1799.0</field>
+        </record>
+
+        <record id="website_sale_order_17" model="sale.order">
+            <field name="create_date" eval="datetime.now() - relativedelta(months=1, days=2)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()-relativedelta(months=1, days=2)"/>
+            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=1, days=2)"/>
+        </record>
+
+        <record id="website_sale_order_line_17" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_17"/>
+            <field name="name">Pedal Bin</field>
+            <field name="product_id" ref="product.product_product_9"/>
+            <field name="product_uom_qty">7</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">47.0</field>
+            <field name="invoice_status">to invoice</field>
+        </record>
+
+        <record id="website_sale_order_18" model="sale.order">
+            <field name="create_date" eval="datetime.now() - relativedelta(months=2)"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()-relativedelta(months=2)"/>
+            <field name="confirmation_date" eval="datetime.now()-relativedelta(months=2)"/>
+        </record>
+
+        <record id="website_sale_order_line_18" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_18"/>
+            <field name="name">Pedal Bin</field>
+            <field name="product_id" ref="product.product_product_9"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">47.0</field>
+            <field name="invoice_status">to invoice</field>
+        </record>
+
 
         <!-- action_confirm for confirmation date -->
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_14')]]"/>
