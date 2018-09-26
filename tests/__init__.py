@@ -4,5 +4,4 @@
 from . import test_program_without_code_operations
 from . import test_program_with_code_operations
 from . import test_program_rules
-from . import test_program_rewards
 from . import test_program_numbers
