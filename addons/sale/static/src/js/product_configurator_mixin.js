@@ -46,7 +46,7 @@ var ProductConfiguratorMixin = {
      * - The new total price
      * - The need of adding a "custom value" input
      *
-     * @param {MouseEvent}
+     * @param {MouseEvent} ev
      */
     onChangeVariant: function (ev) {
         var self = this;
