@@ -1228,6 +1228,49 @@ Here are two examples on how to use these methods:
     this.do_warn(_t("Error"), _t("Filter name is required."));
 
 
+Systray
+=======
+
+The Systray is the right part of the menu bar in the interface, where the web
+client displays a few widgets, such as a messaging menu.
+
+When the SystrayMenu is created by the menu, it will look for all registered
+widgets and add them as a sub widget at the proper place.
+
+There is currently no specific API for systray widgets.  They are supposed to
+be simple widgets, and can communicate with their environment just like other
+widgets with the *trigger_up* method.
+
+Adding a new Systray Item
+-------------------------
+
+There is no systray registry.  The proper way to add a widget is to add it to
+the class variable SystrayMenu.items.
+
+.. code-block:: javascript
+
+    var SystrayMenu = require('web.SystrayMenu');
+
+    var MySystrayWidget = Widget.extend({
+        ...
+    });
+
+    SystrayMenu.items.push(MySystrayWidget);
+
+
+Ordering
+--------
+
+Before adding the widget to himself, the Systray Menu will sort the items by
+a sequence property. If that property is not present on the prototype, it will
+use 50 instead.  So, to position a systray item to be on the right, one can
+set a very high sequence number (and conversely, a low number to put it on the
+left).
+
+.. code-block:: javascript
+
+    MySystrayWidget.prototype.sequence = 100;
+
 
 Translation management
 ======================
