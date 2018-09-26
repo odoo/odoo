@@ -121,7 +121,10 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
 
                 var usedAccessKey = this._getAllUsedAccessKeys();
 
-                var buttonsWithoutAccessKey = this.$el.find('button.btn:visible').not('[accesskey]').not('[disabled]');
+                var buttonsWithoutAccessKey = this.$el.find('button.btn:visible')
+                    .not('[accesskey]')
+                    .not('[disabled]')
+                    .not('[tabindex="-1"]');
                 _.each(buttonsWithoutAccessKey, function (elem) {
                     var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
                     for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
