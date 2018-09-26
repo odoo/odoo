@@ -182,10 +182,10 @@ var Dialog = Widget.extend({
             self.$modal.removeAttr("aria-hidden");
             self.$modal.modal('show');
             self._opened.resolve();
+            if (options && options.shouldFocusButtons) {
+                self._onFocusControlButton();
+            }
         });
-        if (options && options.shouldFocusButtons) {
-            self._onFocusControlButton();
-        }
 
         return self;
     },
