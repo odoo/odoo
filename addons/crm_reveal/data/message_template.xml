@@ -17,16 +17,16 @@
                             <b><t t-esc="name"/></b>
                         </span>
                         <span style="">
-                            <a t-if="twitter" style="margin: 0 0 0 8px;" target="blank" t-attf-href="http://www.twitter.com/{{twitter}}">
+                            <a t-if="twitter" style="margin: 0 0 0 8px;" target="_blank" t-attf-href="http://www.twitter.com/{{twitter}}">
                                 <img src="/web_editor/font_to_img/61569/rgb(0,132,180)/22"/>
                             </a>
-                            <a t-if="facebook" style="margin: 0 0 0 8px;" target="blank" t-attf-href="http://www.facebook.com/{{facebook}}">
+                            <a t-if="facebook" style="margin: 0 0 0 8px;" target="_blank" t-attf-href="http://www.facebook.com/{{facebook}}">
                                 <img src="/web_editor/font_to_img/61570/rgb(59,89,152)/22"/>
                             </a>
-                            <a t-if="linkedin" style="margin: 0 0 0 8px;" target="blank" t-attf-href="https://www.linkedin.com/{{linkedin}}">
+                            <a t-if="linkedin" style="margin: 0 0 0 8px;" target="_blank" t-attf-href="https://www.linkedin.com/{{linkedin}}">
                                 <img src="/web_editor/font_to_img/61580/rgb(0,119,181)/22"/>
                             </a>
-                            <a t-if="crunchbase" style="margin: 0 0 0 8px;" target="blank" t-attf-href="https://www.crunchbase.com/{{crunchbase}}">
+                            <a t-if="crunchbase" style="margin: 0 0 0 8px;" target="_blank" t-attf-href="https://www.crunchbase.com/{{crunchbase}}">
                                 <img width="18px" height="18px" src="/crm_reveal/static/img/crunchbase.ico"/>
                             </a>
                         </span>
@@ -43,7 +43,7 @@
                         <b>Timezone : </b>
                         <span><t t-esc="timezone"/></span>
                         <span>
-                            <a target="blank" t-attf-href="https://www.timeanddate.com/worldclock/{{timezone_link}}">(Time Now)</a>
+                            <a target="_blank" t-att-href="timezone_url">(Time Now)</a>
                         </span>
                     </td>
                 </tr>
@@ -53,7 +53,7 @@
                         <b>Phone :</b>
                         <t t-foreach="phone_numbers" t-as="phone_number">
                             <span style="margin:0 5px;">
-                                <a target="blank" t-attf-href="tel:{{phone_number}}"><t t-esc="phone_number"/></a>
+                                <a target="_blank" t-attf-href="tel:{{phone_number}}"><t t-esc="phone_number"/></a>
                             </span>
                         </t>
                     </td>
