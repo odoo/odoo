@@ -5251,20 +5251,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if res.get('domain'):
                 result.setdefault('domain', {}).update(res['domain'])
             if res.get('warning'):
-                if result.get('warning') and \
-                        (result['warning'].get('title') != res['warning'].get('title') or \
-                         result['warning'].get('message') != res['warning'].get('message')):
-                    # Concatenate multiple warnings
-                    warning = result['warning']
-                    warning['message'] = '\n\n'.join(s for s in [
-                        warning.get('title'),
-                        warning.get('message'),
-                        res['warning'].get('title'),
-                        res['warning'].get('message'),
-                    ] if s)
-                    warning['title'] = _('Warnings')
-                else:
-                    result['warning'] = res['warning']
+                result['warnings'].add((
+                    res['warning'].get('title') or _("Warning"),
+                    res['warning'].get('message') or "",
+                ))
 
         if onchange in ("1", "true"):
             for method in self._onchange_methods.get(field_name, ()):
@@ -5333,7 +5323,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     continue
                 record[name] = value
 
-        result = {}
+        result = {'warnings': OrderedSet()}
         dirty = set()
 
         # process names in order (or the keys of values if no name given)
@@ -5376,6 +5366,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
                 for name in dirty
             }
+
+        # format warnings
+        warnings = result.pop('warnings')
+        if len(warnings) == 1:
+            title, message = warnings.pop()
+            result['warning'] = dict(title=title, message=message)
+        elif len(warnings) > 1:
+            # concatenate warning titles and messages
+            title = _("Warnings")
+            message = "\n\n".join(itertools.chain(*warnings))
+            result['warning'] = dict(title=title, message=message)
 
         return result
 
