@@ -831,7 +831,7 @@ class Partner(models.Model):
             'state_code': self.state_id.code or '',
             'state_name': self.state_id.name or '',
             'country_code': self.country_id.code or '',
-            'country_name': self.country_id.name or '',
+            'country_name': self._get_country_name(),
             'company_name': self.commercial_company_name or '',
         }
         for field in self._address_fields():
@@ -855,6 +855,10 @@ class Partner(models.Model):
             'label': _('Import Template for Customers'),
             'template': '/base/static/xls/res_partner.xls'
         }]
+
+    @api.multi
+    def _get_country_name(self):
+        return self.country_id.name or ''
 
 
 class ResPartnerIndustry(models.Model):
