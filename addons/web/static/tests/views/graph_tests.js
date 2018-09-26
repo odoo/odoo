@@ -26,6 +26,7 @@ QUnit.module('Views', {
                     {id: 5, foo: 4, bar: false, product_id: 41, date: "2016-05-01"},
                     {id: 6, foo: 63, bar: false, product_id: 41},
                     {id: 7, foo: 42, bar: false, product_id: 41},
+                    {id: 8, foo: 48, bar: false, product_id: 41, date: "2016-04-01"},
                 ]
             },
             product: {
@@ -84,8 +85,8 @@ QUnit.module('Views', {
             // So, instead we will do some white box testing.
             assert.strictEqual(graph.model.chart.data[0].value, 3,
                 "should have first datapoint with value 3");
-            assert.strictEqual(graph.model.chart.data[1].value, 4,
-                "should have first datapoint with value 4");
+            assert.strictEqual(graph.model.chart.data[1].value, 5,
+                "should have first datapoint with value 5");
             graph.destroy();
             done();
         });
@@ -165,6 +166,24 @@ QUnit.module('Views', {
             graph.destroy();
             done();
         });
+    });
+
+    QUnit.test('displaying line chart data with multiple data point', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph type="line">' +
+                        '<field name="date"/>' +
+                '</graph>',
+        });
+
+        assert.strictEqual(graph.$('.nv-x text').text(), "March 2016May 2016",
+            "should contain intermediate x labels only");
+
+        graph.destroy();
     });
 
     QUnit.test('displaying line chart data with multiple groupbys', function (assert) {
@@ -731,7 +750,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Undefined should appear in bar, pie graph but not in line graph', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
         
         var graph = createView({
             View: GraphView,
@@ -744,7 +763,8 @@ QUnit.module('Views', {
         });
 
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('Undefined')").length, 0);
-        assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
+        assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 0);
+        assert.strictEqual(graph.$("svg.nvd3-svg:contains('March')").length, 1);
 
         graph.$buttons.find('.o_graph_button[data-mode=bar]').click();
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('Undefined')").length, 1);
