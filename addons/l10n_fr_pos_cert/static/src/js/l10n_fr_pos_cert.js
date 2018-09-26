@@ -13,12 +13,12 @@
     The time for the bill to print will depend on the server processing time.
 
     1. If you want to change the message printed on the bill, overload the
-    function prepare_certification_text()
+    function models.Order._prepare_certification_text()
 
     2. If you want to change the behaviour of the PoS if server is unreachable,
     (for exemple, prevent printing the bill), overload the following functions :
-    - ReceiptScreenWidget.show_certification()
-    - ProxyDevice.print_receipt_certification()
+    - ReceiptScreenWidget._handleCertification()
+    - ProxyDevice._print_receipt_certification()
 ******************************************************************************/
 
 'use strict';
@@ -33,28 +33,6 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
     var _t = core._t;
 
     /*************************************************************************
-        Promise that will be resolved, when the hash of the saved order is
-        known
-     */
-    var certification_deferred = null;
-
-    /*************************************************************************
-     * Function that return certification text, depending of a hash
-     * @param {string} hash: value of the pos_order.l10n_fr_hash
-     * @param {string} setting: value of the pos_config.l10n_fr_print_hash
-     * @returns {string}: Certification Text that will be printed on the bill
-     */
-    var prepare_certification_text = function(hash, setting){
-        if (setting === 'no_print'){
-            return '';
-        }
-        if (hash){
-            return _t('Certification Number: ') + hash.substring(0, 10) + '...' + hash.substring(hash.length - 10);
-        }
-        return _t("Because of a network problem, this ticket could not be certified.");
-    };
-
-    /*************************************************************************
         Extend module.Order:
             Add a new certification_text field that will content a text and
             the hash of the PoS Order, or a warning if hash has not been
@@ -62,30 +40,55 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
      */
     var OrderParent = models.Order.prototype;
     models.Order = models.Order.extend({
+
+        /* Function that return certification text, depending of a hash
+         * @param {string} hash: value of the pos_order.l10n_fr_hash
+         * @param {string} setting: value of the pos_config.l10n_fr_print_hash
+         * @returns {string}: Certification Text that will be printed on the bill
+         */
+        _prepare_certification_text: function (hash, setting) {
+            if (setting === 'no_print'){
+                return '';
+            }
+            if (hash){
+                return _t('Certification Number: ') + hash.substring(0, 10) + '...' + hash.substring(hash.length - 10);
+            }
+            return _t("Because of a network problem, this ticket could not be certified.");
+        },
+
         set_hash: function(hash, setting) {
-            var certification_text = prepare_certification_text(hash, setting);
+            var certification_text = this._prepare_certification_text(hash, setting);
             this.set({
                 hash: hash,
                 certification_text: certification_text,
             });
         },
 
-        export_for_printing: function(attributes){
-            var order = OrderParent.export_for_printing.apply(this, arguments);
-            if (this.pos.config.l10n_fr_print_hash === 'no_print'){
-                order.certification_text = '';
-            } else {
-                // We add a tag that will be replaced after, because
-                // when export_for_printing is called, hash is unknown
-                order.certification_text = "__CERTIFICATION_TEXT__";
-            }
-            return order;
-        },
-
         export_as_JSON: function() {
             var order = OrderParent.export_as_JSON.apply(this, arguments);
             order.certification_text = this.get('certification_text');
             return order;
+        },
+
+        // @override
+        // Prevents saving as unpaid if valid hash has been set on the order
+        save_to_db: function () {
+            var changes = this.changedAttributes();
+
+            var hashed = false;
+            _.each(changes, function (value, key) {
+                if (['hash', 'certification_text'].indexOf(key) === -1){
+                    hashed = false;
+                    return; // abort if another other data has been set
+                }
+                if (key === 'hash') {
+                    hashed = value ? true : false;
+                }
+            });
+
+            if (!hashed) {
+                OrderParent.save_to_db.apply(this, arguments);
+            }
         },
 
     });
@@ -99,6 +102,20 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
      */
     var PosModelParent = models.PosModel.prototype;
     models.PosModel = models.PosModel.extend({
+
+       /* Setter/getter for the promise that will be resolved,
+        * when the hash of the saved order is known
+        */
+        _getCertificationDeferred: function (make_new) {
+            if (!this.certification_deferred || make_new) {
+                this.certification_deferred = new $.Deferred();
+            }
+            return this.certification_deferred;
+        },
+
+        _resetCertificationDeferred: function () {
+            this.certification_deferred = null;
+        },
 
         load_server_data: function(){
             var self = this;
@@ -128,10 +145,10 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
                 return PosModelParent._save_to_server.apply(this, arguments);
             }
             // Create a new promise that will resolved after the call to get the hash
-            certification_deferred = new $.Deferred();
+            var certification_deferred = this._getCertificationDeferred(true);
 
             var current_order = self.get('selectedOrder');
-            if (current_order){
+            if (current_order && !current_order.get('hash')){
                 // Init hash (and description that will be used, if server is unreachable)
                 current_order.set_hash(false, setting);
             }
@@ -178,24 +195,21 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
 
         show: function(){
             var self = this;
+            var selfArgs = arguments;
             var setting = this.pos.config.l10n_fr_print_hash;
             if (setting === 'no_print'){
                 // Direct Call
-                self.show_certification();
+                ReceiptScreenWidgetShowParent.apply(this, arguments);
             } else {
                 // Wait for Promise
-                certification_deferred.then(function success(order_id) {
-                    self.show_certification();
-                }, function error() {
-                    self.show_certification();
+                this._handleCertification().always(function () {
+                    ReceiptScreenWidgetShowParent.apply(self, selfArgs);
                 });
             }
         },
 
-        show_certification: function(){
-            // Display the bill for printing
-            ReceiptScreenWidgetShowParent.apply(this, []);
-            certification_deferred = null;
+        _handleCertification: function () {
+            return this.pos._getCertificationDeferred();
         },
     });
 
@@ -211,15 +225,15 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
 
         print_receipt: function(receipt){
             var self = this;
+            var selfArgs = arguments;
             var setting = this.pos.config.l10n_fr_print_hash;
             if (receipt){
                 if (setting === 'no_print'){
-                    self.print_receipt_certification(receipt, false);
+                    ProxyDevicePrintReceiptParent.apply(this, arguments);
                 } else {
-                    certification_deferred.then(function success(hash) {
-                        self.print_receipt_certification(receipt, hash);
-                    }, function error() {
-                        self.print_receipt_certification(receipt, false);
+                    this._print_receipt_certification(receipt).always(function () {
+                        ProxyDevicePrintReceiptParent.apply(self, selfArgs);
+                        self.pos._resetCertificationDeferred();
                     });
                 }
             } else {
@@ -228,13 +242,11 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
             }
         },
 
-        print_receipt_certification: function(receipt, hash){
-            var setting = this.pos.config.l10n_fr_print_hash;
-            // Add the according text
-            var changed_receipt = receipt.replace("__CERTIFICATION_TEXT__", prepare_certification_text(hash, setting));
-            // Print the bill
-            ProxyDevicePrintReceiptParent.apply(this, [changed_receipt]);
-            certification_deferred = null;
+        _print_receipt_certification: function(receipt){
+            if (this.pos.get_order().get('hash')) {
+                return $.when();
+            }
+            return this.pos._getCertificationDeferred();
         },
     });
 

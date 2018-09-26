@@ -16,8 +16,8 @@
 <!--     Proxy Bill -->
     <t t-extend="XmlReceipt">
         <t t-jquery="[class='after-footer']" t-operation="after">
-            <t t-if='receipt.certification_text'>
-                <br /><t t-esc='receipt.certification_text' /><br/>
+            <t t-if="order.get('certification_text')">
+                <br /><t t-esc="order.get('certification_text')" /><br/>
             </t>
         </t>
     </t>
