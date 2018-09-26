@@ -862,7 +862,7 @@ Symbols and Conventions
         seats_available = fields.Integer(oldname='register_avail', string='Available Seats',
             store=True, readonly=True, compute='_compute_seats')
         price = fields.Integer(string='Price')
-        type = fields.Selection(string="Type", selection='_selection_type')
+        event_type = fields.Selection(string="Type", selection='_selection_type')
 
         # compute and search fields, in the same order of fields declaration
         @api.multi
