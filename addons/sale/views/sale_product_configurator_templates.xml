@@ -185,7 +185,7 @@
                     t-att-data-attribute_id="variant_id.attribute_id.id"
                     t-attf-class="form-control js_variant_change #{variant_id.attribute_id.create_variant}"
                     t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
-                <t t-foreach="variant_id.product_value_ids" t-as="value_id">
+                <t t-foreach="variant_id.product_template_value_ids" t-as="value_id">
                   <option t-att-value="value_id.id"
                     t-att-data-value_id="value_id.product_attribute_value_id.id"
                     t-att-data-value_name="value_id.name"
@@ -207,7 +207,7 @@
             <t t-if="variant_id.attribute_id.type == 'radio'">
               <ul t-att-data-attribute_id="variant_id.attribute_id.id" class="list-unstyled">
                   <t t-set="inc" t-value="0"/>
-                  <t t-foreach="variant_id.product_value_ids" t-as="value_id">
+                  <t t-foreach="variant_id.product_template_value_ids" t-as="value_id">
                       <li class="form-group js_attribute_value" style="margin: 0;">
                           <label class="col-form-label" style="margin: 0 20px;">
                               <input type="radio"
@@ -238,7 +238,7 @@
             <t t-if="variant_id.attribute_id.type == 'color'">
               <ul t-att-data-attribute_id="variant_id.attribute_id.id" class="list-inline">
                   <t t-set="inc" t-value="0"/>
-                  <li t-foreach="variant_id.product_value_ids" t-as="value_id" class="list-inline-item">
+                  <li t-foreach="variant_id.product_template_value_ids" t-as="value_id" class="list-inline-item">
                       <label t-attf-style="background-color:#{value_id.html_color or value_id.name if not value_id.is_custom else ''}"
                           t-attf-class="css_attribute_color #{'active' if not inc else ''} #{'custom_value' if value_id.is_custom else ''}">
                         <input type="radio"

@@ -41,7 +41,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
      * @param {integer} params.rootProduct.product_id
      * @param {integer} params.rootProduct.quantity
      * @param {Array} params.rootProduct.variant_values
-     * @param {Array} params.rootProduct.product_custom_variant_values
+     * @param {Array} params.rootProduct.product_custom_attribute_values
      * @param {Array} params.rootProduct.no_variant_attribute_values
      */
     init: function (parent, params) {
@@ -176,7 +176,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             products.push({
                 product_id: parseInt($item.find('input.product_id').val()),
                 quantity: quantity,
-                product_custom_variant_values: productCustomVariantValues,
+                product_custom_attribute_values: productCustomVariantValues,
                 no_variant_attribute_values: noVariantAttributeValues
             });
         });
@@ -201,14 +201,14 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             .attr("src", "/web/image/product.product/" + productId + "/image_medium");
 
         if (this.rootProduct &&
-                (this.rootProduct.product_custom_variant_values ||
+                (this.rootProduct.product_custom_attribute_values ||
                  this.rootProduct.no_variant_attribute_values)) {
             var $productDescription = $modalContent
                 .find('.main_product')
                 .find('td.td-product_name div.text-muted.small');
             var description = $productDescription.html();
 
-            $.each(this.rootProduct.product_custom_variant_values, function (){
+            $.each(this.rootProduct.product_custom_attribute_values, function (){
                 description += '<br/>' + this.attribute_value_name + ': ' + this.custom_value;
             });
 

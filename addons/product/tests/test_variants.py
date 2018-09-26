@@ -169,7 +169,7 @@ class TestVariantsNoCreate(common.TestProductCommon):
         super(TestVariantsNoCreate, self).setUp()
         self.size = self.env['product.attribute'].create({
             'name': 'Size',
-            'create_variant': 'never',
+            'create_variant': 'no_variant',
             'value_ids': [(0, 0, {'name': 'S'}), (0, 0, {'name': 'M'}), (0, 0, {'name': 'L'})],
         })
         self.size_S = self.size.value_ids[0]

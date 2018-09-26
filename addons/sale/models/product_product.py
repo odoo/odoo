@@ -61,7 +61,7 @@ class ProductAttribute(models.Model):
     type = fields.Selection([
         ('radio', 'Radio'),
         ('select', 'Select'),
-        ('color', 'Color')], default='radio')
+        ('color', 'Color')], default='radio', required=True)
 
 
 class ProductAttributeValue(models.Model):
@@ -76,7 +76,7 @@ class ProductAttributeValue(models.Model):
 
 
 class ProductProductAttributeValue(models.Model):
-    _inherit = "product.product.attribute.value"
+    _inherit = "product.template.attribute.value"
 
     html_color = fields.Char('HTML Color Index', related="product_attribute_value_id.html_color")
     is_custom = fields.Boolean('Is custom value', related="product_attribute_value_id.is_custom")

@@ -55,14 +55,14 @@ class ProductTemplate(models.Model):
         }
         return action
 
-    def create_product_variant(self, product_attribute_value_ids):
+    def create_product_variant(self, product_template_attribute_value_ids):
         self.ensure_one()
 
         attribute_value_ids = \
-            self.env['product.product.attribute.value'] \
-                .browse(json.loads(product_attribute_value_ids)) \
+            self.env['product.template.attribute.value'] \
+                .browse(json.loads(product_template_attribute_value_ids)) \
                 .mapped('product_attribute_value_id') \
-                .filtered(lambda attribute_value_id: attribute_value_id.attribute_id.create_variant != 'never')
+                .filtered(lambda attribute_value_id: attribute_value_id.attribute_id.create_variant != 'no_variant')
 
         product_variant = self.env['product.product'].create({
             'product_tmpl_id': self.id,

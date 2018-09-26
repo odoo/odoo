@@ -939,9 +939,9 @@ class SaleOrderLine(models.Model):
         if self._context.get('no_variant_attribute_values'):
             attributes = self._context.get('no_variant_attribute_values')
             res['product_no_variant_attribute_values'] = [(6, 0, [int(attribute['value']) for attribute in attributes])]
-        if self._context.get('product_custom_variant_values'):
-            values = self._context.get('product_custom_variant_values')
-            res['product_custom_variant_values'] = [(0, 0, value) for value in values]
+        if self._context.get('product_custom_attribute_values'):
+            values = self._context.get('product_custom_attribute_values')
+            res['product_custom_attribute_value_ids'] = [(0, 0, value) for value in values]
         return res
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
@@ -1131,10 +1131,10 @@ class SaleOrderLine(models.Model):
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
     product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
-    product_custom_variant_values = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string='User entered custom product attribute values')
-    # M2M holding the values of product.attribute with create_variant field set to 'never'
+    product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string='User entered custom product attribute values')
+    # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
-    product_no_variant_attribute_values = fields.Many2many('product.product.attribute.value', string='Product attribute values that do not create variants')
+    product_no_variant_attribute_values = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants')
     # Non-stored related field to allow portal user to see the image of the product he has ordered
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
 
@@ -1441,13 +1441,13 @@ class SaleOrderLine(models.Model):
 
         name = self.get_sale_order_line_multiline_description_sale(product)
 
-        if self.product_custom_variant_values or self.product_no_variant_attribute_values:
+        if self.product_custom_attribute_value_ids or self.product_no_variant_attribute_values:
             name += '\n'
 
-        if self.product_custom_variant_values:
-            for product_custom_variant_value in self.product_custom_variant_values:
-                if product_custom_variant_value.custom_value and product_custom_variant_value.custom_value.strip():
-                    name += '\n' + product_custom_variant_value.attribute_value_id.name + ': ' + product_custom_variant_value.custom_value.strip()
+        if self.product_custom_attribute_value_ids:
+            for product_custom_attribute_value in self.product_custom_attribute_value_ids:
+                if product_custom_attribute_value.custom_value and product_custom_attribute_value.custom_value.strip():
+                    name += '\n' + product_custom_attribute_value.attribute_value_id.name + ': ' + product_custom_attribute_value.custom_value.strip()
 
         if self.product_no_variant_attribute_values:
             for no_variant_attribute_value in self.product_no_variant_attribute_values.filtered(

@@ -109,9 +109,9 @@ class ProductProduct(models.Model):
         'Barcode', copy=False, oldname='ean13',
         help="International Article Number used for product identification.")
     attribute_value_ids = fields.Many2many(
-        'product.attribute.value', string='Attributes', ondelete='restrict')
-    product_attribute_value_ids = fields.Many2many(
-        'product.product.attribute.value', string='Attribute Values', compute="_compute_product_attribute_value_ids")
+        'product.attribute.value', string='Attribute Values', ondelete='restrict')
+    product_template_attribute_value_ids = fields.Many2many(
+        'product.template.attribute.value', string='Template Attribute Values', compute="_compute_product_template_attribute_value_ids")
     # image: all image fields are base64 encoded and PIL-supported
     image_variant = fields.Binary(
         "Variant Image", attachment=True,
@@ -195,10 +195,10 @@ class ProductProduct(models.Model):
             value -= product.price_extra
             product.write({'list_price': value})
 
-    @api.depends('product_attribute_value_ids.price_extra')
+    @api.depends('product_template_attribute_value_ids.price_extra')
     def _compute_product_price_extra(self):
         for product in self:
-            product.price_extra = sum(product.mapped('product_attribute_value_ids.price_extra'))
+            product.price_extra = sum(product.mapped('product_template_attribute_value_ids.price_extra'))
 
     @api.depends('list_price', 'price_extra')
     def _compute_product_lst_price(self):
@@ -273,9 +273,9 @@ class ProductProduct(models.Model):
         else:
             self.product_tmpl_id.image = image
 
-    def _compute_product_attribute_value_ids(self):
+    def _compute_product_template_attribute_value_ids(self):
         for product in self:
-            product.product_attribute_value_ids = self.env['product.product.attribute.value']._search([
+            product.product_template_attribute_value_ids = self.env['product.template.attribute.value']._search([
                 ('product_tmpl_id', '=', product.product_tmpl_id.id),
                 ('product_attribute_value_id', 'in', product.attribute_value_ids.ids)])
 

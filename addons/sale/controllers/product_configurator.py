@@ -90,7 +90,7 @@ class ProductConfiguratorController(http.Controller):
            exclusions.parent_exclusions: exclusions coming from the reference_product
         """
 
-        product_attribute_values = request.env['product.product.attribute.value'].search([
+        product_attribute_values = request.env['product.template.attribute.value'].search([
             ('product_tmpl_id', '=', product.id),
             ('product_attribute_value_id', 'in', product.attribute_line_ids.mapped('value_ids').ids),
         ])
@@ -110,7 +110,7 @@ class ProductConfiguratorController(http.Controller):
         if reference_product:
             parent_exclusions = [
                 value_id
-                for filter_line in reference_product.mapped('product_attribute_value_ids.exclude_for').filtered(
+                for filter_line in reference_product.mapped('product_template_attribute_value_ids.exclude_for').filtered(
                     lambda filter_line: filter_line.product_tmpl_id == product
                 ) for value_id in filter_line.value_ids.ids]
 
@@ -129,14 +129,14 @@ class ProductConfiguratorController(http.Controller):
         return product_context
 
     def _get_combination_info(self, product_template_id, product_id, combination, add_qty, pricelist, **kw):
-        product_attribute_values = request.env['product.product.attribute.value'].browse(combination)
-        filtered_product_attribute_values = product_attribute_values.filtered(
-            lambda product_attribute_value: product_attribute_value.attribute_id.create_variant != 'never'
+        product_template_attribute_values = request.env['product.template.attribute.value'].browse(combination)
+        filtered_product_template_attribute_values = product_template_attribute_values.filtered(
+            lambda product_attribute_value: product_attribute_value.attribute_id.create_variant != 'no_variant'
         )
         context = {
             'quantity': add_qty,
             'pricelist': pricelist.id if pricelist else None,
-            'current_attributes_price_extra': [product_attribute_value.price_extra or 0.0 for product_attribute_value in product_attribute_values]
+            'current_attributes_price_extra': [product_attribute_value.price_extra or 0.0 for product_attribute_value in product_template_attribute_values]
         }
 
         product_template = request.env['product.template'].with_context(context).browse(product_template_id)
@@ -149,8 +149,8 @@ class ProductConfiguratorController(http.Controller):
                 ('product_tmpl_id', '=', product_template_id)
             ])
             product = products.filtered(
-                lambda product: all(product_attribute_value in product.product_attribute_value_ids
-                    for product_attribute_value in filtered_product_attribute_values)
+                lambda product: all(product_attribute_value in product.product_template_attribute_value_ids
+                    for product_attribute_value in filtered_product_template_attribute_values)
             )
 
         product_id = None
@@ -159,8 +159,8 @@ class ProductConfiguratorController(http.Controller):
         if(product):
             product = product.with_context(
                 no_variant_attributes_price_extra=[product_attribute_value.price_extra or 0.0
-                    for product_attribute_value in product_attribute_values.filtered(
-                        lambda product_attribute_value: product_attribute_value.attribute_id.create_variant == 'never'
+                    for product_attribute_value in product_template_attribute_values.filtered(
+                        lambda product_attribute_value: product_attribute_value.attribute_id.create_variant == 'no_variant'
                     )
                 ]
             )
@@ -169,9 +169,9 @@ class ProductConfiguratorController(http.Controller):
             price = product.price or list_price
 
         display_name = [product_template.name]
-        if filtered_product_attribute_values:
+        if filtered_product_template_attribute_values:
             display_name.append(' (')
-            display_name.append(', '.join(filtered_product_attribute_values.mapped('name')))
+            display_name.append(', '.join(filtered_product_template_attribute_values.mapped('name')))
             display_name.append(')')
 
         if pricelist and pricelist.currency_id != product_template.currency_id:

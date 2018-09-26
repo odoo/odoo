@@ -84,7 +84,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
             self.rootProduct = {
                 product_id: productId,
                 quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
-                product_custom_variant_values: self.getCustomVariantValues($form.find('.js_product')),
+                product_custom_attribute_values: self.getCustomVariantValues($form.find('.js_product')),
                 variant_values: self.getSelectedVariantValues($form.find('.js_product')),
                 no_variant_attribute_values: self.getNoVariantAttributeValues($form.find('.js_product'))
             };
@@ -113,9 +113,9 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
      */
     _onModalOptionsEmpty: function () {
         var $productCustomVariantValues = $('<input>', {
-            name: 'product_custom_variant_values',
+            name: 'product_custom_attribute_values',
             type: "hidden",
-            value: JSON.stringify(this.rootProduct.product_custom_variant_values)
+            value: JSON.stringify(this.rootProduct.product_custom_attribute_values)
         });
         this.$form.append($productCustomVariantValues);
 
@@ -165,7 +165,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
     /**
      * Submits the form with additional parameters
      * - lang
-     * - product_custom_variant_values: The products custom variant values
+     * - product_custom_attribute_values: The products custom variant values
      *
      * @private
      * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
