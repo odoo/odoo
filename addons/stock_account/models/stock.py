@@ -383,7 +383,8 @@ class StockMove(models.Model):
             qty_done = 0.0
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
-            elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding):
+            elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) or \
+                    float_is_zero(product_tot_qty_available + qty_done, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
             else:
                 # Get the standard price

@@ -27,7 +27,7 @@ class PaymentPortal(http.Controller):
         except:
             return False
 
-        if request.env.user == request.env.ref('base.public_user'):
+        if request.env.user._is_public():
             save_token = False # we avoid to create a token for the public user
 
         token = request.env['payment.token'].sudo()  # currently no support of payment tokens
