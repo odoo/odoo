@@ -365,7 +365,7 @@ return AbstractRenderer.extend({
                 }
             }
 
-            if (!tickValues) {
+            if (!tickValues.length) {
                 tickValues = graphData.map(function (d, i) {
                     return i;
                 });
@@ -413,6 +413,13 @@ return AbstractRenderer.extend({
                 });
                 data = _.map(data_dict, identity);
             }
+        }
+
+        // Delete first and last label because there is no enough space because
+        // of the tiny margins.
+        if (ticksLabels.length > 3) {
+            ticksLabels[0] = [];
+            ticksLabels[ticksLabels.length - 1] = [];
         }
 
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
