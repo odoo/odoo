@@ -119,7 +119,7 @@ class Property(models.Model):
                 [self._ids]
             )
             default_deleted = self.env.cr.rowcount == 1
-        r = super().unlink()
+        r = super(Property, self).unlink()
         if default_deleted:
             self.clear_caches()
         return r

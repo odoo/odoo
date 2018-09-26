@@ -62,7 +62,7 @@ class TestEncoding(ImportCase):
 class TestFileSeparator(ImportCase):
 
     def setUp(self):
-        super().setUp()
+        super(TestFileSeparator, self).setUp()
         self.imp = self._make_import(
 """c|f
 a|1
