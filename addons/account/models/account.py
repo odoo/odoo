@@ -111,6 +111,8 @@ class AccountAccount(models.Model):
     def onchange_internal_type(self):
         if self.internal_type in ('receivable', 'payable'):
             self.reconcile = True
+        if self.internal_type == 'liquidity':
+            self.reconcile = False
 
     @api.multi
     @api.depends('name', 'code')
