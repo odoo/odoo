@@ -98,7 +98,6 @@ class ResPartner(models.Model):
             return False, str(exception)
         except InsufficientCreditError as exception:
             _logger.warning('Insufficient Credits for Autocomplete Service: %s' % str(exception))
-            account.sudo().write({'insufficient_credit': True})
             return False, 'Insufficient Credit'
 
     @api.model
