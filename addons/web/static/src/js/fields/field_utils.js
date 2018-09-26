@@ -153,15 +153,21 @@ function formatDateTime(value, field, options) {
  *   python description of the field.
  * @param {integer[]} [options.digits] the number of digits that should be used,
  *   instead of the default digits precision in the field.
+ * @param {function} [options.humanReadable] if returns true,
+ *   formatFloat acts like utils.human_number
  * @returns {string}
  */
 function formatFloat(value, field, options) {
+    options = options || {};
     if (value === false) {
         return "";
     }
+    if (options.humanReadable && options.humanReadable(value)) {
+        return utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback);
+    }
     var l10n = core._t.database.parameters;
     var precision;
-    if (options && options.digits) {
+    if (options.digits) {
         precision = options.digits[1];
     } else if (field && field.digits) {
         precision = field.digits[1];
@@ -220,10 +226,13 @@ function formatFloatTime(value) {
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
  * @param {boolean} [options.isPassword=false] if true, returns '********'
+ * @param {function} [options.humanReadable] if returns true,
+ *   formatFloat acts like utils.human_number
  * @returns {string}
  */
 function formatInteger(value, field, options) {
-    if (options && options.isPassword) {
+    options = options || {};
+    if (options.isPassword) {
         return _.str.repeat('*', String(value).length);
     }
     if (!value && value !== 0) {
@@ -231,6 +240,9 @@ function formatInteger(value, field, options) {
         // view, I want to display the concept of 'no value' with an empty
         // string.
         return "";
+    }
+    if (options.humanReadable && options.humanReadable(value)) {
+        return utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback);
     }
     return utils.insert_thousand_seps(_.str.sprintf('%d', value));
 }
@@ -322,9 +334,9 @@ function formatMonetary(value, field, options) {
     if (options.field_digits === true) {
         digits = field.digits || digits;
     }
-    var formatted_value = formatFloat(value, field, {
-        digits: digits,
-    });
+    var formatted_value = formatFloat(value, field,
+        _.extend({}, options , {digits: digits})
+    );
 
     if (!currency || options.noSymbol) {
         return formatted_value;
