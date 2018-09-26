@@ -266,7 +266,7 @@
                             <t t-call="website.pager"/>
                         </div>
 
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-12 mb16" t-if="not slide_type and category_datas and not tag">
+                        <div class="row col-xl-12 col-lg-12 col-md-12 col-12 mb16" t-if="not slide_type and category_datas and not tag">
                             <t t-foreach="category_datas" t-as="category">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-12">
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-12 mt8 oe_slides_bottom_border">
@@ -324,7 +324,7 @@
 <!-- Embedded template: display a list of slides in a grid view -->
 <template id='slides_grid_view' name="Slides (Grid View)">
     <div class="col-xl-3 col-lg-4 col-md-6 col-12 mt16 mb16" t-foreach="slides" t-as="slide">
-        <div class="card card-body oe_slides_thumbnail_container">
+        <div class="card card-body oe_slides_thumbnail_container p-2">
             <a t-attf-href="/slides/slide/#{slug(slide)}">
                 <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-fluid img-thumbnail oe_slides_grid_thumbnail" alt="slide.name"/>
             </a>
@@ -332,7 +332,7 @@
             <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
                 groups="base.group_user"
                 t-attf-href="/slides/slide/#{slide.id}/promote"
-                style="position: absolute;right: 20px;top: 7px;"
+                style="position: absolute;right: 5px;top: 5px;"
                 t-attf-title="Promote this #{slide.slide_type}"
                 t-attf-aria-label="Promote this #{slide.slide_type}">
                 <span class="fa-stack fa-lg">
@@ -342,16 +342,16 @@
             </a>
 
             <div style="padding: 5px;">
-                <h4 class="mt4 mb8 oe_slides_ellipsis">
+                <h5 class="mt4 mb8 oe_slides_ellipsis">
                     <a t-att-title="slide.name" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
-                </h4>
+                </h5>
                 <div class="text-muted clearfix">
                     <small class="float-left"><t t-esc="slide.total_views"/> Views</small>
                     <small class="float-right"><timeago class="timeago" t-att-datetime="slide.create_date"></timeago></small>
                 </div>
                 <p t-if="slide.tag_ids" style="padding-top: 5px;">
                     <t t-foreach="slide.tag_ids" t-as="att_tag">
-                        <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(att_tag)}" t-attf-class="badge badge-secondary #{tag and tag.name == att_tag.name and 'badge-primary' ''} text-muted" t-field="att_tag.name"/>
+                        <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(att_tag)}" t-attf-class="badge badge-secondary #{tag and tag.name == att_tag.name and 'badge-primary' ''}" t-field="att_tag.name"/>
                     </t>
                 </p>
             </div>
