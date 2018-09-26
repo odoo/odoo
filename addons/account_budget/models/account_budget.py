@@ -236,9 +236,10 @@ class CrossoveredBudgetLines(models.Model):
 
     @api.constrains('general_budget_id', 'analytic_account_id')
     def _must_have_analytical_or_budgetary_or_both(self):
-        if not self.analytic_account_id and not self.general_budget_id:
-            raise ValidationError(
-                _("You have to enter at least a budgetary position or analytic account on a budget line."))
+        for record in self:
+            if not record.analytic_account_id and not record.general_budget_id:
+                raise ValidationError(
+                    _("You have to enter at least a budgetary position or analytic account on a budget line."))
 
     @api.multi
     def action_open_budget_entries(self):
