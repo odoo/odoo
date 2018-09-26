@@ -73,7 +73,7 @@ class SaleOrder(models.Model):
         if line_id:
             domain += [('id', '=', line_id)]
         else:
-            domain += [('product_custom_variant_values', '=', False)]
+            domain += [('product_custom_attribute_value_ids', '=', False)]
 
         lines = self.env['sale.order.line'].sudo().search(domain)
 
@@ -167,9 +167,9 @@ class SaleOrder(models.Model):
         if not order_line:
             values = self._website_product_id_change(self.id, product_id, qty=1)
 
-            custom_values = kwargs.get('product_custom_variant_values')
+            custom_values = kwargs.get('product_custom_attribute_values')
             if custom_values:
-                values['product_custom_variant_values'] = [(0, 0, {
+                values['product_custom_attribute_value_ids'] = [(0, 0, {
                     'attribute_value_id': custom_value['attribute_value_id'],
                     'custom_value': custom_value['custom_value']
                 }) for custom_value in custom_values]

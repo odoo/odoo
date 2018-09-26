@@ -114,7 +114,7 @@ class ProductTemplate(models.Model):
     color = fields.Integer('Color Index')
 
     is_product_variant = fields.Boolean(string='Is a product variant', compute='_compute_is_product_variant')
-    attribute_line_ids = fields.One2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes')
+    attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes')
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
     product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
@@ -454,11 +454,11 @@ class ProductTemplate(models.Model):
             # iterator of n-uple of product.attribute.value *ids*
             variant_matrix = [
                 AttributeValues.browse(value_ids)
-                for value_ids in itertools.product(*(line.value_ids.ids for line in tmpl_id.attribute_line_ids if line.value_ids[:1].attribute_id.create_variant != 'never'))
+                for value_ids in itertools.product(*(line.value_ids.ids for line in tmpl_id.attribute_line_ids if line.value_ids[:1].attribute_id.create_variant != 'no_variant'))
             ]
 
             # get the value (id) sets of existing variants
-            existing_variants = {frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'never').ids) for variant in tmpl_id.product_variant_ids}
+            existing_variants = {frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'no_variant').ids) for variant in tmpl_id.product_variant_ids}
             # -> for each value set, create a recordset of values to create a
             #    variant for if the value set isn't already a variant
             for value_ids in variant_matrix:
@@ -476,9 +476,9 @@ class ProductTemplate(models.Model):
 
             # check product
             for product_id in tmpl_id.product_variant_ids:
-                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'never') in variant_matrix:
+                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'no_variant') in variant_matrix:
                     variants_to_activate.append(product_id)
-                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'never') not in variant_matrix:
+                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'no_variant') not in variant_matrix:
                     variants_to_unlink.append(product_id)
 
         if variants_to_activate:
@@ -521,30 +521,30 @@ class ProductTemplate(models.Model):
             The filtered list of product variants
         """
         self.ensure_one()
-        product_product_attribute_values = self.env['product.product.attribute.value'].search([('product_tmpl_id', '=', self.id)])
+        product_template_attribute_values = self.env['product.template.attribute.value'].search([('product_tmpl_id', '=', self.id)])
         if reference_product:
             # append the reference_product if provided
-            product_product_attribute_values |= reference_product.product_attribute_value_ids
+            product_template_attribute_values |= reference_product.product_template_attribute_value_ids
         product_variants = self.product_variant_ids
 
-        for product_product_attribute_value in product_product_attribute_values:
+        for product_template_attribute_value in product_template_attribute_values:
             # CASE 1: The whole product is excluded when no attribute values are selected in the parent product
             # returns empty recordset of product.product if so. What is checked is:
             # If the product_attribute value doesn't belong to self (i.e. belongs to the reference product)
             # and self is the excluded product template on the exclusion lines
             # and the exclusions is on the product without specified product attribute values (i.e. the whole product is excluded)
-            if product_product_attribute_value.product_tmpl_id != self \
-                    and self in product_product_attribute_value.exclude_for.mapped('product_tmpl_id') \
+            if product_template_attribute_value.product_tmpl_id != self \
+                    and self in product_template_attribute_value.exclude_for.mapped('product_tmpl_id') \
                     and any(not exclude_for.value_ids
-                            for exclude_for in product_product_attribute_value.exclude_for.filtered(
+                            for exclude_for in product_template_attribute_value.exclude_for.filtered(
                                 lambda excluded_product_attribute_value: excluded_product_attribute_value.product_tmpl_id == self)):
                 return self.env['product.product']
 
-            # CASE 2: Check if some of the product.product.attribute.value of the product are excluded
+            # CASE 2: Check if some of the product.template.attribute.value of the product are excluded
             # for this prodcut. A variant could be excluded:
             # - Either by itself (eg: The office chair with iron legs excludes the color white)
             # - Or by the reference product (eg: The customizable desk with iron legs excludes the office chair with aluminium legs)
-            for excluded in product_product_attribute_value.exclude_for.filtered(
+            for excluded in product_template_attribute_value.exclude_for.filtered(
                     lambda excluded_product_attribute_value: excluded_product_attribute_value.product_tmpl_id == self):
                 product_variants -= product_variants.filtered(
                     lambda variant:
@@ -553,9 +553,9 @@ class ProductTemplate(models.Model):
                     # OR the restriction is on a product_attribute_value that this variant has, eg:
                     # if the office chair with iron legs excludes the color white, we must check
                     # that this variant has iron legs to check the exclusion
-                    (product_product_attribute_value.product_tmpl_id != self or product_product_attribute_value in variant.product_attribute_value_ids) and
+                    (product_template_attribute_value.product_tmpl_id != self or product_template_attribute_value in variant.product_template_attribute_value_ids) and
                     # 2/ Check the variant has one of the excluded attribute values
-                    any(attribute_value in excluded.value_ids for attribute_value in variant.product_attribute_value_ids))
+                    any(attribute_value in excluded.value_ids for attribute_value in variant.product_template_attribute_value_ids))
 
         return product_variants
 

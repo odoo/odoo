@@ -26,11 +26,15 @@ class TestProductAttributeValueConfig(TransactionCase):
 
         self.computer_case.create_variant_ids()
 
-    def test_product_product_attribute_values_creation(self):
-        self.assertEqual(len(self.computer_ssd_attribute_lines.product_value_ids), 2, 'Product attribute values (ssd) were not automatically created')
-        self.assertEqual(len(self.computer_ram_attribute_lines.product_value_ids), 3, 'Product attribute values (ram) were not automatically created')
-        self.assertEqual(len(self.computer_hdd_attribute_lines.product_value_ids), 3, 'Product attribute values (hdd) were not automatically created')
-        self.assertEqual(len(self.computer_case_size_attribute_lines.product_value_ids), 3, 'Product attribute values (size) were not automatically created')
+    def test_product_template_attribute_values_creation(self):
+        self.assertEqual(len(self.computer_ssd_attribute_lines.product_template_value_ids), 2,
+            'Product attribute values (ssd) were not automatically created')
+        self.assertEqual(len(self.computer_ram_attribute_lines.product_template_value_ids), 3,
+            'Product attribute values (ram) were not automatically created')
+        self.assertEqual(len(self.computer_hdd_attribute_lines.product_template_value_ids), 3,
+            'Product attribute values (hdd) were not automatically created')
+        self.assertEqual(len(self.computer_case_size_attribute_lines.product_template_value_ids), 3,
+            'Product attribute values (size) were not automatically created')
 
     def test_product_filtered_exclude_for(self):
         """
@@ -58,7 +62,7 @@ class TestProductAttributeValueConfig(TransactionCase):
 
         self._add_hdd_excludes_computer_case()
         hdd_4_variant = self.computer.product_variant_ids.filtered(
-            lambda variant: self.hdd_4 in variant.product_attribute_value_ids.mapped('product_attribute_value_id'))[0]
+            lambda variant: self.hdd_4 in variant.product_template_attribute_value_ids.mapped('product_attribute_value_id'))[0]
         self.assertEqual(len(self.computer_case.get_filtered_variants(hdd_4_variant)), 2)
         self.assertFalse(self._get_variant_for_attribute_values(self.computer_case, [self.size_m], hdd_4_variant))
 
@@ -72,7 +76,7 @@ class TestProductAttributeValueConfig(TransactionCase):
             'name': '512 GB',
             'attribute_id': self.ssd_attribute.id
         })
-        self.computer_ssd_attribute_lines = self.env['product.attribute.line'].create({
+        self.computer_ssd_attribute_lines = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.computer.id,
             'attribute_id': self.ssd_attribute.id,
             'value_ids': [(6, 0, [self.ssd_256.id, self.ssd_512.id])]
@@ -92,7 +96,7 @@ class TestProductAttributeValueConfig(TransactionCase):
             'name': '32 GB',
             'attribute_id': self.ram_attribute.id
         })
-        self.computer_ram_attribute_lines = self.env['product.attribute.line'].create({
+        self.computer_ram_attribute_lines = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.computer.id,
             'attribute_id': self.ram_attribute.id,
             'value_ids': [(6, 0, [self.ram_8.id, self.ram_16.id, self.ram_32.id])]
@@ -112,14 +116,14 @@ class TestProductAttributeValueConfig(TransactionCase):
             'name': '4 To',
             'attribute_id': self.hdd_attribute.id
         })
-        self.computer_hdd_attribute_lines = self.env['product.attribute.line'].create({
+        self.computer_hdd_attribute_lines = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.computer.id,
             'attribute_id': self.hdd_attribute.id,
             'value_ids': [(6, 0, [self.hdd_1.id, self.hdd_2.id, self.hdd_4.id])]
         })
 
     def _add_ram_exclude_for(self):
-        self.ram_16_excludes_hdd_1 = self.env['product.attribute.filter.line'].create({
+        self.ram_16_excludes_hdd_1 = self.env['product.template.attribute.exclusion'].create({
             'product_tmpl_id': self.computer.id,
             'value_ids': [(6, 0, [self._get_product_value_id(self.computer_hdd_attribute_lines, self.hdd_1).id])]
         })
@@ -141,14 +145,14 @@ class TestProductAttributeValueConfig(TransactionCase):
             'name': 'XL',
             'attribute_id': self.size_attribute.id
         })
-        self.computer_case_size_attribute_lines = self.env['product.attribute.line'].create({
+        self.computer_case_size_attribute_lines = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': self.computer_case.id,
             'attribute_id': self.size_attribute.id,
             'value_ids': [(6, 0, [self.size_m.id, self.size_l.id, self.size_xl.id])]
         })
 
     def _add_hdd_excludes_computer_case(self):
-        self.hdd_4_excludes_computer_case_m = self.env['product.attribute.filter.line'].create({
+        self.hdd_4_excludes_computer_case_m = self.env['product.template.attribute.exclusion'].create({
             'product_tmpl_id': self.computer_case.id,
             'value_ids': [(6, 0, [self._get_product_value_id(self.computer_case_size_attribute_lines, self.size_m).id])]
         })
@@ -156,8 +160,8 @@ class TestProductAttributeValueConfig(TransactionCase):
             'exclude_for': [(6, 0, [self.hdd_4_excludes_computer_case_m.id])]
         })
 
-    def _get_product_value_id(self, product_attribute_lines, product_attribute_value):
-        return product_attribute_lines.product_value_ids.filtered(
+    def _get_product_value_id(self, product_template_attribute_lines, product_attribute_value):
+        return product_template_attribute_lines.product_template_value_ids.filtered(
             lambda product_value_id: product_value_id.product_attribute_value_id == product_attribute_value)[0]
 
     def _get_variant_for_attribute_values(self, product, attribute_values, reference_product=None):

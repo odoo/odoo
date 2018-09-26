@@ -398,7 +398,7 @@ class WebsiteSale(ProductConfiguratorController):
             product_id=int(product_id),
             add_qty=add_qty,
             set_qty=set_qty,
-            product_custom_variant_values=json.loads(kw.get('product_custom_variant_values'))
+            product_custom_attribute_values=json.loads(kw.get('product_custom_attribute_values'))
         )
         return request.redirect("/shop/cart")
 
@@ -1087,10 +1087,10 @@ class WebsiteSale(ProductConfiguratorController):
                 add_qty=add_qty,
                 set_qty=set_qty,
                 optional_product_ids=optional_product_ids,
-                product_custom_variant_values=self._get_product_custom_value(
+                product_custom_attribute_values=self._get_product_custom_value(
                     int(product_id),
                     custom_values,
-                    'product_custom_variant_values'
+                    'product_custom_attribute_values'
                 ),
                 no_variant_attribute_values=self._get_product_custom_value(
                     int(product_id),
@@ -1105,10 +1105,10 @@ class WebsiteSale(ProductConfiguratorController):
                 product_id=option_id,
                 set_qty=value.get('quantity'),
                 linked_line_id=value.get('line_id'),
-                product_custom_variant_values=self._get_product_custom_value(
+                product_custom_attribute_values=self._get_product_custom_value(
                     option_id,
                     custom_values,
-                    'product_custom_variant_values'
+                    'product_custom_attribute_values'
                 ),
                 no_variant_attribute_values=self._get_product_custom_value(
                     option_id,

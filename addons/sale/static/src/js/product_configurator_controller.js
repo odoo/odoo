@@ -120,7 +120,7 @@ var ProductConfiguratorFormController = FormController.extend({
                 product_id: productId,
                 quantity: parseFloat($modal.find('input[name="add_qty"]').val() || 1),
                 variant_values: variantValues,
-                product_custom_variant_values: productCustomVariantValues,
+                product_custom_attribute_values: productCustomVariantValues,
                 no_variant_attribute_values: noVariantAttributeValues
             };
 
@@ -185,7 +185,7 @@ var ProductConfiguratorFormController = FormController.extend({
     * @param {Array} products the list of added products
     *   {integer} products.product_id: the id of the product
     *   {integer} products.quantity: the added quantity for this product
-    *   {Array} products.product_custom_variant_values:
+    *   {Array} products.product_custom_attribute_values:
     *     see product_configurator_mixin.getCustomVariantValues
     *   {Array} products.no_variant_attribute_values:
     *     see product_configurator_mixin.getNoVariantAttributeValues
