@@ -260,7 +260,7 @@ response = request.render("website.template_partner_comment", {
                         <t t-set="bs_state_colors" t-value="[['success', 'Success'], ['info', 'Info'], ['warning', 'Warning'], ['danger', 'Danger']]"/>
                         <t t-set="bs_theme_colors" t-value="bs_basic_colors + bs_state_colors"/>
                         <t t-set="bs_gray_colors" t-value="[['white', 'White'], ['gray-lighter', 'Gray Lighter'], ['gray-light', 'Gray Light'], ['gray', 'Gray'], ['gray-dark', 'Gray Dark'], ['gray-darker', 'Gray Darker'], ['black', 'Black']]"/>
-                        <div id="wrap oe_structure">
+                        <div id="wrap" class="oe_structure">
                             <section class="py-2">
                                 <div class="container">
                                     <h1>Components</h1>
@@ -524,7 +524,7 @@ response = request.render("website.template_partner_comment", {
                                 clear: both;
                             }
                         </style>
-                        <div id="wrap oe_structure">
+                        <div id="wrap" class="oe_structure">
                             <t t-call="website.snippets"/>
                         </div>
                     </t>
