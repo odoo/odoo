@@ -1089,6 +1089,12 @@ function compute_domain (expr, fields) {
         var op = ex[1];
         var val = ex[2];
 
+        if ((typeof val === 'string' || val instanceof String) && (val.indexOf("_field_") == 0)) { // val starts with "_field_"
+        	val = val.substr(7);  // "_field_val" -> "val"
+        	var field_2 = fields[val];  // get the second field
+        	val = field_2.get_value ? field_2.get_value() : field_2.value;  // set val as the value of the second field
+        }
+
         switch (op.toLowerCase()) {
             case '=':
             case '==':
