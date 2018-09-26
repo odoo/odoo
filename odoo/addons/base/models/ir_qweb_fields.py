@@ -627,8 +627,8 @@ class Contact(models.AbstractModel):
         options = super(Contact, self).get_available_options()
         options.update(
             fields=dict(type='array', params=dict(type='selection', params=["name", "address", "city", "country_id", "phone", "mobile", "email", "fax", "karma", "website"]), string=_('Displayed fields'), description=_('List of contact fields to display in the widget'), default_value=["name", "address", "phone", "mobile", "email"]),
-            separator=dict(type='string', string=_('Adress separator'), description=_('Separator use to split the address from the display_name.'), default_value="\\n"),
-            no_marker=dict(type='boolean', string=_('Hide marker'), description=_("Don't display the font awsome marker")),
+            separator=dict(type='string', string=_('Address separator'), description=_('Separator use to split the address from the display_name.'), default_value="\\n"),
+            no_marker=dict(type='boolean', string=_('Hide badges'), description=_("Don't display the font awesome marker")),
             no_tag_br=dict(type='boolean', string=_('Use comma'), description=_("Use comma instead of the <br> tag to display the address")),
             phone_icons=dict(type='boolean', string=_('Displayed phone icons'), description=_("Display the phone icons even if no_marker is True")),
             country_image=dict(type='boolean', string=_('Displayed contry image'), description=_("Display the country image if the field is present on the record")),
