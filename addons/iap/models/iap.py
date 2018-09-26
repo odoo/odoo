@@ -188,18 +188,21 @@ class IapAccount(models.Model):
     def get_credits(self, service_name):
         credit = 0
         account = self.get(service_name)
-        if account:
-            route = '/iap/1/balance'
-            endpoint = get_endpoint(self.env)
-            url = endpoint + route
-            params = {
-                'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
-                'account_token': account.account_token,
-                'service_name': service_name,
-            }
 
-            credit = jsonrpc(url=url, params=params)
-            account.sudo().write({'insufficient_credit': credit == 0})
+        route = '/iap/1/balance'
+        endpoint = get_endpoint(self.env)
+        url = endpoint + route
+        params = {
+            'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'account_token': account.account_token,
+            'service_name': service_name,
+        }
 
-        return credit
+        credit = jsonrpc(url=url, params=params)
+        account.sudo().write({'insufficient_credit': credit == 0})
+
+        return {
+            'credit': credit,
+            'url': account.get_credits_url(service_name),
+        }
 

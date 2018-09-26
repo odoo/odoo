@@ -35,7 +35,6 @@ var IAPCreditChecker = Widget.extend({
 
         this.$widget.appendTo(this.$el);
 
-        this._getLink();
         this._getCredits();
     },
 
@@ -52,22 +51,10 @@ var IAPCreditChecker = Widget.extend({
             args: [this.service_name],
         }, {
             shadow: true,
-        }).then(function (credit) {
-            if (credit) self._showSufficient(credit);
+        }).then(function (result) {
+            if (result.credit) self._showSufficient(result.credit);
             else self._showInsufficient();
-        });
-    },
-
-    _getLink: function () {
-        var self = this;
-        return rpc.query({
-            model: 'iap.account',
-            method: 'get_credits_url',
-            args: [this.service_name],
-        }, {
-            shadow: true,
-        }).then(function (url) {
-            self.$buyLink.attr('href', url);
+            self.$buyLink.attr('href', result.url);
         });
     },
 
