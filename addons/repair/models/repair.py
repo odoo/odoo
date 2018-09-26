@@ -320,7 +320,7 @@ class Repair(models.Model):
                 repair.write({'invoiced': True, 'invoice_id': invoice.id})
 
                 for operation in repair.operations:
-                    if operation.type == 'add':
+                    if operation.operation_type == 'add':
                         if group:
                             name = repair.name + '-' + operation.name
                         else:
@@ -503,9 +503,9 @@ class RepairLine(models.Model):
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade')
-    type = fields.Selection([
+    operation_type = fields.Selection([
         ('add', 'Add'),
-        ('remove', 'Remove')], 'Type', required=True)
+        ('remove', 'Remove')], string='Type', required=True, oldname='type')
     product_id = fields.Many2one('product.product', 'Product', required=True)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
@@ -550,7 +550,7 @@ class RepairLine(models.Model):
         taxes = self.tax_id.compute_all(self.price_unit, self.repair_id.pricelist_id.currency_id, self.product_uom_qty, self.product_id, self.repair_id.partner_id)
         self.price_subtotal = taxes['total_excluded']
 
-    @api.onchange('type', 'repair_id')
+    @api.onchange('operation_type', 'repair_id')
     def onchange_operation_type(self):
         """ On change of operation type it sets source location, destination location
         and to invoice field.
@@ -558,10 +558,10 @@ class RepairLine(models.Model):
         @param guarantee_limit: Guarantee limit of current record.
         @return: Dictionary of values.
         """
-        if not self.type:
+        if not self.operation_type:
             self.location_id = False
             self.location_dest_id = False
-        elif self.type == 'add':
+        elif self.operation_type == 'add':
             self.onchange_product_id()
             args = self.repair_id.company_id and [('company_id', '=', self.repair_id.company_id.id)] or []
             warehouse = self.env['stock.warehouse'].search(args, limit=1)
@@ -589,7 +589,7 @@ class RepairLine(models.Model):
             if self.product_id.description_sale:
                 self.name += '\n' + self.product_id.description_sale
             self.product_uom = self.product_id.uom_id.id
-        if self.type != 'remove':
+        if self.operation_type != 'remove':
             if partner and self.product_id:
                 self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
             warning = False

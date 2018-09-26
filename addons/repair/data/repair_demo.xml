@@ -17,7 +17,7 @@
             'product_uom_qty': '1.0',
             'price_unit': 50.0,
             'state': 'draft',
-            'type': 'add',
+            'operation_type': 'add',
         })]"/>
         <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': 'Laptop formatting fees',
@@ -46,7 +46,7 @@
             'product_uom': obj().env.ref('uom.product_uom_unit').id,
             'product_uom_qty': 1.0,
             'state': 'draft',
-            'type': 'add',
+            'operation_type': 'add',
         })]"/>
         <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': 'Monitor screen repair',
@@ -75,7 +75,7 @@
             'product_uom': obj().env.ref('uom.product_uom_unit').id,
             'product_uom_qty': 1.0,
             'state': 'draft',
-            'type': 'add',
+            'operation_type': 'add',
         })]"/>
         <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
             'name': 'SIM card holder repair',

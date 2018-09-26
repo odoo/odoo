@@ -52,7 +52,7 @@ class TestRepair(AccountingTestCase):
         product_to_add = self.env.ref('product.product_product_5')
         return self.env['repair.line'].create({
             'name': 'Add The product',
-            'type': 'add',
+            'operation_type': 'add',
             'product_id': product_to_add.id,
             'product_uom_qty': qty,
             'product_uom': product_to_add.uom_id.id,
