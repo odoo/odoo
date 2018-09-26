@@ -382,7 +382,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 size: 'medium',
                 title: data.title,
                 $content: qweb.render("CrashManager.warning", data),
-            }).open();
+            }).open({shouldFocusButtons: true});
         } else {
             this.call('notification', 'notify', e.data);
         }
