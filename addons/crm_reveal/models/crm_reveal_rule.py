@@ -463,7 +463,7 @@ class CRMRevealRule(models.Model):
         if timezone:
             log_data.update({
                 'timezone': timezone.replace('_', ' ').title(),
-                'timezone_link': timezone.lower().replace('_', '-'),
+                'timezone_url': reveal_data['timezone_url'],
             })
         return log_data
 
