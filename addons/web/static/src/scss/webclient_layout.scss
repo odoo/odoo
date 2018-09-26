@@ -19,6 +19,9 @@ html {
                 flex: 1 1 auto;
                 display: flex;
                 flex-flow: column nowrap;
+                @include media-breakpoint-down(sm) {
+                    overflow: auto;
+                }
 
                 .o_control_panel {
                     flex: 0 0 auto;
@@ -26,8 +29,10 @@ html {
                 .o_content {
                     flex: 1 1 auto;
                     height: 100%;
-                    overflow: auto;
                     position: relative;
+                    @include media-breakpoint-up(sm) {
+                        overflow: auto;
+                    }
 
                     > .o_view_controller {
                         @include o-position-absolute(0, 0, 0, 0);  // Get the 100% height of its flex parent
@@ -41,10 +46,6 @@ html {
             .o_main_navbar {
                 display: none;
             }
-        }
-
-        .o_main_navbar {
-            flex: 0 0 auto;
         }
 
         .o_control_panel {

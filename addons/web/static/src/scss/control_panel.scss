@@ -7,7 +7,8 @@
     background-color: $o-control-panel-background-color;
 
     > .breadcrumb {
-        width: 50%;
+        flex: 1 0 50%;
+        min-width: map-get($grid-breakpoints, sm) / 2;
         font-size: 18px;
 
         > li {
@@ -24,7 +25,8 @@
     }
 
     > .o_cp_searchview {
-        width: 50%;
+        flex: 1 0 50%;
+        min-width: map-get($grid-breakpoints, sm) / 2;
         min-height: $o-cp-breadcrumb-height;
     }
 
@@ -37,7 +39,8 @@
     > .o_cp_left {
         display: flex;
         justify-content: space-between;
-        width: 50%;
+        flex: 1 0 50%;
+        min-width: map-get($grid-breakpoints, sm) / 2;
         margin-top: 5px;
 
         > .o_cp_sidebar {
@@ -71,7 +74,8 @@
 
     > .o_cp_right {
         display: flex;
-        width: 50%;
+        flex: 1 0 50%;
+        min-width: map-get($grid-breakpoints, sm) / 2;
         margin-top: 5px;
 
         > .o_cp_pager {

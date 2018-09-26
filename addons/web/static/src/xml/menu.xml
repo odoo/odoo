@@ -2,11 +2,16 @@
 <templates id="template" xml:space="preserve">
 
 <header t-name="Menu">
-    <nav class="o_main_navbar">
-        <ul class="o_menu_apps"/>
-        <a class="o_menu_brand" role="button"/>
-        <ul class="o_menu_sections" role="menu"/>
-        <ul class="o_menu_systray" role="menu"/>
+    <nav class="o_main_navbar navbar navbar-expand-md bg-primary">
+        <ul class="o_menu_apps navbar-nav"/>
+        <a class="o_menu_brand navbar-brand nav-link" role="button"/>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle menus" data-target="#o_menu_extra">
+            <i class="fa fa-bars"/>
+        </button>
+        <div id="o_menu_extra" class="collapse navbar-collapse">
+            <ul class="o_menu_sections navbar-nav" role="menu"/>
+            <ul class="o_menu_systray navbar-nav ml-auto" role="menu"/>
+        </div>
     </nav>
 </header>
 
@@ -14,8 +19,8 @@
     @param {web.AppsMenu} widget
 -->
 <t t-name="AppsMenu">
-    <li class="dropdown">
-        <a class="full" data-toggle="dropdown" href="#">
+    <li class="nav-item dropdown">
+        <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button">
             <i class="fa fa-th-large"/>
         </a>
         <div class="dropdown-menu" role="menu">
@@ -42,12 +47,12 @@
                 t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
                 t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''"
                 t-att-data-menu-xmlid="menu.xmlid"
-                t-attf-class="#{inNavbar ? '' : 'dropdown-item '}o_menu_entry_lvl_#{depth}"
+                t-attf-class="#{inNavbar ? 'nav-link' : 'dropdown-item'} o_menu_entry_lvl_#{depth}"
                 data-toggle="collapse" data-target="#o_navbar_collapse.in">
                 <span><t t-esc="menu.name"/></span>
             </a>
         </t>
-        <li t-if="inNavbar">
+        <li class="nav-item" t-if="inNavbar">
             <t t-raw="_link"/>
         </li>
         <t t-else="">
@@ -76,8 +81,8 @@
                     </t>
                 </t>
                 <t t-else="">
-                    <li>
-                        <a href="#" class="dropdown-toggle o-no-caret o_menu_header_lvl_1" t-att-data-menu-xmlid="second_level_menu.xmlid" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <li class="nav-item dropdown">
+                        <a href="#" class="dropdown-toggle nav-link o_menu_header_lvl_1" t-att-data-menu-xmlid="second_level_menu.xmlid" data-toggle="dropdown" role="button" aria-expanded="false">
                             <t t-esc="second_level_menu.name"/>
                         </a>
                         <div class="dropdown-menu" role="menu">

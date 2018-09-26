@@ -227,9 +227,10 @@
 </t>
 
 <t t-name="WebClient.DebugManager">
-    <li class="o_debug_manager" role="menuitem">
-        <a href="#" title="Open Developer Tools" aria-label="Open Developer Tools" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static">
+    <li class="o_debug_manager nav-item dropdown" role="menuitem">
+        <a href="#" title="Open Developer Tools" aria-label="Open Developer Tools" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static" class="nav-link dropdown-toggle">
             <span class="fa fa-bug"/>
+            <span class="d-md-none">Open Developer Tools</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right o_debug_dropdown" role="menu"/>
     </li>
@@ -1530,8 +1531,8 @@
 </t>
 
 <t t-name="UserMenu">
-    <li class="o_user_menu">
-        <a class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
+    <li class="o_user_menu nav-item dropdown">
+        <a class="dropdown-toggle nav-link" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
             <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="Avatar"/>
             <span class="oe_topbar_name"/>
         </a>
@@ -1551,9 +1552,10 @@
 </t>
 
 <t t-name="SwitchCompanyMenu">
-    <li class="o_switch_company_menu">
-        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/>
+    <li class="o_switch_company_menu nav-item dropdown">
+        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+            <i class="fa fa-building-o"/>
+            <span class="oe_topbar_name"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu"/>
     </li>
