@@ -31,6 +31,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         options = options || {};
         this._super(parent, _.extend({
             title: _t("Customize this theme"),
+            buttons: [],
         }, options));
 
         this.defaultTab = options.tab || 0;
