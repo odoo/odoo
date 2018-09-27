@@ -998,6 +998,49 @@ class TestFields(common.TransactionCase):
         self.assertEqual(count(message), 1)
         self.assertEqual(count(message1), 0)
 
+    def test_90_binary_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This should work without problems
+        self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': SVG,
+        })
+        # And this gives error
+        with self.assertRaises(UserError):
+            self.env['test_new_api.binary_svg'].sudo(
+                self.env.ref('base.user_demo'),
+            ).create({
+                'name': 'Test without attachment',
+                'image_wo_attachment': SVG,
+            })
+
+    def test_91_binary_svg_attachment(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This doesn't neuter SVG with admin
+        record = self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
+        # ...but this should be neutered with demo user
+        record = self.env['test_new_api.binary_svg'].sudo(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
 
 class TestX2many(common.TransactionCase):
     def test_search_many2many(self):
