@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.5"
+  - "3.6"
+env:
+  - SPHINX_VERSION=sphinx==1.2.*
+  - SPHINX_VERSION=sphinx==1.5.*
+  - SPHINX_VERSION=sphinx==1.7.*
+  - SPHINX_VERSION=sphinx==1.8.*
+  - SPHINX_VERSION=sphinx
+  - SPHINX_VERSION=git+https://github.com/sphinx-doc/sphinx
+install:
+  - pip install -q $SPHINX_VERSION
+  - pip install -r doc/requirements.txt
+  - pip install -r requirements.txt
+script: make -C doc -e SPHINXOPTS='-vv -t solutions' html
