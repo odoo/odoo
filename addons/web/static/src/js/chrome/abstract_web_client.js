@@ -132,6 +132,9 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 self.action_manager.$el.on('scroll', core.bus.trigger.bind(core.bus, 'scroll'));
                 core.bus.trigger('web_client_ready');
                 odoo.isReady = true;
+                if (session.uid === 1) {
+                    self.$el.addClass('o_is_superuser');
+                }
             });
     },
 
