@@ -526,7 +526,7 @@ class IrAttachment(models.Model):
         except Exception:
             raise Exception
 
-    def _split_pdf_groups(self, pdf_groups, remainder=False):
+    def _split_pdf_groups(self, pdf_groups=None, remainder=False):
         """
         calls _make_pdf to create the a new attachment for each page section.
         :param pdf_groups: a list of lists representing the pages to split:  pages = [[1,1], [4,5], [7,7]]
@@ -542,6 +542,8 @@ class IrAttachment(models.Model):
             max_page = input_pdf.getNumPages()
             remainder_set = set(range(0, max_page))
             new_pdf_ids = []
+            if not pdf_groups:
+                pdf_groups = []
             for pages in pdf_groups:
                 pages[1] = min(max_page, pages[1])
                 pages[0] = min(max_page, pages[0])
@@ -567,7 +569,7 @@ class IrAttachment(models.Model):
                 self.write({'active': False})
             return new_pdf_ids
 
-    def split_pdf(self, indices, remainder=False):
+    def split_pdf(self, indices=None, remainder=False):
         """
         called by the Document Viewer's Split PDF button.
         evaluates the input string and turns it into a list of lists to be processed by _split_pdf_groups
@@ -579,11 +581,14 @@ class IrAttachment(models.Model):
         self.ensure_one()
         if 'pdf' not in self.mimetype:
             raise exceptions.ValidationError(_("ERROR: the file must be a PDF"))
-        try:
-            pages = [[int(x) for x in x.split('-')] for x in indices.split(',')]
-        except ValueError:
-            raise exceptions.ValidationError(_("ERROR: Invalid list of pages to split. Example: 1,5-9,10"))
-        return self._split_pdf_groups([[min(x), max(x)] for x in pages], remainder=remainder)
+        if indices:
+            try:
+                pages = [[int(x) for x in x.split('-')] for x in indices.split(',')]
+            except ValueError:
+                raise exceptions.ValidationError(_("ERROR: Invalid list of pages to split. Example: 1,5-9,10"))
+            return self._split_pdf_groups(pdf_groups=[[min(x), max(x)] for x in pages], remainder=remainder)
+        return self._split_pdf_groups(remainder=remainder)
+
 
 
 
