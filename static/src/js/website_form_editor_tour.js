@@ -21,6 +21,10 @@ odoo.define('website_form_editor.tour', function(require) {
             run:      "drag_and_drop #wrap",
         },
         {
+            content:  "Check dropped snippet",
+            trigger:  "body:has(form[action*='/website_form/'])",
+        },
+        {
             content:  "Check if the snippet is dropped and if the modal is opened",
             trigger:  "body:has(form[action*='/website_form/'])" +
                       ":has(.modal-body:has(select[name='model_selection'])" +
@@ -235,6 +239,7 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Change the label",
             trigger:  ".col-form-label[for='Custom Multiple Checkboxes']",
+            extra_trigger:  ".s_website_form:not(:has(.col-form-label[for='Custom Multiple Checkboxes']:eq(1)))",
             run:      "text Products"
         },
         {
@@ -302,7 +307,7 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".oe_options .dropdown-item:contains('Radio Buttons')"
         },
 
-        // Customize custom multiple checkboxes field
+        // Customize Radio Buttons field
         {
             content:  "Change the label",
             trigger:  ".col-form-label[for='Custom Radio Buttons']",
@@ -354,7 +359,9 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Required",
-            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_require]"
+            trigger:  ".oe_overlay_options .dropdown-item[data-website_form_field_require]",
+            extra_trigger:  ".form-field.o_website_form_custom.o_website_form_required_custom" +
+                            ":has(.col-form-label:contains('Service'))",
         },
         {
             content:  "Check the resulting field",
