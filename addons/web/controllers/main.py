@@ -45,7 +45,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
     serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
-from odoo.service import db
+from odoo.service import db, security
 
 _logger = logging.getLogger(__name__)
 
@@ -518,10 +518,10 @@ class Home(http.Controller):
 
     @http.route('/web/become', type='http', auth='user', sitemap=False)
     def switch_to_admin(self):
-        if not request.env.user._is_system():
-            raise werkzeug.exceptions.Forbidden()
-
-        uid = request.session.uid = odoo.SUPERUSER_ID
+        uid = request.env.user.id
+        if request.env.user._is_system():
+            uid = request.session.uid = odoo.SUPERUSER_ID
+            security.compute_session_token(request.session, request.env)
 
         return http.redirect_with_hash(self._login_redirect(uid))
 
