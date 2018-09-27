@@ -922,6 +922,306 @@ Andrew</p>]]></field>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
+<record id="crm_case_graph_1" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">36221</field>
+<field name="probability">20</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.et"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.salesteam_website_sales"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead2"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_2" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=18)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">28443</field>
+<field name="probability">80</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.salesteam_website_sales"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead3"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_3" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=24)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">88715</field>
+<field name="probability">12</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.salesteam_website_sales"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead2"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_4" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=27)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">11477</field>
+<field name="probability">25</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.team_sales_department"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead2"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_4" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=40)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">7784</field>
+<field name="probability">20</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.team_sales_department"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead2"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_5" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=45)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">54587</field>
+<field name="probability">81</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.team_sales_department"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead2"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_6" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=48)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">5474</field>
+<field name="probability">20</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.mr"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.salesteam_website_sales"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead2"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_7" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=80)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">11475</field>
+<field name="probability">25</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.salesteam_website_sales"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead1"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_8" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=37)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">9987</field>
+<field name="probability">20</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.crm_team_1"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead2"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_9" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=32)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">4482</field>
+<field name="probability">90</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.team_sales_department"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead3"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_10" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=18)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">22500</field>
+<field name="probability">20</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.et"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.crm_team_1"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead2"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+<record id="crm_case_graph_11" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=52)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">99755</field>
+<field name="probability">20</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.tz"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.crm_team_1"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead3"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
+
+<record id="crm_case_graph_12" model="crm.lead">
+<field name="create_date" eval="datetime.now() - relativedelta(days=52)"/>
+<field name="type">lead</field>
+<field name="name">Quote for 600 Chairs</field>
+<field name="planned_revenue">41421</field>
+<field name="probability">20</field>
+<field name="contact_name">Erik N. French</field>
+<field name="partner_name">Leo Mall</field>
+<field name="email_from">ErikNFrench@armyspy.com</field>
+<field name="country_id" ref="base.au"/>
+<field name="city">Chevy Chase</field>
+<field name="street">1920 Del Dew Drive</field>
+<field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
+<field name="priority">1</field>
+<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+<field name="team_id" ref="sales_team.salesteam_website_sales"/>
+<field name="user_id" ref="base.user_admin"/>
+<field name="stage_id" ref="crm.stage_lead3"/>
+<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+<field name="medium_id" ref="utm.utm_medium_email"/>
+<field name="source_id" ref="utm.utm_source_search_engine"/>
+</record>
+
 
         <!-- Call Function to set dome opportunities as Lost -->
         <function model="crm.lead" name="action_set_lost"
