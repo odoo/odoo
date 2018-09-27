@@ -245,7 +245,7 @@ class SnailmailLetter(models.Model):
                 activity_data = {
                     'res_id': letter.res_id,
                     'res_model_id': self.env['ir.model']._get(letter.model).id,
-                    'activity_type_id': self.env.ref('snailmail.mail_activity_data_snailmail').id,
+                    'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
                     'summary': _('Post letter: an error occured.'),
                     'note': note,
                     'user_id': letter.user_id.id,
