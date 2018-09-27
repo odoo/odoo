@@ -18,9 +18,10 @@ var _t = core._t;
 var SnippetOption = Widget.extend({
     events: {
         'mouseenter': '_onLinkEnter',
+        'mouseenter .dropdown-item': '_onLinkEnter',
         'click': '_onLinkClick',
         'mouseleave': '_onMouseleave',
-        'mouseleave .dropdown-menu': '_onMouseleave',
+        'mouseleave .dropdown-item': '_onMouseleave',
     },
     /**
      * When editing a snippet, its options are shown alongside the ones of its
