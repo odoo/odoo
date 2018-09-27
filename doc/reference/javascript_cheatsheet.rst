@@ -120,9 +120,9 @@ This is usually done with code looking like this:
 
 .. code-block:: javascript
 
-    var AppSwitcher = require('web_enterprise.AppSwitcher');
+    var HomeMenu = require('web_enterprise.HomeMenu');
 
-    AppSwitcher.include({
+    HomeMenu.include({
         render: function () {
             this._super();
             // do something else here...
