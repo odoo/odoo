@@ -31,6 +31,7 @@ var IAPCreditChecker = Widget.extend({
         this.$loading = this.$widget.find('.loading');
         this.$sufficient = this.$widget.find('.sufficient');
         this.$insufficient = this.$widget.find('.insufficient');
+        this.$error = this.$widget.find('.error');
         this.$buyLink = this.$widget.find('.oe_link');
 
         this.$widget.appendTo(this.$el);
@@ -52,7 +53,8 @@ var IAPCreditChecker = Widget.extend({
         }, {
             shadow: true,
         }).then(function (result) {
-            if (result.credit) self._showSufficient(result.credit);
+            if (result.credit > 0) self._showSufficient(result.credit);
+            else if (result.credit < 0) self._showError();
             else self._showInsufficient();
             self.$buyLink.attr('href', result.url);
         });
@@ -62,16 +64,25 @@ var IAPCreditChecker = Widget.extend({
         this.$loading.show();
         this.$sufficient.hide();
         this.$insufficient.hide();
+        this.$error.hide();
     },
     _showSufficient: function (credits) {
         this.$loading.hide();
         this.$sufficient.show().find('.remaining_credits').text(credits);
         this.$insufficient.hide();
+        this.$error.hide();
     },
     _showInsufficient: function () {
         this.$loading.hide();
         this.$sufficient.hide();
         this.$insufficient.show();
+        this.$error.hide();
+    },
+    _showError: function () {
+        this.$loading.hide();
+        this.$sufficient.hide();
+        this.$insufficient.hide();
+        this.$error.show();
     },
 });
 
