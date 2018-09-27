@@ -51,7 +51,7 @@ class Team(models.Model):
     def _get_sales_team_ids(self):
         '''
         Hook para obtener los equipos de ventas.
-        sera implementado en un metodo superios
+        sera implementado en un metodo superior
         '''
         return  self.env.user.sale_team_id.id
     
