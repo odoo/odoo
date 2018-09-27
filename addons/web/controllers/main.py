@@ -521,7 +521,8 @@ class Home(http.Controller):
         uid = request.env.user.id
         if request.env.user._is_system():
             uid = request.session.uid = odoo.SUPERUSER_ID
-            security.compute_session_token(request.session, request.env)
+            request.env['res.users']._invalidate_session_cache()
+            request.session.session_token = security.compute_session_token(request.session, request.env)
 
         return http.redirect_with_hash(self._login_redirect(uid))
 
