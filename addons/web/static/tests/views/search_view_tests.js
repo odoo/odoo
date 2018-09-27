@@ -787,5 +787,32 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('a default time range only in context is taken into account', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                // there are two read_group calls (for the groupby lists [] and ["date_field:day"])
+                if (route === '/web/dataset/call_kw/partner/read_group') {
+                    var timeRangeMenuData = args.kwargs.context.timeRangeMenuData;
+                    assert.ok(timeRangeMenuData.timeRange.length > 0, "time range should be non empty");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            context: {time_ranges: {range: 'today', field: 'date_field'}}
+        });
+
+        actionManager.destroy();
+    });
+
 });
 });
