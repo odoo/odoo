@@ -1328,10 +1328,10 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} [options]
      * @param {string} [options.position=top] if the new record should be added
      *   on top or on bottom of the list
-     * @param {Object} [options.[context]] additional context to be merged before
+     * @param {Array} [options.[context]] additional context to be merged before
      *   calling the default_get (eg. to set default values).
      *   If several contexts are found, multiple records are added
-     * @param {boolean} [params.allowWarning=false] if true, the default record
+     * @param {boolean} [options.allowWarning=false] if true, the default record
      *   operation can complete, even if a warning is raised
      * @returns {Deferred<[string]>} resolves to the new records ids
      */
@@ -1349,7 +1349,7 @@ var BasicModel = AbstractModel.extend({
 
         var additionalContexts = options && options.context;
         var makeDefaultRecords = [];
-        if(additionalContexts){
+        if (additionalContexts){
             _.each(additionalContexts, function (context) {
                 params.context = self._getContext(list, {additionalContext: context});
                 makeDefaultRecords.push(self._makeDefaultRecord(list.model, params));
@@ -1359,9 +1359,9 @@ var BasicModel = AbstractModel.extend({
             makeDefaultRecords.push(self._makeDefaultRecord(list.model, params));
         }
 
-        return $.when.apply($, makeDefaultRecords).then(function(){
+        return $.when.apply($, makeDefaultRecords).then(function (){
             var ids = [];
-            _.each(arguments, function(id){
+            _.each(arguments, function (id){
                 ids.push(id);
 
                 list._changes.push({operation: 'ADD', id: id, position: position, isNew: true});
@@ -1394,7 +1394,7 @@ var BasicModel = AbstractModel.extend({
      *   it was changed.
      * @param {string} [options.viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @param {boolean} [params.allowWarning=false] if true, change
+     * @param {boolean} [options.allowWarning=false] if true, change
      *   operation can complete, even if a warning is raised
      *   (only supported by X2ManyChange)
      * @returns {Deferred} list of changed fields
@@ -1745,7 +1745,7 @@ var BasicModel = AbstractModel.extend({
      *   key.  For example, it looks like {operation: ADD, id: 'partner_1'}
      * @param {string} [viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @param {boolean} [params.allowWarning=false] if true, change
+     * @param {boolean} [allowWarning=false] if true, change
      *   operation can complete, even if a warning is raised
      *   (only supported by the 'CREATE' command.operation)
      * @returns {Deferred}

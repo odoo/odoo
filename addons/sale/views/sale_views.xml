@@ -396,7 +396,7 @@
                                 >
                                     <control>
                                         <create string="Add a product"/>
-                                        <create string="Configure a product" context="{'open_product_configurator': 'true'}" groups="product.group_product_variant"/>
+                                        <create string="Configure a product" context="{'open_product_configurator': True}" groups="product.group_product_variant"/>
                                         <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                         <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
@@ -424,7 +424,7 @@
                                         }"
                                     />
                                     <field name="product_custom_attribute_value_ids" invisible="1" />
-                                    <field name="product_no_variant_attribute_values" invisible="1" />
+                                    <field name="product_no_variant_attribute_value_ids" invisible="1" />
                                     <field name="name" widget="section_and_note_text"/>
                                     <field
                                         name="product_uom_qty"
