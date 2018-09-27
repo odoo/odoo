@@ -998,7 +998,7 @@ var StatementModel = BasicModel.extend({
                     return true;
                 })
                 .then(function(){
-                    return data.status === 'write_off'? self.quickCreateProposition(line.handle, data.model_id) : true;
+                    return data.write_off ? self.quickCreateProposition(line.handle, data.model_id) : true;
                 })
             );
         });
