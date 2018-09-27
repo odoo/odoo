@@ -874,7 +874,7 @@ class Meeting(models.Model):
             the duration for not allday meeting ; otherwise the duration is set to zero, since the meeting last all the day.
         """
         for meeting in self:
-            if meeting.allday:
+            if meeting.allday and meeting.start and meeting.stop:
                 meeting.start_date = meeting.start.date()
                 meeting.start_datetime = False
                 meeting.stop_date = meeting.stop.date()
