@@ -1531,12 +1531,12 @@
     <template id="payment_confirmation_status">
         <div class="oe_website_sale_tx_status mt-3" t-att-data-order-id="order.id">
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
-            <div t-att-class="'card %s' % (
-                    (payment_tx_id.state == 'pending' and 'bg-info text-white') or
-                    (payment_tx_id.state == 'done' and 'bg-success text-white') or
-                    (payment_tx_id.state == 'authorized' and 'bg-success text-white') or
-                    'bg-danger text-white')">
-                <div class="card-header">
+            <div class="card">
+                <div t-att-class="'card-header %s' % (
+                    (payment_tx_id.state == 'pending' and 'bg-info') or
+                    (payment_tx_id.state == 'done' and 'bg-success') or
+                    (payment_tx_id.state == 'authorized' and 'bg-success') or
+                    'bg-danger')">
                     <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-right" target="_blank" aria-label="Edit" title="Edit"
                             t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
                         <i class="fa fa-pencil"></i>
@@ -1559,7 +1559,11 @@
                         <span t-else="">Your payment has been authorized.</span>
                     </t>
                 </div>
-                <div class="card-body" t-if="payment_tx_id.acquirer_id.post_msg">
+                <div t-if="payment_tx_id.acquirer_id.post_msg" t-att-class="'card-body %s' % (
+                    (payment_tx_id.state == 'pending' and 'bg-info-light') or
+                    (payment_tx_id.state == 'done' and 'bg-success-light') or
+                    (payment_tx_id.state == 'authorized' and 'bg-success-light') or
+                    'bg-danger-light')">
                     <t t-raw="payment_tx_id.acquirer_id.post_msg" />
                     <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference">
                         <b>Communication: </b><span t-esc='order.reference'/>

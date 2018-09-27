@@ -1054,3 +1054,9 @@ table.table_desc tr td {
         }
     }
 }
+
+@each $color, $value in $theme-colors {
+    .bg-#{$color}-light {
+        background-color: rgba($value, 0.1);
+    }
+}
