@@ -46,12 +46,21 @@ class Team(models.Model):
             for team in self:
                 team.alias_id.write(team.get_alias_values())
         return result
-
+    
+    #Siguiente metodo fue agregado por Trescloud
+    def _get_sales_team_ids(self):
+        '''
+        Hook para obtener los equipos de ventas.
+        sera implementado en un metodo superior
+        '''
+        return  self.env.user.sale_team_id.id
+    
     #TODO JEM : refactor this stuff with xml action, proper customization,
     @api.model
     def action_your_pipeline(self):
         action = self.env.ref('crm.crm_lead_opportunities_tree_view').read()[0]
-        user_team_id = self.env.user.sale_team_id.id
+        #La siguiente linea fue modificado por Trescloud.
+        user_team_id = self._get_sales_team_ids()
         if not user_team_id:
             user_team_id = self.search([], limit=1).id
             action['help'] = """<p class='oe_view_nocontent_create'>Click here to add new opportunities</p><p>
