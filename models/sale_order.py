@@ -14,7 +14,7 @@ class SaleOrder(models.Model):
         domain=[('promo_code_usage', '=', 'no_code_needed')], copy=False)
     code_promo_program_id = fields.Many2one('sale.coupon.program', string="Applied Promo Program",
         domain=[('promo_code_usage', '=', 'code_needed')], copy=False)
-    promo_code = fields.Char(related='code_promo_program_id.promo_code', help="Applied program code")
+    promo_code = fields.Char(related='code_promo_program_id.promo_code', help="Applied program code", readonly=False)
 
     @api.depends('order_line')
     def _compute_reward_total(self):

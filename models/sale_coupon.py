@@ -39,7 +39,7 @@ class SaleCoupon(models.Model):
         help="The sales order from which coupon is generated")
     sales_order_id = fields.Many2one('sale.order', 'Applied on order', readonly=True,
         help="The sales order on which the coupon is applied")
-    discount_line_product_id = fields.Many2one('product.product', related='program_id.discount_line_product_id',
+    discount_line_product_id = fields.Many2one('product.product', related='program_id.discount_line_product_id', readonly=False,
         help='Product used in the sales order to apply the discount.')
 
     _sql_constraints = [
