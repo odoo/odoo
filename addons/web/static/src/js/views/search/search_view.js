@@ -483,7 +483,7 @@ var SearchView = Widget.extend({
             this.hasFavorites = true;
             return this.favorite_menu.toggle_filter(default_custom_filter, true);
         }
-        if (!_.isEmpty(this.search_defaults)) {
+        if (!_.isEmpty(this.search_defaults) || this.timeRanges) {
             var inputs = this.search_fields.concat(this.filters, this.groupbys);
             var search_defaults = _.invoke(inputs, 'facet_for_defaults', this.search_defaults);
             var defaultTimeRange = this._searchDefaultTimeRange();
