@@ -22,7 +22,7 @@ class Web_Editor(Web_Editor):
             res['website_id'] = website.id
         return res
 
-    def get_custom_attachment(self, custom_url, op='like'):
+    def get_custom_attachment(self, custom_url, op='='):
         website = request.env['website'].get_current_website()
         res = super(Web_Editor, self).get_custom_attachment(custom_url, op=op)
         return res.with_context(website_id=website.id).filtered(lambda x: not x.website_id or x.website_id == website)

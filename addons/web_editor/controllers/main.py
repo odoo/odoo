@@ -452,13 +452,13 @@ class Web_Editor(http.Controller):
         self.get_custom_attachment(custom_url).unlink()
         self.get_custom_view(custom_url).unlink()
 
-    def get_custom_attachment(self, custom_url, op='like'):
-        assert op in ('like', '=like', '='), 'Invalid operator'
+    def get_custom_attachment(self, custom_url, op='='):
+        assert op in ('=like', '='), 'Invalid operator'
         IrAttachment = request.env["ir.attachment"]
         return IrAttachment.search([("url", op, custom_url)])
 
     def get_custom_view(self, custom_url, op='='):
-        assert op in ('like', '=ilike', '='), 'Invalid operator'
+        assert op in ('=like', '='), 'Invalid operator'
         IrUiView = request.env["ir.ui.view"]
         return IrUiView.search([("name", op, custom_url)])
 
