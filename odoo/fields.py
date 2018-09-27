@@ -1760,7 +1760,7 @@ class Binary(Field):
             decoded_value = base64.b64decode(value)
             # Full mimetype detection
             if (guess_mimetype(decoded_value).startswith('image/svg') and
-                    not record.env.user._is_admin()):
+                    not record.env.user._is_system()):
                 raise UserError(_("Only admins can upload SVG files."))
         if isinstance(value, bytes):
             return psycopg2.Binary(value)

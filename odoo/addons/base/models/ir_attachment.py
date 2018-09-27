@@ -255,7 +255,7 @@ class IrAttachment(models.Model):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
         user = self.env.context.get('binary_field_real_user', self.env.user)
-        force_text = (xml_like and (not user._is_admin() or
+        force_text = (xml_like and (not user._is_system() or
             self.env.context.get('attachments_mime_plainxml')))
         if force_text:
             values['mimetype'] = 'text/plain'
