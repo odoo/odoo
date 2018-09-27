@@ -152,6 +152,11 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
      * Returns the list of selected products.
      * The root product is added on top of the list.
      *
+     * @returns {Array} products
+     *   {integer} product_id
+     *   {integer} quantity
+     *   {Array} product_custom_variant_values
+     *   {Array} no_variant_attribute_values
      * @public
      */
     getSelectedProducts: function () {

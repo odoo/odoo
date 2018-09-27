@@ -1486,8 +1486,8 @@ var FieldOne2Many = FieldX2Many.extend({
                     allowWarning: data.allowWarning
                 }).always(function () {
                     self.creatingRecord = false;
-                }).done(function(){
-                    if(data.onSuccess){
+                }).done(function (){
+                    if (data.onSuccess){
                         data.onSuccess();
                     }
                 });
