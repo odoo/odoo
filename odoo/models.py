@@ -519,9 +519,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for base in reversed(cls.__bases__):
             if not getattr(base, 'pool', None):
                 # the following attributes are not taken from model classes
-                if not base._inherit and not base._description:
+                if not base._inherit and not base._description and not base.__doc__:
                     _logger.warning("The model %s has no _description", cls._name)
-                cls._description = base._description or cls._description
+                cls._description = base._description or cls._description or base.__doc__ or cls.__doc__
                 cls._table = base._table or cls._table
                 cls._sequence = base._sequence or cls._sequence
                 cls._log_access = getattr(base, '_log_access', cls._log_access)
