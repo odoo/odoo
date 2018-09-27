@@ -14,6 +14,11 @@ odoo.define('website_form_editor', function (require) {
     options.registry['website_form_editor'] = options.Class.extend({
         xmlDependencies: ['/website_form_editor/static/src/xml/website_form_editor.xml'],
 
+        start: function () {
+            this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
+            this.$target.find('label:not(:has(span)), label span').addClass('o_fake_editable').attr('contentEditable', true);
+        },
+
         // Generic modal code
         build_modal: function (modal_title, modal_body, on_save) {
             var self = this;
@@ -291,9 +296,9 @@ odoo.define('website_form_editor', function (require) {
             }
 
             fetch_field_relation.done(function () {
-                field_rendered.resolve(
-                    qweb.render("website_form_editor.field_" + field.type, {field: field})
-                );
+                var $content = $(qweb.render("website_form_editor.field_" + field.type, {field: field}));
+                $content.find('label:not(:has(span)), label span').addClass('o_fake_editable').attr('contentEditable', true);
+                field_rendered.resolve($content);
             });
 
             return field_rendered;
