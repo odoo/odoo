@@ -186,7 +186,6 @@ class IapAccount(models.Model):
 
     @api.model
     def get_credits(self, service_name):
-        credit = 0
         account = self.get(service_name)
 
         route = '/iap/1/balance'
@@ -197,12 +196,14 @@ class IapAccount(models.Model):
             'account_token': account.account_token,
             'service_name': service_name,
         }
-
-        credit = jsonrpc(url=url, params=params)
-        account.sudo().write({'insufficient_credit': credit == 0})
+        try:
+            credit = jsonrpc(url=url, params=params)
+            account.sudo().write({'insufficient_credit': credit == 0})
+        except Exception as e:
+            _logger.info('Get credit error : %s', str(e))
+            credit = -1
 
         return {
             'credit': credit,
             'url': account.get_credits_url(service_name),
         }
-
