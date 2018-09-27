@@ -314,7 +314,8 @@ class IrQWeb(models.AbstractModel, QWeb):
             edit_translations=False, translatable=False,
             rendering_bundle=True)
 
-        env = self.env(context=options)
+        options['website_id'] = self.env.context.get('website_id')
+        IrQweb = self.env['ir.qweb'].with_context(options)
 
         def can_aggregate(url):
             return not urls.url_parse(url).scheme and not urls.url_parse(url).netloc and not url.startswith('/web/content')
@@ -327,7 +328,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                 from odoo.addons.web.controllers.main import module_boot
                 return json.dumps(module_boot())
             return '[]'
-        template = env['ir.qweb'].render(xmlid, {"get_modules_order": get_modules_order})
+        template = IrQweb.render(xmlid, {"get_modules_order": get_modules_order})
 
         files = []
         remains = []
