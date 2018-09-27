@@ -354,11 +354,16 @@ function formatMonetary(value, field, options) {
  * @param {number | false} value
  * @param {Object} [field]
  * @param {Object} [options]
+ * @param {function} [options.humanReadable] if returns true, parsing is avoided
  * @returns {string}
  */
 function formatPercentage(value, field, options) {
-    value = formatFloat(value * 100, field, options) || '0';
-    return parseFloat(value) + "%";
+    options = options || {};
+    var result = formatFloat(value * 100, field, options) || '0';
+    if (options.humanReadable && options.humanReadable(value * 100)) {
+        return result + "%";
+    }
+    return parseFloat(result) + "%";
 }
 /**
  * Returns a string representing the value of the selection.
