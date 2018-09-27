@@ -412,8 +412,7 @@
                 <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
                     <button type="submit" class="btn btn-primary btn-block">Log in</button>
                     <t t-if="debug">
-                        <em t-attf-class="d-block text-center text-muted small ">- or -</em>
-                        <button type="submit" name="redirect" value="/web/become" class="btn btn-block btn-warning">Log in as superuser</button>
+                        <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
                     </t>
                     <div class="o_login_auth"/>
                 </div>
