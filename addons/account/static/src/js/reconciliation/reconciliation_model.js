@@ -43,7 +43,7 @@ var _t = core._t;
  *      mode: string ('inactive', 'match', 'create')
  *      reconciliation_proposition: {
  *          id: number|string
- *          partial_reconcile: boolean
+ *          partial_amount: number
  *          invalid: boolean - through the invalid line (without account, label...)
  *          is_tax: boolean
  *          account_code: string
@@ -533,24 +533,21 @@ var StatementModel = BasicModel.extend({
         }
         return $.when.apply($, defs);
     },
-    searchBalanceAmount: function (handle) {
+    getPartialReconcileAmount: function(handle, data) {
         var line = this.getLine(handle);
-        var amount = line.balance.amount;
-        var amount_str = _.str.sprintf('%.2f', Math.abs(amount));
-        amount_str = (amount > '0' ? '-' : '+') + amount_str;
-        if (line.balance.currency_id && line.balance.amount_currency) {
-            var amount_currency = line.balance.amount_currency;
-            var amount_currency_str = _.str.sprintf('%.2f', Math.abs(amount_currency));
-            amount_str += '|' + (amount_currency > '0' ? '-' : '+') + amount_currency_str;
+        var prop = _.find(line.reconciliation_proposition, {'id': data.data});
+        if (prop) {
+            var amount = prop.partial_amount || prop.amount;
+            // Check if we can get a partial amount that would directly set balance to zero
+            var partial = Math.abs(line.balance.amount + amount);
+            if (Math.abs(line.balance.amount) >= Math.abs(amount)) {
+                return Math.abs(amount);
+            }
+            if (partial <= Math.abs(prop.amount) && partial >= 0) {
+                return partial
+            }
+            return Math.abs(amount);
         }
-        if (amount_str === line.filter) {
-            line.filter = '';
-            line.offset = 0;
-            return this.changeMode(handle, 'create');
-        }
-        line.filter = amount_str;
-        line.offset = 0;
-        return this.changeMode(handle, 'match');
     },
     /**
      * Force the partial reconciliation to display the reconciliate button.
@@ -558,37 +555,35 @@ var StatementModel = BasicModel.extend({
      * @param {string} handle
      * @returns {Deferred}
      */
-    togglePartialReconcile: function (handle) {
+    partialReconcile: function(handle, data) {
         var line = this.getLine(handle);
-
-        // Retrieve the toggle proposition
-        var selected = _.filter(line.reconciliation_proposition, function(prop){return prop.display_triangle});
-
-        // If no toggled proposition found, reject it
-        if(selected.length != 1)
-            return $.Deferred().reject();
-
-        selected = selected[0];
-
-        // Inverse partial_reconcile value
-        selected.partial_reconcile = !selected.partial_reconcile;
-        if (!selected.partial_reconcile) {
-            return this._computeLine(line);
-        }
-
-        // Compute the write_off
-        var format_options = { currency_id: line.st_line.currency_id };
-        selected.write_off_amount = selected.amount + line.balance.amount;
-        selected.write_off_amount_str = field_utils.format.monetary(Math.abs(selected.write_off_amount), {}, format_options);
-        selected.write_off_amount_str = selected.write_off_amount_str.replace('&nbsp;', ' ');
-
-        return this._computeLine(line).then(function () {
-            if (selected.partial_reconcile) {
-                line.balance.amount = 0;
-                line.balance.type = 1;
-                line.mode = 'inactive';
+        var prop = _.find(line.reconciliation_proposition, {'id' : data.mvLineId});
+        if (prop) {
+            var amount = data.amount;
+            try {
+                amount = field_utils.parse.float(data.amount);
             }
-        });
+            catch (err) {
+                amount = NaN;
+            }
+            // Amount can't be greater than line.amount and can not be negative and must be a number
+            // the amount we receive will be a string, so take sign of previous line amount in consideration in order to put
+            // the amount in the correct left or right column
+            if (amount >= Math.abs(prop.amount) || amount <= 0 || isNaN(amount)) {
+                delete prop.partial_amount_str;
+                delete prop.partial_amount;
+                if (isNaN(amount) || amount < 0) {
+                    this.do_warn(_.str.sprintf(_t('The amount %s is not a valid partial amount'), data.amount));
+                }
+                return this._computeLine(line);
+            }
+            else {
+                var format_options = { currency_id: line.st_line.currency_id };
+                prop.partial_amount = (prop.amount > 0 ? 1 : -1)*amount;
+                prop.partial_amount_str = field_utils.format.monetary(Math.abs(prop.partial_amount), {}, format_options);
+            }
+        }
+        return this._computeLine(line);
     },
     /**
      * Change the value of the editable proposition line or create a new one.
@@ -759,9 +754,6 @@ var StatementModel = BasicModel.extend({
         }
 
         line.reconciliation_proposition.push(prop);
-        _.each(line.reconciliation_proposition, function (prop) {
-            prop.partial_reconcile = false;
-        });
     },
     /**
      * stop the editable proposition line and remove it if it's invalid then
@@ -830,6 +822,9 @@ var StatementModel = BasicModel.extend({
                 }
                 return;
             }
+            if (!prop.already_paid && parseInt(prop.id)) {
+                prop.is_move_line = true;
+            }
             reconciliation_proposition.push(prop);
 
             if (prop.tax_id && prop.__tax_to_recompute && prop.base_amount) {
@@ -891,7 +886,7 @@ var StatementModel = BasicModel.extend({
 
             _.each(reconciliation_proposition, function (prop) {
                 if (!prop.invalid) {
-                    total -= prop.amount;
+                    total -= prop.partial_amount || prop.amount;
                     if (isOtherCurrencyId) {
                         amount_currency -= (prop.amount < 0 ? -1 : 1) * Math.abs(prop.amount_currency);
                     }
@@ -915,6 +910,7 @@ var StatementModel = BasicModel.extend({
                 }) : false,
                 account_code: self.accounts[line.st_line.open_balance_account_id],
             };
+            line.balance.show_balance = line.balance.amount_currency != 0;
             line.balance.type = line.balance.amount_currency ? (line.st_line.partner_id ? 0 : -1) : 1;
         });
     },
@@ -1168,7 +1164,7 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var excluded_ids = _.compact(_.flatten(_.map(this.lines, function (line) {
             return _.map(line.reconciliation_proposition, function (prop) {
-                return !prop.partial_reconcile && _.isNumber(prop.id) ? prop.id : null;
+                return _.isNumber(prop.id) ? prop.id : null;
             });
         })));
         var filter = line.filter || "";
@@ -1200,8 +1196,8 @@ var StatementModel = BasicModel.extend({
      */
     _formatToProcessReconciliation: function (line, prop) {
         var amount = -prop.amount;
-        if (prop.partial_reconcile === true) {
-            amount = -prop.write_off_amount;
+        if (prop.partial_amount) {
+            amount = -prop.partial_amount;
         }
 
         var result = {
@@ -1459,6 +1455,9 @@ var ManualModel = StatementModel.extend({
     _computeLine: function (line) {
         return this._super(line).then(function () {
             var props = _.reject(line.reconciliation_proposition, 'invalid');
+            _.each(line.reconciliation_proposition, function(p) {
+                delete p.is_move_line;
+            });
             line.balance.type = -1;
             if (!line.balance.amount_currency && props.length) {
                 line.balance.type = 1;
@@ -1564,7 +1563,7 @@ var ManualModel = StatementModel.extend({
         var line = this.getLine(handle);
         var excluded_ids = _.compact(_.flatten(_.map(this.lines, function (line) {
             return _.map(line.reconciliation_proposition, function (prop) {
-                return !prop.partial_reconcile && _.isNumber(prop.id) ? prop.id : null;
+                return _.isNumber(prop.id) ? prop.id : null;
             });
         })));
         var filter = line.filter || "";

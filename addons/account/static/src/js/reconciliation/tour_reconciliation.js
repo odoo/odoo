@@ -27,7 +27,21 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "click on partial reconcile",
-            trigger: '.o_reconciliation_line:last .accounting_view .do_partial_reconcile_true'
+            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount',
+        },
+        {
+            content: "Edit amount",
+            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount_input:not(.d-none)',
+            run: 'text 2000'
+        },
+        {
+            content: "Press enter to validate amount",
+            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount_input:not(.d-none)',
+            run: 'keydown 13'
+        },
+        {
+            content: "Check that amount has changed",
+            trigger: '.o_reconciliation_line:last .accounting_view .line_amount:contains("2,000.00")'
         },
         {
             content: "reconcile the line",

@@ -58,14 +58,17 @@
             border-right: 1px solid #333;
             padding-right: 5px;
         }
-        .do_partial_reconcile_true {
-            color: $o-community-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
-            padding-right: 5px;
+        .edit_amount {
+            margin-left: 20px;
+            color: #bbb;
         }
-        .do_partial_reconcile_false {
-            color: #f0eeee;
-            padding-right: 5px;
+        .cell:hover .edit_amount {
+            color: #00A09D;
         }
+        .strike_amount {
+            text-decoration: line-through;
+        }
+
     }
 
     .o_multi_currency {

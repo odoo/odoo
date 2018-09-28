@@ -423,11 +423,11 @@ var mv_lines = {
     '[6,"",0,5]': [
         {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 376.00", 'partner_id': 7, 'account_name': "Bank", 'name': "BNK1/2017/0002: SUPP.OUT/2017/0002", 'partner_name': "ASUSTeK", 'total_amount_currency_str': "", 'id': 392, 'credit': 376.0, 'journal_id': "Bank", 'amount_str': "$ 376.00", 'debit': 0.0, 'account_code': "101401", 'ref': "BILL/2017/0003", 'already_paid': true},
         {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 100.00", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 394, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
+        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false},
         {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 525.50", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0004: CUST.IN/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 396, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 525.50", 'debit': 525.5, 'account_code': "101401", 'ref': "INV/2017/0003", 'already_paid': true},
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 109, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-22", 'date': "2017-01-23", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 399, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 4,610.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 106, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 4,610.00", 'debit': 4610.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
-                {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false},
         {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-15", 'total_amount_str': "$ 5,749.99", 'partner_id': 7, 'account_name': "Account Payable", 'name': "BILL/2017/0002", 'partner_name': "ASUSTeK", 'total_amount_currency_str': "", 'id': 117, 'credit': 5749.99, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 5,749.99", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false}
     ],
     '[6,"",5,5]': [
@@ -689,12 +689,12 @@ QUnit.module('account', {
 
         clientAction.widgets[1].$('.accounting_view thead td:first').trigger('click');
         assert.containsN(clientAction.widgets[1], '.mv_line', 5, "should display 5 account move lines");
-        assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_right:contains(".")').length, 4, "should display only the credit account move lines (hide the debit)");
+        assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_right:contains(".")').length, 3, "should display only the credit account move lines (hide the debit)");
         assert.containsN(clientAction.widgets[1], '.mv_line.already_reconciled', 3, "should display 3 already reconciled account move lines");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line').text().replace(/[\n\r\s]+/g, ' '),
-            " 101401 2017-01-23 ASUSTeK: BNK1/2017/0002: SUPP.OUT/2017/0002 : BILL/2017/0003 $ 376.00 101401 2017-01-23 Agrolait: BNK1/2017/0003: CUST.IN/2017/0001 $ 100.00 101401 2017-01-23 Agrolait: BNK1/2017/0004: CUST.IN/2017/0002 : INV/2017/0003 $ 525.50 101200 2017-02-07 Agrolait: INV/2017/0002 $ 650.00 101200 2017-02-22 Agrolait: INV/2017/0004 $ 525.00 ",
+            " 101401 2017-01-23 ASUSTeK: BNK1/2017/0002: SUPP.OUT/2017/0002 : BILL/2017/0003 $ 376.00 101401 2017-01-23 Agrolait: BNK1/2017/0003: CUST.IN/2017/0001 $ 100.00 111100 2017-02-28 Camptocamp: BILL/2017/0001 $ 10,000.00 101401 2017-01-23 Agrolait: BNK1/2017/0004: CUST.IN/2017/0002 : INV/2017/0003 $ 525.50 101200 2017-02-07 Agrolait: INV/2017/0002 $ 650.00 ",
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
-        assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_left:contains(".")').length, 1, "should display only 1 debit account move lines");
+        assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_left:contains(".")').length, 2, "should display only 2 debit account move lines");
 
         // load more
         assert.ok(clientAction.widgets[1].$('.match div.load-more a:visible').length, "should display the 'load more' button");
@@ -846,7 +846,7 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation partial', function (assert) {
-        assert.expect(10);
+        assert.expect(9);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.mock.addMockEnvironment(clientAction, {
@@ -855,12 +855,19 @@ QUnit.module('account', {
                 console.log(args.method);
                 if (args.method === 'process_bank_statement_line') {
                     var lines = args.args['1'];
+                    console.log(args.arsg);
                     assert.deepEqual(args.args, [
                         [6],
                         [{
                             partner_id: lines.length == 1 ? lines[0].partner_id : false,
-                            counterpart_aml_dicts:[],
-                            payment_aml_ids: [392],
+                            counterpart_aml_dicts:[{
+                              "analytic_tag_ids": [[6, null, []]],
+                              "counterpart_aml_id": 114,
+                              "credit": 0,
+                              "debit": 32.58,
+                              "name": "BILL/2017/0001"
+                            }],
+                            payment_aml_ids: [],
                             new_aml_dicts: [],
                         }]
                     ], "should call process_bank_statement_line with partial reconcile values");
@@ -883,26 +890,29 @@ QUnit.module('account', {
         var widget = clientAction.widgets[0];
 
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.notOk( widget.$('.cell_right .line_info_button').length, "should not display the partial reconciliation alert");
+        assert.equal( widget.$('.cell_right .edit_amount').length, 1, "should display the edition pencil");
 
         widget = clientAction.widgets[1];
 
-        assert.notOk( widget.$('.cell_left .line_info_button').length, "should not display the partial reconciliation alert");
         widget.$('.accounting_view thead td:first').trigger('click');
-        widget.$('.match .cell_account_code:first').trigger('click');
-        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
+        assert.strictEqual(widget.$('.match .mv_line[data-line-id=114] .cell_account_code:first()').length, 1, 'Should have line')
+        widget.$('.match .mv_line[data-line-id=114] .cell_account_code').trigger('click');
+
+        assert.equal( widget.$('.accounting_view tbody .cell_left .edit_amount').length, 1, "should display the edition pencil");
 
         // The partner has been set automatically, remove it.
         widget.$('.o_input_dropdown input').trigger('click');
         widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
 
-        assert.containsNone(widget, 'button.btn-primary:visible', "should display the reconcile model buttons");
-        assert.containsOnce(widget, '.text-danger:visible', "should display counterpart alert");
-        widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
-        assert.containsOnce(widget, '.accounting_view .cell_left .line_info_button', "should display a partial reconciliation alert");
-        assert.doesNotHaveClass(widget.$('.accounting_view .cell_left .line_info_button'), 'do_partial_reconcile_true', "should display the partial reconciliation information");
-        assert.containsOnce(widget, 'button.btn-primary:visible', "should display the reconcile button");
-        assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
+        assert.strictEqual(widget.$('button.btn-primary:visible').length, 0, "should display the reconcile model buttons");
+        assert.strictEqual(widget.$('.text-danger:visible').length, 1, "should display counterpart alert");
+        widget.$('.accounting_view .cell_left .edit_amount').trigger('click');
+        assert.strictEqual(widget.$('.accounting_view .cell_left .edit_amount_input:not(.d-none)').length, 1, "should display the input field to edit amount");
+        // Edit amount
+        widget.$('.accounting_view .cell_left .edit_amount_input:not(.d-none)').val('32.58').trigger('blur');
+        assert.strictEqual(widget.$('.accounting_view .cell_left .line_amount').text().replace(/[\n\r\s]+/g, ' '), " $ 10000.00 $ 32.58 ", "should display previous amount and new amount")
+
+        assert.strictEqual(widget.$('button.btn-primary:visible').length, 1, "should display the reconcile button");
         widget.$('button.btn-primary:visible').trigger('click');
 
         clientAction.destroy();
@@ -1320,7 +1330,7 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation: Payment < inv1 + inv2(partial)', function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         /*
          * One payment: $1175
@@ -1383,17 +1393,15 @@ QUnit.module('account', {
 
         // Add first invoice to reconcile fully
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.notOk( widget.$('.cell_right .line_info_button').length,
-            "should not display the partial reconciliation alert");
+        assert.ok( widget.$('.cell_right .edit_amount').length,
+            "should display the pencil to edit amount");
 
         // Add second invoice to reconcile partially
         widget.$('.match .cell_account_code:first').trigger('click');
-        var $reconciliationAlert = widget.$('.cell_right .line_info_button');
 
-        assert.ok($reconciliationAlert.length,
-            "should display the partial reconciliation alert");
-
-        testUtils.dom.click($reconciliationAlert);
+        // Edit amount on last invoice
+        testUtils.dom.click(widget.$('.edit_amount:last()'));
+        widget.$('.edit_amount_input:last()').val('525').trigger('blur');
 
         var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
 
@@ -1484,13 +1492,13 @@ QUnit.module('account', {
         // Add first invoice
         // There should be the opportunity to reconcile partially
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.ok(widget.$('.cell_right .line_info_button').length,
-            "should display the partial reconciliation alert");
+        assert.ok(widget.$('.cell_right .edit_amount').length,
+            "should display the pencil to edit amount");
 
         // Add second invoice
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.notOk(widget.$('.cell_right .line_info_button').length,
-            "should not display the partial reconciliation alert");
+        assert.ok(widget.$('.cell_right .edit_amount').length,
+            "should display the pencil to edit amount");
 
         var writeOffCreate = widget.$('div.create');
 
@@ -1509,6 +1517,103 @@ QUnit.module('account', {
             'The reconcile button must be visible');
 
         testUtils.dom.click($buttonReconcile);
+
+        clientAction.destroy();
+    });
+
+    QUnit.test('Reconciliation: partial payment of 2 invoices with one payment', function (assert) {
+        assert.expect(4);
+
+        /*
+         * One payment: $1175
+         * Two Invoices as Inv1 = 1200; Inv2 = 1200:
+         * Payment < Inv1 AND Payment < Inv2
+         * Assign 500 to inv1 and 675 to inv2
+         */
+
+        // modify the invoice line to have their amount > payment
+        var indexInv1 = _.findIndex(this.params.mv_lines['[5,"",0,5]'], function (line) {return line.id === 109});
+        this.params.mv_lines['[5,"",0,5]'][indexInv1] =
+            {account_type: "receivable", amount_currency_str: "", currency_id: false, date_maturity: "2017-02-07", date: "2017-01-08",
+             total_amount_str: "$ 1200.00", partner_id: 8, account_name: "101200 Account Receivable", name: "INV/2017/0002", partner_name: "Agrolait",
+             total_amount_currency_str: "", id: 109, credit: 0.0, journal_id: [1, "Customer Invoices"], amount_str: "$ 1200.00", debit: 1200.0,
+             account_code: "101200", ref: "", already_paid: false};
+
+        var indexInv2 = _.findIndex(this.params.mv_lines['[5,"",0,5]'], function (line) {return line.id === 112});
+        this.params.mv_lines['[5,"",0,5]'][indexInv2] =
+            {account_type: "receivable", amount_currency_str: "", currency_id: false, date_maturity: "2017-02-07", date: "2017-01-08",
+             total_amount_str: "$ 1200.00", partner_id: 8, account_name: "101200 Account Receivable", name: "INV/2017/0003",
+             partner_name: "Agrolait", total_amount_currency_str: "", id: 112, credit: 0.0, journal_id: [1, "Customer Invoices"],
+             amount_str: "$ 1200.00", debit: 1200.0, account_code: "101200", ref: "", already_paid: false};
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'process_bank_statement_line') {
+                    assert.deepEqual(args.args,
+                        [
+                            [5], // Id of the bank statement line
+
+                            [{counterpart_aml_dicts:
+                                [{name:"INV/2017/0002",
+                                  debit: 0,
+                                  credit: 500,
+                                  analytic_tag_ids: [[6, null, []]],
+                                  counterpart_aml_id: 109},
+
+                                 {name: "INV/2017/0003",
+                                  debit: 0,
+                                  credit: 675,
+                                  analytic_tag_ids: [[6, null, []]],
+                                  counterpart_aml_id: 112}],
+
+                              payment_aml_ids: [],
+                              partner_id: 8,
+                              new_aml_dicts: []
+                          }]
+                        ], "should call process_bank_statement_line with correct counterpart_aml_dicts");
+                }
+                return this._super(route, args);
+            },
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+        clientAction.appendTo($('#qunit-fixture'));
+
+        // The first reconciliation "line" is where it happens
+        var widget = clientAction.widgets[0];
+
+        // Add first invoice
+        // There should be the opportunity to reconcile partially
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.ok(widget.$('.cell_right .edit_amount').length,
+            "should display the pencil to edit amount");
+
+        // Add second invoice
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.ok(widget.$('.cell_right .edit_amount').length,
+            "should display the pencil to edit amount");
+
+        // Edit invoice first amount
+        widget.$('.edit_amount:first()').trigger('click');
+        widget.$('.edit_amount_input:first()').val('500').trigger('blur');
+        // Edit invoice second amount
+        var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
+        widget.$('.edit_amount:last()').trigger('click');
+        widget.$('.edit_amount_input:last()').val('675').trigger('blur');
+
+        assert.equal($buttonReconcile.length, 1,
+            'The reconcile button must be visible');
+
+        $buttonReconcile.click();
 
         clientAction.destroy();
     });
@@ -1559,7 +1664,7 @@ QUnit.module('account', {
 
         // Add first prop
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.equal( widget.$('.cell_right .line_info_button').length, 1, "should display the partial reconciliation alert");
+        assert.equal( widget.$('.cell_right .edit_amount').length, 0, "should not display the pencil to edit amount");
 
         // Add second prop
         widget.$('.match .cell_account_code:first').trigger('click');
