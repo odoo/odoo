@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields
 
 from odoo.tests import common
-from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
+from odoo.addons.project_timesheet.tests.test_timesheet import TestCommonTimesheet
 
 
 class TestTimesheetHolidaysCreate(common.TransactionCase):

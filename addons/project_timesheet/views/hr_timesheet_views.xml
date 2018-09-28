@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="timesheet_view_tree" model="ir.ui.view">
+        <field name="name">timesheet.line.view.tree.project</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="attributes">
+            	<attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="after">
+                <field name="project_id" required="1"/>
+                <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="timesheet_view_form" model="ir.ui.view">
+        <field name="name">timesheet.line.view.form.project</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="attributes">
+            	<attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="after">
+                <field name="project_id" required="1"/>
+                <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+            </xpath>
+        </field>
+    </record>
+
+	<record id="timesheet_view_search" model="ir.ui.view">
+        <field name="name">timesheet.line.view.search.project</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='groupby_employee']" position="after">
+            	<filter string="Project" name="groupby_project" domain="[]" context="{'group_by':'project_id'}"/>
+                <filter string="Task" name="groupby_task" domain="[]" context="{'group_by':'task_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="project_id"/>
+                <field name="task_id"/>
+            </xpath>
+        </field>
+    </record>
+
+	<record id="timesheet_view_kanban" model="ir.ui.view">
+        <field name="name">timesheet.line.view.kanban.project</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('col-10')]/div[hasclass('text-muted')]" position="before">
+                <div>
+                    <strong><t t-esc="record.project_id.value"/></strong>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+ 	<record id="hr_timesheet.timesheet_action_all" model="ir.actions.act_window">
+        <field name="res_model">account.analytic.line</field>
+        <field name="context">{
+            'search_default_week':1,
+            'search_default_groupby_employee':1,
+            'search_default_groupby_project':1,
+            'search_default_groupby_task':1,
+            'default_is_timesheet': 1,
+        }</field>
+    </record>
+
+</odoo>

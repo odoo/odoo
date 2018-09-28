@@ -31,6 +31,10 @@ class Project(models.Model):
             if project.allow_timesheets and not project.analytic_account_id:
                 raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.' % (project.name,)))
 
+    # ---------------------------------------------------------
+    # CRUD and ORM Methods
+    # ---------------------------------------------------------
+
     @api.model
     def name_create(self, name):
         """ Create a project with name_create should generate analytic account creation """
@@ -76,6 +80,10 @@ class Project(models.Model):
         result = super(Project, self).unlink()
         analytic_accounts_to_delete.unlink()
         return result
+
+    # ---------------------------------------------------------
+    # Business Methods
+    # ---------------------------------------------------------
 
     @api.model
     def _init_data_analytic_account(self):
