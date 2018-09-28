@@ -601,11 +601,11 @@ class IrServerObjectLines(models.Model):
                                             "When Formula type is selected, this field may be a Python expression "
                                             " that can use the same values as for the code field on the server action.\n"
                                             "If Value type is selected, the value will be used directly without evaluation.")
-    type = fields.Selection([
+    evaluation_type = fields.Selection([
         ('value', 'Value'),
         ('reference', 'Reference'),
         ('equation', 'Python expression')
-    ], 'Evaluation Type', default='value', required=True, change_default=True)
+    ], 'Evaluation Type', default='value', required=True, change_default=True, oldname='type')
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model',
         compute='_compute_resource_ref', inverse='_set_resource_ref')
@@ -615,10 +615,10 @@ class IrServerObjectLines(models.Model):
         models = self.env['ir.model'].search([])
         return [(model.model, model.name) for model in models]
 
-    @api.depends('col1.relation', 'value', 'type')
+    @api.depends('col1.relation', 'value', 'evaluation_type')
     def _compute_resource_ref(self):
         for line in self:
-            if line.type in ['reference', 'value'] and line.col1 and line.col1.relation:
+            if line.evaluation_type in ['reference', 'value'] and line.col1 and line.col1.relation:
                 value = line.value or ''
                 try:
                     value = int(value)
@@ -634,7 +634,7 @@ class IrServerObjectLines(models.Model):
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
-        for line in self.filtered(lambda line: line.type == 'reference'):
+        for line in self.filtered(lambda line: line.evaluation_type == 'reference'):
             if line.resource_ref:
                 line.value = str(line.resource_ref.id)
 
@@ -643,7 +643,7 @@ class IrServerObjectLines(models.Model):
         result = dict.fromkeys(self.ids, False)
         for line in self:
             expr = line.value
-            if line.type == 'equation':
+            if line.evaluation_type == 'equation':
                 expr = safe_eval(line.value, eval_context)
             elif line.col1.ttype in ['many2one', 'integer']:
                 try:
