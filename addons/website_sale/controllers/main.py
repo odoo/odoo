@@ -398,7 +398,7 @@ class WebsiteSale(ProductConfiguratorController):
             product_id=int(product_id),
             add_qty=add_qty,
             set_qty=set_qty,
-            product_custom_attribute_values=json.loads(kw.get('product_custom_attribute_values'))
+            product_custom_attribute_values=json.loads(kw.get('product_custom_attribute_values', '{}'))
         )
         return request.redirect("/shop/cart")
 
