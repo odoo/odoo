@@ -169,16 +169,11 @@ tour.register('shop_sale_coupon', {
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */
         {
             content: "go to checkout",
-            trigger: 'a[href="/shop/checkout"]',
-        },
-        {
-            content: "Confirm checkout",
-            extra_trigger: "div.all_shipping .panel",
-            trigger: 'a[href="/shop/confirm_order"]',
+            trigger: 'a[href="/shop/checkout?express=1"]',
         },
         {
             content: "check total is unchanged",
-            trigger: '.oe_currency_value:contains("967.50")',
+            trigger: 'tr#order_total .oe_currency_value:contains("967.50")',
             run: function () {}, // it's a check
         },
     ]
