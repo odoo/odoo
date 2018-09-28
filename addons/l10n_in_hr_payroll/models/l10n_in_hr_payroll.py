@@ -30,6 +30,7 @@ class HrPayrollAdvice(models.Model):
     Bank Advice
     '''
     _name = 'hr.payroll.advice'
+    _description = "Indian HR Payroll Advice"
 
     def _get_default_date(self):
         return fields.Date.from_string(fields.Date.today())
