@@ -147,7 +147,7 @@ class CustomerPortal(CustomerPortal):
             return request.redirect('/my')
 
         if report_type in ('html', 'pdf', 'text'):
-            return self._show_report(model=order_sudo, report_type=report_type, report_ref='sale.report_web_quote', download=download)
+            return self._show_report(model=order_sudo, report_type=report_type, report_ref='sale.action_report_saleorder', download=download)
 
         # use sudo to allow accessing/viewing orders for public user
         # only if he knows the private token

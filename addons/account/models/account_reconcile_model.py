@@ -178,7 +178,10 @@ class AccountReconcileModel(models.Model):
         total_residual = move_lines and sum(aml.currency_id and aml.amount_residual_currency or aml.amount_residual for aml in move_lines) or 0.0
         balance = line_residual - total_residual
 
-        if not self.account_id or float_is_zero(balance, precision_rounding=line_currency.rounding) or balance < 0:
+        if not self.account_id\
+            or float_is_zero(balance, precision_rounding=line_currency.rounding)\
+            or (st_line.amount > 0 and balance < 0)\
+            or (st_line.amount < 0 and balance > 0):
             return []
 
         line_balance = self.amount_type == 'percentage' and balance * (self.amount / 100.0) or self.amount
