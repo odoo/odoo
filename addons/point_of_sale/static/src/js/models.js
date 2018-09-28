@@ -2333,13 +2333,11 @@ exports.Order = Backbone.Model.extend({
                 line[prop] = options.extras[prop];
             }
         }
-
-        var to_merge_orderline;
-        for (var i = 0; i < this.orderlines.length; i++) {
-            if(this.orderlines.at(i).can_be_merged_with(line) && options.merge !== false){
-                to_merge_orderline = this.orderlines.at(i);
-            }
-        }
+	    
+	var to_merge_orderline =
+            _.find(this.get_orderlines().slice(0).reverse(), function(l){
+              return l && l.can_be_merged_with(line) && options.merge !== false;
+        });
         if (to_merge_orderline){
             to_merge_orderline.merge(line);
             this.select_orderline(to_merge_orderline);
