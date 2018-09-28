@@ -159,23 +159,8 @@ class Website(models.Model):
                                                             ('key', '=', standard_homepage.key)])
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
-        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
-        if default_menu:
-            self.copy_menu_hierarchy(default_menu)
-        else:
-            top_menu = self.env['website.menu'].create({
-                'name': _('Top Menu for website %s') % self.id,
-                'website_id': self.id,
-                'sequence': 0,
-            })
-            self.menu_id = top_menu.id
-            self.env['website.menu'].create({
-                'name': _('Home'),
-                'url': '/',
-                'website_id': self.id,
-                'parent_id': top_menu.id,
-                'sequence': 10,
-            })
+        default_menu = self.env.ref('website.main_menu')
+        self.copy_menu_hierarchy(default_menu)
 
     @api.model
     def copy_menu_hierarchy(self, top_menu):
@@ -404,7 +389,6 @@ class Website(models.Model):
             })
 
         return dependencies
-
 
     # ----------------------------------------------------------
     # Languages

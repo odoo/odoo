@@ -59,9 +59,3 @@ class TestMenu(common.TransactionCase):
         total_menus = Menu.search_count([])
         Website.create({'name': 'new website'})
         self.assertEqual(total_menus + 4, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Contactus/Sub Default Menu)")
-
-        # Even if default menu was deleted
-        self.env.ref('website.main_menu').unlink()
-        total_menus = Menu.search_count([])
-        Website.create({'name': 'new website 2'})
-        self.assertEqual(total_menus + 2, Menu.search_count([]), "If default menu got deleted, new website still should have a container menu and a home menu")
