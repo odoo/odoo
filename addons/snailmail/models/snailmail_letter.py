@@ -157,16 +157,15 @@ class SnailmailLetter(models.Model):
                 }
             }
             # Specific to each case:
-            # If we are estimating the price: batch: 1 obj = 1 page else: we generate the attachment to have the exact price.
+            # If we are estimating the price: 1 object = 1 page
             # If we are printing -> attach the pdf
-            if route == 'estimate' and batch:
+            if route == 'estimate':
                 document.update(pages=1)
             else:
                 # adding the web logo from the company for future possible customization
-                if route == 'print':
-                    document.update({
-                        'company_logo': letter.company_id.logo_web,
-                    })
+                document.update({
+                    'company_logo': letter.company_id.logo_web,
+                })
                 attachment = letter._fetch_attachment()
                 if attachment:
                     document.update({
@@ -179,7 +178,7 @@ class SnailmailLetter(models.Model):
                         'state': 'error',
                         })
                     continue
-                if letter.report_template == self.env.ref('l10n_de.external_layout_din5008', False):
+                if letter.company_id.external_report_layout_id == self.env.ref('l10n_de.external_layout_din5008', False):
                     document.update({
                         'rightaddress': 0,
                     })
