@@ -87,6 +87,7 @@ class Website(models.Model):
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_googleplus = fields.Char('Google+ Account', default=_default_social_googleplus)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
+    social_default_image = fields.Binary(string="Default Social Share Image", attachment=True, help="If set, replaces the company logo as the default social share image.")
 
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
@@ -703,19 +704,23 @@ class SeoMetadata(models.AbstractModel):
         title = (request.website or company).name
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
+        if request.website.social_default_image:
+            img = '/web/image/website/%s/social_default_image' % request.website.id
+        else:
+            img = '/web/image/res.company/%s/logo' % company.id
         # Default meta for OpenGraph
         default_opengraph = {
             'og:type': 'website',
             'og:title': title,
             'og:site_name': company.name,
             'og:url': request.httprequest.url,
-            'og:image': '/web/image/res.company/%s/logo' % company.id,
+            'og:image': img,
         }
         # Default meta for Twitter
         default_twitter = {
             'twitter:card': 'summary_large_image',
             'twitter:title': title,
-            'twitter:image': '/web/image/res.company/%s/logo' % company.id,
+            'twitter:image': img + '/300x300',
         }
         if company.social_twitter:
             default_twitter['twitter:site'] = "@%s" % company.social_twitter.split('/')[-1]
