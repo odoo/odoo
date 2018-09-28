@@ -111,7 +111,8 @@ class ResPartner(models.Model):
                 #set the address fields
                 for field, value in partner_address.items():
                     partner[field] = value
-                    non_set_address_fields.remove(field)
+                    if field in non_set_address_fields:
+                        non_set_address_fields.remove(field)
                 for field in non_set_address_fields:
                     if partner[field]:
                         partner[field] = False
