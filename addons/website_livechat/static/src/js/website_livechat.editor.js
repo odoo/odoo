@@ -4,7 +4,6 @@ odoo.define('website_livechat.editor', function (require) {
 var core = require('web.core');
 var wUtils = require('website.utils');
 var WebsiteNewMenu = require('website.newMenu');
-var weContext = require('web_editor.context');
 
 var _t = core._t;
 
@@ -36,7 +35,6 @@ WebsiteNewMenu.include({
             return self._rpc({
                 model: 'im_livechat.channel',
                 method: 'create_and_get_website_url',
-                context: weContext.get(),
                 args: [[]],
                 kwargs: {
                     name: name,

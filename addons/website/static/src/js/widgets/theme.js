@@ -5,7 +5,6 @@ var config = require('web.config');
 var core = require('web.core');
 var ColorpickerDialog = require('web.colorpicker');
 var Dialog = require('web.Dialog');
-var weContext = require('web_editor.context');
 var widgets = require('web_editor.widget');
 var websiteNavbarData = require('website.navbar');
 
@@ -44,7 +43,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             templateDef = this._rpc({
                 model: 'ir.ui.view',
                 method: 'read_template',
-                args: ['website.theme_customize', weContext.get()],
+                args: ['website.theme_customize'],
             }).then(function (data) {
                 return core.qweb.add_template(data);
             });
@@ -313,7 +312,6 @@ var ThemeCustomizeDialog = Dialog.extend({
                         data[1],
                         '#wrapwrap { background-image: url("' + src + '"); }',
                         '//style',
-                        weContext.get(),
                     ],
                 });
             }).then(function () {

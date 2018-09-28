@@ -5,7 +5,6 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var QWeb = core.qweb;
 var WebsiteNewMenu = require('website.newMenu');
-var weContext = require('web_editor.context');
 
 var _t = core._t;
 
@@ -33,7 +32,6 @@ WebsiteNewMenu.include({
         return this._rpc({
             model: 'slide.channel',
             method: 'list_all',
-            context: weContext.get(),
             args: [[]],
         }).then(function (data) {
             var def = $.Deferred();

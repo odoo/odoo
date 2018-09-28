@@ -7,6 +7,7 @@ var core = require('web.core');
 var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
+var weContext = require('web_editor.context');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -51,6 +52,7 @@ if (!$('.o_website_links_create_tracked_url').length) {
             return rpc.query({
                     model: this.obj,
                     method: 'search_read',
+                    context: weContext.get(), // TODO use this._rpc
                 })
                 .then(function (result) {
                     return _.map(result, function (val) {
@@ -75,6 +77,7 @@ if (!$('.o_website_links_create_tracked_url').length) {
                     model: this.obj,
                     method: 'create',
                     args: [{name:name}],
+                    context: weContext.get(), // TODO use this._rpc
                 })
                 .then(function (record) {
                     self.element.attr('value', record);

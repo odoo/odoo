@@ -2,7 +2,6 @@ odoo.define('website_blog.new_blog_post', function (require) {
 'use strict';
 
 var core = require('web.core');
-var weContext = require('web_editor.context');
 var wUtils = require('website.utils');
 var WebsiteNewMenu = require('website.newMenu');
 
@@ -28,7 +27,6 @@ WebsiteNewMenu.include({
         return this._rpc({
             model: 'blog.blog',
             method: 'name_search',
-            context: weContext.get(),
         }).then(function (blog_ids) {
             if (blog_ids.length === 1) {
                 document.location = '/blog/' + blog_ids[0][0] + '/post/new';
