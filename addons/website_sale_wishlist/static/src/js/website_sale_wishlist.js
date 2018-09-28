@@ -3,17 +3,22 @@ odoo.define('website_sale_wishlist.wishlist', function (require) {
 
 var sAnimations = require('website.content.snippets.animation');
 var wSaleUtils = require('website_sale.utils');
+var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 
-sAnimations.registry.ProductWishlist = sAnimations.Class.extend({
+// ProductConfiguratorMixin events are overridden on purpose here
+// to avoid registering them more than once since they are already registered
+// in website_sale.js
+sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfiguratorMixin, {
     selector: '.oe_website_sale',
     read_events: {
         'click #my_wish': '_onClickMyWish',
         'click .o_add_wishlist, .o_add_wishlist_dyn': '_onClickAddWish',
-        'change input.js_variant_change, select.js_variant_change, ul[data-attribute_exclusions]': '_onChangeVariant',
+        'change input.product_id': '_onChangeVariant',
         'change input.js_product_change': '_onChangeProduct',
         'click .wishlist-section .o_wish_rm': '_onClickWishRemove',
         'click .wishlist-section .o_wish_add': '_onClickWishAdd',
     },
+    events: sAnimations.Class.events,
 
     start: function () {
         var self = this;
@@ -48,23 +53,40 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend({
      */
     _addNewProducts: function ($el) {
         var self = this;
-        var productID = parseInt($el.data('product-product-id'), 10);
-        if (!productID && $el.hasClass('o_add_wishlist_dyn')) {
-            productID = parseInt($el.parent().find('.product_id').val());
+        var productID = $el.data('product-product-id');
+        if ($el.hasClass('o_add_wishlist_dyn')) {
+            // TODO awa: create product if it does not exist (yet)
+            productID = $el.parent().find('.product_id').val();
+            if (!productID) { // case List View Variants
+                productID = $el.parent().find('input:checked').first().val();
+            }
+            productID = parseInt(productID, 10);
         }
-        if (productID && !_.contains(self.wishlistProductIDs, productID)) {
-            return this._rpc({
-                route: '/shop/wishlist/add',
-                params: {
-                    product_id: productID,
-                },
-            }).then(function () {
-                self.wishlistProductIDs.push(productID);
-                self._updateWishlistView();
-                wSaleUtils.animateClone($('#my_wish'), $el.closest('form'), 25, 40);
-                $el.prop("disabled", true).addClass('disabled');
-            });
-        }
+
+        var productReady = this.selectOrCreateProduct(
+            $el.closest('form'),
+            productID,
+            $el.closest('form').find('.product_template_id').val(),
+            false
+        );
+
+        productReady.done(function (productId) {
+            productId = parseInt(productId, 10);
+
+            if (productId && !_.contains(self.wishlistProductIDs, productId)) {
+                return self._rpc({
+                    route: '/shop/wishlist/add',
+                    params: {
+                        product_id: productId,
+                    },
+                }).then(function () {
+                    self.wishlistProductIDs.push(productId);
+                    self._updateWishlistView();
+                    wSaleUtils.animateClone($('#my_wish'), $el.closest('form'), 25, 40);
+                    $el.prop("disabled", true).addClass('disabled');
+                });
+            }
+        });
     },
     /**
      * @private
@@ -175,16 +197,15 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend({
      * @param {Event} ev
      */
     _onChangeVariant: function (ev) {
-        var $ul = $(ev.target).closest('.js_add_cart_variants');
-        var $parent = $ul.closest('.js_product');
-        var $productID = $parent.find('.product_id').first();
+        var $input = $(ev.target);
+        var $parent = $input.closest('.js_product');
         var $el = $parent.find("[data-action='o_wishlist']");
-        if (!_.contains(this.wishlistProductIDs, parseInt($productID.val(), 10))) {
+        if (!_.contains(this.wishlistProductIDs, parseInt($input.val(), 10))) {
             $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
         } else {
             $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
         }
-        $el.data('product-product-id', parseInt($productID.val(), 10));
+        $el.data('product-product-id', parseInt($input.val(), 10));
     },
     /**
      * @private
