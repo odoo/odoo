@@ -110,7 +110,7 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(lambda x: not x.is_reward_line or x.product_id in free_reward_product)
 
     def _get_reward_values_discount_fixed_amount(self, program):
-        total_amount = sum(self.order_line.filtered(lambda line: not line.is_reward_line).mapped('price_total'))
+        total_amount = sum(self._get_paid_order_lines().mapped('price_total'))
         fixed_amount = program._compute_program_amount('discount_fixed_amount', self.currency_id)
         if total_amount < fixed_amount:
             return total_amount
@@ -126,6 +126,15 @@ class SaleOrder(models.Model):
         return discount_amount
 
     def _get_reward_values_discount(self, program):
+        if program.discount_type == 'fixed_amount':
+            return [{
+                'name': _("Discount: ") + program.name,
+                'product_id': program.discount_line_product_id.id,
+                'price_unit': - self._get_reward_values_discount_fixed_amount(program),
+                'product_uom_qty': 1.0,
+                'product_uom': program.discount_line_product_id.uom_id.id,
+                'is_reward_line': True,
+            }]
         reward_dict = {}
         lines = self._get_paid_order_lines()
         if program.discount_apply_on == 'cheapest_product':
@@ -269,41 +278,51 @@ class SaleOrder(models.Model):
 
     def _update_existing_reward_lines(self):
         '''Update values for already applied rewards'''
+        def update_line(order, lines, values):
+            '''Update the lines and return them if they should be deleted'''
+            lines_to_remove = self.env['sale.order.line']
+            # Check commit 6bb42904a03 for next if/else
+            # Remove reward line if price or qty equal to 0
+            if values['product_uom_qty'] and values['price_unit']:
+                order.write({'order_line': [(1, line.id, values) for line in lines]})
+            else:
+                if program.reward_type != 'free_shipping':
+                    # Can't remove the lines directly as we might be in a recordset loop
+                    lines_to_remove += lines
+                else:
+                    value.update(price_unit=0.0)
+                    order.write({'order_line': [(1, line.id, values) for line in lines]})
+            return lines_to_remove
+
         self.ensure_one()
         order = self
         applied_programs = order._get_applied_programs_with_rewards_on_current_order()
         for program in applied_programs:
             values = order._get_reward_line_values(program)
             lines = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id)
-            lines_to_remove = lines
-            # Values is what discount lines should really be, lines is what we got in the SO at the moment
-            # 1. If values & lines match, we should update the line (or delete it if no qty or price?)
-            # 2. If the value is not in the lines, we should add it
-            # 3. if the lines contains a tax not in value, we should remove it
-            for value in values:
-                value_found = False
-                for line in lines:
-                    # Case 1.
-                    if not len(set(line.tax_id.mapped('id')).symmetric_difference(set([v[1] for v in value['tax_id']]))):
-                        value_found = True
-                        # Working on Case 3.
-                        lines_to_remove -= line
-                        # Check commit 6bb42904a03 for next if/else
-                        # Remove reward line if price or qty equal to 0
-                        if value['product_uom_qty'] and value['price_unit']:
-                            order.write({'order_line': [(1, line.id, value)]})
-                        else:
-                            if program.reward_type != 'free_shipping':
-                                lines_to_remove += line
-                            else:
-                                value.update(price_unit=0.0)
-                                order.write({'order_line': [(1, line.id, value)]})
-                        continue
-                # Case 2.
-                if not value_found:
-                    order.write({'order_line': [(0, False, value)]})
-            # Case 3.
-            lines_to_remove.unlink()
+            if program.reward_type == 'discount' and program.discount_type == 'percentage':
+                lines_to_remove = lines
+                # Values is what discount lines should really be, lines is what we got in the SO at the moment
+                # 1. If values & lines match, we should update the line (or delete it if no qty or price?)
+                # 2. If the value is not in the lines, we should add it
+                # 3. if the lines contains a tax not in value, we should remove it
+                for value in values:
+                    value_found = False
+                    for line in lines:
+                        # Case 1.
+                        if not len(set(line.tax_id.mapped('id')).symmetric_difference(set([v[1] for v in value['tax_id']]))):
+                            value_found = True
+                            # Working on Case 3.
+                            lines_to_remove -= line
+                            lines_to_remove += update_line(order, line, value)
+                            continue
+                    # Case 2.
+                    if not value_found:
+                        order.write({'order_line': [(0, False, value)]})
+                # Case 3.
+                lines_to_remove.unlink()
+            else:
+                update_line(order, lines, values[0]).unlink()
 
     def _remove_invalid_reward_lines(self):
         """ Find programs & coupons that are not applicable anymore.
