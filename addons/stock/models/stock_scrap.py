@@ -99,7 +99,7 @@ class StockScrap(models.Model):
                                            'lot_id': self.lot_id.id, })],
 #             'restrict_partner_id': self.owner_id.id,
             'state': 'draft',
-            'picking_id': False
+            'picking_id': self.picking_id.id
         }
 
     @api.multi
