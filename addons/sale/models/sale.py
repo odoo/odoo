@@ -1046,7 +1046,7 @@ class SaleOrderLine(models.Model):
 
         values.update(self._prepare_add_missing_fields(values))
         line = super(SaleOrderLine, self).create(values)
-        if line.order_id.state == 'sale':
+        if line.product_id and line.order_id.state == 'sale':
             msg = _("Extra line with %s ") % (line.product_id.display_name,)
             line.order_id.message_post(body=msg)
             # create an analytic account if at least an expense product
