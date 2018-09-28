@@ -22,6 +22,7 @@ import time
 import zlib
 
 import werkzeug
+import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
@@ -44,7 +45,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
     serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
-from odoo.service import db
+from odoo.service import db, security
 
 _logger = logging.getLogger(__name__)
 
@@ -505,11 +506,25 @@ class Home(http.Controller):
         if not odoo.tools.config['list_db']:
             values['disable_database_manager'] = True
 
+        # otherwise no real way to test debug mode in template as ?debug =>
+        # values['debug'] = '' but that's also the fallback value when of
+        # missing variables in qweb
+        if 'debug' in values:
+            values['debug'] = True
+
         response = request.render('web.login', values)
         response.headers['X-Frame-Options'] = 'DENY'
         return response
 
+    @http.route('/web/become', type='http', auth='user', sitemap=False)
+    def switch_to_admin(self):
+        uid = request.env.user.id
+        if request.env.user._is_system():
+            uid = request.session.uid = odoo.SUPERUSER_ID
+            request.env['res.users']._invalidate_session_cache()
+            request.session.session_token = security.compute_session_token(request.session, request.env)
 
+        return http.redirect_with_hash(self._login_redirect(uid))
 
 class WebClient(http.Controller):
 
