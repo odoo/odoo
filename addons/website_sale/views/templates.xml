@@ -121,7 +121,7 @@
                     </h6>
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
-                            <t t-if="product.website_price_difference and website.get_current_pricelist().discount_policy=='without_discount'">
+                            <t t-if="product.product_variant_id and product.website_price_difference and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
 
@@ -484,7 +484,7 @@
                             <span itemprop="url" style="display:none;" t-esc="'%sshop/product/%s' % (request.httprequest.url_root, slug(product))"/>
                             <form action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                <div class="js_product js_main_product" t-if="product.product_variant_ids">
+                                <div class="js_product js_main_product">
                                     <t t-placeholder="select">
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
@@ -604,7 +604,7 @@
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
           <h4 class="oe_price_h4 css_editable_mode_hidden">
               <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
-                t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" t-att-style="'text-decoration: line-through; white-space: nowrap; ' + '' if product.website_price_difference and website.get_current_pricelist().discount_policy == 'without_discount' else 'display: none;'"
+                t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" t-att-style="'text-decoration: line-through; white-space: nowrap; ' + '' if product.product_variant_id and product.website_price_difference and website.get_current_pricelist().discount_policy == 'without_discount' else 'display: none;'"
               />
               <b class="oe_price" style="white-space: nowrap;" t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
               <span itemprop="price" style="display:none;" t-esc="product.website_price"/>
@@ -951,7 +951,7 @@
                             <div class="text-muted d-none d-md-block" t-field="product.description_sale" />
                         </td>
                         <td class='td-price'>
-                            <t t-if="product.website_price_difference  and website.get_current_pricelist().discount_policy=='without_discount'">
+                            <t t-if="product.product_variant_id and product.website_price_difference  and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-options="{'widget': 'monetary','from_currency': product.currency_id, 'display_currency': website.currency_id}" />
                             </t>
                             <span t-field="product.website_price" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}" />

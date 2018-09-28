@@ -4,20 +4,20 @@ odoo.define('sale.product.configurator.tests', function (require) {
     var FormView = require('web.FormView');
     var ProductConfiguratorFormView = require('sale.ProductConfiguratorFormView');
     var testUtils = require('web.test_utils');
-    var ajax = require('web.ajax');
     var createView = testUtils.createView;
 
     var getArch = function (){
         return '<form>' +
         '<sheet>' +
-        '<field name="sale_order_line">' +
+        '<field name="pricelist_id" widget="selection" />' +
+        '<field name="sale_order_line" widget="section_and_note_one2many">' +
         '<tree editable="top"><control>' +
         '<create string="Add a product"/>' +
-        '<create string="Configure a product" context="{\'open_product_configurator\': \'true\'}"/>' +
+        '<create string="Configure a product" context="{\'open_product_configurator\': True}"/>' +
         '<create string="Add a section" context="{\'default_display_type\': \'line_section\'}"/>' +
         '<create string="Add a note" context="{\'default_display_type\': \'line_note\'}"/>' +
         '</control>' +
-        '<field name="product_id"/><field name="quantity"/>' +
+        '<field name="product_id"/><field name="product_uom_qty"/>' +
         '</tree>' +
         '</field>' +
         '</sheet>' +
@@ -39,11 +39,23 @@ odoo.define('sale.product.configurator.tests', function (require) {
                 product: {
                     fields: {
                         id: {type: 'integer'}
-                    }
+                    },
+                    records: [{
+                        id: 1,
+                        display_name: "Customizable Desk (1)"
+                    }, {
+                        id: 2,
+                        display_name: "Customizable Desk (2)"
+                    }]
                 },
                 sale_order: {
                     fields: {
                         id: {type: 'integer'},
+                        pricelist_id: {
+                            string: 'Pricelist',
+                            type: 'one2many',
+                            relation: 'pricelist'
+                        },
                         sale_order_line: {
                             string: 'lines',
                             type: 'one2many',
@@ -58,7 +70,7 @@ odoo.define('sale.product.configurator.tests', function (require) {
                             type: 'many2one',
                             relation: 'product'
                         },
-                        quantity: {type: 'integer'}
+                        product_uom_qty: {type: 'integer'}
                     }
                 },
                 sale_product_configurator: {
@@ -73,6 +85,11 @@ odoo.define('sale.product.configurator.tests', function (require) {
                         product_template_id: 42
                     }]
                 },
+                pricelist: {
+                    fields: {
+                        id: {type: 'integer'}
+                    }
+                }
             };
         }
     }, function (){
@@ -108,10 +125,10 @@ odoo.define('sale.product.configurator.tests', function (require) {
                 arch: getArch()
             });
 
-            var list = form.renderer.allFieldWidgets[form.handle][0];
+            var list = form.renderer.allFieldWidgets[form.handle][1];
 
             list.trigger_up('add_record', {
-                context: [{product_id: 1, quantity: 2}, {product_id: 2, quantity: 3}],
+                context: [{default_product_id: 1, default_product_uom_qty: 2}, {default_product_id: 2, default_product_uom_qty: 3}],
                 forceEditable: "bottom" ,
                 allowWarning: true
             });
@@ -144,9 +161,6 @@ odoo.define('sale.product.configurator.tests', function (require) {
                         return this._super.apply(this, arguments);
                     }
             });
-            var div = '<div>';
-            var $div = $(div).addClass('js_sale_order_pricelist_id').html(43);
-            product_configurator_form.$('.o_input').after($div);
             product_configurator_form.$('.o_input').click();
             $("ul.ui-autocomplete li a:contains('Customizable Desk')").mouseenter().click();
         });

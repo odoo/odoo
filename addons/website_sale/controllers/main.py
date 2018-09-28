@@ -394,11 +394,15 @@ class WebsiteSale(ProductConfiguratorController):
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
+        product_custom_attribute_values = None
+        if kw.get('product_custom_attribute_values'):
+            product_custom_attribute_values = json.loads(kw.get('product_custom_attribute_values'))
+
         request.website.sale_get_order(force_create=1)._cart_update(
             product_id=int(product_id),
             add_qty=add_qty,
             set_qty=set_qty,
-            product_custom_attribute_values=json.loads(kw.get('product_custom_attribute_values', '{}'))
+            product_custom_attribute_values=product_custom_attribute_values
         )
         return request.redirect("/shop/cart")
 
@@ -1078,7 +1082,9 @@ class WebsiteSale(ProductConfiguratorController):
             if "optional-product-" in k and int(kw.get(k.replace("product", "add"))):
                 optional_product_ids.append(int(v))
 
-        custom_values = json.loads(kw.get('custom_values'))
+        custom_values = []
+        if kw.get('custom_values'):
+            custom_values = json.loads(kw.get('custom_values'))
 
         value = {}
         if add_qty or set_qty:

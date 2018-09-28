@@ -91,6 +91,7 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
         this.unselectRow().then(function () {
             var context = ev.currentTarget.dataset.context;
 
+            var pricelistId = self._getPricelistId();
             if (context && pyUtils.py_eval(context).open_product_configurator){
                 self._rpc({
                     model: 'ir.model.data',
@@ -102,7 +103,10 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                         type: 'ir.actions.act_window',
                         res_model: 'sale.product.configurator',
                         views: [[res_id, 'form']],
-                        target: 'new'
+                        target: 'new',
+                        context: {
+                            'default_pricelist_id': pricelistId
+                        }
                     }, {
                         on_close: function (products) {
                             if (products && products !== 'special'){
@@ -122,6 +126,20 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                 self.trigger_up('add_record', {context: context && [context]}); // TODO write a test, the deferred was not considered
             }
         });
+    },
+
+    /**
+     * Will try to get the pricelist_id value from the parent sale_order form
+     *
+     * @private
+     * @returns {integer} pricelist_id's id
+     */
+    _getPricelistId: function () {
+        var saleOrderForm = this.getParent() && this.getParent().getParent();
+        var stateData = saleOrderForm && saleOrderForm.state && saleOrderForm.state.data;
+        var pricelist_id = stateData.pricelist_id && stateData.pricelist_id.data;
+
+        return pricelist_id.id;
     },
 
     /**
