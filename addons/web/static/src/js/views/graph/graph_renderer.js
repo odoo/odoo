@@ -415,13 +415,6 @@ return AbstractRenderer.extend({
             }
         }
 
-        // Delete first and last label because there is no enough space because
-        // of the tiny margins.
-        if (ticksLabels.length > 3) {
-            ticksLabels[0] = [];
-            ticksLabels[ticksLabels.length - 1] = [];
-        }
-
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
@@ -436,7 +429,6 @@ return AbstractRenderer.extend({
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
-          wrapLabels: true,
         });
         chart.forceY([0]);
         chart.xAxis
@@ -458,6 +450,12 @@ return AbstractRenderer.extend({
 
         // Bigger line (stroke-width 1.5 is hardcoded in nv.d3)
         $svgContainer.find('.nvd3 .nv-groups g.nv-group').css('stroke-width', '2px')
+
+        // Delete first and last label because there is no enough space because
+        // of the tiny margins.
+        if (ticksLabels.length > 3) {
+            $svgContainer.find('svg .nv-x g.nv-axisMaxMin-x > text').hide();
+        }
 
         return chart;
     },
@@ -482,11 +480,24 @@ return AbstractRenderer.extend({
         var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
 
         if (chart) {
-            // FIXME: When 'orient' is right for Y axis, horizontal lines aren't displayed correctly
             chart.dispatch.on('renderEnd', function () {
+                // FIXME: When 'orient' is right for Y axis, horizontal lines aren't displayed correctly
                 $('.nv-y .tick > line').attr('x2', function (i, value) {
                     return Math.abs(value);
                 });
+
+                // We don't need to show all labels
+                $('.o_graph_svg_container svg .nv-x g.tick > text').show();
+                var $ticksText = $('svg .nv-x g.tick:not(.zero) > text');
+                var ticksLength = $ticksText.length;
+                var tickTextMargin = 5;
+                if (ticksLength) {
+                    var tickWidth = $ticksText[0].getBBox().width + tickTextMargin;
+                    var svgWidth = $('.o_graph_svg_container').width();
+                    var keepOneOf = Math.ceil(ticksLength / (svgWidth / tickWidth));
+                    // FIXME: should work with two line charts
+                    $('.o_graph_svg_container svg .nv-x g.tick:not(:nth-child(' + keepOneOf + 'n+1)) > text').hide();
+                }
             })
 
             chartResize(chart);
