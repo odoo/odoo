@@ -659,6 +659,7 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def action_submit_sheet(self):
         self.write({'state': 'submit'})
+        self.activity_update()
 
     @api.multi
     def approve_expense_sheets(self):
