@@ -60,7 +60,7 @@ class ProductConfiguratorController(http.Controller):
 
         has_optional_products = False
         for optional_product in product.optional_product_ids:
-            if optional_product.get_filtered_variants(product):
+            if optional_product.has_dynamic_attributes() or optional_product.get_filtered_variants(product):
                 has_optional_products = True
                 break
 

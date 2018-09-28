@@ -269,6 +269,43 @@ var ProductConfiguratorMixin = {
         return values.concat(unchangedValues);
     },
 
+    /**
+     * Will return a deferred:
+     * - If the product already exists, immediately resolves it with the product_id
+     * - If the product does not exist yet ("dynamic" variant creation), this method will
+     *   create the product first and then resolve the deferred with the created product's id
+     *
+     * @param {$.Element} $container the container to look into
+     * @param {integer} productId the product id
+     * @param {integer} productTemplateId the corresponding product template id
+     * @param {boolean} useAjax wether the rpc call should be done using ajax.jsonRpc or using _rpc
+     * @returns {$.Deferred} the deferred that will be resolved with a {integer} productId
+     */
+    selectOrCreateProduct: function ($container, productId, productTemplateId, useAjax) {
+        var self = this;
+        var productReady = $.Deferred();
+        if (productId && productId !== '0'){
+            productReady.resolve(productId);
+        } else {
+            var params = {
+                model: 'product.template',
+                method: 'create_product_variant',
+                args: [
+                    productTemplateId,
+                    JSON.stringify(self.getSelectedVariantValues($container))
+                ]
+            };
+
+            if (useAjax) {
+                productReady = ajax.jsonRpc('/web/dataset/call', 'call', params);
+            } else {
+                productReady = this._rpc(params);
+            }
+        }
+
+        return productReady;
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

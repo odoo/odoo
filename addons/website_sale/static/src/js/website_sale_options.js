@@ -62,21 +62,12 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
             'input[type="radio"][name="product_id"]:checked'
         ];
 
-        var productId = parseInt($form.find(productSelector.join(', ')).first().val(), 10);
-
-        var productReady = $.Deferred();
-        if (productId){
-            productReady.resolve(productId);
-        } else {
-            productReady = self._rpc({
-                model: 'product.template',
-                method: 'create_product_variant',
-                args: [
-                    $form.find('.product_template_id').val(),
-                    JSON.stringify(self.getSelectedVariantValues($form))
-                ],
-            });
-        }
+        var productReady = this.selectOrCreateProduct(
+            $form,
+            parseInt($form.find(productSelector.join(', ')).first().val(), 10),
+            $form.find('.product_template_id').val(),
+            false
+        );
 
         productReady.done(function (productId){
             $form.find(productSelector.join(', ')).val(productId);

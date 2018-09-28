@@ -122,7 +122,7 @@
 
     <template id="optional_product_items">
     <t t-foreach="product.optional_product_ids" t-as="product">
-        <t t-if="len(product.get_filtered_variants(reference_product)) > 0">
+        <t t-if="len(product.get_filtered_variants(reference_product)) > 0 or product.has_dynamic_attributes()">
         <tr class="js_product">
         <td class="td-img">
         <input type="hidden" class="product_template_id" t-att-value="product.id"/>
