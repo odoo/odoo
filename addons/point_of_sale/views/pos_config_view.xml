@@ -155,10 +155,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="barcode_scanner" class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="barcode_scanner"/>
-                            </div>
+                        <div id="barcode_scanner" class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('iface_scan_via_proxy', '=', False)]}">
+                            <field name="barcode_scanner" invisible="1"/>
                             <div class="o_setting_right_pane">
                                 <label for="barcode_scanner" string="Barcode Scanner"/>
                                 <div class="text-muted">
