@@ -32,7 +32,10 @@ if [ -z "${WIRED_IP}" ] ; then
 
 			service dnsmasq restart
 
-			service nginx restart
+			service nginx stop
+			# We start nginx in another configuration than the default one with https
+			# as it needs to do redirect instead in case the IoT Box acts as an ap
+			nginx -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/nginx_ap.conf
 
 			service odoo restart
 		fi
@@ -42,7 +45,8 @@ if [ -z "${WIRED_IP}" ] ; then
 	fi
 # wired
 else
-	service nginx stop
+	killall nginx
+	service nginx restart
 	service dnsmasq stop
 	service odoo restart
 fi
