@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import inspect
 import logging
 try:
     import pylint
+    from pylint import lint
+    from pylint.reporters import CollectingReporter
 except ImportError:
     pylint = None
-import subprocess
 from distutils.version import LooseVersion
 import os
 from os.path import join
@@ -15,8 +17,6 @@ import sys
 from odoo.tests.common import TransactionCase
 from odoo import tools
 from odoo.modules import get_modules, get_module_path
-
-HERE = os.path.dirname(os.path.realpath(__file__))
 
 _logger = logging.getLogger(__name__)
 
@@ -30,6 +30,9 @@ class TestPyLint(TransactionCase):
         'unreachable',
 
         'mixed-indentation',
+
+        # odoo checks
+        'sql-injection',
 
         # py3k checks
         'print-statement',
@@ -134,24 +137,17 @@ class TestPyLint(TransactionCase):
             '--enable=%s' % ','.join(self.ENABLED_CODES),
             '--reports=n',
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
-            '--load-plugins=pylint.extensions.bad_builtin,_odoo_checkers',
+            '--load-plugins=pylint.extensions.bad_builtin,odoo.addons.test_pylint.tests._odoo_checkers',
             '--bad-functions=%s' % ','.join(self.BAD_FUNCTIONS),
-            '--deprecated-modules=%s' % ','.join(self.BAD_MODULES)
+            '--deprecated-modules=%s' % ','.join(self.BAD_MODULES),
+            '--score=n',
         ]
 
-        pypath = HERE + os.pathsep + os.environ.get('PYTHONPATH', '')
-        env = dict(os.environ, PYTHONPATH=pypath)
-        try:
-            pylint_bin = tools.which('pylint')
-            process = subprocess.Popen(
-                [pylint_bin] + options + paths,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                env=env,
-            )
-        except (OSError, IOError):
-            self._skip_test('pylint executable not found in the path')
-        else:
-            out, err = process.communicate()
-            if process.returncode:
-                self.fail("pylint test failed:\n" + (b"\n" + out + b"\n" + err).decode('utf-8').strip())
+        run_args = inspect.getargspec(lint.Run.__init__).args
+        # pylint dual compatibility
+        do_exit_kwarg = {'exit': False} if 'exit' in run_args else {'do_exit': False}
+        res = lint.Run(options + paths, reporter=CollectingReporter(), **do_exit_kwarg)
+        msgs = res.linter.reporter.messages
+        msg = '\n'.join([msg.format(res.linter.config.msg_template) for msg in msgs])
+        if msg:
+            self.fail("Pylint errors: %d\n%s" % (len(msgs), msg))
