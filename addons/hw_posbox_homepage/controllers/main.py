@@ -205,7 +205,7 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
             if resp and resp.data:
                 zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                 zip_file.extractall("/home/pi/odoo/addons/hw_drivers/drivers")
-        subprocess.call("sudo service odoo restart")
+        subprocess.call("sudo service odoo restart", shell=True)
         subprocess.call("sudo mount -o remount,ro /", shell=True)
         subprocess.call("sudo mount -o remount,ro /root_bypass_ramdisks", shell=True)
 
