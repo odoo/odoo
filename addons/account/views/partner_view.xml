@@ -190,6 +190,7 @@
             <field name="model">res.partner</field>
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="groups_id" eval="[(5,)]"/>
             <field name="arch" type="xml">
                 <page name="sales_purchases" position="after">
                     <page string="Invoicing" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
