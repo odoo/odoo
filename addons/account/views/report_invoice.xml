@@ -20,27 +20,27 @@
                     </h2>
 
                     <div class="row mt32 mb32">
-                        <div class="mr32 col-3" t-if="o.name" name="description">
+                        <div class="col-auto" t-if="o.name" name="description">
                             <strong>Description:</strong>
                             <p t-field="o.name"/>
                         </div>
-                        <div class="mr32 col-3" t-if="o.date_invoice" name="invoice_date">
+                        <div class="col-auto" t-if="o.date_invoice" name="invoice_date">
                             <strong>Invoice Date:</strong>
                             <p t-field="o.date_invoice"/>
                         </div>
-                        <div class="mr32 col-3" t-if="o.date_due and o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
+                        <div class="col-auto" t-if="o.date_due and o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
                             <strong>Due Date:</strong>
                             <p t-field="o.date_due"/>
                         </div>
-                        <div class="mr32 col-3" t-if="o.origin" name="origin">
+                        <div class="col-auto" t-if="o.origin" name="origin">
                             <strong>Source:</strong>
                             <p t-field="o.origin"/>
                         </div>
-                        <div class="mr32 col-3" t-if="o.partner_id.ref" name="customer_code">
+                        <div class="col-auto" t-if="o.partner_id.ref" name="customer_code">
                             <strong>Customer Code:</strong>
                             <p t-field="o.partner_id.ref"/>
                         </div>
-                        <div name="reference" class="mr32 col-3" t-if="o.reference">
+                        <div name="reference" class="col-auto" t-if="o.reference">
                             <strong>Reference:</strong>
                             <p t-field="o.reference"/>
                         </div>
