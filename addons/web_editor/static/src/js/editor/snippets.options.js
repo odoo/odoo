@@ -1236,7 +1236,6 @@ registry.many2one = SnippetOption.extend({
             kwargs: {
                 order: [{name: 'name', asc: false}],
                 limit: 5,
-                context: weContext.get(),
             },
         }).then(function (result) {
             self.$search.siblings().remove();
@@ -1275,7 +1274,6 @@ registry.many2one = SnippetOption.extend({
                         args: [[self.ID]],
                         kwargs: {
                             options: options,
-                            context: weContext.get(),
                         },
                     }).then(function (html) {
                         $node.html(html);

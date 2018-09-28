@@ -140,7 +140,7 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     # add attachment (images or link)
     #------------------------------------------------------
-    @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'])
+    @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, upload=None, url=None, disable_optimization=None, filters=None, **kwargs):
         # the upload argument doesn't allow us to access the files if more than
         # one file is uploaded, as upload references the first file
@@ -215,7 +215,7 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     # remove attachment (images or link)
     #------------------------------------------------------
-    @http.route('/web_editor/attachment/remove', type='json', auth='user')
+    @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)
     def remove(self, ids, **kwargs):
         """ Removes a web-based image attachment if it is used by no view (template)
 
@@ -249,7 +249,7 @@ class Web_Editor(http.Controller):
     ## This route is used from CropImageDialog to get image info.
     ## It is used to display the original image when we crop a previously
     ## cropped image
-    @http.route('/web_editor/get_image_info', type='json', auth='user')
+    @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
     def get_image_info(self, image_id=None, xml_id=None):
         if xml_id:
             record = request.env.ref(xml_id)
@@ -390,7 +390,7 @@ class Web_Editor(http.Controller):
     ## @param url - the original url of the scss file which has to be modified
     ## @param bundle_xmlid - the xmlid of the bundle in which the scss file addition can be found
     ## @param content - the new content of the scss file
-    @http.route("/web_editor/save_scss", type="json", auth="user")
+    @http.route("/web_editor/save_scss", type="json", auth="user", website=True)
     def save_scss(self, url, bundle_xmlid, content):
         IrAttachment = request.env["ir.attachment"]
 
@@ -444,7 +444,7 @@ class Web_Editor(http.Controller):
     ## The reset_scss route is in charge of reverting all the changes that were done to a scss file.
     ## @param url - the original URL of the scss file to reset
     ## @param bundle_xmlid - the xmlid of the bundle in which the scss file addition can be found
-    @http.route("/web_editor/reset_scss", type="json", auth="user")
+    @http.route("/web_editor/reset_scss", type="json", auth="user", website=True)
     def reset_scss(self, url, bundle_xmlid):
         custom_url = self._make_custom_scss_file_url(url, bundle_xmlid)
 

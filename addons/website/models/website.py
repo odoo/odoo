@@ -447,6 +447,10 @@ class Website(models.Model):
         if request and request.session.get('force_website_id'):
             return self.browse(request.session['force_website_id'])
 
+        website_id = self.env.context.get('website_id')
+        if website_id:
+            return self.browse(website_id)
+
         domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
 
         country = request.session.geoip.get('country_code') if request and request.session.geoip else False

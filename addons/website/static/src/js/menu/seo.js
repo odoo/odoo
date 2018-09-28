@@ -479,7 +479,6 @@ var MetaKeywords = Widget.extend({
             model: 'website',
             method: 'get_languages',
             args: [[weContext.get().website_id]],
-            context: weContext.get(),
         }).then( function (data) {
             self.$('#language-box').html(core.qweb.render('Configurator.language_promote', {
                 'language': data,
@@ -676,7 +675,7 @@ var SeoConfigurator = Dialog.extend({
             // - no reload if we are not editing a view (condition: website_id === undefined)
             // - reload if generic page (condition: website_id === false)
             self.reloadOnSave = data.website_id === undefined ? false : !data.website_id;
-            //If website.page, hide the google preview & tell user his page is currently unindexed 
+            //If website.page, hide the google preview & tell user his page is currently unindexed
             self.isIndexed = (data && ('website_indexed' in data)) ? data.website_indexed : true;
             self.canEditTitle = data && ('website_meta_title' in data);
             self.canEditDescription = data && ('website_meta_description' in data);
@@ -745,7 +744,7 @@ var SeoConfigurator = Dialog.extend({
             rpc.query({
                 model: obj.model,
                 method: 'read',
-                args: [[obj.id], fields, weContext.get()],
+                args: [[obj.id], fields],
             }).then(function (data) {
                 if (data.length) {
                     var meta = data[0];
@@ -768,7 +767,7 @@ var SeoConfigurator = Dialog.extend({
             return rpc.query({
                 model: obj.model,
                 method: 'write',
-                args: [[obj.id], data, weContext.get()],
+                args: [[obj.id], data],
             });
         }
     },

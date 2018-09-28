@@ -70,7 +70,9 @@ var SlideDialog = Widget.extend({
             model: 'slide.slide',
             method: 'search_count',
             args: [[['channel_id', '=', self.channel_id], ['name', '=', file_name]]],
-            kwargs: {}
+            kwargs: {
+                context: weContext.get(), // TODO use this._rpc
+            }
         });
     },
     slide_upload: function (ev) {
@@ -258,7 +260,7 @@ var SlideDialog = Widget.extend({
                     kwargs: {
                         fields: ['name'],
                         domain: [['channel_id', '=', self.channel_id]],
-                        context: weContext.get()
+                        context: weContext.get(), // TODO use this._rpc
                     }
                 });
             }));
@@ -279,7 +281,7 @@ var SlideDialog = Widget.extend({
                 args: [],
                 kwargs: {
                     fields: ['name'],
-                    context: weContext.get()
+                    context: weContext.get(), // TODO use this._rpc
                 }
             });
         }));
