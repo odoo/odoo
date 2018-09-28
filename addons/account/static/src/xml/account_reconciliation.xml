@@ -130,7 +130,7 @@
 </t>
 
 <t t-name="reconciliation.line.balance">
-    <tr t-if="state.balance.amount_currency &amp;&amp; !(state.reconciliation_proposition[0] || {}).partial_reconcile">
+    <tr t-if="state.balance.show_balance">
         <td class="cell_action"><span role="img" class="toggle_create fa fa-play" aria-label="Run" title="Run"></span></td>
         <td class="cell_account_code"><t t-esc="state.balance.account_code"/></td>
         <td class="cell_due_date"></td>
@@ -220,17 +220,27 @@
 </div>
 
 
-<t t-name="reconciliation.line.mv_line.triangle">
-    <t t-if="line.display_triangle">
-        <t t-if="line.partial_reconcile">
-            <span t-att-class="'do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle'"
-                  data-content="Undo the partial reconciliation."/>
+<t t-name="reconciliation.line.mv_line.amount">
+    <span t-att-class="(line.is_move_line &amp;&amp; proposition == true) ? 'cell' : ''">
+        
+        <span class="line_amount">
+            <span t-if="line.amount_currency_str"
+                  t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money"
+                  t-att-data-content="line.amount_currency_str"/>
+            <span t-if="line.partial_amount &amp;&amp; line.partial_amount != line.amount" class="strike_amount text-muted">
+                <t t-raw="line.amount_str"/>
+                <br/>
+            </span>
+        </span>
+        <t t-if="line.is_move_line &amp;&amp; proposition == true">
+            <i class="fa fa-pencil edit_amount"></i>
+            <input class="edit_amount_input text-right d-none"/>
         </t>
-        <t t-else="">
-            <span t-att-class="'do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle'"
-                  data-content="This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open."/>
-        </t>
-    </t>
+        <span class="line_amount">
+            <t t-if="!line.partial_amount_str" t-raw="line.amount_str"/>
+            <t t-if="line.partial_amount_str &amp;&amp; line.partial_amount != line.amount" t-raw="line.partial_amount_str"/>
+        </span>
+    </span>
 </t>
 
 
@@ -256,20 +266,12 @@
         </td>
         <td class="cell_left">
             <t t-if="line.amount &lt; 0">
-                <t t-call="reconciliation.line.mv_line.triangle"/>
-                <span t-if="line.amount_currency_str"
-                      t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money"
-                      t-att-data-content="line.amount_currency_str"/>
-                <t t-raw="line.partial_reconcile ? line.write_off_amount_str : line.amount_str"/>
+                <t t-call="reconciliation.line.mv_line.amount"/>
             </t>
         </td>
         <td class="cell_right">
             <t t-if="line.amount &gt; 0">
-                <t t-call="reconciliation.line.mv_line.triangle"/>
-                <span t-if="line.amount_currency_str"
-                      t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money"
-                      t-att-data-content="line.amount_currency_str"/>
-                <t t-raw="line.partial_reconcile ? line.write_off_amount_str : line.amount_str"/>
+                <t t-call="reconciliation.line.mv_line.amount"/>
             </t>
         </td>
         <td class="cell_info_popover"></td>
