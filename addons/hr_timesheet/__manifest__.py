@@ -20,22 +20,16 @@ It is completely integrated with the cost accounting module. It allows you to se
 up a management by affair.
     """,
     'website': 'https://www.odoo.com/page/timesheet-mobile-app',
-    'depends': ['hr', 'analytic', 'project', 'uom'],
+    'depends': ['hr', 'analytic', 'uom'],
     'data': [
         'security/hr_timesheet_security.xml',
         'security/ir.model.access.csv',
         'views/assets.xml',
         'views/hr_timesheet_views.xml',
         'views/res_config_settings_views.xml',
-        'views/project_views.xml',
-        'views/project_portal_templates.xml',
         'report/hr_timesheet_report_view.xml',
-        'report/report_timesheet_templates.xml',
         'views/hr_views.xml',
         'data/hr_timesheet_data.xml',
-    ],
-    'demo': [
-        'data/hr_timesheet_demo.xml',
     ],
     'installable': True,
     'application': False,

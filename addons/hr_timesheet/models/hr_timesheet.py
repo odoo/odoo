@@ -6,7 +6,6 @@ from lxml import etree
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -23,31 +22,12 @@ class AccountAnalyticLine(models.Model):
 
     is_timesheet = fields.Boolean("Is timesheet", default=False, index=True)
 
-    task_id = fields.Many2one('project.task', 'Task', index=True)
-    project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
-
     employee_id = fields.Many2one('hr.employee', "Employee")
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
 
     _sql_constraints = [
         ('check_timesheet_employee_required', "CHECK((is_timesheet = 't' AND employee_id IS NOT NULL) OR (is_timesheet = 'f'))", "The employee is required for a timesheet entry."),
     ]
-
-    @api.onchange('project_id')
-    def onchange_project_id(self):
-        # force domain on task when project is set
-        if self.is_timesheet and self.project_id:
-            if self.project_id != self.task_id.project_id:
-                # reset task when changing project
-                self.task_id = False
-            return {'domain': {
-                'task_id': [('project_id', '=', self.project_id.id)]
-            }}
-
-    @api.onchange('task_id')
-    def _onchange_task_id(self):
-        if self.is_timesheet and not self.project_id:
-            self.project_id = self.task_id.project_id
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
@@ -120,9 +100,6 @@ class AccountAnalyticLine(models.Model):
             return True
         if self._context.get('default_is_timesheet'):
             return True
-        if self._context.get('default_project_id'):  # retro compatibility for the UI
-            _logger.warning("Determine timesheet use case with project_id set: this should be deprecated baby !")
-            return True
         return False
 
     def _timesheet_preprocess(self, vals):
@@ -130,28 +107,13 @@ class AccountAnalyticLine(models.Model):
             Overrride this to compute on the fly some field that can not be computed fields.
             :param values: dict values for `create`or `write`.
         """
-        # project implies analytic account
-        if vals.get('project_id') and not vals.get('account_id'):
-            project = self.env['project.project'].browse(vals.get('project_id'))
-            vals['account_id'] = project.analytic_account_id.id
-            vals['company_id'] = project.analytic_account_id.company_id.id
-            if not project.analytic_account_id.active:
-                raise UserError(_('The project you are timesheeting on is not linked to an active analytic account. Set one on the project configuration.'))
         # employee implies user
         if vals.get('employee_id') and not vals.get('user_id'):
             employee = self.env['hr.employee'].browse(vals['employee_id'])
             vals['user_id'] = employee.user_id.id
-        # force customer partner, from the task or the project
-        if (vals.get('project_id') or vals.get('task_id')) and not vals.get('partner_id'):
-            partner_id = False
-            if vals.get('task_id'):
-                partner_id = self.env['project.task'].browse(vals['task_id']).partner_id.id
-            else:
-                partner_id = self.env['project.project'].browse(vals['project_id']).partner_id.id
-            if partner_id:
-                vals['partner_id'] = partner_id
+
         # set timesheet UoM from the AA company (AA implies uom)
-        if 'product_uom_id' not in vals and all([v in vals for v in ['account_id', 'project_id']]):  # project_id required to check this is timesheet flow
+        if 'product_uom_id' not in vals and all([v in vals for v in ['account_id']]):
             analytic_account = self.env['account.analytic.account'].sudo().browse(vals['account_id'])
             vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
         return vals
