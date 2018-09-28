@@ -68,6 +68,7 @@ class ResConfigSettings(models.TransientModel):
     has_social_network = fields.Boolean("Configure Social Network", compute=has_social_network, inverse=inverse_has_social_network)
 
     favicon = fields.Binary('Favicon', related='website_id.favicon', readonly=False)
+    social_default_image = fields.Binary('Default Social Share Image', related='website_id.social_default_image', readonly=False)
 
     google_maps_api_key = fields.Char(related='website_id.google_maps_api_key', readonly=False)
     group_multi_website = fields.Boolean("Multi-website", implied_group="website.group_multi_website")
