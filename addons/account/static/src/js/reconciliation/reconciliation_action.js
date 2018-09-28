@@ -22,12 +22,12 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         change_offset: '_onAction',
         change_partner: '_onAction',
         add_proposition: '_onAction',
-        search_balance_amount: '_onAction',
         remove_proposition: '_onAction',
         update_proposition: '_onAction',
         create_proposition: '_onAction',
+        getPartialAmount: '_onActionPartialAmount',
         quick_create_proposition: '_onAction',
-        toggle_partial_reconcile: '_onAction',
+        partial_reconcile: '_onAction',
         validate: '_onValidate',
         change_name: '_onChangeName',
         close_statement: '_onCloseStatement',
@@ -231,6 +231,14 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                 });
             }
         });
+    },
+
+    _onActionPartialAmount: function(event) {
+        var self = this;
+        var handle = event.target.handle;
+        var line = this.model.getLine(handle);
+        var amount = this.model.getPartialReconcileAmount(handle, event.data);
+        self._getWidget(handle).updatePartialAmount(event.data.data, amount);
     },
 
     /**
