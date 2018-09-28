@@ -453,3 +453,30 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
                 'coupon_code': 'test_10pc'
             }).process_coupon()
+
+    def test_program_fixed_price(self):
+        # Check fixed amount discount
+        order = self.empty_order
+        fixed_amount_program = self.env['sale.coupon.program'].create({
+            'name': '$249 discount',
+            'promo_code_usage': 'no_code_needed',
+            'program_type': 'promotion_program',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 249.0,
+        })
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.computerCase.id,
+            'name': 'Computer Case',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 0, "Total should be null. The fixed amount discount is higher than the SO total, it should be reduced to the SO total")
+        self.assertEqual(len(order.order_line.ids), 2, "There should be the product line and the reward line")
+        sol1.product_uom_qty = 17
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 176, "Fixed amount discount should be totally deduced")
+        self.assertEqual(len(order.order_line.ids), 2, "Number of lines should be unchanged as we just recompute the reward line")
+        fixed_amount_program.write({'active': False})  # Check archived product will remove discount lines on recompute
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 1, "Archiving the program should remove the program reward line")
