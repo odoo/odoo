@@ -2233,7 +2233,14 @@ var BasicModel = AbstractModel.extend({
                     if (data === undefined) {
                         return;
                     }
-                    record.specialData[name] = data;
+                    if (record.type === 'list') {
+                        _.each(record.data, function (dataPointID) {
+                            var r = self.localData[dataPointID];
+                            r.specialData[name] = data;
+                        });
+                    } else {
+                        record.specialData[name] = data;
+                    }
                     specialFieldNames.push(name);
                 });
             }
@@ -2477,7 +2484,7 @@ var BasicModel = AbstractModel.extend({
                 self._fetchX2ManysBatched(list),
                 self._fetchReferencesBatched(list));
         }).then(function () {
-            return list;
+            return self._postprocess(list);
         });
     },
     /**
@@ -3951,7 +3958,7 @@ var BasicModel = AbstractModel.extend({
                     // sortList has already been applied after first the read
                     self._setDataInRange(list);
                 }
-                return list;
+                return self._postprocess(list);
             });
         });
     },
