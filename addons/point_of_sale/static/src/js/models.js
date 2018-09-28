@@ -294,7 +294,7 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self, locations){ self.shop = locations[0]; },
     },{
         model:  'product.pricelist',
-        fields: ['name', 'display_name', 'discount_policy'],
+        fields: ['name', 'display_name'],
         domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
@@ -1306,7 +1306,7 @@ exports.Product = Backbone.Model.extend({
         // because it would cause inconsistencies with the backend for
         // pricelist that have base == 'pricelist'.
         return price;
-    }, 
+    },
 });
 
 var orderline_id = 1;
@@ -1557,9 +1557,6 @@ exports.Orderline = Backbone.Model.extend({
             discount:           this.get_discount(),
             product_name:       this.get_product().display_name,
             product_name_wrapped: this.generate_wrapped_product_name(),
-            price_lst:          this.get_lst_price(),
-            display_discount_policy:    this.display_discount_policy(),
-            price_display_one:  this.get_display_price_one(),
             price_display :     this.get_display_price(),
             price_with_tax :    this.get_price_with_tax(),
             price_without_tax:  this.get_price_without_tax(),
@@ -1623,28 +1620,6 @@ exports.Orderline = Backbone.Model.extend({
     get_base_price:    function(){
         var rounding = this.pos.currency.rounding;
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
-    },
-    get_display_price_one: function(){
-        var rounding = this.pos.currency.rounding;
-        var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
-        if (this.pos.config.iface_tax_included !== 'total') {
-            return round_pr(price_unit, rounding);
-        } else {
-            var product =  this.get_product();
-            var taxes_ids = product.taxes_id;
-            var taxes =  this.pos.taxes;
-            var product_taxes = [];
-
-            _(taxes_ids).each(function(el){
-                product_taxes.push(_.detect(taxes, function(t){
-                    return t.id === el;
-                }));
-            });
-
-            var all_taxes = this.compute_all(product_taxes, price_unit, 1, this.pos.currency.rounding);
-
-            return round_pr(all_taxes.total_included * (1 - this.get_discount()/100), rounding);
-        }
     },
     get_display_price: function(){
         if (this.pos.config.iface_tax_included === 'total') {
@@ -1804,12 +1779,6 @@ exports.Orderline = Backbone.Model.extend({
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };
-    },
-    display_discount_policy: function(){
-        return this.order.pricelist.discount_policy;
-    },
-    get_lst_price: function(){
-        return this.product.lst_price;
     },
 });
 
@@ -2374,11 +2343,10 @@ exports.Order = Backbone.Model.extend({
         }
         if (to_merge_orderline){
             to_merge_orderline.merge(line);
-            this.select_orderline(to_merge_orderline);
         } else {
             this.orderlines.add(line);
-            this.select_orderline(this.get_last_orderline());
         }
+        this.select_orderline(this.get_last_orderline());
 
         if(line.has_product_lot){
             this.display_lot_popup();
@@ -2481,9 +2449,7 @@ exports.Order = Backbone.Model.extend({
     },
     get_total_discount: function() {
         return round_pr(this.orderlines.reduce((function(sum, orderLine) {
-            sum += (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
-            sum += ((orderLine.get_lst_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
-            return sum;
+            return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
         }), 0), this.pos.currency.rounding);
     },
     get_total_tax: function() {
