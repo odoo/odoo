@@ -157,6 +157,7 @@ class configmanager(object):
         group.add_option("--test-file", dest="test_file", my_default=False,
                          help="Launch a python test file.")
         group.add_option("--test-enable", action="callback", callback=self._test_enable_callback,
+                         dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
                          help="Comma separated list of tags to filter which tests to excute. Enable unit tests if set.")
