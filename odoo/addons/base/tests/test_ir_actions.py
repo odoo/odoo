@@ -105,8 +105,8 @@ class TestServerActions(TestServerActionsBase):
             'crud_model_id': self.res_country_model.id,
             'link_field_id': False,
             'fields_lines': [(5,),
-                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'type': 'equation'}),
-                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'record.name[0:2]', 'type': 'equation'})],
+                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'}),
+                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'record.name[0:2]', 'evaluation_type': 'equation'})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
