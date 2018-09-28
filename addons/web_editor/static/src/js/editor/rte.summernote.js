@@ -1160,7 +1160,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         });
         if (data.onSave) {
             colorpicker.on('colorpicker:saved', this, function (ev) {
-                data.onSave(ev.data.hex);
+                data.onSave(ev.data.cssColor);
             });
         }
         colorpicker.open();
