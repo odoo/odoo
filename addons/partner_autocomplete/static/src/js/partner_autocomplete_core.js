@@ -114,7 +114,13 @@ return {
         // Get logo
         var logoPromise = company.logo ? this.getCompanyLogo(company.logo) : false;
 
-        $.when(enrichPromise, logoPromise).done(function (company_data, logo_data) {
+        this._whenAll([enrichPromise, logoPromise]).always(function (company_data, logo_data){
+            if (Array.isArray(company_data)) company_data = company_data[0];
+            else company_data = {};
+
+            if (Array.isArray(logo_data)) logo_data = logo_data[0];
+            else logo_data = '';
+
             if (_.isEmpty(company_data)) company_data = company;
 
             // Delete attribute to avoid "Field_changed" errors
