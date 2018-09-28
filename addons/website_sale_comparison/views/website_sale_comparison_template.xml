@@ -35,8 +35,8 @@
                             <table class='table table-striped table-sm table-hover'>
                                 <t t-foreach="atts.keys()" t-as="spec">
                                     <t t-if="len(atts.keys())&gt;1">
-                                        <tr class="success text-left breadcrumb clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
-                                            <th t-att-colspan="2"><t t-esc="spec"/></th>
+                                        <tr class="clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
+                                            <th class="text-left" t-att-colspan="2"><t t-esc="spec"/></th>
                                         </tr>
                                     </t>
                                     <tr t-foreach="atts[spec]" t-as="att" t-att-class="'collapse in show ' + spec.split()[0]">
@@ -72,7 +72,7 @@
                         <h3>Compare Products</h3>
                         <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
                             <thead>
-                                <td class='td-top-left'></td>
+                                <td t-if="specs.keys()" class='td-top-left'/>
                                 <td t-foreach="products" t-as="product">
                                     <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
                                         <strong class='float-right'>x</strong>
@@ -95,7 +95,7 @@
 
                                         <form action="/shop/cart/update" method="post" class="text-center">
                                             <input name="product_id" t-att-value="product.id" type="hidden"/>
-                                            <a role="button" class="btn btn-primary btn-block a-submit"><i class="fa fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
+                                            <a role="button" class="btn btn-primary btn-block a-submit" href="#"><i class="fa fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
                                         </form>
                                     </div>
                                 </td>
@@ -103,8 +103,8 @@
                         <tbody>
                             <t t-foreach="specs.keys()" t-as="spec">
                                 <t t-if="len(specs.keys())&gt;1">
-                                    <tr class="success text-left breadcrumb clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
-                                        <th t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><t t-esc="spec"/></th>
+                                    <tr class="clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
+                                        <th class="text-left" t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><t t-esc="spec"/></th>
                                     </tr>
                                 </t>
                                 <tr t-foreach="specs[spec].keys()" t-as="att" t-att-class="'collapse in show ' + spec.split()[0]">

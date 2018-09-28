@@ -7,6 +7,7 @@ var Widget = require('web.Widget');
 var sAnimations = require('website.content.snippets.animation');
 var website_sale_utils = require('website_sale.utils');
 
+var qweb = core.qweb;
 var _t = core._t;
 
 var ProductComparison = Widget.extend({
@@ -32,13 +33,11 @@ var ProductComparison = Widget.extend({
      */
     start: function () {
         var self = this;
+
         self._loadProducts(this.comparelist_product_ids).then(function () {
-            self._updateContent(self.comparelist_product_ids, true);
-            if (self.comparelist_product_ids.length) {
-                $('.o_product_feature_panel').addClass('d-md-block');
-                self._updateComparelistView();
-            }
+            self._updateContent('hide');
         });
+        self._updateComparelistView();
 
         $('#comparelist .o_product_panel_header').popover({
             trigger: 'manual',
@@ -49,13 +48,14 @@ var ProductComparison = Widget.extend({
             },
             container: '.o_product_feature_panel',
             placement: 'top',
-            template: '<div style="width:600px;" class="popover comparator-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+            template: qweb.render('popover'),
             content: function () {
                 return $('#comparelist .o_product_panel_content').html();
             }
         });
 
         $(document.body).on('click.product_comparaison_widget', '.comparator-popover .o_comparelist_products .o_remove', function (ev) {
+            ev.preventDefault();
             self._removeFromComparelist(ev);
         });
         $(document.body).on('click.product_comparaison_widget', '.o_comparelist_remove', function (ev) {
@@ -140,10 +140,10 @@ var ProductComparison = Widget.extend({
         if (!_.contains(self.comparelist_product_ids, product_id)) {
             self.comparelist_product_ids.push(product_id);
             if (_.has(self.product_data, product_id)){
-                self._updateContent([product_id], false);
+                self._updateContent();
             } else {
                 self._loadProducts([product_id]).then(function () {
-                    self._updateContent([product_id], false);
+                    self._updateContent();
                 });
             }
         }
@@ -152,17 +152,18 @@ var ProductComparison = Widget.extend({
     /**
      * @private
      */
-    _updateContent: function (product_ids, reset) {
+    _updateContent: function (force) {
         var self = this;
-        if (reset) {
-            self.$('.o_comparelist_products .o_product_row').remove();
-        }
-        _.each(product_ids, function (res) {
+        this.$('.o_comparelist_products .o_product_row').remove();
+        _.each(this.comparelist_product_ids, function (res) {
             var $template = self.product_data[res].render;
             self.$('.o_comparelist_products').append($template);
         });
-        if ($('.comparator-popover').length) {
+        if (force !== 'hide' && (this.comparelist_product_ids.length > 1 || force === 'show')) {
             $('#comparelist .o_product_panel_header').popover('show');
+        }
+        else {
+            $('#comparelist .o_product_panel_header').popover('hide');
         }
     },
     /**
@@ -173,8 +174,7 @@ var ProductComparison = Widget.extend({
         $(e.currentTarget).parents('.o_product_row').remove();
         this._updateCookie();
         $('.o_comparelist_limit_warning').hide();
-        // force refresh to reposition popover
-        this._updateContent(this.comparelist_product_ids, true);
+        this._updateContent('show');
     },
     /**
      * @private
@@ -191,8 +191,8 @@ var ProductComparison = Widget.extend({
         this.$('.o_comparelist_button').removeClass('d-md-block');
         if (_.isEmpty(this.comparelist_product_ids)) {
             $('.o_product_feature_panel').removeClass('d-md-block');
-            this._togglePanel();
         } else {
+            $('.o_product_feature_panel').addClass('d-md-block');
             this.$('.o_comparelist_products').addClass('d-md-block');
             if (this.comparelist_product_ids.length >=2) {
                 this.$('.o_comparelist_button').addClass('d-md-block');
