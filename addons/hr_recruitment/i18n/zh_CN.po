@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# 珠海-杜哥 <liangjia@qq.com>, 2016
 # Bo Cao, 2017
 # e2f <projects@e2f.com>, 2018
 msgid ""
@@ -31,6 +31,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>尊敬的 ${object.partner_name or 'applicant'},</p>\n"
+"<p>感谢您的咨询。<br />\n"
+"我们很遗憾地通知您，贵资料与我司要求不符。</p>\n"
+"<p>如您有任何疑问，请随时与我们联系。</p>\n"
+"<p>此致,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -43,6 +49,13 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>尊敬的 ${object.partner_name or 'applicant'},</p>\n"
+"<p>感谢您的咨询。<br />\n"
+"你的简历引起了我们的兴趣。我会尽快与你联系计划\n"
+"招聘流程的下一步。</p>\n"
+"<p>如您有任何疑问，请随时与我们联系。</p>\n"
+"<p>此致,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -127,7 +140,7 @@ msgstr "有效"
 msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
-msgstr ""
+msgstr "添加用于定义 <b>面试阶段</b>。<br/><i>例如，新增申请人 &gt; 取得资格 &gt; 首次面试 &gt; 录用</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -424,7 +437,7 @@ msgstr "内容"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Contract"
-msgstr "合约"
+msgstr "合同"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4

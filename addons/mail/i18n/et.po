@@ -10,13 +10,14 @@
 # Egon Raamat <egon@avalah.ee>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 # Martin Aavastik <martin@avalah.ee>, 2018
+# Helen Sulaoja <helen@avalah.ee>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2018\n"
+"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,7 +117,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:639
 #, python-format
 msgid " This channel is private. People must be invited to join it."
-msgstr ""
+msgstr "See kanal on privaatne. Inimesi tuleb kutsuda kanaliga ühinemiseks."
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -126,6 +127,10 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
+"${object.subject or (object.record_name and 'Vastus: %s' % "
+"object.record_name) or (object.parent_id and object.parent_id.subject and "
+"'Re: %s' % object.parent_id.subject) or (object.parent_id and "
+"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
@@ -150,14 +155,14 @@ msgstr "%s loodud"
 #: code:addons/mail/models/res_users.py:69
 #, python-format
 msgid "%s has joined the %s network."
-msgstr ""
+msgstr "%s on ühinenud %s võrgustikuga."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:94
 #, python-format
 msgid "(from"
-msgstr ""
+msgstr "(saatja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
@@ -1303,7 +1308,7 @@ msgstr "E-kirjade mallid"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "E-posti kirjavahetus"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_alias_id

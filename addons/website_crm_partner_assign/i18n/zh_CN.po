@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# 珠海-杜哥 <liangjia@qq.com>, 2016
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
@@ -55,6 +55,36 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"<p>您好,</p>\n"
+"\n"
+"\n"
+"<p>贵地区有一些潜在客户联系了我们。因此，我们将以下线索分配给 ${ctx['partner_id'].name}:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p>请连接 <a href=\"${object.get_portal_url()}\">合作伙伴门户</a> 获取详细信息。每个线索在左上角有两个按钮：“感兴趣”和“不感兴趣”，您在联系完线索后应按其中之一。</p>\n"
+"% else:\n"
+"<p>\n"
+"    您没有我们数据库的门户访问权限。请联系 \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"</p>\n"
+"% endif\n"
+"<p>如果未在 20 天内联系线索，线索将发送给其他合作伙伴。</p>\n"
+"\n"
+"<p>谢谢,</p>\n"
+"\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}\n"
+"\n"
+"% if not ctx['partner_id'].user_id:\n"
+"PS: 似乎您没有分配到客户经理，请联系我们。\n"
+"% endif\n"
+"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases

@@ -3,14 +3,15 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# 珠海-杜哥 <liangjia@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
+"Last-Translator: 珠海-杜哥 <liangjia@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,9 @@ msgid ""
 "* The 'Waiting Approval' status is used to confirm the timesheet by user. \n"
 "* The 'Approved' status is used when the users timesheet is accepted by his/her senior."
 msgstr ""
+" * 用 '打开' 状态表示新建时间表并编辑中以及时间表未被确认。 \n"
+"* 用 '等待确认' 状态表示时间表等待用户的确认。 \n"
+"* 用 '批准' 状态表示时间表已被他/她的上级领导批准了。"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -58,7 +62,7 @@ msgstr "已批准"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
 #, python-format
 msgid "Cannot approve a non-submitted timesheet."
-msgstr ""
+msgstr "无法批准未提交的工时表。"
 
 #. module: hr_timesheet_sheet
 #. openerp-web

@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# 珠海-杜哥 <liangjia@qq.com>, 2016
 # Martin Lin <whinelin@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # Martin Trigaux, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,9 @@ msgid ""
 "                            the one you use are your \"From:\". Otherwise, your\n"
 "                            expenses will not be accepted by email."
 msgstr ""
+"<b>说明</b>在雇员表单上设置相同的电子邮件地址\n"
+"你使用的是你的“From:”。否则，你的\n"
+"费用不会收到电子邮件通知信息。"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -45,7 +49,7 @@ msgid ""
 "<p>Managers can validate or refuse expense reports.</p><p>If you refuse a "
 "report, explain the reason using the <i>New Message</i> button in the "
 "bottom.</p>"
-msgstr ""
+msgstr "<p>经理可以验证或拒绝费用报告。</p><p>如果拒绝报告，请点击底部的 <i>新建信息</i> 按钮解释原因。"
 
 #. module: hr_expense
 #. openerp-web
@@ -56,6 +60,7 @@ msgid ""
 "approval.</p><p><i>Tip: from the list view, select all expenses to submit "
 "them all at once, in a single report.</i></p>"
 msgstr ""
+"<p>完成后，您可以<b>提交这笔费用</b>以获得批准.</p><p><i>提示：从列表视图中，在一个报告中可以选择一次性提交所有费用.</i></p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -64,7 +69,7 @@ msgstr ""
 msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
-msgstr ""
+msgstr "<p>会计会获得已核准的费用报告。如果税收和账户都是正确的</p><p>，他只需点击一下就可以发布日记账条目。</p>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -72,6 +77,8 @@ msgid ""
 "<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong"
 " class=\"text-primary\">PRICE</strong>"
 msgstr ""
+"<strong class=\"text-info\">[PRODUCT CODE]</strong> 自由描述 <strong class"
+"=\"text-primary\">PRICE</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -109,6 +116,8 @@ msgid ""
 "<strong>Your email gateway is not configured.</strong> Please configure your email\n"
 "                            gateway from the Settings app, menu <i>General Settings</i>."
 msgstr ""
+"<strong>您的电子邮件网关未配置。</strong>请配置您的电子邮件\n"
+" 来自“设置”应用的菜单<i>“常规设置”</i>。"
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_register_payment.py:79
@@ -1370,7 +1379,7 @@ msgstr "您不能在同一个报告中为不同的员工报告费用！"
 #: code:addons/hr_expense/models/hr_expense.py:605
 #, python-format
 msgid "You cannot report expenses with different payment modes."
-msgstr ""
+msgstr "你不可用不同的支付方式报告费用。"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:105

@@ -32,6 +32,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * \"Šablono\" būsena naudojama tada, kai vartotojas kuria naują ir nepatvirtintą kuponą.\n"
+" * \"Išankstinės sąskaitos\" būsena naudojama tada, kai kuponas neturi kupono numerio.\n"
+" * \"Paskelbta\" būsena naudojama tada, kai vartotojas sukuria kuponą, kupono numeris yra sugeneruojamas ir kupono įrašai yra sukuriami sąskaitoje.\n"
+" * \"Atšaukta\" būsena naudojama tada, kai vartotojas atšaukia kuponą."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -200,6 +204,8 @@ msgstr "DK įrašų įsigaliojimo data"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
 msgstr ""
+"Šiai eilutei priskiriamas sekos numeris, pagal kurį ji bus atvaizduojama "
+"kupone."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -219,6 +225,8 @@ msgstr "ID"
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
+"Jei susiduriate su apvalinimo problema mokesčiuose, naudokite šį lauką, kad "
+"ją ištaisytumėte"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
