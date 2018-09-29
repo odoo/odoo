@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# 珠海-杜哥 <liangjia@qq.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
 # Martin Trigaux, 2017
@@ -12,13 +12,14 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Jackie Zhang <jzh@odoo.com>, 2018\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +58,9 @@ msgid ""
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
+"\n"
+"创建从供应商直接发到客户的直运dropship路线，增加更加复杂的测试\n"
+"-这会安装  stock_dropshipping模块。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:217
@@ -82,6 +86,13 @@ msgid ""
 " * Transferred: has been processed, can't be modified or cancelled anymore\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+" * 草稿：即未确认状态，直到确认前不会被安排分拣。\n"
+" * 等待另一操作：等待另一库存移动完成后而自动变为可用状态（例如MTO流程）。\n"
+" * 等待可用：等待产品可用状态。\n"
+" * 部分可用：一些产品可用并被保留。\n"
+" * 准备调拨：产品已保留，等待确认。\n"
+" * 已调拨：已完成调拨，再也无法修改和取消。\n"
+" * 已取消：已取消，再也无法确认。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -127,6 +138,14 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations"
 msgstr ""
+"*供应商位置：虚拟位置，代表来自你的供应商的产品之来源位置\n"
+"*视图：用于为你的仓库创建分层结构的虚拟位置，聚合其子位置;不能直接包含产品\n"
+"*内部位置：你自己的仓库内的物理位置，\n"
+"*客户位置：代表发送给客户的产品的目的地位置的虚拟位置\n"
+"*库存损失：作为库存操作的副本，用于纠正库存水平的虚拟库位（物理库存）\n"
+"*采购：当来源（供应商或生产）尚未被知晓时，虚拟地点作为采购业务的临时对手。采购计划员完成运行时，此位置应为空。\n"
+"*生产：生产操作的虚拟对应位置：该位置消耗原材料并生产成品\n"
+"*转运地点：应在公司间或仓间运营中使用的对手位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

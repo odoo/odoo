@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# 珠海-杜哥 <liangjia@qq.com>, 2016
 # 卓忆科技 <zhanghao@jointd.com>, 2016
 # Bo Cao, 2016
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
@@ -13,13 +13,14 @@
 # e2f <projects@e2f.com>, 2018
 # Talway <9010446@qq.com>, 2018
 # Martin Trigaux, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,6 +133,107 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">自动登录</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Odoo已自动启动并正在运行中</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">下一步咧?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>试着发个电子邮件到 </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">邀请新用户</span></a></span>\n"
+"                                        <span>合作</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">发现 </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">项目策划人员</span></a></span>\n"
+"                                <span> 激活额外的功能</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>用工时单跟踪小时数,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>用预测计划任务和资源,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>获取智能报告和准确的仪表盘,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>按任务或问题计时开单,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>以及更多...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">需要帮忙么？?</span>\n"
+"                                <span style=\"font-style:italic;\">你还有我</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>我们很高兴能够在这一路上帮助您。如果您有任何疑问，随时可以通过\n"
+"                                <a href=\"https://www.odoo.com/help\">支援表</a> 和我们取得联络。\n"
+"                                您还可以使用我们的 </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">用户文档</span></a>\n"
+"                                </span><span> 或使用 </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API 文档</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>尽情享受您的 Odoo 体验,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>来自 Odoo 官方团队<br/>PS: Odoo已经达到人见人爱车见车爆胎的令人发指的火红地步, 不信你看 </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">大众评论。</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -216,7 +318,7 @@ msgstr "2. 现在，我们花点时间来列出 <strong>你需要的项目:</str
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
-msgstr ""
+msgstr "<b>向某人分配任务</b>。<i>您可以随时创建并邀请新用户。</i>"
 
 #. module: project
 #. openerp-web
@@ -230,7 +332,7 @@ msgstr "<b>点击保存按钮 </b> 应用对任务的更改。"
 #: code:addons/project/static/src/js/tour.js:48
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
-msgstr ""
+msgstr "可以在列间<b>拖 &amp; 放</b> 任务。"
 
 #. module: project
 #. openerp-web
@@ -245,7 +347,7 @@ msgstr "<b>通过电子邮件</b>邀请同事。<br/> <i>每行发送一个电�
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr "<b>星标记任务</b>用于标识团队优先级。"
+msgstr "<b>星标任务</b>用于标记团队优先级。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

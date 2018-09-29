@@ -4,20 +4,21 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# 珠海-杜哥 <liangjia@qq.com>, 2016
 # 老窦 北京 <2662059195@qq.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 # Martin Trigaux, 2017
 # fausthuang, 2017
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
+"Last-Translator: KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,6 +129,105 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">自动登录</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>您的 Odoo CRM 应用程序已启动并且正在运行。</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">接下来做什么?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>尝试创建线索，方法是将电子邮件发送至 </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>将卡片从一列拖放到另一列，即可在销售渠道中追踪您的机会</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">探索 </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">CRM 规划师</span></a></span>\n"
+"                                <span> 以激活额外功能</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>通过线索评分自动将您的销售线索分配给销售人员, </span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>通过高效的电子邮件活动与您的潜在客户保持联系,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>从调查中获得高质量见解,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>获得智能报告和准确的仪表板,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>以及更多内容...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">需要帮助?</span>\n"
+"                                <span style=\"font-style:italic;\">您不是孤立无援</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>W我们很高兴能够全程为您提供帮助。如果您有任何问题，可以随时通过\n"
+"                                <a href=\"https://www.odoo.com/help\">支持表</a> 联系我们.\n"
+"                                您还可以通过我们的 </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">用户文档</span></a>\n"
+"                                </span><span> 或 </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API 文档</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>请尽情享受您的 Odoo 体验,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>来自 Odoo 团队<br/>PS: 人见人爱车见车爆胎, 逆天了 </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">不信你自己看大众评论。</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -140,6 +240,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>您好 ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>商机 <strong>${object.name}</strong> 已经5天没有任何跟进记录了。</p>\n"
+"%if object.description:\n"
+"<p>这是关于商机的说明： </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>谢谢!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -773,7 +880,7 @@ msgstr "<strong>潜在客户</strong> 开始讨论你的服务"
 msgid ""
 "<strong>To boost your leads acquisition,</strong> you should have a look at "
 "our marketing apps:"
-msgstr "<strong>为了提高你的线索采集的能力，</strong> 你应该看看我们的市场营销应用程序："
+msgstr "<strong>为了提高你的搜索来源的能力，</strong> 你应该看看我们的市场营销应用程序："
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1706,7 +1813,7 @@ msgstr "刪除"
 #: code:addons/crm/static/src/js/web_planner_crm.js:28
 #, python-format
 msgid "Demonstration"
-msgstr ""
+msgstr "演示"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2002,7 +2109,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:32
 #, python-format
 msgid "Final Proposal sent"
-msgstr ""
+msgstr "最后确认发送"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2066,7 +2173,7 @@ msgstr "来自: %s:%s"
 #: code:addons/crm/static/src/js/web_planner_crm.js:31
 #, python-format
 msgid "GAP analysis with customer"
-msgstr ""
+msgstr "与客户进行 GAP 分析"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2298,7 +2405,7 @@ msgstr "信息"
 #: code:addons/crm/static/src/js/web_planner_crm.js:23
 #, python-format
 msgid "Initial Contact"
-msgstr ""
+msgstr "初步联系"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
@@ -2934,7 +3041,7 @@ msgstr "新商机"
 #: code:addons/crm/static/src/js/web_planner_crm.js:17
 #, python-format
 msgid "New propspect assigned to the right salesperson"
-msgstr ""
+msgstr "潜在的客户分配给新的销售员"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
@@ -3271,7 +3378,7 @@ msgstr "逾期活动"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
-msgstr ""
+msgstr "逾期商机"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
@@ -3288,14 +3395,14 @@ msgstr "所有者"
 #: code:addons/crm/static/src/js/web_planner_crm.js:28
 #, python-format
 msgid "POC Sold"
-msgstr ""
+msgstr "售出的 POC"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:32
 #, python-format
 msgid "POC demonstration to the customer"
-msgstr ""
+msgstr "针对客户的 POC 演示"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_parent_id
@@ -3372,7 +3479,7 @@ msgstr "电话"
 #: code:addons/crm/static/src/js/web_planner_crm.js:24
 #, python-format
 msgid "Phone call with following questions: ..."
-msgstr ""
+msgstr "电话跟踪如下问题"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3501,7 +3608,7 @@ msgstr "产品"
 #: code:addons/crm/static/src/js/web_planner_crm.js:23
 #, python-format
 msgid "Product Demonstration"
-msgstr ""
+msgstr "产品演示"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3546,7 +3653,7 @@ msgstr "验证"
 #: code:addons/crm/static/src/js/web_planner_crm.js:15
 #, python-format
 msgid "Qualified Sponsor"
-msgstr ""
+msgstr "优质赞助商"
 
 #. module: crm
 #. openerp-web
@@ -3567,7 +3674,7 @@ msgstr "发送给客户的报价单"
 #: code:addons/crm/static/src/js/web_planner_crm.js:21
 #, python-format
 msgid "Quotation signed by the customer"
-msgstr ""
+msgstr "客户签署的报价单"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
@@ -3879,7 +3986,7 @@ msgstr "显示下一个操作日期在今天之前的所有商机"
 msgid ""
 "Show all opportunities with a deadline for which the next action date is "
 "before today"
-msgstr ""
+msgstr "显示下一个操作日期在今天之前的所有商机及最后期限"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4088,14 +4195,14 @@ msgstr "报价单模板（用在线报价实现）"
 #: code:addons/crm/static/src/js/web_planner_crm.js:15
 #, python-format
 msgid "Territory"
-msgstr ""
+msgstr "领域"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:20
 #, python-format
 msgid "The customer came back to you to discuss your quotation"
-msgstr ""
+msgstr "找到你的客户，并与你商讨价钱"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id

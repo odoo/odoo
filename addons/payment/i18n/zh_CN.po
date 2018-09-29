@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# 珠海-杜哥 <liangjia@qq.com>, 2016
 # Martin Trigaux, 2017
 # e2f <projects@e2f.com>, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,8 @@ msgid ""
 "        Will be safe_eval with `self` being the current transaction. i.e.:\n"
 "            self.env['my.model'].payment_validated(self)"
 msgstr ""
+"        此事务会通过带有 `self` 参数的safe_eval来执行。例如：\n"
+"            self.env['my.model'].payment_validated(self)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
@@ -98,6 +101,7 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>错误，</i>请注意，在交易过程中出现错误。订单已确认，但未支付。如果您对订单状态有任何疑问，请随时联系我们。</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -183,21 +187,21 @@ msgstr "金额"
 #: selection:payment.acquirer,auto_confirm:0
 msgid ""
 "Authorize & capture the amount and confirm the SO on acquirer confirmation"
-msgstr ""
+msgstr "授权和获取金额并确认收单方确认的SO"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid ""
 "Authorize & capture the amount, confirm the SO and auto-validate the invoice"
 " on acquirer confirmation"
-msgstr ""
+msgstr "授权和获取金额，确认SO并在收单方确认时自动验证发票"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid ""
 "Authorize the amount and confirm the SO on acquirer confirmation (capture "
 "manually)"
-msgstr ""
+msgstr "授权金额并确认收单方确认的SO（手动操作）"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
