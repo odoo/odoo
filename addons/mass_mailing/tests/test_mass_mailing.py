@@ -222,7 +222,7 @@ class TestOnResPartner(common.TransactionCase):
 
         # Set Blacklist
         self.blacklist_contact_entry = self.env['mail.blacklist'].create({
-            'email': 'test2@email.com',
+            'email': 'Test2@email.com',
         })
 
         # create mass mailing record
