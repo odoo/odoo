@@ -281,14 +281,15 @@ class MailComposer(models.TransientModel):
 
         blacklisted_rec_ids = []
         if mass_mail_mode and hasattr(self.env[self.model], "_primary_email"):
-            blacklist = self.env['mail.blacklist'].sudo().search([]).mapped('email')
+            BL_sudo = self.env['mail.blacklist'].sudo()
+            blacklist = set(email.lower() for email in BL_sudo.search([]).mapped('email'))
             if blacklist:
                 [email_field] = self.env[self.model]._primary_email
-                sql = """ SELECT id from %s WHERE LOWER(%s) = any (array[%s]) AND id in (%s)""" % \
-                      (self.env[self.model]._table, email_field, ', '.join("'" + rec + "'" for rec in blacklist),
-                       ', '.join(str(res_id) for res_id in res_ids))
-                self._cr.execute(sql)
-                blacklisted_rec_ids = [rec[0] for rec in self._cr.fetchall()]
+                targets = self.env[self.model].browse(res_ids).read([email_field])
+                blacklisted_rec_ids = [r['id']
+                                        for r in targets
+                                        if r[email_field]
+                                        if r[email_field].lower() in blacklist]
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
