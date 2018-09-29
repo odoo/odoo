@@ -293,7 +293,7 @@ class AccountBankStatement(models.Model):
         if statements:
             sql_query += ' AND stl.statement_id IN %s'
             params += (tuple(statements.ids),)
-        sql_query += ' ORDER BY stl.id'
+        sql_query += ' ORDER BY date, sequence, stl.id'
         self.env.cr.execute(sql_query, params)
         st_lines_left = self.env['account.bank.statement.line'].browse([line.get('id') for line in self.env.cr.dictfetchall()])
 
