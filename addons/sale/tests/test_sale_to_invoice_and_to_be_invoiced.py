@@ -71,7 +71,7 @@ class TestSaleOrderInvoicing(AccountingTestCase):
         self.assertEqual(sum(order.order_line.mapped('amt_invoiced')), 0.0, 'Sale: the Amount Invoiced for the sale order should be 0.0.')
 
         # Now I validate invoice_1.
-        invoice_1.invoice_validate()
+        invoice_1.action_invoice_open()
 
         self.assertEqual(sum(order.order_line.mapped('amt_to_invoice')), 300.0, 'Sale: the Amount To Invoice for the sale order should be 300.0.')
         self.assertEqual(sum(order.order_line.mapped('amt_invoiced')), 500.0, 'Sale: the Amount Invoiced for the sale order should be 500.0.')
