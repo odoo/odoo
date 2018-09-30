@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
         <template id="s_website_form" name="Form Builder">
             <form action="/website_form/" method="post" class="s_website_form container-fluid mt32" enctype="multipart/form-data">
                 <div class="container">
@@ -25,10 +24,12 @@
         </template>
 
         <template id="snippet_options" inherit_id="website.snippet_options">
+            <xpath expr="//*[@id='so_snippet_addition']" position="attributes">
+                <attribute name="data-selector" add=".s_website_form" separator=","/>
+            </xpath>
             <xpath expr="//div" position="after">
-
               <!-- Form -->
-              <div data-js='website_form_editor' data-selector='.s_website_form' data-drop-in=".oe_structure, [data-oe-type=html]">
+              <div data-js="website_form_editor" data-selector=".s_website_form">
                   <a href="#" class="dropdown-item" data-website_form_model_modal="" data-no-preview="true">Change Form Parameters</a>
                   <a href="#" class="dropdown-item" data-website_form_field_modal="" data-no-preview="true">Add an existing field</a>
                   <div class="dropdown-submenu">
@@ -82,8 +83,6 @@
 
               <!-- Remove the delete options of the Submit button -->
               <div data-js="website_form_editor_field_required" data-selector=".s_website_form .o_website_form_send"/>
-
             </xpath>
         </template>
-
 </odoo>
