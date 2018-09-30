@@ -6,9 +6,6 @@ odoo.define('website_form_editor', function (require) {
      */
 
     var core = require('web.core');
-    var ajax = require('web.ajax');
-    var rpc = require('web.rpc');
-    var weContext = require("web_editor.context");
     var options = require('web_editor.snippets.options');
     var wUtils = require('website.utils');
 
@@ -65,99 +62,94 @@ odoo.define('website_form_editor', function (require) {
         fetch_model_fields: function () {
             var self = this;
             this.fields_deferred = new $.Deferred();
-            rpc.query({
-                    model: "ir.model",
-                    method: "get_authorized_fields",
-                    args: [this.$target.closest('form').attr('data-model_name')],
-                    context: weContext.get(),
-                })
-                .then(function (fields) {
-                    // The get_fields function doesn't return the name
-                    // in the field dict since it uses it has the key
-                    _.map(fields, function (field, field_name){
-                        field.name = field_name;
-                        return field;
-                    });
-
-                    self.fields_deferred.resolve(fields);
+            this._rpc({
+                model: "ir.model",
+                method: "get_authorized_fields",
+                args: [this.$target.closest('form').attr('data-model_name')],
+            }).then(function (fields) {
+                // The get_fields function doesn't return the name
+                // in the field dict since it uses it has the key
+                _.map(fields, function (field, field_name){
+                    field.name = field_name;
+                    return field;
                 });
 
+                self.fields_deferred.resolve(fields);
+            });
             return this.fields_deferred;
         },
 
         // Choose a model modal
         website_form_model_modal: function (previewMode, value, $li) {
             var self = this;
-            rpc.query({
-                    model: "ir.model",
-                    method: "search_read",
-                    args: [
-                        [['website_form_access', '=', true]],
-                        ['id', 'model', 'name', 'website_form_label']
-                    ],
-                    context: weContext.get(),
-                })
-                .then(function (models) {
-                    // Models selection input
-                    var model_selection = qweb.render("website_form_editor.field_many2one", {
-                        field: {
-                            name: 'model_selection',
-                            string: 'Action',
-                            records: _.map(models, function (m) {
-                                return {
-                                    id: m.model,
-                                    display_name: m.website_form_label || m.name,
-                                    selected: (m.model === self.$target.attr('data-model_name')) ? 1 : null,
-                                };
-                            }),
-                        }
-                    });
-
-                    // Success page input
-                    var success_page = qweb.render("website_form_editor.field_char", {
-                        field: {
-                            name: 'success_page',
-                            string: 'Thank You Page',
-                            value: self.$target.attr('data-success_page')
-                        }
-                    });
-
-                    // Form parameters modal
-                    self.build_modal(
-                        "Form Parameters",
-                        model_selection + success_page,
-                        function () {
-                            var model_name = self.$modal.find("[name='model_selection']").val();
-                            var success_page = self.$modal.find("[name='success_page']").val();
-                            self.init_form(model_name);
-                            self.$target.attr('data-success_page', success_page);
-
-                            // Add magic email_to input if model is mail.mail
-                            self.$target.find("input.form-field[name='email_to']").remove();
-                            if (model_name === 'mail.mail') {
-                                var email_to = self.$modal.find("input[name='email_to']").val();
-                                self.$target.append("<input class='form-field' type='hidden' name='email_to' value=" + email_to + ">");
-                            }
-                        }
-                    );
-
-                    self.$modal.find("label.col-form-label[for='success_page']").css('font-weight', 'normal');
-                    wUtils.autocompleteWithPages(self, self.$modal.find("input[name='success_page']"));
-                    self.toggle_email_to();
-
-                    self.$modal.find("[name='model_selection']").on('change', function () {
-                        self.toggle_email_to();
-                    });
-
-                    // On modal close, if there is no data-model, it means
-                    // that the user refused to configure the form on the
-                    // first modal, so we remove the snippet.
-                    self.$modal.on('hidden.bs.modal', function (e) {
-                        if (!self.$target.attr('data-model_name')){
-                            self.$target.remove();
-                        }
-                    });
+            this._rpc({
+                model: "ir.model",
+                method: "search_read",
+                args: [
+                    [['website_form_access', '=', true]],
+                    ['id', 'model', 'name', 'website_form_label']
+                ],
+            }).then(function (models) {
+                // Models selection input
+                var model_selection = qweb.render("website_form_editor.field_many2one", {
+                    field: {
+                        name: 'model_selection',
+                        string: 'Action',
+                        records: _.map(models, function (m) {
+                            return {
+                                id: m.model,
+                                display_name: m.website_form_label || m.name,
+                                selected: (m.model === self.$target.attr('data-model_name')) ? 1 : null,
+                            };
+                        }),
+                    }
                 });
+
+                // Success page input
+                var success_page = qweb.render("website_form_editor.field_char", {
+                    field: {
+                        name: 'success_page',
+                        string: 'Thank You Page',
+                        value: self.$target.attr('data-success_page')
+                    }
+                });
+
+                // Form parameters modal
+                self.build_modal(
+                    "Form Parameters",
+                    model_selection + success_page,
+                    function () {
+                        var model_name = self.$modal.find("[name='model_selection']").val();
+                        var success_page = self.$modal.find("[name='success_page']").val();
+                        self.init_form(model_name);
+                        self.$target.attr('data-success_page', success_page);
+
+                        // Add magic email_to input if model is mail.mail
+                        self.$target.find("input.form-field[name='email_to']").remove();
+                        if (model_name === 'mail.mail') {
+                            var email_to = self.$modal.find("input[name='email_to']").val();
+                            self.$target.append("<input class='form-field' type='hidden' name='email_to' value=" + email_to + ">");
+                        }
+                    }
+                );
+
+                self.$modal.find("label.col-form-label[for='success_page']").css('font-weight', 'normal');
+                wUtils.autocompleteWithPages(self, self.$modal.find("input[name='success_page']"));
+                self.toggle_email_to();
+
+                self.$modal.find("[name='model_selection']").on('change', function () {
+                    self.toggle_email_to();
+                });
+
+                // On modal close, if there is no data-model, it means
+                // that the user refused to configure the form on the
+                // first modal, so we remove the snippet.
+                self.$modal.on('hidden.bs.modal', function (e) {
+                    if (!self.$target.attr('data-model_name')){
+                        self.$target.remove();
+                    }
+                });
+            });
         },
 
         // Choose a field modal
@@ -282,14 +274,13 @@ odoo.define('website_form_editor', function (require) {
             // Fetch possible values for relation fields
             var fetch_field_relation = $.Deferred();
             if (field.relation && field.relation !== 'ir.attachment') {
-                ajax.jsonRpc('/web/dataset/call_kw', 'call', {
-                    model:  field.relation,
+                this._rpc({
+                    model: field.relation,
                     method: 'search_read',
                     args: [
                         field.domain || [],
                         ['display_name']
                     ],
-                    kwargs:{context: weContext.get()}
                 }).then(function (records) {
                     field.records = records;
                     fetch_field_relation.resolve();
@@ -345,7 +336,7 @@ odoo.define('website_form_editor', function (require) {
                 if (fields.length) {
                     // ideally we'd only do this if saving the form
                     // succeeds... but no idea how to do that
-                    rpc.query({
+                    this._rpc({
                         model: 'ir.model.fields',
                         method: 'formbuilder_whitelist',
                         args: [model, _.uniq(fields)],
