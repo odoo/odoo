@@ -18,10 +18,12 @@
             <field name="model">res.partner.title</field>
             <field name="arch" type="xml">
                 <form string="Partner Titles">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="shortcut"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="shortcut"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -683,11 +685,13 @@
             <field name="model">res.partner.category</field>
             <field name="arch" type="xml">
                 <form string="Contact Tag">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="active"/>
-                        <field name="parent_id"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="active"/>
+                            <field name="parent_id"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -721,11 +725,13 @@
             <field name="model">res.partner.industry</field>
             <field name="arch" type="xml">
                 <form string="Industry">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="full_name"/>
-                        <field name="active"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="full_name"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
