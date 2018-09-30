@@ -31,7 +31,30 @@
             box-shadow: 0px 0px 2px 1px gray('600');
         }
     }
+    .o_opacity_slider {
+        position: relative;
+        width: 18px;
+        height: 200px;
+        cursor: pointer;
+        background-image: url('/web_editor/static/src/img/transparent.png');
+
+        .o_opacity_pointer {
+            @include o-position-absolute($left: -4px);
+            width: 23px;
+            height: 6px;
+            border: 1px solid white;
+            box-shadow: 0px 0px 2px 1px gray('600');
+        }
+
+        .o_opacity_transparent {
+            height: 100%;
+            width: 100%;
+        }
+    }
     .o_color_picker_inputs {
+        .o_color_preview_parent {
+            background-image: url('/web_editor/static/src/img/transparent.png');
+        }
         .o_color_preview {
             padding: 0.375rem 1.2rem;
         }

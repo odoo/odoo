@@ -15,6 +15,7 @@ var Colorpicker = Dialog.extend({
     events: _.extend({}, Dialog.prototype.events || {}, {
         'mousedown .o_color_pick_area': '_onMouseDownPicker',
         'mousedown .o_color_slider': '_onMouseDownSlider',
+        'mousedown .o_opacity_slider': '_onMouseDownOpacitySlider',
         'change .o_color_picker_inputs' : '_onChangeInputs',
     }),
 
@@ -38,6 +39,7 @@ var Colorpicker = Dialog.extend({
         
         this.pickerFlag = false;
         this.sliderFlag = false;
+        this.sliderOpacityFlag = false;
         this.colorComponents = {};
 
         var self = this;
@@ -45,10 +47,12 @@ var Colorpicker = Dialog.extend({
         $body.on('mousemove.colorpicker', _.throttle(function (ev) {
             self._onMouseMovePicker(ev);
             self._onMouseMoveSlider(ev);
+            self._onMouseMoveOpacitySlider(ev);
         }, 10));
         $body.on('mouseup.colorpicker', _.throttle(function (ev) {
             self.pickerFlag = false;
             self.sliderFlag = false;
+            self.sliderOpacityFlag = false;
         }, 10));
 
         this.options = _.clone(options);
@@ -61,11 +65,16 @@ var Colorpicker = Dialog.extend({
         this.$colorpickerPointer = this.$('.o_picker_pointer');
         this.$colorSlider = this.$('.o_color_slider');
         this.$colorSliderPointer = this.$('.o_slider_pointer');
+        this.$colorOpacity = this.$('.o_opacity_slider');
+        this.$colorOpacityPointer = this.$('.o_opacity_pointer');
 
         var defaultColor = this.options.defaultColor || '#FF0000';
-        var rgb = defaultColor.match(/rgb\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)/);
-        if (rgb) {
-            this._updateRgb(parseInt(rgb[1]), parseInt(rgb[2]), parseInt(rgb[3]));
+        var rgba = defaultColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+        if (rgba) {
+            if (rgba[4] == undefined) {
+                rgba[4] = 1;
+            }
+            this._updateRgba(parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), parseFloat(rgba[4]));
         } else {
             this._updateHex(defaultColor);
         }
@@ -114,6 +123,18 @@ var Colorpicker = Dialog.extend({
         var height = this.$colorSlider.height();
         var y = this.colorComponents.hue * height / 360;
         this.$colorSliderPointer.css('top', Math.round(y - 2));
+
+        // Update opacity slider position
+        var heightOpacity = this.$colorOpacity.height();
+        var z = heightOpacity * this.colorComponents.opacity;
+        this.$colorOpacityPointer.css('bottom', Math.round(z - 6));
+
+        // Add gradient color on opacity slider
+        this.$('.o_opacity_transparent').css('background', 'linear-gradient('+this.colorComponents.hex+' 0%, transparent 100%)');
+
+        // Override update opacity input + update color preview
+        this.$('.o_opacity_input').val(Math.floor(z/(heightOpacity/100)));
+        this.$('.o_color_preview').css('opacity', this.colorComponents.opacity);
     },
     /**
      * Updates colors according to given hex value.
@@ -139,12 +160,17 @@ var Colorpicker = Dialog.extend({
      * @param {integer} r
      * @param {integer} g
      * @param {integer} b
+     * @param {integer} o
      */
-    _updateRgb: function (r, g, b) {
+    _updateRgba: function (r, g, b, o) {
+        if (o == undefined) {
+            o = this.colorComponents.opacity;
+        }
         var hex = Colorpicker.prototype.convertRgbToHex(r, g, b);
         if (hex) {
             _.extend(this.colorComponents,
                 {red: r, green: g, blue: b},
+                {opacity: o},
                 hex,
                 Colorpicker.prototype.convertRgbToHsl(r, g, b)
             );
@@ -167,6 +193,34 @@ var Colorpicker = Dialog.extend({
                 Colorpicker.prototype.convertRgbToHex(rgb.red, rgb.green, rgb.blue)
             );
         }
+    },
+    /**
+     * Updates color opacity
+     *
+     * @private
+     * @param {integer} o
+     */
+    _updateOpacity: function (o) {
+        _.extend(this.colorComponents,
+            {opacity: o}
+        );
+    },
+    /**
+     * Updates color opacity
+     *
+     * @private
+     * @param {integer} o
+     */
+    _updateCssColor: function (r, g, b, o) {
+        var cssColor;
+        if (this.colorComponents.opacity == 1) {
+            cssColor = this.colorComponents.hex;
+        } else {
+            cssColor = 'rgba('+r+' , '+g+' , '+b+' , '+o+')';
+        }
+        _.extend(this.colorComponents,
+            {cssColor: cssColor}
+        );
     },
 
     //--------------------------------------------------------------------------
@@ -234,6 +288,35 @@ var Colorpicker = Dialog.extend({
         this._updateUI();
     },
     /**
+     * Updates opacity when user starts clicking on opacity slider.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseDownOpacitySlider: function (ev) {
+        this.sliderOpacityFlag = true;
+        this._onMouseMoveOpacitySlider(ev);
+    },
+    /**
+     * Updates opacity value on mouse drag over opacity slider.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onMouseMoveOpacitySlider: function (ev) {
+        if (!this.sliderOpacityFlag) {
+            return;
+        }
+
+        var z = ev.pageY - this.$colorOpacity.offset().top;
+        
+        if (z >= 0 && z <= this.$colorOpacity.height()){
+            var z = (1 - z/this.$colorOpacity.height());
+            this._updateOpacity(z);
+            this._updateUI();
+        }
+    },
+    /**
      * Called when input value is changed -> Updates UI: Set picker and slider
      * position and set colors.
      *
@@ -246,7 +329,7 @@ var Colorpicker = Dialog.extend({
                 this._updateHex(this.$('.o_hex_input').val());
                 break;
             case 'rgb':
-                this._updateRgb(
+                this._updateRgba(
                     parseInt(this.$('.o_red_input').val()),
                     parseInt(this.$('.o_green_input').val()),
                     parseInt(this.$('.o_blue_input').val())
@@ -259,6 +342,9 @@ var Colorpicker = Dialog.extend({
                     parseInt(this.$('.o_lightness_input').val())
                 );
                 break;
+            case 'opacity':
+                parseInt(this.$('.o_opacity_input').val() * 100);
+                break;
         }
         this._updateUI();
     },
@@ -266,6 +352,7 @@ var Colorpicker = Dialog.extend({
      * @private
      */
     _onFinalPick: function () {
+        this._updateCssColor(this.colorComponents.red, this.colorComponents.green, this.colorComponents.blue, this.colorComponents.opacity);
         this.trigger_up('colorpicker:saved', this.colorComponents);
     },
 

@@ -10,10 +10,14 @@
                     <div class="o_color_slider d-inline-block ml-2 border">
                         <div class="o_slider_pointer"/>
                     </div>
+                    <div class="o_opacity_slider d-inline-block ml-2 border">
+                        <div class="o_opacity_pointer"/>
+                        <div class="o_opacity_transparent"/>
+                    </div>
                 </div>
                 <form class="col o_color_picker_inputs">
                     <div class="input-group">
-                        <div class="input-group-prepend">
+                        <div class="input-group-prepend o_color_preview_parent">
                             <span class="input-group-text rounded-0 o_color_preview"/>
                         </div>
                         <input type="text" class="form-control o_hex_input" data-color-method="hex"/>
@@ -47,6 +51,10 @@
                                 <input type="text" class="form-control o_lightness_input" data-color-method="hsl" id="lightness"/>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="opacity">Opacity %</label>
+                        <input type="text" class="form-control o_opacity_input" data-color-method="opacity" id="opacity"/>
                     </div>
                 </form>
             </div>
