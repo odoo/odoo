@@ -7,31 +7,34 @@
             <field name="model">res.bank</field>
             <field name="arch" type="xml">
                 <form string="Bank">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="bic"/>
-                    </group>
-                    <group>
-                        <group string="Address">
-                            <label for="street" string="Address"/>
-                            <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street"/>
-                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                <field name="city" placeholder="City" class="o_address_city"/>
-                                <field name="state" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                <field name="country" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                            </div>
+                    <sheet>
+                        <group name="bank_details" col="4">
+                            <field name="name"/>
+                            <field name="bic"/>
                         </group>
-                        <group string="Communication">
-                            <field name="phone"/>
-                            <field name="email" widget="email"/>
-                            <field name="active"/>
+                        <group>
+                            <group name="address_details" string="Address">
+                                <label for="street" string="Address"/>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city"/>
+                                    <field name="state" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="country" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                </div>
+                            </group>
+                            <group name="communication_details" string="Communication">
+                                <field name="phone"/>
+                                <field name="email" widget="email"/>
+                                <field name="active"/>
+                            </group>
                         </group>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
+
         <record id="view_res_bank_tree" model="ir.ui.view">
             <field name="name">res.bank.tree</field>
             <field name="model">res.bank</field>
@@ -43,6 +46,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="action_res_bank_form" model="ir.actions.act_window">
             <field name="name">Banks</field>
             <field name="res_model">res.bank</field>
@@ -79,6 +83,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_partner_bank_tree" model="ir.ui.view">
             <field name="name">res.partner.bank.tree</field>
             <field name="model">res.partner.bank</field>
@@ -93,6 +98,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_partner_bank_search" model="ir.ui.view">
             <field name="name">res.partner.bank.search</field>
             <field name="model">res.partner.bank</field>
@@ -104,6 +110,7 @@
                 </search>
             </field>
         </record>
+
         <record id="action_res_partner_bank_account_form" model="ir.actions.act_window">
             <field name="name">Bank Accounts</field>
             <field name="res_model">res.partner.bank</field>
@@ -115,7 +122,6 @@
               </p>
             </field>
         </record>
-
 
     </data>
 </odoo>
