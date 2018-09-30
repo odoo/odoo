@@ -379,7 +379,7 @@ class AccountMove(models.Model):
         reversed_move = self.copy(default={
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
-            'ref': _('%sreversal of: ') % (_('Automatic ') if auto else '') + self.name,
+            'ref': (_('Automatic reversal of: %s') if auto else _('Reversal of: %s')) % (self.name),
             'auto_reverse': False})
         for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
             acm_line.write({
