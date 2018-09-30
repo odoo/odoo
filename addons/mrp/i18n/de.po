@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2018
@@ -13,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-09-25 13:18+0000\n"
+"PO-Revision-Date: 2018-09-25 13:18+0000\n"
 "Last-Translator: Wolfgang Taferner, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +26,7 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:19
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr ""
+msgstr "<br/><br/>Die Komponenten werden von <b>%s</b>genommen."
 
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
@@ -622,11 +621,6 @@ msgstr ""
 "Endprodukt sein."
 
 #. module: mrp
-#: selection:stock.rule,action:0
-msgid "Buy"
-msgstr "Einkaufen"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_byproduct
 msgid "By-Products"
 msgstr "Nebenprodukte"
@@ -1014,6 +1008,11 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Document"
+msgstr "Dokument"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__is_done
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1032,11 +1031,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__done_wo
 msgid "Done for Work Order"
 msgstr "Erledigt für Arbeitsauftrag"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
-msgid "Download"
-msgstr "Herunterladen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1522,11 +1516,6 @@ msgstr ""
 "Leer lassen, wenn Sie am Lagerort der Rohstoffe produzieren. Legen Sie einen"
 " Ort fest, wenn Sie an festem Platz fertigen. Dies kann auch ein Partnersitz"
 " sein, wenn Sie Fertigungsschritte ausgelagert haben."
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__key
-msgid "Key"
-msgstr "Schlüssel"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -2539,7 +2528,6 @@ msgid "Product to Track"
 msgstr "Zu verfolgendes Produkt"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2565,6 +2553,7 @@ msgstr "Fertigungort (virtuelles Lager)"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
+#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Production Order"
@@ -3241,13 +3230,6 @@ msgstr ""
 "Technisches Feld zum Prüfen, wann wir die Reservierung aufheben können"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_document__key
-msgid ""
-"Technical field used to resolve multiple attachments in a multi-website "
-"environment."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__consumed_less_than_planned
 msgid ""
 "Technical field used to see if we have to display a warning or not when "
@@ -3831,22 +3813,12 @@ msgid "Warning"
 msgstr "Warnung"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
-msgid "Website"
-msgstr "Website"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__website_message_ids
 msgid "Website Messages"
 msgstr "Website-Nachrichten"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__website_url
-msgid "Website URL"
-msgstr "Website URL"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__website_message_ids

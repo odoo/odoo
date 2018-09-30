@@ -7,7 +7,6 @@
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
 # Fabien Bourgeois <fabien@yaltik.com>, 2018
-# Xavier Symons <xsy@openerp.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
@@ -16,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-09-25 13:18+0000\n"
+"PO-Revision-Date: 2018-09-25 13:18+0000\n"
 "Last-Translator: Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -639,11 +638,6 @@ msgid "BoM line product %s should not be same as BoM product."
 msgstr "La nomenclature de %s ne devrait pas contenir %s comme élément."
 
 #. module: mrp
-#: selection:stock.rule,action:0
-msgid "Buy"
-msgstr "Acheter"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_byproduct
 msgid "By-Products"
 msgstr "Sous-produits"
@@ -1031,6 +1025,11 @@ msgid "Display Name"
 msgstr "Nom affiché"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Document"
+msgstr "Document"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__is_done
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1049,11 +1048,6 @@ msgstr "Fait dans les 365 derniers jours"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__done_wo
 msgid "Done for Work Order"
 msgstr "Fait pour poste de travail"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
-msgid "Download"
-msgstr "Télécharger"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1544,11 +1538,6 @@ msgstr ""
 "matières premières. Définissez un emplacement si la production se fait à un "
 "lieu fixe. Il peut s'agir d'un emplacement partenaire si vous sous-traitez "
 "les opérations de fabrication."
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__key
-msgid "Key"
-msgstr "Clé"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -2571,7 +2560,6 @@ msgid "Product to Track"
 msgstr "Produit à tracer"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2597,6 +2585,7 @@ msgstr "Emplacement de production"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
+#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Production Order"
@@ -3281,15 +3270,6 @@ msgid "Technical field to check when we can unreserve"
 msgstr "Champ technique à cocher si nous pouvons annuler la réservation"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_document__key
-msgid ""
-"Technical field used to resolve multiple attachments in a multi-website "
-"environment."
-msgstr ""
-"Champ technique utilisé pour gérer les pièces jointes multiples dans un "
-"environnement multi-sites web."
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__consumed_less_than_planned
 msgid ""
 "Technical field used to see if we have to display a warning or not when "
@@ -3884,22 +3864,12 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
-msgid "Website"
-msgstr "Site Web"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__website_message_ids
 msgid "Website Messages"
 msgstr "Messages du site web"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_document__website_url
-msgid "Website URL"
-msgstr "Adresse du site"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__website_message_ids

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Carlos Lopez <celm1990@hotmail.com>, 2018
 # Massiel Acuna <mac@odoo.com>, 2018
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2018
 # Nicolás Broggi <rnbroggi@gmail.com>, 2018
@@ -18,19 +19,22 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
 # e2f_es_ t7 <e2f_es_t7@outlook.com>, 2018
 # Angel Moya - PESOL <angel.moya@pesol.es>, 2018
+# Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2018
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
+# Moises Lopez - https://www.vauxoo.com/ <moylop260@vauxoo.com>, 2018
 # Cristina Martín Rodríguez <cristina.marrod@gmail.com>, 2018
 # Miquel Torner <miq@odoo.com>, 2018
 # Rubi Navarro <ren@odoo.com>, 2018
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2018
+# Jimmy Ramos <jimmybanegas93@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2018\n"
+"Last-Translator: Jimmy Ramos <jimmybanegas93@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,13 +99,13 @@ msgstr "%s (copia)"
 #: code:addons/account/models/account.py:686
 #, python-format
 msgid "%s Sequence"
-msgstr "Secuencia"
+msgstr "%s Secuencia"
 
 #. module: account
 #: code:addons/account/models/account_move.py:399
 #, python-format
 msgid "%sreversal of: "
-msgstr ""
+msgstr "reverso de:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -162,7 +166,7 @@ msgstr ": Libro mayor"
 #: code:addons/account/models/account.py:684
 #, python-format
 msgid ": Refund"
-msgstr ": Abono"
+msgstr "Nota de Crédito"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_trialbalance
@@ -226,7 +230,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr ""
+msgstr "<em>Factura Borrador</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -236,13 +240,13 @@ msgstr "Descargar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-fw fa-comments\"/><b>Send message</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Enviar mensaje</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
-msgstr "Configurar servidores de email"
+msgstr "Configurar servidores de correo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -256,7 +260,7 @@ msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
 "or received.</p>"
 msgstr ""
-"Puede controlar su factura de proveedor en base a lo comprado o recobido."
+"Puede controlar su factura de proveedor en base a lo comprado o recibido."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -267,6 +271,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                        <strong>Correo electrónico masivo</strong> en\n"
+"                                        <span>los registros seleccionados</span>\n"
+"                                    </span>\n"
+"                                    <span>Seguidores del documento y</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -275,6 +284,9 @@ msgid ""
 " aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
 "-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
+"-md-inline\"> Esperando Pago</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -283,6 +295,9 @@ msgid ""
 "check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Pagado</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -291,6 +306,9 @@ msgid ""
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
+"remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Cancelado</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -316,6 +334,8 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
 "'between')]}\">and</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
+"'between')]}\">y</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -358,12 +378,12 @@ msgstr "Moneda Principal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Rounding Method</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Método de Redondeo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "<span class=\"o_form_label\">of the month</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">del mes</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -383,11 +403,13 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Importe</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Precio Total</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
-msgstr "Una cuenta bancaria puede pertenecer a un solo diario."
+msgstr "<span name=\"button_import_placeholder\"/>extractos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -397,7 +419,7 @@ msgstr "<span role=\"separator\">Nuevo</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr ""
+msgstr "<span role=\"separator\">Conciliación</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -407,7 +429,7 @@ msgstr "Vista"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Balance en Libro Mayor</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -448,7 +470,7 @@ msgstr "Débito"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Description</span>"
-msgstr ""
+msgstr "<span>Descripción</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -458,7 +480,7 @@ msgstr "<span>Desc.(%)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr ""
+msgstr "<span>Importar Facturas</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -508,7 +530,7 @@ msgstr "<span>Operaciones</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Original Amount</span>"
-msgstr ""
+msgstr "<span>Importe Original</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -518,7 +540,7 @@ msgstr "Socios"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr ""
+msgstr "<span>Cantidad</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -528,12 +550,12 @@ msgstr "<span>Reportería</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Source Document</span>"
-msgstr ""
+msgstr "<span>Documento Origen</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
-msgstr ""
+msgstr "<span>Impuestos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -543,7 +565,7 @@ msgstr "<span>Total</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr ""
+msgstr "<span>Precio Unitario</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2015,12 +2037,12 @@ msgstr "Aplicación"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Aplicado en un elemento de diario de crédito"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "Aplicado en un elemento de diario de débito"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_invoice_layout_form
@@ -2542,7 +2564,7 @@ msgstr "Administrador de facturación"
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr "Cuentas"
+msgstr "Facturas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2557,7 +2579,7 @@ msgstr "Facturas a pagar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Facturas para Validar"
+msgstr "Facturas a Validar"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
@@ -3053,7 +3075,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:137
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "Seleccione contrapartida o Cree un Descuadre"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_refund__filter_refund
@@ -7082,7 +7104,7 @@ msgstr "Envíe sus facturas con un solo clic usando"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_payment__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Adjuntos principales"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -7255,7 +7277,7 @@ msgstr "Circular:"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Error de Envío de Mensaje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
@@ -7750,7 +7772,7 @@ msgstr "Número de mensajes que requieren una acción"
 #: model:ir.model.fields,help:account.field_account_invoice__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Número de mensajes con error de envío"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter
@@ -9115,7 +9137,7 @@ msgstr "Referencia/Descripción"
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_in_refund
 msgid "Refund"
-msgstr "Abono"
+msgstr "Nota de Crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__refund_invoice_ids
@@ -11083,6 +11105,8 @@ msgstr "El nombre que se utilizará en los apuntes contables"
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"La nueva fecha de bloqueo para los asesores se debe establecer después de la"
+" fecha de bloqueo anterior."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_number_next
@@ -12307,7 +12331,7 @@ msgstr "Términos de Pago"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Vendor Payments"
-msgstr ""
+msgstr "Pagos de Proveedor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -12607,6 +12631,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"No puede definir condiciones más estrictas en los asesores que en los "
+"usuarios. Asegúrese de que la fecha de bloqueo en el asesor esté configurada"
+" antes de la fecha de bloqueo para los usuarios."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:583

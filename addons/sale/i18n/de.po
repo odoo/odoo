@@ -418,13 +418,13 @@ msgstr "<strong>Ihre Referenz:</strong>"
 #: code:addons/sale/models/sale.py:811
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "Ein Journal muss auf dem Zahlungsanbieter angegeben sein %s."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:804
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "Ein Zahlungsanbieter ist benörtigt um die Transaktion zu erstellen."
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
@@ -437,6 +437,8 @@ msgstr "Ein einzelner Verkaufspreis pro Produkt"
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
 msgstr ""
+"Eine Transaktion kann nicht mit einen Auftrag verbunden werden wenn "
+"verschiedene Währungen angegeben sind."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:780
@@ -444,6 +446,8 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
+"Eine Transaktion kann nicht mit einen Auftrag verbunden werden wenn "
+"verschiedene Partner angegeben sind."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -452,6 +456,9 @@ msgid ""
 "                where you want to sell extra hours to the customer\n"
 "                because the initial hours have already been used."
 msgstr ""
+"Ein typische Beispiel sind vorrausbezahlte Service-Stunden,\n"
+"               wo Sie mehr Stunden an den Kunden verkaufen wollen\n"
+"               als ursprünglich geplant."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -472,12 +479,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Akzeptieren &amp; Bezahlen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Zugriffswarnung"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -523,17 +530,17 @@ msgstr "Aktivitätstypen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a note"
-msgstr ""
+msgstr "Notiz hinzufügen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a product"
-msgstr ""
+msgstr "Produkt hinzufügen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
-msgstr ""
+msgstr "Unterteilung hinzufügen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice__comment
@@ -586,7 +593,7 @@ msgstr "Analysekonto"
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analyse der Ausgaben"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -614,6 +621,8 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Manuelle Rabatte auf Angebotslinien oder durch Preislisten kalkulierte "
+"Rabatte (Option die auf Preislisten aktiviert werden kann)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

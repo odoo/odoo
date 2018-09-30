@@ -4,13 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Максим Дронь <dronmax@gmail.com>, 2018
+# Collex100, 2018
+# Sergey Vilizhanin, 2018
+# Denis Trepalin <zekarious@gmail.com>, 2018
+# Viktor Pogrebniak <vp@aifil.ru>, 2018
+# Артур Чеботарь <artcha.chebotar@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 11:37+0000\n"
-"PO-Revision-Date: 2018-08-24 11:37+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-28 11:17+0000\n"
+"PO-Revision-Date: 2018-09-28 11:17+0000\n"
+"Last-Translator: Артур Чеботарь <artcha.chebotar@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,14 +25,14 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid ""
 "<span class=\"o_form_label\">Gengo Public or Private keys are wrong or "
 "missing.</span>"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid ""
 "<span class=\"o_form_label\">Note: If the translation state is 'In "
 "Progress', it means that the translation has to be approved to be uploaded "
@@ -35,22 +41,68 @@ msgid ""
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__user_ids
+msgid "Accepted Users"
+msgstr "Акцептованные пользователи"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__account_no
+msgid "Account No."
+msgstr "Счет номер."
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Private Key..."
 msgstr "Добавить персональный ключ логина Gengo..."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Public Key..."
 msgstr "Добавить публичный ключ логина Gengo..."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add your comments here for translator...."
 msgstr "Добавьте здесь ваши комментарии к переводу"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_calendar
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr ""
+"Разрешить пользователям синхронизировать свой календарь с календарём Google"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_base_import
+msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
+msgstr ""
+"Позволяет пользователям импортировать данные из файлов CSV, XLS, XLSX, ODS"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr "Разрешена работа в мультивалютной среде."
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__report_header
+msgid ""
+"Appears by default on the top right corner of your printed documents (report"
+" header)."
+msgstr ""
+"По умолчанию отображается в верхнем правом углу печатных документов "
+"(заголовок отчета)."
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_voip
+msgid "Asterisk (VoIP)"
+msgstr "Астериск (VoIP)"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_drive
+msgid "Attach Google documents to any record"
+msgstr "Прилагать документы Google к любой записи"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Auto Approve Translation"
 msgstr "Автоматическое подтверждение перевода"
 
@@ -61,12 +113,36 @@ msgid "Auto Approve Translation ?"
 msgstr "Автоматически утвердить перевод?"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_ir_translation__state
+msgid ""
+"Automatically set to let administators find new terms that might need to be "
+"translated"
+msgstr ""
+"Автоматически отсылает администраторам новые термины, которые возможно, "
+"нуждаются в переводе"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__bank_ids
+msgid "Bank Accounts"
+msgstr "Банковские счета"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__bank_ids
+msgid "Bank accounts related to this company"
+msgstr "Банковские счета , связанные с этой компанией"
+
+#. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Both"
 msgstr "Оба"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -81,12 +157,32 @@ msgstr ""
 "главным образом используется для тестирования."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__child_ids
+msgid "Child Companies"
+msgstr "Дочерние компании"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__city
+msgid "City"
+msgstr "Город"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Click here to Configure Gengo Parameters"
 msgstr "Нажмите здесь, чтобы настроить параметры Gengo"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: selection:ir.translation,type:0
+msgid "Code"
+msgstr "Код"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_pad
+msgid "Collaborative Pads"
+msgstr "Совместные планшеты"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Comment"
 msgstr "Комментарий"
 
@@ -107,22 +203,116 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__company_id
+msgid "Company"
+msgstr "Компания"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__logo
+msgid "Company Logo"
+msgstr "Логотип компании"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__name
+msgid "Company Name"
+msgstr "Название компании"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__company_registry
+msgid "Company Registry"
+msgstr "ОГРН"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__report_header
+msgid "Company Tagline"
+msgstr "Девиз компании"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Constraint"
+msgstr "Ограничение"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__country_id
+msgid "Country"
+msgstr "Страна"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__create_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__create_uid
 msgid "Created by"
 msgstr "Создано"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__create_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__create_date
 msgid "Created on"
 msgstr "Создан"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__currency_id
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__report_footer
+msgid "Custom Report Footer"
+msgstr "Пользовательский колонтитул отчета"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__user_default_rights
+msgid "Default Access Rights"
+msgstr "Права доступа по умолчанию"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__external_report_layout_id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__external_report_layout_id
+msgid "Document Template"
+msgstr "Шаблон документа"
+
+#. module: base_gengo
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Done"
+msgstr "Сделано"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__email
+msgid "Email"
+msgstr "Email"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__external_email_server_default
+msgid "External Email Servers"
+msgstr "Внешние Почтовые Сервера"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__state_id
+msgid "Fed. State"
+msgstr "Область"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__report_footer
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "Текст подвала отображается в нижней части всех отчётов."
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Comments & Activity..."
 msgstr "Комментарии и мероприятия Gengo..."
 
@@ -144,12 +334,12 @@ msgid "Gengo Public Key"
 msgstr "Gengo публичный ключ"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
 msgstr "Форма запроса Gengo"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Translation Service"
 msgstr "Услуги Gengo перевода"
 
@@ -199,9 +389,22 @@ msgid "Gengo: Sync translation (Response)"
 msgstr ""
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_spreadsheet
+msgid "Google Spreadsheet"
+msgstr "Google Электронные таблицы"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__id
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__id
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__id
 msgid "ID"
 msgstr "Номер"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__src
+msgid "Internal Source"
+msgstr "Внутренний Источник"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company__gengo_auto_approve
@@ -210,24 +413,77 @@ msgid "Jobs are Automatically Approved by Gengo."
 msgstr "Вакансии автоматически одобрены Grengo"
 
 #. module: base_gengo
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Just done"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_auth_ldap
+msgid "LDAP Authentication"
+msgstr "LDAP Авторизация"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__lang_id
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__lang
 msgid "Language"
 msgstr "Язык"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__write_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__write_uid
 msgid "Last Updated by"
 msgstr "Последний раз обновил"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__write_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__write_date
 msgid "Last Updated on"
 msgstr "Последнее обновление"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__logo_web
+msgid "Logo Web"
+msgstr "Web Логотип"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr "Управление межфирменным взаимодействием"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__group_multi_company
+msgid "Manage multiple companies"
+msgstr "Управление несколькими компаниями"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Model Field"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__module
+msgid "Module"
+msgstr "Модуль"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_ir_translation__module
+msgid "Module this term belongs to"
+msgstr "Модуль к которому относится термин"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__group_multi_currency
+msgid "Multi-Currencies"
+msgstr "Мультивалютность"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_limit
@@ -235,7 +491,33 @@ msgid "No. of terms to sync"
 msgstr "No. Терминов для синхронизации"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Not done"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__paperformat_id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__paperformat_id
+msgid "Paper format"
+msgstr "Размер бумаги"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__parent_id
+msgid "Parent Company"
+msgstr "Родительская компания"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__partner_id
+msgid "Partner"
+msgstr "Партнёр"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__phone
+msgid "Phone"
+msgstr "Телефон"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Private Key"
 msgstr ""
 
@@ -245,7 +527,7 @@ msgid "Pro"
 msgstr "Про"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Public Key"
 msgstr ""
 
@@ -255,14 +537,34 @@ msgid "Receive Translation"
 msgstr "Получить перевод"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__res_id
+msgid "Record ID"
+msgstr "ID записи"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__report_footer
+msgid "Report Footer"
+msgstr "Подпись в отчётах"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "SQL Constraint"
+msgstr "SQL ограничение"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company__gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_sandbox
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Sandbox Mode"
 msgstr "Режим песочницы"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: selection:ir.translation,type:0
+msgid "Selection"
+msgstr "Выбор"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Send"
 msgstr "Отправить"
 
@@ -272,14 +574,82 @@ msgid "Send New Terms"
 msgstr "Отправлять новые термины"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__sequence
+msgid "Sequence"
+msgstr "Нумерация"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__company_share_partner
+msgid "Share partners to all companies"
+msgstr "Поделиться партнерами со всеми компаниями"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__company_share_partner
+msgid ""
+"Share your partners to all companies defined in your instance.\n"
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"Поделитесь своими партнёрами со всеми компаниями, определёнными в вашем экземпляре.\n"
+"* Установлено: Партнёры являются видимыми для каждой компании, даже если компания определена у партнёра.\n"
+"* Снято: Каждая компания может видеть только своего партнёра (партнёров компании, где определена). Партнёры, не относящиеся к какой-нибудь компании, видимы для всех компаний."
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__show_effect
+msgid "Show Effect"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__source
+msgid "Source term"
+msgstr "Исходный термин"
+
+#. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Standard"
 msgstr "Стандарт"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__base_onboarding_company_state
+msgid "State of the onboarding company step"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__state
+msgid "Status"
+msgstr "Статус"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__street
+msgid "Street"
+msgstr "Улица"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__street2
+msgid "Street2"
+msgstr "Улица2"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Structured Model Field"
+msgstr ""
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_type
 msgid "Sync Type"
 msgstr "Тип синхронизации"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__vat
+msgid "Tax ID"
+msgstr "ID налога"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr ""
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:114
@@ -306,15 +676,49 @@ msgstr ""
 "Этот комментарий будет автоматически отправлен вместе с запросом к Grengo"
 
 #. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__logo
+msgid ""
+"This field holds the image used as avatar for this contact, limited to "
+"1024x1024px"
+msgstr ""
+"Это поле содержит изображение, используемое в качестве аватара для этого "
+"контакта, ограничено 1024x1024px"
+
+#. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:109
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Этот язык не поддерживается службой перевода Grengo."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_translation_search
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_translation_search
 msgid "To Approve In Gengo"
 msgstr "Подтвердить в Gengo"
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "To Translate"
+msgstr "Перевести"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_base_gengo
+msgid "Translate Your Website with Gengo"
+msgstr ""
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "Translated"
+msgstr "Переведено"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__name
+msgid "Translated field"
+msgstr "Переведенное Поле"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_ir_translation
+msgid "Translation"
+msgstr "Перевод"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -322,9 +726,49 @@ msgid "Translation By Machine"
 msgstr "Машинный перевод"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__value
+msgid "Translation Value"
+msgstr "Значение Перевода"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__comments
+msgid "Translation comments"
+msgstr "Комментарии перевода"
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "Translation in Progress"
+msgstr "Перевод в Процессе"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__type
+msgid "Type"
+msgstr "Тип"
+
+#. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Ultra"
 msgstr "Ультра"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_web_unsplash
+msgid "Unsplash Image Library"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr "Использовать внешние аутентификационные сервисы (OAuth)"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__sequence
+msgid "Used to order Companies in the company switcher"
+msgstr "Используется для заказа компаний в коммутаторе компании"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__website
+msgid "Website"
+msgstr "Вебсайт"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_ir_translation__gengo_translation
@@ -336,16 +780,11 @@ msgstr ""
 "уровень обслуживания."
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__zip
+msgid "Zip"
+msgstr "Индекс"
+
+#. module: base_gengo
 #: model:ir.model,name:base_gengo.model_base_gengo_translations
 msgid "base.gengo.translations"
 msgstr "base.gengo.translations"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_ir_translation
-msgid "ir.translation"
-msgstr "ir.translation"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

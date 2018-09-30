@@ -161,6 +161,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Hallo ${partner.name},<br/>\n"
+"            Mogen we je vragen even de tijd te nemen om onze diensten te beoordelen van ticket \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Vertel ons hoe uw ervaring was met onze service</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(klik op een van deze smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Wij waarderen uw feedback. Het helpt ons om continu te verbeteren.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat uw ticket is geëvolueerd naar het stadium<b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden <b>${object.project_id.rating_status_period}</b> zolang the taak in de status <b>${object.stage_id.name}</b> is.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -175,6 +231,15 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Beste ${object.partner_id.name or 'customer'},<br/>\n"
+"   Bedankt voor uw aanvraag.<br/>\n"
+"   Indien u vragen heeft kan u ons steeds contacteren.\n"
+"    <br/><br/>\n"
+"    Alvast bedankt,\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -206,6 +271,10 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Documenten zijn gekoppeld aan de taken en issues van uw project.</p><p>\n"
+"                        Verzend berichten of interne notities met bijlages om documenten te linken met uw project.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:149
@@ -227,7 +296,7 @@ msgstr "<p>Eenmaal u taak klaar is kan u ze bewaren.</p>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<small class=\"text-muted\">Project - </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Projekt - </small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -237,17 +306,17 @@ msgstr "<small class=\"text-right\">Status:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Bijlagen</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Description</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Omschrijving</strong>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">Probeer de e-mail poort</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -346,6 +415,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+"Voeg kolommen toe om <b>fases voor uw taken</b> te "
+"configureren.<br/><i>bijv.  Nieuw - In uitvoering - Uitgevoerd</i>"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -393,7 +464,7 @@ msgstr "Alle"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "Alle taken"
 
 #. module: project
 #. openerp-web
@@ -611,6 +682,8 @@ msgid ""
 "Click on the card to write more information about it and collaborate with "
 "your coworkers."
 msgstr ""
+"Klik op de kaart om er meer informatie over te schrijven en samen te werken "
+"met uw collega's."
 
 #. module: project
 #. openerp-web
@@ -635,6 +708,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"Communiceer met klanten over de taak via de e-mail gateway. Bevestig logo-"
+"ontwerpen aan de taak, zodat de informatie van de ontwerpers naar de "
+"arbeiders wordt overgebracht die het t-shirt bedrukken. Organiseer "
+"prioriteiten per bestellingen%s door het icoon te gebruiken."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -651,6 +728,9 @@ msgid ""
 "Computed using sum of hours planned of all subtasks created from main task. "
 "Usually these hours are less or equal to the Planned Hours (of main task)."
 msgstr ""
+"Berekend op basis van de som van de geplande uren van alle subtaken die zijn"
+" gemaakt op basis van de hoofdtaak. Meestal zijn deze uren minder of gelijk "
+"aan de geplande uren (van de hoofdtaak)."
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -726,7 +806,7 @@ msgstr "Maak een nieuwe taak"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Aangemaakt op"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
