@@ -59,7 +59,7 @@ class MailActivityType(models.Model):
              ' and not available when managing activities for other models.')
     default_next_type_id = fields.Many2one('mail.activity.type', 'Default Next Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
-    force_next = fields.Boolean("Auto-launched next activity", default=False)
+    force_next = fields.Boolean("Auto Schedule Next Activity", default=False)
     next_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
