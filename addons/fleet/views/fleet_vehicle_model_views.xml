@@ -99,15 +99,17 @@
         <field name="model">fleet.vehicle.model.brand</field>
         <field name="arch" type="xml">
             <form string="Model Make">
-                <group>
-                    <div>
-                        <field name="image_medium" widget="image" class="oe_avatar"/>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                    </div>
-                </group>
+                <sheet>
+                    <group>
+                        <div>
+                            <field name="image_medium" widget="image" class="oe_avatar"/>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>

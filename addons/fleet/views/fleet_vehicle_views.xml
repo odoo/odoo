@@ -437,9 +437,11 @@
         <field name="model">fleet.vehicle.tag</field>
         <field name="arch" type="xml">
             <form string="Vehicle Tags">
-                <group>
-                    <field name="name"/>
-                </group>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
