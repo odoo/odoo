@@ -239,18 +239,8 @@ class Quant(models.Model):
         price_unit = move.get_price_unit()
         location = force_location_to or move.location_dest_id
         rounding = move.product_id.uom_id.rounding
-        vals = {
-            'product_id': move.product_id.id,
-            'location_id': location.id,
-            'qty': float_round(qty, precision_rounding=rounding),
-            'cost': price_unit,
-            'history_ids': [(4, move.id)],
-            'in_date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'company_id': move.company_id.id,
-            'lot_id': lot_id,
-            'owner_id': owner_id,
-            'package_id': dest_package_id,
-        }
+        #La siguiente linea fue modificada por TRESCLOUD
+        vals = self.get_value_quant_create_from_move(move, location, qty, price_unit, lot_id, owner_id, dest_package_id, rounding)
         if move.location_id.usage == 'internal':
             # if we were trying to move something from an internal location and reach here (quant creation),
             # it means that a negative quant has to be created as well.
@@ -270,6 +260,25 @@ class Quant(models.Model):
 
         # create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         return self.sudo().create(vals)
+    
+    #El siguiente metodo fue agreagdo por TRESCLOUD
+    @api.model
+    def get_value_quant_create_from_move(self, move, location, qty, price_unit, lot_id, owner_id, dest_package_id, rounding):
+        '''
+        Este metodo devuelve los valores del quant
+        '''
+        return  {
+            'product_id': move.product_id.id,
+            'location_id': location.id,
+            'qty': float_round(qty, precision_rounding=rounding),
+            'cost': price_unit,
+            'history_ids': [(4, move.id)],
+            'in_date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'company_id': move.company_id.id,
+            'lot_id': lot_id,
+            'owner_id': owner_id,
+            'package_id': dest_package_id,
+        }
 
     @api.model
     def _quant_create(self, qty, move, lot_id=False, owner_id=False,
