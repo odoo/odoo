@@ -6,13 +6,15 @@
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
 # Martin Trigaux, 2018
 # fanha99 <fanha99@hotmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
+# Minh Nguyen <ndminh210994@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 11:37+0000\n"
-"PO-Revision-Date: 2018-08-24 11:37+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-28 11:17+0000\n"
+"PO-Revision-Date: 2018-09-28 11:17+0000\n"
+"Last-Translator: Minh Nguyen <ndminh210994@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,14 +23,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid ""
 "<span class=\"o_form_label\">Gengo Public or Private keys are wrong or "
 "missing.</span>"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid ""
 "<span class=\"o_form_label\">Note: If the translation state is 'In "
 "Progress', it means that the translation has to be approved to be uploaded "
@@ -37,22 +39,66 @@ msgid ""
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__user_ids
+msgid "Accepted Users"
+msgstr "Người dùng được chấp nhận"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__account_no
+msgid "Account No."
+msgstr "Số tài khoản."
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Private Key..."
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Public Key..."
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add your comments here for translator...."
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_calendar
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr "Cho phép người dùng đồng bộ lịch của họ với Google Calendar"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_base_import
+msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
+msgstr "Cho phép người dùng nhập liệu từ các tập tin CSV/XLS/XLSX/ODS"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr "Cho phép làm việc trong môi trường đa tiền tệ"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__report_header
+msgid ""
+"Appears by default on the top right corner of your printed documents (report"
+" header)."
+msgstr ""
+"Xuất hiện mặc định tại góc trên cùng bên tay phải của các tài liệu in."
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_voip
+msgid "Asterisk (VoIP)"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_drive
+msgid "Attach Google documents to any record"
+msgstr ""
+"Đính kèm tài liệu Google (Google Docs) và bất kỳ Bản ghi nào trong Odoo"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Auto Approve Translation"
 msgstr ""
 
@@ -63,12 +109,36 @@ msgid "Auto Approve Translation ?"
 msgstr ""
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_ir_translation__state
+msgid ""
+"Automatically set to let administators find new terms that might need to be "
+"translated"
+msgstr ""
+"Tự động đặt cho phép người quản trị tìm các thuật ngữ mới có thể cần được "
+"dịch"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__bank_ids
+msgid "Bank Accounts"
+msgstr "Tài khoản ngân hàng"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__bank_ids
+msgid "Bank accounts related to this company"
+msgstr "Tài khoản ngân hàng liên quan đến công ty này"
+
+#. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Both"
 msgstr "Cả hai"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Cancel"
 msgstr "Hủy"
 
@@ -81,12 +151,32 @@ msgid ""
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__child_ids
+msgid "Child Companies"
+msgstr "Công ty con"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__city
+msgid "City"
+msgstr "Thành phố"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Click here to Configure Gengo Parameters"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: selection:ir.translation,type:0
+msgid "Code"
+msgstr "Mã"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_pad
+msgid "Collaborative Pads"
+msgstr "Collaborative Pads"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Comment"
 msgstr "Bình luận"
 
@@ -107,22 +197,116 @@ msgid "Companies"
 msgstr "Công ty"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__logo
+msgid "Company Logo"
+msgstr "Logo Công ty"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__name
+msgid "Company Name"
+msgstr "Tên Công ty"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__company_registry
+msgid "Company Registry"
+msgstr "Số đăng ký kinh doanh"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__report_header
+msgid "Company Tagline"
+msgstr "Khẩu hiệu"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_res_config_settings
+msgid "Config Settings"
+msgstr "Cấu hình thiết lập"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Constraint"
+msgstr "Ràng buộc"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__country_id
+msgid "Country"
+msgstr "Quốc gia"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__create_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__create_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__create_date
 msgid "Created on"
 msgstr "Thời điểm tạo"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__currency_id
+msgid "Currency"
+msgstr "Tiền tệ"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__report_footer
+msgid "Custom Report Footer"
+msgstr "Chân Báo cáo Tuỳ chỉnh"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__user_default_rights
+msgid "Default Access Rights"
+msgstr "Quyền Truy cập Mặc định"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__external_report_layout_id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__external_report_layout_id
+msgid "Document Template"
+msgstr "Mẫu Tài liệu"
+
+#. module: base_gengo
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Done"
+msgstr "Hoàn thành"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__email
+msgid "Email"
+msgstr "Email"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__external_email_server_default
+msgid "External Email Servers"
+msgstr "Máy chủ Email Ngoài"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__state_id
+msgid "Fed. State"
+msgstr "Tỉnh/TP/Bang"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__report_footer
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "Nội dung lề dưới sẽ hiển thị ở tất cả các báo cáo."
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Comments & Activity..."
 msgstr ""
 
@@ -144,12 +328,12 @@ msgid "Gengo Public Key"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Translation Service"
 msgstr ""
 
@@ -195,9 +379,22 @@ msgid "Gengo: Sync translation (Response)"
 msgstr ""
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_spreadsheet
+msgid "Google Spreadsheet"
+msgstr "Google Spreadsheet"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__id
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__id
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__src
+msgid "Internal Source"
+msgstr "Nguồn nội bộ"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company__gengo_auto_approve
@@ -206,24 +403,77 @@ msgid "Jobs are Automatically Approved by Gengo."
 msgstr ""
 
 #. module: base_gengo
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Just done"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_auth_ldap
+msgid "LDAP Authentication"
+msgstr "Xác thực với LDAP"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__lang_id
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__lang
 msgid "Language"
 msgstr "Ngôn ngữ"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối vào"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__write_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__write_uid
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__write_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__logo_web
+msgid "Logo Web"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr "Quản lý liên công ty"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__group_multi_company
+msgid "Manage multiple companies"
+msgstr "Quản lý đa công ty"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Model Field"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__module
+msgid "Module"
+msgstr "Mô đun"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_ir_translation__module
+msgid "Module this term belongs to"
+msgstr "Module this term belongs to"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__group_multi_currency
+msgid "Multi-Currencies"
+msgstr "Đa tiền tệ"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_limit
@@ -231,7 +481,33 @@ msgid "No. of terms to sync"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Not done"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__paperformat_id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__paperformat_id
+msgid "Paper format"
+msgstr "Định dạng trang"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__parent_id
+msgid "Parent Company"
+msgstr "Công ty mẹ"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__partner_id
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__phone
+msgid "Phone"
+msgstr "Điện thoại"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Private Key"
 msgstr ""
 
@@ -241,7 +517,7 @@ msgid "Pro"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Public Key"
 msgstr ""
 
@@ -251,14 +527,34 @@ msgid "Receive Translation"
 msgstr ""
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__res_id
+msgid "Record ID"
+msgstr "Record ID"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__report_footer
+msgid "Report Footer"
+msgstr "Lề dưới báo cáo"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "SQL Constraint"
+msgstr "Ràng buộc SQL"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company__gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_sandbox
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Sandbox Mode"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: selection:ir.translation,type:0
+msgid "Selection"
+msgstr "Lựa chọn"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Send"
 msgstr "Gửi"
 
@@ -268,13 +564,81 @@ msgid "Send New Terms"
 msgstr ""
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__sequence
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__company_share_partner
+msgid "Share partners to all companies"
+msgstr "Chia sẻ đối tác cho tất cả các công ty"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__company_share_partner
+msgid ""
+"Share your partners to all companies defined in your instance.\n"
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"Chia sẻ tất cả các đối tác cho tất cả các công ty trong hệ thống của bạn.\n"
+" * Đánh dấu: Các đối tác sẽ được thấy bởi tất cả các công ty, kể cả công ty đối tác.\n"
+" * Bỏ Đánh dấu: Mỗi công ty chỉ có thể đối tác của chính nó (các đối tác có thiết lập công ty). Các đối tác không có thiết lập công ty sẽ được thấy bởi tất cả các công ty.\n"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__show_effect
+msgid "Show Effect"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__source
+msgid "Source term"
+msgstr "Từ gốc"
+
+#. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Standard"
 msgstr "Chuẩn"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__base_onboarding_company_state
+msgid "State of the onboarding company step"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__state
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__street
+msgid "Street"
+msgstr "Địa chỉ"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__street2
+msgid "Street2"
+msgstr "Địa chỉ, đường"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Structured Model Field"
+msgstr ""
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_type
 msgid "Sync Type"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__vat
+msgid "Tax ID"
+msgstr "Mã số thuế"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
 msgstr ""
 
 #. module: base_gengo
@@ -299,15 +663,49 @@ msgid ""
 msgstr ""
 
 #. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__logo
+msgid ""
+"This field holds the image used as avatar for this contact, limited to "
+"1024x1024px"
+msgstr ""
+"Trường này lưu hình dùng cho ảnh đại diện của liên hệ, giới hạn là  "
+"1024x1024px"
+
+#. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:109
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_translation_search
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_translation_search
 msgid "To Approve In Gengo"
 msgstr ""
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "To Translate"
+msgstr "Dịch thành"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_base_gengo
+msgid "Translate Your Website with Gengo"
+msgstr "Dịch Website của bạn với Gengo"
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "Translated"
+msgstr "Đã dịch"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__name
+msgid "Translated field"
+msgstr "Trường đã dịch"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_ir_translation
+msgid "Translation"
+msgstr "Bản dịch"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -315,9 +713,49 @@ msgid "Translation By Machine"
 msgstr ""
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__value
+msgid "Translation Value"
+msgstr "Giá trị dịch"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__comments
+msgid "Translation comments"
+msgstr "Bình luận dịch"
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "Translation in Progress"
+msgstr "Đang tiến hành dịch"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__type
+msgid "Type"
+msgstr "Loại"
+
+#. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Ultra"
 msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_web_unsplash
+msgid "Unsplash Image Library"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr "Sử dụng các nhà cung cấp dịch vụ xác thực bên ngoài (OAuth)"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__sequence
+msgid "Used to order Companies in the company switcher"
+msgstr "Được dùng để sắp xếp các công ty trong phần thay đổi công ty"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__website
+msgid "Website"
+msgstr "Trang web"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_ir_translation__gengo_translation
@@ -327,16 +765,11 @@ msgid ""
 msgstr ""
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__zip
+msgid "Zip"
+msgstr "Mã bưu chính"
+
+#. module: base_gengo
 #: model:ir.model,name:base_gengo.model_base_gengo_translations
 msgid "base.gengo.translations"
 msgstr ""
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_ir_translation
-msgid "ir.translation"
-msgstr "ir.translation"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

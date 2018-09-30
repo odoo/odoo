@@ -6,20 +6,21 @@
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
 # guohuadeng <guohuadeng@hotmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: roye w <159820@qq.com>, 2018\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,6 +155,8 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "                This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"价格是一组销售价格或规则，用于根据产品、产品类别、日期和订购数量计算销售订单行的价格。\n"
+"这是处理几个价格、季节性折扣等的完美工具。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -468,7 +471,7 @@ msgstr "成本"
 msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
 "in average/FIFO."
-msgstr ""
+msgstr "在标准价格中用于库存估值的成本，作为第一个价格的平均价格/FIFO。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -588,13 +591,13 @@ msgstr "所有库存商品的缺省单位。"
 msgid ""
 "Default unit of measure used for purchase orders. It must be in the same "
 "category as the default unit of measure."
-msgstr ""
+msgstr "采购订单中使用的默认计量单位。它必须与默认的度量单位相同。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__seller_ids
 #: model:ir.model.fields,help:product.field_product_template__seller_ids
 msgid "Define vendor pricelists."
-msgstr ""
+msgstr "定义供应商价格表。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -789,7 +792,7 @@ msgstr "如果勾选此项， 某些信息将会产生传递错误。"
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
-msgstr ""
+msgstr "如果没有设置，供应商的价格将适用于所有产品的变体。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1214,7 +1217,7 @@ msgstr "价格附加费用"
 #: model:ir.model.fields,help:product.field_product_template__list_price
 #: model:ir.model.fields,help:product.field_product_template__lst_price
 msgid "Price at which the product is sold to customers."
-msgstr ""
+msgstr "产品销售给客户的价格。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
@@ -1324,12 +1327,12 @@ msgstr "产品属性"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "Product Attribute Line"
-msgstr ""
+msgstr "产品属性行"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_price
 msgid "Product Attribute Price"
-msgstr ""
+msgstr "产品属性价格"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
@@ -1410,17 +1413,17 @@ msgstr "产品包装"
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "Product Price List History"
-msgstr ""
+msgstr "产品价格历史列表"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Product Price List Report"
-msgstr ""
+msgstr "产品价格表报告"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_list
 msgid "Product Price per Unit Based on Pricelist Version"
-msgstr ""
+msgstr "基于价格列表版本的单位产品价格"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -1770,7 +1773,7 @@ msgstr "计算的价格基于产品默认计量单位。"
 msgid ""
 "The default Unit of Measure and the purchase Unit of Measure must be in the "
 "same category."
-msgstr ""
+msgstr "默认的计量单位和购买单位的度量必须在同一类别中。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
@@ -1789,7 +1792,7 @@ msgstr "从供应商采购的最小数量的计量单位在产品的供应商信
 #: code:addons/product/models/product_pricelist.py:443
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "最小保证金应低于最大保证金。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -1868,12 +1871,12 @@ msgstr "这是所有属性额外价格的总和"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "这张备注只用于内部用途。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will show up on sales orders & invoices."
-msgstr ""
+msgstr "这条备注将显示在销售订单和发票上。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
@@ -2086,7 +2089,7 @@ msgstr "测量的重量单位"
 msgid ""
 "Weight of the product, packaging not included. The unit of measure can be "
 "changed in the general settings"
-msgstr ""
+msgstr "产品重量、包装不包括在内。可以在一般设置中改变测量单位。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
@@ -2097,7 +2100,7 @@ msgstr "重量单位"
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "重量单位计量标签"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2109,14 +2112,14 @@ msgstr "重量"
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
-msgstr ""
+msgstr "你可以给你的客户分配价目表，或者在创建一个新的销售报价时选择一个。"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:437
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
+msgstr "不能将主价目表作为价目表中的其他价目表指定。"
 
 #. module: product
 #: code:addons/product/models/product.py:54
@@ -2136,7 +2139,7 @@ msgstr "您不能将“帐户”的小数精度定义为大于公司主要货币
 #: code:addons/product/models/product_attribute.py:105
 #, python-format
 msgid "You cannot use this attribute with the following value."
-msgstr ""
+msgstr "不能使用以下值使用此属性。"
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:26
@@ -2157,6 +2160,8 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "                whether it's a physical product, a consumable or services."
 msgstr ""
+"您必须为购买的所有商品定义产品，\n"
+"无论它是实物产品，消费品,可消耗还是服务。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -2167,6 +2172,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"你必须为你销售的每一件产品定义一种产品，不管它是一种物理产品。\n"
+"你为顾客提供的消耗品或服务。\n"
+"产品形式包含简化销售过程的信息：\n"
+"价格、报价单、会计数据、采购方法等。"
 
 #. module: product
 #: code:addons/product/models/product_template.py:29

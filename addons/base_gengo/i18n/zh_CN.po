@@ -4,13 +4,23 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# e2f <projects@e2f.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
+# Wei "oldrev" Li <liwei@sandwych.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# fausthuang, 2018
+# xiaobin wu <bd5dml@gmail.com>, 2018
+# 菜小蛇 <lttlsnk@gmail.com>, 2018
+# guohuadeng <guohuadeng@hotmail.com>, 2018
+# Felix Yuen <fyu@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 11:37+0000\n"
-"PO-Revision-Date: 2018-08-24 11:37+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-28 11:17+0000\n"
+"PO-Revision-Date: 2018-09-28 11:17+0000\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,14 +29,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid ""
 "<span class=\"o_form_label\">Gengo Public or Private keys are wrong or "
 "missing.</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Gengo 公钥或私钥错误或者缺失。</span>"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid ""
 "<span class=\"o_form_label\">Note: If the translation state is 'In "
 "Progress', it means that the translation has to be approved to be uploaded "
@@ -35,22 +45,64 @@ msgid ""
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__user_ids
+msgid "Accepted Users"
+msgstr "接受的用户"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__account_no
+msgid "Account No."
+msgstr "科目号码"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Private Key..."
 msgstr "添加Gengo登录私有密钥…"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Public Key..."
 msgstr "添加Gengo登录公开密钥…"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add your comments here for translator...."
 msgstr "添加您的评论在这里翻译...."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_calendar
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr "允许用户同步Google日历"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_base_import
+msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
+msgstr "允许用过通过 CSV/XLS/XLSX/ODS文档导入数据"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr "允许在多货币环境中使用"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__report_header
+msgid ""
+"Appears by default on the top right corner of your printed documents (report"
+" header)."
+msgstr "将出现在打印的报表的右上角(报表页眉)。"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_voip
+msgid "Asterisk (VoIP)"
+msgstr "Asterisk (VoIP)"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_drive
+msgid "Attach Google documents to any record"
+msgstr "附加Google文档到记录"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Auto Approve Translation"
 msgstr "自动审核翻译"
 
@@ -61,12 +113,34 @@ msgid "Auto Approve Translation ?"
 msgstr "自动审核翻译 ?"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_ir_translation__state
+msgid ""
+"Automatically set to let administators find new terms that might need to be "
+"translated"
+msgstr "自动设置让管理员找到可能需要翻译的术语。"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__bank_ids
+msgid "Bank Accounts"
+msgstr "银行帐户"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__bank_ids
+msgid "Bank accounts related to this company"
+msgstr "与本公司相关的银行账户"
+
+#. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Both"
 msgstr "全部"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Cancel"
 msgstr "取消"
 
@@ -79,12 +153,32 @@ msgid ""
 msgstr "如果您使用Gengo沙盒模式 选中这个框,主要是用于测试目的."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__child_ids
+msgid "Child Companies"
+msgstr "下级公司"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__city
+msgid "City"
+msgstr "城市"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Click here to Configure Gengo Parameters"
 msgstr "单击此处配置Gengo参数"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: selection:ir.translation,type:0
+msgid "Code"
+msgstr "代码"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_pad
+msgid "Collaborative Pads"
+msgstr "协作pad"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Comment"
 msgstr "备注"
 
@@ -105,22 +199,116 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__logo
+msgid "Company Logo"
+msgstr "公司 Logo"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__name
+msgid "Company Name"
+msgstr "公司名称"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__company_registry
+msgid "Company Registry"
+msgstr "公司注册"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__report_header
+msgid "Company Tagline"
+msgstr "公司标语"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Constraint"
+msgstr "约束"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__country_id
+msgid "Country"
+msgstr "国家"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__create_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__create_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__currency_id
+msgid "Currency"
+msgstr "币种"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__report_footer
+msgid "Custom Report Footer"
+msgstr "自定义报表页脚"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__user_default_rights
+msgid "Default Access Rights"
+msgstr "默认访问权限"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__external_report_layout_id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__external_report_layout_id
+msgid "Document Template"
+msgstr "文档模板"
+
+#. module: base_gengo
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Done"
+msgstr "完成"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__email
+msgid "Email"
+msgstr "电子邮箱"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__external_email_server_default
+msgid "External Email Servers"
+msgstr "外部邮件服务器"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__state_id
+msgid "Fed. State"
+msgstr "状态"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__report_footer
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "显示在所有报告下方的页脚文字。"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Comments & Activity..."
 msgstr "Gengo 意见及活动..."
 
@@ -142,12 +330,12 @@ msgid "Gengo Public Key"
 msgstr "Gengo公开密钥"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
 msgstr "Gengo 申请书"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Translation Service"
 msgstr "Gengo 翻译服务"
 
@@ -195,9 +383,22 @@ msgid "Gengo: Sync translation (Response)"
 msgstr "Gengo：同步翻译（响应）"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_google_spreadsheet
+msgid "Google Spreadsheet"
+msgstr "谷歌电子表格"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__id
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__id
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__src
+msgid "Internal Source"
+msgstr "内部来源"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company__gengo_auto_approve
@@ -206,24 +407,77 @@ msgid "Jobs are Automatically Approved by Gengo."
 msgstr "任务已被Gengo自动审核."
 
 #. module: base_gengo
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Just done"
+msgstr "完成"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_auth_ldap
+msgid "LDAP Authentication"
+msgstr "LDAP认证"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__lang_id
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__lang
 msgid "Language"
 msgstr "语言"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__write_uid
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__write_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__write_date
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__logo_web
+msgid "Logo Web"
+msgstr "网页徽标"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr "管理公司间交易"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__group_multi_company
+msgid "Manage multiple companies"
+msgstr "管理多公司"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Model Field"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__module
+msgid "Module"
+msgstr "模块"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_ir_translation__module
+msgid "Module this term belongs to"
+msgstr "模块这个项属于"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__group_multi_currency
+msgid "Multi-Currencies"
+msgstr "多币种"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_limit
@@ -231,7 +485,33 @@ msgid "No. of terms to sync"
 msgstr "条款编号同步"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: selection:res.company,base_onboarding_company_state:0
+msgid "Not done"
+msgstr "尚未完成"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__paperformat_id
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__paperformat_id
+msgid "Paper format"
+msgstr "纸张格式"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__parent_id
+msgid "Parent Company"
+msgstr "上级公司"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__partner_id
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__phone
+msgid "Phone"
+msgstr "电话"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Private Key"
 msgstr "私有密匙"
 
@@ -241,7 +521,7 @@ msgid "Pro"
 msgstr "Pro"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Public Key"
 msgstr "公开密钥"
 
@@ -251,14 +531,34 @@ msgid "Receive Translation"
 msgstr "接收翻译"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__res_id
+msgid "Record ID"
+msgstr "记录 ID"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__report_footer
+msgid "Report Footer"
+msgstr "报表页脚"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "SQL Constraint"
+msgstr "SQL 约束"
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company__gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_sandbox
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Sandbox Mode"
 msgstr "沙盒模式"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: selection:ir.translation,type:0
+msgid "Selection"
+msgstr "选中内容"
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Send"
 msgstr "发送"
 
@@ -268,14 +568,82 @@ msgid "Send New Terms"
 msgstr "发送新术语"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__company_share_partner
+msgid "Share partners to all companies"
+msgstr "多公司间所有公司的公共用户"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_config_settings__company_share_partner
+msgid ""
+"Share your partners to all companies defined in your instance.\n"
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"在你实例中把产品定义为公司间分享选择：产品队每个公司可见，即便是某个\n"
+"公司只针对某一个业务伙伴不选择：每个公司只能看到自己的产品（定义产品的\n"
+"公司）。但是没有关联到某一公司的产品对全部的公司都是可见的"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__show_effect
+msgid "Show Effect"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__source
+msgid "Source term"
+msgstr "源术语"
+
+#. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Standard"
 msgstr "标准"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__base_onboarding_company_state
+msgid "State of the onboarding company step"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__state
+msgid "Status"
+msgstr "省份"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__street
+msgid "Street"
+msgstr "街道"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__street2
+msgid "Street2"
+msgstr "街道 2"
+
+#. module: base_gengo
+#: selection:ir.translation,type:0
+msgid "Structured Model Field"
+msgstr ""
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__sync_type
 msgid "Sync Type"
 msgstr "同步类型"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__vat
+msgid "Tax ID"
+msgstr "税号"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr ""
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:114
@@ -299,15 +667,47 @@ msgid ""
 msgstr "此评论将在每次提交时自动封闭并发给Gengo。"
 
 #. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__logo
+msgid ""
+"This field holds the image used as avatar for this contact, limited to "
+"1024x1024px"
+msgstr "该字段保存的图像用作联系人的头像，限制为1024x1024px"
+
+#. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:109
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Gengo 翻译服务不支持这种语言."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_translation_search
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_translation_search
 msgid "To Approve In Gengo"
 msgstr "通过Gengo审核"
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "To Translate"
+msgstr "待翻译"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_base_gengo
+msgid "Translate Your Website with Gengo"
+msgstr "用Gengo翻译您的网站"
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "Translated"
+msgstr "翻译"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__name
+msgid "Translated field"
+msgstr "已翻译字段"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_ir_translation
+msgid "Translation"
+msgstr "翻译"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -315,9 +715,49 @@ msgid "Translation By Machine"
 msgstr "机器翻译"
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__value
+msgid "Translation Value"
+msgstr "翻译值"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__comments
+msgid "Translation comments"
+msgstr "翻译备注"
+
+#. module: base_gengo
+#: selection:ir.translation,state:0
+msgid "Translation in Progress"
+msgstr "翻译进行中"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_ir_translation__type
+msgid "Type"
+msgstr "类型"
+
+#. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Ultra"
 msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_web_unsplash
+msgid "Unsplash Image Library"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr "使用外部验证提供者 (OAuth)"
+
+#. module: base_gengo
+#: model:ir.model.fields,help:base_gengo.field_res_company__sequence
+msgid "Used to order Companies in the company switcher"
+msgstr "用于在公司切换器中对公司进行排序"
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__website
+msgid "Website"
+msgstr "网站"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_ir_translation__gengo_translation
@@ -327,16 +767,11 @@ msgid ""
 msgstr "你可以在这里选择你所需要的Gengo自动翻译级别."
 
 #. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_res_company__zip
+msgid "Zip"
+msgstr "邮政编码"
+
+#. module: base_gengo
 #: model:ir.model,name:base_gengo.model_base_gengo_translations
 msgid "base.gengo.translations"
 msgstr "base.gengo.translations"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_ir_translation
-msgid "ir.translation"
-msgstr "ir.translation"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_res_config_settings
-msgid "res.config.settings"
-msgstr "设置-基础设置"

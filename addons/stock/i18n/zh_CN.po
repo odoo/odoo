@@ -13,7 +13,6 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # Yuan Xulei <hi@yxl.name>, 2018
-# 老窦 北京 <2662059195@qq.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
@@ -21,8 +20,9 @@
 # Henry Zhou <zhouhenry@live.com>, 2018
 # 卓忆科技 <zhanghao@jointd.com>, 2018
 # Rona Lin <ssauapw@qq.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
 # liulixia <liu.lixia@elico-corp.com>, 2018
-# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
 # Shane Tsoi <sso@odoo.com>, 2018
 # Felix Yuen <fyu@odoo.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
@@ -368,7 +368,7 @@ msgstr "<strong>总数量 </strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products ?</strong>"
-msgstr "你要把产品发送到哪里？"
+msgstr "<strong>你要把产品发送到哪里？</strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:123
@@ -2494,14 +2494,14 @@ msgstr "盘点"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr "库存盘点"
+msgstr "库存调整"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr "库存盘点"
+msgstr "库存调整"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__date
@@ -2539,7 +2539,7 @@ msgstr "盘点位置"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Inventory Loss"
-msgstr "库存亏损"
+msgstr "库存损失"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
@@ -2549,7 +2549,7 @@ msgstr "库存状况"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Product"
-msgstr "库存产品"
+msgstr "盘点产品"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__name
@@ -3366,7 +3366,7 @@ msgid ""
 "No procurement rule found in location \"%s\" for product \"%s\".\n"
 " Check routes configuration."
 msgstr ""
-"库位\"%s\"中的产品\"%s\"没有定义补货规则。\n"
+"库位 \"%s\" 中的产品 \"%s\"没有定义补货规则。\n"
 "请确认路线设置。"
 
 #. module: stock
@@ -3375,7 +3375,7 @@ msgstr ""
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)."
-msgstr "没有可退回产品（只有处于完成状态并且没有全部退回的行才可以退回产品）"
+msgstr "没有可退回产品（只有处于完成状态并且没有全部退回的行才可以退回产品）。"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:172
@@ -3466,8 +3466,9 @@ msgid ""
 "                the vendor or the purchase order reference. Then you can confirm\n"
 "                all products received using the buttons on the right of each line."
 msgstr ""
-"当你接收到送货单时，你可依厂商名或者相应的采购订单来筛选。\n"
-"然后你可以点每一订单行右面的按钮确认接收到的产品及数量。"
+"当你接收到送货单时，\n"
+"                你可依厂商名或者相应的采购订单来筛选。\n"
+"                然后你可以点每一订单明细行右面的按钮确认接收到的产品及数量。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:121
@@ -4146,7 +4147,7 @@ msgstr "产品移动"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "产品移动(移库行)"
+msgstr "产品移动(移库明细)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
@@ -5276,7 +5277,7 @@ msgstr "指定产品以作为特殊产品来专注于你的存货。"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr "开始盘存"
+msgstr "开始盘点"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__state
@@ -5397,7 +5398,7 @@ msgstr "库存作业"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr ""
+msgstr "仓库包装层级"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
@@ -5431,7 +5432,7 @@ msgstr "库存规则报告"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "库存规则报告"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
@@ -5466,7 +5467,7 @@ msgstr "已经处理移动库存"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "库存规则报告"
 
 #. module: stock
 #: selection:product.template,type:0
@@ -5592,7 +5593,7 @@ msgid ""
 "The 'Manual Operation' value will create a stock move after the current one."
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
-msgstr ""
+msgstr "“手动操作”的值会在当前操作之后创建库存移动。当“自动无步骤添加”时，位置将在原来的移动中被替换。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:824
@@ -5696,46 +5697,46 @@ msgstr "请求的作业无法处理，因为一个程序错误，设置`product_
 msgid ""
 "The rules defined per product will be applied before the rules defined per "
 "product category."
-msgstr ""
+msgstr "若同时对产品类别和产品定义规则， 则产品规则会优先生效。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:160
 #, python-format
 msgid ""
 "The selected inventory options are not coherent, the package doesn't exist."
-msgstr ""
+msgstr "所选的库存选项不一致，包装不存在。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:156
 #, python-format
 msgid "The selected lot number doesn't exist."
-msgstr ""
+msgstr "所选择的批号不存在。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:158
 #, python-format
 msgid "The selected owner doesn't have the proprietary of that product."
-msgstr ""
+msgstr "所选的物主对此产品没有所有权。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:154
 #, python-format
 msgid "The selected product doesn't belong to that owner.."
-msgstr ""
+msgstr "所选产品不属于此物主。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
 #: model:ir.model.fields,help:stock.field_res_users__property_stock_customer
 msgid ""
 "The stock location used as destination when sending goods to this contact."
-msgstr ""
+msgstr "当发送产品到此联系人时， 此预定义的库存将用做目的库位。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
 #: model:ir.model.fields,help:stock.field_res_users__property_stock_supplier
 msgid ""
 "The stock location used as source when receiving goods from this contact."
-msgstr ""
+msgstr "当从此联系人接收产品时， 此预定义的库存将用做源库位。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_id
@@ -5745,14 +5746,14 @@ msgstr "打包作业执行的库存作业"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__rule_id
 msgid "The stock rule that created this stock move"
-msgstr ""
+msgstr "建立此移库动作的相应规则"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid ""
 "The stock will be reserved for operations waiting for availability and the "
 "reordering rules will be triggered."
-msgstr ""
+msgstr "库存会保留给待料的事务，同时会触发相应重订货规则。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -6027,7 +6028,7 @@ msgstr "追踪"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__tracking_line_ids
 msgid "Tracking Line"
-msgstr "跟踪行"
+msgstr "跟踪明细"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
@@ -6043,7 +6044,7 @@ msgstr "调拨目的地地址"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_overprocessed_transfer
 msgid "Transfer Over Processed Stock"
-msgstr ""
+msgstr "已过帐移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_id
@@ -6426,12 +6427,12 @@ msgstr "仓库"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr "对库存不足给出警告"
+msgstr "库存不足时发出警告"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr "对报废量不足给出警告"
+msgstr "报废数量不足发出警告"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:129
@@ -6713,7 +6714,7 @@ msgid ""
 "Please first validate the first inventory adjustment before creating another"
 " one."
 msgstr ""
-"在“正在进行”状态下，您不能有两个库存调整使用相同的产品（），相同的位置（），相同的包装，相同的所有者和相同的批次。 "
+"在“正在进行”状态下，您不能有两个库存调整使用相同的产品 (%s), 相同的位置, 相同的包装, 相同的所有者和相同的批次。 "
 "在创建另一个产品之前，请先使用此产品验证第一个库存调整。"
 
 #. module: stock
