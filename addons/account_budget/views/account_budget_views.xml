@@ -42,20 +42,22 @@ Budgets
         <field name="model">account.budget.post</field>
         <field name="arch" type="xml">
             <form string="Budgetary Position">
-                <group col="4">
-                    <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                </group>
-                <notebook>
-                    <page string="Accounts">
-                        <field name="account_ids">
-                            <tree>
-                                <field name="code"/>
-                                <field name="name"/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
+                <sheet>
+                    <group name="name_company_details" col="4">
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    </group>
+                    <notebook>
+                        <page name="accounts" string="Accounts">
+                            <field name="account_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
     </record>
