@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+import logging
+
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class MailBlackList(models.Model):
@@ -22,17 +26,33 @@ class MailBlackList(models.Model):
 
     @api.model_create_multi
     def create(self, values):
+        # First of all, extract values to ensure emails are really unique (and don't modify values in place)
+        new_values = []
+        for value in values:
+            email = self._sanitize_email(value.get('email'))
+            if not email:
+                _logger.warning('Blacklist: invalid email value %s' % value['email'])
+                continue
+            new_value = dict(value, email=email)
+            new_values.append(new_value)
+
         """ To avoid crash during import due to unique email, return the existing records if any """
-        sql = '''SELECT LOWER(email), id FROM mail_blacklist WHERE LOWER(email) = ANY(%s)'''
-        emails = [(v['email'] or '').lower() for v in values]
+        sql = '''SELECT email, id FROM mail_blacklist WHERE email = ANY(%s)'''
+        emails = [v['email'] for v in new_values]
         self._cr.execute(sql, (emails,))
         bl_entries = dict(self._cr.fetchall())
-        to_create = [v for v in values
-                       if (v['email'] or '').lower() not in bl_entries]
+        to_create = [v for v in new_values
+                     if v['email'] not in bl_entries]
 
         # TODO DBE Fixme : reorder ids according to incoming ids.
         results = super(MailBlackList, self).create(to_create)
         return self.env['mail.blacklist'].browse(bl_entries.values()) | results
+
+    @api.multi
+    def write(self, values):
+        if 'email' in values:
+            values['email'] = self._sanitize_email(values['email'])
+        return super(MailBlackList, self).write(values)
 
     def _add(self, email):
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', email)])
@@ -49,6 +69,15 @@ class MailBlackList(models.Model):
         else:
             record = record.create({'email': email, 'active': False})
         return record
+
+    def _sanitize_email(self, email):
+        """ Sanitize and standardize blacklist entries: all emails should be
+        only real email extracted from strings (A <a@a> -> a@a)  and should be
+        lower case. """
+        emails = tools.email_split(email)
+        if not emails or len(emails) != 1:
+            return False
+        return emails[0].lower()
 
 
 class MailBlackListMixin(models.AbstractModel):
