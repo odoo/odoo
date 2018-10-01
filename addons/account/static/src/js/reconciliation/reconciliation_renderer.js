@@ -84,7 +84,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     hideLoadMoreButton: function () {
         this.$('.js_load_more').hide();
     },
-    showRainbowMan(state){
+    showRainbowMan: function (state) {
         var dt = Date.now()-this.time;
         var $done = $(qweb.render("reconciliation.done", {
             'duration': moment(dt).utc().format(time.getLangTimeFormat()),
