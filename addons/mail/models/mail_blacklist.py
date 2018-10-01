@@ -59,7 +59,8 @@ class MailBlackList(models.Model):
         return super(MailBlackList, self).write(values)
 
     def _add(self, email):
-        record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', email)])
+        sanitized = self._sanitize_email(email)
+        record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', sanitized)])
         if len(record) > 0:
             record.write({'active': True})
         else:
@@ -67,7 +68,8 @@ class MailBlackList(models.Model):
         return record
 
     def _remove(self, email):
-        record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', email)])
+        sanitized = self._sanitize_email(email)
+        record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', sanitized)])
         if len(record) > 0:
             record.write({'active': False})
         else:
