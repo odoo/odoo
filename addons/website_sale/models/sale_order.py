@@ -176,7 +176,7 @@ class SaleOrder(models.Model):
 
             no_variant_attribute_values = kwargs.get('no_variant_attribute_values')
             if no_variant_attribute_values:
-                values['product_no_variant_attribute_values'] = [
+                values['product_no_variant_attribute_value_ids'] = [
                     (6, 0, [int(attribute['value']) for attribute in no_variant_attribute_values])
                 ]
 

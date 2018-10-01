@@ -56,7 +56,7 @@ var ProductConfiguratorFormController = FormController.extend({
             route: '/product_configurator/configure',
             params: {
                 product_id: event.data.changes.product_template_id.id,
-                pricelist_id: $('.js_sale_order_pricelist_id').html()
+                pricelist_id: this.renderer.pricelistId
             }
         }).then(function (configurator) {
             self.renderer.renderConfigurator(configurator);
@@ -87,19 +87,12 @@ var ProductConfiguratorFormController = FormController.extend({
         ];
 
         var productId = parseInt($modal.find(productSelector.join(', ')).first().val(), 10);
-        var productReady = $.Deferred();
-        if (productId){
-            productReady.resolve(productId);
-        } else {
-            productReady = this._rpc({
-                model: 'product.template',
-                method: 'create_product_variant',
-                args: [
-                    $modal.find('.product_template_id').val(),
-                    JSON.stringify(self.renderer.getSelectedVariantValues($modal))
-                ],
-            });
-        }
+        var productReady = this.renderer.selectOrCreateProduct(
+            $modal,
+            productId,
+            $modal.find('.product_template_id').val(),
+            false
+        );
 
         productReady.done(function (productId){
             $modal.find(productSelector.join(', ')).val(productId);
@@ -126,7 +119,7 @@ var ProductConfiguratorFormController = FormController.extend({
 
             self.optionalProductsModal = new OptionalProductsModal($('body'), {
                 rootProduct: self.rootProduct,
-                pricelistId: $('.js_sale_order_pricelist_id').html(),
+                pricelistId: self.renderer.pricelistId,
                 okButtonText: _t('Confirm'),
                 cancelButtonText: _t('Back'),
                 title: _t('Configure')
