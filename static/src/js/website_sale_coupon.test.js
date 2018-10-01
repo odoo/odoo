@@ -4,6 +4,7 @@ odoo.define('website_sale_coupon.test', function (require) {
 require("website_sale.tour");
 var tour = require("web_tour.tour");
 var base = require("web_editor.base");
+var ajax = require('web.ajax');
 
 tour.register('shop_sale_coupon', {
     test: true,
@@ -11,15 +12,30 @@ tour.register('shop_sale_coupon', {
     wait_for: base.ready()
 },
     [
+        {
+            content: "open customize menu",
+            extra_trigger: '.oe_website_sale .o_website_sale_search',
+            trigger: '#customize-menu > a',
+        },
+        {
+            content: "enable 'Show # found' if needed",
+            trigger: "#customize-menu a:contains(Show # found)",
+            run: function () {
+                if (!$('#customize-menu a:contains(Show # found) input').prop('checked')) {
+                    $('#customize-menu a:contains(Show # found)').click();
+                }
+            }
+        },
         /* 1. Buy 1 Large Cabinet, enable coupon code & insert 10% code */
         {
             content: "select Large Cabinet",
+            extra_trigger: '.oe_search_found',
             trigger: '.oe_product_cart a:contains("Large Cabinet")',
         },
         {
-            content: "add 3 Large Cabinet into cart",
+            content: "add 2 Large Cabinet into cart",
             trigger: '#product_details input[name="add_qty"]',
-            run: "text 3",
+            run: "text 2",
         },
         {
             content: "click on 'Add to Cart' button",
@@ -61,54 +77,96 @@ tour.register('shop_sale_coupon', {
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
+            content: "go to shop",
+            trigger: '.reward_product:contains("10.0% discount on total amount")',
+            run: function () {
+                ajax.jsonRpc('/web/dataset/call', 'call', {
+                    model: 'account.tax',
+                    method: 'create',
+                    args: [{
+                      'name':'15% tax incl ' + _.now(),
+                      'amount': 15,
+                    }],
+                }).then(function (tax_id) {
+                    ajax.jsonRpc('/web/dataset/call', 'call', {
+                        model: 'product.template',
+                        method: 'create',
+                        args: [{
+                          'name': 'Taxed Product',
+                          'taxes_id': [([6, false, [tax_id]])],
+                          'list_price': 100,
+                          'website_published': true,
+                        }],
+                    }).then(function (data) {
+                        location.href = '/shop';
+                    });
+                });
+            },
+        },
+        {
+            content: "type Taxed Product in search",
+            trigger: 'form input[name="search"]',
+            run: "text Taxed Product",
+        },
+        {
+            content: "start search",
+            trigger: 'form:has(input[name="search"]) .oe_search_button',
+        },
+        {
+            content: "select Taxed Product",
+            extra_trigger: '.oe_search_found', // Wait to be on search results or it sometimes throws concurent error (sent search form + click on product on /shop)
+            trigger: '.oe_product_cart a:containsExact("Taxed Product")',
+        },
+        {
+            content: "click on 'Add to Cart' button",
+            trigger: "a:contains(Add to Cart)",
+        },
+        {
+            content: "check reduction amount got recomputed and merged both discount lines into one only",
+            extra_trigger: '.oe_currency_value:contains("-﻿75.50"):not(#cart_total .oe_currency_value:contains("-﻿75.50"))',
+            trigger: '.oe_website_sale .oe_cart',
+            run: function () {}, // it's a check
+        },
+        /* 3. Add some cabinet to get a free one, play with quantity */
+        {
+            content: "add one Large Cabinet",
+            trigger: '#cart_products input.js_quantity',
+            run: "text 3",
+        },
+        {
+            content: "check reduction amount got recomputed when changing qty",
+            trigger: '.oe_currency_value:contains("-﻿107.50")',
+            run: function () {}, // it's a check
+        },
+        {
             content: "add more Large Cabinet into cart",
             trigger: '#cart_products input.js_quantity',
             run: "text 4",
         },
         {
-            content: "check reduction amount got recomputed",
-            extra_trigger: '.oe_currency_value:contains("96.00")', // For some reason, "-96.00" won't work
-            trigger: '.reward_product:contains("Free Product - Large Cabinet")',
+            content: "check free product is added",
+            trigger: '#wrap:has(.reward_product:contains("Free Product - Large Cabinet"))',
             run: function () {}, // it's a check
         },
         {
             content: "remove one cabinet from cart",
-            trigger: '#cart_products a.js_add_cart_json:first',
+            trigger: '#cart_products input.js_quantity[value="4"]',
+            run: "text 3",
         },
         {
             content: "check free product is removed",
             trigger: '#wrap:not(:has(.reward_product:contains("Free Product - Large Cabinet")))',
             run: function () {}, // it's a check
         },
-        /* 3. Empty cart and disable coupon */
+        /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */
         {
-            content: "remove Large Cabinet from cart",
-            trigger: '#cart_products input.js_quantity:first',
-            run: "text 0",
+            content: "go to checkout",
+            trigger: 'a[href="/shop/checkout?express=1"]',
         },
         {
-            content: "check cart is empty",
-            trigger: '#wrap:not(:has(#cart_products))',
+            content: "check total is unchanged",
+            trigger: 'tr#order_total .oe_currency_value:contains("967.50")',
             run: function () {}, // it's a check
-        },
-        {
-            content: "check cart is empty (2)",
-            trigger: 'div.js_cart_lines:contains(Your cart is empty!)',
-            run: function () {}, // it's a check
-        },
-        /* 4. Disabled customize options coupon box & 'Show # found'*/
-        {
-            content: "open customize menu",
-            extra_trigger: '.oe_website_sale .oe_cart',
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: "click on 'Promo Code'",
-            trigger: "#customize-menu a:contains(Promo Code)",
-        },
-        {
-            content: "click on 'Continue Shopping'",
-            trigger: "a:contains(Continue Shopping)",
         },
     ]
 );
