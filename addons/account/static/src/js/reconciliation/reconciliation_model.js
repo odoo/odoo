@@ -1002,7 +1002,7 @@ var StatementModel = BasicModel.extend({
                 })
             );
         });
-        return $.when(defs);
+        return $.when.apply($, defs);
     },
     /**
      * Format the server value then compute the line
