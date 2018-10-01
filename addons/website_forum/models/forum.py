@@ -53,6 +53,7 @@ class Forum(models.Model):
                             'build your professional profile and become a better marketer together.'))
     welcome_message = fields.Html(
         'Welcome Message',
+        translate=True,
         default = """<section class="bg-info" style="height: 168px;"><div class="container">
                         <div class="row">
                             <div class="col-md-12">

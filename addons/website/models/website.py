@@ -729,17 +729,13 @@ class Page(models.Model):
     @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        view = self.env['ir.ui.view'].browse(self.view_id.id)
-        # website.page's ir.ui.view should have a different key than the one it
-        # is copied from.
-        # (eg: website_version: an ir.ui.view record with the same key is
-        # expected to be the same ir.ui.view but from another version)
-        new_view = view.copy({'key': view.key + '.copy', 'name': '%s %s' % (view.name,  _('(copy)'))})
-        default = {
-            'name': '%s %s' % (self.name,  _('(copy)')),
-            'url': self.env['website'].get_unique_path(self.url),
-            'view_id': new_view.id,
-        }
+        # website.page's ir.ui.view should have a different key than the one
+        # it is copied from (website_version, multi-website..)
+        default = dict(default or {})
+        default.update(
+            name='%s %s' % (self.name, _('(copy)')),
+            url=self.env['website'].get_unique_path(self.url),
+            key=self.key + '.copy')
         return super(Page, self).copy(default=default)
 
     @api.model

@@ -37,7 +37,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', nosubs
         access_as_sudo = _has_token_access(res_model, res_id, token=token)
         if access_as_sudo:
             record = record.sudo()
-            if request.env.user == request.env.ref('base.public_user'):
+            if request.env.user._is_public():
                 author_id = record.partner_id.id if hasattr(record, 'partner_id') else author_id
             else:
                 if not author_id:

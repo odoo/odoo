@@ -17,8 +17,9 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     website_order_line = fields.One2many(
-        'sale.order.line', 'order_id',
-        string='Order Lines displayed on Website', readonly=True,
+        'sale.order.line',
+        compute='_compute_website_order_line',
+        string='Order Lines displayed on Website',
         help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
     )
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
@@ -35,6 +36,10 @@ class SaleOrder(models.Model):
         for order in self:
             transaction = order.get_portal_last_transaction()
             order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and transaction and transaction.acquirer_id.provider in ['transfer', 'manual']
+
+    @api.one
+    def _compute_website_order_line(self):
+        self.website_order_line = self.order_line
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')

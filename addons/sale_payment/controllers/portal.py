@@ -12,7 +12,7 @@ class CustomerPortal(CustomerPortal):
         if values['portal_confirmation'] == 'pay':
             payment_inputs = request.env['payment.acquirer']._get_available_payment_input(order.partner_id, order.company_id)
             # if not connected (using public user), the method _get_available_payment_input will return public user tokens
-            is_public_user = request.env.ref('base.public_user') == request.env.user
+            is_public_user = request.env.user._is_public()
             if is_public_user:
                 # we should not display payment tokens owned by the public user
                 payment_inputs.pop('pms', None)
