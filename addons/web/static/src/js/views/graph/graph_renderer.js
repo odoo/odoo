@@ -136,11 +136,7 @@ return AbstractRenderer.extend({
             }];
         } else if (this.state.groupedBy.length === 1) {
             values = this.state.data.map(function (datapt, index) {
-                if (self.state.comparisonData) {
-                    return {x: index, y: datapt.value};
-                } else {
-                    return {x: datapt.labels, y: datapt.value};
-                }
+                return {x: datapt.labels, y: datapt.value};
             });
             data.push({
                 values: values,
@@ -148,7 +144,7 @@ return AbstractRenderer.extend({
             });
             if (this.state.comparisonData) {
                 values = this.state.comparisonData.map(function (datapt, index) {
-                    return {x: index, y: datapt.value};
+                    return {x: datapt.labels, y: datapt.value};
                 });
                 data.push({
                     values: values,
