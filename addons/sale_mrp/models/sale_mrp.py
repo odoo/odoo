@@ -48,6 +48,17 @@ class SaleOrderLine(models.Model):
                 components[product] = {'qty': qty, 'uom': to_uom.id}
         return components
 
+    def _get_qty_procurement(self):
+        self.ensure_one()
+        # Specific case when we change the qty on a SO for a kit product.
+        # We don't try to be too smart and keep a simple approach: we compare the quantity before
+        # and after update, and return the difference. We don't take into account what was already
+        # sent, or any other exceptional case.
+        bom = self.env['mrp.bom']._bom_find(product=self.product_id)
+        if bom and bom.type == 'phantom' and 'previous_product_uom_qty' in self.env.context:
+            return self.env.context['previous_product_uom_qty'].get(self.id, 0.0)
+        return super(SaleOrderLine, self)._get_qty_procurement()
+
 
 class AccountInvoiceLine(models.Model):
     # TDE FIXME: what is this code ??

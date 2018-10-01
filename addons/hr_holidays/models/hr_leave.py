@@ -387,7 +387,7 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             domain = [
                 ('date_from', '<=', holiday.date_to),
-                ('date_to', '>=', holiday.date_from),
+                ('date_to', '>', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
                 ('id', '!=', holiday.id),
                 ('state', 'not in', ['cancel', 'refuse']),

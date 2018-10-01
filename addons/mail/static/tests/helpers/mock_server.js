@@ -75,7 +75,17 @@ MockServer.include({
     _mockMessageFetch: function (args) {
         var domain = args.args[0];
         var model = args.model;
+        var mod_channel_ids = args.kwargs.moderated_channel_ids;
         var messages = this._getRecords(model, domain);
+        if (mod_channel_ids) {
+            var mod_messages = this._getRecords(
+                model,
+                [['model', '=', 'mail.channel'],
+                 ['res_id', 'in', mod_channel_ids],
+                 ['need_moderation', '=', true]]
+            );
+            messages = _.union(messages, mod_messages);
+        }
         // sorted from highest ID to lowest ID (i.e. from youngest to oldest)
         messages.sort(function (m1, m2) {
             return m1.id < m2.id ? 1 : -1;

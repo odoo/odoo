@@ -4133,7 +4133,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return [default]
 
     @api.multi
-    def copy_translations(old, new):
+    def copy_translations(old, new, excluded=()):
+        """ Recursively copy the translations from original to new record
+
+        :param old: the original record
+        :param new: the new record (copy of the original one)
+        :param excluded: a container of user-provided field names
+        """
         # avoid recursion through already copied records in case of circular relationship
         if '__copy_translations_seen' not in old._context:
             old = old.with_context(__copy_translations_seen=defaultdict(set))
@@ -4159,13 +4165,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if not field.copy:
                 continue
 
-            if field.type == 'one2many':
+            if field.inherited and field.related[0] in excluded:
+                # inherited fields that come from a user-provided parent record
+                # must not copy translations, as the parent record is not a copy
+                # of the old parent record
+                continue
+
+            if field.type == 'one2many' and field.name not in excluded:
                 # we must recursively copy the translations for o2m; here we
                 # rely on the order of the ids to match the translations as
                 # foreseen in copy_data()
                 old_lines = old[name].sorted(key='id')
                 new_lines = new[name].sorted(key='id')
                 for (old_line, new_line) in pycompat.izip(old_lines, new_lines):
+                    # don't pass excluded as it is not about those lines
                     old_line.copy_translations(new_line)
 
             elif field.translate:
@@ -4207,7 +4220,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         vals = self.copy_data(default)[0]
         # To avoid to create a translation in the lang of the user, copy_translation will do it
         new = self.with_context(lang=None).create(vals)
-        self.with_context(from_copy_translation=True).copy_translations(new)
+        self.with_context(from_copy_translation=True).copy_translations(new, excluded=default or ())
         return new
 
     @api.multi

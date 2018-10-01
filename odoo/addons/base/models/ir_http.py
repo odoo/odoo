@@ -298,15 +298,17 @@ class IrHttp(models.AbstractModel):
             obj = cls._xmlid_to_obj(env, xmlid)
         if access_mode:
             obj = cls.check_access_mode(env, id, access_mode, model, access_token=access_token, related_id=related_id)
-        elif id and model == 'ir.attachment' and access_token:
-            obj = env[model].sudo().browse(int(id))
-            if not consteq(obj.access_token or '', access_token):
-                return (403, [], None)
         elif id and model in env.registry:
             obj = env[model].browse(int(id))
         # obj exists
         if not obj or not obj.exists() or field not in obj:
             return (404, [], None)
+
+        # access token grant access
+        if model == 'ir.attachment' and access_token:
+            obj = obj.sudo()
+            if not consteq(obj.access_token or '', access_token):
+                return (403, [], None)
 
         # check read access
         try:

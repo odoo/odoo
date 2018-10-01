@@ -743,7 +743,7 @@ class PaymentTransaction(models.Model):
         payments = defaultdict(lambda: self.env['account.payment'])
         for trans in self:
             if trans.payment_id:
-                payments += trans.payment_id
+                payments[trans.acquirer_id.company_id.id] += trans.payment_id
                 continue
 
             payment_vals = trans._prepare_account_payment_vals()

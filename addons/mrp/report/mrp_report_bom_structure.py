@@ -134,7 +134,7 @@ class ReportBomStructure(models.AbstractModel):
         components = []
         total = 0
         for line in bom.bom_line_ids:
-            line_quantity = (bom_quantity) * line.product_qty
+            line_quantity = (bom_quantity / (bom.product_qty or 1.0)) * line.product_qty
             if line._skip_bom_line(product):
                 continue
             price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line_quantity

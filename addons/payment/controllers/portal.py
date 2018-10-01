@@ -203,6 +203,7 @@ class WebsitePayment(http.Controller):
             values['sale_order_ids'] = [(6, 0, [order_id])]
 
         reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
+        reference_values.update(acquirer_id=int(acquirer_id))
         values['reference'] = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
         tx.return_url = '/website_payment/confirm?tx_id=%d' % tx.id

@@ -241,10 +241,7 @@ class ProductTemplate(models.Model):
 
     def _compute_is_product_variant(self):
         for template in self:
-            if template._name == 'product.template':
-                template.is_product_variant = False
-            else:
-                template.is_product_variant = True
+            template.is_product_variant = False
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):

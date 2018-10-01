@@ -1038,6 +1038,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # (Because the POT comments are correct on Launchpad but not the
         # PO comments due to a Launchpad limitation. See LP bug 933496.)
         pot_reader = []
+        use_pot_reference = False
 
         # now, the serious things: we read the language file
         fileobj.seek(0)
@@ -1066,6 +1067,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     pot_handle = file_open(os.path.join(
                         addons, module, i18n_dir, module + '.pot'), mode='rb')
                     pot_reader = PoFile(pot_handle)
+                    use_pot_reference = True
                 except:
                     pass
 
@@ -1100,17 +1102,18 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             dic['lang'] = lang
             dic.update(pycompat.izip(fields, row))
 
-            # discard the target from the POT targets.
-            src = dic['src']
-            target_key = (dic['type'], dic['name'], dic['type'] != 'code' and dic['res_id'] or 0)
-            target = pot_targets.get(src)
-            if not target or target_key not in target.targets:
-                _logger.info("Translation '%s' (%s, %s, %s) not found in reference pot, skipping",
-                    src[:60], dic['type'], dic['name'], dic['res_id'])
-                return
+            if use_pot_reference:
+                # discard the target from the POT targets.
+                src = dic['src']
+                target_key = (dic['type'], dic['name'], dic['type'] != 'code' and dic['res_id'] or 0)
+                target = pot_targets.get(src)
+                if not target or target_key not in target.targets:
+                    _logger.info("Translation '%s' (%s, %s, %s) not found in reference pot, skipping",
+                        src[:60], dic['type'], dic['name'], dic['res_id'])
+                    return
 
-            target.value = dic['value']
-            target.targets.discard(target_key)
+                target.value = dic['value']
+                target.targets.discard(target_key)
 
             # This would skip terms that fail to specify a res_id
             res_id = dic['res_id']
@@ -1138,15 +1141,16 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         for row in reader:
             process_row(row)
 
-        # Then process the entries implied by the POT file (which is more
-        # correct w.r.t. the targets) if some of them remain.
-        pot_rows = []
-        for src, target in pot_targets.items():
-            if target.value:
-                for type, name, res_id in target.targets:
-                    pot_rows.append((type, name, res_id, src, target.value, target.comments))
-        for row in pot_rows:
-            process_row(row)
+        if use_pot_reference:
+            # Then process the entries implied by the POT file (which is more
+            # correct w.r.t. the targets) if some of them remain.
+            pot_rows = []
+            for src, target in pot_targets.items():
+                if target.value:
+                    for type, name, res_id in target.targets:
+                        pot_rows.append((type, name, res_id, src, target.value, target.comments))
+            for row in pot_rows:
+                process_row(row)
 
         irt_cursor.finish()
         Translation.clear_caches()
