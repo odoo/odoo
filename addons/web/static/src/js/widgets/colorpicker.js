@@ -161,18 +161,16 @@ var Colorpicker = Dialog.extend({
      * @param {integer} [a]
      */
     _updateRgba: function (r, g, b, a) {
-        if (a === undefined) {
-            a = this.colorComponents.opacity;
-        }
         var hex = Colorpicker.prototype.convertRgbToHex(r, g, b);
-        if (hex) {
-            _.extend(this.colorComponents,
-                {red: r, green: g, blue: b},
-                {opacity: a},
-                hex,
-                Colorpicker.prototype.convertRgbToHsl(r, g, b)
-            );
+        if (!hex) {
+            return;
         }
+        _.extend(this.colorComponents,
+            {red: r, green: g, blue: b},
+            a === undefined ? {} : {opacity: a},
+            hex,
+            Colorpicker.prototype.convertRgbToHsl(r, g, b)
+        );
         this._updateCssColor();
     },
     /**
@@ -185,13 +183,14 @@ var Colorpicker = Dialog.extend({
      */
     _updateHsl: function (h, s, l) {
         var rgb = Colorpicker.prototype.convertHslToRgb(h, s, l);
-        if (rgb) {
-            _.extend(this.colorComponents,
-                {hue: h, saturation: s, lightness: l},
-                rgb,
-                Colorpicker.prototype.convertRgbToHex(rgb.red, rgb.green, rgb.blue)
-            );
+        if (!rgb) {
+            return;
         }
+        _.extend(this.colorComponents,
+            {hue: h, saturation: s, lightness: l},
+            rgb,
+            Colorpicker.prototype.convertRgbToHex(rgb.red, rgb.green, rgb.blue)
+        );
         this._updateCssColor();
     },
     /**
@@ -201,6 +200,9 @@ var Colorpicker = Dialog.extend({
      * @param {integer} a
      */
     _updateOpacity: function (a) {
+        if (a < 0 || a > 100) {
+            return;
+        }
         _.extend(this.colorComponents,
             {opacity: a}
         );
