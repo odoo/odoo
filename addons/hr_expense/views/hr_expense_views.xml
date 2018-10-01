@@ -462,7 +462,7 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
+                        <group name="employee_details">
                             <field name="employee_id"/>
                             <field name="payment_mode"/>
                             <field name="user_id"/>
@@ -472,7 +472,7 @@
                         </group>
                     </group>
                      <notebook>
-                        <page string="Expense">
+                        <page name="expenses" string="Expense">
                         <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'expense_adding_line': True}">
                             <tree decoration-danger="is_refused">
                                 <field name="date"/>
@@ -499,7 +499,7 @@
                                 <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator"/>
                             </group>
                         </page>
-                        <page string="Other Info">
+                        <page name="other_info" string="Other Info">
                             <group>
                                 <group>
                                     <field name="journal_id" domain="[('type', '=', 'purchase')]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
@@ -509,7 +509,7 @@
                                 <group>
                                     <field name="account_move_id" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
                                 </group>
-                        </group>
+                            </group>
                         </page>
                      </notebook>
                 </sheet>
