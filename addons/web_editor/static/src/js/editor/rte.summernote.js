@@ -32,21 +32,24 @@ var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
 
-function _rgbToHex(rgb) {
-    var rgb = rgb.match(/rgb\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)/);
-    if (!rgb) {
-        return rgb;
+function _rgbToHex(cssColor) {
+    var rgba = cssColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    if (!rgba) {
+        return cssColor;
+    }
+    if (rgba[4]) {
+        return cssColor;
     }
     var hex = ColorpickerDialog.prototype.convertRgbToHex(
-        parseInt(rgb[1]),
-        parseInt(rgb[2]),
-        parseInt(rgb[3])
+        parseInt(rgba[1]),
+        parseInt(rgba[2]),
+        parseInt(rgba[3])
     );
     if (!hex) {
-        return rgb; // TODO handle error
+        return cssColor; // TODO handle error
     }
     return hex.hex.toUpperCase();
-};
+}
 
 // Update and change the popovers content, and add history button
 var fn_createPalette = renderer.createPalette;
