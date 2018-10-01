@@ -443,13 +443,16 @@ class Website(models.Model):
     # ----------------------------------------------------------
 
     @api.model
-    def get_current_website(self, fallback=True):
+    def get_current_website(self, fallback=True, explicit=False):
         if request and request.session.get('force_website_id'):
             return self.browse(request.session['force_website_id'])
 
         website_id = self.env.context.get('website_id')
         if website_id:
             return self.browse(website_id)
+
+        if explicit:
+            return False
 
         domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
 
@@ -465,7 +468,6 @@ class Website(models.Model):
     def _get_current_website_id(self, domain_name, country_id, fallback=True):
         # sort on country_group_ids so that we fall back on a generic website (empty country_group_ids)
         websites = self.search([('domain', '=', domain_name)]).sorted('country_group_ids')
-
         if not websites:
             if not fallback:
                 return False
