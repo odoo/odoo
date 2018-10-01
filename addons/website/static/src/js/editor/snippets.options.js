@@ -290,6 +290,58 @@ options.registry.carousel = options.Class.extend({
     },
 });
 
+options.registry.navTabs = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this.$navLinks = this.$target.find('.nav-link');
+        var $el = this.$target;
+        do {
+            $el = $el.parent();
+            this.$tabPanes = $el.find('.tab-pane');
+        } while (this.$tabPanes.length === 0 && !$el.is('body'));
+
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this._generateUniqueIDs();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._generateUniqueIDs();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _generateUniqueIDs: function () {
+        for (var i = 0 ; i < this.$navLinks.length ; i++) {
+            var id = _.now() + '_' + _.uniqueId();
+            var idLink = 'nav_tabs_link_' + id;
+            var idContent = 'nav_tabs_content_' + id;
+            this.$navLinks.eq(i).attr({
+                'id': idLink,
+                'href': '#' + idContent,
+                'aria-controls': idContent,
+            });
+            this.$tabPanes.eq(i).attr({
+                'id': idContent,
+                'aria-labelledby': idLink,
+            });
+        }
+    },
+});
+
 options.registry.sizing_x = options.registry.sizing.extend({
     /**
      * @override
