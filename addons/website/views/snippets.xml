@@ -668,7 +668,7 @@
 <template id="s_tabs" name="Tabs">
     <section class="s_tabs">
         <div class="container">
-            <div class="row">
+            <div class="row s_col_no_bgcolor">
                 <div class="col-lg-8 offset-lg-2 pt48 pb48">
                     <div class="card">
                         <div class="card-header">
@@ -906,7 +906,7 @@
 
     <!-- COLOR | .s_three_columns | .s_comparisons -->
     <div data-js="colorpicker"
-        data-selector=".s_three_columns [class*='col-lg-'], .s_comparisons [class*='col-lg-']"
+        data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
         data-target=".card"
         data-palette-title="Box Color">
         <div class="dropdown-submenu">
