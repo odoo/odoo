@@ -548,6 +548,7 @@ class PaymentToken(models.Model):
             }
 
             url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (acquirer.environment,)
+            _logger.info("ogone_create: Creating new alias %s via url %s", alias, url)
             result = requests.post(url, data=data).content
 
             try:
