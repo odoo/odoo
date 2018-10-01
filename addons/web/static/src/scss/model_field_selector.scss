@@ -61,6 +61,9 @@
                     padding: 0px 35px;
                     text-align: center;
                 }
+                .o_field_selector_search {
+                    padding-right: 0.4rem;
+                }
                 .o_field_selector_popover_option {
                     @include o-position-absolute($top: 0);
                     padding: 7px 8px 8px 6px;
@@ -71,7 +74,6 @@
                     }
                     &.o_field_selector_close {
                         right: 0;
-                        border-left: 1px solid darken(theme-color('primary'), 10%);
                     }
                     &:hover {
                         background: darken(theme-color('primary'), 10%);
