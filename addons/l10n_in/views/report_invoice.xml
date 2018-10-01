@@ -26,7 +26,7 @@
             </t>
         </xpath>
         <xpath expr="//table[@name='invoice_line_table']" position="replace">
-            <table class="table table-condensed" name="invoice_line_table">
+            <table class="table table-condensed" name="invoice_line_table" groups="!sale.group_sale_layout">
                 <thead>
                     <tr>
                         <th>Description</th>

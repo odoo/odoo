@@ -1263,8 +1263,9 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
         amount = -self.balance * distribution.percentage / 100.0
+        default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
         return {
-            'name': self.name,
+            'name': default_name,
             'date': self.date,
             'account_id': distribution.account_id.id,
             'partner_id': self.partner_id.id,
