@@ -811,6 +811,43 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('lazy load multi record view with previous action', function (assert) {
+        assert.expect(6);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            debug: 1,
+        });
+        actionManager.doAction(4);
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4',
+            "breadcrumbs should contain the display_name of the opened record");
+
+        actionManager.doAction(3, {
+            resID: 2,
+            viewType: 'form',
+        });
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 3,
+            "there should be three controllers in the breadcrumbs");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4PartnersSecond record',
+            "the breadcrumb elements should be correctly ordered");
+
+        // go back to List
+        $('.o_control_panel .breadcrumb a:last').click();
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 2,
+            "there should be two controllers in the breadcrumbs");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4Partners',
+            "the breadcrumb elements should be correctly ordered");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('change the viewType of the current action', function (assert) {
         assert.expect(13);
 

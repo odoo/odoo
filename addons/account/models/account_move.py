@@ -396,7 +396,7 @@ class AccountMove(models.Model):
         reversed_move = self.copy(default={
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
-            'ref': _('%sreversal of: ') % (_('Automatic ') if auto else '') + self.name,
+            'ref': (_('Automatic reversal of: %s') if auto else _('Reversal of: %s')) % (self.name),
             'auto_reverse': False})
         for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
             acm_line.write({
@@ -1268,8 +1268,9 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
         amount = -self.balance * distribution.percentage / 100.0
+        default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
         return {
-            'name': self.name,
+            'name': default_name,
             'date': self.date,
             'account_id': distribution.account_id.id,
             'partner_id': self.partner_id.id,

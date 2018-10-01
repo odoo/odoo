@@ -165,6 +165,7 @@ var SearchableThread = Thread.extend({
         var self = this;
 
         var domain = this._getThreadDomain();
+        var moderatedChannelIds = typeof(this._id) === 'number' ? [this._id] : false;
 
         var cache = this._getCache(pDomain);
         if (pDomain) {
@@ -179,6 +180,7 @@ var SearchableThread = Thread.extend({
             method: 'message_fetch',
             args: [domain],
             kwargs: {
+                moderated_channel_ids: moderatedChannelIds,
                 limit: this._FETCH_LIMIT,
                 context: session.user_context
             },

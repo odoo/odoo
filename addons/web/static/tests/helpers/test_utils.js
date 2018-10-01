@@ -125,6 +125,7 @@ var createActionManager = function (params) {
  */
 var createDebugManager = function (params) {
     params = params || {};
+    var mockRPC = params.mockRPC;
     _.extend(params, {
         mockRPC: function (route, args) {
             if (args.method === 'check_access_rights') {
@@ -132,6 +133,9 @@ var createDebugManager = function (params) {
             }
             if (args.method === 'xmlid_to_res_id') {
                 return $.when(true);
+            }
+            if (mockRPC) {
+                return mockRPC.apply(this, arguments);
             }
             return this._super.apply(this, arguments);
         },

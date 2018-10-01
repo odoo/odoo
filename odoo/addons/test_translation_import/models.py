@@ -15,3 +15,7 @@ class m(models.TransientModel):
 
     # With the name label above, this source string should be generated twice.
     _('1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB')
+
+    _('Klingon')
+
+    _('Accounting')

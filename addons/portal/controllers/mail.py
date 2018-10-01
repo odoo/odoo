@@ -42,7 +42,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', nosubs
         access_as_sudo = _has_token_access(res_model, res_id, token=token)
         if access_as_sudo:
             record = record.sudo()
-            if request.env.user == request.env.ref('base.public_user'):
+            if request.env.user._is_public():
                 if kw.get('pid') and consteq(kw.get('hash'), record._sign_token(int(kw.get('pid')))):
                     author_id = kw.get('pid')
                 else:

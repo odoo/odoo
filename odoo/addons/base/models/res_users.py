@@ -1038,7 +1038,7 @@ class GroupsView(models.Model):
         def linearize(app, gs):
             # 'User Type' is an exception
             if app.xml_id == 'base.module_category_user_type':
-                return (app, 'selection', gs)
+                return (app, 'selection', gs.sorted('id'))
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct

@@ -964,6 +964,40 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(discussion.important_messages), 2)
         self.assertEqual(len(discussion.very_important_messages), 2)
 
+    def test_80_copy(self):
+        Translations = self.env['ir.translation']
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = self.env.ref('test_new_api.message_0_0')
+        message1 = self.env.ref('test_new_api.message_0_1')
+
+        email = self.env.ref('test_new_api.emailmessage_0_0')
+        self.assertEqual(email.message, message)
+
+        french = self.env['res.lang']._lang_get('fr_FR')
+        french.active = True
+
+        def count(msg):
+            # return the number of translations of msg.label
+            return Translations.search_count([
+                ('name', '=', 'test_new_api.message,label'),
+                ('res_id', '=', msg.id),
+            ])
+
+        # set a translation for message.label
+        email.with_context(lang='fr_FR').label = "bonjour"
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting the parent record should not copy its translations
+        email.copy({'message': message1.id})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting a one2many should not copy translations on the lines
+        discussion.copy({'messages': [(6, 0, message1.ids)]})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
 
 class TestX2many(common.TransactionCase):
     def test_search_many2many(self):
