@@ -152,6 +152,11 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
      * Returns the list of selected products.
      * The root product is added on top of the list.
      *
+     * @returns {Array} products
+     *   {integer} product_id
+     *   {integer} quantity
+     *   {Array} product_custom_variant_values
+     *   {Array} no_variant_attribute_values
      * @public
      */
     getSelectedProducts: function () {
@@ -340,20 +345,12 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             $main_product.after($parent);
         }
 
-        var productId = $parent.find('.product_id').val();
-        var productReady = $.Deferred();
-        if (productId && productId !== '0'){
-            productReady.resolve(productId);
-        } else {
-            productReady = ajax.jsonRpc('/web/dataset/call', 'call', {
-                model: 'product.template',
-                method: 'create_product_variant',
-                args: [
-                    productTemplateId,
-                    JSON.stringify(self.getSelectedVariantValues($parent))
-                ]
-            });
-        }
+        var productReady = this.selectOrCreateProduct(
+            $parent,
+            $parent.find('.product_id').val(),
+            productTemplateId,
+            true
+        );
 
         productReady.done(function (productId){
             $parent.find('.product_id').val(productId);
@@ -371,9 +368,12 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
                 if ($addedItem.find(".product_template_id").length > 0) {
                     // we need to map this product with it's optional products to be able to:
                     // - remove them from the cart if the parent product is removed
-                    // - place the optional products under their parent in the interface when they're added to the cart
-                    optionalProductsMap[productTemplateId] = $addedItem.find(".product_template_id").map(function () {
-                        return $(this).val();
+                    // - place the optional products under their parent in
+                    //   the interface when they're added to the cart
+                    optionalProductsMap[productTemplateId] = $addedItem
+                        .find(".product_template_id")
+                        .map(function () {
+                            return $(this).val();
                     }).get();
                 }
 

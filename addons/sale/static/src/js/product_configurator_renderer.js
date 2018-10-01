@@ -10,8 +10,7 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMix
      */
     init: function (){
         this._super.apply(this, arguments);
-
-        this.pricelistId = $('.js_sale_order_pricelist_id').html();
+        this.pricelistId = this.state.context.default_pricelist_id || 0;
     },
     /**
      * @override
