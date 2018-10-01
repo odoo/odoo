@@ -17,32 +17,33 @@
         <field name="model">uom.uom</field>
         <field name="arch" type="xml">
             <form string="Units of Measure">
-                <group>
+                <sheet>
                     <group>
-                        <field name="name"/>
-                        <field name="category_id"/>
-                        <field name="uom_type"/>
-                        <field name="factor"
-                            digits="[42,5]"
-                            attrs="{'invisible':[('uom_type','!=','smaller')],
-                                    'readonly':[('uom_type','=','bigger')]}"/>
-                        <field name="factor_inv"
-                            string="Ratio"
-                            digits="[42,5]"
-                            attrs="{'invisible':[('uom_type','!=','bigger')],
-                                    'readonly':[('uom_type','!=','bigger')]}"/>
-                        <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey" colspan="2">
-                            e.g: 1 * (reference unit) = ratio * (this unit)
-                        </p>
-                        <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey" colspan="2">
-                            e.g: 1 * (this unit) = ratio * (reference unit)
-                        </p>
-                    </group>
-                    <group>
-                        <field name="active"/>
-                        <field name="rounding" digits="[42, 5]"/>
-                    </group>
-                </group>
+                         <group name="uom_details">
+                             <field name="name"/>
+                             <field name="category_id"/>
+                             <field name="uom_type"/>
+                             <field name="factor"
+                                 digits="[42,5]"
+                                 attrs="{'invisible':[('uom_type','!=','smaller')],
+                                         'readonly':[('uom_type','=','bigger')]}"/>
+                             <field name="factor_inv"
+                                 digits="[42,5]"
+                                 attrs="{'invisible':[('uom_type','!=','bigger')],
+                                         'readonly':[('uom_type','!=','bigger')]}"/>
+                             <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey" colspan="2">
+                                 e.g: 1 * (reference unit) = ratio * (this unit)
+                             </p>
+                             <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey" colspan="2">
+                                 e.g: 1 * (this unit) = ratio * (reference unit)
+                             </p>
+                         </group>
+                         <group name="active_rounding">
+                             <field name="active"/>
+                             <field name="rounding" digits="[42, 5]"/>
+                         </group>
+                     </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -67,10 +68,12 @@
         <field name="model">uom.category</field>
         <field name="arch" type="xml">
             <form string="Units of Measure categories">
-                <group>
-                    <field name="name"/>
-                    <field name="measure_type"/>
-                </group>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="measure_type"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
