@@ -145,12 +145,11 @@ class IapAccount(models.Model):
     service_name = fields.Char()
     account_token = fields.Char(default=lambda s: uuid.uuid4().hex)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
-    insufficient_credit = fields.Boolean('Insufficient credits', default=False)
 
     @api.model
-    def get(self, service_name):
+    def get(self, service_name, force_create=True):
         account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])])
-        if not account:
+        if not account and force_create:
             account = self.create({'service_name': service_name})
             # Since the account did not exist yet, we will encounter a NoCreditError,
             # which is going to rollback the database and undo the account creation,
@@ -186,24 +185,22 @@ class IapAccount(models.Model):
 
     @api.model
     def get_credits(self, service_name):
-        account = self.get(service_name)
+        account = self.get(service_name, force_create=False)
+        credit = 0
 
-        route = '/iap/1/balance'
-        endpoint = get_endpoint(self.env)
-        url = endpoint + route
-        params = {
-            'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
-            'account_token': account.account_token,
-            'service_name': service_name,
-        }
-        try:
-            credit = jsonrpc(url=url, params=params)
-            account.sudo().write({'insufficient_credit': credit == 0})
-        except Exception as e:
-            _logger.info('Get credit error : %s', str(e))
-            credit = -1
+        if account:
+            route = '/iap/1/balance'
+            endpoint = get_endpoint(self.env)
+            url = endpoint + route
+            params = {
+                'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                'account_token': account.account_token,
+                'service_name': service_name,
+            }
+            try:
+                credit = jsonrpc(url=url, params=params)
+            except Exception as e:
+                _logger.info('Get credit error : %s', str(e))
+                credit = -1
 
-        return {
-            'credit': credit,
-            'url': account.get_credits_url(service_name),
-        }
+        return credit
