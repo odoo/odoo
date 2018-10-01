@@ -81,6 +81,7 @@ Toledo8217Protocol = ScaleProtocol(
     clearCommand=b'C',
     emptyAnswerValid=False,
     autoResetWeight=False,
+    disable=False
 )
 
 # The ADAM scales have their own RS232 protocol, usually documented in the scale's manual
@@ -110,6 +111,7 @@ ADAMEquipmentProtocol = ScaleProtocol(
     clearCommand=None, # No clear command -> Tare again
     emptyAnswerValid=True, # AZExtra does not answer unless a new non-zero weight has been detected
     autoResetWeight=True,  # AZExtra will not return 0 after removing products
+    disable=True
 )
 
 
@@ -131,6 +133,7 @@ class Scale(Thread):
         self.device = None
         self.path_to_scale = ''
         self.protocol = None
+        self.disabled = False
 
     def lockedstart(self):
         with self.lock:
@@ -258,6 +261,8 @@ class Scale(Thread):
             return None
 
     def get_weight(self):
+        self.repeats = 5
+        self.disabled = False
         self.lockedstart()
         return self.weight
 
@@ -338,23 +343,30 @@ class Scale(Thread):
         self.device = None
 
         while True:
-            if self.device:
-                old_weight = self.weight
-                self.read_weight()
-                if self.weight != old_weight:
-                    _logger.info('New Weight: %s, sleeping %ss', self.weight, self.protocol.newWeightDelay)
-                    time.sleep(self.protocol.newWeightDelay)
-                    if self.weight and self.protocol.autoResetWeight:
-                        self.weight = 0
+            if not self.disabled:
+                if self.device:
+                    old_weight = self.weight
+                    self.read_weight()
+                    if self.weight != old_weight:
+                        _logger.info('New Weight: %s, sleeping %ss', self.weight, self.protocol.newWeightDelay)
+                        time.sleep(self.protocol.newWeightDelay)
+                        if self.weight and self.protocol.autoResetWeight:
+                            self.weight = 0
+                    else:
+                        _logger.info('Weight: %s, sleeping %ss', self.weight, self.protocol.weightDelay)
+                        time.sleep(self.protocol.weightDelay)
+                        self.disabled = True
                 else:
-                    _logger.info('Weight: %s, sleeping %ss', self.weight, self.protocol.weightDelay)
-                    time.sleep(self.protocol.weightDelay)
+                    with self.scalelock:
+                        self.device = self.get_device()
+                    if not self.device:
+                        # retry later to support "plug and play"
+                        time.sleep(10)
+                    else: 
+                        self.disabled = self.protocol.disable
             else:
-                with self.scalelock:
-                    self.device = self.get_device()
-                if not self.device:
-                    # retry later to support "plug and play"
-                    time.sleep(10)
+                time.sleep(10)
+
 
 scale_thread = None
 if serial:
