@@ -71,21 +71,21 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
-                        <group>
+                        <group name="blog_details">
                             <field name="blog_id"/>
                             <field name="name" placeholder="Blog Post Title"/>
                             <field name="subtitle" placeholder="Blog Subtitle"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                             <field name="website_id" groups="website.group_multi_website"/>
                         </group>
-                        <group string="Publishing Options">
+                        <group name="publishing_details" string="Publishing Options">
                             <field name="author_id"/>
                             <field name="create_date" groups="base.group_no_one"/>
                             <field name="post_date"/>
                             <field name="write_uid"/>
                             <field name="write_date"/>
                         </group>
-                        <group string="Technical" groups="base.group_no_one">
+                        <group name="techincal" string="Technical" groups="base.group_no_one">
                             <field name="ranking" invisible="1"/>
                         </group>
                     </sheet>
