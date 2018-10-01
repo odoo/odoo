@@ -2316,11 +2316,13 @@
             <field name="model">account.group</field>
             <field name="arch" type="xml">
                 <form string="Account Group">
+                <sheet>
                     <group>
                         <field name="name"/>
                         <field name="code_prefix"/>
                         <field name="parent_id"/>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
