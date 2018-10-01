@@ -286,10 +286,16 @@ class MailComposer(models.TransientModel):
             if blacklist:
                 [email_field] = self.env[self.model]._primary_email
                 targets = self.env[self.model].browse(res_ids).read([email_field])
+                # First extract email from recipient before comparing with blacklist
+                email_targets = []
+                for target in targets:
+                    email_target = tools.email_split(target.get(email_field))
+                    if email_target and len(email_target) == 1:
+                        email_targets.append(dict(id=target['id'], email=email_target[0]))
                 blacklisted_rec_ids = [r['id']
-                                        for r in targets
-                                        if r[email_field]
-                                        if r[email_field].lower() in blacklist]
+                                        for r in email_targets
+                                        if r['email']
+                                        if r['email'].lower() in blacklist]
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
