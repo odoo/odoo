@@ -28,11 +28,15 @@ class MailBlackList(models.Model):
     def create(self, values):
         # First of all, extract values to ensure emails are really unique (and don't modify values in place)
         new_values = []
+        all_emails = []
         for value in values:
             email = self._sanitize_email(value.get('email'))
             if not email:
                 _logger.warning('Blacklist: invalid email value %s' % value['email'])
                 continue
+            if email in all_emails:
+                continue
+            all_emails.append(email)
             new_value = dict(value, email=email)
             new_values.append(new_value)
 
