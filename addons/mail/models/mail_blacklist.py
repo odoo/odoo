@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 
@@ -102,11 +102,20 @@ class MailBlackListMixin(models.AbstractModel):
     def _compute_is_blacklisted(self):
         [email_field] = self._primary_email
         # TODO : Should remove the sudo as compute_sudo defined on methods.
-        # But if user doesn't have access to mail.blacklist, doen't work without sudo().
+        # But if user doesn't have access to mail.blacklist, doesn't work without sudo().
         BL_sudo = self.env['mail.blacklist'].sudo()
-        emails_lower = [(email or '').lower() for email in self.mapped(email_field)]
+        sanatized_emails = []
+        for email in self.mapped(email_field):
+            new_email = self._sanitize_email(email)
+            if new_email:
+                sanatized_emails.append(new_email)
         blacklist = set(e.lower()
-                        for e in BL_sudo.search([('email', 'in', emails_lower)]).mapped('email'))
+                        for e in BL_sudo.search([('email', 'in', sanatized_emails)]).mapped('email'))
         for record in self:
-            email_lower = (record[email_field] or '').lower()
-            record.is_blacklisted = email_lower in blacklist
+            record.is_blacklisted = self._sanitize_email(email) in blacklist
+
+    def _sanitize_email(self, email):
+        emails = tools.email_split(email)
+        if not emails or len(emails) != 1:
+            return False
+        return emails[0].lower()
