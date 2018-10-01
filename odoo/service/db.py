@@ -70,9 +70,11 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
 
             if country_code:
                 country = env['res.country'].search([('code', 'ilike', country_code)])[0]
-                env['res.company'].browse(1).write({'country_id': country_code and country.id, 'currency_id': country_code and country.currency_id.id, 'phone':phone})
-            elif phone:
+                env['res.company'].browse(1).write({'country_id': country_code and country.id, 'currency_id': country_code and country.currency_id.id})
+            if phone:
                 env['res.company'].browse(1).write({'phone': phone})
+            if '@' in login:
+                env['res.company'].browse(1).write({'email': login})
 
             # update admin's password and lang and login
             values = {'password': user_password, 'lang': lang}
