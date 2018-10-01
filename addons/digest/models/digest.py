@@ -135,7 +135,7 @@ class Digest(models.Model):
             return False
         tip.user_ids = [4, user.id]
         body = tools.html_sanitize(tip.tip_description)
-        tip_description = self.env['mail.template'].render_template(body, 'digest.tip', self.id)
+        tip_description = self.env['mail.template']._render_template(body, 'digest.tip', self.id)
         return tip_description
 
     def compute_kpis_actions(self, company, user):
