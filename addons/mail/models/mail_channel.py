@@ -425,7 +425,7 @@ class Channel(models.Model):
         if self.env.user in self.moderator_ids or self.env.user.has_group('base.group_system'):
             success = self._send_guidelines(self.channel_partner_ids)
             if not success:
-                raise UserError('Template "mail.mail_template_channel_send_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.')
+                raise UserError('View "mail.mail_channel_send_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.')
         else:
             raise UserError("Only an administrator or a moderator can send guidelines to channel members!")
 
@@ -434,19 +434,23 @@ class Channel(models.Model):
         """ Send guidelines of a given channel. Returns False if template used for guidelines
         not found. Caller may have to handle this return value. """
         self.ensure_one()
-        template = self.env.ref('mail.mail_template_channel_send_guidelines', raise_if_not_found=False)
-        if not template:
-            _logger.warning('Template "mail.mail_template_channel_send_guidelines" was not found.')
+        view = self.env.ref('mail.mail_channel_send_guidelines', raise_if_not_found=False)
+        if not view:
+            _logger.warning('View "mail.mail_channel_send_guidelines" was not found.')
             return False
         banned_emails = self.env['mail.moderation'].sudo().search([
             ('status', '=', 'ban'),
             ('channel_id', 'in', self.ids)
         ]).mapped('email')
         for partner in partners.filtered(lambda p: p.email and not (p.email in banned_emails)):
-            # the sudo is needed because because send_mail will create a message (a mail). As the template is
-            # linked to res.partner model the current user could not have the rights to modify this model. It
-            # means it could prevent users to create the mail.message necessary for the mail.mail.
-            template.with_context(lang=partner.lang, channel=self).sudo().send_mail(partner.id)
+            create_values = {
+                'body_html': view.render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
+                'subject': "Guidelines of channel %s" % self.name,
+                'email_from': partner.company_id.catchall or partner.company_id.email,
+                'recipient_ids': [(4, partner.id)]
+            }
+            mail = self.env['mail.mail'].create(create_values)
+            mail.send()
         return True
 
     @api.multi
