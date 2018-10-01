@@ -239,7 +239,7 @@ class xml_import(object):
         node_uid = node.get('uid','') or (len(data_node) and data_node.get('uid',''))
         if node_uid:
             return self.id_get(node_uid)
-        return self.uid
+        return self.env.user.id
 
     def make_xml_id(self, xml_id):
         if not xml_id or '.' in xml_id:
@@ -247,7 +247,6 @@ class xml_import(object):
         return "%s.%s" % (self.module, xml_id)
 
     def _test_xml_id(self, xml_id):
-        id = xml_id
         if '.' in xml_id:
             module, id = xml_id.split('.', 1)
             assert '.' not in id, """The ID reference "%s" must contain
@@ -257,30 +256,30 @@ form: module.record_id""" % (xml_id,)
                 modcnt = self.env['ir.module.module'].search_count([('name', '=', module), ('state', '=', 'installed')])
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
-    def _tag_delete(self, rec, data_node=None, mode=None):
-        d_model = rec.get("model")
-        d_search = rec.get("search")
-        d_id = rec.get("id")
+    def _tag_delete(self, rec, _data_node):
+        d_model = rec["model"]
         records = self.env[d_model]
 
+        d_search = rec.get("search")
         if d_search:
             idref = _get_idref(self, self.env, d_model, {})
             try:
                 records = records.search(safe_eval(d_search, idref))
             except ValueError:
                 _logger.warning('Skipping deletion for failed search `%r`', d_search, exc_info=True)
-                pass
+
+        d_id = rec.get("id")
         if d_id:
             try:
                 records += records.browse(self.id_get(d_id))
             except ValueError:
                 # d_id cannot be found. doesn't matter in this case
                 _logger.warning('Skipping deletion for missing XML ID `%r`', d_id, exc_info=True)
-                pass
+
         if records:
             records.unlink()
 
-    def _tag_report(self, rec, data_node=None, mode=None):
+    def _tag_report(self, rec, data_node):
         res = {}
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f)
@@ -333,16 +332,15 @@ form: module.record_id""" % (xml_id,)
             report.unlink_action()
         return report.id
 
-    def _tag_function(self, rec, data_node=None, mode=None):
+    def _tag_function(self, rec, data_node):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
         context = self.get_context(data_node, rec, {'ref': self.id_get})
         uid = self.get_uid(data_node, rec)
         env = self.env(user=uid, context=context)
         _eval_xml(self, rec, env)
-        return
 
-    def _tag_act_window(self, rec, data_node=None, mode=None):
+    def _tag_act_window(self, rec, data_node):
         name = rec.get('name')
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
@@ -357,7 +355,7 @@ form: module.record_id""" % (xml_id,)
         view_mode = rec.get('view_mode') or 'tree,form'
         usage = rec.get('usage')
         limit = rec.get('limit')
-        uid = self.uid
+        uid = self.env.user.id
 
         # Act_window's 'domain' and 'context' contain mostly literals
         # but they can also refer to the variables provided below
@@ -444,72 +442,68 @@ form: module.record_id""" % (xml_id,)
         data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
         self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
-    def _tag_menuitem(self, rec, data_node=None, mode=None):
-        rec_id = rec.get("id")
+    def _tag_menuitem(self, rec, data_node):
+        rec_id = rec.attrib["id"]
         self._test_xml_id(rec_id)
 
         # The parent attribute was specified, if non-empty determine its ID, otherwise
         # explicitly make a top-level menu
-        if rec.get('parent'):
-            menu_parent_id = self.id_get(rec.get('parent',''))
-        else:
-            # we get here with <menuitem parent="">, explicit clear of parent, or
-            # if no parent attribute at all but menu name is not a menu path
-            menu_parent_id = False
-        values = {'parent_id': menu_parent_id}
-        if rec.get('name'):
-            values['name'] = rec.get('name')
-        try:
-            res = [ self.id_get(rec.get('id','')) ]
-        except:
-            res = None
-
-        if rec.get('action'):
-            a_action = rec.get('action')
-
-            # determine the type of action
-            action_model, action_id = self.model_id_get(a_action)
-            action_type = action_model.split('.')[-1] # keep only type part
-            values['action'] = "ir.actions.%s,%d" % (action_type, action_id)
-
-            if not values.get('name') and action_type in ('act_window', 'wizard', 'url', 'client', 'server'):
-                resw = self.env[action_model].sudo().browse(action_id).name
-                if resw:
-                    values['name'] = resw
-
-        if not values.get('name'):
-            # ensure menu has a name
-            values['name'] = rec_id or '?'
+        values = {
+            'parent_id': False,
+            'active': self.nodeattr2bool(rec, 'active', default=True),
+        }
 
         if rec.get('sequence'):
             values['sequence'] = int(rec.get('sequence'))
 
-        values['active'] = self.nodeattr2bool(rec, 'active', default=True)
-
-        if rec.get('groups'):
-            g_names = rec.get('groups','').split(',')
-            groups_value = []
-            for group in g_names:
-                if group.startswith('-'):
-                    group_id = self.id_get(group[1:])
-                    groups_value.append((3, group_id))
-                else:
-                    group_id = self.id_get(group)
-                    groups_value.append((4, group_id))
-            values['groups_id'] = groups_value
-
-        if not values.get('parent_id'):
+        if rec.get('parent'):
+            values['parent_id'] = self.id_get(rec.attrib['parent'])
+        else:
             if rec.get('web_icon'):
-                values['web_icon'] = rec.get('web_icon')
+                values['web_icon'] = rec.attrib['web_icon']
 
-        xid = self.make_xml_id(rec_id)
-        data = dict(xml_id=xid, values=values, noupdate=self.isnoupdate(data_node))
+
+        if rec.get('name'):
+            values['name'] = rec.attrib['name']
+
+        if rec.get('action'):
+            a_action = rec.attrib['action']
+
+            if '.' not in a_action:
+                a_action = '%s.%s' % (self.module, a_action)
+            act = self.env.ref(a_action).sudo()
+            values['action'] = "%s,%d" % (act.type, act.id)
+
+            if not values.get('name') and act.type.endswith(('act_window', 'wizard', 'url', 'client', 'server')) and act.name:
+                values['name'] = act.name
+
+        if not values.get('name'):
+            values['name'] = rec_id or '?'
+
+
+        groups = []
+        for group in rec.get('groups', '').split(','):
+            if group.startswith('-'):
+                group_id = self.id_get(group[1:])
+                groups.append((3, group_id))
+            elif group:
+                group_id = self.id_get(group)
+                groups.append((4, group_id))
+        if groups:
+            values['groups_id'] = groups
+
+
+        data = {
+            'xml_id': self.make_xml_id(rec_id),
+            'values': values,
+            'noupdate': self.isnoupdate(data_node),
+        }
         self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
 
     def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)
 
-    def _tag_assert(self, rec, data_node=None, mode=None):
+    def _tag_assert(self, rec, data_node):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
 
@@ -568,7 +562,7 @@ form: module.record_id""" % (xml_id,)
         else: # all tests were successful for this assertion tag (no break)
             self.assertion_report.record_success()
 
-    def _tag_record(self, rec, data_node=None, mode=None):
+    def _tag_record(self, rec, data_node):
         rec_model = rec.get("model")
         model = self.env[rec_model]
         rec_id = rec.get("id", '')
@@ -654,10 +648,10 @@ form: module.record_id""" % (xml_id,)
         if rec_id:
             self.idref[rec_id] = record.id
         if config.get('import_partial'):
-            self.cr.commit()
+            self.env.cr.commit()
         return rec_model, record.id
 
-    def _tag_template(self, el, data_node=None, mode=None):
+    def _tag_template(self, el, data_node):
         # This helper transforms a <template> element into a <record> and forwards it
         tpl_id = el.get('id', el.get('t-name'))
         full_tpl_id = tpl_id
@@ -701,7 +695,7 @@ form: module.record_id""" % (xml_id,)
             record.append(Field(el.get('key'), name='key'))
         if el.get('active') in ("True", "False"):
             view_id = self.id_get(tpl_id, raise_if_not_found=False)
-            if mode != "update" or not view_id:
+            if self.mode != "update" or not view_id:
                 record.append(Field(name='active', eval=el.get('active')))
         if el.get('customize_show') in ("True", "False"):
             record.append(Field(name='customize_show', eval=el.get('customize_show')))
@@ -736,32 +730,26 @@ form: module.record_id""" % (xml_id,)
             id_str = '%s.%s' % (self.module, id_str)
         return self.env['ir.model.data'].xmlid_to_res_model_res_id(id_str, raise_if_not_found=raise_if_not_found)
 
-    def parse(self, de, mode=None):
-        roots = ['openerp','data','odoo']
-        if de.tag not in roots:
-            raise Exception("Root xml tag must be <openerp>, <odoo> or <data>.")
-        for rec in de:
-            if rec.tag in roots:
-                self.parse(rec, mode)
-            elif rec.tag in self._tags:
-                try:
-                    self._tags[rec.tag](rec, de, mode=mode)
-                except Exception as e:
-                    exc_info = sys.exc_info()
-                    pycompat.reraise(
-                        ParseError,
-                        ParseError(ustr(e), etree.tostring(rec, encoding='unicode').rstrip(), rec.getroottree().docinfo.URL, rec.sourceline),
-                        exc_info[2]
-                    )
-        return True
+    def _tag_root(self, el, _data_node):
+        for rec in el:
+            f = self._tags.get(rec.tag)
+            if f is None:
+                continue
+            try:
+                f(rec, el)
+            except Exception as e:
+                exc_info = sys.exc_info()
+                pycompat.reraise(
+                    ParseError,
+                    ParseError(ustr(e), etree.tostring(rec, encoding='unicode').rstrip(), rec.getroottree().docinfo.URL, rec.sourceline),
+                    exc_info[2]
+                )
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
         self.env = odoo.api.Environment(cr, SUPERUSER_ID, {})
-        self.cr = cr
-        self.uid = SUPERUSER_ID
-        self.idref = idref
+        self.idref = {} if idref is None else idref
         if report is None:
             report = assertion_report.assertion_report()
         self.assertion_report = report
@@ -776,7 +764,13 @@ form: module.record_id""" % (xml_id,)
             'report': self._tag_report,
             'act_window': self._tag_act_window,
             'assert': self._tag_assert,
+
+            **dict.fromkeys(self.DATA_ROOTS, self._tag_root)
         }
+    def parse(self, de):
+        assert de.tag in self.DATA_ROOTS, "Root xml tag must be <openerp>, <odoo> or <data>."
+        self._tag_root(de, de)
+    DATA_ROOTS = ['odoo', 'data', 'openerp']
 
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
     if pathname is None:
@@ -843,12 +837,9 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         _logger.info(ustr(relaxng.error_log.last_error))
         raise
 
-    if idref is None:
-        idref={}
     if isinstance(xmlfile, pycompat.string_types):
         xml_filename = xmlfile
     else:
         xml_filename = xmlfile.name
     obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate, xml_filename=xml_filename)
-    obj.parse(doc.getroot(), mode=mode)
-    return True
+    obj.parse(doc.getroot())
