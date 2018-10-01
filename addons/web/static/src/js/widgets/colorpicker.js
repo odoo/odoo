@@ -77,7 +77,6 @@ var Colorpicker = Dialog.extend({
             this._updateRgba(parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), Math.round(parseFloat(rgba[4] * 100)));
         } else {
             this._updateHex(defaultColor);
-            this._updateOpacity(100);
         }
         this.opened().then(this._updateUI.bind(this));
 
@@ -103,6 +102,17 @@ var Colorpicker = Dialog.extend({
     _updateUI: function () {
         var self = this;
 
+        // Update cssColor
+        this.colorComponents.cssColor = this.colorComponents.hex;
+        if (this.colorComponents.alpha !== 100) {
+            this.colorComponents.cssColor = _.str.sprintf('rgba(%s, %s, %s, %s)',
+                this.colorComponents.red,
+                this.colorComponents.green,
+                this.colorComponents.blue,
+                this.colorComponents.alpha / 100
+            );
+        }
+
         // Update inputs
         _.each(this.colorComponents, function (value, color) {
             self.$(_.str.sprintf('.o_%s_input', color)).val(value);
@@ -127,11 +137,15 @@ var Colorpicker = Dialog.extend({
 
         // Update opacity slider position
         var heightOpacity = this.$opacitySlider.height();
-        var z = heightOpacity * (1 - this.colorComponents.opacity / 100.0);
+        var z = heightOpacity * (1 - this.colorComponents.alpha / 100.0);
         this.$opacitySliderPointer.css('top', Math.round(z - 2));
 
         // Add gradient color on opacity slider
-        this.$opacitySlider.css('background', 'linear-gradient(' + this.colorComponents.hex + ' 0%, transparent 100%)');
+        var hex = this.colorComponents.hex;
+        if (this.colorComponents.alpha !== 100) {
+            hex = this.colorComponents.hex.slice(0,-2);
+        }
+        this.$opacitySlider.css('background', 'linear-gradient(' + hex + ' 0%, transparent 100%)');
     },
     /**
      * Updates colors according to given hex value. Opacity is left unchanged.
@@ -140,16 +154,15 @@ var Colorpicker = Dialog.extend({
      * @param {string} hex - hexadecimal code
      */
     _updateHex: function (hex) {
-        var rgb = Colorpicker.prototype.convertHexToRgb(hex);
-        if (!rgb) {
+        var rgba = Colorpicker.prototype.convertHexToRgba(hex);
+        if (!rgba) {
             return;
         }
         _.extend(this.colorComponents,
             {hex: hex},
-            rgb,
-            Colorpicker.prototype.convertRgbToHsl(rgb.red, rgb.green, rgb.blue)
+            rgba,
+            Colorpicker.prototype.convertRgbToHsl(rgba.red, rgba.green, rgba.blue)
         );
-        this._updateCssColor();
     },
     /**
      * Updates colors according to given RGB values.
@@ -162,18 +175,17 @@ var Colorpicker = Dialog.extend({
      */
     _updateRgba: function (r, g, b, a) {
         if (a === undefined) {
-            a = this.colorComponents.opacity;
+            a = this.colorComponents.alpha;
         }
-        var hex = Colorpicker.prototype.convertRgbToHex(r, g, b);
+        var hex = Colorpicker.prototype.convertRgbaToHex(r, g, b, a);
         if (hex) {
             _.extend(this.colorComponents,
-                {red: r, green: g, blue: b},
-                {opacity: a},
+                {red: r, green: g, blue: b, alpha: a},
+                {alpha: a},
                 hex,
                 Colorpicker.prototype.convertRgbToHsl(r, g, b)
             );
         }
-        this._updateCssColor();
     },
     /**
      * Updates colors according to given HSL values.
@@ -189,41 +201,9 @@ var Colorpicker = Dialog.extend({
             _.extend(this.colorComponents,
                 {hue: h, saturation: s, lightness: l},
                 rgb,
-                Colorpicker.prototype.convertRgbToHex(rgb.red, rgb.green, rgb.blue)
+                Colorpicker.prototype.convertRgbaToHex(rgb.red, rgb.green, rgb.blue, this.colorComponents.alpha)
             );
         }
-        this._updateCssColor();
-    },
-    /**
-     * Updates color opacity.
-     *
-     * @private
-     * @param {integer} a
-     */
-    _updateOpacity: function (a) {
-        _.extend(this.colorComponents,
-            {opacity: a}
-        );
-        this._updateCssColor();
-    },
-    /**
-     * Updates css color representation.
-     *
-     * @private
-     */
-    _updateCssColor: function () {
-        var cssColor = this.colorComponents.hex;
-        if (this.colorComponents.opacity !== 100) {
-            cssColor = _.str.sprintf('rgba(%s, %s, %s, %s)',
-                this.colorComponents.red,
-                this.colorComponents.green,
-                this.colorComponents.blue,
-                this.colorComponents.opacity / 100
-            );
-        }
-        _.extend(this.colorComponents,
-            {cssColor: cssColor}
-        );
     },
 
     //--------------------------------------------------------------------------
@@ -315,7 +295,7 @@ var Colorpicker = Dialog.extend({
         var opacity = Math.round(100 * (1 - y / this.$opacitySlider.height()));
         opacity = utils.confine(opacity, 0, 100);
 
-        this._updateOpacity(opacity);
+        this._updateRgba(this.colorComponents.red, this.colorComponents.green, this.colorComponents.blue, opacity);
         this._updateUI();
     },
     /**
@@ -334,7 +314,8 @@ var Colorpicker = Dialog.extend({
                 this._updateRgba(
                     parseInt(this.$('.o_red_input').val()),
                     parseInt(this.$('.o_green_input').val()),
-                    parseInt(this.$('.o_blue_input').val())
+                    parseInt(this.$('.o_blue_input').val()),
+                    parseInt(this.$('.o_alpha_input').val())
                 );
                 break;
             case 'hsl':
@@ -343,9 +324,6 @@ var Colorpicker = Dialog.extend({
                     parseInt(this.$('.o_saturation_input').val()),
                     parseInt(this.$('.o_lightness_input').val())
                 );
-                break;
-            case 'opacity':
-                this._updateOpacity(parseInt(this.$('.o_opacity_input').val()));
                 break;
         }
         this._updateUI();
@@ -362,21 +340,21 @@ var Colorpicker = Dialog.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Converts Hexadecimal code to RGB.
+     * Converts Hexadecimal code to RGBA.
      *
      * @static
      * @param {string} hex - hexadecimal code
-     * @returns {Object|false} contains red, green and blue
+     * @returns {Object|false} contains red, green, blue and alpha
      */
-    convertHexToRgb: function (hex) {
-        if (!/^#[0-9A-F]{6}$/i.test(hex)) {
+    convertHexToRgba: function (hex) {
+        if (!/^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(hex)) {
             return false;
         }
-
         return {
             red: parseInt(hex.substr(1, 2), 16),
             green: parseInt(hex.substr(3, 2), 16),
             blue: parseInt(hex.substr(5, 2), 16),
+            alpha: hex.length > 7 ? Math.round(parseInt(hex.substr(7, 2), 16) * 100 / 255) : 100,
         };
     },
     /**
@@ -470,24 +448,31 @@ var Colorpicker = Dialog.extend({
         }
     },
     /**
-     * Converts RGB color to Hexadecimal code.
+     * Converts RGBA color to Hexadecimal code.
      *
      * @static
      * @param {integer} r
      * @param {integer} g
      * @param {integer} b
+     * @param {integer} a
      * @returns {Object|false} contains hexadecimal code
      */
-    convertRgbToHex: function (r, g, b) {
+    convertRgbaToHex: function (r, g, b, a) {
         if (typeof(r) !== 'number' || isNaN(r) || r < 0 || r > 255 ||
             typeof(g) !== 'number' || isNaN(g) || g < 0 || g > 255 ||
-            typeof(b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
+            typeof(b) !== 'number' || isNaN(b) || b < 0 || b > 255 ||
+            typeof(a) !== 'number' || isNaN(a) || a < 0 || a > 100) {
             return false;
         }
         var red = r < 16 ? '0' + r.toString(16) : r.toString(16);
         var green = g < 16 ? '0' + g.toString(16) : g.toString(16);
         var blue = b < 16 ? '0' + b.toString(16) : b.toString(16);
-        return {hex: _.str.sprintf('#%s%s%s', red, green, blue)};
+        var alpha = Math.floor(a/100 * 255).toString(16);
+        var hex = _.str.sprintf('#%s%s%s%s', red, green, blue, alpha);
+        if (a === 100) {
+            hex = _.str.sprintf('#%s%s%s', red, green, blue);
+        }
+        return {hex: hex};
     },
 });
 

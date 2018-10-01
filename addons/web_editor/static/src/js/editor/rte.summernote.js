@@ -40,7 +40,7 @@ function _rgbToHex(cssColor) {
     if (rgba[4]) {
         return cssColor;
     }
-    var hex = ColorpickerDialog.prototype.convertRgbToHex(
+    var hex = ColorpickerDialog.prototype.convertRgbaToHex(
         parseInt(rgba[1]),
         parseInt(rgba[2]),
         parseInt(rgba[3])
