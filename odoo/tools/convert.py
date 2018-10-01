@@ -19,7 +19,7 @@ from . import assertion_report, pycompat
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
-from odoo import SUPERUSER_ID
+from odoo import SUPERUSER_ID, api
 
 _logger = logging.getLogger(__name__)
 
@@ -177,20 +177,32 @@ def _eval_xml(self, node, env):
                 return tuple(res)
             return res
     elif node.tag == "function":
-        args = []
         a_eval = node.get('eval')
-        # FIXME: should probably be exclusive
         if a_eval:
             self.idref['ref'] = self.id_get
-            args = safe_eval(a_eval, self.idref)
-        for n in node:
-            return_val = _eval_xml(self, n, env)
-            if return_val is not None:
-                args.append(return_val)
+            # ensure the args are a list (sometimes folks eval a tuple which
+            # is inconvenient when trying to concatenate w/ a list)
+            args = list(safe_eval(a_eval, self.idref))
+        else:
+            args = [
+                r for r in (_eval_xml(self, n, env) for n in node)
+                if r is not None
+            ]
+
         model = env[node.get('model')]
-        method = node.get('name')
-        # this one still depends on the old API
-        return odoo.api.call_kw(model, method, args, {})
+        method_name = node.get('name')
+        method = getattr(model, method_name)
+
+        # this mess is necessary to merge @context and a possible positional
+        # context parameter, as <function> works on the old API so ids and
+        # context are just args
+        ids, args = [], list(args)
+        if getattr(method, '_api', None) not in ('model', 'model_create'):
+            ids, args = args[:1], args[1:]
+        context, args, kwargs = api.split_context(method, args, {})
+        kwargs['context'] = {**env.context, **(context or {})}
+
+        return odoo.api.call_kw(model, method_name, ids + args, kwargs)
     elif node.tag == "test":
         return node.text
 
@@ -213,33 +225,21 @@ class xml_import(object):
     def isnoupdate(self, data_node=None):
         return self.noupdate or (len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False))
 
-    def get_context(self, data_node, node, eval_dict):
-        data_node_context = (len(data_node) and data_node.get('context',''))
-        node_context = node.get("context")
-        context = {}
-        for ctx in (data_node_context, node_context):
-            if ctx:
-                try:
-                    ctx_res = safe_eval(ctx, eval_dict)
-                    if isinstance(context, dict):
-                        context.update(ctx_res)
-                    else:
-                        context = ctx_res
-                except (ValueError, NameError):
-                    # Some contexts contain references that are only valid at runtime at
-                    # client-side, so in that case we keep the original context string
-                    # as it is. We also log it, just in case.
-                    context = ctx
-                    _logger.debug('Context value (%s) for element with id "%s" or its data node does not parse '\
-                                                    'at server-side, keeping original string, in case it\'s meant for client side only',
-                                                    ctx, node.get('id','n/a'), exc_info=True)
-        return context
-
-    def get_uid(self, data_node, node):
-        node_uid = node.get('uid','') or (len(data_node) and data_node.get('uid',''))
-        if node_uid:
-            return self.id_get(node_uid)
-        return self.env.user.id
+    def get_env(self, node, eval_context=None):
+        uid = node.get('uid')
+        context = node.get('context')
+        if uid or context:
+            return self.env(
+                user=uid and self.id_get(uid),
+                context=context and {
+                    **self.env.context,
+                    **safe_eval(context, {
+                        'ref': self.id_get,
+                        **(eval_context or {})
+                    })
+                }
+            )
+        return self.env
 
     def make_xml_id(self, xml_id):
         if not xml_id or '.' in xml_id:
@@ -335,9 +335,7 @@ form: module.record_id""" % (xml_id,)
     def _tag_function(self, rec, data_node):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
-        context = self.get_context(data_node, rec, {'ref': self.id_get})
-        uid = self.get_uid(data_node, rec)
-        env = self.env(user=uid, context=context)
+        env = self.get_env(rec)
         _eval_xml(self, rec, env)
 
     def _tag_act_window(self, rec, data_node):
@@ -388,9 +386,8 @@ form: module.record_id""" % (xml_id,)
             'active_id': active_id,
             'active_ids': active_ids,
             'active_model': active_model,
-            'ref': self.id_get,
         }
-        context = self.get_context(data_node, rec, eval_context)
+        context = self.get_env(rec, eval_context).context
 
         try:
             domain = safe_eval(domain, eval_context)
@@ -516,14 +513,11 @@ form: module.record_id""" % (xml_id,)
         rec_string = rec.get("string") or 'unknown'
 
         records = None
-        eval_dict = {'ref': self.id_get}
-        context = self.get_context(data_node, rec, eval_dict)
-        uid = self.get_uid(data_node, rec)
-        env = self.env(user=uid, context=context)
+        env = self.get_env(rec)
         if rec_id:
             records = env[rec_model].browse(self.id_get(rec_id))
         elif rec_src:
-            q = safe_eval(rec_src, eval_dict)
+            q = safe_eval(rec_src, {'ref': self.id_get})
             records = env[rec_model].search(q)
             if rec_src_count:
                 count = int(rec_src_count)
@@ -547,7 +541,6 @@ form: module.record_id""" % (xml_id,)
             globals_dict['_ref'] = ref
             for test in rec.findall('./test'):
                 f_expr = test.get("expr",'')
-                env = self.env(user=uid, context=context)
                 expected_value = _eval_xml(self, test, env) or True
                 expression_value = safe_eval(f_expr, globals_dict)
                 if expression_value != expected_value: # assertion failed
@@ -564,15 +557,16 @@ form: module.record_id""" % (xml_id,)
 
     def _tag_record(self, rec, data_node):
         rec_model = rec.get("model")
-        model = self.env[rec_model]
+        env = self.get_env(rec)
         rec_id = rec.get("id", '')
-        rec_context = rec.get("context", {})
-        if rec_context:
-            rec_context = safe_eval(rec_context)
+
+        model = env[rec_model]
 
         if self.xml_filename and rec_id:
-            rec_context['install_module'] = self.module
-            rec_context['install_filename'] = self.xml_filename
+            model = model.with_context(
+                install_module=self.module,
+                install_filename=self.xml_filename
+            )
 
         self._test_xml_id(rec_id)
         xid = self.make_xml_id(rec_id)
@@ -585,7 +579,7 @@ form: module.record_id""" % (xml_id,)
             if not rec_id:
                 return None
 
-            record = self.env['ir.model.data']._load_xmlid(xid)
+            record = env['ir.model.data']._load_xmlid(xid)
             if record:
                 # if the resource already exists, don't update it but store
                 # its database id (can be useful)
@@ -609,16 +603,13 @@ form: module.record_id""" % (xml_id,)
             f_val = False
 
             if f_search:
-                context = self.get_context(data_node, rec, {'ref': self.id_get})
-                uid = self.get_uid(data_node, rec)
-                env = self.env(user=uid, context=context)
                 idref2 = _get_idref(self, env, f_model, self.idref)
                 q = safe_eval(f_search, idref2)
                 assert f_model, 'Define an attribute model="..." in your .XML file !'
                 # browse the objects searched
-                s = self.env[f_model].search(q)
+                s = env[f_model].search(q)
                 # column definitions of the "local" object
-                _fields = self.env[rec_model]._fields
+                _fields = env[rec_model]._fields
                 # if the current field is many2many
                 if (f_name in _fields) and _fields[f_name].type == 'many2many':
                     f_val = [(6, 0, [x[f_use] for x in s])]
@@ -633,7 +624,7 @@ form: module.record_id""" % (xml_id,)
                 else:
                     f_val = self.id_get(f_ref)
             else:
-                f_val = _eval_xml(self, field, self.env)
+                f_val = _eval_xml(self, field, env)
                 if f_name in model._fields:
                     if model._fields[f_name].type == 'integer':
                         f_val = int(f_val)
@@ -644,11 +635,11 @@ form: module.record_id""" % (xml_id,)
             res[f_name] = f_val
 
         data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
-        record = model.with_context(rec_context)._load_records([data], self.mode == 'update')
+        record = model._load_records([data], self.mode == 'update')
         if rec_id:
             self.idref[rec_id] = record.id
         if config.get('import_partial'):
-            self.env.cr.commit()
+            env.cr.commit()
         return rec_model, record.id
 
     def _tag_template(self, el, data_node):
@@ -735,20 +726,21 @@ form: module.record_id""" % (xml_id,)
             f = self._tags.get(rec.tag)
             if f is None:
                 continue
+
+            self.envs.append(self.get_env(el))
             try:
                 f(rec, el)
-            except Exception as e:
-                exc_info = sys.exc_info()
-                pycompat.reraise(
-                    ParseError,
-                    ParseError(ustr(e), etree.tostring(rec, encoding='unicode').rstrip(), rec.getroottree().docinfo.URL, rec.sourceline),
-                    exc_info[2]
-                )
+            finally:
+                self.envs.pop()
+
+    @property
+    def env(self):
+        return self.envs[-1]
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
-        self.env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        self.envs = [odoo.api.Environment(cr, SUPERUSER_ID, {})]
         self.idref = {} if idref is None else idref
         if report is None:
             report = assertion_report.assertion_report()
@@ -767,9 +759,21 @@ form: module.record_id""" % (xml_id,)
 
             **dict.fromkeys(self.DATA_ROOTS, self._tag_root)
         }
+
     def parse(self, de):
         assert de.tag in self.DATA_ROOTS, "Root xml tag must be <openerp>, <odoo> or <data>."
-        self._tag_root(de, de)
+        try:
+            self._tag_root(de, de)
+        except Exception as e:
+            exc_info = sys.exc_info()
+            pycompat.reraise(
+                ParseError,
+                ParseError(
+                    ustr(e),
+                    etree.tostring(de, encoding='unicode').rstrip(),
+                    de.getroottree().docinfo.URL, de.sourceline),
+                exc_info[2]
+            )
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
