@@ -332,7 +332,7 @@ return AbstractRenderer.extend({
         var self = this;
 
         // Remove Undefined of first GroupBy
-        var graphData = _.filter(this.state.data, function(elem){
+        var graphData = _.filter(this.state.data, function (elem) {
             return elem.labels[0] !== undefined && elem.labels[0] !== _t("Undefined");
         });
 

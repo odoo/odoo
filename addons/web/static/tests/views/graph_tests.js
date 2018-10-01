@@ -780,6 +780,7 @@ QUnit.module('Views', {
 
     QUnit.test('Undefined should appear in bar, pie graph but not in line graph', function (assert) {
         assert.expect(4);
+
         var graph = createView({
             View: GraphView,
             model: "foo",
@@ -806,7 +807,7 @@ QUnit.module('Views', {
         var graph = createView({
             View: GraphView,
             model: "foo",
-            groupBy:['date', 'product_id'],
+            groupBy:['date', 'color_id'],
             data: this.data,
             arch: '<graph string="Partners" type="line">' +
                         '<field name="bar"/>' +
@@ -820,6 +821,7 @@ QUnit.module('Views', {
         assert.strictEqual(graph.$("svg.nvd3-svg .nv-x:contains('Undefined')").length, 1);
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
 
+        // Undefined should not appear after switching back to line chart
         graph.$buttons.find('.o_graph_button[data-mode=line]').click();
         assert.strictEqual(graph.$("svg.nvd3-svg .nv-x:contains('Undefined')").length, 0);
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
