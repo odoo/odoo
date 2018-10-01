@@ -65,8 +65,6 @@
     {%- endmacro %}
 
     {% macro create_form() -%}
-        <p>Odoo is up and running! <br />
-        Fill out this form to create a new database. You will install your first app afterwards.</p>
         {{ master_input() }}
         <div class="form-group row">
             <label for="name" class="col-md-4 col-form-label">Database Name</label>
@@ -95,17 +93,19 @@
                 <input id="phone" type="tel" name="phone" class="form-control" autocomplete="off"/>
             </div>
         </div>
-        <div class="form-row">
-            <div class="col-lg-6 form-group">
-                <label for="lang" class="col-form-label">Language</label>
+        <div class="form-group row">
+            <label for="lang" class="col-md-4 col-form-label">Language</label>
+            <div class="col-md-8">
                 <select id="lang" name="lang" class="form-control" required="required" autocomplete="off">
                     {% for lang in langs %}
                         <option {% if lang[0] == "en_US" %}selected="selected" {% endif %}value="{{ lang[0] }}">{{ lang[1] }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-lg-6 form-group">
-                <label for="country" class="col-form-label">Country</label>
+        </div>
+        <div class="form-group row">
+            <label for="country" class="col-md-4 col-form-label ">Country</label>
+            <div class="col-md-8">
                 <select id="country" name="country_code" class="form-control" autocomplete="off">
                     <option value=""></option>
                     {% for country in countries %}
@@ -114,13 +114,10 @@
                 </select>
             </div>
         </div>
-        <div class="form-group">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" id="load_demo_checkbox" class="custom-control-input" name="demo" value="1">
-                <label for="load_demo_checkbox" class="custom-control-label">
-                    Load demonstration data
-                    <span class="text-muted">(Check this box to evaluate Odoo)</span>
-                </label>
+        <div class="form-group row">
+            <label for="demo" class="col-md-4 col-form-label">Demo data</label>
+            <div class="col-md-8">
+                <input type="checkbox" id="load_demo_checkbox" class="form-control-sm" name="demo" value="1">
             </div>
         </div>
     {%- endmacro %}
@@ -201,6 +198,9 @@
                         </div>
                         <div class="modal-body">
                             {{ create_form() }}
+                            <small class="text-muted">
+                                To enhance your experience, some data may be sent to Odoo online services. See our <a href="https://www.odoo.com/privacy">Privacy Policy</a>.
+                            </small>
                         </div>
                         <div class="modal-footer">
                             <input type="submit" value="Continue" class="btn btn-primary float-right"/>
