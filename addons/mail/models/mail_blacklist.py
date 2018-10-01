@@ -68,11 +68,14 @@ class MailBlackListMixin(models.AbstractModel):
 
     @api.model
     def _search_is_blacklisted(self, operator, value):
-        # Assumes operator is '=' and value is True or False
+        # Assumes operator is '=' or '!=' and value is True or False
         if not hasattr(self.env[self._name], "_primary_email"):
             raise UserError(_('Invalid primary email field on model %s') % self._name)
         if operator != '=':
-            raise NotImplementedError()
+            if operator == '!=' and isinstance(value, bool):
+                value = not value
+            else:
+                raise NotImplementedError()
 
         [email_field] = self._primary_email
         if value:
