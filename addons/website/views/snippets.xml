@@ -672,28 +672,55 @@
                 <div class="col-lg-8 offset-lg-2 pt48 pb48">
                     <div class="card">
                         <div class="card-header">
-                            <ul class="nav nav-tabs card-header-tabs">
+                            <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link text-primary active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+                                    <a class="nav-link active"
+                                        id="nav_tabs_link_1"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_1"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_1"
+                                        aria-selected="true">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-primary" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
+                                    <a class="nav-link"
+                                        id="nav_tabs_link_2"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_2"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_2"
+                                        aria-selected="false">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-primary" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>
+                                    <a class="nav-link"
+                                        id="nav_tabs_link_3"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_3"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_3"
+                                        aria-selected="false">Contact</a>
                                 </li>
                             </ul>
                         </div>
-                        <div class="card-body tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="card-body tab-content">
+                            <div class="tab-pane fade show active"
+                                id="nav_tabs_content_1"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_1">
                                 <h3>Details</h3>
                                 <p><b>Great stories have personality.</b> Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
                             </div>
-                            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="tab-pane fade"
+                                id="nav_tabs_content_2"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_2">
                                 <h3>Shipping</h3>
                                 <p><b>Great stories are for everyone even when only written for just one person.</b> If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
                             </div>
-                            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                            <div class="tab-pane fade"
+                                id="nav_tabs_content_3"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_3">
                                 <h3>Review</h3>
                                 <blockquote>
                                     <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
@@ -1081,6 +1108,8 @@
         <a href="#" class="dropdown-item" data-add-slide="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add Slide</a>
         <a href="#" class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
     </div>
+
+    <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs"/>
 
     <!-- Parallax -->
     <div data-js="parallax" data-selector=".parallax">
