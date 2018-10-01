@@ -222,9 +222,11 @@
             <field name="model">hr.contract.type</field>
             <field name="arch" type="xml">
                 <form string="Contract Type">
-                    <group col="4">
-                        <field colspan="4" name="name"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
