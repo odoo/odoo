@@ -1113,6 +1113,9 @@
                 <field name="currency_id" position="before">
                     <field name="discount_policy" groups="sale.group_discount_per_so_line" widget="radio"/>
                 </field>
+                <button name="toggle_active" position="attributes">
+                    <attribute name="groups">sales_team.group_sale_manager</attribute>
+                </button>
             </field>
         </record>
 

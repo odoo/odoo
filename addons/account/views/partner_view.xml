@@ -225,15 +225,15 @@
                     </page>
                 </page>
                 <xpath expr="//page[@name='sales_purchases']/group" position="inside">
-                    <group string="Fiscal Information" name="fiscal_information" priority="5" groups="account.group_account_invoice, sales_team.group_sale_salesman">
+                    <group string="Fiscal Information" name="fiscal_information" priority="5" groups="account.group_account_invoice">
                         <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                     </group>
                 </xpath>
                 <group name="sale" position="inside">
-                    <field string="Payment Terms" name="property_payment_term_id" widget="selection" groups="account.group_account_invoice, sales_team.group_sale_salesman"/>
+                    <field string="Payment Terms" name="property_payment_term_id" widget="selection" groups="account.group_account_invoice"/>
                 </group>
                 <group name="purchase" position="inside">
-                    <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice, sales_team.group_sale_salesman"/>
+                    <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice"/>
                 </group>
             </field>
         </record>
