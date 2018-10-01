@@ -126,7 +126,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _serve_attachment(cls):
         env = api.Environment(request.cr, SUPERUSER_ID, request.context)
-        domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
+        domain = cls._get_serve_attachment_domain()
         fields = ['__last_update', 'datas', 'name', 'mimetype', 'checksum']
         attach = env['ir.attachment'].search_read(domain, fields)
         if attach:
@@ -151,6 +151,10 @@ class IrHttp(models.AbstractModel):
             response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
             response.data = base64.b64decode(datas)
             return response
+
+    @classmethod
+    def _get_serve_attachment_domain(cls):
+        return [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
 
     @classmethod
     def _serve_fallback(cls, exception):

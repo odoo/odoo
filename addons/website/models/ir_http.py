@@ -150,6 +150,12 @@ class Http(models.AbstractModel):
         return request.env['website.redirect'].search(domain, limit=1)
 
     @classmethod
+    def _get_serve_attachment_domain(cls):
+        domain = super(Http, cls)._get_serve_attachment_domain()
+        website = request.env['website'].get_current_website()
+        return domain + website.website_domain()
+
+    @classmethod
     def _serve_fallback(cls, exception):
         # serve attachment before
         parent = super(Http, cls)._serve_fallback(exception)
