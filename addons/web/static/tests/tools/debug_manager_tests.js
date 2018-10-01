@@ -2,6 +2,7 @@ odoo.define('web.debugManagerTests', function (require) {
 "use strict";
 
 var testUtils = require('web.test_utils');
+var FormView = require('web.FormView');
 
 var createDebugManager = testUtils.createDebugManager;
 
