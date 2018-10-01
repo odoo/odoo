@@ -741,12 +741,15 @@
             <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
             <div class="o_field_selector_title"/>
             <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
+            <div t-if="widget.options.showSearchInput" class="o_field_selector_search">
+                <input type="text" class="o_input"/>
+            </div>
         </div>
         <div class="o_field_selector_popover_body">
             <ul class="o_field_selector_page"/>
         </div>
         <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
-            <input type="text" class="o_input"/>
+            <input type="text" class="o_input o_field_selector_debug"/>
         </div>
     </div>
 </div>
