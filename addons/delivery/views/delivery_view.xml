@@ -75,7 +75,7 @@
                             </h1>
                         </div>
                         <group>
-                            <group>
+                            <group name="provider_details">
                                 <label for="delivery_type"/>
                                 <div>
                                     <field name="delivery_type" widget="radio"/>
@@ -83,7 +83,7 @@
                                 </div>
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                             </group>
-                            <group>
+                            <group name="delivery_details">
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
                                     <field name="margin" class="oe_inline"/>%
@@ -98,9 +98,9 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">
+                            <page name="pricing" string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">
                                 <group attrs="{'invisible':[('delivery_type', '!=', 'fixed')]}">
-                                    <group>
+                                    <group name="fixed_price">
                                         <field name="fixed_price"/>
                                     </group>
                                 </group>
@@ -115,15 +115,15 @@
                                     </p>
                                 </group>
                                 <group>
-                                    <group>
+                                    <group name="country_details">
                                         <field name="country_ids" widget="many2many_tags"/>
                                         <field name="state_ids" widget="many2many_tags"/>
                                     </group>
                                     <group></group>
-                                    <group>
+                                    <group name="zip_from">
                                         <field name="zip_from"/>
                                     </group>
-                                    <group>
+                                    <group name="zip_to">
                                         <field name="zip_to"/>
                                     </group>
                                 </group>
