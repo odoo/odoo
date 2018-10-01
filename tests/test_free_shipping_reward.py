@@ -123,6 +123,10 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 3, "We should get the delivery line but not the free delivery since we are below 872.73$ with the 10% discount")
 
         p_minimum_threshold_free_delivery.sequence = 10
+        (order.order_line - sol1).unlink()
+        order.carrier_id = self.env['delivery.carrier'].search([])[1]
+        order.get_delivery_price()
+        order.set_delivery_line()
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 4, "We should get both promotion line since the free delivery will be applied first and won't change the SO total")
 
@@ -198,5 +202,5 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
         p_specific_product.discount_apply_on = 'cheapest_product'
         order.recompute_coupon_lines()
-        # 872.73 - (20% of 1 iPad) = 872.73 - 64 = 808.73
-        self.assertEqual(order.amount_untaxed, 808.73, "One large cabinet should be discounted by 20%")
+        # 872.73 - (20% of 1 iPad) = 872.73 - 58.18 = 814.55
+        self.assertEqual(order.amount_untaxed, 814.55, "One large cabinet should be discounted by 20%")
