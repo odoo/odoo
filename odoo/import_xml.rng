@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <rng:define name="env">
+        <rng:optional><rng:attribute name="uid" /></rng:optional>
+        <rng:optional><rng:attribute name="context" /></rng:optional>
+    </rng:define>
+
     <rng:define name="any">
         <rng:element>
             <rng:anyName/>
@@ -37,9 +42,7 @@
         <rng:element name="function">
             <rng:attribute name="model" />
             <rng:attribute name="name" />
-            <!-- doesn't look like it has any use? -->
-            <rng:optional><rng:attribute name="id" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:ref name="env"/>
             <rng:optional>
                 <rng:choice>
                     <rng:attribute name="eval" />
@@ -163,7 +166,7 @@
                 </rng:optional>
             </rng:optional>
             <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:ref name="env"/>
             <rng:zeroOrMore>
                 <rng:ref name="field" />
             </rng:zeroOrMore>
@@ -303,7 +306,7 @@
                 <rng:name>data</rng:name>
             </rng:choice>
             <rng:optional><rng:attribute name="noupdate" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:ref name="env"/>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>
