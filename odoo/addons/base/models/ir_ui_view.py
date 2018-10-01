@@ -320,6 +320,12 @@ actual arch.
                         self.raise_view_error(message, self.id)
         return True
 
+    def _check_groups_validity(self, view, view_name):
+        for node in view.xpath('//*[@groups]'):
+            for group in node.get('groups').replace('!', '').split(','):
+                if not self.env.ref(group.strip(), raise_if_not_found=False):
+                    _logger.warning("The group %s defined in view %s does not exist!", group, view_name)
+
     @api.constrains('arch_db')
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
@@ -332,6 +338,7 @@ actual arch.
             view_arch_utf8 = view_def['arch']
             if view.type != 'qweb':
                 view_doc = etree.fromstring(view_arch_utf8)
+                self._check_groups_validity(view_doc, view.name)
                 # verify that all fields used are valid, etc.
                 self.postprocess_and_fields(view.model, view_doc, view.id)
                 # RNG-based validation is not possible anymore with 7.0 forms
