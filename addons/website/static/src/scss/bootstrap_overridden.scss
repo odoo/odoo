@@ -2,7 +2,12 @@
 // Color system
 //
 
-$yiq-text-dark: color('text');
+// TODO should take into account the final values of yiq-text-light and
+// yiq-text-dark, not consider it is white and black, but this is ok as a
+// first approximation.
+$-is-light: if(color('text') != null, (luma(color('text')) > 50%), null);
+$yiq-text-light: if($-is-light, color('text'), null);
+$yiq-text-dark: if($-is-light, null, color('text'));
 
 // Body
 //
