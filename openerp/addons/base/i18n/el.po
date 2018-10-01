@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2018-04-17 20:09+0000\n"
+"PO-Revision-Date: 2018-09-12 14:30+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -903,7 +903,7 @@ msgid ""
 "You can write a query in order to create Consistency Test and you will get the result of the test \n"
 "in PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test \n"
 "and print the report from Print button in header area.\n"
-msgstr ""
+msgstr "\nΕπιβεβαιώσεις στην Λογιστική.\n======================\nWith this module you can manually check consistencies and inconsistencies of accounting module from menu Reporting/Accounting/Accounting Tests.\n\nYou can write a query in order to create Consistency Test and you will get the result of the test \nin PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test \nand print the report from Print button in header area.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_asset
@@ -956,7 +956,7 @@ msgid ""
 "\n"
 "This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.\n"
 "    "
-msgstr ""
+msgstr "\nΑυτόματες Μεταφράσεις μέσω του Gengo API\n========================================\n\nThis module will install passive scheduler job for automated translations \nusing the Gengo API. To activate it, you must\n1) Configure your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`\n2) Launch the wizard under `Settings > Application Terms > Gengo: Manual Request of Translation` and follow the wizard.\n\nThis wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_service
@@ -994,7 +994,7 @@ msgid ""
 "scanner, and is used by the posbox to provide barcode scanner support to the\n"
 "point of sale module. \n"
 "\n"
-msgstr ""
+msgstr "\nΟδηγός Barcode Scanner Hardware\n================================\n\nThis module allows the web client to access a remotely installed barcode\nscanner, and is used by the posbox to provide barcode scanner support to the\npoint of sale module. \n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -1552,7 +1552,7 @@ msgid ""
 "    - The payslip.line with appears_in_payslip = False should appears in the\n"
 "      payslip interface, but not in the payslip report\n"
 "    "
-msgstr ""
+msgstr "\nΓαλλικοί Κανόνες Μισθοδοσίας\n=====================\n\n    - Configuration of hr_payroll for French localization\n    - All main contributions rules for French payslip, for 'cadre' and 'non-cadre'\n    - New payslip report\n\nTODO:\n-----\n    - Integration with holidays module for deduction and allowance\n    - Integration with hr_payroll_account for the automatic account_move_line\n      creation from the payslip\n    - Continue to integrate the contribution. Only the main contribution are\n      currently implemented\n    - Remake the report under webkit\n    - The payslip.line with appears_in_payslip = False should appears in the\n      payslip interface, but not in the payslip report\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -1644,7 +1644,7 @@ msgid ""
 "This modules only contains the enabling framework. The actual devices drivers\n"
 "are found in other modules that must be installed separately. \n"
 "\n"
-msgstr ""
+msgstr "\nΆρθρωμα Hardware Poxy\n=============\n\nThis module allows you to remotely use peripherals connected to this server.\n\nThis modules only contains the enabling framework. The actual devices drivers\nare found in other modules that must be installed separately. \n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr
@@ -1673,7 +1673,7 @@ msgid ""
 "\n"
 "This module allows authorized users to import a custom data module (.xml files and static assests)\n"
 "for customization purpose.\n"
-msgstr ""
+msgstr "\nΆρθρωμα Εισαγωγής custom data\n===========================\n\nThis module allows authorized users to import a custom data module (.xml files and static assests)\nfor customization purpose.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -2137,7 +2137,7 @@ msgid ""
 "description provided by the CODA configuration tables is based upon the CODA\n"
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
-msgstr ""
+msgstr "\nΆρθρωμα για να εισάγει CODA bank statements.\n======================================\n\nSupported are CODA flat files in V2 format from Belgian bank accounts.\n----------------------------------------------------------------------\n    * CODA v1 support.\n    * CODA v2.2 support.\n    * Foreign Currency support.\n    * Support for all data record types (0, 1, 2, 3, 4, 8, 9).\n    * Parsing & logging of all Transaction Codes and Structured Format\n      Communications.\n    * Automatic Financial Journal assignment via CODA configuration parameters.\n    * Support for multiple Journals per Bank Account Number.\n    * Support for multiple statements from different bank accounts in a single\n      CODA file.\n    * Support for 'parsing only' CODA Bank Accounts (defined as type='info' in\n      the CODA Bank Account configuration records).\n    * Multi-language CODA parsing, parsing configuration data provided for EN,\n      NL, FR.\n\nThe machine readable CODA Files are parsed and stored in human readable format in\nCODA Bank Statements. Also Bank Statements are generated containing a subset of\nthe CODA information (only those transaction lines that are required for the\ncreation of the Financial Accounting records). The CODA Bank Statement is a\n'read-only' object, hence remaining a reliable representation of the original\nCODA file whereas the Bank Statement will get modified as required by accounting\nbusiness processes.\n\nCODA Bank Accounts configured as type 'Info' will only generate CODA Bank Statements.\n\nA removal of one object in the CODA processing results in the removal of the\nassociated objects. The removal of a CODA File containing multiple Bank\nStatements will also remove those associated statements.\n\nInstead of a manual adjustment of the generated Bank Statements, you can also\nre-import the CODA after updating the OpenERP database with the information that\nwas missing to allow automatic reconciliation.\n\nRemark on CODA V1 support:\n~~~~~~~~~~~~~~~~~~~~~~~~~~\nIn some cases a transaction code, transaction category or structured\ncommunication code has been given a new or clearer description in CODA V2.The\ndescription provided by the CODA configuration tables is based upon the CODA\nV2.2 specifications.\nIf required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -3037,7 +3037,7 @@ msgid ""
 "\n"
 "If you need to manage your meetings, you should install the CRM module.\n"
 "    "
-msgstr ""
+msgstr "\nΑυτό είναι ένα πλήρες σύστημα Ημερολογίου.\n========================================\n\nIt supports:\n------------\n    - Calendar of events\n    - Recurring events\n\nIf you need to manage your meetings, you should install the CRM module.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -3144,7 +3144,7 @@ msgid ""
 "Agrega una nomenclatura contable para Guatemala. También icluye impuestos y\n"
 "la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\n"
 "taxes and the Quetzal currency."
-msgstr ""
+msgstr "\nΓουατεμάλα - Λογιστικό Σχέδιο και Λογαριασμοί.\n=====================================================================\n\nAgrega una nomenclatura contable para Guatemala. También icluye impuestos y\nla moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\ntaxes and the Quetzal currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -3156,7 +3156,7 @@ msgid ""
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
-msgstr ""
+msgstr "\nΟνδούρα - Λογιστικό Σχέδιο και Λογαριασμοί\n====================================================================\n    \nAgrega una nomenclatura contable para Honduras. También incluye impuestos y la\nmoneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\nand the Lempira currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -3188,7 +3188,7 @@ msgid ""
 "produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\n"
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
-msgstr ""
+msgstr "\nΜαρόκο - Λογιστικό Σχέδιο και Λογαριασμοί.\n=================================================================\n\nCe Module charge le modèle du plan de comptes standard Marocain et permet de\ngénérer les états comptables aux normes marocaines (Bilan, CPC (comptes de\nproduits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\nL'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\nSeddik au cours du troisième trimestre 2010."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_coa
@@ -3613,7 +3613,7 @@ msgid ""
 "This gives the profitability by calculating the difference between the Unit\n"
 "Price and Cost Price.\n"
 "    "
-msgstr ""
+msgstr "\nΑυτό το άρθρωμα προσθέτει το MarkUp στις εντολές πώλησης.\n=============================================\n\nThis gives the profitability by calculating the difference between the Unit\nPrice and Cost Price.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue_sheet
@@ -3750,7 +3750,7 @@ msgid ""
 "team. Once you get back your migrated database, you restore it and reverse the\n"
 "anonymization process to recover your previous data.\n"
 "    "
-msgstr ""
+msgstr "\nThis module allows you to anonymize a database.\n===============================================\n\nThis module allows you to keep your data confidential for a given database.\nThis process is useful, if you want to use the migration process and protect\nyour own or your customer’s confidential data. The principle is that you run\nan anonymization tool which will hide your confidential data(they are replaced\nby ‘XXX’ characters). Then you can send the anonymized database to the migration\nteam. Once you get back your migrated database, you restore it and reverse the\nanonymization process to recover your previous data.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -3769,7 +3769,7 @@ msgid ""
 "It is integrated with sales and accounting to allow you to automatically\n"
 "invoice and send propositions for membership renewal.\n"
 "    "
-msgstr ""
+msgstr "\nΑυτό το άρθρωμα σας επιτρέπει να διαχειριστείτε όλες τις λειτουργίες για διαχείριση συνδρομών - μελών.\n=========================================================================\n\nIt supports different kind of members:\n--------------------------------------\n    * Free member\n    * Associated member (e.g.: a group subscribes to a membership for all subsidiaries)\n    * Paid members\n    * Special member prices\n\nIt is integrated with sales and accounting to allow you to automatically\ninvoice and send propositions for membership renewal.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_contract
@@ -3811,7 +3811,7 @@ msgid ""
 "-----------------\n"
 "    A + B + C -> D + E\n"
 "    "
-msgstr ""
+msgstr "\nΑυτό το άρθρωμα σας επιτρέπει να παράξετε διαφορετικά προιόντα από μια εντολή παραγωγής.\n=============================================================================\n\nYou can configure by-products in the bill of material.\n\nWithout this module:\n--------------------\n    A + B + C -> D\n\nWith this module:\n-----------------\n    A + B + C -> D + E\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_print_docsaway
@@ -3848,7 +3848,7 @@ msgid ""
 "Shows you a list of applications features to install from.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nΑυτό το άρθρωμα βοηθά στην διαμόρφωση του συστήματος την στιγμή της εγκατάστασης των νέων βάσεων δεδομένων.\n================================================================================\n\nShows you a list of applications features to install from.\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -3885,7 +3885,7 @@ msgid ""
 "    \n"
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
-msgstr ""
+msgstr "\nΛογιστική - Λογαριασμοί για την  OHADA περιοχή.\n===========================================================\n    \nIt allows any company or association to manage its financial accounting.\n\nCountries that use OHADA are the following:\n-------------------------------------------\n    Benin, Burkina Faso, Cameroon, Central African Republic, Comoros, Congo,\n    \n    Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, Niger,\n    \n    Replica of Democratic Congo, Senegal, Chad, Togo.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -3949,7 +3949,7 @@ msgid ""
 "It is basically used when we want to keep track of production orders generated\n"
 "from sales order. It adds sales name and sales Reference on production order.\n"
 "    "
-msgstr ""
+msgstr "\nΑυτό το άρθρωμα δίνει την δυνατότητα στον χρήστη να εγκαταστήσει τα αρθρώματα MRP&SALES στον ίδιο χρόνο\n====================================================================================\n\nIt is basically used when we want to keep track of production orders generated\nfrom sales order. It adds sales name and sales Reference on production order.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign
@@ -3988,7 +3988,7 @@ msgid ""
 "This module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at.\n"
 "============================================================================================================= \n"
 "Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
-msgstr ""
+msgstr "\nΑυστρία - Λογιστικό Σχέδιο, Template from BMF.gv.at.\n============================================================================================================= \nPlease keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
@@ -4202,7 +4202,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr ""
+msgstr "\nΆρθρωμα λογιστικής για το WMS module\n======================\nThis module makes the link between the 'stock' and 'account' modules and allows you to create accounting entries to value your stock movements\n\nKey Features\n------------\n* Stock Valuation (periodical or automatic)\n* Invoice from Picking\n\nDashboard / Reports for Warehouse Management includes:\n------------------------------------------------------\n* Stock Inventory Value at given date (support dates in the past)\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -18322,7 +18322,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr ""
+msgstr "στις"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
