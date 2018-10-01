@@ -68,14 +68,15 @@
         <field name="model">hr.payroll.structure</field>
         <field name="arch" type="xml">
             <form string="Employee Function">
-                <group col="4">
+            <sheet>
+                <group name="salary_details" col="4">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="parent_id"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </group>
                 <notebook colspan="4">
-                     <page string="Salary Rules">
+                     <page name="salary_rules" string="Salary Rules">
                        <field name="rule_ids" domain="[('parent_rule_id','=',False)]">
                          <tree>
                             <field name="name"/>
@@ -87,6 +88,7 @@
                       </field>
                      </page>
                 </notebook>
+            </sheet>
             </form>
         </field>
     </record>
@@ -109,14 +111,16 @@
         <field name="model">hr.salary.rule.category</field>
         <field name="arch" type="xml">
             <form string="Salary Categories">
-                <group col="4">
+            <sheet>
+                <group name="category_details" col="4">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="parent_id"/>
                 </group>
-                <group string="Notes">
+                <group name="notes" string="Notes">
                     <field name="note" nolabel="1"/>
                 </group>
+            </sheet>
             </form>
         </field>
     </record>
@@ -205,15 +209,17 @@
         <field name="model">hr.contribution.register</field>
         <field name="arch" type="xml">
             <form string="Contribution">
-                <group>
+            <sheet>
+                <group name="general_info">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
                 </group>
                 <newline/>
-                <group>
+                <group name="description">
                 <separator string="Description"/><newline/>
                 <field name="note" nolabel="1"/></group>
+            </sheet>
             </form>
         </field>
     </record>
@@ -302,12 +308,13 @@
         <field name="model">hr.salary.rule</field>
         <field name="arch" type="xml">
             <form string="Salary Rules">
+            <sheet>
                 <label for="name" class="oe_edit_only"/>
                 <h1><field name="name"/></h1>
                 <label for="category_id" class="oe_edit_only"/>
                 <h2><field name="category_id"/></h2>
 
-                <group col="4">
+                <group name="main_details" col="4">
                    <field name="code"/>
                    <field name="sequence" />
                    <field name="active"/>
@@ -315,8 +322,8 @@
                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </group>
                 <notebook colspan="6">
-                    <page string="General">
-                        <group col="4">
+                    <page name="general" string="General">
+                        <group name="general_conditions" col="4">
                             <separator colspan="4" string="Conditions"/>
                             <field name="condition_select"/><newline/>
                             <field name="condition_python" attrs="{'invisible':[('condition_select','!=','python')], 'required': [('condition_select','=','python')]}" colspan="4"/> <newline/>
@@ -339,7 +346,7 @@
                        <separator string="Children Definition"/>
                        <field name="child_ids"/>
                     </page>
-                       <page string="Inputs">
+                       <page name="inputs" string="Inputs">
                             <field name="input_ids" mode="tree">
                                 <tree string="Input Data" editable="bottom">
                                     <field name="name"/>
@@ -347,10 +354,11 @@
                                 </tree>
                             </field>
                        </page>
-                    <page string="Description">
+                    <page name="description" string="Description">
                         <field name="note"/>
                     </page>
                 </notebook>
+            </sheet>
             </form>
         </field>
     </record>
