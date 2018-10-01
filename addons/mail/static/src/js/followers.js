@@ -293,7 +293,7 @@ var Followers = AbstractField.extend({
             });
         } else {
             var kwargs = _.extend({}, ids);
-            if (follower_id === undefined || follower_id === this.partnerID) {
+            if (followerID === undefined || followerID === this.partnerID) {
                 //this.subtypes will only be updated if the current user
                 //just added himself to the followers. We need to update
                 //the subtypes manually when editing subtypes
