@@ -8,10 +8,12 @@
             <field name="model">ir.actions.actions</field>
             <field name="arch" type="xml">
                 <form string="Action">
+                <sheet>
                     <group>
                         <field name="name"/>
                         <field name="type"/>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -155,28 +157,29 @@
             <field name="model">ir.actions.act_window</field>
             <field name="arch" type="xml">
                 <form string="Open a Window">
+                <sheet>
                     <group>
-                        <group>
+                        <group name="main_details">
                             <field name="name"/>
                             <field name="xml_id" string="External ID"/>
                             <field name="res_model" string="Object"/>
                             <field name="src_model" string="Source Object"/>
                         </group>
-                        <group>
+                        <group name="action_details">
                             <field name="usage"/>
                             <field name="type" readonly="1"/>
                             <field name="target"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="General Settings">
+                        <page name="general_settings" string="General Settings">
                             <group>
-                                <group string="Views">
+                                <group name="views" string="Views">
                                     <field name="view_mode"/>
                                     <field name="view_id"/>
                                     <field name="search_view_id"/>
                                 </group>
-                                <group string="Filters">
+                                <group name="filters" string="Filters">
                                     <field name="domain"/>
                                     <field name="context"/>
                                     <field name="limit"/>
@@ -185,10 +188,10 @@
                                     <field name="multi"/>
                                 </group>
                             </group>
-                            <group string="Help">
+                            <group name="help" string="Help">
                                 <field colspan="2" name="help" nolabel="1"/>
                             </group>
-                            <group string="Views">
+                            <group name="views_tree" string="Views">
                                 <field colspan="2" name="view_ids" nolabel="1">
                                     <form string="Views">
                                         <group>
@@ -209,6 +212,7 @@
                             <field name="groups_id"/>
                         </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
