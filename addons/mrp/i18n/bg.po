@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-06 07:28+0000\n"
-"PO-Revision-Date: 2018-08-26 14:04+0000\n"
+"PO-Revision-Date: 2018-09-20 02:01+0000\n"
 "Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -193,7 +193,7 @@ msgstr "Не е намерен активен нимер"
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "Всички продуктови количества трябва да да по-големи от 0.\nТрябва да инсталирате модула mrp_byproduct, ако искате да управлявате допълнителни продукти на фактури за покупки на материали!"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
@@ -243,12 +243,12 @@ msgstr "Имена на Списъка от материали"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "BOM Product Variants needed form apply this line."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
 msgid "BOM Ref"
-msgstr ""
+msgstr "Референция за фактура за поръчка на материали"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
@@ -259,7 +259,7 @@ msgstr "Структура на Списъка от материали"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "Редове на фактура за поръчка на материали за реферираната фактура за поръчка на материали"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:25
@@ -461,12 +461,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Click to create a new routing."
-msgstr ""
+msgstr "Натиснете, за да създадете ново маршрутизиране."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
 msgid "Click to start a new manufacturing order."
-msgstr ""
+msgstr "Натиснете, за да създадете нова производствена поръчка"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_code
@@ -798,13 +798,13 @@ msgstr "Обща информация"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
 msgid "Gives the sequence order when displaying a list of bills of material."
-msgstr ""
+msgstr "Задава реда на последователност, когато показва списък с пактури за покупка на материали."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_sequence
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
+msgstr "Задава реда на последователност, когато показва списък с работни центрове за маршрутизация."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
@@ -814,7 +814,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Задава реда на последователност, когато показва"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
@@ -862,7 +862,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "Ако продуктовият вариант е определен, фактурата за покупка на материали е налична само за този продукт."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread
@@ -883,7 +883,7 @@ msgstr "Ако е отбелязано, новите съобщения ще и�
 msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
-msgstr ""
+msgstr "Ако активното поле е настроено на 'Грешно', това ще ви позволи да скриете фактурите за покупка на материали без да ги махнете."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
@@ -897,7 +897,7 @@ msgstr "Ако полето Активен е НЕ, това е позволи �
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
-msgstr ""
+msgstr "Ако активното поле е настроено на 'Грешно', това ще ви позволи да скриете маршрутизирането без да го премахвате."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1022,7 +1022,7 @@ msgstr "Място, където системата ще търси компон
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr ""
+msgstr "Локацията, където системата ще складира готовите продукти."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_lot_id
@@ -1034,17 +1034,17 @@ msgstr "Партида"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr ""
+msgstr "Управлявайте операциите по работните поръчки"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by manufacturing orders"
-msgstr ""
+msgstr "Управлявайте продукция чрез производствени поръчки"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by work orders"
-msgstr ""
+msgstr "Управлявайте продукция чрез работни поръчки"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_rounding_efficiency
@@ -1163,7 +1163,7 @@ msgid ""
 "Manufacturing orders are usually proposed automatically based\n"
 "                on customer requirements or automated rules like the minimum\n"
 "                stock rule."
-msgstr ""
+msgstr "Производствените поръчки обикновено се предлагат автоматично въз основа\n                на клиентски изисквания или автоматизирани правила като правилото за\n                минимална наличност."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1197,7 +1197,7 @@ msgstr "Режим"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "Работен център за Планиране на производствените ресурси - MRP"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
@@ -1218,17 +1218,17 @@ msgstr "Nieuw"
 #: code:addons/mrp/procurement.py:108
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "Не съществува фактура за покупка на материали за този продукт!"
 
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "No Tracking"
-msgstr ""
+msgstr "Без проследяване"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr ""
+msgstr "Няма вторични продукти във фактурите за покупка на материали (A + B --> C)"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_rounding_efficiency:0
@@ -1314,7 +1314,7 @@ msgstr "Брой непрочетени съобщения"
 msgid ""
 "Odoo uses these BoMs to automatically propose manufacturing\n"
 "                orders according to procurement needs."
-msgstr ""
+msgstr "Odoo използва тези фактури за покупка на материали, за да предлага автоматично производствени\n                поръчки дпоред нуждите от доставки."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
@@ -1548,7 +1548,7 @@ msgstr "Използвани продукти"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "Продуктите могат да имат няколко атрибута, определящи варианти (пример: размер, цвят и т.н.)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
@@ -1656,13 +1656,13 @@ msgstr "Означение"
 #. module: mrp
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Референцията трябва да е уникална за всяка компания!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_origin
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr ""
+msgstr "Референция на документа, който създава тази заявка за производствена поръчка."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_position
@@ -1749,7 +1749,7 @@ msgid ""
 "                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
-msgstr ""
+msgstr "Маршрутите ви позволяват да създавате и управлявате производствените\n                операции, които трябва да бъдат следвани в рамките на работните Ви центрове\n                с цел производство на продукция. Те са прикрепени към фактури за покупка на\n                материали, които ще определят необходимите суровини."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
@@ -1804,7 +1804,7 @@ msgstr "Търсене на рецепта за суровини"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Потърсете компоненти от фактура за покупка на материали"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1814,12 +1814,12 @@ msgstr "Тръсене производство"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr ""
+msgstr "Потърсете работен център за Планиране на производствения ресурс - MRP"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "Дни за безопасност за всяка производствена операция."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_qty
@@ -1844,7 +1844,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Ship this product as a set of components (kit)"
-msgstr ""
+msgstr "Превозете този продукт като комплект компоненти (комплект)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
@@ -1937,7 +1937,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr ""
+msgstr "Списъкът с операции (списък с работни центрове), които произвеждат готовия продукт. Маршрутизирането се използва основно за изчисляване разходите на работните центрове в хода на операциите и за планиране на бъдещи натоварвания на работните центрове на база производствено планиране."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_operations
@@ -2045,7 +2045,7 @@ msgstr "Мерна единица"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "Единицата мярка (единица мярка) е мерната единица за контрол на инвентара"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread
@@ -2172,7 +2172,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "Когато продуктите се произвеждат, те могат да бъдат произведени в този склад."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_state
@@ -2260,7 +2260,7 @@ msgid ""
 "operations that should be followed within your work centers in order to "
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
-msgstr ""
+msgstr "Операциите по работните поръчки Ви позволяват да създавате и управлявате производствените операции, които трябва да се следват в рамките на работните Ви центрове, за да произвеждате продукт. Те са прикрепени към фактури за покупка на материали, които ще определят необходимите суровини."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
@@ -2292,7 +2292,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "Можете да конфигурирате вторични продукти във фактурата за покупка на материали.\nБез този модул: A + B + C -> D.\nС този модул: A + B + C -> D + E.\n-Това инсталира модула mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:348
@@ -2300,7 +2300,7 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "Не можете да изтривате фактура за покупка на материали с производствена поръчка, която се изпълнява.\nМоля, първо я затворете или отменете."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:128
@@ -2328,12 +2328,12 @@ msgstr "мин"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "mrp.bom.line"
-msgstr ""
+msgstr "mrp.bom.line"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
 msgid "mrp.config.settings"
-msgstr ""
+msgstr "mrp.config.settings"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2343,7 +2343,7 @@ msgstr "плюс"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mrpbomstructure
 msgid "report.mrp.report_mrpbomstructure"
-msgstr ""
+msgstr "report.mrp.report_mrpbomstructure"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
