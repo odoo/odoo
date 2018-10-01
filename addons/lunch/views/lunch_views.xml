@@ -314,9 +314,11 @@
             <field name="model">lunch.product.category</field>
             <field name="arch" type="xml">
                 <form string="Products Form">
+                <sheet>
                     <group>
                         <field name='name' string="Product Category: "/>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -669,7 +671,7 @@
                             </button>
                         </div>
                         <group>
-                            <group string="Schedule">
+                            <group name="schedule" string="Schedule">
                                 <group colspan="4">
                                     <field name="alert_type"/>
                                     <field name="specific_day"
@@ -677,7 +679,7 @@
                                     <field name='start_hour' widget='float_time' />
                                     <field name='end_hour' widget='float_time' />
                                 </group>
-                                <group col="4" attrs="{'invisible': [('alert_type','!=','week')]}">
+                                <group name="weekdays" col="4" attrs="{'invisible': [('alert_type','!=','week')]}">
                                     <field name="monday"/>
                                     <field name="tuesday"/>
                                     <field name="wednesday"/>
@@ -687,8 +689,8 @@
                                     <field name="sunday"/>
                                 </group>
                             </group>
-                            <group string="Vendor">
-                                <group colspan="4">
+                            <group name="vendor" string="Vendor">
+                                <group name="partner" colspan="4">
                                     <field name="partner_id"/>
                                     <field name="display" invisible="True"/>
                                 </group>
