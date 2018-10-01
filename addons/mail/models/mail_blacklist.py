@@ -101,11 +101,19 @@ class MailBlackListMixin(models.AbstractModel):
         store=False, search="_search_is_blacklisted", groups="base.group_user",
         help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list")
 
+    def _assert_primary_email(self):
+        if not hasattr(self, "_primary_email") or \
+                not isinstance(self._primary_email, (list, tuple)) or \
+                not len(self._primary_email) == 1:
+            raise UserError(_('Invalid primary email field on model %s') % self._name)
+        field_name = self._primary_email[0]
+        if field_name not in self._fields or self._fields[field_name].type != 'char':
+            raise UserError(_('Invalid primary email field on model %s') % self._name)
+
     @api.model
     def _search_is_blacklisted(self, operator, value):
         # Assumes operator is '=' or '!=' and value is True or False
-        if not hasattr(self.env[self._name], "_primary_email"):
-            raise UserError(_('Invalid primary email field on model %s') % self._name)
+        self._assert_primary_email()
         if operator != '=':
             if operator == '!=' and isinstance(value, bool):
                 value = not value
@@ -117,17 +125,17 @@ class MailBlackListMixin(models.AbstractModel):
             query = """
                 SELECT m.id
                   FROM mail_blacklist bl
-                  JOIN %s m on (LOWER(m.email) = LOWER(bl.email) AND bl.active)
+                  JOIN %s m on (LOWER(m.%s) = LOWER(bl.email) AND bl.active)
             """
         else:
             query = """
                   SELECT m.id
                     FROM %s m
                LEFT JOIN mail_blacklist bl
-                      ON (LOWER(m.email) = LOWER(bl.email) AND bl.active)
+                      ON (LOWER(m.%s) = LOWER(bl.email) AND bl.active)
                    WHERE bl.id IS NULL
             """
-        self._cr.execute(query % self._table)
+        self._cr.execute(query % (self._table, email_field))
         res = self._cr.fetchall()
         if not res:
             return [(0, '=', 1)]
@@ -135,6 +143,7 @@ class MailBlackListMixin(models.AbstractModel):
 
     @api.depends(lambda self: self._primary_email)
     def _compute_is_blacklisted(self):
+        self._assert_primary_email()
         [email_field] = self._primary_email
         # TODO : Should remove the sudo as compute_sudo defined on methods.
         # But if user doesn't have access to mail.blacklist, doen't work without sudo().
