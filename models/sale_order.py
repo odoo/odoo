@@ -13,14 +13,14 @@ class SaleOrder(models.Model):
         lines = self.order_line.filtered(lambda line: line.is_delivery or line.product_id in free_delivery_product)
         return lines + super(SaleOrder, self)._get_no_effect_on_threshold_lines()
 
-    def _get_order_lines_tax_included_amount(self):
+    def _get_paid_order_lines(self):
         """ Returns the taxes included sale order total amount without the rewards amount"""
         free_reward_product = self.env['sale.coupon.program'].search([('reward_type', '=', 'product')]).mapped('discount_line_product_id')
-        return sum([x.price_total for x in self.order_line.filtered(lambda x: not (x.is_reward_line or x.is_delivery) or x.product_id in free_reward_product)])
+        return self.order_line.filtered(lambda x: not (x.is_reward_line or x.is_delivery) or x.product_id in free_reward_product)
 
     def _get_reward_line_values(self, program):
         if program.reward_type == 'free_shipping':
-            return self._get_reward_values_free_shipping(program)
+            return [self._get_reward_values_free_shipping(program)]
         else:
             return super(SaleOrder, self)._get_reward_line_values(program)
 
@@ -40,9 +40,9 @@ class SaleOrder(models.Model):
             'tax_id': [(4, tax.id, False) for tax in taxes],
         }
 
-    def _get_lines_unit_prices(self):
+    def _get_cheapest_line(self):
         # Unit prices tax included
-        return [x.price_total / x.product_uom_qty for x in self.order_line.filtered(lambda x: not x.is_delivery and not x.is_reward_line)]
+        return min(self.order_line.filtered(lambda x: not x.is_reward_line and not x.is_delivery and x.price_unit > 0), key=lambda x: x['price_unit'])
 
 class SalesOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -50,6 +50,7 @@ class SalesOrderLine(models.Model):
     def unlink(self):
         # Due to delivery_set and delivery_unset methods that are called everywhere, don't unlink
         # reward lines if it's a free shipping
+        self = self.exists()
         orders = self.mapped('order_id')
         applied_programs = orders.mapped('no_code_promo_program_ids') + \
                            orders.mapped('code_promo_program_id') + \
