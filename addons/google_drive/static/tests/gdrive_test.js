@@ -154,10 +154,10 @@ QUnit.module('gdrive_integration', {
         }
         // Trigger opening of the dynamic link
         self.activeId = nameToId[$("[name='display_name']").text()];
-        form.sidebar.$('.oe_share_gdoc').find('a:first').click();
+        form.sidebar.$('.oe_share_gdoc').click();
         form.pager.$('.o_pager_next').click();
         self.activeId = nameToId[$("[name='display_name']").text()];
-        form.sidebar.$('.oe_share_gdoc').find('a:first').click();
+        form.sidebar.$('.oe_share_gdoc').click();
         form.destroy();
     });
 });
