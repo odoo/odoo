@@ -115,11 +115,11 @@ class MassMailingList(models.Model):
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
             where
                 COALESCE(r.opt_out,FALSE) = FALSE
-                AND c.email NOT IN (select email from mail_blacklist where active = TRUE)
                 AND substring(c.email, '%s') IS NOT NULL
+                AND LOWER(substring(c.email, '%s')) NOT IN (select email from mail_blacklist where active = TRUE)
             group by
                 list_id
-        ''' % EMAIL_PATTERN)
+        ''' % (EMAIL_PATTERN, EMAIL_PATTERN))
         data = dict(self.env.cr.fetchall())
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
@@ -172,7 +172,7 @@ class MassMailingList(models.Model):
                     mail_mass_mailing_list mailing_list
                 WHERE contact.id=contact_list_rel.contact_id
                 AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
-                AND contact.email NOT IN (select email from mail_blacklist where active = TRUE)
+                AND LOWER(substring(contact.email, %s)) NOT IN (select email from mail_blacklist where active = TRUE)
                 AND mailing_list.id=contact_list_rel.list_id
                 AND mailing_list.id IN %s
                 AND NOT EXISTS
@@ -186,7 +186,7 @@ class MassMailingList(models.Model):
                     AND contact_list_rel2.list_id = %s
                     )
                 ) st
-            WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
+            WHERE st.rn = 1;""", (self.id, EMAIL_PATTERN, tuple(src_lists.ids), self.id))
         self.invalidate_cache()
         if archive:
             (src_lists - self).write({'active': False})
