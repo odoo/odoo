@@ -2954,7 +2954,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         xml_data = dict((x['res_id'], x) for x in IrModelData.search_read([('model', '=', self._name),
                                                                            ('res_id', 'in', self.ids)],
                                                                           ['res_id', 'noupdate', 'module', 'name'],
-                                                                          order='id'))
+                                                                          order='id',
+                                                                          limit=1))
         for r in res:
             value = xml_data.get(r['id'], {})
             r['xmlid'] = '%(module)s.%(name)s' % value if value else False
