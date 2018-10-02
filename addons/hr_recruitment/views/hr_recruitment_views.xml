@@ -371,21 +371,6 @@
          </field>
     </record>
 
-    <record id="hr_applicant_action_activity" model="ir.actions.act_window">
-        <field name="name">My Next Activities</field>
-        <field name="res_model">hr.applicant</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form,kanban,calendar</field>
-        <field name="view_id" ref="hr_applicant_view_tree_activity"/>
-        <field name="context">{'search_default_activities_my': 1}</field>
-        <field name="domain">[('activity_date_deadline', '!=', False)]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No scheduled activities for the moment
-            </p>
-        </field>
-    </record>
-
     <record model="ir.actions.act_window" id="action_hr_job_sources">
         <field name="name">Jobs Sources</field>
         <field name="res_model">hr.recruitment.source</field>
@@ -543,7 +528,7 @@
     <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
         <field name="context">{}</field>
@@ -617,12 +602,6 @@
         name="All Applications"
         parent="menu_crm_case_categ0_act_job"
         id="menu_crm_case_categ_all_app" action="crm_case_categ0_act_job" sequence="2"/>
-
-    <menuitem id="hr_applicant_nmenu_activity"
-        name="Next Activities"
-        parent="hr_recruitment.menu_crm_case_categ0_act_job"
-        action="hr_applicant_action_activity"
-        sequence="20"/>
 
     <!-- Resume and Letters -->
     <record id="ir_attachment_view_search_inherit_hr_recruitment" model="ir.ui.view">
