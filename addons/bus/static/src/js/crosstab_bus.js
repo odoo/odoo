@@ -304,7 +304,7 @@ var CrossTabBus = Longpolling.extend({
 
         // last notification id changed
         if (key === this._generateKey('last')) {
-            this._lastNotificationID = value | 0;
+            this._lastNotificationID = value || 0;
         }
         // notifications changed
         else if (key === this._generateKey('notification')) {
