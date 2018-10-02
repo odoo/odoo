@@ -83,6 +83,8 @@
                                         </field>
                                     </div>
                                 </group>
+                            </group>
+                            <group>
                                 <group name="email_template_and_project" invisible="1"/>
                             </group>
                             <group string="Description for Customers" name="description" invisible="1">
@@ -97,13 +99,13 @@
                         <page string="Inventory" name="inventory" groups="stock.group_stock_user,product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
-                                    <label for="weight"/>
-                                    <div class="o_row" name="weight">
+                                    <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1)]}"/>
+                                    <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1)]}">
                                         <field name="weight"/>
                                         <span><field name="weight_uom_name"/></span>
                                     </div>
-                                    <label for="volume"/>
-                                    <div class="o_row" name="volume">
+                                    <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1)]}"/>
+                                    <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1)]}">
                                         <field name="volume" string="Volume"/>
                                         <span>m³</span>
                                     </div>
@@ -153,6 +155,10 @@
                 <filter string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Product Type" name="type" context="{'group_by':'type'}"/>
+                    <filter string="Product Category" name="categ_id" context="{'group_by':'categ_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -212,54 +218,64 @@
             <field name="arch" type="xml">
                 <form string="Variant Information">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" 
+                                widget="boolean_button" 
+                                options='{"terminology": "archive"}'/>
+                                <field name="type" invisible="1"/>
+                            </button>
+                        </div>
                         <field name="id" invisible="1"/>
-                        <field name="image_medium" widget="image" class="oe_avatar"/>
+                        <field name="image_medium" widget="image" class="oe_avatar" readonly="1"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
-                            <h1><field name="name" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
+                            <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
+                            <field name="attribute_value_ids" widget="many2many_tags" readonly="1"/>
+                            <p>
+                                <span>All general settings about this product are managed on</span>
+                                <button name="open_product_template" type="object" string="the product template." class="oe_link_product" style="margin-left: 3px; margin-bottom: 3px;"/>
+                            </p>
                         </div>
                         <group>
-                            <p>All general settings about this product are managed on <button name="open_product_template" type="object" string="the product template" class="oe_link"/></p>
-                        </group>
-                        <group string="Attributes">
-                            <field name="attribute_value_ids" widget="many2many_tags" readonly="1"/>
-                        </group>
-                        <group>
                             <group name="codes" string="Codes">
-                                <field name="barcode"/>
                                 <field name="default_code"/>
+                                <field name="barcode"/>
                             </group>
-                            <group>
-                                <field name="active"/>
-                                <field name="type" invisible="1"/>
-                            </group>
-                        </group>
-                        <group>
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
-                                <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
-                                <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <label for="lst_price"/>
+                                <div class="o_row">
+                                    <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                                    <button name="open_list_attribute"
+                                        type="object" string="Edit" class="oe_link_product"
+                                        groups="product.group_product_variant"
+                                        style="margin-left: 3px; margin-bottom: 3px;"/>
+                                </div>
+                                <label for="standard_price"/>
+                                <div class="o_row">
+                                    <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </div>
                                 <field name="currency_id" invisible='1'/>
                             </group>
-                            <group name="weight">
-                                <group name="weight" string="Weights" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
-                                    <label for="volume"/>
-                                    <div class="o_row">
-                                        <field name="volume"/>
-                                        <span>m³</span>
-                                    </div>
-                                    <label for="weight"/>
-                                    <div class="o_row">
-                                        <field name="weight"/>
-                                        <span>kg</span>
-                                    </div>
-                                </group>
-                            </group>
                         </group>
-                        <group name="packaging" string="Packaging"
-                            colspan="4"
-                            groups="product.group_stock_packaging">
-                            <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
+                        <group>
+                            <group name="weight" string="Logistics" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                                <label for="volume"/>
+                                <div class="o_row">
+                                    <field name="volume"/>
+                                    <span>m³</span>
+                                </div>
+                                <label for="weight"/>
+                                <div class="o_row">
+                                    <field name="weight"/>
+                                    <span>kg</span>
+                                </div>
+                            </group>
+                            <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
+                                <field name="packaging_ids" nolabel="1" 
+                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -294,7 +310,6 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-
                 <tree string="Product Variants">
                     <field name="default_code"/>
                     <field name="name"/>

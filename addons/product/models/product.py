@@ -91,7 +91,7 @@ class ProductProduct(models.Model):
         digits=dp.get_precision('Product Price'),
         help="This is the sum of the extra price of all attributes")
     lst_price = fields.Float(
-        'Sale Price', compute='_compute_product_lst_price',
+        'Sales Price', compute='_compute_product_lst_price',
         digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
@@ -485,6 +485,17 @@ class ProductProduct(models.Model):
                 'res_id': self.product_tmpl_id.id,
                 'target': 'new'}
 
+    @api.multi
+    def open_list_attribute(self):
+        action = self.env.ref('product.action_open_list_attribute').read()[0]
+        action['domain'] = [
+            ('product_tmpl_id.product_variant_ids', 'in', self.id),
+        ]
+        action['context'] = {
+            'active_model': 'product.template.attribute.value'
+        }
+        return action
+
     def _prepare_sellers(self, params):
         return self.seller_ids
 
@@ -597,6 +608,14 @@ class ProductProduct(models.Model):
             name += '\n' + self.description_sale
 
         return name
+
+    @api.multi
+    def toggle_active(self):
+        """ Archiving related product.template if there is only one active product.product """
+        if len(self.product_tmpl_id.product_variant_ids) == 1:
+            self.product_tmpl_id.toggle_active()
+        else:
+            return super(ProductProduct, self).toggle_active()
 
 
 class ProductPackaging(models.Model):
