@@ -1255,7 +1255,7 @@ the class variable SystrayMenu.items.
         ...
     });
 
-    SystrayMenu.items.push(MySystrayWidget);
+    SystrayMenu.Items.push(MySystrayWidget);
 
 
 Ordering
