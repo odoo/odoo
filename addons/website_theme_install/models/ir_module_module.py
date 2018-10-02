@@ -196,16 +196,10 @@ class IrModuleModule(models.Model):
         # load data from xml to template table
         _logger.info('Load theme %s for website %s from template.' % (self.mapped('name'), website.id))
 
-        old_data = []
         for model in self._theme_models:
-            old_data.append(self._get_module_data(model).with_context(active_test=False).mapped('copy_ids').filtered(lambda v: v.website_id == website))
-
-        new_data = []
-        for model in self._theme_models:
-            new_data.append(self._get_module_data(model))
-
-        for i in range(len(self._theme_models)):
-            self._update_records(website, old_data[i], new_data[i])
+            old = self._get_module_data(model).with_context(active_test=False).mapped('copy_ids').filtered(lambda v: v.website_id == website)
+            new = self._get_module_data(model)
+            self._update_records(website, old, new)
 
         self.env['theme.utils']._post_copy(self)
 
