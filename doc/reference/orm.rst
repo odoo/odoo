@@ -1033,7 +1033,9 @@ at runtime) but less power: using the :attr:`~odoo.models.Model._inherits`
 a model *delegates* the lookup of any field not found on the current model
 to "children" models. The delegation is performed via
 :class:`~odoo.fields.Reference` fields automatically set up on the parent
-model:
+model. The main difference is in the meaning. When using Delegation, the model
+**has one** instead of **is one**, turning the relationship in a composition
+instead of inheritance:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/delegation.py
     :language: python
