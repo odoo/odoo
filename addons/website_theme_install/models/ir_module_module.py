@@ -30,7 +30,7 @@ class IrModuleModule(models.Model):
     @api.multi
     def write(self, vals):
         if len(self) == 1 and self.name.startswith('theme_'):
-            # print('theme', self.name, 'current state', self.state, 'next state', vals.get('state'), 'websites', [w.name for w in websites], 'stream', [t.name for t in self._get_stream_themes()])
+            print('theme', self.name, 'current state', self.state, 'next state', vals.get('state'))
 
             # if the theme is about to be upgraded
             # if self.state == 'to upgrade' and not vals.get('state'):
@@ -51,14 +51,15 @@ class IrModuleModule(models.Model):
                 if self.state == 'to upgrade':
                     website = self.env['website'].get_current_website(explicit=True)
                     # if we don't get an explicit website, we assume all websites have to be updated
+                    # else update if the current theme is in the current website stream
                     if not website:
                         # update it for every website for which it will be in the stream
-                        websites = self._get_stream_website_ids()
-                    else:
-                        websites = website
-                    for website in websites:
-                        # print('->>> must LOAD old data for', website.name, self.name)
-                        # self._after_load_one_theme_module(website, website.old_theme_data)
+                        for website in self._get_stream_website_ids():
+                            # print('->>> must LOAD old data for', website.name, self.name)
+                            # self._after_load_one_theme_module(website, website.old_theme_data)
+                            if self in website.theme_id._get_stream_themes():
+                                self._load_one_theme_module(website, with_update=False)
+                    elif self in website.theme_id._get_stream_themes():
                         self._load_one_theme_module(website, with_update=False)
 
         return super(IrModuleModule, self).write(vals)
@@ -218,10 +219,10 @@ class IrModuleModule(models.Model):
         # load data from xml to template table
         _logger.info('Load theme %s for website %s from template.' % (self.mapped('name'), website.id))
 
-        old_data = self._before_load_one_theme_module(website)
         if with_update:
             self.button_immediate_upgrade()
 
+        old_data = self._before_load_one_theme_module(website)
         self._after_load_one_theme_module(website, old_data)
 
     @api.multi
