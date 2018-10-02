@@ -24,7 +24,16 @@ var MessagingMenu = Widget.extend({
         'click .o_filter_button': '_onClickFilterButton',
         'click .o_new_message': '_onClickNewMessage',
         'click .o_mail_preview_mark_as_read': '_onClickPreviewMarkAsRead',
-        'show.bs.dropdown': '_onShowDropdown',
+        'show.bs.dropdown': '_onShowDropdown'
+    },
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.counter = 0;
+        this.filter = false;
+        this.previews = [];
     },
     /**
      * @override
@@ -36,15 +45,15 @@ var MessagingMenu = Widget.extend({
      * @override
      */
     start: function () {
-        this._$filterButtons = this.$('.o_filter_button');
-        this._$previews = this.$('.o_mail_systray_dropdown_items');
-        this._filter = false;
-        this._updateCounter();
+        this._$counter = this.$('.o_notification_counter');
+        this._$content = this.$('.o_systray_menu_content');
         var mailBus = this.call('mail_service', 'getMailBus');
-        mailBus.on('update_needaction', this, this._updateCounter);
-        mailBus.on('new_channel', this, this._updateCounter);
-        mailBus.on('update_thread_unread_counter', this, this._updateCounter);
-        return this._super.apply(this, arguments);
+        mailBus.on('update_needaction', this, this._render);
+        mailBus.on('new_channel', this, this._render);
+        mailBus.on('update_thread_unread_counter', this, this._render);
+        return this._super.apply(this, arguments)
+                .then(this._getCounterAndPreviews.bind(this))
+                .then(this._render.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -66,36 +75,11 @@ var MessagingMenu = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when clicking on a preview related to a mail failure
+     * Compute the counter to display on the messaging menu, using data from
+     * the mail service.
      *
      * @private
-     * @param {$.Element} $target DOM of preview element clicked
-     */
-    _clickMailFailurePreview: function ($target) {
-        var documentID = $target.data('document-id');
-        var documentModel = $target.data('document-model');
-        if (documentModel && documentID) {
-            this._openDocument(documentModel, documentID);
-        } else if (documentModel !== 'mail.channel') {
-            // preview of mail failures grouped to different document of same model
-            this.do_action({
-                name: "Mail failures",
-                type: 'ir.actions.act_window',
-                view_mode: 'kanban,list,form',
-                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                target: 'current',
-                res_model: documentModel,
-                domain: [['message_has_error', '=', true]],
-            });
-        }
-    },
-    /**
-     * Compute the counter next to the systray messaging menu. This counter is
-     * the sum of unread messages in channels, the counter of the mailbox inbox,
-     * and the amount of mail failures.
-     *
-     * @private
-     * @returns {integer}
+     * @returns {integer} the computed counter to display
      */
     _computeCounter: function () {
         var channels = this.call('mail_service', 'getChannels');
@@ -107,8 +91,17 @@ var MessagingMenu = Widget.extend({
         }, 0);
         var inboxCounter = this.call('mail_service', 'getMailbox', 'inbox').getMailboxCounter();
         var mailFailureCounter = this.call('mail_service', 'getMailFailures').length;
-
         return unreadChannelCounter + inboxCounter + mailFailureCounter;
+    },
+    /**
+     * Get counter and previews from the mail service.
+     *
+     * @private
+     * @returns {$.Deferred} resolved when it receives counter and previews
+     */
+    _getCounterAndPreviews: function () {
+        this.counter = this._computeCounter();
+        return this._getPreviews().then(this._updatePreviews.bind(this));
     },
     /**
      * @private
@@ -116,17 +109,10 @@ var MessagingMenu = Widget.extend({
      *   compatible with the 'mail.Preview' template.
      */
     _getPreviews: function () {
-        return this.call('mail_service', 'getSystrayPreviews', this._filter);
+        return this.call('mail_service', 'getSystrayPreviews', this.filter);
     },
     /**
-     * @private
-     * @return {boolean} whether the messaging menu is shown or not.
-     */
-    _isShown: function () {
-        return this.$el.hasClass('show');
-    },
-    /**
-     * Open discuss
+     * Open discuss with the provided channel
      *
      * @private
      * @param {integer} [channelID] if set, auto-select this channel when
@@ -135,11 +121,9 @@ var MessagingMenu = Widget.extend({
     _openDiscuss: function (channelID) {
         var self = this;
         var discussOptions = { clear_breadcrumbs: true };
-
         if (channelID) {
             discussOptions.active_id = channelID;
         }
-
         this.do_action('mail.action_discuss', discussOptions)
             .then(function () {
                 // we cannot 'go back to previous page' otherwise
@@ -168,72 +152,48 @@ var MessagingMenu = Widget.extend({
         }
     },
     /**
-     * Render the list of conversation previews
+     * Called when clicking on a preview related to a mail failure
      *
      * @private
-     * @param {Object} previews list of valid objects for preview rendering
-     *   (see mail.Preview template)
+     * @param {string} documentModel
+     * @param {integer|undefined} [documentID=undefined]
      */
-    _renderPreviews: function (previews) {
-        this._$previews.html(QWeb.render('mail.systray.MessagingMenu.Previews', {
-            previews: previews,
-        }));
-    },
-    /**
-     * Get and render list of previews, based on the selected filter
-     *
-     * preview shows the last message of a channel with inline format.
-     * There is a hack where filter "All" also shows preview of chatter
-     * messages (which are not channels).
-     *
-     * List of filters:
-     *
-     *  1. All
-     *      - filter:   undefined
-     *      - previews: last messages of all non-mailbox channels, in addition
-     *                  to last messages of chatter (get from inbox)
-     *
-     *  2. Channel
-     *      - filter:   "Channels"
-     *      - previews: last messages of all non-mailbox and non-DM channels
-     *
-     *  3. Chat
-     *      - filter:   "Chat"
-     *      - previews: last messages of all DM channels
-     *
-     * @private
-     */
-    _updatePreviews: function () {
-        // Display spinner while waiting for conversations preview
-        this._$previews.html(QWeb.render('Spinner'));
-        this._getPreviews()
-            .then(this._renderPreviews.bind(this));
-    },
-    /**
-     * Update the counter on the systray messaging menu icon.
-     * The counter display the number of unread messages in channels (DM included), the number of
-     * messages in Inbox mailbox, and the number of mail failures.
-     * Also updates the previews if the messaging menu is open.
-     *
-     * Note that the number of unread messages in document thread are ignored, because they are
-     * already considered in the number of messages in Inbox with the current design.
-     * Also, some unread messages in channel can also be in inbox, so they are considered twice in
-     * the counter. This is intended, as the number of needaction messages in a channel are
-     * separately considered in the messaging menu from the unread messages, even though a message
-     * can be both unread and needaction (such a message increments the counter twice).
-     *
-     * The global counter of the messaging menu should match the counter next to each of the preview
-     * item when the messaging menu is open.
-     *
-     * @private
-     */
-    _updateCounter: function () {
-        var counter = this._computeCounter();
-        this.$('.o_notification_counter').text(counter);
-        this.$el.toggleClass('o_no_notification', !counter);
-        if (this._isShown()) {
-            this._updatePreviews();
+    _openMailFailurePreview: function (documentModel, documentID) {
+        if (documentModel && documentID) {
+            this._openDocument(documentModel, documentID);
+        } else if (documentModel !== 'mail.channel') {
+            // preview of mail failures grouped to different document of same model
+            this.do_action({
+                name: "Mail failures",
+                type: 'ir.actions.act_window',
+                view_mode: 'kanban,list,form',
+                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+                target: 'current',
+                res_model: documentModel,
+                domain: [['message_has_error', '=', true]],
+            });
         }
+    },
+    /**
+     * Compute counter and previews, and render them.
+     *
+     * @private
+     */
+    _render: function () {
+        var self = this;
+        this._getCounterAndPreviews().then(function () {
+            self.$el.toggleClass('o_no_notification', !self.counter);
+            self._$counter.html(QWeb.render('mail.systray.Counter', { widget: self }));
+            self._$content.html(QWeb.render('mail.systray.MessagingMenu.Content', { widget: self }));
+        });
+    },
+    /**
+     * @private
+     * @param {Object[]} list of objects that are compatible with mail.Preview
+     *   template.
+     */
+    _updatePreviews: function (previews) {
+        this.previews = previews;
     },
 
     //--------------------------------------------------------------------------
@@ -241,22 +201,16 @@ var MessagingMenu = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     */
-    _onShowDropdown: function () {
-        this._updatePreviews();
-    },
-    /**
+     * Note: we stop propagation of the event, so that jQuery does not close
+     * the dropdown menu.
+     *
      * @private
      * @param {MouseEvent} ev
      */
     _onClickFilterButton: function (ev) {
         ev.stopPropagation();
-        this._$filterButtons.removeClass('active');
-        var $target = $(ev.currentTarget);
-        $target.addClass('active');
-        this._filter = $target.data('filter');
-        this._updatePreviews();
+        this.filter = $(ev.currentTarget).data('filter');
+        this._render();
     },
     /**
      * @private
@@ -274,14 +228,14 @@ var MessagingMenu = Widget.extend({
     _onClickPreview: function (ev) {
         var $target = $(ev.currentTarget);
         var previewID = $target.data('preview-id');
+        var documentID = $target.data('document-id');
+        var documentModel = $target.data('document-model');
 
         if (previewID === 'mail_failure') {
-            this._clickMailFailurePreview($target);
+            this._openMailFailurePreview(documentModel, documentID);
         } else if (previewID === 'mailbox_inbox') {
             // inbox preview for non-document thread,
             // e.g. needaction message of channel
-            var documentID = $target.data('document-id');
-            var documentModel = $target.data('document-model');
             this._openDocument(documentModel, documentID);
         } else {
             // preview of thread
@@ -327,6 +281,17 @@ var MessagingMenu = Widget.extend({
                 thread.markAsRead();
             }
         }
+    },
+    /**
+     * Called when opening the systray messaging menu. It should always use
+     * the 1st filter
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onShowDropdown: function (ev) {
+        this.filter = undefined;
+        this._render();
     },
 });
 

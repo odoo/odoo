@@ -37,7 +37,7 @@ return MessagingMenu.include({
      *   compatible with the 'mail.Preview' template.
      */
     _getPreviews: function () {
-        var mailbotPreviews = this.call('mailbot_service', 'getPreviews', this._filter);
+        var mailbotPreviews = this.call('mailbot_service', 'getPreviews', this.filter);
         return this._super.apply(this, arguments).then(function (previews) {
             return _.union(mailbotPreviews, previews);
         });

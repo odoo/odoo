@@ -16,7 +16,6 @@
     ],
     'qweb': [
         "static/src/xml/discuss.xml",
-        "static/src/xml/systray.xml",
     ],
     'installable': True,
     'auto_install': False,
