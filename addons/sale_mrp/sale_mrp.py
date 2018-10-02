@@ -35,7 +35,8 @@ class SaleOrderLine(models.Model):
         # have changed, we don't compute the quantities but verify the move state.
         bom = self.env['mrp.bom']._bom_find(product=self.product_id)
         if bom and bom.type == 'phantom':
-            bom_delivered = all([move.state == 'done' for move in self.procurement_ids.mapped('move_ids')])
+            moves = self.procurement_ids.mapped('move_ids').filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
+            bom_delivered = all([move.state == 'done' for move in moves])
             if bom_delivered:
                 return self.product_uom_qty
             else:
