@@ -445,7 +445,7 @@ class Channel(models.Model):
         for partner in partners.filtered(lambda p: p.email and not (p.email in banned_emails)):
             create_values = {
                 'body_html': view.render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
-                'subject': "Guidelines of channel %s" % self.name,
+                'subject': _("Guidelines of channel %s") % self.name,
                 'email_from': partner.company_id.catchall or partner.company_id.email,
                 'recipient_ids': [(4, partner.id)]
             }
