@@ -3306,6 +3306,9 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} dataPoint
      */
     _invalidateCache: function (dataPoint) {
+        if (dataPoint.model === 'res.currency') {
+            this.call('currency', 'reload', dataPoint.res_id);
+        }
         while (dataPoint.parentID) {
             dataPoint = this.localData[dataPoint.parentID];
         }
