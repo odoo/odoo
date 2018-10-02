@@ -589,6 +589,8 @@ class IrAttachment(models.Model):
             return self._split_pdf_groups(pdf_groups=[[min(x), max(x)] for x in pages], remainder=remainder)
         return self._split_pdf_groups(remainder=remainder)
 
-
-
-
+    @api.model
+    def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
+        domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
+        fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
+        return self.search_read(domain, fieldNames, order=order, limit=1)
