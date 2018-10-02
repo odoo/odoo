@@ -78,22 +78,18 @@ class TestLead2opportunity2win(TestCrmCases):
         test_res_user_01 = self.env['res.users'].create({
             'name': 'Test user A',
             'login': 'tua@example.com',
-            'new_password': 'tua'
         })
         test_res_user_02 = self.env['res.users'].create({
             'name': 'Test user B',
             'login': 'tub@example.com',
-            'new_password': 'tub'
         })
         test_res_user_03 = self.env['res.users'].create({
             'name': 'Test user C',
             'login': 'tuc@example.com',
-            'new_password': 'tuc'
         })
         test_res_user_04 = self.env['res.users'].create({
             'name': 'Test user D',
             'login': 'tud@example.com',
-            'new_password': 'tud'
         })
 
         # Salesman also creates lead so giving access rights of salesman.
