@@ -15,20 +15,14 @@ class MassMailing(models.Model):
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
         for mass_mailing in self:
-            if mass_mailing.mailing_model_name != 'sale.order':
-                mass_mailing.sale_quotation_count = 0
-            else:
-                mass_mailing.sale_quotation_count = self.env['sale.order'].search_count(self._get_sale_utm_domain())
+            mass_mailing.sale_quotation_count = self.env['sale.order'].search_count(self._get_sale_utm_domain())
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
         for mass_mailing in self:
-            if mass_mailing.mailing_model_name != 'sale.order':
-                mass_mailing.sale_invoiced_amount = 0
-            else:
-                invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
-                res = self.env['account.invoice.report'].search_read([('invoice_id', 'in', invoices.ids)], ['user_currency_price_total'])
-                mass_mailing.sale_invoiced_amount = sum(r['user_currency_price_total'] for r in res)
+            invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
+            res = self.env['account.invoice.report'].search_read([('invoice_id', 'in', invoices.ids)], ['user_currency_price_total'])
+            mass_mailing.sale_invoiced_amount = sum(r['user_currency_price_total'] for r in res)
 
     @api.multi
     def action_redirect_to_quotations(self):
@@ -57,5 +51,5 @@ class MassMailing(models.Model):
         if self.medium_id:
             res.append(('medium_id', '=', self.medium_id.id))
         if not res:
-            res.append(('1', '=', '0'))
+            res.append((0, '=', 1))
         return res
