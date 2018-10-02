@@ -410,7 +410,7 @@
         <field name="name">New Request</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
-        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_mode">calendar,tree,form,activity</field>
         <field name="context">{}</field>
         <field name="domain">[('user_id', '=', uid)]</field>
         <field name="help" type="html">
@@ -454,7 +454,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,calendar,kanban</field>
+        <field name="view_mode">tree,form,calendar,kanban,activity</field>
         <field name="context">{}</field>
         <field name="domain">[('user_id', '=', uid)]</field>
         <field name="help" type="html">
@@ -492,7 +492,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="context">{}</field>
         <field name="domain">[]</field>
         <field name="help" type="html">
@@ -506,7 +506,7 @@
         <field name="name">Department Leaves</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="context">{
             'search_default_department':1,
             'search_default_approve':1}
@@ -550,7 +550,7 @@
         <field name="name">Leaves Requests</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="context">{'search_default_gray': True}</field>
         <field name="domain">[]</field>
         <field name="help" type="html">
