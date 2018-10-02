@@ -182,7 +182,7 @@ class AccountReconciliation(models.AbstractModel):
 
         results.update({
             'statement_name': len(bank_statements_left) == 1 and bank_statements_left.name or False,
-            'journal_id': bank_statements_left and bank_statements_left[0].journal_id.id or False,
+            'journal_id': bank_statements and bank_statements[0].journal_id.id or False,
             'notifications': []
         })
 
