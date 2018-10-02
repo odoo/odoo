@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    minlength = fields.Integer("Minimum Length", help="Minimum number of characters passwords must contain.")
+    minlength = fields.Integer("Minimum Password Length", help="Minimum number of characters passwords must contain, set to 0 to disable.")
 
     @api.model
     def get_values(self):
