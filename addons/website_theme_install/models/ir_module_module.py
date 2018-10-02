@@ -292,6 +292,11 @@ class IrModuleModule(models.Model):
         # create template data of missing theme
         next_action = False
         if self.state != 'installed':
+            # upgrade the upstream chain first
+            themes = self._get_upstream_themes()
+            if themes[0].state == 'installed':
+                themes[0].button_immediate_upgrade()
+
             next_action = self.button_immediate_install()
             # reload registry to check if 'theme.utils'._<theme_name>_post_copy exists e.g.
             self.env.reset()
@@ -299,7 +304,6 @@ class IrModuleModule(models.Model):
 
         website.theme_id = self
         # Copy new theme from template table to real table
-        # TODO should we update on install or not?
         for mod in self._get_stream_themes():
             mod._load_one_theme_module(website)
 
@@ -319,7 +323,7 @@ class IrModuleModule(models.Model):
         website = self.env['website'].get_current_website()
 
         # we only need to update the common ancestor (theme_common) to update them all
-        themes = website.theme_id._get_stream_themes()
+        themes = website.theme_id._get_upstream_themes()
         themes[0].button_immediate_upgrade()
 
     @api.model
