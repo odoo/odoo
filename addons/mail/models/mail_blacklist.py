@@ -58,6 +58,24 @@ class MailBlackList(models.Model):
             values['email'] = self._sanitize_email(values['email'])
         return super(MailBlackList, self).write(values)
 
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        """ Override _search in order to grep search on email field and make it
+        lower-case and sanitized """
+        if args:
+            new_args = []
+            for arg in args:
+                if isinstance(arg, (list, tuple)) and arg[0] == 'email' and isinstance(arg[2], tools.pycompat.text_type):
+                    sanitized = self.env['mail.blacklist']._sanitize_email(arg[2])
+                    if sanitized:
+                        new_args.append([arg[0], arg[1], sanitized])
+                    else:
+                        new_args.append(arg)
+                else:
+                    new_args.append(arg)
+        else:
+            new_args = args
+        return super(MailBlackList, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+
     def _add(self, email):
         sanitized = self._sanitize_email(email)
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', sanitized)])
