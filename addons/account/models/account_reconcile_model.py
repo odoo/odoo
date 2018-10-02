@@ -597,8 +597,7 @@ class AccountReconcileModel(models.Model):
         reconciled_amls_ids = set()
 
         # Iterate all and create results.
-        sorted_st_lines = sorted(st_lines, key=lambda line: (line.statement_id.id, line.date, -line.sequence, line.id), reverse=True)
-        for line in sorted_st_lines:
+        for line in st_lines:
             line_currency = line.currency_id or line.journal_id.currency_id or line.company_id.currency_id
             line_residual = line.currency_id and line.amount_currency or line.amount
 

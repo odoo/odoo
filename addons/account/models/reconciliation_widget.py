@@ -115,8 +115,8 @@ class AccountReconciliation(models.AbstractModel):
         """
         excluded_ids = excluded_ids or []
 
-        bank_statement_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
-        sorted_st_lines = sorted(bank_statement_lines, key=lambda line: (line.statement_id.id, line.date, -line.sequence, line.id), reverse=True)
+        # Make a search to preserve the table's order.
+        bank_statement_lines = self.env['account.bank.statement.line'].search([('id', 'in', st_line_ids)])
         reconcile_model = self.env['account.reconcile.model'].search([('rule_type', '!=', 'writeoff_button')])
 
         # Search for missing partners when opening the reconciliation widget.
@@ -133,7 +133,7 @@ class AccountReconciliation(models.AbstractModel):
 
         # Iterate on st_lines to keep the same order in the results list.
         bank_statements_left = self.env['account.bank.statement']
-        for line in sorted_st_lines:
+        for line in bank_statement_lines:
             if matching_amls[line.id].get('status') == 'reconciled':
                 reconciled_move_lines = matching_amls[line.id].get('reconciled_lines')
                 results['value_min'] += 1
