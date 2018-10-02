@@ -124,16 +124,17 @@ class MailBlackListMixin(models.AbstractModel):
         if value:
             query = """
                 SELECT m.id
-                  FROM mail_blacklist bl
-                  JOIN %s m on (LOWER(m.%s) = LOWER(bl.email) AND bl.active)
+                    FROM mail_blacklist bl
+                    JOIN %s m
+                    ON (LOWER(substring(m.%s, '([^ ,;<@]+@[^> ,;]+)')) = bl.email AND bl.active)
             """
         else:
             query = """
-                  SELECT m.id
+                SELECT m.id
                     FROM %s m
-               LEFT JOIN mail_blacklist bl
-                      ON (LOWER(m.%s) = LOWER(bl.email) AND bl.active)
-                   WHERE bl.id IS NULL
+                    LEFT JOIN mail_blacklist bl
+                    ON (LOWER(substring(m.%s, '([^ ,;<@]+@[^> ,;]+)')) = bl.email AND bl.active)
+                    WHERE bl.id IS NULL
             """
         self._cr.execute(query % (self._table, email_field))
         res = self._cr.fetchall()
@@ -147,10 +148,7 @@ class MailBlackListMixin(models.AbstractModel):
         [email_field] = self._primary_email
         # TODO : Should remove the sudo as compute_sudo defined on methods.
         # But if user doesn't have access to mail.blacklist, doen't work without sudo().
-        BL_sudo = self.env['mail.blacklist'].sudo()
-        emails_lower = [(email or '').lower() for email in self.mapped(email_field)]
-        blacklist = set(e.lower()
-                        for e in BL_sudo.search([('email', 'in', emails_lower)]).mapped('email'))
+        sanitized = [self.env['mail.blacklist']._sanitize_email(email) for email in self.mapped(email_field)]
+        blacklist = set(self.env['mail.blacklist'].sudo().search([('email', 'in', sanitized)]).mapped('email'))
         for record in self:
-            email_lower = (record[email_field] or '').lower()
-            record.is_blacklisted = email_lower in blacklist
+            record.is_blacklisted = self.env['mail.blacklist']._sanitize_email(record[email_field]) in blacklist
