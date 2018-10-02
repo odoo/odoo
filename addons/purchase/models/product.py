@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
@@ -45,9 +44,9 @@ class ProductTemplate(models.Model):
         action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
         action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
-            'search_default_last_year_purchase': 1,
-            'search_default_status': 1, 'search_default_order_month': 1,
-            'graph_measure': 'unit_quantity'
+            'graph_measure': 'unit_quantity',
+            'search_default_orders': 1,
+            'time_ranges': {'field': 'date_approve', 'range': 'last_365_days'}
         }
         return action
 

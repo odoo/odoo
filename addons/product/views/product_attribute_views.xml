@@ -93,10 +93,10 @@
         <field name="model">product.template.attribute.value</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Attributes" create="0" delete="0">
+            <tree string="Attributes" create="0" delete="0" editable="bottom">
                 <field name="attribute_id"/>
                 <field name="name"/>
-                <field name="price_extra" />
+                <field name="price_extra"/>
             </tree>
         </field>
     </record>
@@ -111,7 +111,7 @@
                     <field name="name" />
                     <field name="price_extra" />
                     <field name="exclude_for" widget="one2many_list" mode="tree">
-                        <tree editable="bottom">
+                        <tree editable="top">
                             <field name="product_tmpl_id" />
                             <field name="value_ids" widget="many2many_tags" options="{'no_create': true}" />
                         </tree>

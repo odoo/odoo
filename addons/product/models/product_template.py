@@ -70,7 +70,7 @@ class ProductTemplate(models.Model):
         'Price', compute='_compute_template_price', inverse='_set_template_price',
         digits=dp.get_precision('Product Price'))
     list_price = fields.Float(
-        'Sales Price', default=1.0,
+        'Sale Price', default=1.0,
         digits=dp.get_precision('Product Price'),
         help="Price at which the product is sold to customers.")
     lst_price = fields.Float(

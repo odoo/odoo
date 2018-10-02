@@ -91,7 +91,7 @@ class ProductProduct(models.Model):
         digits=dp.get_precision('Product Price'),
         help="This is the sum of the extra price of all attributes")
     lst_price = fields.Float(
-        'Sale Price', compute='_compute_product_lst_price',
+        'Public Price', compute='_compute_product_lst_price',
         digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
@@ -617,6 +617,14 @@ class ProductProduct(models.Model):
         values = self.attribute_value_ids.filtered(lambda v: v.attribute_id.create_variant != 'no_variant')
         attributes = values.mapped('attribute_id')
         return attributes == valid_attributes and values <= valid_values
+
+    @api.multi
+    def toggle_active(self):
+        """ Archiving related product.template if there is only one active product.product """
+        with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.product_variant_ids) == 1)
+        for product in with_one_active:
+            product.product_tmpl_id.toggle_active()
+        return super(ProductProduct, self - with_one_active).toggle_active()
 
 
 class ProductPackaging(models.Model):
