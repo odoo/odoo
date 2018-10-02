@@ -614,15 +614,10 @@ class WebAsset(object):
                 return
             try:
                 # Test url against ir.attachments
-                fields = ['__last_update', 'datas', 'mimetype']
-                domain = self._get_stat_attachment_domain()
-                attach = self.bundle.env['ir.attachment'].sudo().search_read(domain, fields)
+                attach = self.bundle.env['ir.attachment'].sudo().get_serve_attachment(self.url)
                 self._ir_attach = attach[0]
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)
-
-    def _get_stat_attachment_domain(self):
-        return [('type', '=', 'binary'), ('url', '=', self.url)]
 
     # depreciated and will remove after v11
     def to_html(self):
