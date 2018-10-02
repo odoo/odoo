@@ -7004,6 +7004,47 @@ QUnit.module('Views', {
         testUtils.mock.unpatch(BasicModel);
     });
 
+    QUnit.test('reload currencies when writing on records of model res.currency', function (assert) {
+        assert.expect(5);
+
+        this.data['res.currency'] = {
+            fields: {},
+            records: [{id: 1, display_name: "some currency"}],
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'res.currency',
+            data: this.data,
+            arch: '<form><field name="display_name"/></form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                reloadCurrencies: function () {
+                    assert.step('reload currencies');
+                },
+            },
+        });
+
+        testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'new value');
+        testUtils.form.clickSave(form);
+
+        assert.verifySteps([
+            'read',
+            'write',
+            'reload currencies',
+            'read',
+        ]);
+
+        form.destroy();
+    });
+
     QUnit.test('a popup window should automatically close after a do_action event', function (assert) {
 
         // Having clicked on a one2many in a form view and clicked on a many2one

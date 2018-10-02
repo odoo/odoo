@@ -337,6 +337,27 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Reload the currencies (initially given in session_info). This is meant to
+     * be called when changes are made on 'res.currency' records (e.g. when
+     * (de-)activating a currency). For the sake of simplicity, we reload all
+     * session_info.
+     *
+     * FIXME: this whole currencies handling should be moved out of session.
+     *
+     * @returns {$.promise}
+     */
+    reloadCurrencies: function () {
+        var self = this;
+        return this.rpc('/web/session/get_session_info').then(function (result) {
+            self.currencies = result.currencies;
+        });
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 

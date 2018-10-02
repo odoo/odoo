@@ -3477,12 +3477,17 @@ var BasicModel = AbstractModel.extend({
      * Invalidates the DataManager's cache if the main model (i.e. the model of
      * its root parent) of the given dataPoint is a model in 'noCacheModels'.
      *
+     * Reloads the currencies if the main model is 'res.currency'.
+     *
      * @private
      * @param {Object} dataPoint
      */
     _invalidateCache: function (dataPoint) {
         while (dataPoint.parentID) {
             dataPoint = this.localData[dataPoint.parentID];
+        }
+        if (dataPoint.model === 'res.currency') {
+            session.reloadCurrencies();
         }
         if (_.contains(this.noCacheModels, dataPoint.model)) {
             core.bus.trigger('clear_cache');
