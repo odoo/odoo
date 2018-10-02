@@ -190,7 +190,7 @@ class AccountReconcileModel(models.Model):
 
         # First write-off line.
         writeoff_line = {
-            'name': self.label,
+            'name': self.label or st_line.name,
             'account_id': self.account_id.id,
             'analytic_account_id': self.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
@@ -210,7 +210,7 @@ class AccountReconcileModel(models.Model):
         if self.has_second_line and self.second_account_id:
             line_balance = balance - sum(aml['debit'] - aml['credit'] for aml in new_aml_dicts)
             second_writeoff_line = {
-                'name': self.second_label,
+                'name': self.second_label or st_line.name,
                 'account_id': self.second_account_id.id,
                 'analytic_account_id': self.second_analytic_account_id.id,
                 'analytic_tag_ids': [(6, 0, self.second_analytic_tag_ids.ids)],
