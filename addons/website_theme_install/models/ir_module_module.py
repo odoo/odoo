@@ -20,7 +20,7 @@ class IrModuleModule(models.Model):
     # for kanban view
     is_installed_on_current_website = fields.Boolean(compute='_compute_is_installed_on_current_website')
 
-    website_ids = fields.One2many('website', 'theme_id', string="Websites")
+    website_ids = fields.One2many('website', 'theme_id', string="Websites", help="Websites using this theme.")
 
     @api.multi
     def _compute_is_installed_on_current_website(self):
@@ -30,37 +30,30 @@ class IrModuleModule(models.Model):
     @api.multi
     def write(self, vals):
         if len(self) == 1 and self.name.startswith('theme_'):
-            print('theme', self.name, 'current state', self.state, 'next state', vals.get('state'))
-
-            # if the theme is about to be upgraded
-            # if self.state == 'to upgrade' and not vals.get('state'):
-            #     for website in websites:
-            #         print('->>> must SAVE old data for', website.name, self.name)
-            #        # website.old_theme_data = self._before_load_one_theme_module(website)
-
             # if the theme is now installed
             if vals.get('state') == 'installed':
                 _logger.info('Module %s has been loaded as theme template' % self.name)
+
+                websites = self.env['website']
                 # if this theme wasn't installed before
                 # load it for every website for which it will be a downstream theme
                 if self.state == 'to install':
-                    for website in self._get_downstream_website_ids():
-                        self._load_one_theme_module(website, with_update=False)
+                    websites = self._get_downstream_website_ids()
 
-                # if it was an upgrade, update the related websites
-                if self.state == 'to upgrade':
+                # if it was an upgrade, update the related website(s)
+                elif self.state == 'to upgrade':
                     website = self.env['website'].get_current_website(explicit=True)
+
                     # if we don't get an explicit website, we assume all websites have to be updated
                     # else update if the current theme is in the current website stream
-                    if not website:
-                        # update it for every website for which it will be in the stream
-                        for website in self._get_stream_website_ids():
-                            # print('->>> must LOAD old data for', website.name, self.name)
-                            # self._after_load_one_theme_module(website, website.old_theme_data)
-                            if self in website.theme_id._get_stream_themes():
-                                self._load_one_theme_module(website, with_update=False)
-                    elif self in website.theme_id._get_stream_themes():
-                        self._load_one_theme_module(website, with_update=False)
+                    if website:
+                        websites = website
+                    else:
+                        websites = self._get_stream_website_ids()
+
+                for website in websites:
+                    if website.theme_id and self in website.theme_id._get_stream_themes():
+                        self._load_one_theme_module(website)
 
         return super(IrModuleModule, self).write(vals)
 
@@ -199,13 +192,14 @@ class IrModuleModule(models.Model):
         deleted.unlink()
         return (created, updated, deleted)
 
-    def _before_load_one_theme_module(self, website):
+    def _load_one_theme_module(self, website, **kw):
+        # load data from xml to template table
+        _logger.info('Load theme %s for website %s from template.' % (self.mapped('name'), website.id))
+
         old_data = []
         for model in self._theme_models:
             old_data.append(self._get_module_data(model).with_context(active_test=False).mapped('copy_ids').filtered(lambda v: v.website_id == website))
-        return old_data
 
-    def _after_load_one_theme_module(self, website, old_data):
         new_data = []
         for model in self._theme_models:
             new_data.append(self._get_module_data(model))
@@ -214,16 +208,6 @@ class IrModuleModule(models.Model):
             self._update_records(website, old_data[i], new_data[i])
 
         self.env['theme.utils']._post_copy(self)
-
-    def _load_one_theme_module(self, website, with_update=True, **kw):
-        # load data from xml to template table
-        _logger.info('Load theme %s for website %s from template.' % (self.mapped('name'), website.id))
-
-        if with_update:
-            self.button_immediate_upgrade()
-
-        old_data = self._before_load_one_theme_module(website)
-        self._after_load_one_theme_module(website, old_data)
 
     @api.multi
     def _unload_one_theme_module(self, website):
@@ -299,20 +283,7 @@ class IrModuleModule(models.Model):
                         websites += website
         return websites
 
-        # First go upstream from self to find potential candidates.
-        # Then for each potential candidates, see if self is actually in the stream.
-
-        # indirect_website_ids = self.env['website']
-        # for potential_theme in self._get_upstream_themes():
-        #     for theme in potential_theme._get_stream_themes():
-        #         if self == theme:
-        #             for website in potential_theme.website_ids:
-        #                 if website not in indirect_website_ids:
-        #                     indirect_website_ids += website
-        #             break
-        # return indirect_website_ids
-
-    def _remove_theme(self, website):
+    def _remove_theme_on_website(self, website):
         for mod in reversed(website.theme_id._get_stream_themes()):
             mod._unload_one_theme_module(website)
         website.theme_id = False
@@ -322,9 +293,7 @@ class IrModuleModule(models.Model):
         self.ensure_one()
         website = self.env['website'].get_current_website()
 
-        self._remove_theme(website)
-
-        website.theme_id = self
+        self._remove_theme_on_website(website)
 
         # create template data of missing theme
         next_action = False
@@ -334,10 +303,11 @@ class IrModuleModule(models.Model):
             self.env.reset()
             self = self.env()[self._name].browse(self.id)
 
+        website.theme_id = self
         # Copy new theme from template table to real table
         # TODO should we update on install or not?
         for mod in self._get_stream_themes():
-            mod._load_one_theme_module(website, with_update=False)
+            mod._load_one_theme_module(website)
 
         # Alter next action for redirect
         if not next_action:
@@ -349,11 +319,13 @@ class IrModuleModule(models.Model):
 
     def button_remove_theme(self):
         website = self.env['website'].get_current_website()
-        self._remove_theme(website)
+        self._remove_theme_on_website(website)
 
     def button_refresh_theme(self):
         website = self.env['website'].get_current_website()
+
         for mod in website.theme_id._get_stream_themes():
+            mod.button_immediate_upgrade()
             mod._load_one_theme_module(website)
 
     @api.model

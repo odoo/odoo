@@ -468,6 +468,7 @@ class Website(models.Model):
     def _get_current_website_id(self, domain_name, country_id, fallback=True):
         # sort on country_group_ids so that we fall back on a generic website (empty country_group_ids)
         websites = self.search([('domain', '=', domain_name)]).sorted('country_group_ids')
+
         if not websites:
             if not fallback:
                 return False
