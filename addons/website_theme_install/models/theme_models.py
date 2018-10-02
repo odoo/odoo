@@ -28,6 +28,8 @@ class ThemeView(models.Model):
     inherit_id = fields.Reference(selection=[('ir.ui.view', 'ir.ui.view'), ('theme.ir.ui.view', 'theme.ir.ui.view')])
     copy_ids = fields.One2many('ir.ui.view', 'theme_template_id', 'Views using a copy of me', copy=False, readonly=True)
 
+    # TODO add missing customize_show
+
 
 class ThemeAttachment(models.Model):
     _name = 'theme.ir.attachment'
