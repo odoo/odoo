@@ -7,7 +7,7 @@ import requests
 import werkzeug.utils
 
 from PIL import Image
-from odoo import http, tools
+from odoo import http, tools, _
 from odoo.http import request
 
 logger = logging.getLogger(__name__)
@@ -39,9 +39,12 @@ class Web_Unsplash(http.Controller):
         else:
             res_id = None
 
-        for key in unsplashurls:
-            url = unsplashurls[key].get('url')
+        for key, value in unsplashurls.items():
+            url = value.get('url')
             try:
+                if not url.startswith('https://images.unsplash.com/'):
+                    logger.exception("ERROR: Unknown Unsplash URL!: " + url)
+                    raise Exception(_("ERROR: Unknown Unsplash URL!"))
                 req = requests.get(url)
                 if req.status_code != requests.codes.ok:
                     continue
@@ -56,20 +59,19 @@ class Web_Unsplash(http.Controller):
                 logger.exception("Timeout: " + str(e))
                 continue
 
-            image = Image.open(io.BytesIO(datas))
-            image_format = image.format
+            name = key
 
             # optimized image before save
-            if image_format and image_format in ('PNG', 'JPEG'):
-                datas = tools.image_save_for_web(image)
-
-            name = key
-            # append image extension in name
-            if image_format:
-                name += '.' + image_format.lower()
+            if mimetype in ('image/jpeg', 'image/png'):
+                image = Image.open(io.BytesIO(datas))
+                if image.format in ('PNG', 'JPEG'):
+                    datas = tools.image_save_for_web(image)
+                    # append image extension in name
+                    name += '.' + image.format
 
             attachment = Attachments.create({
                 'name': name,
+                'url': '/unsplash/' + name,
                 'datas_fname': name,
                 'mimetype': mimetype,
                 'datas': base64.b64encode(datas),
@@ -78,7 +80,7 @@ class Web_Unsplash(http.Controller):
                 'res_model': res_model,
             })
             attachment.generate_access_token()
-            uploads.extend(attachment.read(['name', 'mimetype', 'checksum', 'res_id', 'res_model', 'access_token']))
+            uploads.extend(attachment.read(['name', 'mimetype', 'checksum', 'res_id', 'res_model', 'access_token', 'url']))
 
         return uploads
 
@@ -88,8 +90,14 @@ class Web_Unsplash(http.Controller):
             return request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
         raise werkzeug.exceptions.NotFound()
 
-    @http.route("/web_unsplash/set_client_id", type='json', auth="user")
-    def set_unsplash_client_id(self, key, **post):
+    @http.route("/web_unsplash/get_app_id", type='json', auth="public")
+    def get_unsplash_app_id(self, **post):
+        return request.env['ir.config_parameter'].sudo().get_param('unsplash.app_id')
+
+    @http.route("/web_unsplash/save_unsplash", type='json', auth="user")
+    def save_unsplash(self, **post):
         if request.env.user._has_unsplash_key_rights():
-            return request.env['ir.config_parameter'].sudo().set_param('unsplash.access_key', key)
+            request.env['ir.config_parameter'].sudo().set_param('unsplash.app_id', post.get('appId'))
+            request.env['ir.config_parameter'].sudo().set_param('unsplash.access_key', post.get('key'))
+            return True
         raise werkzeug.exceptions.NotFound()
