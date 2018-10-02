@@ -50,8 +50,8 @@ field registry, then adding the widget to the field in the form view
 
         var FieldChar = require('web.basic_fields').FieldChar;
 
-        var CustomFieldChar = Fieldchar.extend({
-            renderReadonly: function () {
+        var CustomFieldChar = FieldChar.extend({
+            _renderReadonly: function () {
                 // implement some custom logic here
             },
         });
