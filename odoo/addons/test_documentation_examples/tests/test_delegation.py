@@ -8,9 +8,9 @@ class TestDelegation(common.TransactionCase):
     def setUp(self):
         super(TestDelegation, self).setUp()
         env = self.env
-        record = env['delegation.parent'].create({
-            'child0_id': env['delegation.child0'].create({'field_0': 0}).id,
-            'child1_id': env['delegation.child1'].create({'field_1': 1}).id,
+        record = env['delegation.laptop'].create({
+            'screen_id': env['delegation.screen'].create({'size': 13.0}).id,
+            'keyboard_id': env['delegation.keyboard'].create({'layout': 'QWERTY'}).id,
         })
         self.record = record
 
@@ -20,28 +20,28 @@ class TestDelegation(common.TransactionCase):
 
         # children fields can be looked up on the parent record directly
         self.assertEqual(
-            record.field_0
+            record.size
             ,
-            0
-            )
+            13.0
+        )
         self.assertEqual(
-            record.field_1
+            record.layout
             ,
-            1
-            )
+            'QWERTY'
+        )
 
     def test_swap_child(self):
         env = self.env
         record = self.record
 
         record.write({
-            'child0_id': env['delegation.child0'].create({'field_0': 42}).id
+            'screen_id': env['delegation.screen'].create({'size': 17.0}).id
         })
-        self.assertEqual(record.field_0, 42)
+        self.assertEqual(record.size, 17.0)
 
     def test_write(self):
         record = self.record
 
-        record.write({'field_1': 4})
-        self.assertEqual(record.field_1, 4)
-        self.assertEqual(record.child1_id.field_1, 4)
+        record.write({'size': 14.0})
+        self.assertEqual(record.size, 14.0)
+        self.assertEqual(record.screen_id.size, 14.0)
