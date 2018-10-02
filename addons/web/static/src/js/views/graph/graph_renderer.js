@@ -262,7 +262,7 @@ return AbstractRenderer.extend({
             return;
         }
         if (all_zero) {
-            if (this.isEmbedded) {
+            if (this.isEmbedded || this.isComparison) {
                 // add fake data to display an empty pie chart
                 data = [{
                     x : "No data" ,

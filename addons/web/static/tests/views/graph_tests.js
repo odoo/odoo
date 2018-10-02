@@ -282,6 +282,35 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('render pie chart in comparison mode', function (assert) {
+        assert.expect(2);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            context: {
+                timeRangeMenuData: {
+                    //Q3 2018
+                    timeRange: ['&', ["date", ">=", "2018-07-01"],["date", "<=", "2018-09-30"]],
+                    timeRangeDescription: 'This Quarter',
+                    //Q4 2018
+                    comparisonTimeRange: ['&', ["date", ">=", "2018-10-01"],["date", "<=", "2018-12-31"]],
+                    comparisonTimeRangeDescription: 'Previous Period',
+                },
+            },
+            arch: '<graph type="pie">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+
+        assert.strictEqual(graph.$('div.o_view_nocontent').length, 0,
+        "should not display the no content helper");
+        assert.strictEqual($('.o_graph_svg_container svg > text').text(),
+            "No data to displayNo data to display", "should display two empty pie charts instead");
+        graph.destroy();
+    });
+
     QUnit.test('no content helper after update', function (assert) {
         var done = assert.async();
         assert.expect(4);
