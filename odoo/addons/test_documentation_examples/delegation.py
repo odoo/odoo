@@ -26,6 +26,6 @@ class Laptop(models.Model):
     maker = fields.Char(string='Maker')
 
     # a Laptop has a screen
-    screen_id = fields.One2many('delegation.screen', ondelete="cascade", required=True)
+    screen_id = fields.Many2one('delegation.screen', required=True, ondelete="cascade")
     # a Laptop has a keyboard
-    keyboard_id = fields.One2many('delegation.keyboard', ondelete="cascade", required=True)
+    keyboard_id = fields.Many2one('delegation.keyboard', required=True, ondelete="cascade")
