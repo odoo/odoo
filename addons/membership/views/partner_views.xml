@@ -48,6 +48,7 @@
         <record model="ir.actions.act_window" id="action_membership_members">
             <field name="name">Members</field>
             <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
             <field name="context">{"search_default_all_members": 1, "default_free_member": True}</field>
             <field name="help" type="html">
