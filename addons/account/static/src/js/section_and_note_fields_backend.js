@@ -137,9 +137,9 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
     _getPricelistId: function () {
         var saleOrderForm = this.getParent() && this.getParent().getParent();
         var stateData = saleOrderForm && saleOrderForm.state && saleOrderForm.state.data;
-        var pricelist_id = stateData.pricelist_id && stateData.pricelist_id.data;
+        var pricelist_id = stateData.pricelist_id && stateData.pricelist_id.data && stateData.pricelist_id.data.id;
 
-        return pricelist_id.id;
+        return pricelist_id;
     },
 
     /**
