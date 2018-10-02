@@ -282,28 +282,28 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Create needed programs
         self.p2.active = False
         self.p_ipad = self.env['sale.coupon.program'].create({
-            'name': 'Buy 1 ipad, get one for free',
+            'name': 'Buy 1 large cabinet, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
             'reward_product_id': self.iPadMini.id,
-            'rule_products_domain': '[["name","ilike","ipad mini"]]',
+            'rule_products_domain': '[["name","ilike","large cabinet"]]',
         })
         self.p_ipod = self.env['sale.coupon.program'].create({
-            'name': 'Buy 1 ipod, get one for free',
+            'name': 'Buy 1 chair, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
             'reward_product_id': self.iPod.id,
-            'rule_products_domain': '[["name","ilike","ipod"]]',
+            'rule_products_domain': '[["name","ilike","conference chair"]]',
         })
         self.p_keyboard = self.env['sale.coupon.program'].create({
-            'name': 'Buy 1 keyboard, get one for free',
+            'name': 'Buy 1 bin, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
             'reward_product_id': self.wirelessKeyboard.id,
-            'rule_products_domain': '[["name","ilike","keyboard"]]',
+            'rule_products_domain': '[["name","ilike","pedal bin"]]',
         })
 
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
