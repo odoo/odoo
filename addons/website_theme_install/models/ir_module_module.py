@@ -324,9 +324,9 @@ class IrModuleModule(models.Model):
     def button_refresh_theme(self):
         website = self.env['website'].get_current_website()
 
-        for mod in website.theme_id._get_stream_themes():
-            mod.button_immediate_upgrade()
-            mod._load_one_theme_module(website)
+        # we only need to update the common ancestor (theme_common) to update them all
+        themes = website.theme_id._get_stream_themes()
+        themes[0].button_immediate_upgrade()
 
     @api.model
     def update_list(self):
