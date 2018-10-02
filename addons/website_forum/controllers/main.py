@@ -81,7 +81,7 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum'], type='http', auth="public", website=True)
     def forum(self, **kwargs):
-        domain = request.website.get_current_website().website_domain()
+        domain = request.website.website_domain()
         forums = request.env['forum.forum'].search(domain)
         if len(forums) == 1:
             return werkzeug.utils.redirect('/forum/%s' % slug(forums[0]), code=302)
