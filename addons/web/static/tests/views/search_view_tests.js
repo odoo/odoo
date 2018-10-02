@@ -723,6 +723,7 @@ QUnit.module('Search View', {
         assert.expect(43);
 
         var self = this;
+        var nbrReadGroup = 0;
 
         var periodOptionText, periodOptionValue;
         var unpatchDate = patchDate(2017, 2, 22, 1, 0, 0);
@@ -733,14 +734,20 @@ QUnit.module('Search View', {
             data: this.data,
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/partner/read_group') {
+                    nbrReadGroup++;
                     var timeRangeMenuData = args.kwargs.context.timeRangeMenuData;
                     if (timeRangeMenuData) {
-                        assert.deepEqual(timeRangeMenuData.timeRange,
-                            self.periodDomains.shift(),
-                            "time range domain for " + periodOptionText);
-                        assert.deepEqual(timeRangeMenuData.comparisonTimeRange,
-                            self.previousPeriodDomains.shift(),
-                            "comparaison time range domain for " + periodOptionText);
+                        // nbrReadGroup % 2 === 0 is true when the read group is for data, false
+                        // for comparison data
+                        if (nbrReadGroup % 2 === 0) {
+                            assert.deepEqual(timeRangeMenuData.timeRange,
+                                self.periodDomains.shift(),
+                                "time range domain for " + periodOptionText);
+                        } else {
+                            assert.deepEqual(timeRangeMenuData.comparisonTimeRange,
+                                self.previousPeriodDomains.shift(),
+                                "comparaison time range domain for " + periodOptionText);
+                        }
                     }
                 }
                 return this._super.apply(this, arguments);
