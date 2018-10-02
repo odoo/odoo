@@ -404,6 +404,10 @@ var FieldDate = InputField.extend({
         this._super.apply(this, arguments);
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
+        this.datepickerOptions = _.defaults(
+            this.nodeOptions.datepicker || {},
+            {defaultDate: this.value}
+        );
     },
     /**
      * In edit mode, instantiates a DateWidget datepicker and listen to changes.
@@ -468,13 +472,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(
-            this,
-            _.defaults(
-                this.nodeOptions.datepicker || {},
-                {defaultDate: this.value}
-            )
-        );
+        return new datepicker.DateWidget(this, this.datepickerOptions);
     },
 
     /**
@@ -492,6 +490,17 @@ var FieldDate = InputField.extend({
 var FieldDateTime = FieldDate.extend({
     supportedFieldTypes: ['datetime'],
 
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        if (this.value) {
+            var offset = this.getSession().getTZOffset(this.value);
+            var displayedValue = this.value.clone().add(offset, 'minutes');
+            this.datepickerOptions.defaultDate = displayedValue;
+        }
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -522,10 +531,8 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _makeDatePicker: function () {
-        var value = this.value && this.value.clone().add(this.getSession().getTZOffset(this.value), 'minutes');
-        return new datepicker.DateTimeWidget(this, {defaultDate: value});
+        return new datepicker.DateTimeWidget(this, this.datepickerOptions);
     },
-
     /**
      * Set the datepicker to the right value rather than the default one.
      *
