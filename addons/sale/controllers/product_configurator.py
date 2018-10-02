@@ -57,6 +57,11 @@ class ProductConfiguratorController(http.Controller):
         compute_currency = lambda price: from_currency._convert(price, to_currency, company, date)
 
         product = product.with_context(self._get_product_context(pricelist, **kw))
+        no_variant_attribute_values = request.env['product.template.attribute.value'].browse(variant_values).filtered(
+            lambda product_template_attribute_value: product_template_attribute_value.attribute_id.create_variant == 'no_variant'
+        )
+        if no_variant_attribute_values:
+            product = product.with_context(no_variant_attribute_values=no_variant_attribute_values)
 
         has_optional_products = False
         for optional_product in product.optional_product_ids:
@@ -108,9 +113,15 @@ class ProductConfiguratorController(http.Controller):
 
         parent_exclusions = []
         if reference_product:
+            parent_attribute_value_ids = reference_product.product_template_attribute_value_ids
+            if parent_attribute_value_ids and reference_product._context.get('no_variant_attribute_values'):
+                # Add "no_variant" attribute values' exclusions
+                # They are kept in the context since they are not linked to this product variant
+                parent_attribute_value_ids |= reference_product._context.get('no_variant_attribute_values')
+
             parent_exclusions = [
                 value_id
-                for filter_line in reference_product.mapped('product_template_attribute_value_ids.exclude_for').filtered(
+                for filter_line in parent_attribute_value_ids.mapped('exclude_for').filtered(
                     lambda filter_line: filter_line.product_tmpl_id == product
                 ) for value_id in filter_line.value_ids.ids]
 
