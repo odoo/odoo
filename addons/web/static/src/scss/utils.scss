@@ -49,14 +49,6 @@
 }
 
 // ------------------------------------------------------------------
-// Transparent background color
-// ------------------------------------------------------------------
-@mixin o-transparent-background-color($alpha: 1, $color: white) {
-    // convert hex to rgba for applying opacity
-    background-color: rgba(red($color), green($color), blue($color), $alpha);
-}
-
-// ------------------------------------------------------------------
 // Hovering effects
 // ------------------------------------------------------------------
 @mixin o-hover-opacity($default-opacity: 0.5, $hover-opacity: 1) {

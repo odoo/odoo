@@ -77,7 +77,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
 
         .o_thread_typing_notification_bar {
-            @include o-transparent-background-color(0.75, $o-mail-thread-window-bg);
+            background-color: rgba($o-mail-thread-window-bg, 0.75);
         }
 
         .o_thread_date_separator {
