@@ -42,6 +42,6 @@ class TestDelegation(common.TransactionCase):
     def test_write(self):
         record = self.record
 
-        record.write({'size': 14})
-        self.assertEqual(record.size, 14)
-        self.assertEqual(record.screen.size, 14)
+        record.write({'size': 14.0})
+        self.assertEqual(record.size, 14.0)
+        self.assertEqual(record.screen.size, 14.0)
