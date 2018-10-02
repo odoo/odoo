@@ -187,7 +187,7 @@ class ProductTemplateAttributeValue(models.Model):
     @api.multi
     def name_get(self):
         if not self._context.get('show_attribute', True):  # TDE FIXME: not used
-            return super(ProductAttributeValue, self).name_get()
+            return super(ProductTemplateAttributeValue, self).name_get()
         return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
 
 

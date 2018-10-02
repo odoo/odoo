@@ -327,6 +327,9 @@ var ProductConfiguratorMixin = {
      * the exclusions coming from the parent product (meaning that this product
      * is an option of the parent product)
      *
+     * It will also check that the selected combination does not exactly
+     * match a manually archived product
+     *
      * @private
      * @param {$.Element} $parent the parent container to apply exclusions
      * @param {Array} combination the selected combination of product attribute values
@@ -362,6 +365,18 @@ var ProductConfiguratorMixin = {
                     disable = true;
                 }
                 self._disableInput($parent, exclusion);
+            });
+        }
+
+        if (combinationData.archived_combinations){
+            _.each(combinationData.archived_combinations, function (archived_combination){
+                if (disable) {
+                    return;
+                }
+
+                disable = _.every(archived_combination, function (attribute_value){
+                    return combination.indexOf(attribute_value) > -1;
+                });
             });
         }
 
