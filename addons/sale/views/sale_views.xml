@@ -958,7 +958,7 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days">
+                        type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
@@ -986,7 +986,7 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days">
+                        type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>

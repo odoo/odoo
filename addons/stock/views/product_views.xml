@@ -344,7 +344,7 @@
                     <!-- change attrs of fields added in view_template_property_form
                     to restrict the display for templates -->
                     <xpath expr="//group[@name='group_lots_and_weight']" position="attributes">
-                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu'])]}</attribute>
                     </xpath>
 
                     <xpath expr="//group[@name='group_lots_and_weight']" position="inside">

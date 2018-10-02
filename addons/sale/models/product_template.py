@@ -50,9 +50,11 @@ class ProductTemplate(models.Model):
         action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
         action['domain'] = [('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
-            'search_default_last_year': 1,
-            'pivot_measures': ['product_qty'],
-            'search_default_team_id': 1
+            'pivot_measures': ['product_uom_qty'],
+            'active_id': self._context.get('active_id'),
+            'active_model': 'sale.report',
+            'search_default_Sales': 1,
+            'time_ranges': {'field': 'date', 'range': 'last_365_days'}
         }
         return action
 

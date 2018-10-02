@@ -271,8 +271,6 @@
                     <separator/>
                     <filter string="Late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'confirmed')]"
                         name="late" help="Production started late"/>
-                    <filter string="Done Last 365 Days" name="last_year_mo_order"
-                        domain="[('date_planned_start', '&gt;', (context_today() - relativedelta(days=365)).strftime('%Y-%m-%d'))]"/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
@@ -340,6 +338,7 @@
         <field name="res_model">mrp.production</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot,form</field>
+        <field name="target">current</field>
     </record>
 
     <menuitem id="menu_mrp_workorder_todo"
