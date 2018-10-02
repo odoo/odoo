@@ -40,12 +40,12 @@
                         <field name="standard_price"
                             attrs="{'readonly':[('valuation','=','real_time')]}"
                             widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"
-                            class="float-left"/>
-                        <div name="update_cost_price" class="col-lg-2">
+                            class="float-left oe_inline"/>
+                        <div name="update_cost_price">
                             <button string="Update Cost" type="action"
-                            name="%(action_view_change_standard_price)d"
-                            attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard']), ('product_variant_count', '>', 1)]}"
-                            class="oe_link oe_read_only"/>
+                                name="%(action_view_change_standard_price)d"
+                                attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard']), ('product_variant_count', '>', 1)]}"
+                                class="oe_link pt-0 float-left oe_inline"/>
                         </div>
                     </field>
                 </data>
@@ -64,15 +64,15 @@
                     </field>
                     <field name="standard_price" position="replace">
                         <label for="standard_price"/>
-                        <div name="standard_price_div">
+                        <div name="standard_price_div" class="row ml-0">
                             <field name="standard_price"
                                 attrs="{'readonly':[('valuation','=','real_time')]}"
                                 widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="float-left"/>
-                            <div name="update_cost_price" class="col-lg-2">
+                            <div name="update_cost_price">
                                 <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
                                 attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
-                                class="oe_link oe_read_only" colspan="2"/>
+                                class="oe_link pt-0 float-left"/>
                             </div>
                         </div>
                     </field>

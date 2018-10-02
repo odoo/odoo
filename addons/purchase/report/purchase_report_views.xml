@@ -56,8 +56,6 @@
             <search string="Purchase Orders">
                 <filter string="Quotations" name="quotes" domain="[('state','=','draft')]"/>
                 <filter string="Orders" name="orders" domain="[('state','!=','draft'),('state','!=','cancel')]"/>
-                <filter string="Purchased Last 365 Days" name="last_year_purchase"
-                        domain="[('date_order', '&gt;', (context_today() - relativedelta(days=365)).strftime('%Y-%m-%d'))]"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <group expand="0" string="Extended Filters">
@@ -87,9 +85,9 @@
         <field name="res_model">purchase.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
-        <field name="context">{'search_default_orders': 1}</field>
         <field name="view_id"></field>  <!-- force empty -->
         <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your vendors, etc.</field>
+        <field name="target">current</field>
     </record>
 
     <menuitem id="purchase_report" name="Reporting" parent="purchase.menu_purchase_root" sequence="99"
