@@ -18,7 +18,8 @@ class SaleOrderLine(models.Model):
                 # have changed, we don't compute the quantities but verify the move state.
                 bom = self.env['mrp.bom']._bom_find(product=line.product_id)
                 if bom and bom.type == 'phantom':
-                    bom_delivered = all([move.state == 'done' for move in line.move_ids])
+                    moves = line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
+                    bom_delivered = all([move.state == 'done' for move in moves])
                     if bom_delivered:
                         line.qty_delivered = line.product_uom_qty
                     else:
@@ -26,7 +27,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_bom_component_qty(self, bom):
-        bom_quantity = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id)
+        bom_quantity = self.product_uom._compute_quantity(1, bom.product_uom_id)
         boms, lines = bom.explode(self.product_id, bom_quantity)
         components = {}
         for line, line_data in lines:
