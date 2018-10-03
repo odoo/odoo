@@ -116,6 +116,17 @@
             </field>
         </record>
 
+        <record id="view_account_analytic_line_form_inherit_hr_timesheet" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.inherit.hr_timesheet</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="project_id" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="hr_timesheet_line_search" model="ir.ui.view">
             <field name="name">account.analytic.line.search</field>
             <field name="model">account.analytic.line</field>
