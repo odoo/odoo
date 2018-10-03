@@ -3211,7 +3211,7 @@ var BasicModel = AbstractModel.extend({
     _getFieldNames: function (element, options) {
         var fieldsInfo = element.fieldsInfo;
         var viewType = options && options.viewType || element.viewType;
-        return Object.keys(fieldsInfo && fieldsInfo[viewType] || {});
+        return _.without(Object.keys(fieldsInfo && fieldsInfo[viewType] || {}), '__last_update');
     },
     /**
      * Get many2one fields names in a datapoint. This is useful in order to
