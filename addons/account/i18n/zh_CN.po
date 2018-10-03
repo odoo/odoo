@@ -6,7 +6,7 @@
 # 老窦 北京 <2662059195@qq.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# 珠海-杜哥 <liangjia@qq.com>, 2017
 # e2f_cn r14 <e2f_cn_r14@outlook.com>, 2017
 # Henry Zhou <zhouhenry@live.com>, 2017
 # sunny sun <sunxiaoxia@inspur.com>, 2017
@@ -14,13 +14,16 @@
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# keecome <7017511@qq.com>, 2018
+# KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2018
+# 敬洪 甘 <349220879@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
 "PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: 敬洪 甘 <349220879@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +39,7 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * \"草稿\"状态是一个用户正在编码一个新的或未确认的发票时状态。\n"
+" * \"草稿\"状态是一个用户正在编码一个新的或未确认的发票状态。\n"
 " * \"开启\"状态是用户创建发票，发票号被生成时的状态。它保持开放状态，直到用户支付发票为止。\n"
 " * \"已付”状态是在该发票被支付后自动设置的。它关联日分录可能会或不会一致。\n"
 " * \"取消\"状态是在用户取消发票时体现。"
@@ -186,8 +189,8 @@ msgid ""
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>亲爱的${object.partner_id.name},</p>\n"
-"<p>谢谢你付款.<br/>这是你的付款收据 <strong>${(object.name or '').replace('/','-')}</strong> 总金额 <strong>${format_amount(object.amount, object.currency_id)}</strong> 公司${object.company_id.name}.</p>\n"
-"<p>有任何问题 ，请不要犹豫，立即联系我们。</p>\n"
+"<p>谢谢你付款。<br/>这是你的付款收据 <strong>${(object.name or '').replace('/','-')}</strong> 总金额 <strong>${format_amount(object.amount, object.currency_id)}</strong> 公司${object.company_id.name}。</p>\n"
+"<p>如您有任何疑问 ，请不要犹豫，立即与我们联系。</p>\n"
 "<p>敬祝\n"
 "% if user and user.signature:\n"
 "${user.signature | safe}\n"
@@ -627,7 +630,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"系统余额\">总账中的余额</span>"
+msgstr "<span title=\"系统余额\">总账余额</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2193,12 +2196,12 @@ msgstr "适用范围"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "应用在贷方日记账项目"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "应用在借方日记账项目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
@@ -3067,7 +3070,7 @@ msgstr "选择科目模板"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "选择关联或创建注销"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -7135,7 +7138,7 @@ msgstr "十月"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Odoo Accounting has many extra-features:"
-msgstr ""
+msgstr "Odoo 会计有很多额外的功能："
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -9891,7 +9894,7 @@ msgstr "为保证全部总量被分配，最后一行的计算类型应该是 \"
 #: code:addons/account/models/company.py:94
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "锁定日期是不能删除"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
@@ -9919,7 +9922,7 @@ msgstr "会计分录行将使用的名称。"
 #, python-format
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
-msgstr ""
+msgstr "新的锁定日期必须与先前的锁定日期后进行设置"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
@@ -10842,9 +10845,7 @@ msgstr ""
 msgid ""
 "Used to hold the reference of the external mean that created this statement "
 "(name of imported file, reference of online synchronization...)"
-msgstr ""
-"Used to hold the reference of the external mean that created this statement "
-"(name of imported file, reference of online synchronization...)"
+msgstr "用于保存创建此语句的外部均值的引用（导入文件的名称，在线同步的引用...）"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
@@ -11284,7 +11285,7 @@ msgstr "在没有填写'货币' 和 '币种数量'的字段时，你不可以创
 msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
-msgstr ""
+msgstr "您无法在总账模块上定义比用户更严格的条件。请确保在用户锁定日期之前设置总账模块上的锁定日期。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:613
@@ -11357,7 +11358,7 @@ msgstr "不允许有无法对账的应收账款/应付账款。（账号代码�
 msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
-msgstr ""
+msgstr "你不能锁定未完成的会计期间。请确保所设置的锁定日期早于上月的最后一天。"
 
 #. module: account
 #. openerp-web

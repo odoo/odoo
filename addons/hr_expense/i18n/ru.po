@@ -9,9 +9,10 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Andrey Samorukov <andrey.samorukov@me.com>, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Sergey Vilizhanin, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 # KingOPl Slav <87slava13@gmail.com>, 2017
 # Denis Baranov <baranov@itlibertas.com>, 2017
@@ -57,7 +58,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "2 ways to record expenses:"
-msgstr ""
+msgstr "2 возможности записи расходов:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -92,20 +93,22 @@ msgid ""
 "<p>Click on <b> Action Submit To Manager </b> to submit selected expenses to"
 " your manager</p>"
 msgstr ""
+"<p>Кликните по <b> Отправить менеджеру </b>, чтобы отослать расходы на "
+"проверку</p>"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:31
 #, python-format
 msgid "<p>Once your Expense is ready, you can save it.</p>"
-msgstr ""
+msgstr "После введения данных по расходам, сохраните их"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:39
 #, python-format
 msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr ""
+msgstr "<p>Выберите расходы для отправки менеджеру на проверку</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -136,6 +139,8 @@ msgid ""
 "                                        <span class=\"small\">HR officer, manager</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\"> <strong>Централизовано</strong><br/> <span "
+"class=\"small\">Менеджер по персоналу, Начальник HR-отдела </span>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -154,6 +159,8 @@ msgid ""
 "                                        <span class=\"small\">Employee’s team manager</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\"> <strong>Децентрализовано</strong><br/> <span "
+"class=\"small\">Начальник отдела, teamlead</span> </span>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -189,6 +196,7 @@ msgid ""
 "<strong>Employee(s) record expenses, </strong>and send expense reports to "
 "their manager;"
 msgstr ""
+"<strong>Сотрудник(-и) вносят свои расходы </strong>и отсылают их менеджерам;"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -206,6 +214,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "<strong>Manager(s) approve or refuse expense reports;</strong>"
 msgstr ""
+"<strong>Менеджер(-ы) утверждают или отклоняют полученные отчеты по "
+"расходам;</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -278,7 +288,7 @@ msgstr "Бухгалтерский учёт"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Accounting: Accountant or Adviser"
-msgstr ""
+msgstr "Бухгалтерия: Бухгалтер или Аудитор"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -348,7 +358,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:35
 #, python-format
 msgid "Attach your receipt here."
-msgstr ""
+msgstr "Приложите чек"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
@@ -368,7 +378,7 @@ msgstr "Выставление счетов"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Business trip"
-msgstr ""
+msgstr "Командировка"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
@@ -690,7 +700,7 @@ msgstr "Лист расходов"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Expense Types"
-msgstr ""
+msgstr "Типы расходов"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -730,7 +740,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
 msgid "Expense: Submit To Manager"
-msgstr ""
+msgstr "Расход: Отправить менеджеру"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -791,7 +801,7 @@ msgstr "Расходы по месяцам"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Expenses follow this flow:"
-msgstr ""
+msgstr "Расходы проводятся по след. схеме:"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:438
@@ -839,12 +849,12 @@ msgstr "Расходы будут проходить через следующи
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Expenses: Manager"
-msgstr ""
+msgstr "Расходы: Менеджер"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_is_refused
 msgid "Explicitely Refused by manager or acccountant"
-msgstr ""
+msgstr "Отклонено менеджером или бухгалтером"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -867,8 +877,8 @@ msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
 msgstr ""
-"Отсюда бухгалтер сможет утвердить, а также отказаться от расходов, которые "
-"проверяются Менеджером по персоналу."
+"Здесь бухгалтер сможет утвердить или отклонить расходы, проверенные "
+"менеджером по персоналу."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -895,7 +905,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Grant this user with “Manager” rights for Expense app"
-msgstr ""
+msgstr "Выдайте этому пользователю права Менеджера для приложения \"Расходы\""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -1017,12 +1027,12 @@ msgstr "Менеджер"
 #: code:addons/hr_expense/static/src/js/tour.js:60
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
-msgstr "В этом меню менеджеры могут получать все отчеты для утверждения."
+msgstr "Это меню ведет менеджера к списку подлежащих утверждению расходов"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_communication
 msgid "Memo"
-msgstr "Памятка"
+msgstr "Заметки"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
@@ -1038,7 +1048,7 @@ msgstr "Мои расходы для отправки"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_refused
 msgid "My Refused Reports"
-msgstr ""
+msgstr "Мои отклоненные отчеты"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -1096,12 +1106,12 @@ msgstr "Для журнала %s не найден кредитный счет, 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_refused
 msgid "No refused reports to display."
-msgstr ""
+msgstr "Нет отклоненных отчетов"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Not Refused"
-msgstr "Не отказался"
+msgstr "Не отклонено"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -1140,6 +1150,8 @@ msgid ""
 "Once expense reports approved by managers, the accounting department checks "
 "accounts, products and taxes used. Then they"
 msgstr ""
+"После утверждения расходов менеджерами, отчет проверяет бухгалтерия: счета, "
+"товары, налоги и т.п. После этого"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1161,8 +1173,8 @@ msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
 msgstr ""
-"После того как вы создали свой расход, отправьте его к своему менеджеру, "
-"который будет проверять его."
+"После сохранения данных по расходам, отправьте их своему менеджеру на "
+"проверку и утверждение."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:543
@@ -1202,7 +1214,7 @@ msgstr "Партнёр"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_amount
 msgid "Payment Amount"
-msgstr "Сумма к Оплате"
+msgstr "Сумма к оплате"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
@@ -1213,23 +1225,23 @@ msgstr "Оплата по"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_payment_date
 msgid "Payment Date"
-msgstr "Дата Платежа"
+msgstr "Дата платежа"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_journal_id
 msgid "Payment Method"
-msgstr "Метод Оплаты"
+msgstr "Метод оплаты"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_payment_method_id
 msgid "Payment Type"
-msgstr "Тип Платежа"
+msgstr "Тип платежа"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Periodically, you submit expenses report to your manager,"
-msgstr "Периодически, вы передаете отчет расходов своему менеджеру,"
+msgstr "Периодически отсылайте отчеты по расходам своему менеджеру."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_web_planner
@@ -1311,12 +1323,12 @@ msgstr "Причина"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Reason :"
-msgstr ""
+msgstr "Причина:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "Причина отклонения"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1326,17 +1338,17 @@ msgstr "Внесите первый расход"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Recording"
-msgstr ""
+msgstr "Запись"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Recording Mode"
-msgstr ""
+msgstr "Режим записи"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Ref."
-msgstr "Ссыл."
+msgstr "Ref."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1359,12 +1371,12 @@ msgstr "Отказано"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Refused Expenses"
-msgstr "Отказать в Расходах"
+msgstr "Отклоненные расходы"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports_refused
 msgid "Refused Reports"
-msgstr ""
+msgstr "Отклоненные отчеты"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_sheet_register_payment_wizard_action
@@ -1465,7 +1477,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Set a manager in the employee form"
-msgstr ""
+msgstr "Назначьте менеджера в карточке сотрудника"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1514,12 +1526,12 @@ msgstr "Состояние расходов."
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Submit for Approval"
-msgstr ""
+msgstr "Отправить на утверждение"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Submit to Manager"
-msgstr "Сохранить для менеджера"
+msgstr "Отправить менеджеру"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
@@ -1619,7 +1631,7 @@ msgstr "К одобрению"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Pay"
-msgstr "Оплатить"
+msgstr "К оплате"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
@@ -1793,7 +1805,7 @@ msgstr "Вы записываете расходы,"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Ваши расходы"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1823,12 +1835,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "e.g. Lunch"
-msgstr "например Ланч"
+msgstr "например Обед"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "e.g. Lunch with Customer"
-msgstr "например Ланч с Клиентом"
+msgstr "например Обед с Клиентом"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form

@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# trendspotter, 2018
+# J. Podhorecky <j.podhorecky@volny.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Chris <krystof.reklamy13@gmail.com>, 2018
 # Ladislav Tomm <tomm@helemik.cz>, 2018
@@ -2721,17 +2721,17 @@ msgstr "Sloučit"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically"
-msgstr ""
+msgstr "Sloučit automaticky"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically all process"
-msgstr ""
+msgstr "Sloučit automaticky všechny procesy"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Contacts"
-msgstr ""
+msgstr "Sloučit kontakty"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -2757,7 +2757,7 @@ msgstr "Sloučit příležitosti"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge the following contacts"
-msgstr ""
+msgstr "Sloučit následující kontakty"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -2808,7 +2808,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_min_id
 msgid "MinID"
-msgstr ""
+msgstr "MinID"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2886,7 +2886,7 @@ msgstr "Nové"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
-msgstr ""
+msgstr "Nová příležitost"
 
 #. module: crm
 #. openerp-web
@@ -3027,6 +3027,9 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
+"Pouze cílový kontakt může být propojen s existujícími položkami deníku. "
+"Požádejte administrátora, že potřebujete sloučit několik kontaktů "
+"propojených s existujícími položkami deníku."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -3632,6 +3635,9 @@ msgid ""
 "                            Odoo will propose you to merge only those having\n"
 "                            all these fields in common. (not one of the fields)."
 msgstr ""
+"Vyberte seznam polí používaných k vyhledávání duplicitních záznamů. Pokud "
+"vyberete několik polí, Odoo vám navrhne sloučit pouze ty, které mají "
+"společné všechny tyto oblasti. (ne jedno z polí)."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3646,6 +3652,8 @@ msgid ""
 "                                will be redirected to the destination contact.\n"
 "                                You can remove contacts from this list to avoid merging them."
 msgstr ""
+"Vybrané kontakty budou sloučeny. \n"
+"Všechny dokumenty, které jsou propojeny s jedním z těchto kontaktů, budou přesměrovány na cílový kontakt. Kontakty můžete odstranit z tohoto seznamu, aby se zabránilo jejich sloučení."
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -3749,7 +3757,7 @@ msgstr "Zobrazit pouze příležitosti"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Skip these contacts"
-msgstr ""
+msgstr "Přeskočit tyto kontakty"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3872,7 +3880,7 @@ msgstr "Ulice2"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Submit"
-msgstr ""
+msgstr "Odeslat"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4048,7 +4056,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "There is no more contacts to merge for this request..."
-msgstr ""
+msgstr "K žádosti o sloučení neexistují další kontakty ..."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_email_cc
@@ -4524,7 +4532,7 @@ msgstr ""
 #: code:addons/crm/wizard/base_partner_merge.py:270
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
+msgstr "Nemůžete sloučit kontakt s jedním z jeho nadřazených kontaktů."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4642,12 +4650,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_base_partner_merge_automatic_wizard
 msgid "base.partner.merge.automatic.wizard"
-msgstr ""
+msgstr "base.partner.merge.automatic.wizard"
 
 #. module: crm
 #: model:ir.model,name:crm.model_base_partner_merge_line
 msgid "base.partner.merge.line"
-msgstr ""
+msgstr "base.partner.merge.line"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

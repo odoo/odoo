@@ -9,6 +9,7 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 # Martin Aavastik <martin@avalah.ee>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Helen Sulaoja <helen@avalah.ee>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
 # Marek Pontus, 2018
 msgid ""
@@ -1018,7 +1019,9 @@ msgstr "Lisa võimalusi"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before creating an opportunity"
-msgstr "Lisa kvalifikatsioonisamm enne võimaluse loomist"
+msgstr ""
+"\n"
+"Lisasamm enne müügivõimaluste loomist"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1093,7 +1096,7 @@ msgstr "Arveldamist ootavate pakkumiste summa"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Analysis"
-msgstr "Analüütiline"
+msgstr "Ülevaade"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1162,7 +1165,7 @@ msgstr "Määramise kuupäev"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_open
 msgid "Assigned"
-msgstr "Määratud"
+msgstr "Loomise kuupäev"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1250,7 +1253,7 @@ msgstr "CRM müügivõimaluste analüüs"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
 msgid "Call for Demo"
-msgstr ""
+msgstr "Telli demo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
@@ -1462,7 +1465,7 @@ msgstr "Palju õnne, said hakkama!"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor7
 msgid "Consulting"
-msgstr ""
+msgstr "Konsultatsioon"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1499,7 +1502,7 @@ msgstr "Kontaktid"
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_name
 msgid "Conversion Action"
-msgstr "Muutmise tegevus"
+msgstr "Vali tegevus"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_conversion
@@ -1516,7 +1519,7 @@ msgstr "Conversion Date from Lead to Opportunity"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Conversion Options"
-msgstr "Conversion Options"
+msgstr "Muutmine"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1781,12 +1784,12 @@ msgstr "Kuupäev"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_open
 msgid "Days to Assign"
-msgstr "Määratavad päevad"
+msgstr "Müügivihjest müügivõimaluseni (päevade arv)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_close
 msgid "Days to Close"
-msgstr "Päevi sulgemiseni"
+msgstr "Päevi lõpptähtajani"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
@@ -2134,7 +2137,7 @@ msgstr "Müügitorus volditud"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
 msgid "Follow-up Quote"
-msgstr ""
+msgstr "Järeltsitaat"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2172,7 +2175,7 @@ msgstr "Force assignation"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Format phone numbers based on national conventions"
-msgstr "Vorminda telefoninumbreid tuginedes riiklikele konventsioonidele"
+msgstr "Vorminda telefoninumbreid vastavalt rahvusvahelisele standardile"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:588
@@ -2220,8 +2223,7 @@ msgid ""
 "Generate unassigned leads from incoming emails. Leads coming from\n"
 "                                    that email will be assigned manually."
 msgstr ""
-"Loob sissetulevatest kirjadest müügivõimalused, millel ei ole vastutaja "
-"määratud. Vastutajad tuleb määrata käsitsi."
+"Loob sissetulevatest e-kirjadest automaatselt müügivihjed/müügivõimalused"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -2781,7 +2783,7 @@ msgstr "Manual Assignation of Emails"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manually Assignation of Incoming Emails"
-msgstr "Käsitsi vastutaja määramine sissetulevatele kirjadele"
+msgstr "Loo e-kirjast müügivihje/müügivõimalus"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
@@ -2875,7 +2877,7 @@ msgstr "Liida kontaktid"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge Leads/Opportunities"
-msgstr "Merge Leads/Opportunities"
+msgstr "Ühenda müügivihjed/müügivõimalused"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_merge
@@ -2886,7 +2888,7 @@ msgstr "Merge Selected Contacts"
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
 msgid "Merge leads/opportunities"
-msgstr "Merge leads/opportunities"
+msgstr "Ühenda müügivihjed/müügivõimalused"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -3422,7 +3424,7 @@ msgstr "Telefon"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_crm_phone_validation
 msgid "Phone Formatting"
-msgstr "Telefoni vormindamine"
+msgstr "Telefoninumbri seadistus"
 
 #. module: crm
 #. openerp-web
@@ -3666,7 +3668,7 @@ msgstr "Kirje seose ID"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_referred
 msgid "Referred By"
-msgstr "Soovitas"
+msgstr "Soovitaja"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_action
@@ -3725,7 +3727,7 @@ msgstr "Sale Flow"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Sales Channel"
-msgstr "Müügitiim"
+msgstr "Müügitiimid"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
@@ -3804,7 +3806,7 @@ msgstr "Search duplicates based on duplicated data in"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Select Leads/Opportunities"
-msgstr "Select Leads/Opportunities"
+msgstr "Vali müügivihjed/müügivõimalused"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form

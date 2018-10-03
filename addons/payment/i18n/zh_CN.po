@@ -4,13 +4,13 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# 珠海-杜哥 <liangjia@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # Martin Trigaux, 2017
 # glovebx <ruinning@163.com>, 2017
-# Talway <9010446@qq.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
 # 钟小华 <mackz@sina.com>, 2017
 # fausthuang, 2017
 # waveyeung <waveyeung@qq.com>, 2017
@@ -66,7 +66,7 @@ msgstr "<i class=\"fa fa-trash\"/>删除"
 #: code:addons/payment/models/payment_acquirer.py:112
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>取消,</i> 你的付款已被取消。"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:108
@@ -74,7 +74,7 @@ msgstr ""
 msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
-msgstr ""
+msgstr "<i>完成,</i> 你的在线支付已成功完成. 感谢你的订单。"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -83,7 +83,7 @@ msgid ""
 "<i>Error,</i> Please be aware that an error occurred during the transaction."
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
-msgstr ""
+msgstr "<i>错误,</i> 请注意交易中会发生的错误.。订单已确认但未支付。如你有任何关于订单状态的问题, 请及时联系我们。"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:104
@@ -91,7 +91,7 @@ msgstr ""
 msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
-msgstr ""
+msgstr "<i>待定,</i> 你的在线付款已完成. 但是你的订单还验证。"
 
 #. module: payment
 #. openerp-web
@@ -873,7 +873,7 @@ msgstr "收单"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
 msgid "Payment Flow"
-msgstr ""
+msgstr "立即支付"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -930,7 +930,7 @@ msgstr "付款交易"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Payment from Odoo"
-msgstr ""
+msgstr "Odoo付款"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:59
@@ -997,7 +997,7 @@ msgstr "请选择付款方式"
 #: code:addons/payment/static/src/js/payment_form.js:308
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "请选择选项以添加新的付款方式。"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -1032,7 +1032,7 @@ msgstr "服务商"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "重定向跳转至所请求的网站"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
@@ -1224,7 +1224,7 @@ msgid ""
 "and to reuse it for a later purchase. If you manage subscriptions (recurring"
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
-msgstr ""
+msgstr "该选项允许将客户信用卡的支付授权信令用于后续支付来调用。如果您需要管理订阅信息（循环发票），则需要在发出发票时自动向客户收取费用。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
@@ -1300,14 +1300,14 @@ msgstr "警告!"
 #: code:addons/payment/static/src/js/payment_form.js:134
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "目前我们无法添加您的付款方式。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:300
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "目前我们无法添加您的付款方式。</p>"
 
 #. module: payment
 #. openerp-web
@@ -1315,28 +1315,28 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:367
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
-msgstr ""
+msgstr "我们此时无法删除您的支付方式。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:173
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr ""
+msgstr "我们无法为您重新提交付款表。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:179
 #, python-format
 msgid "We are not able to redirect you to the payment form.<"
-msgstr ""
+msgstr "我们无法为您重新提交付款表格。<"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:188
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "我们无法处理您的付款。"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1443,7 +1443,7 @@ msgstr "货币：交易币种浏览记录"
 #: code:addons/payment/static/src/js/payment_form.js:285
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
-msgstr ""
+msgstr "例如，你的信用卡卡号有误。请核实。"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

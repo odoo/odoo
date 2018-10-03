@@ -434,7 +434,7 @@ msgstr "الكلمات الدليلية للموظف"
 msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
-msgstr ""
+msgstr "أدخل هنا العنوان الخاص للموظف ، وليس الشخص المرتبط بشركتك."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:310
@@ -719,7 +719,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "معاش قانوني"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -816,7 +816,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr ""
+msgstr "لا توظيف"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -851,6 +851,8 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
+"هيكل اودوو للادارات يستخدم لادارة كل المستندات\n"
+"المتعلقى بالموظفين (الاقسام, المصورفات, جدول العمل, الاجازات, التوظيف, ...)."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -1010,12 +1012,14 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
+"تعيين التقويم الافتراضي المستخدم لحساب تخصيص الوقت للأوراق والجداول الزمنية "
+"..."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
-msgstr ""
+msgstr "حدد ما إذا كانت عملية التوظيف مفتوحة أو مغلقة لهذا المنصب الوظيفي."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -1027,17 +1031,17 @@ msgstr "إعدادات"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
 msgid "Show Organizational Chart"
-msgstr ""
+msgstr "إظهار الهيكل التنظيمي"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
-msgstr ""
+msgstr "عرض الهيكل التنظيمي على ملف الموظف"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
-msgstr ""
+msgstr "عرض الهيكل التنظيمي على ملف الموظف"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1125,7 +1129,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "عنوان الموظف مرتبط بالشركة"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -1170,6 +1174,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"استخدم هنا عنوان المنزل للموظف.\n"
+"يتم استخدام هذا العنوان الخاص في مستند سداد تقرير النفقات.\n"
+"يجب أن يكون مختلفًا عن عنوان العمل."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1184,7 +1191,7 @@ msgstr "المستخدمون"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "الشواغر :"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
@@ -1272,6 +1279,9 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
+"مع نظرة سريعة على شاشة الموظف في اودوو ، أنت\n"
+"يمكنك بسهولة العثور على جميع المعلومات التي تحتاجها لكل شخص ؛\n"
+"بيانات الاتصال ، وموقع الوظيفة ، والتوافر ، وما إلى ذلك."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1315,7 +1325,7 @@ msgstr "محمول العمل"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "تنظيم العمل"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1511,7 +1521,7 @@ msgstr "سوف تعمل بشكل وثيق مع جميع المتدربين"
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
 msgid "Your document has not been created"
-msgstr ""
+msgstr "لم يتم إنشاء المستند الخاص بك"
 
 #. module: hr
 #: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
@@ -1539,7 +1549,7 @@ msgstr "مثلا مدير مبيعات"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings

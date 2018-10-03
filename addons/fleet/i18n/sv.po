@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Frida E, 2017
-# Martin Trigaux, 2017
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2017
 # lasch a <bmail440@gmail.com>, 2017
 # lynnliuying <lynn.liu1971@gmail.com>, 2017
 # Robert Frykelius <robert.frykelius@linserv.se>, 2017
+# Martin Trigaux, 2017
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
@@ -38,8 +39,7 @@ msgstr "%s %s har lagts till i flottan!"
 #: code:addons/fleet/models/fleet_vehicle_cost.py:274
 #, python-format
 msgid "%s contract(s) will expire soon and should be renewed and/or closed!"
-msgstr ""
-"%s kontrakt(et/er) löper snart ut och behöver förlängas eller avslutas!"
+msgstr "%s kontrakt löper snart ut och behöver förlängas eller avslutas!"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -54,27 +54,27 @@ msgstr "<span>kW</span>"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
 msgid "A/C Compressor Replacement"
-msgstr "Byte av komfortkyla"
+msgstr "Byte av kompressor till AC"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_2
 msgid "A/C Condenser Replacement"
-msgstr "Byte A/C kondensor"
+msgstr "Byte av kondensator till AC"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_3
 msgid "A/C Diagnosis"
-msgstr "A/C Diagnostik"
+msgstr "Diagnostik av AC"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_4
 msgid "A/C Evaporator Replacement"
-msgstr "Byte A/C förångare"
+msgstr "Byte av förångare till AC"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_5
 msgid "A/C Recharge"
-msgstr "A/C Laddning"
+msgstr "Laddning av AC"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -112,7 +112,7 @@ msgstr "Alla fordon"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_7
 msgid "Alternator Replacement"
-msgstr "Alternatorbyte"
+msgstr "Generatorbyte"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_amount
@@ -135,7 +135,7 @@ msgstr "Assistans"
 #. module: fleet
 #: selection:fleet.vehicle,transmission:0
 msgid "Automatic"
-msgstr "Automatiskt"
+msgstr "Automatisk"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_auto_generated
@@ -198,7 +198,7 @@ msgstr "CO2-utsläpp från fordonet"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
 msgid "Calculation Benefit In Kind"
-msgstr "Beräknings förmånsvärde"
+msgstr "Beräkning av förmånsvärde"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
@@ -287,7 +287,7 @@ msgstr "Klicka för att skapa en vägmätarlogg."
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid "Click to create a new service entry."
-msgstr "Klicka för att skapa en ny tjänstpost."
+msgstr "Klicka för att skapa en ny service."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
@@ -297,7 +297,7 @@ msgstr "Klicka för att skapa en ny typ av kontrakt."
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Click to create a new type of service."
-msgstr "Klicka för att skapa en ny typ av tjänst."
+msgstr "Klicka för att skapa en ny typ av service."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
@@ -312,7 +312,7 @@ msgstr "Klicka för att skapa en fordonsstatus."
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Close Contract"
-msgstr "Stäng kontrakt"
+msgstr "Avsluta kontrakt"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -337,12 +337,12 @@ msgstr "Fordonets färg"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
 msgid "Compact"
-msgstr "Krymp"
+msgstr "Kompakt"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
@@ -362,7 +362,7 @@ msgstr "Avtal"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_graph
 msgid "Contract Costs Per Month"
-msgstr "Kontraktskostnader per månad"
+msgstr "Avtalskostnader per månad"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_expiration_date
@@ -391,17 +391,17 @@ msgstr "Avtalstyper"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_contract_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_contract_id
 msgid "Contract attached to this cost"
-msgstr "Kontrakt knutet till denna kostnad"
+msgstr "Kontrakt knuten till denna kostnad"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Contract details"
-msgstr "Kontraktsdetaljer"
+msgstr "Kontraktsuppgifter"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
 msgid "Contract information on a vehicle"
-msgstr "Upphandlingsinformation om ett fordon"
+msgstr "Kontraktsinformation om ett fordon"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -412,7 +412,7 @@ msgstr "Kontraktsloggar"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Contract(s)"
-msgstr "Kontrakt(er)"
+msgstr "Kontrakt"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_purchaser_id
@@ -429,7 +429,7 @@ msgstr "Avtal"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
 msgid "Convertible"
-msgstr "Konvertibel"
+msgstr "Cab"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
@@ -449,12 +449,12 @@ msgstr "Kostnadsbeskrivning"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
 msgid "Cost Details"
-msgstr "Kostnadsdetaljer"
+msgstr "Kostnadsuppgifter"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Cost Subtype"
-msgstr "Kostnadsundertyp"
+msgstr "Delkostnader"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -469,7 +469,7 @@ msgstr "Kostnad relaterad till ett fordon"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost that is paid only once at the creation of the contract"
-msgstr "Engångskostnader vid upprättandet av kontraktet"
+msgstr "Engångskostnader vid upprättande av kontrakt"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_subtype_id
@@ -477,14 +477,14 @@ msgstr "Engångskostnader vid upprättandet av kontraktet"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_subtype_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_subtype_id
 msgid "Cost type purchased with this cost"
-msgstr "Kostnadstyp köpt med denna kostnad"
+msgstr "Typ av kostnad som köpts"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_count
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Costs"
-msgstr "Kostnad"
+msgstr "Kostnader"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_costs_reporting_action
@@ -494,7 +494,7 @@ msgstr "Kostnadsanalys"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_graph
 msgid "Costs Per Month"
-msgstr "Kostnader per månad"
+msgstr "Månadskostnad"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_generated
@@ -503,8 +503,8 @@ msgid ""
 "cost frequency is set to unique, the cost will be logged at the start date"
 msgstr ""
 "Kostnader betalas med jämna mellanrum, beroende på kostnadsfrekvensen. Om "
-"kostnadsfrekvensen är inställd på engångs så kommer kostnaden att loggas vid"
-" startdatumet"
+"kostnadsfrekvensen är inställd på engångskostnad så kommer kostnaden att "
+"loggas vid startdatumet"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -548,7 +548,7 @@ msgstr "Skapad den"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id
 msgid "Current state of the vehicle"
-msgstr "Nuvarande tillstånd för fordonet"
+msgstr "Nuvarande fordonsstatus"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -619,7 +619,7 @@ msgstr "Visningsnamn"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_17
 msgid "Door Window Motor/Regulator Replacement"
-msgstr "Byte dörrfönster-motor/regulator"
+msgstr "Byte motor/regulator till dörrfönster"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_doors
@@ -650,7 +650,7 @@ msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
-"Varje kontrakt (t ex leasing) kan innefatta flera tjänster\n"
+"Varje kontrakt (t ex leasing) kan inkludera flertal tjänster\n"
 "             (reparation, försäkringar, periodiskt underhåll)."
 
 #. module: fleet
@@ -684,7 +684,7 @@ msgstr "Tjänstebil"
 #: code:addons/fleet/models/fleet_vehicle_cost.py:44
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr "Att nolla mätarställningen för ett fordon är inte tillåtet."
+msgstr "Att nollställa mätarställningen på ett fordon är inte tillåtet."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_18
@@ -709,7 +709,7 @@ msgstr "Kamremsbyte"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Entry into service tax"
-msgstr "Ibruktagande skatt"
+msgstr "Skatt för ibruktagande"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -747,7 +747,7 @@ msgstr "Fordonsflotta: Skapa kontraktskostnad utifrån kostnadsfrekvens"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_type
 msgid "For internal purpose only"
-msgstr "Endast för internt ändamål"
+msgstr "Endast för interna ändamål"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_frequency
@@ -876,7 +876,7 @@ msgid ""
 "            field."
 msgstr ""
 "Här kan du lägga till tankningsposter för alla fordon. Du kan\n"
-" filtrera även loggar på ett visst fordon med sökningen\n"
+" även filtrera loggar på ett visst fordon med sökningen\n"
 "fält."
 
 #. module: fleet
@@ -887,13 +887,13 @@ msgid ""
 "            the search field."
 msgstr ""
 "Här kan du lägga till olika kilometertangenter för alla fordon.\n"
-"Du kan också visa mätvärdet för ett visst fordon med hjälp av\n"
+"Du kan också visa mätarställning för ett visst fordon med hjälp av\n"
 "sökfältet."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower
 msgid "Horsepower"
-msgstr "Hästkraft"
+msgstr "Hästkrafter"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower_tax
@@ -1063,18 +1063,18 @@ msgstr "Senast uppdaterad"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_leasing
 msgid "Leasing"
-msgstr "Plats"
+msgstr "Leasing"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_license_plate
 msgid "License Plate"
-msgstr "Registreringsskylt"
+msgstr "Registreringsnummer"
 
 #. module: fleet
 #: code:addons/fleet/models/fleet_vehicle.py:224
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
-msgstr "Registreringsskylt från '%s' till '%s'"
+msgstr "Registreringsnummer från '%s' till '%s'"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_license_plate
@@ -1108,13 +1108,13 @@ msgstr "Logotyp"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_image_medium
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_image_medium
 msgid "Logo (medium)"
-msgstr "Logga (medium)"
+msgstr "Logo (medium)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_image_small
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_image_small
 msgid "Logo (small)"
-msgstr "Logga (liten)"
+msgstr "Logo (liten)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id
@@ -1168,8 +1168,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
-"Medelstor logo av varumärket. Den ändras automatiskt som en 128x128px bild, "
-"med bildförhållande bevarat. Använd det här fältet i formulärvyer eller "
+"Medelstor logo av varumärket. Den ändras automatiskt till en 128x128px bild,"
+" med bildförhållande bevarat. Använd det här fältet i formulärvyer eller "
 "vissa kanban vyer."
 
 #. module: fleet
@@ -1199,7 +1199,7 @@ msgstr "Årsmodell"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
 msgid "Model make of Vehicle"
-msgstr "Modelltillverkaren"
+msgstr "Modell på bilen"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_name
@@ -1225,7 +1225,7 @@ msgstr "Modell: från '1%s' till '1%s'"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_tree
 msgid "Models"
-msgstr "Objekt"
+msgstr "Modeller"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -1300,24 +1300,24 @@ msgstr "Antal platser i fordonet"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_count
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Odometer"
-msgstr "Vägmätare"
+msgstr "Mätarställning"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Odometer Details"
-msgstr "Vägmätardetaljer"
+msgstr "Detaljer för mätarställning"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_tree
 msgid "Odometer Logs"
-msgstr "Vägmätarlogg"
+msgstr "Logg för mätarställning"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit
 msgid "Odometer Unit"
-msgstr "Vägmätar-enhet"
+msgstr "Enhet för mätarställning"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer
@@ -1325,32 +1325,32 @@ msgstr "Vägmätar-enhet"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_value
 msgid "Odometer Value"
-msgstr "Vägmätar-värde"
+msgstr "Värde för mätarställning"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_graph
 msgid "Odometer Values Per Vehicle"
-msgstr "Vägmätarvärde per fordon"
+msgstr "Mätarställning per fordon"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer
 msgid "Odometer at creation"
-msgstr "Vägmätarvärde vid skapande"
+msgstr "Mätarställning vid skapande"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Odometer details"
-msgstr "Vägmätardetaljer"
+msgstr "Detaljer för mätarställning"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "Vägmätarlogg för ett fordon"
+msgstr "Fordonslogg för mätarställning"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer
 msgid "Odometer measure of the vehicle at the moment of the contract creation"
-msgstr "Vägmätar-värde för fordonet vid upprättande av kontraktet"
+msgstr "Mätarställning på fordonet vid upprättande av kontraktet"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer
@@ -1362,7 +1362,7 @@ msgstr "Vägmätar-värde för fordonet vid upprättande av kontraktet"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer
 msgid "Odometer measure of the vehicle at the moment of this log"
-msgstr "Vägmätar-värdet för fordonet vid denna logg"
+msgstr "Mätarställning på fordonet vid denna logg"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
@@ -1373,7 +1373,7 @@ msgid ""
 msgstr ""
 "Odoo hjälper dig att hålla reda på alla tjänster som utförts\n"
 "på ditt fordon. Tjänster kan vara av många slag: tillfällig\n"
-"reparation, fast underhåll mm"
+"reparation, fast underhåll mm."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
@@ -1382,9 +1382,9 @@ msgid ""
 "                vehicles. Costs are created automatically from services,\n"
 "                contracts (fixed or recurring) and fuel logs."
 msgstr ""
-"Odoo hjälper dig att hantera kostnaderna för din annorlunda\n"
+"Odoo hjälper dig att hantera kostnaderna för dina olika\n"
 "fordon. Kostnader skapas automatiskt från tjänster,\n"
-"kontrakt (fast eller återkommande) och bränsle loggar."
+"kontrakt (fast eller återkommande) och bränsleloggar."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1450,7 +1450,7 @@ msgstr "Byte av syrgasgivare"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_parent_id
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Parent"
-msgstr "Överliggande"
+msgstr "Överordnad"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_parent_id
