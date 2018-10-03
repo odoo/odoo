@@ -3429,6 +3429,29 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list with selection widget', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" widget="selection"/>' +
+                '</tree>',
+        });
+
+        list.$('.o_data_cell:first').click();
+
+        assert.strictEqual(list.$('.o_selection_cell .o_input.o_field_widget').attr("name"), 'm2o',
+            "Selection widget should apply on m2o field");
+        assert.strictEqual(list.$('.o_selection_cell .o_input.o_field_widget').val(), '1',
+            "Value of field with selection widget should be 1 as Value 1 have 1 sequence");
+
+        list.destroy();
+    });
+
     QUnit.test('list grouped by date:month', function (assert) {
         assert.expect(1);
 
