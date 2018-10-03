@@ -247,7 +247,7 @@ class IrHttp(models.AbstractModel):
         return env.ref(xmlid, False)
 
     @classmethod
-    def check_access_mode(cls, env, id, access_mode, model, access_token=None, related_id=None):
+    def _check_access_mode(cls, env, id, access_mode, model, access_token=None, related_id=None):
         """
         Implemented by each module to define an additional way to check access.
 
@@ -256,9 +256,9 @@ class IrHttp(models.AbstractModel):
         :param access_mode: typically a string that describes the behaviour of the custom check
         :param model: the model of the object for which binary_content was called
         :param related_id: optional id to check security.
-        :return: the object or falsy result if not valid.
+        :return: True if the test passes, else False.
         """
-        return None
+        return False
 
 
     @classmethod
@@ -294,8 +294,6 @@ class IrHttp(models.AbstractModel):
         obj = None
         if xmlid:
             obj = cls._xmlid_to_obj(env, xmlid)
-        if access_mode:
-            obj = cls.check_access_mode(env, id, access_mode, model, access_token=access_token, related_id=related_id)
         elif id and model in env.registry:
             obj = env[model].browse(int(id))
         # obj exists
@@ -305,7 +303,11 @@ class IrHttp(models.AbstractModel):
         # access token grant access
         if model == 'ir.attachment' and access_token:
             obj = obj.sudo()
-            if not consteq(obj.access_token or '', access_token):
+            if access_mode:
+                if not cls._check_access_mode(env, id, access_mode, model, access_token=access_token,
+                                             related_id=related_id):
+                    return (403, [], None)
+            elif not consteq(obj.access_token or '', access_token):
                 return (403, [], None)
 
         # check read access
