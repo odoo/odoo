@@ -298,6 +298,7 @@ var SlideDialog = Widget.extend({
             });
         return res;
     },
+    // TODO: Remove this part, as now SVG support in image resize tools is included
     //Python PIL does not support SVG, so converting SVG to PNG
     svg_to_png: function () {
         var img = this.$el.find("img#slide-image")[0];

@@ -202,7 +202,7 @@
                     <strong>Signature</strong>
                 </div>
                 <div class="offset-8 col-4">
-                    <img t-att-src="'data:image/png;base64,%s' % to_text(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+                    <img t-att-src="image_data_uri(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
                 </div>
                 <div class="offset-8 col-4 text-center">
                     <p t-field="doc.signed_by"/>

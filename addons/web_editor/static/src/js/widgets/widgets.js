@@ -363,6 +363,7 @@ var ImageWidget = MediaWidget.extend({
         if (!noRender) {
             this.$('input.url').val('').trigger('input').trigger('change');
         }
+        // TODO: Expand this for adding SVG
         var domain = this.domain.concat(['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]]);
         if (needle && needle.length) {
             domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);

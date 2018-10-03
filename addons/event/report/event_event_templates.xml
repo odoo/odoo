@@ -15,7 +15,7 @@
                                         <div t-field="o.event_id.event_logo"/>
                                     </t>
                                     <span t-if="not o.event_id.event_logo and o.event_id.organizer_id.company_id.logo_web and o.event_id.organizer_id.is_company">
-                                        <img t-att-src="'data:image/png;base64,%s' % to_text(o.event_id.organizer_id.company_id.logo_web)" style="max-height:1cm; max-width:4cm;" alt="Logo"/>
+                                        <img t-att-src="image_data_uri(o.event_id.organizer_id.company_id.logo_web)" style="max-height:1cm; max-width:4cm;" alt="Logo"/>
                                     </span>
                                     <h5 t-field="o.event_id.name"/>
                                     <h5>( <i class="fa fa-clock-o" aria-label="Period" role="img" title="Period"></i> <span itemprop="startDate" t-field="o.event_id.with_context(tz=o.event_id.date_tz).date_begin" t-options='{"hide_seconds": True}'> </span> <i>to</i> <span itemprop="endDate" t-field="o.event_id.with_context(tz=o.event_id.date_tz).date_end" t-options='{"hide_seconds": True}'> </span> )</h5>
@@ -65,7 +65,7 @@
                                 <div class="col-12">
                                     <span t-if="event.organizer_id.is_company and event.organizer_id.company_id.logo_web">
                                         <div t-field="event.event_logo">
-                                            <img t-att-src="'data:image/png;base64,%s' % to_text(event.organizer_id.company_id.logo_web)" style="max-height:1cm; max-width:4cm;" alt="Logo"/>
+                                            <img t-att-src="image_data_uri(event.organizer_id.company_id.logo_web)" style="max-height:1cm; max-width:4cm;" alt="Logo"/>
                                         </div>
                                     </span>
                                     <h4 t-field="event.name"/>
