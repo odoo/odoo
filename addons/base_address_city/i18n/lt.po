@@ -7,6 +7,7 @@
 # Martin Trigaux, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -30,6 +31,8 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
+"Pažymėkite šį laukelį, kad užtikrintumėte, jog kiekvienas tos šalies adresas"
+" turėtų pasirinktą miestą iš šalies miestų sąrašo."
 
 #. module: base_address_city
 #: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
@@ -81,13 +84,16 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
+"Rodyti ir valdyti visų miestų, kurie gali būti priskirti jūsų\n"
+"partnerių įrašams, sąrašą. Atkreipkite dėmesį, kad šis pasirinkimas gali būti nustatytas kiekvienai\n"
+"šaliai atskirai, kad būtų forsuojamas privalomas miesto iš šio sąrašo turėjimas."
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner_country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_users_country_enforce_cities
 msgid "Enforce Cities"
-msgstr ""
+msgstr "Forsuoti miestus"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_id
@@ -117,12 +123,12 @@ msgstr "Pavadinimas"
 #. module: base_address_city
 #: model:ir.ui.view,arch_db:base_address_city.view_city_filter
 msgid "Search City"
-msgstr ""
+msgstr "Ieškoti miesto"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_state_id
 msgid "State"
-msgstr "Būsena"
+msgstr "Regionas"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_zipcode

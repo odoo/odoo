@@ -7,11 +7,11 @@
 # waveyeung <waveyeung@qq.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# 珠海-杜哥 <liangjia@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Eddie Lim <bhweelim@yahoo.com>, 2017
 # Martin Trigaux, 2017
-# Talway <9010446@qq.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # fausthuang, 2017
@@ -50,13 +50,17 @@
 # e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018
 # 石家庄_老刘 <liuaiqun@sina.com>, 2018
 # John Lin <linyinhuan@139.com>, 2018
+# Shane Tsoi <sso@odoo.com>, 2018
+# KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2018
+# 海飞 Lu <330472962@qq.com>, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:47+0000\n"
 "PO-Revision-Date: 2018-08-02 09:47+0000\n"
-"Last-Translator: John Lin <linyinhuan@139.com>, 2018\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -755,6 +759,8 @@ msgid ""
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
 msgstr ""
+"\n"
+"       生成带有海关编号的电子发票"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -1060,6 +1066,12 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"使锁定日期后不可逆转：\n"
+"\n"
+" *您无法在总账模块上定义比用户更严格的条件。然后，必须在用户的锁定日期之前设置总账模块程序上的锁定日期\n"
+" *您无法锁定尚未完成的期间。所以，必须在上个月的最后一天之前设置顾问的锁定日期\n"
+" *必须在上一个锁定日期之后设置总账的新锁定日期"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1940,7 +1952,7 @@ msgstr ""
 "======================\n"
 "\n"
 " * 员工详细信息\n"
-" * 员工合约\n"
+" * 员工合同\n"
 " * 基于护照的合同\n"
 " * 补贴/扣除\n"
 " * 允许配置基本薪资/毛薪资/净薪资\n"
@@ -3883,6 +3895,8 @@ msgid ""
 "Move the cash basis lines to another account.\n"
 "    "
 msgstr ""
+"\n"
+"将现金收付制明细行移到到另一个帐户"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
@@ -4163,7 +4177,7 @@ msgstr ""
 "* 快速安装apps\n"
 "* 快速用户添加\n"
 "* 统一管理工具入口\n"
-"* 快速访问 `应用商店` 和 `主题商店`"
+"* 快速访问 `在线应用商店` 和 `在线主题商店`"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -5158,6 +5172,21 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"这个附加组件带来了法国法规CGI艺术的技术需求。 286，I。3°bis规定了与私人销售相关的数据的不可更改性，安全性，存储和存档的某些标准（B2C）。\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"如果您使用POS应用程序向个人销售，请安装它\n"
+"\n"
+"该模块增加了以下功能：\n"
+"\n"
+" 不可更改性：取消或取消修改POS订单，发票和日记账分录的关键数据的所有方法\n"
+"\n"
+" 安全性：链接算法验证不可比性\n"
+"\n"
+" 存储：自动销售关闭，计算期间和累计总数（每日，每月，每年）\n"
+"\n"
+" 访问下载Odoo SA提供的强制性符合性证书（仅适用于Odoo企业用户）\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_certification
@@ -5176,6 +5205,18 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"这个附加装置带来了法国法规CGI艺术的技术需求。 286，I。3°bis规定了与私人销售相关的数据的不可更改性，安全性，存储和存档的某些标准（B2C）.\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"该模块增加了以下功能：\n"
+"\n"
+"不可更改性：取消激活取消或修改密钥的所有方法数据，发票和日记账分录\n"
+"\n"
+"安全性：用于验证不可更改性的链接算法\n"
+"\n"
+"存储：自动销售结算，计算期间和累计总数（每日，每月，每年）\n"
+"\n"
+"访问下载强制性合法证书Odoo SA（仅适用于Odoo企业版用户）\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -5780,6 +5821,14 @@ msgid ""
 "    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
 "\n"
 msgstr ""
+"\n"
+"该模块增加了对自动销售结算的支持，计算期间和累计总数（每日，每月，每年）\n"
+"-------------------------------------------------- -------------------------------------------------- -------------------------------------------------- -------------------------------------------------- ---------------------------------------------\n"
+"\n"
+"该模块增加了以下功能：\n"
+"\n"
+" 存储：自动销售关闭，计算期间和累计总数（每日，每月，每年）\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -6818,7 +6867,7 @@ msgstr ""
 #: code:addons/base/ir/ir_ui_view.py:1054
 #, python-format
 msgid " - %r in %s=%r"
-msgstr ""
+msgstr "- %r in %s=%r"
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -7455,6 +7504,148 @@ msgid ""
 "<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
 "\"O-BTN.validate\" is scanned.\n"
 msgstr ""
+"==============================\n"
+"条形码模块文档\n"
+"==============================\n"
+"\n"
+"该模块带有条形码编码逻辑和客户端条形码扫描实用程序\n"
+"\n"
+"\n"
+"条形码编码\n"
+"==============================\n"
+"\n"
+"条形码模块定义条形码命名法，其规则标识特定类型\n"
+"例如，物品产品，地点。它包含以下功能：\n"
+"\n"
+" - 识别包含数值（例如重量，价格）的条形码的模式\n"
+" - 确定条形码别名，允许识别具有不同条形码的相同产品\n"
+" - 无限制的条形码模式和定义，\n"
+" - 支持编码EAN-13，EAN-8和UPC-A\n"
+"\n"
+"条码编码\n"
+"-----------------\n"
+"\n"
+"条形码是ASCII字符的任意长序列。 EAN-13条形码是13位数\n"
+"条形码，其第13位是校验和。 \n"
+"\n"
+"简单的条形码和规则\n"
+"-------------------------\n"
+"\n"
+"默认命名法假定产品条形码的EAN-13编码。它定义了一个规则\n"
+"对于编码为EAN-13且其模式为“。”的单位产品，即任何条形码\n"
+"匹配这种模式。扫描产品的条形码，例如'5410013101703'，符合此规则。 \n"
+"因此，扫描的项目被识别为单位产品，并从产品表中检索\n"
+"\n"
+"注意：特殊字符'。'在模式中匹配任何字符。明确指出\n"
+"'。'模式中的字符，用'\\'转义它。 '\\'字符也必须进行转义\n"
+"（'\\\\'）明确说明\n"
+"\n"
+"现在让我们假设我们用条形码识别其他物品，比如库存位置。我们定义a\n"
+"在命名法中使用相应类型的新规则（在我们的示例中，类型为“位置”），\n"
+"并且其模式是例如'414.'，即任何位置条形码都以'414'开头。扫描条形码\n"
+"位置，例如'41401'，匹配此位置规则，并从retrieved检索相应的位置\n"
+"位置表\n"
+"\n"
+"注意：规则有一个序列字段，表示规则的评估顺序（ASC）。在我们的\n"
+"在前面的例子中，单位产品规则应该有一个更大的序列，然后是位置规则，\n"
+"因为我们希望首先评估后者\n"
+"\n"
+"带数字内容的条形码\n"
+"--------------------------------\n"
+"\n"
+"条形码可以编码数字内容，其由条形码模块解码。为此目的，\n"
+"必须为具有数字内容的条形码定义新规则（例如，加权bar的条形码）\n"
+"产品）。模式中的数字内容在大括号（特殊字符'{'和）之间指定\n"
+"'}'）。大括号的内容必须是'N'的序列（代表数字whole的整个部分）\n"
+"内容）后跟一系列'D'（代表数字内容的小数部分）。 \n"
+"例如，让我们为加权产品定义一个新规则，其模式为'21 ..... {NNDDD}。'。 Since\n"
+"我们假设产品条形码的EAN-13编码，此规则的编码也应该是EAN-13\n"
+"\n"
+"现在让我们假设我们想要为给定的加权产品编写条形码，比如橙子。我们先\n"
+"必须在产品橙子中定义一个与加权产品规则相匹配的条形码。这条码\n"
+"必须从'21'开始并且是正确的EAN-13条形码（即第13位必须是正确的校验和）。 \n"
+"而且，所有数字内容必须设置为'0'。例如，让我们将条形码设置为\n"
+"'2100001000004'。 \n"
+"\n"
+"我们现在想要为2.75千克的橙子写一个条形码。此条形码应为'2100001027506'（\n"
+"该条形码的数字内容为'02750'，正确的校验和为'6'）。扫描时，这个\n"
+"条形码与加权产品规则匹配（因为它以'21'开头）。提取数字内容，\n"
+"并替换为'0'的序列。然后为获得的条形码computed计算正确的校验和\n"
+"（'2100001000004'）和相应的产品（橙子）从产品表中检索\n"
+"\n"
+"注意：模式中的特殊字符“{”和“}”用于标识数字内容。到\n"
+"在模式中明确指定“{”或“}”，它们必须被转义\n"
+"\n"
+"\n"
+"严格的EAN-13条形码命名法领域\n"
+"--------------------------------------------\n"
+"\n"
+"许多条形码扫描仪在扫描EAN-13条形码时剥离前导零点。条形码命名法\n"
+"有一个布尔字段“Use strict EAN13”。如果为False，则尝试将扫描条形码与match匹配\n"
+"编码为EAN-13的规则，如果条形码的长度为12，并且在前面加上0，则\n"
+"最后一位是正确的校验和，我们自动将条形码前置0并尝试\n"
+"找到与这个新条形码匹配。如果“Use strict EAN13”设置为True，我们会查找模式\n"
+"匹配原始的12位长的条形码\n"
+"\n"
+"\n"
+"\n"
+"条形码扫描\n"
+"==============================\n"
+"\n"
+"Scanning\n"
+"--------\n"
+"\n"
+"使用USB扫描仪（模拟键盘输入）以便在Odoo.中使用条形码\n"
+"必须将扫描程序配置为不使用前缀，并使用回车符或制表符作为后缀\n"
+"每个字符输入之间的延迟必须小于或等于50毫秒\n"
+"大多数条形码扫描仪都可以开箱即用\n"
+"但是，请确保扫描仪使用与其插入的设备相同的键盘布局\n"
+"通过将设备的键盘布局设置为US QWERTY（大多数读卡器的默认值）\n"
+"或者通过更改扫描仪的键盘布局（查看手册）\n"
+"\n"
+"\n"
+"条形码事件\n"
+"------------------------------\n"
+"\n"
+"安装模块条形码后，它会实现javascript类BarcodeEvents.的单例\n"
+"此组件的目的是收听按键以检测条形码，然后发送这些条形码\n"
+"在'barcode_event'.里面的core.bus上\n"
+"所有按键事件都被缓冲，直到在50ms内没有更多按键或回车/标签为\n"
+"输入（因为大多数条码扫描器使用它作为后缀）\n"
+"如果缓冲的键看起来像条形码，则会触发事件：\n"
+"core.bus.trigger（'barcode_scanned'，条形码）;\n"
+"否则，按键被“重新发送”。但是，出于安全考虑，以编程方式进行按键事件\n"
+"精心设计不会触发本机浏览器行为。因此，BarcodeEvents不会拦截按键\n"
+"其目标是可编辑元素（例如输入）或按下ctrl / cmd / alt时\n"
+"要捕获以可编辑元素为目标的按键，它必须具有barcode_events =“true”属性\n"
+"\n"
+"\n"
+"条码处理程序\n"
+"------------------------------\n"
+"\n"
+"为了保持Web客户端的一致性，想要监听条形码事件的组件应该包含BarcodeHandlerMixin.\n"
+"它需要实现on_barcode_scanned（条形码）方法并公开方法start_listening和stop_listening\n"
+"只要它是由ViewManager管理的视图的后代，只会在附加视图时进行侦听\n"
+"\n"
+"\n"
+"表格视图条码处理程序\n"
+"------------------------------\n"
+"\n"
+"表单视图可以监听条形码事件，处理客户端和/或服务器端\n"
+"当条形码在服务器端处理时，它就像onchange一样工作。相关模型必须包括\n"
+"BarcodeEventsMixin和重新定义方法on_barcode_scanned。该方法接收扫描的条形码和\n"
+"`self`是一个表示表单视图内容的伪记录，就像@ api.onchange方法一样\n"
+"带有'O-CMD'或'O-BTN'前缀的条形码保留用于特殊功能，并且永远不会传递给on_barcode_scanned。\n"
+"可以扩展表单视图条形码处理程序以添加客户端处理。请参考（希望\n"
+"足够好）记录文件以获取更多信息\n"
+"\n"
+"\n"
+"按钮条码处理程序\n"
+"------------------------------\n"
+"\n"
+"将属性“barcode_trigger”添加到按钮，以便能够通过扫描条形码来触发它。示例：\n"
+"当条形码包含时将触发1\n"
+"扫描“O-BTN.validate”\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -7534,6 +7725,107 @@ msgid ""
 "\n"
 ".. figure:: static/description/invoice_custom_xml.png\n"
 msgstr ""
+"==========================================\n"
+"Odoo墨西哥库存/着陆的本地化\n"
+"==========================================\n"
+"\n"
+"该模块将墨西哥本地化的功能扩展到支持\n"
+"生成电子产品时与海关成本相关的海关数量\n"
+"invoice.\n"
+"\n"
+"Usage\n"
+"=====\n"
+"\n"
+"要使用此模块，您需要：\n"
+"\n"
+"*为国外产品生成新的采购订单。降落成本是\n"
+" 仅适用于配置了“自动”评估的产品\n"
+" 'FIFO'成本计算方法。成本计算方法在产品中配置\n"
+" category.\n"
+"\n"
+".. figure :: static/description/purchase_order_new.png\n"
+"\n"
+"*收到采购订单的产品\n"
+"\n"
+".. figure :: static/description/picking_done_purchase.png\n"
+"\n"
+"*转到库存 - >库存控制 - >降落成本\n"
+"\n"
+"*创建新的到岸成本，表明采购订单的选择\n"
+" 和海关信息的数量(pedimento)。降落成本是\n"
+" 仅适用于使用real实时评估配置的产品\n"
+" 价格成本法。成本计算方法在产品上配置\n"
+" category\n"
+"\n"
+".. figure :: static/description/landed_cost_picking.png\n"
+"\n"
+"*首先创建特定产品以表明您的各种Landed\n"
+" 费用，如运费，保险或关税\n"
+"\n"
+" 转到库存 - >配置 - >到岸成本类型。降落成本是\n"
+" 仅适用于使用real实时评估配置的产品\n"
+" 价格成本法。成本计算方法在产品上配置\n"
+" category.\n"
+"\n"
+".. figure :: static / description /product_landed_cost.png\n"
+"\n"
+"*单击“计算”按钮，查看落地成本如何分摊\n"
+" 采摘线\n"
+"\n"
+".. figure :: static/description/purchase_order_new.png\n"
+"\n"
+"*收到采购订单的产品\n"
+"\n"
+".. figure :: static/description/picking_done_purchase.png\n"
+"\n"
+"*转到库存 - >库存控制 - >降落成本\n"
+"\n"
+"*创建新的到岸成本，表明采购订单的选择\n"
+" 和海关信息的数量(pedimento)。降落成本是\n"
+" 仅适用于使用real实时评估配置的产品\n"
+" 价格成本法。成本计算方法在产品上配置\n"
+" category\n"
+"\n"
+".. figure :: static/description /landed_cost_picking.png\n"
+"\n"
+"*首先创建特定产品以表明您的各种Landed\n"
+" 费用，如运费，保险或关税\n"
+"\n"
+" 转到库存 - >配置 - >到岸成本类型。降落成本是\n"
+" 仅适用于使用real实时评估配置的产品\n"
+" 价格成本法。成本计算方法在产品上配置\n"
+" category.\n"
+"\n"
+".. figure :: static/description/product_landed_cost.png\n"
+"\n"
+"*单击“计算”按钮，查看落地成本如何分摊\n"
+" 采摘线\n"
+"\n"
+".. figure :: static/description/compute_landed_cost.png\n"
+"\n"
+"*要确认到岸成本归属，请单击“验证”按钮\n"
+"\n"
+".. figure :: static/description/validate_landed_cost.png\n"
+"\n"
+"*为从国外购买的产品创建销售订单\n"
+"\n"
+".. figure :: static/description/sale_order_new.png\n"
+"\n"
+"*交付与销售订单相关的产品\n"
+"\n"
+".. figure :: static/description/picking_done_sale.png\n"
+"\n"
+"*创建并验证与销售订单关联的新发票\n"
+"\n"
+".. figure :: static/description/validate_invoice_customs.png\n"
+"\n"
+"*海关信息可在相关发票的行中找到\n"
+" 与每个产品.\n"
+"\n"
+".. figure :: static/description/invoice_custom_pedimento.png\n"
+"\n"
+"*检查与产品所在地相关的电子发票\n"
+" 显示海关信息\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_customs
@@ -7584,6 +7876,50 @@ msgid ""
 "For more information in the `SAT page <http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/cfdv33.pdf>`_. Page 70.\n"
 "For more information in the SAT documentation\n"
 msgstr ""
+"================================================== =====\n"
+"Odoo墨西哥本地化发票与自定义号码\n"
+"================================================== =====\n"
+"\n"
+"当您生成电子发票时，此模块扩展了墨西哥本地化的功能以支持海关编号\n"
+"\n"
+"使用说明\n"
+"=====\n"
+"\n"
+"要使用此模块，您需要：\n"
+"\n"
+" - 正常创建客户发票\n"
+" - 添加与海关信息相关的专用号码，以逗号分隔，\n"
+" 如果与产品关联的发票的每一行有多个数字\n"
+"\n"
+" 例如，给定申请数量** 16 52 3XXX 8000988 **。\n"
+"\n"
+" 必须注册相应的导入商品的申请编号，按以下方式从左到右集成：\n"
+"\n"
+" 验证年度的最后2位数后跟两个空格，海关的2位数字后跟两个空格，4位数字的专利后跟两个空格，\n"
+" 1个数字对应于当前年份的最后一位数字，除了它是一个合并动议，在前一年或原始动议中启动\n"
+" 进行整改，然后是海关逐步编号的6位数字\n"
+"\n"
+" + ------------ + ------------ + --------- + ----------- + - ------- + ------------ + ------------ +\n"
+" |验证| |海关| |专利| |练习和数量|\n"
+" + ============ + ============ + ====== + =========== + = ======= + ============ + ======================= +\n"
+" | 16 |两个空格| 52 |两个空格| 3XXX |两个空格| 8000988 |\n"
+" + ------------ + ------------ + --------- + ----------- + - ------- + ------------ + ------------ +\n"
+"具有我们申请书专利的初始价值。这些值必须与SAT目录一致，即：\n"
+"\n"
+" *验证：验证年份。第一和第二位置的值必须小于或等于当前日期年份的最后两位数，并且必须大于或等于当前日期年份的最后两位数减去十。\n"
+"\n"
+" *海关：清关代理代码。第五和第六位必须对应海关目录中的一把钥匙（catCFDI：c_Aduana）\n"
+"\n"
+" *专利：位置9到12必须对应海关专利目录的专利号（catCFDI：c_PatenteAduanal）\n"
+"\n"
+" *练习：本年度的最后一位数，除非是在前一年启动的综合议案或原始动议进行整改）\n"
+"\n"
+" *数量：最后六位数的值必须介于目录数量列catCFDI：c_NumPedimentoAduana中的最小值1和连续数字的最大值之间，与当年海关使用的值相对应。\n"
+"\n"
+" - 验证发票\n"
+"\n"
+"有关更多信息，请参阅SAT页面http://www.Sat.gob.mx/informacion_fiscal/factura_electronica/Documents/cfdv33.pdf。第70页.\n"
+"有关SAT文档的更多信息，请参阅\n"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
@@ -7793,7 +8129,7 @@ msgstr "访问令牌"
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr ""
+msgstr "访问私人地址"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -8052,7 +8388,7 @@ msgstr "添加交货成本到在线销售"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_cash_basis_base_account
 msgid "Add a custom account to handle base amount lines"
-msgstr ""
+msgstr "添加自定义帐户以处理基本金额行"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -8391,7 +8727,7 @@ msgstr "允许你创建发票，以及跟踪付款。这是为不是会计师的
 msgid ""
 "Also you will find here all the related documents and download it by "
 "clicking on any individual document."
-msgstr ""
+msgstr "您还可以在此处找到所有相关文档，并通过单击任何个体的文档进行下载。"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -8608,7 +8944,7 @@ msgstr "阿根廷 - 会计报表"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
 msgid "Arguments sent to the client along with the view tag"
-msgstr ""
+msgstr "和视图标签一起发送给客户端的参数"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -8947,12 +9283,12 @@ msgstr "条码扫描器的硬件驱动"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
-msgstr ""
+msgstr "移动客户端使用条码"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
-msgstr ""
+msgstr "移动客户端条码扫描"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes
@@ -10021,7 +10357,7 @@ msgstr "计算"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
 msgid "Compute taxes with TaxCloud after online delivery computation."
-msgstr ""
+msgstr "交货后使用TaxCloud计算税金计算在线交付。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -11437,7 +11773,7 @@ msgstr "直运"
 #, python-format
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
-msgstr ""
+msgstr "不允许复制公司。请创建一个新公司。"
 
 #. module: base
 #: code:addons/base/ir/ir_qweb/fields.py:394
@@ -11453,12 +11789,12 @@ msgstr "E 给水；排水；废物管理和整治行动"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_external_trade
 msgid "EDI External Trade Complement for Mexico"
-msgstr ""
+msgstr "墨西哥的EDI对外贸易补充"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment
 msgid "EDI Payment"
-msgstr ""
+msgstr "EDI付款"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_payment
@@ -11470,6 +11806,12 @@ msgid ""
 "which established that a payment complement can be emitted ten (10) days after,\n"
 "of the same month, when was received.\n"
 msgstr ""
+"EDI付款\n"
+"===========\n"
+"\n"
+"墨西哥本地化的支付模块允许满足SAT指示\n"
+"确定付款补充可以在十（10）天后发出，\n"
+"当月收到的时候\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi
@@ -11578,6 +11920,45 @@ msgid ""
 "* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
 "* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
 msgstr ""
+"墨西哥电子会计和财政报告\n"
+"================================================== =\n"
+"\n"
+"将财务报告添加到墨西哥电子发票\n"
+"\n"
+" - COA\n"
+" - 试算平衡\n"
+" - 期刊项目\n"
+"\n"
+"添加其他操作报告，如DIOT.\n"
+"\n"
+" - DIOT\n"
+"\n"
+"已知泄漏的功能：\n"
+"\n"
+" - 保存生成的xml，以便提供Fiscal声明文档的历史记录\n"
+" - 单元测试以增加该模块的覆盖范围并避免将来出现回归\n"
+"\n"
+"注：\n"
+"------\n"
+"\n"
+" - 在税收中可以设置帐户“基本税收帐户”即\n"
+" 将在现金基础日记帐分录和创建的行上设置的帐户\n"
+" 用于跟踪税基金额，此帐户不被视为in\n"
+" 墨西哥的报道\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"要配置此模块，强烈建议您的帐户图表取决于l10n_mx数据和结构，\n"
+"如果你的CoA不依赖于l10n_mx的作用，你可以在之后设置这个，但是你需要额外的手工工作。\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"** **贡献者\n"
+"\n"
+"* Nhomar Hernandez <nhomar@vauxoo.com>（策划人/审计员）\n"
+"* Luis Torres <luis_t@vauxoo.com>（开发人员）\n"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:647
@@ -12005,7 +12386,7 @@ msgstr "External Key/Identifier  能用来跟第三方系统作数据集成"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_external_trade
 msgid "External Trade Complement for the Mexican localization"
-msgstr ""
+msgstr "墨西哥本地化对外贸易补充"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_external_trade
@@ -12156,6 +12537,150 @@ msgid ""
 ".. _c_colonia: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Colonia.xls\n"
 ".. _c_localidad: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Localidad.xls\n"
 msgstr ""
+"墨西哥本地化的对外贸易补充\n"
+"================================================== =====\n"
+"\n"
+"该模块将对外贸易补充添加到CFDI版本3.3，其中\n"
+"添加了产品的海关信息，它指定了发射器\n"
+"和接收者地址，以及与出口法律有关的数据\n"
+"\n"
+"所有出口货物和发票的发票都需要这种补充\n"
+"登陆码为“A1”\n"
+"\n"
+"添加以下字段以符合补充结构\n"
+"由SAT定义\n"
+"\n"
+" - 在发票中：\n"
+"\n"
+" - **需要外贸吗？**：此字段用于表示CFDI\n"
+" 要生成的文件，必须加入外贸\n"
+" 补充。默认情况下从合作伙伴处获取此值，但可能是\n"
+" 如果是一个例外，这里改变了。如果此字段处于活动状态，则将为\n"
+" 显示了下一个字段：\n"
+"\n"
+" - ** Incoterm **：用于外部交易中的属性* incoterm *\n"
+" node，是必需的，并且必须包含SATcatalog_to中的值\n"
+" incoterms.\n"
+"\n"
+" - **证书来源**：如果要生成的文件是a\n"
+" 原产地证书，必须注册证书\n"
+" 原始对账单或CFDI中的财务对开，用于发行\n"
+" 原产地证书已经支付。如果此字段为空，请指明\n"
+" 本文件不适合作为原产地证书\n"
+"\n"
+"\n"
+" .. figure ::../l10n_mx_edi_external_trade/static/src/InvoiceET.png\n"
+"\n"
+" - 在产品中：\n"
+"\n"
+" - **关税分数**：此字段用于存储关税分数\n"
+" 对应于要销售的产品，这已经加载了SAT\n"
+" 目录“c_FraccionArancelaria_”。如果找不到一条记录是因为\n"
+" 只加载了当前的记录\n"
+"\n"
+"- ** UMT Customs **：用于指定适用单位密钥的字段\n"
+" 衡量海关货物数量的指标。 This\n"
+" 度量单位必须与中指定的关税分数相对应\n"
+" 产品，如SAT目录中所示\n"
+"\n"
+" - **重量**：如果* UMT海关*是“KG”，这里必须具体为重量\n"
+" 每种产品\n"
+"\n"
+"\n"
+" .. figure ::../l10n_mx_edi_external_trade/static/src/Product_CET.png\n"
+"\n"
+" - 在测量单位\n"
+"\n"
+" - **海关编码**：与中的计量单位对应的代码\n"
+" SAT的目录。这是将aduana用于产品的代码\n"
+" 有关。 Link_\n"
+"\n"
+"\n"
+" .. figure ::../l10n_mx_edi_external_trade/static/src/Code_Aduana.png\n"
+"\n"
+" - 在发票行中：\n"
+"\n"
+" - ** Qty UMT **：以量为单位表示的数量\n"
+" 产品的习俗\n"
+"\n"
+" 它将用于每个属性中的“CantidadAduana”属性\n"
+" 商品销售，当产品代码海关UMT是\n"
+" 不同于99.\n"
+"\n"
+"该字段自动填入invoice中的发票行\n"
+" 以下情况：\n"
+"\n"
+" 1.该产品具有与UMT海关和UoM相同的价值\n"
+" 在这种情况下，Qty UMT设置为数量的相同值\n"
+" 产品上线.\n"
+"\n"
+" 2.产品UMT中的计量单位代码等于06（千）\n"
+" 在这种情况下，Qty UMT将等于the中定义的权重\n"
+" 产品乘以销售的产品数量\n"
+"\n"
+" 在其他情况下，该值必须由用户在每个中定义\n"
+" lines.\n"
+"\n"
+" - **单位价值UMT **：代表商品的单价\n"
+" 海关UMT。它用于设置属性“ValorUnitarioAduana”in\n"
+" 每个CFDI商品。它对用户是透明的\n"
+"\n"
+" - ** UMT Adduana **：默认情况下，此值与the中定义的值相同\n"
+" 该产品线\n"
+"\n"
+"\n"
+" .. figure ::../l10n_mx_edi_external_trade/static/src/invoice_line_ET.png\n"
+" ：宽度：700pt\n"
+"\n"
+" - 在伙伴中：\n"
+"\n"
+" - ** CURP **：用于存储寄存器的唯一密钥\n"
+" CFDI发行人的人口（CURP）。当它是天然的\n"
+" 人，必须包含18个字符\n"
+"\n"
+" - **需要对外贸易？**：用于表明客户是否需要的字段\n"
+" 他们的发票与外部补充。如果该字段等于True，则\n"
+" 然后将附加组件添加到此客户端的CFDI中\n"
+"\n"
+"\n"
+" .. figure ::../l10n_mx_edi_external_trade/static/src/partnerET2.png\n"
+"\n"
+" - **地点**：用于表示发射器和loc的位置的字段\n"
+" CFDI中的接收者\n"
+"- ** Colony Code **：该字段用于存储发射器的代码\n"
+" 殖民地。它必须是SAT目录提供的值\n"
+" 注意：此字段只能在公司地址或in中配置\n"
+" 在多分支环境中用作分支地址的合作伙伴\n"
+" c_colonia_\n"
+"\n"
+" .. figure ::../l10n_mx_edi_external_trade/static/src/partnerET.png\n"
+"\n"
+" - 在公司里\n"
+"\n"
+" - **可靠出口商数量**：出口商的身份识别\n"
+" 根据“自由贸易协定”附件1第22条的规定\n"
+" 欧洲协会和欧洲共同体的决定，\n"
+" 用于建立属性“NumeroExportadorConfiable”如果\n"
+" 客户的国家属于欧洲联盟\n"
+"\n"
+" - 此外，还增加了以下型号：\n"
+"\n"
+" - **地点**：用于存储墨西哥地区的模型\n"
+" 通过SAT的目录。它的字段是名称，州，国家和代码\n"
+" c_localidad_\n"
+"\n"
+"在此版本中，外部交易补充不支持Type of\n"
+"转移证明（'T'）。出于这个原因，节点“Propietario”和\n"
+"外部交易模板中未指定“MotivodeTraslado”。在\n"
+"另一方面，不会添加可选节点“DescripcionesEspecificas”\n"
+"在这个版本中，因为它需要依赖于库存模块的字段\n"
+"它们将在以后的版本中添加\n"
+"\n"
+".. _catalog：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_INCOTERM.xls\n"
+".. _c_FraccionArancelaria：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_FraccionArancelaria.xls\n"
+".. _Link：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_UnidadMedidaAduana.xls\n"
+".. _c_colonia：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Colonia.xls\n"
+".. _c_localidad：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Localidad.xls\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_share
@@ -12337,7 +12862,7 @@ msgstr "字段\"Type\" 不能在模型上更改 。"
 #: code:addons/base/ir/ir_ui_view.py:1053
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
-msgstr ""
+msgstr "用在属性的字段 %r 必须出现在视图，遗漏:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
@@ -12607,7 +13132,7 @@ msgstr "表单"
 #: selection:ir.actions.report,binding_type:0
 #: selection:ir.actions.server,binding_type:0
 msgid "Form-only"
-msgstr ""
+msgstr "仅限表单"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_email_formatted
@@ -12665,19 +13190,19 @@ msgstr "法国-FEC"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
 msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
-msgstr ""
+msgstr "法国 - 反欺诈认证增值税号（CGI 286 I-3 bis）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
 msgid ""
 "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
-msgstr ""
+msgstr "法国 - 反欺诈认证增值税号（CGI 286 I-3 bis） -关闭销售"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
 msgid ""
 "France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
-msgstr ""
+msgstr "法国 -POS的反欺诈认证增值税号（CGI 286 I-3 bis）"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -13212,7 +13737,7 @@ msgstr "人力资源组织图"
 #. module: base
 #: model:res.country,vat_label:base.ca
 msgid "HST"
-msgstr ""
+msgstr "HST"
 
 #. module: base
 #: selection:ir.actions.report,report_type:0
@@ -13710,6 +14235,8 @@ msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
 "log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
+"打开此项时, 在DEBUG日志模式下, SMTP的详细日志会记录到 openerp-server.log 中.(注意,日志记录得比较详尽, "
+"会包含一些SMTP帐户信息, 在调试完毕后, 请关闭此项)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -14369,7 +14896,7 @@ msgstr "爱尔兰"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
 msgid "Irreversible Lock Date"
-msgstr ""
+msgstr "不可逆转的锁定日期"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
@@ -15495,7 +16022,7 @@ msgstr "多对多 关系"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_margin
 msgid "Margins by Products"
-msgstr "毛利，按产品"
+msgstr "产品毛利模块"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
@@ -15780,7 +16307,7 @@ msgstr "模型"
 #: code:addons/base/ir/ir_model.py:471
 #, python-format
 msgid "Model %s does not exist"
-msgstr ""
+msgstr "模型 %s 不存在"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:631
@@ -17184,7 +17711,7 @@ msgstr ""
 "\n"
 "允许在各个级别的进程中手动编辑所有建议操作。使用Odoo，您不用担心会因为僵化的系统而造成麻烦。\n"
 "\n"
-"安排工票\n"
+"安排工单\n"
 "--------------------\n"
 "\n"
 "检查资源能力并修复瓶颈。确定工艺路线，并计划\n"
@@ -17194,7 +17721,7 @@ msgstr ""
 "高效的用户界面\n"
 "---------------------------\n"
 "\n"
-"按照您希望的方式组织生产订单和工票。处理列表视图中的下一个\n"
+"按照您希望的方式组织生产订单和工单。处理列表视图中的下一个\n"
 "订单，在日历视图中进行控制并在甘特图中编辑建议的\n"
 "时间表。\n"
 "\n"
@@ -17369,7 +17896,7 @@ msgstr ""
 "营销部门热衷于开展营销活动。对于其他用户也可以考虑提供\n"
 "一键群发邮件的功能，方便其针对潜在客户或文档使用群发功能。\n"
 "\n"
-"选择文档（如销售线索、支持工票、供应商、申请人等），\n"
+"选择文档（如销售线索、支持工单、供应商、申请人等），\n"
 "然后点击一下鼠标，即可将电子邮件发送给他们的联系人，\n"
 "并重用现有的电子邮件模板。\n"
 "\n"
@@ -17416,12 +17943,12 @@ msgstr "Odoo 墨西哥语本地化报告"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_customs
 msgid "Odoo Mexico Localization for Invoice with customs Number"
-msgstr ""
+msgstr "Odoo墨西哥本地化的发票与海关编号"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr ""
+msgstr "Odoo墨西哥本地化库存/起货的定位"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -19632,7 +20159,7 @@ msgstr "在选择值之前，请将模型设置为创建"
 #: code:addons/base/ir/ir_model.py:472
 #, python-format
 msgid "Please specify a valid model for the object relation"
-msgstr ""
+msgstr "请为对象关系指定有效的模型"
 
 #. module: base
 #: code:addons/base/res/res_users.py:255
@@ -19835,7 +20362,7 @@ msgstr "家庭住址"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr ""
+msgstr "私人地址表单"
 
 #. module: base
 #: code:addons/models.py:112
@@ -20093,7 +20620,7 @@ msgstr "潜在客户"
 msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
-msgstr ""
+msgstr "提供用于将新创建的记录链接到服务器操作所使用的记录的字段。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -20270,12 +20797,12 @@ msgstr "R  艺术、娱乐和休闲"
 #. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
@@ -22018,7 +22545,7 @@ msgstr "目标窗口"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_cash_basis_base_account
 msgid "Tax Cash Basis Edit Base Account"
-msgstr ""
+msgstr "税金现金收付制日记账科目"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_vat
@@ -22032,7 +22559,7 @@ msgstr "税务标识号。如果公司需要缴税，请填写。在一些法律
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
 msgid "TaxCloud and Delivery - Ecommerce"
-msgstr ""
+msgstr "交付和TaxCloud - 电子商务"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
@@ -22152,7 +22679,7 @@ msgstr "泰国 - 会计报表"
 #: code:addons/base/res/res_users.py:295
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
-msgstr ""
+msgstr " \"App Switcher\" 操作无法选择为主动作"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
@@ -22169,7 +22696,7 @@ msgstr ""
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
-msgstr ""
+msgstr "选择项表达式不是有效的 Python 表达式。请提供一个按照格式 [('key','Label'), ...] 撰写的表达式."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -22672,7 +23199,7 @@ msgstr ""
 msgid ""
 "This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
 "    "
-msgstr ""
+msgstr "此模块可确保在线计算交货价格，并使用TaxCloud计算税额时，税务计算在订单和交货时都能正确完成。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -23302,7 +23829,7 @@ msgstr "更新"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
 msgid "Update Apps List"
-msgstr "更新应用列表"
+msgstr "刷新本地模块列表"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_date_update
@@ -24386,6 +24913,7 @@ msgid ""
 "instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
 "should do the trick."
 msgstr ""
+"您的 Odoo 服务器不支持 SMTP-over-SSL。可以使用STARTTTLS。如需使用 SSL，服务器端升级为 Python 2.6 即可。"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:480

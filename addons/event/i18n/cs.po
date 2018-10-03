@@ -6,7 +6,7 @@
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter, 2018
+# J. Podhorecky <j.podhorecky@volny.cz>, 2018
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
 msgid ""
 msgstr ""
@@ -366,7 +366,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:297
@@ -561,6 +561,8 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"Opravdu chcete tuto událost zrušit? Všichni propojení účastníci budou také "
+"zrušeni."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -810,7 +812,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
-msgstr ""
+msgstr "Potvrzené události"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1255,12 +1257,16 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"Pokud je událost vytvořena, její stav je \"Koncept\". Pokud je událost "
+"potvrzena pro konkrétní data, je stav nastaven na hodnotu \"Potvrzeno\". "
+"Pokud událost skončí, stav je nastaven na \"Hotovo\". Pokud je událost "
+"zrušena, je stav nastaven na \"Zrušeno\"."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "Ihned"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1495,12 +1501,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_expected
 msgid "Number of Expected Attendees"
-msgstr ""
+msgstr "Počet očekávaných účastníků"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_used
 msgid "Number of Participants"
-msgstr ""
+msgstr "Počet zúčastněných"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner_event_count
@@ -1922,7 +1928,7 @@ msgstr "Nepotvrzené"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Nepotvrzené rezervace místa"
 
 #. module: event
 #: model:event.event,description:event.event_0

@@ -4,19 +4,20 @@
 # 
 # Translators:
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Martin Trigaux, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
 # Naglis Jonaitis, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
 "PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Naglis Jonaitis, 2018\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,12 +67,12 @@ msgstr ""
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
 "    <p>Gerb., ${object.name},</p>\n"
-"    <p>Gauta užklausa dėl Odoo sistemos paskyros, susijusios su šiuo el. pašto adresu, slaptažodžio pakeitimo.</p>\n"
-"    <p>Jūs galite pakeisti savo slaptažodį, paspaudus ant pateiktos nuorodos, kuri galios 24 valandas:</p>\n"
+"    <p>Gauta užklausa dėl \"Odoo\" sistemos paskyros, susietos su šiuo el. pašto adresu, slaptažodžio pakeitimo.</p>\n"
+"    <p>Galite pakeisti savo slaptažodį paspaudus ant pateiktos nuorodos, kuri galios 24 valandas:</p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Keisti slaptažodį</a>\n"
 "    </div>\n"
-"    <p>Prašome ignoruoti šį laišką, jei jis su Jumis nesusijęs.</p>\n"
+"    <p>Prašome ignoruoti šį laišką, jei jo neturėjote gauti.</p>\n"
 "    <p>Linkėjimai,</p>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
@@ -127,10 +128,10 @@ msgstr ""
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
 "<p>Gerb., ${object.name},</p>\n"
 "    <p>\n"
-"        Jūs kviečiamas prisijungti prie \"${object.company_id.name}\", kad galėtumėte pasiekti savo dokumentus Odoo sistemoje.\n"
+"        Jūs kviečiamas prisijungti prie \"${object.company_id.name}\", kad galėtumėte pasiekti savo dokumentus \"Odoo\" sistemoje.\n"
 "    </p>\n"
 "    <p>\n"
-"        Priimkite pakvietimą, paspaudę ant nuorodos:\n"
+"        Priimkite pakvietimą paspausdami nuorodą:\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Priimti pakvietimą į \"${object.company_id.name}\"</a>\n"
@@ -147,7 +148,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr "${object.company_id.name} pakvietimas prisijungti prie Odoo"
+msgstr "${object.company_id.name} pakvietimas prisijungti per \"Odoo\""
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
@@ -185,6 +186,38 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Gerb., ${object.name},</p>\n"
+"    <p>\n"
+"        Jūsų paskyra buvo sėkmingai sukurta!\n"
+"    </p>\n"
+"    <p>\n"
+"        Jūsų prisijungimo vardas: ${object.email}\n"
+"        <br/>\n"
+"    </p>\n"
+"    <p>\n"
+"        Norėdami prisijungti prie savo paskyros, galite naudoti šią nuorodą:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Eiti į savo paskyrą</a>\n"
+"    </div>\n"
+"    <p>Linkėjimai,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Išsiųsta ${user.company_id.name} , naudojant <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -192,7 +225,7 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
-"<strong>Slaptažodžio pakeitimo užklausa suformuota šiam naudotojui. El. "
+"<strong>Šiam vartotojui buvo gauta slaptažodžio atstatymo užklausa  El. "
 "laiškas su nuoroda buvo išsiųstas:</strong>"
 
 #. module: auth_signup
@@ -201,7 +234,7 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"<strong>Pakvietimo laiškas, su žemiau pateikta prisijungimo nuoroda, buvo "
+"<strong>Pakvietimo laiškas su žemiau pateikta prisijungimo nuoroda, buvo "
 "išsiųstas:</strong>"
 
 #. module: auth_signup
@@ -213,19 +246,19 @@ msgstr "Jau turite paskyrą?"
 #: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr "El. laiškas su Jūsų slaptažodžio pakeitimo nuoroda buvo išsiųstas"
+msgstr "El. laiškas su jūsų slaptažodžio pakeitimo informacija buvo išsiųstas"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "Jau yra užregistruotas naudotojas su tokiu el. pašto adresu."
+msgstr "Vartotojas su tokių el. paštu jau registruotas."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:136
 #, python-format
 msgid "Authentication Failed."
-msgstr "Autentifikacija nepavyko."
+msgstr "Autentifikavimas nepavyko."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -237,7 +270,7 @@ msgstr "Grįžti į prisijungimo puslapį"
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
-"Nepavyko išsiųsti el. laiško: naudotojas %s neturi nustatyto el. pašto "
+"Nepavyko išsiųsti el. laiško: vartotojas %s neturi nustatyto el. pašto "
 "adreso."
 
 #. module: auth_signup
@@ -248,7 +281,7 @@ msgstr "Patvirtinti"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr "Patvirtinkite slaptažodį"
+msgstr "Patvirtinti slaptažodį"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -258,7 +291,7 @@ msgstr "Patvirtinta"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
-msgstr "Kontaktas"
+msgstr "Susisiekti"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:54
@@ -270,7 +303,7 @@ msgstr "Nepavyko sukurti naujos paskyros."
 #: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "Could not reset your password"
-msgstr "Jūsų slaptažodžio atnaujinti nepavyko"
+msgstr "Slaptažodžio atkurti nepavyko"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
@@ -291,7 +324,7 @@ msgstr "Neturite paskyros?"
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr "Leisti atnaujinti slaptažodį prisijungimo lange"
+msgstr "Leisti atkurti slaptažodį prisijungimo lange"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_model_fields
@@ -348,39 +381,39 @@ msgstr "Slaptažodis"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr "Slaptažodžio atnaujinimas"
+msgstr "Slaptažodžio atstatymas"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Slaptažodžio atnaujinimas"
+msgstr "Slaptažodžio atstatymas"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr "Slaptažodžiai nesutampa; prašome suvesti dar kartą."
+msgstr "Slaptažodžiai nesutampa; prašome įvesti juos dar kartą."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr "Atnaujinti slaptažodį"
+msgstr "Atstatyti slaptažodį"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:110
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr "Slaptažodžio atnaujinimas: netinkamas naudotojas ar el. paštas"
+msgstr "Slaptažodžio atstatymas: negalimas vartotojas ar el. paštas"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr "Siųsti slaptažodžio pakeitimo instrukcijas"
+msgstr "Siųsti slaptažodžio atstatymo instrukcijas"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr "Siųsti pakvietimą"
+msgstr "Siųsti pakvietimo laišką"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
@@ -444,7 +477,7 @@ msgstr "Būsena"
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
-"Šabloninis naudotojas registracijos metu naujai kuriamiems naudotojams "
+"Šabloninis vartotojas registracijos metu naujai kuriamiems vartotojams "
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:122
@@ -476,7 +509,7 @@ msgstr "Jūsų vardas"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "pvz.: John Doe"
+msgstr "pvz.: Jonas Jonaitis"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings

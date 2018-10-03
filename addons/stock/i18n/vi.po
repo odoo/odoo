@@ -16,6 +16,7 @@
 # Thang Duong Bao <nothingctrl@gmail.com>, 2017
 # Tuan Tran <tmtuan.projects@gmail.com>, 2017
 # Duc Dao <blakice12@gmail.com>, 2017
+# Tien Nguyen <tienkt05@gmail.com>, 2018
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -59,13 +60,13 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:308
 #, python-format
 msgid " (%s reserved)"
-msgstr " (%s được xí)"
+msgstr "(%s đã đặt trước)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:311
 #, python-format
 msgid " (reserved)"
-msgstr " (đã xí)"
+msgstr " (đã đặt)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_state
@@ -79,8 +80,8 @@ msgid ""
 msgstr ""
 " * Dự thảo: chưa xác nhận vừa chưa được ấn định lịch cho đến khi được xác nhận.\n"
 " * Đang đợi Hoạt động khác: đang đợi một hoạt động khác trong chuỗi dịch chuyển được thực thi trước khi dịch chuyển này chuyển sang trạng thái khả dụng (vd: trong chu trình Make-To-Order).\n"
-" * Đang đợi: nếu chuwa có hàng khả dụng bởi vì hàng hoá chưa được xí cho dịch chuyển này.\n"
-" * Sẵn sàng: các sản phẩm đã được xí và sẵn sàng dịch chuyển. Nếu chính sách giao hàng là 'Càng sớm càng tốt' thì điều này sẽ xảy ra ngay khi bất cứ số lượng nào đó được xí.\n"
+" * Đang đợi: nếu chuwa có hàng khả dụng bởi vì hàng hoá chưa được đặt cho dịch chuyển này.\n"
+" * Sẵn sàng: các sản phẩm đã được xí và sẵn sàng dịch chuyển. Nếu chính sách giao hàng là 'Càng sớm càng tốt' thì điều này sẽ xảy ra ngay khi bất cứ số lượng nào đó được đặt .\n"
 " * Hoàn thành: đã được dịch chuyển, không thể thay đổi hay huỷ được nữa.\n"
 " * Huỷ: đã bị huỷ, không thể được xác nhận nữa."
 
@@ -114,7 +115,7 @@ msgstr ""
 "* Mới: Khi một dịch chuyển kho được tạo và chưa được xác nhận.\n"
 "* Chờ dịch chuyển khác: Trạng thái này xuất hiện khi một dịch chuyển đang chờ một dịch chuyển khác, ví dụ như trong một chuỗi cung ứng.\n"
 "* Chờ khả dụng: Trạng thái này xảy ra khi nó đang chờ sản phẩm có sẵn để dịch chuyển. Có thể cần phải chờ scheduler chạy, hay chờ một thành phần cần phải sản xuất ra...\n"
-"* Khả dụng: Khi sản phẩm đã được xí và có sẵn để dịch chuyển.\n"
+"* Khả dụng: Khi sản phẩm đã được đặt và có sẵn để dịch chuyển.\n"
 "* Hoàn thành: Khi một lô hàng được xử lý xong."
 
 #. module: stock
@@ -735,7 +736,7 @@ msgstr "Một chu trình bán hàng truyền thống trông như sau:"
 #: code:addons/stock/models/stock_move_line.py:86
 #, python-format
 msgid "A done move line should never have a reserved quantity."
-msgstr "Dịch chuyển đã hoàn tất thì không bao giờ có số lượng đã xí."
+msgstr "Dịch chuyển đã hoàn tất thì không bao giờ có số lượng đã đặt."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1260,7 +1261,7 @@ msgstr "Đã hủy"
 #: code:addons/stock/models/stock_move.py:468
 #, python-format
 msgid "Cannot unreserve a done move"
-msgstr "Không thể thôi xí một dịch chuyển đã thực hiện (hoàn thành)"
+msgstr "Không thể hủy đặt một dịch chuyển đã thực hiện (hoàn thành)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_route_from_categ_ids
@@ -1553,8 +1554,8 @@ msgid ""
 "Could not reserve all requested products. Please use the 'Mark as Todo' "
 "button to handle the reservation manually."
 msgstr ""
-"Không thể xí trước tất cả các sản phẩm được yêu cầu. Vui lòng sử dụng nút "
-"'Đánh dấu Cần làm' để xử lý việc xí trước một cách thủ công."
+"Không thể đặt trước tất cả các sản phẩm được yêu cầu. Vui lòng sử dụng nút "
+"'Đánh dấu Cần làm' để xử lý việc đặt trước một cách thủ công."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
@@ -2789,7 +2790,8 @@ msgid ""
 "tab all the time, even if there was no entire pack reserved."
 msgstr ""
 "Nếu được chọn, điều này cho thấy các gói được di chuyển như một toàn bộ "
-"trong tab Hoạt động mọi lúc, ngay cả khi không có toàn bộ gói được xí trước."
+"trong tab Hoạt động mọi lúc, ngay cả khi không có toàn bộ gói được đặt "
+"trước."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_propagate
@@ -2860,7 +2862,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will show which products are reserved "
 "(lot/serial number, source location, source package)."
 msgstr ""
-"Nếu chọn, Hệ thống sẽ hiển thị sản phẩm nào được xí trước (số lô / số, vị "
+"Nếu chọn, Hệ thống sẽ hiển thị sản phẩm nào được đặt trước (số lô / số, vị "
 "trí nguồn, gói nguồn)."
 
 #. module: stock
@@ -3394,7 +3396,7 @@ msgstr ""
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
-msgstr "Nó không thể xí trước nhiều sản phẩm %s hơn bạn có trong kho."
+msgstr "Nó không thể đặt trước nhiều sản phẩm %s hơn bạn có trong kho."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:256
@@ -3402,7 +3404,7 @@ msgstr "Nó không thể xí trước nhiều sản phẩm %s hơn bạn có tro
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
-"Bạn không thể thôi xí được nhiều sản phẩm %s hơn số lượng bạn có trong kho."
+"Bạn không thể hủy đặt được nhiều sản phẩm %s hơn số lượng bạn có trong kho."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5283,7 +5285,7 @@ msgstr "Số lượng thực tế"
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Quantity Reserved"
-msgstr "Số lượng được xí trước"
+msgstr "Số lượng được đặt trước"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:80
@@ -5300,7 +5302,7 @@ msgstr "Số lượng giảm!"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr "Số lượng tồn kho mà vẫn có thể được xí cho dịch chuyển này"
+msgstr "Số lượng tồn kho mà vẫn có thể được đặt cho dịch chuyển này"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_qty
@@ -5346,7 +5348,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_reserved_availability
 msgid "Quantity that has already been reserved for this move"
-msgstr "Số lượng đó đã được xí trước cho dịch chuyển này"
+msgstr "Số lượng đó đã được đặt trước cho dịch chuyển này"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.lot_open_quants
@@ -5395,7 +5397,7 @@ msgstr "Số lượng thực"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_product_qty
 msgid "Real Reserved Quantity"
-msgstr "Số lượng xí trước thực tế"
+msgstr "Số lượng đặt trước thực tế"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_route_id
@@ -5569,12 +5571,12 @@ msgstr "Xí phần"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Reserved"
-msgstr "Xí trước"
+msgstr "Đặt trước"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserved_quantity
 msgid "Reserved Quantity"
-msgstr "Số lượng đã xí"
+msgstr "Số lượng đã đặt "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_module_procurement_jit
@@ -6053,7 +6055,7 @@ msgstr "Hiển thị hoạt động"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_reserved
 msgid "Show Reserved"
-msgstr "Hiện xí trước"
+msgstr "Hiện đặt trước"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_validate
@@ -7138,7 +7140,7 @@ msgstr "SL ngoài kế hoạch"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
-msgstr "Thôi Xí"
+msgstr "Hủy đặt"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -7523,7 +7525,7 @@ msgid ""
 "When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings\n"
 "                and verify if some reordering rules should be triggered."
 msgstr ""
-"Khi bạn chạy trình điều độ, Hệ thống sẽ cố xí phần số lượng tồn khả dụng cho các phiếu giao nhận và thẩm định\n"
+"Khi bạn chạy trình điều độ, Hệ thống sẽ cố đặt phần số lượng tồn khả dụng cho các phiếu giao nhận và thẩm định\n"
 "                xem có quy tắc tái cung ứng nào sẽ được khởi chạy không."
 
 #. module: stock
@@ -7777,8 +7779,8 @@ msgid ""
 "You do not have any products reserved for this picking.  Please click the 'Reserve' button\n"
 "                                to check if products are available."
 msgstr ""
-"Bạn không có sản phẩm nào được xí trước cho hoạt động giao nhận này. Vui lòng bấm vào nút\n"
-" 'Xí trước' để kiểm tra xem sản phẩm có khả dụng không."
+"Bạn không có sản phẩm nào được đặt trước cho hoạt động giao nhận này. Vui lòng bấm vào nút\n"
+" 'đặt trước' để kiểm tra xem sản phẩm có khả dụng không."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:110
@@ -7835,7 +7837,7 @@ msgid ""
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
 "Bạn vẫn chưa nhập số lượng để <i>hoàn thành</i>. Bằng cách bấm vào <i>Áp dụng</i>\n"
-"                        Hệ thống sẽ tự động xử lý toàn bộ số lượng đã được <i>xí phần</i> phiếu này."
+"                        Hệ thống sẽ tự động xử lý toàn bộ số lượng đã được đặt phần</i> phiếu này."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:44

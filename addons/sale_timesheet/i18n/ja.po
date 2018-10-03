@@ -8,10 +8,10 @@
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-09-17 09:57+0000\n"
+"PO-Revision-Date: 2018-09-17 09:57+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -106,17 +106,17 @@ msgstr "費用と収益"
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a new project but no task"
-msgstr ""
+msgstr "プロジェクト新規作成(タスクは作成しない)"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a task in a new project"
-msgstr ""
+msgstr "新規プロジェクト内にタスク作成"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a task in an existing project"
-msgstr ""
+msgstr "既存プロジェクト内にタスク作成"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_currency_id
@@ -126,7 +126,7 @@ msgstr "通貨"
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Don't create task"
-msgstr ""
+msgstr "タスク作成しない"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -163,7 +163,7 @@ msgstr "請求書"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_policy
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_policy
 msgid "Invoice based on"
-msgstr ""
+msgstr "請求基準"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
@@ -188,7 +188,7 @@ msgstr ""
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Milestones (manually set quantities on order)"
-msgstr ""
+msgstr "マイルストン(オーダに数量を手入力)"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
@@ -340,7 +340,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_tracking
 msgid "Service Tracking"
-msgstr ""
+msgstr "サービス追跡"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -395,7 +395,7 @@ msgid "There is no timesheet for now."
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_order.py:237
+#: code:addons/sale_timesheet/models/sale_order.py:251
 #, python-format
 msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
@@ -403,11 +403,6 @@ msgid ""
 msgstr ""
 "このタスクは以下から作成されました： <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> "
 "(%s)"
-
-#. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "Time and material"
-msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -446,11 +441,12 @@ msgid "Timesheet activities associated to this sale"
 msgstr "この販売に関連付けられたタイムシートアクティビティ"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/controllers/main.py:101
-#: code:addons/sale_timesheet/controllers/main.py:130
+#: code:addons/sale_timesheet/controllers/main.py:104
+#: code:addons/sale_timesheet/controllers/main.py:133
 #: code:addons/sale_timesheet/models/account_invoice.py:26
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_ids
 #: model:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 #, python-format
 msgid "Timesheets"
@@ -465,7 +461,7 @@ msgstr ""
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Timesheets on tasks"
-msgstr ""
+msgstr "タスクのタイムシート"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan

@@ -11,10 +11,10 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# 珠海-杜哥 <liangjia@qq.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
-# Talway <9010446@qq.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
 # fausthuang, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
@@ -6223,7 +6223,7 @@ msgid ""
 "The 'Manual Operation' value will create a stock move after the current one."
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
-msgstr ""
+msgstr "“手动操作”的值会在当前操作之后创建库存移动。当“自动无步骤添加”时，位置将在原来的移动中被替换。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6597,13 +6597,13 @@ msgstr "此库存位置将被使用以替换默认的，当你做盘点时，同
 msgid ""
 "Those are the entire packages of a picking shown in the view of detailed "
 "operations"
-msgstr ""
+msgstr "从操作的角度来看，这些都是挑选的整个包装"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
 msgid ""
 "Those are the entire packages of a picking shown in the view of operations"
-msgstr ""
+msgstr "从操作的角度来看，这些都是挑选的整个包装"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_dest_id
@@ -7413,6 +7413,8 @@ msgid ""
 "lot. Please first validate the first inventory adjustement with this product"
 " before creating another one."
 msgstr ""
+"在“正在进行”状态下，您不能有两个库存调整使用相同的产品（%s），相同的位置（%s），相同的包装，相同的所有者和相同的批次。 "
+"在创建另一个产品之前，请先使用此产品验证第一个库存调整。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:159

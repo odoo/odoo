@@ -11,6 +11,7 @@
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2017
+# Abdulmajeed Alomar <majeeed87@gmail.com>, 2017
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # hoxhe Aits <hoxhe0@gmail.com>, 2017
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2017
@@ -57,7 +58,7 @@ msgstr ""
 "                \n"
 "* اذا تم تأكيد قسيمة الدفع فان الحالة تكون 'مكتملة'.\n"
 "                \n"
-"* عنمما يلغي المستخدم قسيمة الدفع فان الحالة تكون 'مرفوضة'."
+"* عندما يلغي المستخدم قسيمة الدفع فان الحالة تكون 'مرفوضة'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -335,7 +336,7 @@ msgstr "الكود"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_view_kanban
 msgid "Code:"
-msgstr ""
+msgstr "الرمز:"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -432,7 +433,7 @@ msgstr "تسجيلات مساهمة"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
 msgid "Conveyance Allowance"
-msgstr ""
+msgstr "بدل النقل"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
@@ -716,7 +717,7 @@ msgstr ""
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
-msgstr ""
+msgstr "الإجمالي"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -728,7 +729,7 @@ msgstr "تجميع حسب"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
 msgid "House Rent Allowance"
-msgstr ""
+msgstr "بدل سكن"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_id
@@ -886,7 +887,7 @@ msgstr "ربط فئة المرتب إلى الأصل وذالك يستخدم ف�
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_lower_bound
 msgid "Lower Bound"
-msgstr ""
+msgstr "الحد الأدنى"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_lower_bound
@@ -912,7 +913,7 @@ msgstr "الحد الأقصى"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
 msgid "Meal Voucher"
-msgstr ""
+msgstr "قسيمة وجبة"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
@@ -952,7 +953,7 @@ msgstr "الصفي"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_net
 msgid "Net Salary"
-msgstr ""
+msgstr "صافي الراتب"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:199
@@ -1057,12 +1058,12 @@ msgstr "الراتب"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Entries"
-msgstr ""
+msgstr "مدخلات الأجور"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Rules"
-msgstr ""
+msgstr "قواعد الأجور"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
@@ -1084,7 +1085,7 @@ msgstr "قسيمة الدفع"
 #: code:addons/hr_payroll/models/hr_payslip.py:84
 #, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr "ظرف المرتب \"بداية التاريخ\" يجب ان تكون قبل \"نهاية التاريخ\""
+msgstr "قسيمة الراتب \"بداية التاريخ\" يجب ان تكون قبل \"نهاية التاريخ\""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1151,7 +1152,7 @@ msgstr "ايام عمل قسيمه الدفع "
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
 msgid "Payslips"
-msgstr "أظرف الرواتب"
+msgstr "قسائم الرواتب"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
@@ -1189,7 +1190,7 @@ msgstr "فترة"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Post payroll slips in accounting"
-msgstr ""
+msgstr "ترحيل قسيمة الأجور إلى المحاسبة"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
@@ -1204,7 +1205,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
 msgid "Provident Fund"
-msgstr ""
+msgstr "صندوق الادخار"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1235,7 +1236,7 @@ msgstr "كمية"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "Quantity/Rate"
-msgstr "مقدار/قيمة"
+msgstr "كمية/نسبة"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -1274,7 +1275,7 @@ msgstr "المرجع"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr "المرتجع"
+msgstr "المسترجع"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:104
@@ -1345,14 +1346,14 @@ msgstr "مدخلات قاعده المرتب "
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Salary Rules"
-msgstr "قانون الأجور"
+msgstr "قانون الرواتب"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:396
 #: code:addons/hr_payroll/models/hr_payslip.py:446
 #, python-format
 msgid "Salary Slip of %s for %s"
-msgstr "زلة راتب%s ل%s"
+msgstr "قسيمة راتب%s ل%s"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
@@ -1513,7 +1514,7 @@ msgstr "مجموع أيام العمل"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_upper_bound
 msgid "Upper Bound"
-msgstr ""
+msgstr "الحد الأعلى"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_upper_bound
