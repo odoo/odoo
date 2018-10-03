@@ -50,11 +50,34 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    Lugupeetud ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    Teile anti ligipääs ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Teie sisselogimise andmed:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Kasutajanimi: ${object.user_id.login or ''}</li>\n"
+"    <li>Portaal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Andmebaas: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Te saate muuta oma parooli järgmisel aadressil:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
-msgstr ""
+msgstr "<b>Logi sisse</b>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
@@ -98,7 +121,7 @@ msgstr "Tühjenda"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Vajuta, et näha oma dokumenti."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -111,6 +134,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Kinnita\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
@@ -151,7 +176,7 @@ msgstr "Loomise kuupäev"
 #: model:ir.model.fields,help:portal.field_project_task_portal_url
 #: model:ir.model.fields,help:portal.field_sale_order_portal_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Kliendiportaali URL"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_display_name
@@ -165,7 +190,7 @@ msgstr "Näidatav nimi"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "Joonista oma allkiri"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -176,13 +201,13 @@ msgstr "E-post"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "E-posti kirjavahetus"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:130
 #, python-format
 msgid "Group %s is not a portal"
-msgstr ""
+msgstr "Grupp %s ei ole portaal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
@@ -194,18 +219,18 @@ msgstr "ID"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "Portaalis"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:180
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "E-posti aadress ei ole korrektne! Palun kirjuta korrektne e-post."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "Kutse sõnum"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin___last_update
@@ -231,12 +256,12 @@ msgstr "Viimati uuendatud"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:20
 #, python-format
 msgid "Leave a comment"
-msgstr ""
+msgstr "Jäta kommentaar"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr ""
+msgstr "Sisselogimise kasutaja"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.frontend_layout
@@ -264,6 +289,8 @@ msgstr "Järgmine"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Ups! Midagi läks valesti. Proovi oma lehte uuendada ja siis uuesti sisse "
+"logida."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -289,12 +316,12 @@ msgstr "Kliendiportaali juurdepääs"
 #: model:ir.model.fields,field_description:portal.field_project_task_portal_url
 #: model:ir.model.fields,field_description:portal.field_sale_order_portal_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Portaali ligipääsu URL"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Portaali kasutaja seadistused"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.pager
@@ -306,7 +333,7 @@ msgstr "Eelmine"
 #: code:addons/portal/static/src/js/portal_chatter.js:101
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "Avaldatud %s"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -315,6 +342,9 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"Vali, millised kontaktid peaksid kuuluma portaali nimekirja.\n"
+"                        Iga valitud e-posti aadress peab olema unikaalne ja kehtiv.\n"
+"                        Kui vaja, siis e-posti aadressi on võimalik muuta otse siin nimekirjas."
 
 #. module: portal
 #. openerp-web
@@ -327,25 +357,26 @@ msgstr "Saada"
 #: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Mitmel kontaktil on sama e-posti aadress:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Mõnel kontaktil ei ole korrektne e-posti aadress:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
+"Mõnel kasutajal on selle e-posti aadressiga juba kehtiv portaalikasutaja:"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:197
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Mõned nõutud väljad on tühjad."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -367,24 +398,26 @@ msgstr "Aitäh!"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Portaal, kuhu kasutajaid saab lisada või kust saab neid eemaldada."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:11
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "Hetkel kommentaarid puuduvad."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Seda teksti kasutatakse uutele portaali kasutajatele saadetavas e-kirjas."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Seda teksti kasutatakse uutele portaali kasutajatele saadetavas e-kirjas."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -394,6 +427,9 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"Selle probleemi lahendamiseks tegutse järgmiselt: \n"
+"- paranda seotud kontaktide e-posti aadressid\n"
+"- jaga ligipääs ainult unikaalse e-posti aadressiga kontaktidele"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -403,7 +439,7 @@ msgstr "Kasutajad"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "VAT Number"
-msgstr ""
+msgstr "KMKR nr"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account_website_message_ids
@@ -539,37 +575,37 @@ msgstr "Nõustaja"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:32
 #, python-format
 msgid "Write a message..."
-msgstr ""
+msgstr "Kirjuta sõnum ..."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "You must be"
-msgstr ""
+msgstr "Sa pead olema "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:182
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr ""
+msgstr "Sul peab olema kasutaja seadistuste all määratud e-posti aadress."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "Sinu kontaktandmed"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Details"
-msgstr ""
+msgstr "Sinu andmed"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "Sinu dokumendid"
 
 #. module: portal
 #. openerp-web
@@ -582,19 +618,19 @@ msgstr "Sinu nimi"
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr ""
+msgstr "Sinu Odoo kasutaja ${user.company_id.name} ettevõttes"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Zip / Postal Code"
-msgstr ""
+msgstr "Postiindeks"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:56
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "avatar"
 
 #. module: portal
 #. openerp-web
@@ -608,19 +644,19 @@ msgstr "kommentaar"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:9
 #, python-format
 msgid "comments"
-msgstr ""
+msgstr "kommentaarid"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "sisse logitud"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "portal.mixin"
-msgstr ""
+msgstr "portal.mixin"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -632,4 +668,4 @@ msgstr "vali..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "kommentaari sisestamiseks."

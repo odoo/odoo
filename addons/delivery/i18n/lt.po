@@ -3,9 +3,9 @@
 # * delivery
 # 
 # Translators:
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Anatolij, 2017
@@ -39,8 +39,7 @@ msgstr "${(object.name or '').replace('/','_')}"
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} Pristatymo užsakymas (nuoroda ${object.name or "
-"'n/a' })"
+"${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_notification
@@ -67,6 +66,22 @@ msgid ""
 "<p>Thank you,</p>\n"
 "      </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Gerb ${object.partner_id.name},</p>\n"
+"<p>Džiaugiamės informuodami, kad jūsų siunta buvo išsiųsta.</p>\n"
+"<p>\n"
+"%if object.carrier_tracking_ref:\n"
+"  Jūsų sekimo numeris:\n"
+"  %if object.carrier_tracking_url:\n"
+"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"  %else:\n"
+"    ${object.carrier_tracking_ref}.\n"
+"  %endif\n"
+"%endif\n"
+"</p>\n"
+"<p>Daugiau informacijos rasite prisegtame pristatymo užsakyme.</p>\n"
+"<p>Dėkojame jums,</p>\n"
+"      </data>"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_notification
@@ -124,6 +139,58 @@ msgid ""
 "        </table>\n"
 "      "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"font-family:Arial,Helvetica,sans-serif; padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"          <tbody>\n"
+"            <!-- HEADER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                      <span style=\"font-size:20px; color:white; font-weight: bold;\">${object.record_name}</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                      <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- CONTENT -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                  <tbody>\n"
+"                    <td valign=\"top\" style=\"color: #555; font-size: 14px;\">${object.body | safe}</td>\n"
+"                  </tbody>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- FOOTER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">${user.company_id.name}<br/>${user.company_id.phone or ''}</td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                      % if user.company_id.email:\n"
+"                      <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                      % endif\n"
+"                      % if user.company_id.website:\n"
+"                        <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">${user.company_id.website}</a>\n"
+"                      % endif\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"              <td align=\"center\">Technologija <a href=\"https://www.odoo.com\">\"Odoo\"</a>.</td>\n"
+"            </tr>\n"
+"          </tbody>\n"
+"        </table>\n"
+"      "
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:76
@@ -134,7 +201,7 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"oe_view_nocontent\">\n"
-"                    Įsigykite Odoo Enterprise ir gausite daugiau tiekėjų.\n"
+"                    Įsigykite \"Odoo\" Enterprise dabar ir gausite daugiau tiekėjų.\n"
 "                </p>"
 
 #. module: delivery
@@ -146,12 +213,12 @@ msgstr "<span>kg</span>"
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr "<strong>Vežėjas</strong>"
+msgstr "<strong>Kurjeris</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr "<strong>Stebėjimo numeris</strong>"
+msgstr "<strong>Sekimo numeris</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -180,6 +247,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Užsakymo suma, už kurią apsimokėtų nemokamas siuntamas, išreikšta kompanijos"
+" valiuta"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -202,6 +271,8 @@ msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
 msgstr ""
+"Gali būti pakeičiama įdėjimo į pakuotę metu, kad būtų suderintas siuntos "
+"svoris."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -217,7 +288,7 @@ msgstr "Atšaukti"
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "Vežėjas"
+msgstr "Kurjeris"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -266,7 +337,7 @@ msgstr "Sukurta"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_debug_logging
 msgid "Debug logging"
-msgstr "Derinimo pranešimai"
+msgstr "Klaidų registravimas"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -276,12 +347,12 @@ msgstr "Pristatymas"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr "Siuntos vežėjas"
+msgstr "Siuntos kurjeris"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr "Pristatymo mokestis"
+msgstr "Pristatymo kaina"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -329,17 +400,17 @@ msgstr "Siuntos pakavimas"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr "Pristatymp kainos taisyklės"
+msgstr "Pristatymo kainos taisyklės"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
 msgid "Delivery Product"
-msgstr "Siuntos produktas"
+msgstr "Pristatymo produktas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr "Pristatymo reitingas"
+msgstr "Pristatymo sėkmės reitingas"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -370,6 +441,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
+"Kiekvienas kurjeris (pvz., \"UPS\") gali turėti skirtingus pristatymo\n"
+"metodus (pvz., \"UPS Express\", \"UPS Standard\") su tam tikru taisyklių\n"
+"rinkiniu, skirtu kiekvienam metodui."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -381,19 +455,19 @@ msgstr "Aplinka"
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
-msgstr ""
+msgstr "Klaida: nėra tinkančio tinklelio."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:206
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "Klaida: šis pristatymo metodas nėra galimas šiam adresui."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
 msgid "Estimated Delivery Price"
-msgstr "Apskaičiuota pristatymo kaina"
+msgstr "Planuojama pristatymo kaina"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
@@ -432,12 +506,12 @@ msgstr "Nemokama, jei užsakymas viršija"
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "Gauti kainą"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Gauti kainą ir sukurti siuntą"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -484,6 +558,9 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"Informacija:\n"
+"Pristatymas yra nemokamas, nes užsakymo suma viršija %.2f.\n"
+"(Tikroji pristatymo kaina yra: %.2f)"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -498,12 +575,12 @@ msgstr "Integracijos lygis"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr ""
+msgstr "Siuntos sąskaita su pristatymu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Yra pristatymas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package___last_update
@@ -539,7 +616,7 @@ msgstr "Ilgis turi būti teigiamas"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "Sekti užklausas, kad būtų lengviau taisyti klaidas"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -591,21 +668,21 @@ msgstr "Pavadinimas"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr "Vežėjo integracijos nėra"
+msgstr "Kurjerio integracijos nėra"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:73
 #, python-format
 msgid "No carrier set for this order."
-msgstr "Šiam užsakymui vežėjas nėra nustatytas."
+msgstr "Šiam užsakymui kurjeris nėra nustatytas."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:100
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-"Nėra atitinkamos kainos taisyklės šiam užsakymui; pristatymo mokestis negali"
-" būti apskaičiuotas."
+"Nėra atitinkamos kainos taisyklės šiam užsakymui; pristatymo kaina negali "
+"būti apskaičiuota."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -639,7 +716,7 @@ msgstr "Pakuotės kodas"
 #: code:addons/delivery/models/stock_picking.py:124
 #, python-format
 msgid "Package Details"
-msgstr "Pakuotės detalės"
+msgstr "Pakuotės informacija"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -649,7 +726,7 @@ msgstr "Pakuotės"
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
 msgid "Packaging"
-msgstr "Pakuotės tipas"
+msgstr "Pakavimas"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
@@ -672,13 +749,13 @@ msgstr "Fizinės pakuotės"
 msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
-msgstr "Spauskite \"Tikrinti kainą\", šio pasiūlymo gabenimo kainai paskaičiuoti."
+msgstr "Papauskite \"Tikrinti kainą\" šio pasiūlymo gabenimo kainai paskaičiuoti."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 msgid "Price"
-msgstr "Suma"
+msgstr "Kaina"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -718,7 +795,7 @@ msgstr "Kiekis"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Quotation"
-msgstr "Įkainojimas"
+msgstr "Komercinis pasiūlymas"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -728,7 +805,7 @@ msgstr "Siuntos grąžinimas"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
 msgid "Sale Base Price"
-msgstr ""
+msgstr "Bazinė pardavimo kaina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_price
@@ -769,7 +846,7 @@ msgstr "Nustatyti kainą"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr ""
+msgstr "Nustatykite kaip teigiamą, jei esate sertifikuoti gamybai."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:168
@@ -778,11 +855,13 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"Siunta išsiųsta kurjeriui%s pristatymui su siuntos numeriu %s<br/>Kaina: "
+"%.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
-msgstr ""
+msgstr "Pristatymo kaina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_shipping_weight
@@ -827,6 +906,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Šie metodai leidžia automatiškai skaičiuoti pristatymo kainą\n"
+"pagal jūsų nustatymus; pardavimų užsakymuose (pagal komercinį\n"
+"pasiūlymą) arba sąskaitose (pagal pristatymo užsakymus)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
@@ -843,22 +925,22 @@ msgstr "Šis procentas bus pridėtas prie siuntimo kainos."
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr "Stebėjimas"
+msgstr "Sekimas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "Stebėjimo nuoroda"
+msgstr "Sekimo numeris"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url
 msgid "Tracking URL"
-msgstr "Stebėjimo URL"
+msgstr "Sekimo URL"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Pervesti"
+msgstr "Pervedimas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_uom_id
@@ -885,7 +967,7 @@ msgstr "Kintantis"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable_factor
 msgid "Variable Factor"
-msgstr ""
+msgstr "Kintamasis faktorius"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -943,12 +1025,16 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"Jūs siunčiate skirtingus pakavimo tipus toje pačioje siuntoje\n"
+"Pakuočių tipai: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:71
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
 msgstr ""
+"Pridėti pristatymo kainą galite tik nepatvirtintuose komerciniuose "
+"pasiūlymuose."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:182
@@ -957,6 +1043,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
+"Jūsų pristatymo metodas neturi nukreipimo į kurjerio svetainę, per kurį "
+"galėtumėte sekti šį užsakymą."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from

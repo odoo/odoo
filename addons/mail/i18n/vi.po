@@ -225,6 +225,10 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
+"${object.subject or (object.record_name and 'Trả lời: ' % "
+"object.record_name) or (object.parent_id and object.parent_id.subject and "
+"'Trả lời: ' % object.parent_id.subject) or (object.parent_id and "
+"object.parent_id.record_name and 'Re: ' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
@@ -482,6 +486,12 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+"                                      Tất cả hồ sơ phù hợp với bộ lọc tìm kiếm hiện tại của bạn sẽ được gửi bằng thư,\n"
+"                                     không chỉ các id được chọn trong chế độ xem danh sách.\n"
+"                                 </strong><br/>\n"
+"                                 Email sẽ được gửi cho tất cả các hồ sơ được chọn trong danh sách.<br/>\n"
+"                                 Xác nhận thuật sĩ này có thể sẽ mất vài phút để chặn trình duyệt của bạn."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_activity_done
@@ -494,6 +504,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Chỉ các bản ghi được chọn trong chế độ xem danh sách mới được sử dụng.</strong><br/>\n"
+"                                 Email sẽ được gửi cho tất cả các hồ sơ được chọn trong danh sách."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -652,7 +664,7 @@ msgstr "Hoạt động"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Hoạt động Mixin"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -881,6 +893,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Các tệp đính kèm được liên kết với tài liệu thông qua mô hình / res_id và "
+"thông báo qua trường này."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1015,7 +1029,7 @@ msgstr "Phản hồi khác"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
-msgstr ""
+msgstr "Đang trả lời/Ký tự đặt biệt"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_email_cc
@@ -1591,6 +1605,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Không giữ một bản sao của email trong lịch sử giao tiếp tài liệu (chỉ gửi "
+"thư hàng loạt)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -1887,7 +1903,7 @@ msgstr "Trường"
 #: code:addons/mail/models/ir_model.py:24
 #, python-format
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
-msgstr ""
+msgstr "Không thể thay đổi trường \"Chủ đề Thư\" thành \"Sai\"."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field_desc
@@ -2225,7 +2241,7 @@ msgstr "Xử lý trong hệ thống"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
-msgstr ""
+msgstr "Đã đề cập"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -2482,6 +2498,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
+"Nếu được đặt, trình quản lý hàng đợi sẽ gửi email sau ngày. Nếu không được "
+"đặt, email sẽ được gửi càng sớm càng tốt. Các trình giữ chỗ của Jinja2 có "
+"thể được sử dụng."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings_alias_domain
@@ -2544,6 +2563,8 @@ msgid ""
 "Invalid record set: should be called as model (without records) or on "
 "single-record recordset"
 msgstr ""
+"Tập hợp bản ghi không hợp lệ: nên được gọi là mô hình (không có bản ghi) "
+"hoặc trên bản ghi một bản ghi"
 
 #. module: mail
 #: code:addons/mail/controllers/main.py:41
@@ -2999,7 +3020,7 @@ msgstr "Thư đã được tạo để báo cho biết một mail.message đang 
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
 #: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
-msgstr ""
+msgstr "Thư: Trình quản lý hàng đợi email"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:832
@@ -3010,7 +3031,7 @@ msgstr "Hộp thư không khả dụng - %s"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "Mailing Opt-Out"
-msgstr ""
+msgstr "Mailing Opt-Out"
 
 #. module: mail
 #. openerp-web
@@ -3155,6 +3176,11 @@ msgid ""
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
+"Kiểu thư phụ cung cấp loại chính xác hơn trên thư, đặc biệt là đối với thông"
+" báo hệ thống. Ví dụ, nó có thể là một thông báo liên quan đến một bản ghi "
+"mới (Mới) hoặc thay đổi giai đoạn trong một quy trình (Thay đổi giai đoạn). "
+"Các kiểu con tin nhắn cho phép điều chỉnh chính xác các thông báo mà người "
+"dùng muốn nhận trên tường của nó."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -3167,6 +3193,8 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
+"Các kiểu Thông điệp phụ theo dõi, có nghĩa là các kiểu con sẽ được đẩy lên "
+"Tường của người dùng."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_message_type
@@ -3297,13 +3325,15 @@ msgstr "Mô hình"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_res_model
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "Model của tài nguyên được theo dõi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_res_model
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
+"Mô hình loại phụ áp dụng cho. Nếu sai, loại phụ này áp dụng cho tất cả các "
+"kiểu máy."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model
@@ -3313,7 +3343,7 @@ msgstr "Models"
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstallation"
-msgstr ""
+msgstr "Gỡ cài Module"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -3399,17 +3429,17 @@ msgstr "Giá trị ngày giờ mới"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_float
 msgid "New Value Float"
-msgstr ""
+msgstr "Giá trị Float mới"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_integer
 msgid "New Value Integer"
-msgstr ""
+msgstr "Giá trị Integer mới"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_monetary
 msgid "New Value Monetary"
-msgstr ""
+msgstr "Giá trị Monetary mới"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_text
@@ -3542,7 +3572,7 @@ msgstr "Không có kế hoạch hoạt động."
 #: code:addons/mail/static/src/xml/systray.xml:47
 #, python-format
 msgid "No discussion yet..."
-msgstr ""
+msgstr "Chưa có cuộc thảo luận nào ..."
 
 #. module: mail
 #. openerp-web
@@ -3580,7 +3610,7 @@ msgstr "Không có thông điệp gắn sao"
 #: model:ir.model.fields,field_description:mail.field_mail_message_no_auto_thread
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_no_auto_thread
 msgid "No threading for answers"
-msgstr ""
+msgstr "Không có luồng cho câu trả lời"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_note
@@ -3695,6 +3725,8 @@ msgid ""
 "Number of days before executing the action. It allows to plan the action "
 "deadline."
 msgstr ""
+"Số ngày trước khi thực hiện hành động. Nó cho phép lập kế hoạch thời hạn "
+"hành động."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_needaction_counter
@@ -3873,22 +3905,22 @@ msgstr "Giá trị ngày giờ cũ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_float
 msgid "Old Value Float"
-msgstr ""
+msgstr "Giá trị Float cũ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_integer
 msgid "Old Value Integer"
-msgstr ""
+msgstr "Giá trị Integer cũ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_monetary
 msgid "Old Value Monetary"
-msgstr ""
+msgstr "Giá trị Monetary cũ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_text
 msgid "Old Value Text"
-msgstr ""
+msgstr "Giá trị Text cũ"
 
 #. module: mail
 #: selection:ir.model.fields,track_visibility:0
@@ -3967,7 +3999,7 @@ msgstr "Mở trong Thảo luận"
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
 #: model:ir.model.fields,field_description:mail.field_res_users_opt_out
 msgid "Opt-Out"
-msgstr ""
+msgstr "Opt-Out"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_force_thread_id
@@ -4008,12 +4040,15 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
 msgstr ""
+"Ngôn ngữ dịch tùy chọn (mã ISO) để chọn khi gửi email. Nếu không được đặt, "
+"phiên bản tiếng Anh sẽ được sử dụng. Điều này thường phải là biểu thức trình"
+" giữ chỗ cung cấp ngôn ngữ thích hợp, ví dụ: ${object.partner_id.lang}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,help:mail.field_mail_template_null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "Giá trị tùy chọn để sử dụng nếu trường mục tiêu trống"
 
 #. module: mail
 #: selection:mail.activity.type,category:0
@@ -4128,6 +4163,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
+"Phụ đề con, được sử dụng để đăng ký tự động. Trường này không được đặt tên "
+"chính xác. Ví dụ về một dự án, parent_id của các kiểu con dự án là các kiểu "
+"con liên quan đến nhiệm vụ."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -4144,6 +4182,8 @@ msgstr "Hồ sơ Đối tác"
 #: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
+"Các đối tác không yêu cầu không được đưa vào các chiến dịch gửi thư hàng "
+"loạt"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
@@ -4779,6 +4819,8 @@ msgid ""
 "Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
 msgstr ""
+"Chỉ định một mô hình nếu hoạt động phải cụ thể cho một mô hình và không có "
+"sẵn khi quản lý hoạt động cho các mô hình khác."
 
 #. module: mail
 #. openerp-web
@@ -4938,7 +4980,7 @@ msgstr "Thông báo hệ thống"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_has_recommended_activities
 msgid "Technical field for UX purpose"
-msgstr ""
+msgstr "Trường kỹ thuật cho mục đích UX"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.wizard_email_template_preview
@@ -4957,17 +4999,17 @@ msgstr "Các mẫu"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_test
 msgid "Test Mail Model"
-msgstr ""
+msgstr "Kiểm tra Mail Model"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_test_simple
 msgid "Test Simple Chatter Record"
-msgstr ""
+msgstr "Kiểm tra bản ghi trò chuyện đơn giản"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "Mã html thoát đã thay thế phím tắt"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -5029,12 +5071,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr ""
+msgstr "Phím tắt phải được thay thế trong Tin nhắn trò chuyện"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_unicode_source
 msgid "The source is replaced by this unicode character in the Chat Messages"
-msgstr ""
+msgstr "Nguồn được thay thế bằng ký tự unicode này trong Tin nhắn trò chuyện"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
@@ -5154,6 +5196,8 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Các giá trị được theo dõi được lưu trữ trong một mô hình riêng biệt. Trường "
+"này cho phép tạo lại theo dõi và tạo thống kê trên mô hình."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields_track_visibility
@@ -5192,13 +5236,13 @@ msgstr "Kiểu"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_uuid
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:235
 #, python-format
 msgid "Unable to connect to SMTP Server"
-msgstr ""
+msgstr "Không thể kết nối với Máy chủ SMTP"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:31
@@ -5428,7 +5472,7 @@ msgstr "Sử dụng hệ thống email của bạn"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "Được sử dụng để đặt các subtypes."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -5463,6 +5507,9 @@ msgid ""
 "and Enterprise versions. Online users already benefit from a ready-to-use "
 "email server (@mycompany.odoo.com)."
 msgstr ""
+"Sử dụng máy chủ email của riêng bạn là bắt buộc để gửi/nhận email trong các "
+"phiên bản Cộng đồng và Doanh nghiệp. Người dùng trực tuyến đã được hưởng lợi"
+" từ máy chủ email sẵn sàng sử dụng (@tencongty.com)."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:670
@@ -5527,7 +5574,7 @@ msgstr "Thông điệp có phải là một ghi chú nội bộ không (chế đ
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_model_is_mail_thread
 msgid "Whether this model supports messages and notifications."
-msgstr ""
+msgstr "Mô hình này có hỗ trợ tin nhắn và thông báo không."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -5759,13 +5806,15 @@ msgstr "đã được"
 #: code:addons/mail/models/mail_alias.py:282
 #, python-format
 msgid "incorrectly configured alias"
-msgstr ""
+msgstr "bí danh được định cấu hình sai"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:278
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
 msgstr ""
+"bí danh được định cấu hình không chính xác (bản ghi tham chiếu không xác "
+"định)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -5775,31 +5824,31 @@ msgstr "ir.actions.server"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_autovacuum
 msgid "ir.autovacuum"
-msgstr ""
+msgstr "ir.autovacuum"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "model %s không chấp nhận tạo tài liệu"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
-msgstr ""
+msgstr "model %s không chấp nhận cập nhật tài liệu"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:931
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
-msgstr ""
+msgstr "model %s không chấp nhận cập nhật tài liệu, hãy quay lại tạo tài liệu"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
@@ -5833,6 +5882,8 @@ msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
 msgstr ""
+"gửi một tin nhắn không có mô hình nên có một null res_id (tin nhắn riêng), "
+"nhận được %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
@@ -5840,16 +5891,17 @@ msgstr ""
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
 msgstr ""
+"đăng một tin nhắn không có mô hình nên có một parent_id (tin nhắn riêng)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
-msgstr ""
+msgstr "publisher_warranty.contract"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
-msgstr ""
+msgstr "rd"
 
 #. module: mail
 #. openerp-web
@@ -5880,7 +5932,7 @@ msgstr "phản hồi đến tài liệu bị mất (%s,%s)"
 #: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
-msgstr ""
+msgstr "trả lời tài liệu bị thiếu (%s,%s), rơi vào việc tạo tài liệu mới"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
@@ -5891,25 +5943,25 @@ msgstr "res.config.settings"
 #: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
-msgstr ""
+msgstr "đặt lại thread_id"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:254
 #, python-format
 msgid "restricted to channel members"
-msgstr ""
+msgstr "giới hạn đối với thành viên kênh"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:287
 #, python-format
 msgid "restricted to followers"
-msgstr ""
+msgstr "giới hạn người theo dõi"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:291
 #, python-format
 msgid "restricted to known authors"
-msgstr ""
+msgstr "giới hạn tác giả đã biết"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1

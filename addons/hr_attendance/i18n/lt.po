@@ -6,6 +6,7 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
@@ -43,7 +44,7 @@ msgstr "%(empl_name)s nuo %(check_in)s"
 #: code:addons/hr_attendance/models/hr_attendance.py:34
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr "%(empl_name)s nuo %(check_in)s kam %(check_out)s"
+msgstr "%(empl_name)s iš %(check_in)s į%(check_out)s"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -63,7 +64,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:106
 #, python-format
 msgid "Another good day's work! See you soon!"
-msgstr ""
+msgstr "Dar viena puiki darbo diena! Iki greito!"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
@@ -74,7 +75,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
-msgstr "Buvimas darbe"
+msgstr "Lankomumas"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
@@ -133,6 +134,9 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"Negalima atlikti %(empl_name)s išsiregistravimo, nepavyko rasti atitinkamo "
+"įsiregistravimo. Jūsų lankomumas tikriausiai buvo personalo skyriaus "
+"pakeistas rankiniu būdu."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
@@ -225,6 +229,8 @@ msgid ""
 "Create a few employees to be able to select an employee here and perform his"
 " check in / check out."
 msgstr ""
+"Sukurkite kelis darbuotojus, kad galėtumėte čia pasirinkti darbuotoją ir "
+"atlikti jo įsiregistravimą / išsiregistravimą."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
@@ -244,7 +250,7 @@ msgstr "Einamasis mėnuo"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_department_id
 msgid "Department"
-msgstr "Padalinys"
+msgstr "Skyrius"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_display_name
@@ -256,7 +262,7 @@ msgstr "Vaizduojamas pavadinimas"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:123
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
-msgstr ""
+msgstr "Anksti kelsi, vėlai gulsi, gyvenime neprapulsi"
 
 #. module: hr_attendance
 #. openerp-web
@@ -310,35 +316,35 @@ msgstr "Įjungti PIN naudojimą"
 #: code:addons/hr_attendance/static/src/js/my_attendances.js:29
 #, python-format
 msgid "Error : Could not find employee linked to user"
-msgstr ""
+msgstr "Klaida: nepavyko rasti darbuotojo, susieto su vartotoju"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:35
 #, python-format
 msgid "Error : Could not find employee linked to user."
-msgstr ""
+msgstr "Klaida: nepavyko rasti darbuotojo, susieto su vartotoju."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:81
 #, python-format
 msgid "Error: could not find corresponding employee."
-msgstr ""
+msgstr "Klaida: nepavyko rasti atitinkamo darbuotojo."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:70
 #, python-format
 msgid "First come, first served"
-msgstr ""
+msgstr "Aptarnaujamas pirmasis atėjęs"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:85
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr ""
+msgstr "Džiugu, kad sugrįžote, seniai nesimatėme!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -407,7 +413,7 @@ msgstr "Gero vakaro"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:113
 #, python-format
 msgid "Have a nice lunch!"
-msgstr ""
+msgstr "Skanių pietų!"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -429,7 +435,7 @@ msgstr "ID, naudojamas darbuotojų identifikacijai"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:88
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
-msgstr ""
+msgstr "Jei darbą verta atlikti, jį taip pat verta atlikti gerai!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -441,7 +447,7 @@ msgstr "Neteisinga užklausa, prašome sugrįžti į pagrindinį meniu"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
 msgid "Kiosk Mode"
-msgstr "Kortelių skaitytuvo vaizdas"
+msgstr "Kortelių skaitytuvo režimas"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
@@ -466,7 +472,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
 msgid "Manage Attendances"
-msgstr "Valdyti lankomumus"
+msgstr "Valdyti lankomą"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -477,7 +483,7 @@ msgstr "Vadovas"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
-msgstr "Lankomumo taisymas"
+msgstr "Rankinis lankomumas"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -508,7 +514,7 @@ msgstr "Nėra atvaizduotinų lankomumo įrašų."
 #: code:addons/hr_attendance/models/hr_employee.py:72
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
-msgstr "Nėra darbuotojo, pagal brūkšninį kodą %(barcode)s"
+msgstr "Nėra darbuotojo, atitinkančio brūkšninį kodą %(barcode)s"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -524,6 +530,8 @@ msgstr "PIN"
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
+"PIN yra naudojamas įsiregistravimui/išsiregistravimui kortelių skaitytuvo "
+"režime (jei įjungta nustatymuose)."
 
 #. module: hr_attendance
 #. openerp-web
@@ -544,6 +552,7 @@ msgstr "Norėdami išsiregistruoti, įveskite savo PIN kodą"
 msgid ""
 "Please make sure you're using the correct filter if you expected to see any."
 msgstr ""
+"Įsitikinkite, kad naudojate teisingą filtrą, jei tikitės ką nors pamatyti."
 
 #. module: hr_attendance
 #. openerp-web
@@ -580,6 +589,8 @@ msgstr "Pasirinkite darbuotoją"
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
 msgstr ""
+"Nustatykite PIN kodus darbuotojo informacijos formoje (personalo nustatymų "
+"skiltyje)."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -618,6 +629,8 @@ msgid ""
 "The employee will have access to the \"My Attendances\" menu to check in and"
 " out from his session"
 msgstr ""
+"Darbuotojas turės prieigą prie \"Mano dalyvavimai\" meniu, kad galėtų "
+"įsiregistruoti ir išsiregistruoti iš šios sesijos"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -625,6 +638,8 @@ msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
 msgstr ""
+"Vartotojas gaus prieigą prieš žmogiškųjų išteklių dalyvavimo meniu, "
+"leidžiančio jam valdyti savo dalyvavimą."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -632,6 +647,8 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
+"Norėdamas įsiregistruoti ar išsiregistruoti rankiniu būdu, vartotojas turės "
+"ekrane įvesti savo PIN."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -647,6 +664,7 @@ msgstr "Šiandien"
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
 msgstr ""
+"Naudokite PIN kodus, kad įsiregistruotumėte kortelių skaitytuvo režime. "
 
 #. module: hr_attendance
 #. openerp-web

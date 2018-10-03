@@ -1093,7 +1093,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account."
-msgstr "銀行對帳單行是銀行帳戶的財務交易。"
+msgstr "銀行對帳單明細皆代表是銀行科目的每一筆交易明細."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -1503,7 +1503,7 @@ msgstr "科目標籤"
 msgid ""
 "Account that will be set on invoice tax lines for credit notes. Leave empty "
 "to use the expense account."
-msgstr "將會設定在折讓單上的發票稅明細行上的科目。留空以使用支出帳戶。"
+msgstr "將會設定在折讓單上的發票稅務明細上的科目。留空以使用支出帳戶。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -1511,14 +1511,14 @@ msgstr "將會設定在折讓單上的發票稅明細行上的科目。留空以
 msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
-msgstr "設定在發票的發票稅明細行上的科目，留空則用費用科目。"
+msgstr "設定在發票的發票稅務明細上的科目，留空則用費用科目。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template_refund_account_id
 msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
-msgstr "設定在退款的發票稅明細行上的科目，留空使用費用科目。"
+msgstr "設定在退款的發票稅務明細上的科目，留空使用費用科目。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -1845,7 +1845,7 @@ msgstr "所有選擇的日記帳分錄已審核和已過帳。之後您將不能
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr "所有的分錄必須被處理，這樣才能關閉對帳單。"
+msgstr "所有的對帳單明細必須被處理，這樣才能關閉對帳單。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
@@ -2094,7 +2094,7 @@ msgstr "分析帳戶"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_line_ids
 msgid "Analytic lines"
-msgstr "分析明細行"
+msgstr "分析明細"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_tag_ids
@@ -3142,7 +3142,7 @@ msgstr "通用報表"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Communication"
-msgstr "溝通"
+msgstr "備註"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -4272,7 +4272,7 @@ msgstr "平行顯示子項"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children with hierarchy"
-msgstr "樹形顯示子項"
+msgstr "列表顯示子項"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_display_detail
@@ -4960,13 +4960,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr "當顯示發票時給予該明細行的排序。"
+msgstr "當顯示發票時給予該明細的排序。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_sequence
 msgid ""
 "Gives the sequence order when displaying a list of bank statement lines."
-msgstr "當顯示銀行對帳單明細行時給予序列順序"
+msgstr "當顯示銀行對帳單明細時給予序列順序"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_tax_sequence
@@ -4977,7 +4977,7 @@ msgstr "按序列順序顯示發票稅金列表。"
 #: model:ir.model.fields,help:account.field_account_payment_term_line_sequence
 msgid ""
 "Gives the sequence order when displaying a list of payment terms lines."
-msgstr "當顯示付款明細行列表時給予序號排序。"
+msgstr "當顯示付款明細列表時給予序號排序。"
 
 #. module: account
 #. openerp-web
@@ -5027,7 +5027,7 @@ msgstr "分組"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group_invoice_lines
 msgid "Group Invoice Lines"
-msgstr "分組發票明細行"
+msgstr "分組發票明細"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -5207,7 +5207,7 @@ msgstr "如果設定，計算出來後的將是價內稅。"
 msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
-msgstr "如果設定，根據此稅計算出來的金額將被指派予發票明細行（如有的話）的同一個分析科目"
+msgstr "如果設定，根據此稅計算出來的金額將被指派予發票明細（如有的話）的同一個分析科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_active
@@ -5221,7 +5221,7 @@ msgstr "如果有效字段被設否，它將允許您隱藏付款條款而不會
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "如果勾選此項, 系統將試圖對發票生成的會計行分組。"
+msgstr "如果勾選此項, 系統將針對發票生成的會計傳票明細分組。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5610,7 +5610,7 @@ msgstr "發票明細"
 #: model:ir.model.fields,field_description:account.field_account_invoice_invoice_line_ids
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Invoice Lines"
-msgstr "發票明細行"
+msgstr "發票明細"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -5759,17 +5759,17 @@ msgstr "發票無付款"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "開立發票"
+msgstr "會計"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_is_unaffected_earnings_line
 msgid "Is Unaffected Earnings Line"
-msgstr "不影響收入的明細行"
+msgstr "不影響收入的明細"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_is_rounding_line
 msgid "Is a rounding line in case of cash rounding."
-msgstr "在現金捨入時時捨入明細行。"
+msgstr "在現金捨入時時捨入明細。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
@@ -6099,12 +6099,12 @@ msgstr "保持這個字段為空，使用來自產品類別的預設值。"
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 #, python-format
 msgid "Label"
-msgstr "標籤"
+msgstr "備註"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_description
 msgid "Label on Invoices"
-msgstr "發票上的標籤"
+msgstr "發票上的備註"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment___last_update
@@ -7067,14 +7067,14 @@ msgstr ""
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoice(s)."
-msgstr "能讓您直接對相應的銷售或者採購發票調節對帳單明細行"
+msgstr "能讓您直接對相應的銷售或者採購發票調節對帳單明細"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoices."
-msgstr "允許調節和銷售或者採購發票相關的對帳單行"
+msgstr "允許調節和銷售或者採購發票相關的對帳單"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -7713,7 +7713,7 @@ msgstr "創建了這條分錄的付款"
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
 msgid "Payments"
-msgstr "付款"
+msgstr "收付款"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7821,7 +7821,7 @@ msgstr "請檢查公司已經設定'轉帳科目'字段。"
 #: code:addons/account/models/account_invoice.py:1070
 #, python-format
 msgid "Please create some invoice lines."
-msgstr "請創建發票明細行。"
+msgstr "請創建發票明細"
 
 #. module: account
 #: code:addons/account/models/account_move.py:157
@@ -8546,7 +8546,7 @@ msgstr "表格捨入"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_is_rounding_line
 msgid "Rounding Line"
-msgstr "捨入明細行"
+msgstr "捨入明細"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding_rounding_method
@@ -8734,7 +8734,7 @@ msgstr "第二日記帳"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_label
 msgid "Second Journal Item Label"
-msgstr "第二日記帳項標籤"
+msgstr "第二日記帳項備註"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_tax_id
@@ -9047,14 +9047,14 @@ msgstr "對帳單%s已確認，日記帳項已創建。"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_line_form
 msgid "Statement Line"
-msgstr "對帳單明細行"
+msgstr "對帳單明細"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_ids
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_bank_statement_line_tree
 msgid "Statement lines"
-msgstr "對帳單明細行"
+msgstr "對帳單明細"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_tree
@@ -9252,7 +9252,7 @@ msgstr "稅ID"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_line_ids
 msgid "Tax Lines"
-msgstr "稅明細行"
+msgstr "稅務明細"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_ids
@@ -9410,7 +9410,7 @@ msgid ""
 "Technical field holding the number given to the journal entry, automatically"
 " set when the statement line is reconciled then stored to set the same "
 "number again if the line is cancelled, set to draft and re-processed again."
-msgstr "當對帳單行被調節然後存儲時，包含日記帳分錄的技術字段會自動生成。當行被取消，回到草稿狀態並再次被處理時，會設定相同的號碼。"
+msgstr "當對帳單明細被調節然後存儲時，包含日記帳分錄的技術字段會自動生成。當明細被取消，回到草稿狀態並再次被處理時，會設定相同的號碼。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_account_setup_bank_data_done
@@ -9942,7 +9942,7 @@ msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
 msgstr ""
-"用於定義應用稅行順序的序列字段。\n"
+"用於定義應用稅務明細順序的序列字段。\n"
 " "
 
 #. module: account
@@ -10197,7 +10197,7 @@ msgstr "這個日記帳已經包含明細帳，因此您不能更改它的簡稱
 msgid ""
 "This label will be displayed on report to show the balance computed for the "
 "given comparison filter."
-msgstr "此標籤將放在報表上以顯示比較篩選條件計算出來的餘額。"
+msgstr "此備註將放在報表上以顯示比較篩選條件計算出來的餘額。"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:533
@@ -10279,7 +10279,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr "這個技術字段可以用於調節單行創建或導入時，用以避免以後在它上面的調節過程。調節單行僅僅是在這個科目上創建一個對方分錄。"
+msgstr "這個技術字段可以用於調節單明細創建或導入時，用以避免以後在它上面的調節過程。調節單明細僅僅是在這個科目上創建一個對方分錄。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -11132,7 +11132,7 @@ msgstr "已經過帳的付款不能被刪除"
 #: code:addons/account/models/account_invoice.py:1633
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
-msgstr "您只可以刪除草稿狀態的發票明細行。"
+msgstr "您只可以刪除草稿狀態的發票明細。"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:141
@@ -11528,7 +11528,7 @@ msgstr "account.tax.group"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "activate this feature"
-msgstr "激活此功能"
+msgstr "啟用此功能"
 
 #. module: account
 #. openerp-web

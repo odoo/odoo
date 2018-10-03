@@ -120,6 +120,8 @@ msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
 msgstr ""
+"Моля, настройте екранно име в Twitter, откъдето да заредите фаворити, в "
+"настройките на уебсайта (не е задължително да е вашето)"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:23
@@ -133,7 +135,7 @@ msgstr ""
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:35
 #, python-format
 msgid "Reload"
-msgstr ""
+msgstr "Презаредете"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:18
@@ -142,11 +144,13 @@ msgid ""
 "Request cannot be served due to the applications rate limit having been "
 "exhausted for the resource."
 msgstr ""
+"Заявката не може да бъде изпълнена, тъй като ограничението за степента на "
+"приложенията е изчерпано за ресурса."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
 msgid "Screen Name"
-msgstr ""
+msgstr "Екранно име"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_screen_name
@@ -168,6 +172,8 @@ msgstr "Покажете ми как да се сдобия с API ключ и �
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr ""
+"Сървърите в Twitter работят, но са претоварени със заявки. Опитайте отново "
+"по-късно."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:22
@@ -176,6 +182,8 @@ msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
 msgstr ""
+"Сървърите в Twitter работят, но заявката не можа да бъде обслужена, поради "
+"някаква липса в нашия стак. Опитайте отново по-късно."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:17
@@ -202,7 +210,7 @@ msgstr ""
 #: code:addons/website_twitter/models/res_config_settings.py:14
 #, python-format
 msgid "There was no new data to return."
-msgstr ""
+msgstr "Нямаше нови данни за връщане."
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -217,7 +225,7 @@ msgstr "Идентификационен номер на tweet"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet
 msgid "Tweets"
-msgstr ""
+msgstr "Туитове"
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -232,7 +240,7 @@ msgstr "Twitter API Key"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API Secret"
-msgstr ""
+msgstr "API тайна за Twitter"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_key
@@ -247,7 +255,7 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API secret"
-msgstr ""
+msgstr "API тайна за Twitter"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
@@ -259,7 +267,7 @@ msgstr ""
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:41
 #, python-format
 msgid "Twitter Configuration"
-msgstr ""
+msgstr "Twitter конфигурация"
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -270,13 +278,13 @@ msgstr "Twitter ролка"
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Twitter authorization error!"
-msgstr ""
+msgstr "Twitter грешка при оторизация!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:20
 #, python-format
 msgid "Twitter is down or being upgraded."
-msgstr ""
+msgstr "Twitter не работи или преминава към по-висока версия."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:19
@@ -285,6 +293,8 @@ msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
+"Twitter изглежда счупен. Моля, опитайте отново по-късно. Може да помислите "
+"да публикувате проблема във форумите на Twitter, за да получите помощ."
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
@@ -293,6 +303,8 @@ msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
 msgstr ""
+"Потребител на Twitter @%(username)s има по-малко от 12 любими туита. Моля, "
+"добавете още или изберете различно екранно име."
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
@@ -306,7 +318,7 @@ msgstr ""
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "We failed to reach a twitter server."
-msgstr ""
+msgstr "Не успяхме да стигнем до сървър на Twitter."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
@@ -322,4 +334,4 @@ msgstr "res.config.settings"
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
-msgstr ""
+msgstr "website.twitter.tweet"

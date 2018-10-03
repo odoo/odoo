@@ -5,6 +5,7 @@
 # Translators:
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Martin Trigaux, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -36,8 +37,9 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
-"Jei varnelė uždėta, nebus leidžiama išsaugoti kontakto, jei jo PVM kodas "
-"nebus patvirtintas per Europos PVM greitų informacijos mainų - GIMS sistemą."
+"Jei šis laukelis pažymėtas, nebus leidžiama išsaugoti kontakto, jei jo PVM "
+"kodas nebus patvirtintas per Europos PVM greitų informacijos mainų - VIES "
+"sistemą."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:134
@@ -46,7 +48,7 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
-"PVM kodas [%s] įmonės [%s] nėra galimas. \n"
+"PVM kodas [%s] partneriui [%s] nėra galimas. \n"
 "Pastaba: reikalaujamas formatas yra šis %s"
 
 #. module: base_vat
@@ -56,7 +58,7 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
-"PVM kodas [%s] įmonės [%s] nerastas VIES VAT sistemoje arba neatitiko "
+"PVM kodas [%s] partneriui [%s] nerastas VIES VAT sistemoje arba neatitiko "
 "reikalingo formato %s."
 
 #. module: base_vat
@@ -74,7 +76,7 @@ msgstr "Tikrinti PVM kodus"
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "Tikrinti PVM kodus Europos GIMS sistemoje"
+msgstr "Tikrinti PVM kodus Europos VIES sistemoje"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
