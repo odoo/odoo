@@ -443,13 +443,16 @@ class Website(models.Model):
     # ----------------------------------------------------------
 
     @api.model
-    def get_current_website(self, fallback=True):
+    def get_current_website(self, fallback=True, explicit=False):
         if request and request.session.get('force_website_id'):
             return self.browse(request.session['force_website_id'])
 
         website_id = self.env.context.get('website_id')
         if website_id:
             return self.browse(website_id)
+
+        if explicit:
+            return False
 
         domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
 
