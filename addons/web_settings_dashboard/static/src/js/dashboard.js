@@ -346,10 +346,22 @@ var DashboardTranslations = Widget.extend({
     template: 'DashboardTranslations',
 
     events: {
-        'click .o_load_translations': 'on_load_translations'
+        'click .o_load_translations': '_onLoadTranslations'
     },
 
-    on_load_translations: function () {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when clicking on "Load a translation" button. It prompts a dialog
+     * to load a translation.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onLoadTranslations: function (ev) {
+        ev.preventDefault();
         this.do_action('base.action_view_base_language_install');
     }
 

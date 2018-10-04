@@ -21,7 +21,11 @@ function createDashboard(params) {
         widget.destroy();
     };
 
-    dashboard.appendTo($('#qunit-fixture'));
+    if (params.debug) {
+        dashboard.appendTo($('body'));
+    } else {
+        dashboard.appendTo($('#qunit-fixture'));
+    }
 
     return dashboard;
 }
@@ -188,6 +192,42 @@ QUnit.module('settings_dashboard', function () {
         assert.strictEqual(dashboard.$('.o_user_emails').val(), '',
             'input have been cleared');
         assert.verifySteps(['warning', 'warning'], "should have triggered 2 warnings");
+
+        dashboard.destroy();
+    });
+
+    QUnit.test('Prevent default behaviour when clicking on load translation', function (assert) {
+        assert.expect(3);
+
+        var dashboard = createDashboard({
+            dashboards: ['translations'],
+            mockRPC: function (route, args) {
+                if (route === '/web_settings_dashboard/data') {
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var $loadTranslation = dashboard.$('.o_load_translations');
+
+        assert.strictEqual($loadTranslation.length, 1,
+            "should have button to load translations");
+
+        // Prevent the browser default behaviour when clicking on anything.
+        // This includes clicking on a `<a>` with `href`, so that it does not
+        // change the URL in the address bar.
+        $(document.body).on('click.o_test', function (ev) {
+            assert.ok(ev.isDefaultPrevented(),
+                "should have prevented browser default behaviour");
+            assert.strictEqual(ev.target, $loadTranslation[0],
+                "should have clicked on 'load a translation' button");
+            ev.preventDefault();
+        });
+
+        $loadTranslation.click();
+
+        $(document.body).off('click.o_test');
 
         dashboard.destroy();
     });
