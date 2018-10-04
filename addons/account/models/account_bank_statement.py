@@ -982,23 +982,8 @@ class AccountBankStatementLine(models.Model):
                     aml_dict['currency_id'] = statement_currency.id
 
             # Create write-offs
-            # When we register a payment on an invoice, the write-off line contains the amount
-            # currency if all related invoices have the same currency. We apply the same logic in
-            # the manual reconciliation.
-            counterpart_aml = self.env['account.move.line']
-            for aml_dict in counterpart_aml_dicts:
-                counterpart_aml |= aml_dict.get('move_line', self.env['account.move.line'])
-            new_aml_currency = False
-            if counterpart_aml\
-                    and len(counterpart_aml.mapped('currency_id')) == 1\
-                    and counterpart_aml[0].currency_id\
-                    and counterpart_aml[0].currency_id != company_currency:
-                new_aml_currency = counterpart_aml[0].currency_id
             for aml_dict in new_aml_dicts:
                 aml_dict['payment_id'] = payment and payment.id or False
-                if new_aml_currency and not aml_dict.get('currency_id'):
-                    aml_dict['currency_id'] = new_aml_currency.id
-                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], new_aml_currency)
                 aml_obj.with_context(check_move_validity=False, apply_taxes=True).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
@@ -1009,9 +994,6 @@ class AccountBankStatementLine(models.Model):
                 aml_dict['payment_id'] = payment and payment.id or False
 
                 counterpart_move_line = aml_dict.pop('move_line')
-                if counterpart_move_line.currency_id and counterpart_move_line.currency_id != company_currency and not aml_dict.get('currency_id'):
-                    aml_dict['currency_id'] = counterpart_move_line.currency_id.id
-                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], counterpart_move_line.currency_id)
                 new_aml = aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
                 (new_aml | counterpart_move_line).reconcile()
