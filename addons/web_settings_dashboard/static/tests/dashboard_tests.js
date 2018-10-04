@@ -231,6 +231,46 @@ QUnit.module('settings_dashboard', function () {
 
         dashboard.destroy();
     });
+
+    QUnit.test('Prevent default behaviour when clicking on set up company', function (assert) {
+        assert.expect(3);
+
+        var dashboard = createDashboard({
+            dashboards: ['company'],
+            mockRPC: function (route, args) {
+                if (route === '/web_settings_dashboard/data') {
+                    return $.when({
+                        company: {
+                            company_name: 'MyCompany'
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var $setupCompany = dashboard.$('.o_setup_company');
+
+        assert.strictEqual($setupCompany.length, 1,
+            "should have button to set up company");
+
+        // Prevent the browser default behaviour when clicking on anything.
+        // This includes clicking on a `<a>` with `href`, so that it does not
+        // change the URL in the address bar.
+        $(document.body).on('click.o_test', function (ev) {
+            assert.ok(ev.isDefaultPrevented(),
+                "should have prevented browser default behaviour");
+            assert.strictEqual(ev.target, $setupCompany[0],
+                "should have clicked on 'setup company' button");
+            ev.preventDefault();
+        });
+
+        $setupCompany.click();
+
+        $(document.body).off('click.o_test');
+
+        dashboard.destroy();
+    });
 });
 
 });
