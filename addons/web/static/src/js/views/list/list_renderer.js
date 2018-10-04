@@ -652,7 +652,6 @@ var ListRenderer = BasicRenderer.extend({
         var data = {
             selectedRecords: this.$('td.o_list_record_selector').length,
             totalRecords: this.state.count,
-            hasAllSelector: this.allSelected,
         };
         if (this.state.groupedBy.length) {
             var groups = this._getOpenedLeafGroups(this.state.data);
@@ -843,15 +842,16 @@ var ListRenderer = BasicRenderer.extend({
         var actionType = $(event.currentTarget).data('action-type');
         if (actionType === 'select_all') {
             this.allSelected = true;
-            this.$el.find('.o_list_view_select_all').remove();
             // make thead input checked if all records are selected. so that we can get domain while exporting records.
             this.$('thead .o_list_record_selector input').prop('checked', true);
-            this._renderAllSelectorBar();
+            this.$('.o_list_clear_selection').removeClass('d-none');
+            this.$('.o_list_all_selected').addClass('d-none');
         } else {
             this.$('.o_list_record_selector input').prop('checked', false);
+            this.selection = [];
             this._removeAllSelectorBar();
         }
-        this._updateSelection();
+        this.trigger_up('selection_changed', { selection: this.selection, allSelected: this.allSelected });
     },
     /**
      * @private
