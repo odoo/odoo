@@ -21,12 +21,12 @@ var PasswordField = fields.InputField.extend({
     },
     willStart: function () {
         var _this = this;
-        var getPolicy = this._rpc({
+        var getPolicy = this.nodeOptions['password_meter'] ? this._rpc({
             model: 'res.users',
             method: 'get_password_policy',
         }).then(function (p) {
             _this._meter = new Meter(_this, new policy.Policy(p), policy.recommendations);
-        });
+        }) : undefined;
         return $.when(
             this._super.apply(this, arguments),
             getPolicy
