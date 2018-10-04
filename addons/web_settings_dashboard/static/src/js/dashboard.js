@@ -371,7 +371,7 @@ var DashboardCompany = Widget.extend({
     template: 'DashboardCompany',
 
     events: {
-        'click .o_setup_company': 'on_setup_company'
+        'click .o_setup_company': '_onSetupCompany'
     },
 
     init: function (parent, data) {
@@ -380,7 +380,16 @@ var DashboardCompany = Widget.extend({
         this._super.apply(this, arguments);
     },
 
-    on_setup_company: function () {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSetupCompany: function (ev) {
+        ev.preventDefault();
         var self = this;
         var action = {
             type: 'ir.actions.act_window',
