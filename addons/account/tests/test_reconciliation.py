@@ -108,6 +108,7 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(move_line.currency_id.id, aml_dict[move_line.account_id.id]['currency_id'])
             if 'currency_diff' in aml_dict[move_line.account_id.id]:
                 currency_diff_move = move_line.full_reconcile_id.exchange_move_id
+                self.assertTrue(currency_diff_move, 'The full reconciliation should have created an exchange rate journal entry')
                 for currency_diff_line in currency_diff_move.line_ids:
                     if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
                         if currency_diff_line.account_id.id == move_line.account_id.id:
@@ -201,11 +202,11 @@ class TestReconciliation(AccountingTestCase):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 40, 0.0, False)
         self.check_results(customer_move_lines, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -61.16, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': 0.0, 'currency_id': False},
         })
         self.check_results(supplier_move_lines, {
             self.account_euro.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': 0.0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 61.16, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
         })
 
     def test_statement_euro_invoice_usd_transaction_chf(self):
@@ -243,7 +244,7 @@ class TestReconciliation(AccountingTestCase):
               'move_line': line_id,
               'debit': 0.0,
               'credit': 32.7,
-              'name': line_id.name,
+              'name': 'test_statement_euro_invoice_usd_transaction_euro_full',
             }], new_aml_dicts=[{
               'debit': 0.0,
               'credit': 7.3,
@@ -252,8 +253,8 @@ class TestReconciliation(AccountingTestCase):
             }])
         self.check_results(bank_stmt.move_line_ids, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': -41.97, 'currency_id': self.currency_usd_id, 'currency_diff': 0, 'amount_currency_diff': -8.03},
-            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': -9.37, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': 0, 'currency_id': False, 'currency_diff': 0, 'amount_currency_diff': -8.03},
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': 0, 'currency_id': False},
         })
 
         # The invoice should be paid, as the payments totally cover its total
@@ -485,7 +486,7 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(round(aml.amount_currency, 2), line['amount_currency'])
             self.assertEquals(aml.currency_id.id, line['currency_id'])
 
-    def test_partial_reconcile_currencies(self):
+    def test_partial_reconcile_currencies_01(self):
         #                client Account (payable, rsa)
         #        Debit                      Credit
         # --------------------------------------------------------
@@ -674,6 +675,64 @@ class TestReconciliation(AccountingTestCase):
         # - Create an invoice on 2018-01-02 of 111 USD
         # - Register a payment on 2018-02-02 of 111 USD
         # - Unreconcile the payment
+
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-07-01',
+            'rate': 1.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-08-01',
+            'rate': 0.5,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        inv = self.create_invoice(invoice_amount=111, currency_id=self.currency_usd_id)
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 111,
+            'currency_id': self.currency_usd_id,
+            'journal_id': self.bank_journal_usd.id,
+            'payment_date': time.strftime('%Y') + '-08-01',
+        })
+        payment.post()
+        credit_aml = payment.move_line_ids.filtered('credit')
+
+        # Check residual before assignation
+        self.assertAlmostEquals(inv.residual, 111)
+
+        # Assign credit, check exchange move and residual
+        inv.assign_outstanding_credit(credit_aml.id)
+        self.assertEqual(len(payment.move_line_ids.mapped('full_reconcile_id').exchange_move_id), 1)
+        self.assertAlmostEquals(inv.residual, 0)
+
+        # Unreconcile invoice and check residual
+        credit_aml.with_context(invoice_id=inv.id).remove_move_reconcile()
+        self.assertAlmostEquals(inv.residual, 111)
+
+    def test_partial_reconcile_currencies_02(self):
+        ####
+        # Day 1: Invoice Cust/001 to customer (expressed in USD)
+        # Market value of USD (day 1): 1 USD = 0.5 EUR
+        # * Dr. 100 USD / 50 EUR - Accounts receivable
+        # * Cr. 100 USD / 50 EUR - Revenue
+        ####
+        account_revenue = self.env['account.account'].search(
+            [('user_type_id', '=', self.env.ref(
+                'account.data_account_type_revenue').id)], limit=1)
+        dest_journal_id = self.env['account.journal'].search(
+            [('type', '=', 'purchase'),
+             ('company_id', '=', self.env.ref('base.main_company').id)],
+            limit=1)
+
+        # Delete any old rate - to make sure that we use the ones we need.
+        old_rates = self.env['res.currency.rate'].search(
+            [('currency_id', '=', self.currency_usd_id)])
+        old_rates.unlink()
 
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
