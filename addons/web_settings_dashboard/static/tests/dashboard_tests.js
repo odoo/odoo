@@ -271,6 +271,46 @@ QUnit.module('settings_dashboard', function () {
 
         dashboard.destroy();
     });
+
+    QUnit.test('Prevent default behaviour when clicking on browse apps', function (assert) {
+        assert.expect(3);
+
+        var dashboard = createDashboard({
+            dashboards: ['apps'],
+            mockRPC: function (route, args) {
+                if (route === '/web_settings_dashboard/data') {
+                    return $.when({
+                        apps: {},
+                    });
+                }
+                if (args.method === 'get_account_url') {
+                    return $.when('fakeURL');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var $browseAppsButton = dashboard.$('.btn.o_browse_apps');
+
+        // Prevent the browser default behaviour when clicking on anything.
+        // This includes clicking on a `<a>` with `href`, so that it does not
+        // change the URL in the address bar.
+        $(document.body).on('click.o_test', function (ev) {
+            assert.ok(ev.isDefaultPrevented(),
+                "should have prevented browser default behaviour");
+            assert.strictEqual(ev.target, $browseAppsButton[0],
+                "should have clicked on 'browse apps' button");
+            ev.preventDefault();
+        });
+
+        assert.strictEqual($browseAppsButton.length, 1,
+            "should have button to browse apps");
+
+        $browseAppsButton.click();
+
+        $(document.body).off('click.o_test');
+        dashboard.destroy();
+    });
 });
 
 });

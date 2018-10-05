@@ -1,12 +1,7 @@
 odoo.define('iap.Dashboard', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
-var core = require('web.core');
 var Dashboard = require('web_settings_dashboard');
-
-var _t = core._t;
-var QWeb = core.qweb;
 
 Dashboard.Dashboard.include({
     /**
@@ -14,7 +9,7 @@ Dashboard.Dashboard.include({
      */
     load_apps: function (data) {
         var _super = this._super.bind(this);
-        return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        return this._rpc({
             model:  'iap.account',
             method: 'get_account_url',
             args: [],

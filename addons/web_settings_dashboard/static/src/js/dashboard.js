@@ -248,7 +248,7 @@ var DashboardApps = Widget.extend({
     template: 'DashboardApps',
 
     events: {
-        'click .o_browse_apps': 'on_new_apps',
+        'click .o_browse_apps': '_onClickBrowseApps',
         'click .o_confirm_upgrade': 'confirm_upgrade',
     },
 
@@ -265,7 +265,18 @@ var DashboardApps = Widget.extend({
         }
     },
 
-    on_new_apps: function(){
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when clicking on 'Browse Apps' button.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickBrowseApps: function (ev) {
+        ev.preventDefault();
         this.do_action('base.open_module_tree');
     },
 
