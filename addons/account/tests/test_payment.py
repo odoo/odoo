@@ -322,47 +322,6 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(payment_id.partner_id, self.partner_china_exp)
         self.assertEqual(payment_id.partner_type, 'supplier')
 
-    def test_multiple_receivables(self):
-        """ Create test to pay several invoices with same partner but multiple receivable accounts """
-        # One payment for inv_1, inv_2 (same receivable account) and inv_3 (another receivable account)
-
-        account_receivable_id_1 = self.account_receivable.id
-        account_receivable_id_2 = self.account_receivable.copy(default={
-            'code': '%s (%s)' % (self.account_receivable.code, 'duplicate 1')
-        }).id
-
-        inv_1 = self.create_invoice(amount=100, account_id=account_receivable_id_1)
-        inv_2 = self.create_invoice(amount=150, account_id=account_receivable_id_1)
-        inv_3 = self.create_invoice(amount=300, account_id=account_receivable_id_2)
-
-        ids = [inv_1.id, inv_2.id, inv_3.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-        })
-        register_payments.create_payments()
-        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
-
-        self.assertEqual(len(payment_ids), 2)
-        self.assertAlmostEquals(register_payments.amount, 550)
-
-        inv_1_pay = payment_ids.filtered(lambda p: p.state == 'posted' and p.invoice_ids and p.invoice_ids == inv_1 + inv_2)
-        inv_2_pay = payment_ids.filtered(lambda p: p.state == 'posted' and p.invoice_ids and p.invoice_ids == inv_3)
-
-        self.assertTrue(inv_1_pay)
-        self.assertTrue(inv_2_pay)
-
-        self.check_journal_items(inv_1_pay.move_line_ids, [
-            {'account_id': self.account_eur.id, 'debit': 250.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 250.0, 'amount_currency': 0.0, 'currency_id': False},
-        ])
-
-        self.check_journal_items(inv_2_pay.move_line_ids, [
-            {'account_id': self.account_eur.id, 'debit': 300.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            {'account_id': inv_3.account_id.id, 'debit': 0.0, 'credit': 300.0, 'amount_currency': 0.0, 'currency_id': False},
-        ])
-
     def test_payment_and_writeoff_in_other_currency_1(self):
         # Use case:
         # Company is in EUR, create a customer invoice for 25 EUR and register payment of 25 USD.
