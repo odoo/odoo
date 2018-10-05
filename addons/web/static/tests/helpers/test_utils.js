@@ -113,7 +113,13 @@ var createActionManager = function (params) {
         actionManager.destroy = originalDestroy;
         widget.destroy();
     };
-    actionManager.appendTo(widget.$el);
+    var fragment = document.createDocumentFragment();
+    actionManager.appendTo(widget.$el).then(function () {
+        dom.append(widget.$('.o_main_content'), fragment, {
+            in_DOM: true,
+            callbacks: [{widget: actionManager}],
+        });
+    });
 
     return actionManager;
 };
