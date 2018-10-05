@@ -3429,8 +3429,8 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable list with selection widget', function (assert) {
-        assert.expect(2);
+    QUnit.test('editable list with m2o field as selection widget', function (assert) {
+        assert.expect(3);
 
         var list = createView({
             View: ListView,
@@ -3444,11 +3444,12 @@ QUnit.module('Views', {
 
         list.$('.o_data_cell:first').click();
 
-        assert.strictEqual(list.$('.o_selection_cell .o_input.o_field_widget').attr("name"), 'm2o',
-            "Selection widget should apply on m2o field");
+        assert.strictEqual(list.$('select.o_field_widget[name=m2o]').length, 1,
+            "m2o field should have select tag");
         assert.strictEqual(list.$('.o_selection_cell .o_input.o_field_widget').val(), '1',
             "Value of field with selection widget should be 1 as Value 1 have 1 sequence");
-
+        assert.strictEqual(list.$('.o_selection_cell .o_input.o_field_widget option').length, 4,
+            "selection widget should have 4 option(3 value options + 1 empty option)");
         list.destroy();
     });
 
