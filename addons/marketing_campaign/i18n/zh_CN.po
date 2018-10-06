@@ -699,7 +699,7 @@ msgstr "模式"
 #: code:addons/marketing_campaign/models/marketing_campaign.py:198
 #, python-format
 msgid "Model of filter must be same as resource model of Campaign"
-msgstr ""
+msgstr "模型的过滤器必须和营销活动的资源模型一致 "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -777,7 +777,7 @@ msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
-msgstr ""
+msgstr "Odoo的市场营销能让你自动的和潜在客户进行沟通，你可以在线索和业务伙伴上定义一个环节（条件设定）来实现营销"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -1012,6 +1012,10 @@ msgid ""
 " validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
+"测试 - 直接生成和处理所有活动（不等待事务的延迟），但是不发送邮件或者生成报表。\n"
+"实时测试 - 直接生成和处理所有活动，但是不发送邮件或者生成报表.\n"
+"手工确认 - 营销活动正常启动，但是用户必须手工验证所有工作项。\n"
+"正常 - 营销活动正常启动，并自动发送所有邮件和报表（请小心使用这个模式，所有的都是实时的！）"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1032,7 +1036,7 @@ msgstr "实时检验"
 #: code:addons/marketing_campaign/models/marketing_campaign.py:401
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
-msgstr ""
+msgstr "前/后活动必须属于同一个营销活动 "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1097,6 +1101,11 @@ msgid ""
 "- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
 "- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
 msgstr ""
+"工作项进入此活动时执行的操作类型，比如：\n"
+"    - 邮件：通过预定义的邮件模板发送邮件\n"
+"    - 报表：打印定义在资源上的报表，并把它保存到指定的目录\n"
+"    - 自定义操作： 执行一个预定义的操作，比如，修改资源记录的字段\n"
+"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start

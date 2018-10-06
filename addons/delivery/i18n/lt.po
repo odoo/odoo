@@ -166,6 +166,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Užsakymo suma, už kurią apsimokėtų nemokamas siuntamas, išreikšta kompanijos"
+" valiuta"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -279,6 +281,8 @@ msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
 msgstr ""
+"Gali būti pakeičiama įdėjimo į pakuotę metu, kad būtų suderintas siuntos "
+"svoris."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -557,6 +561,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
+"Kiekvienas kurjeris (pvz., \"UPS\") gali turėti skirtingus pristatymo\n"
+"metodus (pvz., \"UPS Express\", \"UPS Standard\") su tam tikru taisyklių\n"
+"rinkiniu, skirtu kiekvienam metodui."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -683,12 +690,12 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "Gauti kainą"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Gauti kainą ir sukurti siuntą"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -844,7 +851,7 @@ msgstr "Atsargų įvertinimas"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr ""
+msgstr "Siuntos sąskaita su pristatymu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
@@ -864,7 +871,7 @@ msgstr "Yra prenumeratorius"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Yra pristatymas"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
@@ -1354,7 +1361,7 @@ msgstr "Maršrutai"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
 msgid "Sale Base Price"
-msgstr ""
+msgstr "Bazinė pardavimo kaina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_sale
@@ -1435,7 +1442,7 @@ msgstr "Nustatyti kainą"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr ""
+msgstr "Nustatykite kaip teigiamą, jei esate sertifikuoti gamybai."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:147
@@ -1448,7 +1455,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
-msgstr ""
+msgstr "Pristatymo kaina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
@@ -1615,6 +1622,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Šie metodai leidžia automatiškai skaičiuoti pristatymo kainą\n"
+"pagal jūsų nustatymus; pardavimų užsakymuose (pagal komercinį\n"
+"pasiūlymą) arba sąskaitose (pagal pristatymo užsakymus)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
@@ -1793,7 +1803,7 @@ msgstr "Kintantis"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable_factor
 msgid "Variable Factor"
-msgstr ""
+msgstr "Kintamasis faktorius"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_variant
@@ -1939,6 +1949,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"Jūs siunčiate skirtingus pakavimo tipus toje pačioje siuntoje\n"
+"Pakuočių tipai: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:163
@@ -1947,6 +1959,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
+"Jūsų pristatymo metodas neturi nukreipimo į kurjerio svetainę, per kurį "
+"galėtumėte sekti šį užsakymą."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
