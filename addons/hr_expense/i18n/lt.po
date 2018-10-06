@@ -42,6 +42,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
 " incoming receipts</i>"
 msgstr ""
+"<i class=\"text-muted oe_edit_only\">Naudokite [numerį] kaip temos priešdėlį"
+" įeinantiems kvitams</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -71,6 +73,9 @@ msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
+"<p>Apskaitininkas gauna patvirtintas išlaidų ataskaitas.</p><p>Jis gali "
+"paskelbti žurnalo įrašus vienu paspaudimu, jei mokesčiai ir sąskaitos yra "
+"teisingi.</p>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -107,7 +112,7 @@ msgstr "<strong>Suma</strong>"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
-msgstr ""
+msgstr "<strong>Patvirtino:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -123,6 +128,8 @@ msgid ""
 "A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
 " to your expense %s has been made."
 msgstr ""
+"Mokėjimas %s %s su numeriu<a href='/mail/view?%s'>%s</a>, susijęs su jūsų "
+"išlaidomis %s , buvo atliktas."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
@@ -152,13 +159,13 @@ msgstr "Apskaitos įrašai"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
-msgstr ""
+msgstr "Tikrųjų išlaidų lapai, ne atmestųjų"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
-msgstr ""
+msgstr "Skrydis"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_domain
@@ -180,7 +187,7 @@ msgstr "Visos išlaidos"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
 msgid "An expense account is expected"
-msgstr ""
+msgstr "Tikimasi išlaidų sąskaitos"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
@@ -354,7 +361,7 @@ msgstr "Data"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr ""
+msgstr "Numatytasis pseudonimas išlaidoms"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_department_id
@@ -487,13 +494,13 @@ msgstr "Išlaidų ataskaitos, kurias reikia patvirtinti"
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
 msgid "Expense Reports To Pay"
-msgstr ""
+msgstr "Išlaidų ataskaitos apmokėjimui"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
 msgid "Expense Reports To Post"
-msgstr ""
+msgstr "Išlaidų ataskaitos paskelbimui"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
@@ -504,7 +511,7 @@ msgstr "Išlaidų ataskaitos, kurias reikia patvirtinti"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Sheet"
-msgstr ""
+msgstr "Išlaidų lapas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -594,12 +601,14 @@ msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
 msgstr ""
+"Išlaidos turi turėti išlaidų žurnalą, skirtą apskaitos įrašų generavimui."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:403
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
+"Išlaidos turi būti apmokėtos to paties vieneto (kompanijos ar darbuotojo)"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -620,7 +629,7 @@ msgstr "Išlaidos, kurias reikia patvirtinti"
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Expenses will go through these steps:"
-msgstr ""
+msgstr "Išlaidos pereis šiuos žingsnius:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -634,6 +643,8 @@ msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
 msgstr ""
+"Iš čia apskaitininkas galės patvirtinti arba atmesti išlaidas, kurios yra "
+"patvirtintos žmogiškųjų išteklių vadovo."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -670,7 +681,7 @@ msgstr "Slėpti apmokėjimo budą"
 #: model:product.product,name:hr_expense.hotel_rent
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
-msgstr ""
+msgstr "Nakvynė viešbutyje"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
