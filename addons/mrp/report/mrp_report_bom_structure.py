@@ -18,7 +18,7 @@ class ReportBomStructure(models.AbstractModel):
             candidates = variant and self.env['product.product'].browse(variant) or bom.product_tmpl_id.product_variant_ids
             for product_variant_id in candidates:
                 if data and data.get('childs'):
-                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=int(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
+                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
                 else:
                     doc = self._get_pdf_line(bom_id, product_id=product_variant_id, unfolded=True)
                 doc['report_type'] = 'pdf'
@@ -26,7 +26,7 @@ class ReportBomStructure(models.AbstractModel):
                 docs.append(doc)
             if not candidates:
                 if data and data.get('childs'):
-                    doc = self._get_pdf_line(bom_id, qty=int(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
+                    doc = self._get_pdf_line(bom_id, qty=float(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
                 else:
                     doc = self._get_pdf_line(bom_id, unfolded=True)
                 doc['report_type'] = 'pdf'
