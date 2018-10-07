@@ -9,14 +9,15 @@
 # Micky Jault <micky037@hotmail.fr>, 2017
 # Xavier Belmere <Info@cartmeleon.com>, 2017
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017
+# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
-# leemannd <denis.leemann@camptocamp.com>, 2017
 # Olivier Dony <odo@odoo.com>, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Denis Leemann <denis.leemann@camptocamp.com>, 2017
 # lucasdeliege <deliegelucas@gmail.com>, 2017
 # Mensanh Dodji Anani LAWSON <omolowo73@gmail.com>, 2017
 # Clo <clo@odoo.com>, 2017
@@ -26,14 +27,13 @@
 # Florian Hatat, 2017
 # e2f <projects@e2f.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
-# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:42+0000\n"
 "PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018\n"
+"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -207,7 +207,7 @@ msgstr "Attribution"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_holiday_type
 msgid "Allocation Mode"
-msgstr "Mode d'allocation"
+msgstr "Mode d'attribution"
 
 #. module: hr_holidays
 #: selection:hr.holidays,type:0
@@ -233,7 +233,7 @@ msgstr "Demandes d'attribution de congés à approuver"
 #: code:addons/hr_holidays/models/hr.py:129
 #, python-format
 msgid "Allocation for %s"
-msgstr "Allocation pour %s"
+msgstr "Attrbution pour %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:337
@@ -249,7 +249,7 @@ msgstr "Attributions à approuver"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Allocations"
-msgstr "Allocations"
+msgstr "Attributions"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -1280,7 +1280,7 @@ msgid ""
 " You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
 "Le champ \"Jours de congés restants\" ne peut être utilisé que s'il n'existe qu'un seul type de congés et que l'option \"Autoriser à outrepasser la limite\" est décochée. (%s trouvé). Autrement, la mise à jour serait ambigüe car le système ne pourrait pas déterminer le type de congés devant être mis à jour.\n"
-" Si la configuration ne permet pas d'utiliser le champ précité, il est préférable de se servir des menus \"Demandes de congés\" et \"Demandes d'allocation\" dans l'application Congés pour gérer les congés des employés."
+" Si la configuration ne permet pas d'utiliser le champ précité, il est préférable de se servir des menus \"Demandes de congés\" et \"Demandes d'attribution\" dans l'application Congés pour gérer les congés des employés."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1482,7 +1482,7 @@ msgid ""
 "               will automatically create and validate allocation requests."
 msgstr ""
 "Vous pouvez attribuer les congés légaux restants pour chaque employé, Odoo\n"
-" créera et validera automatiquement les demandes d'allocation."
+" créera et validera automatiquement les demandes d'attribution."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:249
@@ -1502,7 +1502,7 @@ msgstr "Vous ne pouvez pas supprimer des congés qui sont dans l'état %s."
 #: code:addons/hr_holidays/models/hr.py:140
 #, python-format
 msgid "You cannot reduce validated allocation requests"
-msgstr "Vous ne pouvez pas réduire une demande d'allocation validée."
+msgstr "Vous ne pouvez pas réduire une demande d'attribution validée."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:356
