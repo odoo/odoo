@@ -8,18 +8,19 @@
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 # 老窦 北京 <2662059195@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
 # liulixia <liu.lixia@elico-corp.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:12+0000\n"
 "PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Jackie Zhang <jzh@odoo.com>, 2018\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -275,7 +276,7 @@ msgstr "自动确认资产"
 #: selection:account.asset.asset,date_first_depreciation:0
 #: selection:account.asset.category,date_first_depreciation:0
 msgid "Based on Last Day of Purchase Period"
-msgstr ""
+msgstr "基于购买期的最后一天"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -710,7 +711,7 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the asset date (purchase date) instead of the first January / Start "
 "date of fiscal year"
-msgstr ""
+msgstr "资产折旧的第一个凭证是从购买日开始而不是年初开始."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category__prorata
@@ -810,7 +811,7 @@ msgstr "手动"
 #. module: account_asset
 #: selection:account.asset.category,date_first_depreciation:0
 msgid "Manual (Defaulted on Purchase Date)"
-msgstr ""
+msgstr "手动（默认购买日期）"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__message_has_error
@@ -865,7 +866,7 @@ msgid ""
 "Note that this date does not alter the computation of the first journal "
 "entry in case of prorata temporis assets. It simply changes its accounting "
 "date"
-msgstr ""
+msgstr "请注意，该日期不改变第一日记账的计算情况下的临时资产。它只是改变其会计日期"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__message_needaction_counter
@@ -977,7 +978,7 @@ msgstr "即时按比例分配"
 msgid ""
 "Prorata temporis can be applied only for the \"number of depreciations\" "
 "time method."
-msgstr ""
+msgstr "即时按比例分配仅能用于“折旧次数”的计时方式。"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -1098,7 +1099,7 @@ msgstr "被折旧资产的折旧数量"
 msgid ""
 "The number of depreciations or the period length of your asset category "
 "cannot be 0."
-msgstr ""
+msgstr "折旧的数量或财产类别的期间长度不能是0."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category__date_first_depreciation
@@ -1107,6 +1108,9 @@ msgid ""
 "  * Based on last day of purchase period: The depreciation dates will be based on the last day of the purchase month or the purchase year (depending on the periodicity of the depreciations).\n"
 "  * Based on purchase date: The depreciation dates will be based on the purchase date."
 msgstr ""
+"计算第一期折旧日期的方法。\n"
+" *基于购买期的最后一天：折旧日期将基于购买月份或​​购买年份的最后一天（取决于折旧的周期）。\n"
+" *根据购买日期：折旧日期将基于购买日期。"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset__date_first_depreciation
@@ -1115,6 +1119,9 @@ msgid ""
 "  * Based on last day of purchase period: The depreciation dates will be based on the last day of the purchase month or the purchase year (depending on the periodicity of the depreciations).\n"
 "  * Based on purchase date: The depreciation dates will be based on the purchase date.\n"
 msgstr ""
+"计算第一期折旧日期的方法。\n"
+" *基于购买期的最后一天：折旧日期将基于购买月份或​​购买年份的最后一天（取决于折旧的周期）。\n"
+" *根据购买日期：折旧日期将基于购买日期。\n"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:503
@@ -1122,7 +1129,7 @@ msgstr ""
 msgid ""
 "This depreciation is already linked to a journal entry. Please post or "
 "delete it."
-msgstr ""
+msgstr "此折旧已有相应日记账条目！请提交或删除该条目。"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -1215,7 +1222,7 @@ msgstr "您不能删除包含已过账分录的文档"
 #: code:addons/account_asset/models/account_asset.py:131
 #, python-format
 msgid "You cannot delete a document that is in %s state."
-msgstr ""
+msgstr "不能删除在 %s 状态中的文档."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:638

@@ -33,6 +33,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
+" * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
+" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+" * The 'Cancelled' status is used when user cancel invoice."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -80,7 +84,7 @@ msgstr "%s(副本)"
 #: code:addons/account/models/account_move.py:382
 #, python-format
 msgid "%sreversal of: "
-msgstr ""
+msgstr "%s逆轉"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -274,7 +278,7 @@ msgstr "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>配置電郵服務�
 msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
 "or received.</p>"
-msgstr ""
+msgstr "您可以根據您購買或收到的內容控制供應商的發票。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -318,7 +322,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
-msgstr ""
+msgstr "<span name=\"button_import_placeholder\"/>聲明"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -796,7 +800,7 @@ msgstr "帳戶持有人"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "賬戶持有人姓名"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1219,17 +1223,17 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Add a journal"
-msgstr ""
+msgstr "添加日記"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
 msgid "Add a new account"
-msgstr ""
+msgstr "添加一個新帳戶"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.account_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "添加新標籤"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -1523,12 +1527,12 @@ msgstr "金額"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_total
 msgid "Amount (with Taxes)"
-msgstr ""
+msgstr "銀碼(含稅)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_subtotal
 msgid "Amount (without Taxes)"
-msgstr ""
+msgstr "銀碼(未稅)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_currency
@@ -1747,12 +1751,12 @@ msgstr "適用範圍"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Applied on credit journal item"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "Applied on debit journal item"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -2650,7 +2654,7 @@ msgstr "選擇科目模板"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:136
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "Choose counterpart or Create Write-off"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_refund__filter_refund
@@ -6272,7 +6276,7 @@ msgstr "備註："
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "郵件傳遞錯誤"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -6656,7 +6660,7 @@ msgstr "天數"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "錯誤數量"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_needaction_counter
@@ -6670,7 +6674,7 @@ msgstr "需要行動消息的數量"
 #: model:ir.model.fields,help:account.field_account_invoice__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "發送錯誤的郵件數"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter
@@ -9466,7 +9470,7 @@ msgstr "為保證全部總量被分配，最後一行的計算類型應該是 \"
 #: code:addons/account/models/company.py:97
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "The lock date for advisors is irreversible and can't be removed."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -9484,6 +9488,7 @@ msgstr "會計分錄行將使用的名稱。"
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"The new lock date for advisors must be set after the previous lock date."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_number_next
@@ -10811,6 +10816,8 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"You cannot define stricter conditions on advisors than on users. Please make"
+" sure that the lock date on advisor is set before the lock date for users."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:493
@@ -10878,6 +10885,8 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"You cannot lock a period that is not finished yet. Please make sure that the"
+" lock date for advisors is not set after the last day of the previous month."
 
 #. module: account
 #. openerp-web

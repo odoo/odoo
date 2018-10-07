@@ -18,13 +18,14 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2018
 # Jordy Blankestijn <jblankestijn@erpopen.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
+# Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:12+0000\n"
 "PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Cas Vissers <c.vissers@brahoo.nl>, 2018\n"
+"Last-Translator: Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1548,6 +1549,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows to tag analytic entries and to manage analytic distributions"
 msgstr ""
+"Sta analytische entrie tagging toe en het beheer van analytische "
+"verrichtingen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2608,6 +2611,9 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
+"Wijzigen van uw bedrijfsnaam is niet toegestaan van zodra facturen werden "
+"uitgegeven voor uw rekening. Contacteer ons rechtstreeks aub in verband met "
+"deze verwerking."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:148
@@ -3911,6 +3917,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
+"Bepaald waar de belasting selecteerbaar is. Note : 'None' betekend  dat een "
+"belasting niet gebruikt kan worden. Ze kan wel toegepast worden in een groep"
+" gebruikt. 'adjustment' is used to perform tax adjustment."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
@@ -5415,7 +5424,7 @@ msgstr "Factuurdatum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__invoice_icon
 msgid "Invoice Icon"
-msgstr ""
+msgstr "Faktuur icoon"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_line
@@ -6756,6 +6765,8 @@ msgid ""
 "No account was found to create the invoice, be sure you have installed a "
 "chart of account."
 msgstr ""
+"Geen rekening werd gevonden om de faktuur te maken, verzeker u ervan om de "
+"rekeningstelsels te installeren."
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -7118,6 +7129,9 @@ msgid ""
 "href=#id=%s&model=account.journal>email alias</a> to allow draft vendor "
 "bills to be created upon reception of an email."
 msgstr ""
+"Of zet een <a data-oe-id=%s data-oe-model=\"account.journal\" "
+"href=#id=%s&model=account.journal>email alias</a>om een ontwerp, "
+"leveranciers rekening, te creeren bij ontvangst van een email."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:692
@@ -7136,6 +7150,8 @@ msgid ""
 "Or share the emails %s to your vendors: bills will be created automatically "
 "upon mail reception."
 msgstr ""
+"Of deel de emails %s bij uw leveranciers: rekening zal automatisch gecreerd "
+"worden bij ontvangst van de mail."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -7578,6 +7594,8 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
+"Betalingen worden gebruikt om liquiditeits bewegingen te registreren. U kan "
+"deze betalingen manueel verwerken of via de geinstalleerde faciliteiten."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -7623,6 +7641,7 @@ msgstr "Percentage van balans"
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
 msgstr ""
+"Het percentage voor de betalingsconditie regel moet liggen tussen 0 en 100."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7781,12 +7800,12 @@ msgstr "Prefix van de hoofdcontantenrekening"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__transfer_account_code_prefix
 msgid "Prefix of the main transfer accounts"
-msgstr ""
+msgstr "Prefix van de hoofd transfer rekeningen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_code_prefix
 msgid "Prefix of the transfer accounts"
-msgstr ""
+msgstr "Prefix van de transfer rekeningen"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
@@ -9972,6 +9991,8 @@ msgid ""
 "There is no Transfer Account defined in the accounting settings. Please "
 "define one to be able to confirm this transfer."
 msgstr ""
+"Er is geen transfer rekening gediffinieerd in de boekhoud instellingen. Aub "
+"definieer een transfer rekening om deze verrichting te bevestigen. "
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:181
@@ -10032,6 +10053,8 @@ msgid ""
 "This %s has been created from: <a href=# data-oe-model=account.invoice data-"
 "oe-id=%d>%s</a><br>Reason: %s"
 msgstr ""
+"Deze %s werden aangemaakt van: <a href=# data-oe-model=account.invoice data-"
+"oe-id=%d>%s</a><br>Reden: %s"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -10384,6 +10407,8 @@ msgstr "Te betalen"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
+"Om entries te reconsillieren houd dezelfde bedrijfsnaam aan voor alle "
+"entries."
 
 #. module: account
 #. openerp-web
@@ -10767,6 +10792,8 @@ msgstr "Gebruik verzamelbetalingen"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use budgets to compare actual with expected revenues and costs"
 msgstr ""
+"Gebruik budgetten om te actuele omzet met de te verwachten omzetten en "
+"kosten te vergelijken"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10971,7 +10998,7 @@ msgstr "Leverancier creditfactuur"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__vendor_display_name
 msgid "Vendor Display Name"
-msgstr ""
+msgstr "Leveranciers naam weergave"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:686
@@ -10990,7 +11017,7 @@ msgstr "Betalingstermijn leverancier"
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Vendor Payments"
-msgstr ""
+msgstr "Leverancier betalingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reference
@@ -11151,7 +11178,7 @@ msgstr "Verkeerde debet of credit waarde in boekingsregel!"
 #: code:addons/account/models/account_move.py:890
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr ""
+msgstr "U tracht entries te reconsillieren die reeds werden gereconsillieerd."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked
@@ -11374,6 +11401,8 @@ msgstr ""
 msgid ""
 "You cannot perform this action on an account that contains journal items."
 msgstr ""
+"U kunt deze bewerking niet uitvoeren op een rekening die reeds journaal "
+"boekingen bevat."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -11388,6 +11417,8 @@ msgstr ""
 #, python-format
 msgid "You cannot remove the bank account from the journal once set."
 msgstr ""
+"U kunt de bankrekening niet verwijderen als deze reeds in het journaal werd "
+"opgenomen."
 
 #. module: account
 #: code:addons/account/models/account.py:297
@@ -11406,6 +11437,8 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
+"You cannot switch an account to prevent the reconciliation if some partial "
+"reconciliations are still pending."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1101
@@ -11453,7 +11486,7 @@ msgstr "U dient een reeks aan te maken voor %s in uw bedrijf."
 msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
-msgstr ""
+msgstr "Gelieve een Íntern transfer rekening' definieren in uw kas register."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
@@ -11465,7 +11498,7 @@ msgstr "U moet een startdatum ingeven"
 #: code:addons/account/models/account.py:126
 #, python-format
 msgid "You must first define an opening move."
-msgstr ""
+msgstr "Uw moet een eerste verrichting definieren/boeken."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1677
@@ -11633,17 +11666,17 @@ msgstr "dag(en) na de factureringsdatum"
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g BE15001559627230"
-msgstr ""
+msgstr "bv. BE0111222333"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g Bank of America"
-msgstr ""
+msgstr "bv. Bank of America"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g Checking account"
-msgstr ""
+msgstr "bv. Bankrekening"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
