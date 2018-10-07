@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
 "Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:269
+#: code:addons/sale_stock/models/sale_order.py:273
 #, python-format
 msgid ""
 "\n"
@@ -188,13 +188,13 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "銷售訂單發生例外情況："
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr ""
+msgstr "例外："
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -265,7 +265,7 @@ msgstr "手動"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "可能需要手動操作。"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -296,7 +296,7 @@ msgid "Move forward expected delivery dates by"
 msgstr "將預期交貨日期提前"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:276
+#: code:addons/sale_stock/models/sale_order.py:280
 #, python-format
 msgid "Not enough inventory!"
 msgstr "沒有足夠的庫存！"
@@ -307,7 +307,7 @@ msgid "Order-Specific Routes"
 msgstr "訂單特定路線"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:290
+#: code:addons/sale_stock/models/sale_order.py:294
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "訂購數量減少！"
@@ -485,7 +485,7 @@ msgstr ""
 "在不尋常的情況下，這允許應用銷售訂單行的一種特殊的路徑（如直運、訂造）。為了向銷售訂單提供，路線必須在「銷售訂單線」選項並在他們的設定表格中被勾選。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:393
+#: code:addons/sale_stock/models/sale_order.py:397
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "這個產品是由%.2f%s包裝的。您應該銷售%.2f%s。"
@@ -507,7 +507,7 @@ msgid "Warehouse"
 msgstr "倉庫"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:392
+#: code:addons/sale_stock/models/sale_order.py:396
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -523,7 +523,7 @@ msgid "When to start shipping"
 msgstr "何時開始裝運"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:291
+#: code:addons/sale_stock/models/sale_order.py:295
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -531,7 +531,7 @@ msgid ""
 msgstr "您正在減少訂購的數量！ 如果需要，不要忘記手動更新交貨訂單。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:433
+#: code:addons/sale_stock/models/sale_order.py:437
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
@@ -539,16 +539,17 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:265
+#: code:addons/sale_stock/models/sale_order.py:269
 #, python-format
 msgid ""
-"You plan to sell %s %s but you only have %s %s available in %s warehouse."
-msgstr "您計劃出售%s%s，但只有%s%s在%s倉庫中可用。"
+"You plan to sell %s %s of %s but you only have %s %s available in %s "
+"warehouse."
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "取消"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -564,7 +565,7 @@ msgstr "的"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "訂購而不是"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking

@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: bower Guo <124358678@qq.com>, 2018\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +60,29 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        你好 ${object.partner_id.name},<br/><br/>\n"
+"        我们很高兴通知您，您的订单已发货.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Your tracking reference is\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        查找附带的交货单以了解更多信息.<br/><br/>\n"
+"        非常感谢,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -207,7 +231,7 @@ msgstr "创建时间"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr "调试记录"
+msgstr "调试日志"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -341,7 +365,7 @@ msgstr "环境"
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "错误：此传递方法不适用于此地址。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -698,7 +722,7 @@ msgstr "如果您的凭证已通过生产认证，请设置为True。"
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
-msgstr ""
+msgstr "跟踪号码为  %s 的货物发送给承运人 %s<br/>进行运输的成本: %.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -733,7 +757,7 @@ msgstr "库存移动"
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
-msgstr ""
+msgstr "您的包裹的重量高于这个包装类型所授权的最大重量。请选择另一个包类型。"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
@@ -765,7 +789,7 @@ msgstr "这个百分比将被添加到航运价格。"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "跟踪器链接"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -839,7 +863,7 @@ msgstr "重量* 体积"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Weight computed based on the sum of the weights of the products."
-msgstr ""
+msgstr "根据产品重量的总和计算重量。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
@@ -886,7 +910,7 @@ msgstr "您只能在未经确认的报价单上添加交货价格。"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "你有多个跟踪器链接，它们在聊天中可用。"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:185

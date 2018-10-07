@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-10-02 10:05+0000\n"
 "Last-Translator: Collex100, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -78,13 +78,13 @@ msgid "Cancel"
 msgstr "Отменить"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:713
+#: code:addons/base_import/models/base_import.py:693
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "Колонка %s содержит неверные значения (значение: %s)"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:808
+#: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
 msgstr "Столбец %s содержит неверные значения. Ошибка в строке %d: %s"
@@ -103,7 +103,7 @@ msgid "Comma"
 msgstr "Запятая"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:845
+#: code:addons/base_import/models/base_import.py:825
 #, python-format
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
@@ -176,8 +176,8 @@ msgid "Currency"
 msgstr "Валюта"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:208
-#: code:addons/base_import/models/base_import.py:213
+#: code:addons/base_import/models/base_import.py:207
+#: code:addons/base_import/models/base_import.py:212
 #, python-format
 msgid "Database ID"
 msgstr "ID базы данных"
@@ -265,13 +265,13 @@ msgid "Encoding:"
 msgstr "Кодировка:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:810
+#: code:addons/base_import/models/base_import.py:790
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Ошибка парсинга данных [%s: L %d]: %s"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:290
+#: code:addons/base_import/models/base_import.py:289
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr "Найдены ошибки в ячейках при чтении файла XLS/XLSX: %s"
@@ -291,8 +291,8 @@ msgid "Excel files are recommended as fields formatting is automatic."
 msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:170
-#: code:addons/base_import/models/base_import.py:207
+#: code:addons/base_import/models/base_import.py:169
+#: code:addons/base_import/models/base_import.py:206
 #, python-format
 msgid "External ID"
 msgstr "Внешний ID"
@@ -318,8 +318,8 @@ msgid "File Type"
 msgstr "Тип файла"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:828
-#: code:addons/base_import/models/base_import.py:834
+#: code:addons/base_import/models/base_import.py:808
+#: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr ""
@@ -732,6 +732,16 @@ msgid "Tests : Base Import Model, One to Many child"
 msgstr ""
 
 #. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_complex
+msgid "Tests: Base Import Model Complex"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_float
+msgid "Tests: Base Import Model Float"
+msgstr ""
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:80
 #, python-format
@@ -764,14 +774,14 @@ msgid "Track history during import"
 msgstr "Отслеживание истории при импорте"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:255
+#: code:addons/base_import/models/base_import.py:254
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 "Невозможно загрузить файл «{extension}»: требуется Python-модуль «{modname}»"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:256
+#: code:addons/base_import/models/base_import.py:255
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
@@ -807,7 +817,7 @@ msgid "Value2"
 msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:780
+#: code:addons/base_import/models/base_import.py:760
 #, python-format
 msgid ""
 "You can not import images via URL, check with your administrator or support "
@@ -815,7 +825,7 @@ msgid ""
 msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:651
+#: code:addons/base_import/models/base_import.py:631
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "Вы должны настроить хотя бы одно поле для импорта"
@@ -826,16 +836,6 @@ msgstr "Вы должны настроить хотя бы одно поле д�
 #, python-format
 msgid "at row %d"
 msgstr "в строке %d"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_complex
-msgid "base_import.tests.models.complex"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_float
-msgid "base_import.tests.models.float"
-msgstr ""
 
 #. module: base_import
 #. openerp-web

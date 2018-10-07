@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,35 +21,35 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
-#: model:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid ""
 ".\n"
 "            Manual actions may be needed."
-msgstr ""
+msgstr "可能需要手動操作。"
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "採購訂單發生例外情況："
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "銷售訂單發生例外情況："
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
-#: model:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s):"
-msgstr ""
+msgstr "例外："
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
 msgid "Generated Purchase Lines"
-msgstr ""
+msgstr "生成的採購行"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
@@ -57,22 +58,22 @@ msgid ""
 "If ticked, each time you sell this product through a SO, a RfQ is "
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
-msgstr ""
+msgstr "如果勾選，每次您通過SO銷售此產品時，會自動創建RfQ以購買該產品。 提示：不要忘記在產品上設置供應商。"
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "可能需要手動操作。"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
 msgid "Number of Purchase Order"
-msgstr ""
+msgstr "採購訂單數量"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr ""
+msgstr "生成的購買項目數"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:91
@@ -83,7 +84,7 @@ msgstr "訂購數量減少！"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
-msgstr ""
+msgstr "原產地銷售項目"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -93,13 +94,13 @@ msgstr "產品模板"
 #. module: sale_purchase
 #: sql_constraint:product.template:0
 msgid "Product that is not a service can not create RFQ."
-msgstr ""
+msgstr "非服務的產品無法創建RFQ。"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Purchase Automatically"
-msgstr ""
+msgstr "自動購買"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -112,7 +113,7 @@ msgid "Purchase Order Line"
 msgstr "採購訂單明細行"
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
 msgid "Purchase Orders"
 msgstr "採購訂單"
 
@@ -121,7 +122,7 @@ msgstr "採購訂單"
 msgid ""
 "Purchase line generated by this Sales item on order confirmation, or when "
 "the quantity was increased."
-msgstr ""
+msgstr "在訂單確認時，或在數量增加時，此銷售項目生成的採購行。"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order
@@ -129,7 +130,7 @@ msgid "Quotation"
 msgstr "報價"
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
 msgstr "重新訂購"
 
@@ -157,22 +158,22 @@ msgstr "沒有供應商與產品%s相關聯。 請為此產品定義一個供應
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
-msgstr ""
+msgstr "您正在減少訂購數量！ 如果需要，請不要忘記手動更新採購訂單。"
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
-#: model:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "cancelled"
-msgstr ""
+msgstr "取消"
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
-#: model:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "of"
 msgstr "的"
 
 #. module: sale_purchase
-#: model:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr ""
+msgstr "訂購而不是"

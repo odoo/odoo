@@ -14,13 +14,14 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:07+0000\n"
+"PO-Revision-Date: 2018-10-02 10:07+0000\n"
+"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -340,6 +341,13 @@ msgid "Event Menu"
 msgstr "Menu"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:31
+#, python-format
+msgid "Event Name"
+msgstr "Etkinlik Adı"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Event not found!"
 msgstr "Olay bulunamadı!"
@@ -409,7 +417,7 @@ msgstr "Katılımcı"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
 msgid "Is published"
-msgstr ""
+msgstr "Yayınlandı"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:71
@@ -430,8 +438,7 @@ msgstr "İsim"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/controllers/main.py:200
-#: code:addons/website_event/static/src/js/website_event.editor.js:29
-#: model_terms:ir.ui.view,arch_db:website_event.content_new_event
+#: code:addons/website_event/static/src/js/website_event.editor.js:30
 #, python-format
 msgid "New Event"
 msgstr "Yeni Etkinlik"
@@ -578,19 +585,9 @@ msgid "Registration for this event is now closed"
 msgstr "Bu etkinlik için kayıtlar şimdi kapandı"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_id
-msgid "Restrict publishing to this website."
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Return to the event list."
 msgstr "Etkinlik listesine dön"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__is_seo_optimized
-msgid "SEO optimized"
-msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
@@ -611,11 +608,6 @@ msgstr "Sosyal Medya Akışı"
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Sorry, the requested event is not available anymore."
 msgstr "Maalesef, istenen etkinlik artık mevcut değildir."
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Belgeye web sitesinden erişim için tam URL adresi."
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:44
@@ -646,11 +638,6 @@ msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr ""
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_published
-msgid "Visible on current website"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
 msgstr "Google Haritalarda görselleştirin"
@@ -661,11 +648,6 @@ msgid "We are glad to confirm your registration to our event"
 msgstr "Etkinliğimize kaydınızı onaylarsanız çok mutlu oluruz."
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_id
-msgid "Website"
-msgstr "Websitesi"
-
-#. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Websitesi Anasayfa"
@@ -674,31 +656,6 @@ msgstr "Websitesi Anasayfa"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
 msgstr "Web Sitesi Menü"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_url
-msgid "Website URL"
-msgstr "Web Sitesi URL Adresi"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
-msgid "Website meta description"
-msgstr "Web sitesi meta açıklaması"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Web Sitesi meta anahtar kelimeleri"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
-msgid "Website meta title"
-msgstr "Web sitesi meta başlık"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_og_img
-msgid "Website opengraph image"
-msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-25 12:33+0000\n"
-"PO-Revision-Date: 2018-09-25 12:33+0000\n"
+"POT-Creation-Date: 2018-10-02 10:14+0000\n"
+"PO-Revision-Date: 2018-10-02 10:14+0000\n"
 "Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -556,21 +556,6 @@ msgstr ""
 "\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_extension
-msgid ""
-"\n"
-"        Adapt base accounting module for Enterprise Edition.\n"
-"\n"
-"        This module will be auto installed if account module and enterprise edition are present\n"
-"    "
-msgstr ""
-"\n"
-"        Aanpassen van de basismodule Boekhouding voor de Enterprise Edition.\n"
-"\n"
-"        Deze module wordt automatisch geïnstalleerd wanneer de boekhoudmodule en de Enterprise Edition aanwezig zijn\n"
-"    "
-
-#. module: base
 #: model:ir.module.module,description:base.module_voip
 msgid ""
 "\n"
@@ -930,7 +915,7 @@ msgid ""
 "        Zebra printers integration for stock module"
 msgstr ""
 "\n"
-"Zebra printers integratie voor stock module"
+"Zebra printers integratie voor voorraad module"
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_autocomplete
@@ -1477,7 +1462,7 @@ msgstr ""
 "E-mailsjablonen toevoegen aan producten bij factuurverzending.\n"
 "========================================================\n"
 "\n"
-"Met deze module kan u uw producten koppelen met een emailsjabloon met volledige\n"
+"Met deze module kan u uw producten koppelen met een e-mailsjabloon met volledige\n"
 "informatie en tools, wanneer de factuur naar uw klant verzonden wordt. Dit kan\n"
 "bijvoorbeeld nuttig zijn wanneer u opleidingen factureert: de agenda en het lesmateriaal\n"
 "van de opleiding zullen automatisch met de factuur mee verstuurd worden.\n"
@@ -1894,18 +1879,10 @@ msgid ""
 "================================\n"
 "\n"
 "This module allows the web client to access a remotely installed barcode\n"
-"scanner, and is used by the posbox to provide barcode scanner support to the\n"
+"scanner, and is used by the IoTBox to provide barcode scanner support to the\n"
 "point of sale module. \n"
 "\n"
 msgstr ""
-"\n"
-"Barcode Scanner Hardware Driver\n"
-"================================\n"
-"\n"
-"Deze module geeft de web omgeving toegang tot een barcode scanner. \n"
-"Deze wordt gebruikt door de posbox om barcode scanner ondersteuning \n"
-"te geven aan de kassa module. \n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -2300,7 +2277,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Gemeente beheer in adressen\n"
+"Plaats beheer in adressen\n"
 "============================\n"
 "\n"
 "Deze module staat u toe om gebruikers te verplichten een stad te kiezen uit een op voorhand ingevulde lijst in plaats van een tekstveld."
@@ -2341,7 +2318,7 @@ msgid ""
 "=================================================================================================\n"
 msgstr ""
 "\n"
-"Configureer de prijsnauwkeurigheid die u nodig heeft voor verschillende gebruiken: boekhouding, verkoop, aankoop.\n"
+"Configureer de prijsnauwkeurigheid die u nodig heeft voor verschillende gebruiken: boekhouding, verkoop, inkoop.\n"
 "=================================================================================================\n"
 "\n"
 "De decimale precisie is geconfigureerd per bedrijf.\n"
@@ -2984,6 +2961,7 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_hw_drivers
 #: model:ir.module.module,description:base.module_hw_proxy
 msgid ""
 "\n"
@@ -3280,6 +3258,35 @@ msgstr ""
 "U kan de vergemakkelijkte boekhouding gebruiken indien u werkt met een (externe) boekhouding voor uw boeken en als u toch nog uw betalingen wilt opvolgen. Deze module biedt u ook een gemakkelijk manier aan om betaalmethoden te registreren, zonder complete abstracties van rekeningen te coderen."
 
 #. module: base
+#: model:ir.module.module,description:base.module_hw_posbox_homepage
+msgid ""
+"\n"
+"IoT Box Homepage\n"
+"================\n"
+"\n"
+"This module overrides Odoo web interface to display a simple\n"
+"Homepage that explains what's the iotbox and show the status,\n"
+"and where to find documentation.\n"
+"\n"
+"If you activate this module, you won't be able to access the \n"
+"regular Odoo interface anymore.\n"
+"\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_hw_posbox_upgrade
+msgid ""
+"\n"
+"IoTBox Software Upgrader\n"
+"========================\n"
+"\n"
+"This module allows to remotely upgrade the IoTBox software to a\n"
+"new version. This module is specific to the IoTBox setup and environment\n"
+"and should not be installed on regular Odoo servers.\n"
+"\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
 msgid ""
 "\n"
@@ -3436,8 +3443,8 @@ msgstr ""
 "Beheer 3-way matching op leveranciersfacturen\n"
 "=====================================\n"
 "\n"
-"In de maakindustrie ontvangen bedrijven vaak eerder de leveranciers factuur\n"
-"voor het ontvangen van hun aankoop, maar willen de rekening niet betalen tot de goederen zijn bezorgd.\n"
+"In de maakindustrie ontvangen bedrijven vaak eerder de leveranciersfactuur\n"
+"voor het ontvangen van hun inkoop, maar willen de rekening niet betalen tot de goederen zijn bezorgd.\n"
 "\n"
 "De oplossing voor deze situatie is om de leveranciers factuur te maken wanneer u deze ontvangt (op basis van bestelde hoeveelheden), maar alleen te betalen als de ontvangen hoeveelheden (op de PO-regels) overeen komen met de hoeveelheden in de leveranciers factuur.\n"
 "\n"
@@ -3603,7 +3610,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_sale_stock_options
+#: model:ir.module.module,description:base.module_website_sale_stock
 msgid ""
 "\n"
 "Manage the inventory of your products and display their availability status in your eCommerce store.\n"
@@ -4382,52 +4389,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_hw_posbox_homepage
-msgid ""
-"\n"
-"PosBox Homepage\n"
-"===============\n"
-"\n"
-"This module overrides Odoo web interface to display a simple\n"
-"Homepage that explains what's the posbox and show the status,\n"
-"and where to find documentation.\n"
-"\n"
-"If you activate this module, you won't be able to access the \n"
-"regular Odoo interface anymore.\n"
-"\n"
-msgstr ""
-"\n"
-"PosBox home pagina\n"
-"===============\n"
-"Deze module overschrijft de Odoo web interface om een simpele home pagina\n"
-"weer te geven die uitlegt wat de PosBox is, welke status deze heeft\n"
-"en waar u documentatie kan vinden.\n"
-"\n"
-"Als u deze module activeert kan u niet meer de standaard\n"
-"interface van Odoo bereiken. \n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_hw_posbox_upgrade
-msgid ""
-"\n"
-"PosBox Software Upgrader\n"
-"========================\n"
-"\n"
-"This module allows to remotely upgrade the PosBox software to a\n"
-"new version. This module is specific to the PosBox setup and environment\n"
-"and should not be installed on regular Odoo servers.\n"
-"\n"
-msgstr ""
-"\n"
-"PosBox software updater\n"
-"========================\n"
-"\n"
-"Deze module staat toe om van op afstand de PosBox software te upgraden naar een\n"
-"nieuwe versie. Deze module is specifiek voor de PosBox en zijn omgeving\n"
-"en moet niet geïnstalleerd worden op een gewone Odoo server.\n"
-"\n"
-
-#. module: base
 #: model:ir.module.module,description:base.module_mrp_plm
 msgid ""
 "\n"
@@ -4589,12 +4550,12 @@ msgstr ""
 "Inkomende e-mailberichten ophalen van POP/IMAP servers.\n"
 "=====================================================\n"
 "\n"
-"Voer de parameters van uw POP/IMAP email-account(s) in en elke binnenkomende\n"
+"Voer de parameters van uw POP/IMAP e-mail-account(s) in en elke binnenkomende\n"
 "e-mail voor deze account zal automatisch in uw Odoo-systeem geladen worden. Alle\n"
 "POP3/IMAP-compatibele servers worden ondersteund, ook deze die een versleutelde\n"
 "SSL/TLS-connectie vereisen.\n"
 "\n"
-"This can be used to easily create email-based workflows for many email-enabled OpenERP documents, such as:\n"
+"This can be used to easily create e-mail-based workflows for many e-mail-enabled OpenERP documents, such as:\n"
 "----------------------------------------------------------------------------------------------------------\n"
 "    * CRM Leads/Prospects\n"
 "    * CRM Claims\n"
@@ -4603,10 +4564,10 @@ msgstr ""
 "    * Human Resource Recruitments (Applicants)\n"
 "\n"
 "Just install the relevant application, and you can assign any of these document\n"
-"types (Leads, Project Issues) to your incoming email accounts. New emails will\n"
+"types (Leads, Project Issues) to your incoming e-mail accounts. New emails will\n"
 "automatically spawn new documents of the chosen type, so it's a snap to create a\n"
 "mailbox-to-OpenERP integration. Even better: these documents directly act as mini\n"
-"conversations synchronized by email. You can reply from within OpenERP, and the\n"
+"conversations synchronized by e-mail. You can reply from within OpenERP, and the\n"
 "answers will automatically be collected when they come back, and attached to the\n"
 "same *conversation* document.\n"
 "\n"
@@ -4868,15 +4829,6 @@ msgstr ""
 "\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_sale_options
-msgid ""
-"\n"
-"Suggest optional products when shoppers add products to their cart (e.g. for computers: warranty, OS software, extra components).\n"
-"Optional products are defined in the product form.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_survey_crm
 msgid ""
 "\n"
@@ -4975,7 +4927,7 @@ msgstr ""
 "\n"
 "U kan deze simpele versie van boekhouding gebruiken als u werkt met een (externe) boekhouder om uw boekhouding te beheren, maar u nog wel uw betalingen wilt opvolgen.\n"
 "\n"
-"Het Boekhouding systeem bevat inkomsten en waardebonnen (een gemakkelijk weg om verkopen en inkopen op te volgen). Het bied u ook een gemakkelijke manier van geregistreerde betalingen aan, zondere complete abstracten van uw boekhouding te maken.\n"
+"Het Boekhouding systeem bevat omzet en waardebonnen (een gemakkelijk weg om verkopen en inkopen op te volgen). Het bied u ook een gemakkelijke manier van geregistreerde betalingen aan, zondere complete abstracten van uw boekhouding te maken.\n"
 "\n"
 "Deze module beheert:\n"
 "\n"
@@ -6039,7 +5991,7 @@ msgid ""
 "This module allows you to set a deferred revenue on your subscriptions.\n"
 msgstr ""
 "\n"
-"Deze module staat u toe om uitgestelde inkomsten in te stellen op uw abonnementen.\n"
+"Deze module staat u toe om uitgestelde omzet in te stellen op uw abonnementen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing
@@ -6626,6 +6578,9 @@ msgid ""
 "Visitors can join public mail channels managed in the Discuss app in order to get regular updates or reach out with your community.\n"
 "    "
 msgstr ""
+"\n"
+"Bezoekers kunnen openbare mailgroepen beheren in de discussieer app, zodat ze geregelde updates krijgen of contact krijgen met jouw community\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -6657,7 +6612,7 @@ msgstr ""
 "\n"
 "Dashboard / Rapportages van magazijnen bevatten:\n"
 "------------------------------------------------------\n"
-"Stockvoorraad waarde op een gegeven datum (ondersteund datums in de geschiedenis)"
+"Voorraadwaarde op een gegeven datum (ondersteund datums in de geschiedenis)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_forum
@@ -6848,8 +6803,8 @@ msgstr "%p - Equivalent van AM of PM.\""
 #: code:addons/base/models/ir_filters.py:38
 #: code:addons/base/models/res_partner.py:336
 #: code:addons/base/models/res_users.py:163
+#: code:addons/base/models/res_users.py:505
 #: code:addons/base/models/res_users.py:507
-#: code:addons/base/models/res_users.py:509
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -7178,6 +7133,10 @@ msgid ""
 "                                <span colspan=\"2\">Minute: %(min)s</span>\n"
 "                                <span colspan=\"2\">Second: %(sec)s</span>"
 msgstr ""
+"<span colspan=\"2\">Uur 00-&gt;24: %(h24)s</span>\n"
+"                                <span colspan=\"2\">Uur 00-&gt;12: %(h12)s</span>\n"
+"                                <span colspan=\"2\">Minuut: %(min)s</span>\n"
+"                                <span colspan=\"2\">Seconde: %(sec)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -7621,7 +7580,7 @@ msgid "A AGRICULTURE, FORESTRY AND FISHING"
 msgstr "A LANDBOUW, BOSBOUW EN VISSERIJ"
 
 #. module: base
-#: code:addons/models.py:2982
+#: code:addons/models.py:2986
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr ""
@@ -7646,8 +7605,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
-msgid "A homepage for the PosBox"
-msgstr "Een homepage voor de PosBox"
+msgid "A homepage for the IoT Box"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_exceptions
@@ -7761,6 +7720,12 @@ msgid "ABA Credit Transfer"
 msgstr "ABA overschrijving"
 
 #. module: base
+#: code:addons/fields.py:1760
+#, python-format
+msgid "ASCII characters are required for %s in %s"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_title__shortcut
 msgid "Abbreviation"
 msgstr "Afkorting"
@@ -7833,11 +7798,6 @@ msgstr "Importeren bankrenkeningnummers"
 #: model:ir.module.category,name:base.module_category_localization_account_charts
 msgid "Account Charts"
 msgstr "Rekeningschema's"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_account_extension
-msgid "Account Extension"
-msgstr "Uitbreiding voor boekhouding"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
@@ -8050,7 +8010,7 @@ msgstr "Actie-gebruik"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 msgid "Action Window"
-msgstr ""
+msgstr "Actie venster"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
@@ -8060,7 +8020,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Actie venster weergave"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -8181,6 +8141,12 @@ msgstr "Soort adres"
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Address format..."
 msgstr "Adres formaat..."
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:630
+#, python-format
+msgid "Address separator"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_ldap
@@ -8305,18 +8271,12 @@ msgid ""
 msgstr "Administratieve onderverdelen van een land."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:957
-#: code:addons/base/models/ir_model.py:1070
-#: code:addons/base/models/ir_model.py:1523
+#: code:addons/base/models/ir_model.py:959
+#: code:addons/base/models/ir_model.py:1072
+#: code:addons/base/models/ir_model.py:1525
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Administrator toegang is nodig om een module te kunnen verwijderen."
-
-#. module: base
-#: code:addons/base/models/ir_qweb_fields.py:629
-#, python-format
-msgid "Adress separator"
-msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -8348,7 +8308,7 @@ msgstr "Geavanceerde mogelijkheden voor CRM"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_enterprise
 msgid "Advanced features for Stock"
-msgstr "Geavanceerde mogelijkheden voor stock"
+msgstr "Geavanceerde mogelijkheden voor voorraad"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account_enterprise
@@ -8437,7 +8397,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Allocate leaves and follow leave requests"
-msgstr ""
+msgstr "Verlof toewijzen en verlofaanvragen volgen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_reprint
@@ -8477,8 +8437,8 @@ msgstr "Sta gratis verzending toe in coupon beloning"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_upgrade
-msgid "Allows to remotely upgrade the PosBox software"
-msgstr "Sta toe om de PosBox van afstand bij te werken"
+msgid "Allows to remotely upgrade the IoTBox software"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon
@@ -8551,7 +8511,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr "Analytische kostenplaats in productie"
+msgstr "Kostenplaatsen in productie"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -8600,7 +8560,7 @@ msgid "Application"
 msgstr "Sollicitatie"
 
 #. module: base
-#: code:addons/base/models/res_users.py:970
+#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Application Accesses"
@@ -9011,7 +8971,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 mm"
 
 #. module: base
-#: code:addons/translate.py:1074
+#: code:addons/translate.py:1076
 #, python-format
 msgid "Bad file format: %s"
 msgstr "Onjuist bestandsformaat: %s"
@@ -9113,13 +9073,13 @@ msgid "Barcode scan in Mobile"
 msgstr "Barcode scan in mobiel"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:602
+#: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type"
 msgstr "Soort barcode"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:602
+#: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type, eg: UPCA, EAN13, Code128"
 msgstr ""
@@ -9228,7 +9188,7 @@ msgid "Before Amount"
 msgstr "Voor bedrag"
 
 #. module: base
-#: code:addons/base/models/res_users.py:1242
+#: code:addons/base/models/res_users.py:1240
 #, python-format
 msgid ""
 "Before clicking on 'Change Password', you have to write a new password."
@@ -9494,7 +9454,7 @@ msgid "By"
 msgstr "Door"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:279
+#: code:addons/base/models/ir_qweb_fields.py:280
 #, python-format
 msgid "By default the widget uses the field informations"
 msgstr ""
@@ -9582,7 +9542,7 @@ msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Kan module '%s' niet bijwerken. Deze is niet geïnstalleerd."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:706
+#: code:addons/base/models/ir_model.py:718
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr "Kan maar één naam hernoemen per keer!"
@@ -9645,7 +9605,7 @@ msgid "Cancel Upgrade"
 msgstr "Bijwerken onderbreken"
 
 #. module: base
-#: code:addons/models.py:2116
+#: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr "Kan veld %r niet agregeren."
@@ -9655,6 +9615,7 @@ msgstr "Kan veld %r niet agregeren."
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
 msgstr ""
+"U kan geen taal deactiveren die momenteel in gebruik is door een gebruiker."
 
 #. module: base
 #: code:addons/base/models/res_config.py:388
@@ -9663,7 +9624,7 @@ msgid "Cannot duplicate configuration!"
 msgstr "Het is niet mogelijk de instellingen te dupliceren!"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:606
+#: code:addons/base/models/ir_model.py:618
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
 msgstr ""
@@ -9753,13 +9714,13 @@ msgstr ""
 " te breken."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:693
+#: code:addons/base/models/ir_model.py:705
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Het wijzigen van het model van een veld is niet toegestaan!"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:696
+#: code:addons/base/models/ir_model.py:708
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
@@ -10150,7 +10111,7 @@ msgid "Companies count"
 msgstr "Aantal bedrijven"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:395
+#: code:addons/base/models/ir_qweb_fields.py:396
 #: model:ir.model.fields,field_description:base.field_ir_attachment__company_id
 #: model:ir.model.fields,field_description:base.field_ir_default__company_id
 #: model:ir.model.fields,field_description:base.field_ir_property__company_id
@@ -10223,7 +10184,7 @@ msgid "Company Type"
 msgstr "Soort bedrijf"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:395
+#: code:addons/base/models/ir_qweb_fields.py:396
 #, python-format
 msgid ""
 "Company used for the original currency (only used for t-esc). By default use"
@@ -10297,7 +10258,7 @@ msgstr "Configuratie"
 #. module: base
 #: model:ir.model,name:base.model_res_config_installer
 msgid "Config Installer"
-msgstr ""
+msgstr "Config installeerder"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
@@ -10350,6 +10311,7 @@ msgid "Congo"
 msgstr "Congo"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hw_drivers
 #: model:ir.module.module,summary:base.module_hw_proxy
 msgid "Connect the Web Client to Hardware Peripherals"
 msgstr "Koppel de webclient aan de Hatrdware"
@@ -11072,10 +11034,10 @@ msgstr "Eigen sneltoetsen"
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
 msgid "Custom View"
-msgstr ""
+msgstr "Aangepaste weergave"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:394
+#: code:addons/base/models/ir_model.py:406
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Eigen velden dienen een naam te hebben die begint met 'x_' !"
@@ -11209,7 +11171,7 @@ msgid "Database Structure"
 msgstr "Databasestructuur"
 
 #. module: base
-#: code:addons/models.py:2913
+#: code:addons/models.py:2916
 #, python-format
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
@@ -11219,7 +11181,7 @@ msgstr ""
 "door een type incoherentie in een vorige aanvraag"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:394
+#: code:addons/base/models/ir_qweb_fields.py:395
 #: model:ir.model.fields,field_description:base.field_res_currency__date
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__name
 #: model:ir.model.fields,field_description:base.field_res_partner__date
@@ -11236,31 +11198,31 @@ msgid "Date Format"
 msgstr "Datumnotatie"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:205
+#: code:addons/base/models/ir_qweb_fields.py:206
 #, python-format
 msgid "Date format"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:566
+#: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:510
+#: code:addons/base/models/ir_qweb_fields.py:511
 #, python-format
 msgid "Date unit"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:510
+#: code:addons/base/models/ir_qweb_fields.py:511
 #, python-format
 msgid "Date unit used for comparison and formatting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:511
+#: code:addons/base/models/ir_qweb_fields.py:512
 #, python-format
 msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
@@ -11268,7 +11230,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:394
+#: code:addons/base/models/ir_qweb_fields.py:395
 #, python-format
 msgid ""
 "Date used for the original currency (only used for t-esc). by default use "
@@ -11353,7 +11315,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_deferred_revenue
 msgid "Deferred Revenues"
-msgstr "Uitgestelde inkomsten"
+msgstr "Uitgestelde omzet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_asset
@@ -11419,7 +11381,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
 msgid "Demo Installation Failures"
-msgstr ""
+msgstr "Demo installatie fouten"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -11542,7 +11504,7 @@ msgid "Digital Products"
 msgstr "Digitale producten"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:509
+#: code:addons/base/models/ir_qweb_fields.py:510
 #, python-format
 msgid "Digital formating"
 msgstr ""
@@ -11726,7 +11688,7 @@ msgstr ""
 "degenen waar u mee werkt, onderhouden worden."
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:393
+#: code:addons/base/models/ir_qweb_fields.py:394
 #, python-format
 msgid "Display currency"
 msgstr ""
@@ -11751,40 +11713,41 @@ msgstr ""
 "%(country_code)s: de code van het land"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:224
+#: code:addons/base/models/ir_qweb_fields.py:225
 #, python-format
 msgid "Display only the time"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:633
+#: code:addons/base/models/ir_qweb_fields.py:634
 #, python-format
 msgid "Display the country image if the field is present on the record"
 msgstr ""
+"Geef de afbeelding van het land weer als deze aanwezig is op het record"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:632
+#: code:addons/base/models/ir_qweb_fields.py:633
 #, python-format
 msgid "Display the phone icons even if no_marker is True"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:633
+#: code:addons/base/models/ir_qweb_fields.py:634
 #, python-format
 msgid "Displayed contry image"
-msgstr ""
+msgstr "Weergegeven landschap afbeelding"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:628
+#: code:addons/base/models/ir_qweb_fields.py:629
 #, python-format
 msgid "Displayed fields"
-msgstr ""
+msgstr "Getoonde velden"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:632
+#: code:addons/base/models/ir_qweb_fields.py:633
 #, python-format
 msgid "Displayed phone icons"
-msgstr ""
+msgstr "Weergeven telefoon iconen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
@@ -11832,8 +11795,8 @@ msgid "Document management"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1226
-#: code:addons/base/models/ir_model.py:1229
+#: code:addons/base/models/ir_model.py:1228
+#: code:addons/base/models/ir_model.py:1231
 #, python-format
 msgid "Document model"
 msgstr "Document model"
@@ -11856,7 +11819,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_product
 msgid "Documents - Product"
-msgstr ""
+msgstr "Documenten - Product"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project
@@ -11897,9 +11860,9 @@ msgid "Dominican Republic - Accounting"
 msgstr "Dominicaanse Republiek - Boekhouding"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:630
+#: code:addons/base/models/ir_qweb_fields.py:631
 #, python-format
-msgid "Don't display the font awsome marker"
+msgid "Don't display the font awesome marker"
 msgstr ""
 
 #. module: base
@@ -11965,19 +11928,19 @@ msgid "EDI for Mexico"
 msgstr "EDI voor Mexico"
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:542
+#: code:addons/base/models/ir_attachment.py:541
 #, python-format
 msgid "ERROR: Invalid PDF file!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:583
+#: code:addons/base/models/ir_attachment.py:588
 #, python-format
 msgid "ERROR: Invalid list of pages to split. Example: 1,5-9,10"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:579
+#: code:addons/base/models/ir_attachment.py:583
 #, python-format
 msgid "ERROR: the file must be a PDF"
 msgstr ""
@@ -12149,7 +12112,7 @@ msgid "Employees"
 msgstr "Werknemers"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:450
+#: code:addons/base/models/ir_model.py:462
 #, python-format
 msgid "Empty dependency in %r"
 msgstr "Lege afhankelijkheid in %r"
@@ -12219,13 +12182,13 @@ msgstr ""
 "Weergave`%(view_name)s`"
 
 #. module: base
-#: code:addons/models.py:1089
+#: code:addons/models.py:1091
 #, python-format
 msgid "Error details:"
 msgstr "Meer info over fout:"
 
 #. module: base
-#: code:addons/models.py:1102
+#: code:addons/models.py:1104
 #, python-format
 msgid "Error while validating constraint"
 msgstr "Fout bij bevestigen"
@@ -12445,12 +12408,12 @@ msgstr "Exporteer betalingen als SEPA krediet overschrijving bestanden"
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
 msgid "Exports"
-msgstr ""
+msgstr "Exports"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports_line
 msgid "Exports Line"
-msgstr ""
+msgstr "Exporteert regel"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_server_object_lines__value
@@ -12852,19 +12815,19 @@ msgid "Field"
 msgstr "Veld"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:202
+#: code:addons/base/models/ir_model.py:214
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr "Veld \"Model\" kan niet gewijzigd worden op modellen."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:206
+#: code:addons/base/models/ir_model.py:218
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr "Veld \"Transient Model\" kan niet gewijzigd worden op modellen."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:204
+#: code:addons/base/models/ir_model.py:216
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr "Veld \"Soort\" kan niet gewijzigd worden op modellen."
@@ -12910,7 +12873,7 @@ msgid "Field `%(field_name)s` does not exist"
 msgstr "Veld '%(field_name)s' bestaat niet"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:398
+#: code:addons/base/models/ir_model.py:410
 #, python-format
 msgid ""
 "Field names can only contain characters, digits and underscores (up to 63)."
@@ -12938,7 +12901,7 @@ msgstr "Velden"
 #. module: base
 #: model:ir.model,name:base.model_ir_fields_converter
 msgid "Fields Converter"
-msgstr ""
+msgstr "Velden converteerder"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -12946,7 +12909,7 @@ msgid "Fields Description"
 msgstr "Omschrijving velden"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:607
+#: code:addons/base/models/ir_model.py:619
 #, python-format
 msgid "Fields: %s"
 msgstr "Velden: %s"
@@ -13091,7 +13054,7 @@ msgstr "Folio 27  210 x 330 mm"
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
 msgid "Fomat Address"
-msgstr ""
+msgstr "Adresformaat"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
@@ -13153,13 +13116,13 @@ msgstr ""
 "Indien nodig kunt u de wizard meerdere malen gebruiken"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:649
+#: code:addons/base/models/ir_model.py:661
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "Voor selectievelden moeten de selectie-opties opgegeven worden!"
 
 #. module: base
-#: code:addons/models.py:3042
+#: code:addons/models.py:3015
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created yourself.\n"
@@ -13208,7 +13171,7 @@ msgstr "Alleen formulier"
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
 #: model:ir.model.fields,help:base.field_res_users__email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr "Formaat e-mail adres \"Naam <email@domein>\""
+msgstr "Formaat e-mail adres \"Naam <e-mail@domein>\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__email_formatted
@@ -13518,12 +13481,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03
 msgid "Germany SKR03 - Accounting"
-msgstr ""
+msgstr "Duitsland  SKR03 - Boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
 msgid "Germany SKR04 - Accounting"
-msgstr ""
+msgstr "Duitsland SKR04 - Boekhouding"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
@@ -13850,7 +13813,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP routing"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -13860,7 +13823,7 @@ msgstr "Haïti"
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Handle lunch orders of your employees"
-msgstr ""
+msgstr "Verwerk lunchbestellingen van uw werknemers"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_scanner
@@ -13888,6 +13851,7 @@ msgid "Hardware Drivers"
 msgstr "Hardware Drivers"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_drivers
 #: model:ir.module.module,shortdesc:base.module_hw_proxy
 msgid "Hardware Proxy"
 msgstr "Hardware Proxy"
@@ -13913,7 +13877,7 @@ msgid "Heard Island and McDonald Islands"
 msgstr "Heard- en McDonald-eilanden"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:604
+#: code:addons/base/models/ir_qweb_fields.py:605
 #, python-format
 msgid "Height"
 msgstr "Hoogte"
@@ -14096,13 +14060,13 @@ msgid "Here is the exported translation file:"
 msgstr "Hier is het geëxporteerde vertaalbestand:"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:630
+#: code:addons/base/models/ir_qweb_fields.py:631
 #, python-format
-msgid "Hide marker"
+msgid "Hide badges"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:225
+#: code:addons/base/models/ir_qweb_fields.py:226
 #, python-format
 msgid "Hide seconds"
 msgstr ""
@@ -14188,7 +14152,7 @@ msgid "Human  Resources"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:605
+#: code:addons/base/models/ir_qweb_fields.py:606
 #, python-format
 msgid "Human Readable"
 msgstr ""
@@ -14344,6 +14308,11 @@ msgstr "ID van de weergave zoals gedefinieerd in het xml bestand"
 #: model:ir.module.module,shortdesc:base.module_bus
 msgid "IM Bus"
 msgstr "IM Bus"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_iot
+msgid "IOT"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__code
@@ -14640,7 +14609,7 @@ msgstr "Importeer QIF bankafschriften"
 #: code:addons/base/models/res_partner.py:855
 #, python-format
 msgid "Import Template for Customers"
-msgstr ""
+msgstr "Importeer sjabloon voor klanten"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -14869,13 +14838,13 @@ msgstr ""
 "sturen."
 
 #. module: base
-#: code:addons/models.py:1334
+#: code:addons/models.py:1336
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Onvoldoende velden voor kalenderweergave!"
 
 #. module: base
-#: code:addons/models.py:1344
+#: code:addons/models.py:1346
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -14938,7 +14907,7 @@ msgstr "Interne bron"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Internal User"
-msgstr ""
+msgstr "Interne gebruiker"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
@@ -14976,7 +14945,7 @@ msgid "Introspection report on objects"
 msgstr "Zelfcontrole op rapporten en objecten"
 
 #. module: base
-#: code:addons/models.py:3832
+#: code:addons/models.py:3837
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -14994,7 +14963,7 @@ msgid "Invalid 'group by' parameter"
 msgstr "Incorrecte 'groep door' instelling"
 
 #. module: base
-#: code:addons/models.py:2118
+#: code:addons/models.py:2120
 #, python-format
 msgid "Invalid aggregation function %r."
 msgstr "foutieve aggregatie functie %r."
@@ -15023,7 +14992,7 @@ msgid "Invalid field %s.%s"
 msgstr "Foutief veld %s.%s"
 
 #. module: base
-#: code:addons/models.py:2108
+#: code:addons/models.py:2110
 #, python-format
 msgid "Invalid field specification %r."
 msgstr "Foutieve veld specificatie %r."
@@ -15147,8 +15116,18 @@ msgid "Invoicing Management"
 msgstr "Factuurbeheer"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
+msgid "IoT Box Homepage"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_iot
 msgid "IoT features for Work Order Quality Control"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_posbox_upgrade
+msgid "IoTBox Software Upgrader"
 msgstr ""
 
 #. module: base
@@ -15386,7 +15365,7 @@ msgstr "Taal"
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
 msgid "Language Export"
-msgstr ""
+msgstr "Taal export"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
@@ -15722,7 +15701,7 @@ msgstr "Leadautomatisering"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_reveal
 msgid "Lead Generation"
-msgstr ""
+msgstr "Lead generatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
@@ -15851,7 +15830,7 @@ msgstr "Regel"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__line_ids
 msgid "Lines"
-msgstr "Lijnen"
+msgstr "Regels"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_payment
@@ -15888,7 +15867,7 @@ msgid "Link using field"
 msgstr "Koppel door gebruik van veld"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:628
+#: code:addons/base/models/ir_qweb_fields.py:629
 #, python-format
 msgid "List of contact fields to display in the widget"
 msgstr ""
@@ -16043,7 +16022,7 @@ msgstr "Productie bijproducten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "MRP II"
-msgstr ""
+msgstr "MRP II"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -16253,7 +16232,7 @@ msgid "Manage financial and analytic accounting"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_website_sale_stock_options
+#: model:ir.module.module,summary:base.module_website_sale_stock
 msgid "Manage product inventory & availability"
 msgstr ""
 
@@ -16290,12 +16269,12 @@ msgstr "Beheer uw werknemer salarisregels"
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
-msgstr ""
+msgstr "Beheer je floot en traceer autokosten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
 msgid "Manage your online hiring process"
-msgstr ""
+msgstr "Beheer uw online wervingsproces"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock
@@ -16320,7 +16299,7 @@ msgid "Many2One"
 msgstr "Many2one"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:660
+#: code:addons/base/models/ir_model.py:672
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr "Many2one %s voor model %s bestaat niet!"
@@ -16391,7 +16370,7 @@ msgstr "Mass mailing op deelnemers"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_crm
 msgid "Mass mailing on lead / opportunities"
-msgstr ""
+msgstr "Bulkmailingen op leads en prospects"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sale
@@ -16625,13 +16604,13 @@ msgid "Missing SMTP Server"
 msgstr "Ontbrekende SMTP Server"
 
 #. module: base
-#: code:addons/models.py:3011
+#: code:addons/models.py:3028
 #, python-format
 msgid "Missing document(s)"
 msgstr "Ontbrekend(e) document(en)"
 
 #. module: base
-#: code:addons/models.py:5484
+#: code:addons/models.py:5505
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Ontbrekende verplichte waarde voor het veld '%s' (%s)"
@@ -16680,19 +16659,19 @@ msgid "Model"
 msgstr "Model"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:492
+#: code:addons/base/models/ir_model.py:504
 #, python-format
 msgid "Model %s does not exist"
 msgstr "Model %s bestaat niet"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:656
+#: code:addons/base/models/ir_model.py:668
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Model %s bestaat niet!"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:182
+#: code:addons/base/models/ir_model.py:194
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed."
 msgstr ""
@@ -16700,12 +16679,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
 msgid "Model Access"
-msgstr ""
+msgstr "Model toegang"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
 msgid "Model Constraint"
-msgstr ""
+msgstr "Modelbeperking"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_constraint
@@ -16826,7 +16805,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Module deïnstallatie"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -16974,6 +16953,11 @@ msgstr "Myanmar (Birma)"
 #: model:res.partner.industry,full_name:base.res_partner_industry_N
 msgid "N ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
 msgstr "N ADMINISTRATIEVE EN ONDERSTEUNENDE DIENSTEN"
+
+#. module: base
+#: model:res.country,vat_label:base.gt
+msgid "NIT"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_name
@@ -17151,7 +17135,7 @@ msgid "No Record Found"
 msgstr "Geen record gevonden"
 
 #. module: base
-#: code:addons/models.py:1423
+#: code:addons/models.py:1425
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr "Geen standaardweergave gevonden voor type '%s' !"
@@ -17162,7 +17146,7 @@ msgid "No gap"
 msgstr "Aaneengesloten"
 
 #. module: base
-#: code:addons/fields.py:2357
+#: code:addons/fields.py:2360
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "Geen omgekeerd veld %r gevonden voor %r"
@@ -17208,13 +17192,13 @@ msgid "Non Updatable"
 msgstr "Niet bij te werken"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:459
+#: code:addons/base/models/ir_model.py:471
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr "Niet gerelateerd veld %r in afhankelijkheid %r"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:416
+#: code:addons/base/models/ir_model.py:428
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr "Niet gerelateerde veldnaam '%s' in gerelateerd veld '%s'"
@@ -17284,7 +17268,7 @@ msgid "Not done"
 msgstr "Niet gedaan"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1405
+#: code:addons/base/models/ir_model.py:1407
 #, python-format
 msgid "Not enough access rights on the external ID:"
 msgstr "Niet genoeg rechten voor de externe ID:"
@@ -18532,7 +18516,7 @@ msgid "On delete property for many2one fields"
 msgstr "'On delete' eigenschap voor many2one velden"
 
 #. module: base
-#: code:addons/models.py:3011
+#: code:addons/models.py:3028
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -18542,7 +18526,7 @@ msgstr ""
 "opnieuw na het verversen van uw scherm."
 
 #. module: base
-#: code:addons/models.py:3358
+#: code:addons/models.py:3363
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -18638,7 +18622,7 @@ msgstr ""
 "samenvoegen op bestaande financiële boekingen."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1226
+#: code:addons/base/models/ir_model.py:1228
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -18675,11 +18659,6 @@ msgstr "Prospect naar offerte"
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Option"
 msgstr "Optie"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_options
-msgid "Optional Products"
-msgstr "Optionele producten"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__domain
@@ -18915,14 +18894,14 @@ msgid "Original View"
 msgstr "Oorspronkelijke weergave"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:392
+#: code:addons/base/models/ir_qweb_fields.py:393
 #, python-format
 msgid "Original currency"
 msgstr "Originele valuta"
 
 #. module: base
-#: code:addons/base/models/res_users.py:997
-#: code:addons/base/models/res_users.py:1180
+#: code:addons/base/models/res_users.py:995
+#: code:addons/base/models/res_users.py:1178
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -18996,7 +18975,7 @@ msgid "Output DPI"
 msgstr "Output DPI"
 
 #. module: base
-#: code:addons/models.py:2130
+#: code:addons/models.py:2132
 #, python-format
 msgid "Output name %r is used twice."
 msgstr "Output naam %r is twee keer gebruikt."
@@ -19081,7 +19060,7 @@ msgstr "Papierformaat"
 #. module: base
 #: model:ir.model,name:base.model_report_paperformat
 msgid "Paper Format Config"
-msgstr ""
+msgstr "Papier formaat configurati"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.paper_format_action
@@ -19175,7 +19154,7 @@ msgstr "Relatie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr ""
+msgstr "Relatie automatisch aanvullen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete_address_extended
@@ -19190,7 +19169,7 @@ msgstr "Relatie labels"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
 msgid "Partner Title"
-msgstr ""
+msgstr "Relatie titel"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
@@ -19239,7 +19218,7 @@ msgid "Path"
 msgstr "Pad"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:223
+#: code:addons/base/models/ir_qweb_fields.py:224
 #, python-format
 msgid "Pattern to format"
 msgstr "Patroon om te formateren"
@@ -19392,7 +19371,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1229
+#: code:addons/base/models/ir_model.py:1231
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
@@ -19414,7 +19393,7 @@ msgid "Please set the Model to Create before choosing values"
 msgstr "Stel eerst het aan te maken model in voor waardes te kiezen"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:493
+#: code:addons/base/models/ir_model.py:505
 #, python-format
 msgid "Please specify a valid model for the object relation"
 msgstr "Specificeer een geldig model voor je object relatie"
@@ -19488,16 +19467,6 @@ msgstr "Portugal"
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Accounting"
 msgstr "Portugal - Boekhouding"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
-msgid "PosBox Homepage"
-msgstr "PosBox Homepage"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hw_posbox_upgrade
-msgid "PosBox Software Upgrader"
-msgstr "PosBox Software Upgrader"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -19603,7 +19572,7 @@ msgstr ""
 "Privémethodes (zoals %s) kunnen niet van op afstand aangesproken worden."
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_stock_options
+#: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Product Availability"
 msgstr "Product beschikbaarheid"
 
@@ -19645,7 +19614,7 @@ msgstr "Vervaldatum producten"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_product
 msgid "Products from Documents"
-msgstr ""
+msgstr "Producten vanuit documenten"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_prof
@@ -19760,7 +19729,7 @@ msgid "Properties"
 msgstr "Eigenschappen"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:688
+#: code:addons/base/models/ir_model.py:700
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -19862,7 +19831,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
-msgstr "Inkoop stock"
+msgstr "Inkoopvoorraad"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
@@ -19981,22 +19950,22 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field
 msgid "Qweb Field"
-msgstr ""
+msgstr "Qweb veld"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_barcode
 msgid "Qweb Field Barcode"
-msgstr ""
+msgstr "Qweb veld barcode"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "QWeb veld contact"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_date
 msgid "Qweb Field Date"
-msgstr ""
+msgstr "Qweb veld Datum"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_datetime
@@ -20011,7 +19980,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float
 msgid "Qweb Field Float"
-msgstr ""
+msgstr "Qweb veld float"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float_time
@@ -20051,7 +20020,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_selection
 msgid "Qweb Field Selection"
-msgstr ""
+msgstr "Qweb veld selectie"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_text
@@ -20066,7 +20035,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2many
 msgid "Qweb field many2many"
-msgstr ""
+msgstr "Qweb veld many2many"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:354
@@ -20168,7 +20137,7 @@ msgstr ""
 "opnieuw aub"
 
 #. module: base
-#: code:addons/base/models/ir_actions.py:250 code:addons/models.py:4233
+#: code:addons/base/models/ir_actions.py:250 code:addons/models.py:4251
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "Regel bestaat niet of werd verwijderd."
@@ -20191,13 +20160,13 @@ msgid "Recursion error in modules dependencies !"
 msgstr "Recursiefout in module-afhankelijkheden !"
 
 #. module: base
-#: code:addons/base/models/ir_actions.py:412
+#: code:addons/base/models/ir_actions.py:413
 #, python-format
 msgid "Recursion found in child server actions"
 msgstr "Recursie gevonden in de onderliggende server acties"
 
 #. module: base
-#: code:addons/models.py:3698
+#: code:addons/models.py:3703
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Recursiviteit ontdekt."
@@ -20209,7 +20178,7 @@ msgid "Reference"
 msgstr "Referentie"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:566
+#: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Reference date"
 msgstr "Referentie datum"
@@ -20241,13 +20210,13 @@ msgid "Related field"
 msgstr "Gerelateerd veld"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:428
+#: code:addons/base/models/ir_model.py:440
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr "Gerelateerd veld '%s' heeft geen comodel '%s'"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:426
+#: code:addons/base/models/ir_model.py:438
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
 msgstr "Gerelateerd veld '%s' heeft geen soort '%s'"
@@ -20260,7 +20229,7 @@ msgstr "Relatieveld"
 #. module: base
 #: model:ir.model,name:base.model_ir_model_relation
 msgid "Relation Model"
-msgstr ""
+msgstr "Gerelateerd model"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__name
@@ -20349,7 +20318,7 @@ msgstr "Rapport"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Rapport actie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -20413,7 +20382,7 @@ msgid "Resellers"
 msgstr "Detailhandelaars"
 
 #. module: base
-#: code:addons/models.py:905
+#: code:addons/models.py:907
 #, python-format
 msgid "Resolve other errors first"
 msgstr "Andere fouten eerst oplossen"
@@ -20496,13 +20465,13 @@ msgid "Rounding Factor"
 msgstr "Afrondingsfactor"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:160
+#: code:addons/base/models/ir_qweb_fields.py:161
 #, python-format
 msgid "Rounding precision"
 msgstr "Afrondingsprecisie"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:511
+#: code:addons/base/models/ir_qweb_fields.py:512
 #, python-format
 msgid "Rounding unit"
 msgstr "Afrondingseenheid"
@@ -20547,7 +20516,7 @@ msgstr "Handmatig uitvoeren"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run this action manually."
-msgstr "Voer deze actie manueel uit."
+msgstr "Voer deze actie handmatig uit."
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -20682,7 +20651,7 @@ msgstr "Abonnementen dashboard"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase
 msgid "Sale based on service outsourcing."
-msgstr ""
+msgstr "Verkoop gebaseerd op outsoursing."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_enterprise
@@ -20965,7 +20934,7 @@ msgstr ""
 "moet in het volgende veld worden ingevoerd."
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:279
+#: code:addons/base/models/ir_qweb_fields.py:280
 #: selection:base.partner.merge.automatic.wizard,state:0
 #: selection:ir.property,type:0 selection:ir.translation,type:0
 #, python-format
@@ -21056,7 +21025,7 @@ msgid "Separator Format"
 msgstr "Formaat scheidingsteken"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:629
+#: code:addons/base/models/ir_qweb_fields.py:630
 #, python-format
 msgid "Separator use to split the address from the display_name."
 msgstr ""
@@ -21087,7 +21056,7 @@ msgstr "Reeks code"
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence_date_range
 msgid "Sequence Date Range"
-msgstr ""
+msgstr "Reeks datumbereik"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__padding
@@ -21187,7 +21156,7 @@ msgstr ""
 "opgegeven model."
 
 #. module: base
-#: code:addons/base/models/res_users.py:658
+#: code:addons/base/models/res_users.py:656
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr ""
@@ -21404,25 +21373,25 @@ msgstr "Soms BIC of Swift genoemd."
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:381
-#: code:addons/base/models/ir_model.py:1220
+#: code:addons/base/models/ir_model.py:1222
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Sorry, u heeft geen toegang tot dit document."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1222
+#: code:addons/base/models/ir_model.py:1224
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Sorry, u mag dit soort documenten niet aanmaken."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1223
+#: code:addons/base/models/ir_model.py:1225
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Sorry, u mag dit document niet verwijderen."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1221
+#: code:addons/base/models/ir_model.py:1223
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Sorry, het is u niet toegestaan om dit document te wijzigen"
@@ -21433,7 +21402,7 @@ msgid "Sort"
 msgstr "Sorteer"
 
 #. module: base
-#: code:addons/models.py:3973
+#: code:addons/models.py:3978
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr "Sorteerveld %s niet gevonden bij model %s"
@@ -21561,7 +21530,7 @@ msgstr "Start configuratie"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Status"
+msgstr "Provincie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -21745,11 +21714,6 @@ msgid "Suffix value of the record for the sequence"
 msgstr "Volgnummer achtervoegsel voor het record"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_website_sale_options
-msgid "Suggest optional products when adding to cart"
-msgstr "Stel optionele producten voor bij toevoegen aan winkelmandje"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__summary
 msgid "Summary"
 msgstr "Samenvatting"
@@ -21838,7 +21802,7 @@ msgstr "Syrië"
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Systeem parameter"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_config_list_action
@@ -22097,7 +22061,7 @@ msgstr ""
 "U kunt dit veld gebruiken voor snelzoeken."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:387
+#: code:addons/base/models/ir_model.py:399
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression. Please "
@@ -22238,7 +22202,7 @@ msgid "The demonstration data of"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:586
+#: code:addons/base/models/ir_model.py:598
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
 msgstr ""
@@ -22340,7 +22304,7 @@ msgstr ""
 "gelaten zal het het filter gelden voor alle menu's in dit model."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:138
+#: code:addons/base/models/ir_model.py:150
 #, python-format
 msgid ""
 "The model name can only contain lowercase characters, digits, underscores "
@@ -22350,7 +22314,7 @@ msgstr ""
 "punten bevatten."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:136
+#: code:addons/base/models/ir_model.py:148
 #, python-format
 msgid "The model name must start with 'x_'."
 msgstr "De modelnaam moet beginnen met 'x_'"
@@ -22482,7 +22446,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2920
+#: code:addons/models.py:2923
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to record rules: Document "
@@ -22492,8 +22456,8 @@ msgstr ""
 "Document type: %s, Bewerking: %s, Records: %s, Gebruiker: %s"
 
 #. module: base
-#: code:addons/models.py:2715 code:addons/models.py:2924
-#: code:addons/models.py:3001
+#: code:addons/models.py:2718 code:addons/models.py:2927
+#: code:addons/models.py:3018
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -22520,7 +22484,7 @@ msgstr ""
 #: code:addons/base/models/ir_mail_server.py:182
 #, python-format
 msgid "The server refused the test connection with error %(repl)s"
-msgstr ""
+msgstr "De server heeft de testverbinding met een fout geweigerd %(repl)s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:175
@@ -22535,7 +22499,7 @@ msgid "The state code."
 msgstr "Code staat / provincie"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:519
+#: code:addons/base/models/ir_model.py:531
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr ""
@@ -22565,7 +22529,7 @@ msgstr ""
 "filter openbaar en beschikbaar voor alle gebruikers."
 
 #. module: base
-#: code:addons/models.py:5516
+#: code:addons/models.py:5537
 #, python-format
 msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
@@ -22575,13 +22539,13 @@ msgstr ""
 "huidige model)."
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:404
+#: code:addons/base/models/ir_qweb_fields.py:405
 #, python-format
 msgid "The value send to monetary field is not a number."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5522
+#: code:addons/models.py:5543
 #, python-format
 msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
@@ -22623,7 +22587,7 @@ msgid "This Window"
 msgstr "Dit venster"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:622
+#: code:addons/base/models/ir_model.py:634
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "Deze kolom bevat module data en kan niet verwijderd worden!"
@@ -22884,7 +22848,7 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #. module: base
-#: code:addons/base/models/res_users.py:792
+#: code:addons/base/models/res_users.py:790
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
 msgstr ""
@@ -23000,7 +22964,7 @@ msgstr "Vertaal"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_gengo
 msgid "Translate website in one-click"
-msgstr ""
+msgstr "Vertaal de website in 1 klik"
 
 #. module: base
 #: selection:ir.translation,state:0
@@ -23278,7 +23242,7 @@ msgid "Ukraine"
 msgstr "Oekraïne"
 
 #. module: base
-#: code:addons/models.py:3077
+#: code:addons/models.py:3082
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -23389,25 +23353,25 @@ msgid "Unknown"
 msgstr "Onbekend"
 
 #. module: base
-#: code:addons/models.py:1056
+#: code:addons/models.py:1058
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "Onbekende database identifier '%s'"
 
 #. module: base
-#: code:addons/models.py:904
+#: code:addons/models.py:906
 #, python-format
 msgid "Unknown error during import:"
 msgstr "Onbekende fout tijdens het importeren:"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:457
+#: code:addons/base/models/ir_model.py:469
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr "Onbekend veld %r in afhankelijkheid %r"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:414
+#: code:addons/base/models/ir_model.py:426
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr "Onbekende veldnaam '%s' in gerelateerd veld '%s'"
@@ -23436,7 +23400,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr ""
+msgstr "Unsplash afbeeldingen bibliotheek"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -23489,7 +23453,7 @@ msgstr "Termen bijwerken"
 #. module: base
 #: model:ir.model,name:base.model_base_update_translations
 msgid "Update Translations"
-msgstr ""
+msgstr "Update vertalingen"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -23520,7 +23484,7 @@ msgstr "Bijwerken"
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
 msgid "Upgrade Module"
-msgstr ""
+msgstr "Geüpgradede module"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
@@ -23567,16 +23531,17 @@ msgid "Use barcode scanners to process logistics operations"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:631
+#: code:addons/base/models/ir_qweb_fields.py:632
 #, python-format
 msgid "Use comma"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:631
+#: code:addons/base/models/ir_qweb_fields.py:632
 #, python-format
 msgid "Use comma instead of the <br> tag to display the address"
 msgstr ""
+"Gebruik een komma in plaats van het <br> label om adressen weer te geven"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_coupon
@@ -23685,7 +23650,7 @@ msgid "User Login"
 msgstr "Gebruikersnaam"
 
 #. module: base
-#: code:addons/base/models/res_users.py:969
+#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "User Type"
@@ -23699,7 +23664,7 @@ msgstr "Gebruiker logboek regels"
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "Gebruiker types"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -23752,7 +23717,7 @@ msgstr "Gebruikers & Bedrijven"
 #. module: base
 #: model:ir.model,name:base.model_res_users_log
 msgid "Users Log"
-msgstr ""
+msgstr "Gebruikerslog"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
@@ -23991,7 +23956,7 @@ msgstr ""
 "normale formulier weergave"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:608
+#: code:addons/base/models/ir_model.py:620
 #, python-format
 msgid "View: %s"
 msgstr "Bekijk: %s"
@@ -24069,9 +24034,9 @@ msgstr "Magazijnbeheer: Batchpicking"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:499
-#: code:addons/base/models/ir_model.py:436
-#: code:addons/base/models/ir_model.py:518
-#: code:addons/base/models/res_partner.py:349
+#: code:addons/base/models/ir_model.py:448
+#: code:addons/base/models/ir_model.py:530
+#: code:addons/base/models/res_partner.py:349 code:addons/models.py:5270
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -24083,7 +24048,7 @@ msgid "Warning!"
 msgstr "Waarschuwing!"
 
 #. module: base
-#: code:addons/models.py:5260
+#: code:addons/models.py:5392
 #, python-format
 msgid "Warnings"
 msgstr "Waarschuwingen"
@@ -24202,11 +24167,6 @@ msgid "Website Rating"
 msgstr "Website beoordeling"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_stock
-msgid "Website Sale Stock - Website Delivery Information"
-msgstr "Website verkoop voorraad - Website afleveringsinformatie"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_dashboard
 msgid "Website Sales Dashboard"
 msgstr ""
@@ -24306,7 +24266,7 @@ msgid "Wholesale/Retail"
 msgstr "Groothandel/Retail"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:603
+#: code:addons/base/models/ir_qweb_fields.py:604
 #, python-format
 msgid "Width"
 msgstr "Breedte"
@@ -24435,7 +24395,7 @@ msgid "You can not have two users with the same login !"
 msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam!"
 
 #. module: base
-#: code:addons/base/models/res_users.py:484
+#: code:addons/base/models/res_users.py:482
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -24450,6 +24410,12 @@ msgstr ""
 msgid ""
 "You can select either a format or a specific page width/height, but not "
 "both."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:435
+#, python-format
+msgid "You cannot activate the superuser."
 msgstr ""
 
 #. module: base
@@ -24478,12 +24444,6 @@ msgstr "Het is niet mogelijk een recursieve overerfde weergave te maken"
 
 #. module: base
 #: code:addons/base/models/res_users.py:437
-#, python-format
-msgid "You cannot deactivate the admin user."
-msgstr "U kan de admin gebruiker niet deactiveren."
-
-#. module: base
-#: code:addons/base/models/res_users.py:439
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "U kan de gebruiker waarmee u bent aangemeld niet deactiveren."
@@ -24762,7 +24722,7 @@ msgstr "eCommerce link traceerder"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
-msgstr "email@uwbedrijf.com"
+msgstr "e-mail@uwbedrijf.com"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:334
@@ -24866,7 +24826,7 @@ msgstr "many2one"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "module(s) failed to install and were disabled"
-msgstr ""
+msgstr "module(s) kunnen niet worden geïnstalleerd en zijn uitgeschakeld"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0

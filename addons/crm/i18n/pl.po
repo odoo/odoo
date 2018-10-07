@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:16+0000\n"
-"PO-Revision-Date: 2018-09-21 13:16+0000\n"
+"POT-Creation-Date: 2018-10-02 10:04+0000\n"
+"PO-Revision-Date: 2018-10-02 10:04+0000\n"
 "Last-Translator: Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,6 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_count
-#: model:ir.model.fields,field_description:crm.field_res_users__meeting_count
 msgid "# Meetings"
 msgstr "# Spotkania"
 
@@ -130,15 +129,6 @@ msgid "<span class=\"oe_grey\"> at </span>"
 msgstr "<span class=\"oe_grey\"> przy </span>"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
-msgid ""
-"A Python dictionary that will be evaluated to provide default values when "
-"creating new records for this alias."
-msgstr ""
-"Słownik (dictionary) python, który będzie wyliczony i zastosowany jako "
-"wartości domyślne do tworzenia nowego rekordu w tym aliasie."
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
 msgstr "Akceptuj wiadomości od"
@@ -197,7 +187,7 @@ msgid "Activity Types"
 msgstr "Typy czynności"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:932
+#: code:addons/crm/models/crm_lead.py:933
 #, python-format
 msgid "Add a new lead"
 msgstr ""
@@ -218,26 +208,6 @@ msgstr "Adres"
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Alias"
 msgstr "Alias"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_contact
-msgid "Alias Contact Security"
-msgstr "Zabezpieczenie aliasu"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
-msgid "Alias Name"
-msgstr "Nazwa aliasu"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
-msgid "Alias domain"
-msgstr "Domena aliasu"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
-msgid "Aliased Model"
-msgstr "Aliasowany model"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -285,7 +255,7 @@ msgid "Blacklist"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:399
+#: code:addons/crm/models/crm_lead.py:400
 #, python-format
 msgid "Boom! Team record for the past 30 days."
 msgstr "Bum! Rekord zespołu za ostatnie 30 dni."
@@ -524,13 +494,20 @@ msgid "Convert to opportunities"
 msgstr "Konwertuj do szans"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1115
+#: code:addons/crm/models/crm_lead.py:1116
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #, python-format
 msgid "Convert to opportunity"
 msgstr "Konwertuj do szansy"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Convert visitors of your website into leads in the CRM. Wre do data "
+"enrichment based on their IP address."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
@@ -558,6 +535,11 @@ msgstr "Utwórz"
 #: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create & Edit"
 msgstr "Utwórz i edytuj"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_reveal
+msgid "Create Leads/Opportunities from your website's traffic"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -593,7 +575,7 @@ msgid "Create an new opportunity related to this customer"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:934
+#: code:addons/crm/models/crm_lead.py:935
 #, python-format
 msgid "Create an opportunity in your pipeline"
 msgstr ""
@@ -655,7 +637,7 @@ msgid "Currency"
 msgstr "Waluta"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1167
+#: code:addons/crm/models/crm_lead.py:1168
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_id
@@ -670,7 +652,7 @@ msgid "Customer"
 msgstr "Klient"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1169
+#: code:addons/crm/models/crm_lead.py:1170
 #, python-format
 msgid "Customer Email"
 msgstr "Adres klienta"
@@ -712,11 +694,6 @@ msgstr "Dni do zamknięcia"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_alias_prefix
 msgid "Default Alias Name for Leads"
 msgstr "Domyślny alias dla sygnałów"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_defaults
-msgid "Default Values"
-msgstr "Wartości domyślne"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -930,7 +907,7 @@ msgid "Format phone numbers based on national conventions"
 msgstr "Formatuj numery telefonów na podstawie konwencji krajowych"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:605
+#: code:addons/crm/models/crm_lead.py:606
 #, python-format
 msgid "From %s : %s"
 msgstr "Od %s : %s"
@@ -963,7 +940,7 @@ msgid "Global CC"
 msgstr "Globalne DW"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:397
+#: code:addons/crm/models/crm_lead.py:398
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
 msgstr "Go, Go, Go! Gratulacje dla pierwszej transakcji."
@@ -1023,15 +1000,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_parent_thread_id
-msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr ""
-"ID rekordu nadrzędnego zawierającego alias (np. projekt zawierający alias "
-"tworzenia zadań)"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_unread
 msgid "If checked new messages require your attention."
 msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
@@ -1072,7 +1040,7 @@ msgid "Import & Synchronize"
 msgstr "Importuj i synchronizuj"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1229
+#: code:addons/crm/models/crm_lead.py:1230
 #, python-format
 msgid "Import Template for Leads & Opportunities"
 msgstr ""
@@ -1179,7 +1147,7 @@ msgid "Late Activities"
 msgstr "Spóźnione czynności"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:912
+#: code:addons/crm/models/crm_lead.py:913
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1296,7 +1264,7 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1121
+#: code:addons/crm/models/crm_lead.py:1122
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1387,7 +1355,7 @@ msgid "Medium"
 msgstr "Medium"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:957
+#: code:addons/crm/models/crm_lead.py:958
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Zaplanowane spotkanie '%s'<br> Temat: %s <br> Czas trwania: %s godzin"
@@ -1396,7 +1364,6 @@ msgstr "Zaplanowane spotkanie '%s'<br> Temat: %s <br> Czas trwania: %s godzin"
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
 #: model:ir.actions.act_window,name:crm.calendar_event_partner
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_ids
-#: model:ir.model.fields,field_description:crm.field_res_users__meeting_ids
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Meetings"
 msgstr "Spotkania"
@@ -1436,25 +1403,25 @@ msgid "Merge with existing opportunities"
 msgstr "Połącz z istniejącymi szansami."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:555
+#: code:addons/crm/models/crm_lead.py:556
 #, python-format
 msgid "Merged lead"
 msgstr "Połączone sygnały"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:587
+#: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "Merged leads"
 msgstr "Połączone sygnały"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:587
+#: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "Merged opportunities"
 msgstr "Połączone szanse"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:555
+#: code:addons/crm/models/crm_lead.py:556
 #, python-format
 msgid "Merged opportunity"
 msgstr "Połączone szanse"
@@ -1553,7 +1520,7 @@ msgid "Next activity late"
 msgstr "Następna spóźniona czynność"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1189
+#: code:addons/crm/models/crm_lead.py:1190
 #, python-format
 msgid "No Subject"
 msgstr "Brak tematu"
@@ -1644,7 +1611,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__opportunity_ids
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__opportunity_ids
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_ids
-#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_ids
 #: model:ir.ui.menu,name:crm.menu_crm_config_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1698,13 +1664,12 @@ msgid "Opportunities with a date of Expected Closing which is in the past"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:445
-#: code:addons/crm/models/crm_lead.py:887
+#: code:addons/crm/models/crm_lead.py:446
+#: code:addons/crm/models/crm_lead.py:888
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event__opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__name
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
-#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -1757,17 +1722,6 @@ msgid "Opportunity won"
 msgstr "Szansa wygrana"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_force_thread_id
-msgid ""
-"Optional ID of a thread (record) to which all incoming messages will be "
-"attached, even if they did not reply to it. If set, this will disable the "
-"creation of new records completely."
-msgstr ""
-"Opcjonalne ID wątku (rekordu), do którego przychodzące wiadomości będą "
-"dowiązane, nawet jeśli nie są odpowiedzią na ten rekord. Jeśli ustawione, to"
-" będzie zapobiegać tworzeniu nowych rekordów."
-
-#. module: crm
 #: selection:crm.lead,activity_state:0
 msgid "Overdue"
 msgstr "Przeterminowane"
@@ -1776,32 +1730,6 @@ msgstr "Przeterminowane"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Zaległe Szanse"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_user_id
-msgid "Owner"
-msgstr "Właściciel"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_model_id
-msgid "Parent Model"
-msgstr "Model nadrzędny"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_thread_id
-msgid "Parent Record Thread ID"
-msgstr "ID wątku rekordu nadrzędnego"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_parent_model_id
-msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
-"(parent_model) and task (model))"
-msgstr ""
-"Model nadrzędny zawierający alias. Model zawierający odwołanie do aliasu\n"
-"nie musi być modelem z alias_model_id\n"
-"(np. projekt (parent_model) i zadanie (model))"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_email
@@ -1902,25 +1830,12 @@ msgid "Planned"
 msgstr "Zaplanowane"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:659
+#: code:addons/crm/models/crm_lead.py:660
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
 "view."
 msgstr "Wybierz więcej niż jeden element (sygnał lub szansa) z widoku listy."
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_contact
-msgid ""
-"Policy to post a message on the document using the mailgateway.\n"
-"- everyone: everyone can post\n"
-"- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
-msgstr ""
-"Zasady publikowania wiadomości na dokumencie za pomocą poczty elektronicznej.\n"
-"- wszyscy: każdy może publikować\n"
-"- partnerzy: tylko uwierzytelnieni partnerzy\n"
-"- obserwatorzy: tylko następcy powiązanego dokumentu lub członkowie następujących kanałów\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -1967,11 +1882,6 @@ msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the"
 " <b>CRM</b> app."
 msgstr ""
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
-msgid "Record Thread ID"
-msgstr "ID wątku rekordu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -2038,7 +1948,7 @@ msgid "Sales Team"
 msgstr "Zespół sprzedaży"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1124
+#: code:addons/crm/models/crm_lead.py:1125
 #, python-format
 msgid "Sales Team Settings"
 msgstr ""
@@ -2299,26 +2209,6 @@ msgid "The graph this channel will display in the Dashboard.\n"
 msgstr "Wykres tego kanału zostanie wyświetlony na konsoli.\n"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr ""
-"Model (rodzaj dokumentu Odoo), któremu odpowiada ten alias. Każda "
-"przychodząca wiadomość e-mail, która nie odpowiada istniejącemu rekordowi, "
-"spowoduje utworzenie nowego rekordu tego modelu (np. Zadanie projektu)"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_name
-msgid ""
-"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.odoo.com>"
-msgstr ""
-"Nazwa aliasu e-mail, np. \"jobs\", jeśli chcesz przechwytywać wiadomości "
-"e-mail dla <jobs@example.odoo.com>"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
 msgid ""
 "The name of the future partner company that will be created while converting"
@@ -2326,19 +2216,6 @@ msgid ""
 msgstr ""
 "Przyszła nazwa firmy partnera, która będzie utworzona podczas konwertowania "
 "sygnału do szansy."
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
-"Właściciel rekordów utworzonych z wiadomości. Jeśli pole nie będzie "
-"wypełnione, to system spróbuje przypisać użytkownika na podstawie adresu "
-"nadawcy. Jeśli nie znajdzie takiego użytkownika, to przypisze "
-"Administratora."
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -2416,7 +2293,7 @@ msgstr ""
 "wyświetlenia w tym etapie."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1087
+#: code:addons/crm/models/crm_lead.py:1088
 #, python-format
 msgid "This target does not exist."
 msgstr "Ten cel nie istnieje."
@@ -2596,6 +2473,11 @@ msgid "Website"
 msgstr "Strona WWW"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Website Lead Generation"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__website_message_ids
 msgid "Website Messages"
 msgstr "Wiadomości"
@@ -2632,7 +2514,7 @@ msgid "Within a Year"
 msgstr "W ciągu roku"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1120
+#: code:addons/crm/models/crm_lead.py:1121
 #: model:crm.stage,name:crm.stage_lead4
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -2650,7 +2532,7 @@ msgid "Won in Opportunities Target"
 msgstr "Wygrane w celach Szans"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:401
+#: code:addons/crm/models/crm_lead.py:402
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
 msgstr "Tak trzymaj! Najlepsza oferta ostatnich 7 dni dla zespołu."
@@ -2664,13 +2546,13 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:403
+#: code:addons/crm/models/crm_lead.py:404
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
 msgstr "Gratulacje! Pobiłeś rekord osobisty ostatnich 30 dni."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:405
+#: code:addons/crm/models/crm_lead.py:406
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
 msgstr "Gratulacje! Pobiłeś rekord osobisty ostatnich 7 dni."
@@ -2725,7 +2607,7 @@ msgid "e.g. www.odoo.com"
 msgstr "np. www.odoo.com"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:945
+#: code:addons/crm/models/crm_lead.py:946
 #, python-format
 msgid "or send an email to %s"
 msgstr ""
@@ -2736,7 +2618,7 @@ msgid "team_count"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:951
+#: code:addons/crm/models/crm_lead.py:952
 #, python-format
 msgid "unknown"
 msgstr "nieznane"

@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # 珠海-杜哥 <liangjia@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: 珠海-杜哥 <liangjia@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-10-02 10:05+0000\n"
+"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +53,7 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"导入过程中出现未知问题（可能连接丢失、数据超过限制或内存超过限制）。如果问题是暂时的，请重试。如果问题仍然发生，尝试拆分文件，而不是立即导入它。"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -66,7 +68,7 @@ msgstr "基础导入"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "基础导入对照"
 
 #. module: base_import
 #. openerp-web
@@ -76,13 +78,13 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:713
+#: code:addons/base_import/models/base_import.py:693
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "栏位 %s 包含非法数据(值: %s)"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:808
+#: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
 msgstr "栏位 %s 包含非法数据。值 %d: %s"
@@ -90,7 +92,7 @@ msgstr "栏位 %s 包含非法数据。值 %d: %s"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "栏位标签"
 
 #. module: base_import
 #. openerp-web
@@ -101,19 +103,19 @@ msgid "Comma"
 msgstr "逗号"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:845
+#: code:addons/base_import/models/base_import.py:825
 #, python-format
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
-msgstr ""
+msgstr "无法检索 URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "如果不存在则新建"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -165,7 +167,7 @@ msgid ""
 "Creates new records if they can't be found (instead of failing to import). "
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
-msgstr ""
+msgstr "如果找不到新记录则创建新纪录（代替失败的导入）。注意，列中的值将作为新记录的 '名称' ，并假定这足以创建记录。"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -174,8 +176,8 @@ msgid "Currency"
 msgstr "币种"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:208
-#: code:addons/base_import/models/base_import.py:213
+#: code:addons/base_import/models/base_import.py:207
+#: code:addons/base_import/models/base_import.py:212
 #, python-format
 msgid "Database ID"
 msgstr "数据库 ID"
@@ -253,7 +255,7 @@ msgstr "下载"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -263,13 +265,13 @@ msgid "Encoding:"
 msgstr "编码:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:810
+#: code:addons/base_import/models/base_import.py:790
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "日期语法错误 [%s:L%d]: %s"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:290
+#: code:addons/base_import/models/base_import.py:289
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr "读取XLS/XLSX文件: %s 时发现错误单元格"
@@ -286,11 +288,11 @@ msgstr "看上去一切正常。"
 #: code:addons/base_import/static/src/xml/base_import.xml:82
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
+msgstr "Excel文件推荐格式化自动字段。"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:170
-#: code:addons/base_import/models/base_import.py:207
+#: code:addons/base_import/models/base_import.py:169
+#: code:addons/base_import/models/base_import.py:206
 #, python-format
 msgid "External ID"
 msgstr "外部 ID"
@@ -316,11 +318,11 @@ msgid "File Type"
 msgstr "文件类型"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:828
-#: code:addons/base_import/models/base_import.py:834
+#: code:addons/base_import/models/base_import.py:808
+#: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "文件大小超出设定的最大值 (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -332,14 +334,14 @@ msgstr "文件的审核或导入， 原始二进制编码（不是base64编码�
 #: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "对于 CSV 格式的文件, 您可能需要选择正确的分隔符."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:13
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "格式化选项…"
 
 #. module: base_import
 #. openerp-web
@@ -416,7 +418,7 @@ msgid ""
 "If the model uses parent/child relations, computing the                     "
 "parent / child relation occurs on every line, and lead to a slower import."
 "                     Defering it can speed up import."
-msgstr ""
+msgstr "如果该模型使用父/子关系，每行都会计算父/子关系，并导致导入变慢。推迟它能提升导入速度。"
 
 #. module: base_import
 #. openerp-web
@@ -431,7 +433,7 @@ msgstr "导入"
 #: code:addons/base_import/static/src/xml/base_import.xml:91
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "导入 FAQ"
 
 #. module: base_import
 #. openerp-web
@@ -445,7 +447,7 @@ msgstr "导入文件"
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "Import completed"
-msgstr ""
+msgstr "导入完成"
 
 #. module: base_import
 #. openerp-web
@@ -462,7 +464,7 @@ msgid ""
 "Import timed out. Please retry. If you still encounter this issue, the file "
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
-msgstr ""
+msgstr "导入超时。请重试。如果仍然遇到此问题，则该文件针对系统配置来说可能太大，请尝试对其进行分割（每个文件导入更少的记录）。"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -539,7 +541,7 @@ msgstr "加载文件"
 #: code:addons/base_import/static/src/js/import_action.js:364
 #, python-format
 msgid "Load New File"
-msgstr ""
+msgstr "加载新文件"
 
 #. module: base_import
 #. openerp-web
@@ -563,14 +565,14 @@ msgstr "名称"
 #: code:addons/base_import/static/src/xml/base_import.xml:85
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "需要帮助?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:231
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "没有分隔符"
 
 #. module: base_import
 #. openerp-web
@@ -665,67 +667,77 @@ msgstr "测试导入"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "测试:基本导入模型预览"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "测试:基本导入模型，字符"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "测试:基本导入模型，字符无只读"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "测试:基本导入模型，字符只读"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "测试:基本导入模型，字符必选"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "测试:基本导入模型，字符状态"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "测试:基本导入模型，字符还是只读"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "测试:基本导入模型，多对一"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "测试:基本导入模型，多对一关系"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "测试:基本导入模型，多对一必选"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "测试:基本导入模型，多对一必选相关"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "测试:基本导入模型，一对多"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "测试:基本导入模型，一对多"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_complex
+msgid "Tests: Base Import Model Complex"
+msgstr "测试:基本导入模型复杂"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_float
+msgid "Tests: Base Import Model Float"
+msgstr "测试:基本导入模型浮动"
 
 #. module: base_import
 #. openerp-web
@@ -758,13 +770,13 @@ msgid "Track history during import"
 msgstr "导入时跟踪导入历史"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:255
+#: code:addons/base_import/models/base_import.py:254
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr "无法装载 \"{extension}\"  文件:需要Python 模块 \"{modname}\""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:256
+#: code:addons/base_import/models/base_import.py:255
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
@@ -795,18 +807,18 @@ msgstr "值"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "值2"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:780
+#: code:addons/base_import/models/base_import.py:760
 #, python-format
 msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
-msgstr ""
+msgstr "不能通过URL导入图像，请与管理员进行联系。"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:651
+#: code:addons/base_import/models/base_import.py:631
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "You must configure at least one field to import"
@@ -817,16 +829,6 @@ msgstr "You must configure at least one field to import"
 #, python-format
 msgid "at row %d"
 msgstr "在 %d 行"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_complex
-msgid "base_import.tests.models.complex"
-msgstr ""
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_float
-msgid "base_import.tests.models.float"
-msgstr ""
 
 #. module: base_import
 #. openerp-web
