@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Thomas Pot <thomas@open2bizz.nl>, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,16 +60,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hallo ${object.partner_id.name},<br/><br/>\n"
+"        We zijn blij om u te informeren dat uw bestelling is verzonden.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Uw tracking-referentie is\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        In de bijlage vindt u, uw bestelling met de details.<br/><br/>\n"
+"        Bedankt,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Toevoegen aan order"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Kosten opvragen"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
@@ -634,7 +657,7 @@ msgstr "Prijsregels"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Productmutaties (voorraadmutatieregels)"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -751,6 +774,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Het gewicht van uw verpakking is hoger dan het maximum gewicht toegestaan "
+"voor deze verpakkingssoort. Kies een andere verpakking."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
@@ -767,7 +792,7 @@ msgid ""
 msgstr ""
 "Deze methodes geven u de mogelijkheid om automatisch de leverprijs\n"
 "te berekenen volgens uw instellingen; op het verkooporder (gebaseerd\n"
-"op offerte) of op de factuur (gebaseerd op de aflevernota)."
+"op offerte) of op de factuur (gebaseerd op de leveringen)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id

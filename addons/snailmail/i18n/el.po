@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
 "Last-Translator: Nikos Gkountras <nick@ngsol.net>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -21,13 +21,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:244
+#: code:addons/snailmail/models/snailmail_letter.py:243
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:212
+#: code:addons/snailmail/models/snailmail_letter.py:211
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr ""
@@ -87,6 +87,11 @@ msgstr "Εταιρία"
 #: model:ir.model,name:snailmail.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_res_partner
+msgid "Contact"
+msgstr "Επαφή"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
@@ -161,7 +166,7 @@ msgid "Model"
 msgstr "Μοντέλο"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:210
+#: code:addons/snailmail/models/snailmail_letter.py:209
 #, python-format
 msgid "One or more required fields are empty."
 msgstr ""
@@ -172,7 +177,7 @@ msgid "Optional report to print and attach"
 msgstr "Προαιρετική έκθεση για να εκτύπωση και σύνδεση"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:249
+#: code:addons/snailmail/models/snailmail_letter.py:248
 #, python-format
 msgid "Post letter: an error occured."
 msgstr ""
@@ -190,6 +195,11 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_ir_qweb_field_contact
+msgid "Qweb Field Contact"
 msgstr ""
 
 #. module: snailmail
@@ -213,11 +223,6 @@ msgid "Sent"
 msgstr "Εστάλη"
 
 #. module: snailmail
-#: model:mail.activity.type,name:snailmail.mail_activity_data_snailmail
-msgid "Snailmail"
-msgstr ""
-
-#. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
 msgstr ""
@@ -235,13 +240,13 @@ msgid "Status"
 msgstr "Κατάσταση"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:208
+#: code:addons/snailmail/models/snailmail_letter.py:207
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:239
+#: code:addons/snailmail/models/snailmail_letter.py:238
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
@@ -261,7 +266,7 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:206
+#: code:addons/snailmail/models/snailmail_letter.py:205
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
@@ -269,7 +274,7 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:203
+#: code:addons/snailmail/models/snailmail_letter.py:202
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "

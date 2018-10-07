@@ -11,14 +11,15 @@
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Fisher <fisher@kdomi.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
+"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,9 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">Live Chat</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
-msgstr "即时聊天"
+msgstr ""
+"<span class=\"o_form_label\">即时聊天</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -59,11 +62,6 @@ msgid "Happy face"
 msgstr "笑脸"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
-msgid "Is published"
-msgstr "已发布"
-
-#. module: website_livechat
 #: model:website.menu,name:website_livechat.menu_livechat
 msgid "Live Support"
 msgstr "即时支持"
@@ -84,9 +82,23 @@ msgid "Livechat Support Channels"
 msgstr "即时聊天支持渠道"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:30
+#, python-format
+msgid "Name"
+msgstr "名称"
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Neutral face"
 msgstr "平静"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:29
+#, python-format
+msgid "New Channel"
+msgstr "新频道"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -109,11 +121,6 @@ msgid "The Team"
 msgstr "团队"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
-msgid "The full URL to access the document through the website."
-msgstr "通过网站访问单据的完整URL。"
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "There is no public livechat channel to show."
 msgstr "没有可显示的公开即时对话渠道。"
@@ -121,12 +128,7 @@ msgstr "没有可显示的公开即时对话渠道。"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "There is no rating for this channel for now."
-msgstr ""
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
-msgid "Visible on current website"
-msgstr "在当前网站显示"
+msgstr "目前这个频道没有评分。"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
@@ -142,11 +144,6 @@ msgstr "网站直播频道"
 #: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
 msgstr "网站在线聊天频道"
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
-msgid "Website URL"
-msgstr "网站网址"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
