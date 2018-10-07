@@ -4,19 +4,25 @@
 # 
 # Translators:
 # Eloïse Stilmant <est@odoo.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-10-02 10:05+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: im_livechat_mail_bot
+#: selection:res.users,odoobot_state:0
+msgid "Disabled"
+msgstr "Désactivé"
 
 #. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:18
@@ -31,9 +37,19 @@ msgstr ""
 "d'Odoo! "
 
 #. module: im_livechat_mail_bot
+#: selection:res.users,odoobot_state:0
+msgid "Idle"
+msgstr "Inactif"
+
+#. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_mail_bot
 msgid "Mail Bot"
 msgstr ""
+
+#. module: im_livechat_mail_bot
+#: selection:res.users,odoobot_state:0
+msgid "Not initialized"
+msgstr "Pas initialisé"
 
 #. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:21
@@ -46,9 +62,44 @@ msgstr ""
 "propositions. Sélectionnez l'un d'entre eux et appuyez sur enter."
 
 #. module: im_livechat_mail_bot
+#: model:ir.model.fields,field_description:im_livechat_mail_bot.field_res_users__odoobot_state
+msgid "OdooBot Status"
+msgstr "Statut OdooBot"
+
+#. module: im_livechat_mail_bot
+#: selection:res.users,odoobot_state:0
+msgid "Onboarding attachement"
+msgstr ""
+
+#. module: im_livechat_mail_bot
+#: selection:res.users,odoobot_state:0
+msgid "Onboarding canned"
+msgstr ""
+
+#. module: im_livechat_mail_bot
+#: selection:res.users,odoobot_state:0
+msgid "Onboarding command"
+msgstr ""
+
+#. module: im_livechat_mail_bot
+#: selection:res.users,odoobot_state:0
+msgid "Onboarding emoji"
+msgstr "Emoji Onboarding"
+
+#. module: im_livechat_mail_bot
+#: selection:res.users,odoobot_state:0
+msgid "Onboarding ping"
+msgstr ""
+
+#. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:15
 #, python-format
 msgid "That's me! 🎉<br/>Try to type \":\" to use canned responses."
 msgstr ""
 "C'est moi! 🎉<br/>Essayez de taper \":\" pour utiliser les réponses "
 "automatiques."
+
+#. module: im_livechat_mail_bot
+#: model:ir.model,name:im_livechat_mail_bot.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"

@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
 "Last-Translator: Mariusz, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -560,7 +560,7 @@ msgstr "Dodaj komentarz"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:43
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:45
 #, python-format
 msgid "Add to menu"
 msgstr ""
@@ -576,7 +576,7 @@ msgstr ""
 "propagowanie treści forum na portalach społecznościowych."
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:201
+#: code:addons/website_forum/controllers/main.py:203
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -593,7 +593,7 @@ msgid "Answer"
 msgstr "Odpowiedź"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:520
+#: code:addons/website_forum/models/forum.py:521
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -795,9 +795,9 @@ msgstr ""
 "Unikaj niepotrzebnego przedstawiania się (Cześć... Proszę... Dzięki...)."
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
 #: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:345
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Bad Request"
 msgstr "Nieprawidłowe żądanie"
@@ -825,11 +825,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Biography"
 msgstr "Biografia"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid "Bronwe badge"
-msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -1567,7 +1562,10 @@ msgid "Forum Karma"
 msgstr "Forum karma"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:34
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
+#, python-format
 msgid "Forum Name"
 msgstr "Nazwa forum"
 
@@ -1706,6 +1704,11 @@ msgstr "Odpowiedział/a"
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
 msgstr "Pomoc"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Hide Intro"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1851,8 +1854,8 @@ msgid "It appears your email has not been verified."
 msgstr "Wygląda na to, że Twój adres e-mail nie został zweryfikowany."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:889
-#: code:addons/website_forum/models/forum.py:909
+#: code:addons/website_forum/models/forum.py:890
+#: code:addons/website_forum/models/forum.py:910
 #, python-format
 msgid "It is not allowed to vote for its own post."
 msgstr ""
@@ -2059,8 +2062,7 @@ msgstr "Nowa dyskusja"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:32
-#: model_terms:ir.ui.view,arch_db:website_forum.content_new_forum
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:33
 #, python-format
 msgid "New Forum"
 msgstr "Nowe Forum"
@@ -2113,7 +2115,7 @@ msgid "Nofollow links"
 msgstr "Linki nofollow"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:510
+#: code:addons/website_forum/models/forum.py:511
 #, python-format
 msgid "Not enough karma to retag."
 msgstr "Niewystarczająco karmy do zmiany znaczników"
@@ -2355,7 +2357,7 @@ msgid "Posted 100 comments"
 msgstr "Opublikowano 100 komentarzy"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:447
+#: code:addons/website_forum/models/forum.py:448
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
@@ -2409,7 +2411,7 @@ msgid "Question"
 msgstr "Pytanie"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:523
+#: code:addons/website_forum/models/forum.py:524
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2447,7 +2449,7 @@ msgid "Question set as favorite by 5 users"
 msgstr "Pytanie ustawione jako ulubione przez 5 użytkowników"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:345
 #, python-format
 msgid "Question should not be empty."
 msgstr "Pytanie nie powinno być puste."
@@ -2486,7 +2488,7 @@ msgid "Questions"
 msgstr "Pytania"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:541
+#: code:addons/website_forum/models/forum.py:542
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2530,6 +2532,11 @@ msgstr "Przekieruj do linku zewnętrznego"
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Refuse"
 msgstr "Odmów"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Register"
+msgstr "Zarejestruj"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2899,6 +2906,7 @@ msgstr ""
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -2922,7 +2930,7 @@ msgstr ""
 "utworzenia postu"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:410
+#: code:addons/website_forum/models/forum.py:411
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "To forum nie pozwala %s"
@@ -2977,8 +2985,8 @@ msgid "Title must not be empty"
 msgstr "Tytuł nie może być pusty"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Title should not be empty."
 msgstr "Tytuł nie powinien być pusty."
@@ -3244,6 +3252,11 @@ msgid "Welcome Message"
 msgstr "Wiadomość powitalna"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Welcome!"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "What kinds of questions can I ask here?"
 msgstr "Jakie pytania mogę tutaj zadać?"
@@ -3291,7 +3304,7 @@ msgstr ""
 "            Poczekaj, aż moderator sprawdzi Twój poprzedni post, zanim przejdziesz dalej."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:138
+#: code:addons/website_forum/models/forum.py:139
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."
@@ -3299,7 +3312,7 @@ msgstr ""
 "Nie możesz wybrać %s jako domyślny post, ponieważ forum nie pozwala na to."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:437
+#: code:addons/website_forum/models/forum.py:438
 #, python-format
 msgid "You cannot create recursive forum posts."
 msgstr ""
@@ -3310,7 +3323,7 @@ msgid "You cannot post an empty answer"
 msgstr "Nie możesz opublikować pustej odpowiedzi"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:952
+#: code:addons/website_forum/models/forum.py:953
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
 msgstr ""

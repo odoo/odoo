@@ -14,13 +14,14 @@
 # roye w <159820@qq.com>, 2018
 # 湘子 南 <1360857908@qq.com>, 2018
 # keecome <7017511@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: keecome <7017511@qq.com>, 2018\n"
+"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +79,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"   \n"
+"       亲爱的${object.partner_id.name}\n"
+"       % if object.partner_id.parent_id:\n"
+"          (${object.partner_id.parent_id.name})\n"
+"       % endif\n"
+"      <br/><br/>\n"
+"      这是附件中的采购订单。<strong>${object.name}</strong>\n"
+"       % if object.partner_ref:\n"
+"           with reference: ${object.partner_ref}\n"
+"       % endif\n"
+"       合计 <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"       from ${object.company_id.name}.\n"
+"       <br/><br/>\n"
+"       如果您有任何问题，请随时与我们联系。\n"
+"      <br/><br/>\n"
+"    致敬,\n"
+"   <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -101,6 +121,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"      <br/><br/>\n"
+"       这是申请报价的附件<strong>${object.name}</strong>\n"
+"       % if object.partner_ref:\n"
+"              with reference: ${object.partner_ref}\n"
+"       % endif\n"
+"       from ${object.company_id.name}.\n"
+"       <br/><br/>\n"
+"        如果您有任何问题，请随时与我们联系。\n"
+"       <br/><br/>\n"
+"        致敬，\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1056,6 +1094,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"订购数量：根据订购数量控制账单\n"
+"收到的数量：根据收到的数量控制账单。"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1602,7 +1642,7 @@ msgstr "安全令牌"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_invoice_supplier_purchase_form
 msgid "Select a purchase order or an old bill"
-msgstr ""
+msgstr "选择采购订单或者旧的发票"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn
@@ -1729,6 +1769,8 @@ msgid ""
 "The quotation contains the history of the discussion\n"
 "                you had with your vendor."
 msgstr ""
+"报价单包沟通的历史记录\n"
+"与您的合作小伙伴。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1745,7 +1787,7 @@ msgid ""
 "This account is used in automated inventory valuation to record the price "
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
-msgstr ""
+msgstr "此帐户用于自动库存评估，以在验证此供应商帐单时记录采购订单与其相关供应商帐单之间的价格差异。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1795,7 +1837,7 @@ msgstr "此供应商帐单已从%s修改"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
-msgstr ""
+msgstr "这个供应商没有采购订单.创建一个新的询价单."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1848,7 +1890,7 @@ msgstr "合计金额"
 msgid ""
 "Unable to cancel this purchase order. You must first cancel the related "
 "vendor bills."
-msgstr ""
+msgstr "无法取消此采购订单。 您必须先取消相关的供应商账单。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -1948,7 +1990,7 @@ msgstr "供应商帐单"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor Country"
-msgstr ""
+msgstr "供应商国家"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_manage_vendor_price
@@ -2038,7 +2080,7 @@ msgstr "你可以根据采购订单（服务）或者实际收货数量（产品
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr ""
+msgstr "你可以通过它的名字，TIN，电子邮件或内部参考找到一个客户。 "
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -2055,3 +2097,5 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "            whether it's a physical product, a consumable or services."
 msgstr ""
+" 你必须为你所购买的任何商品定义一个产品。\n"
+"         无论是实物产品、消费品还是服务。"

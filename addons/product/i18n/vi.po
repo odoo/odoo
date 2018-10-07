@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
 "Last-Translator: Minh Nguyen <ndminh210994@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: product
+#: code:addons/product/models/product_template.py:469
+#, python-format
+msgid ""
+"\n"
+"                The number of variants to generate is too high.\n"
+"                You should either not generate variants for each combination or generate them on demand from the sales order.\n"
+"                To do so, open the form view of attributes and change the mode of *Create Variants*."
+msgstr ""
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -53,7 +63,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% chiếu khấu %s phụ phí"
 
 #. module: product
-#: code:addons/product/models/product_template.py:350
+#: code:addons/product/models/product_template.py:357
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (bản sao)"
@@ -213,6 +223,11 @@ msgstr ""
 "                Ví dụ: tăng 10% cho bán lẻ, khuyến mãi 5 EUR cho sản phẩm này, vv."
 
 #. module: product
+#: selection:product.attribute,create_variant:0
+msgid "Always"
+msgstr "Luôn luôn"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
@@ -243,52 +258,46 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__name
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__attribute_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
 msgstr "Thuộc tính"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Attribute Name"
 msgstr "Tên Thuộc tính"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value__price_extra
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Attribute Price Extra"
 msgstr "Giá Cộng thêm cho Thuộc tính"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value__price_ids
-msgid "Attribute Prices"
-msgstr "Giá Thuộc tính"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value__name
+#: model:ir.model,name:product.model_product_attribute_value
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_template_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 msgid "Attribute Value"
 msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__value_ids
+#: model:ir.model.fields,field_description:product.field_product_product__attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
 msgstr "Giá trị Thuộc tính"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
-#: model:ir.model.fields,field_description:product.field_product_product__attribute_value_ids
-#: model_terms:ir.ui.view,arch_db:product.product_attribute_value_view_tree
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Attributes"
 msgstr "Thuộc tính"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
-msgid "Attributes and Variants"
-msgstr "Thuộc tính và Biến thể"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -428,6 +437,11 @@ msgid "Config Settings"
 msgstr "Cấu hình thiết lập"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Configure Variants"
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Tiêu dùng"
@@ -487,8 +501,8 @@ msgstr "Nhóm quốc gia"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
-msgid "Create Variant"
-msgstr "Tạo Biến thể"
+msgid "Create Variants"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -510,8 +524,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__create_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__create_uid
 #: model:ir.model.fields,field_description:product.field_product_category__create_uid
 #: model:ir.model.fields,field_description:product.field_product_packaging__create_uid
@@ -522,13 +534,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__create_uid
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_uid
 #: model:ir.model.fields,field_description:product.field_product_template__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__create_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__create_date
 #: model:ir.model.fields,field_description:product.field_product_category__create_date
 #: model:ir.model.fields,field_description:product.field_product_packaging__create_date
@@ -539,6 +552,9 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:product.field_product_product__create_date
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_date
 #: model:ir.model.fields,field_description:product.field_product_template__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_date
 msgid "Created on"
 msgstr "Thời điểm tạo"
 
@@ -612,13 +628,12 @@ msgstr "Mô tả cho Khách hàng"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value__sequence
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__sequence
 msgid "Determine the display order"
 msgstr "Chỉ ra thứ tự hiển thị"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__display_name
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__display_name
 #: model:ir.model.fields,field_description:product.field_product_category__display_name
 #: model:ir.model.fields,field_description:product.field_product_packaging__display_name
@@ -629,6 +644,9 @@ msgstr "Chỉ ra thứ tự hiển thị"
 #: model:ir.model.fields,field_description:product.field_product_product__display_name
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:product.field_product_template__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
@@ -650,13 +668,18 @@ msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:292
+#: code:addons/product/models/product.py:300
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
 msgstr ""
 "Lỗi! Không được phép chọn nhiều hơn một giá trị cho thuộc tính được cho."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
+msgid "Exclude for"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.cat_expense
@@ -737,7 +760,7 @@ msgid "Global"
 msgstr "Toàn cục"
 
 #. module: product
-#: code:addons/product/models/product_template.py:30
+#: code:addons/product/models/product_template.py:32
 #, python-format
 msgid "Go to Internal Categories"
 msgstr ""
@@ -749,8 +772,6 @@ msgstr "Nhóm theo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__id
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__id
 #: model:ir.model.fields,field_description:product.field_product_category__id
 #: model:ir.model.fields,field_description:product.field_product_packaging__id
@@ -761,6 +782,9 @@ msgstr "Nhóm theo"
 #: model:ir.model.fields,field_description:product.field_product_product__id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:product.field_product_template__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__id
 msgid "ID"
 msgstr "ID"
@@ -845,13 +869,13 @@ msgid "Import Template for Pricelists"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:492
+#: code:addons/product/models/product_template.py:573
 #, python-format
 msgid "Import Template for Products"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:650
+#: code:addons/product/models/product.py:665
 #, python-format
 msgid "Import Template for Vendor Pricelists"
 msgstr ""
@@ -886,6 +910,10 @@ msgstr "Trở thành người theo dõi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
+msgid "Is Product Variant"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
 msgid "Is a product variant"
 msgstr ""
@@ -897,8 +925,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute____last_update
-#: model:ir.model.fields,field_description:product.field_product_attribute_line____last_update
-#: model:ir.model.fields,field_description:product.field_product_attribute_price____last_update
 #: model:ir.model.fields,field_description:product.field_product_attribute_value____last_update
 #: model:ir.model.fields,field_description:product.field_product_category____last_update
 #: model:ir.model.fields,field_description:product.field_product_packaging____last_update
@@ -909,14 +935,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product____last_update
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo____last_update
 #: model:ir.model.fields,field_description:product.field_product_template____last_update
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion____last_update
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line____last_update
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value____last_update
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist____last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối vào"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__write_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__write_uid
 #: model:ir.model.fields,field_description:product.field_product_category__write_uid
 #: model:ir.model.fields,field_description:product.field_product_packaging__write_uid
@@ -927,13 +954,14 @@ msgstr "Sửa lần cuối vào"
 #: model:ir.model.fields,field_description:product.field_product_product__write_uid
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_uid
 #: model:ir.model.fields,field_description:product.field_product_template__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_uid
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__write_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__write_date
 #: model:ir.model.fields,field_description:product.field_product_category__write_date
 #: model:ir.model.fields,field_description:product.field_product_packaging__write_date
@@ -944,6 +972,9 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_date
 #: model:ir.model.fields,field_description:product.field_product_template__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
@@ -977,6 +1008,13 @@ msgstr "Tuyến hậu cần"
 #: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
 #: model:ir.model.fields,field_description:product.field_product_template__message_main_attachment_id
 msgid "Main Attachment"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
+msgid ""
+"Make this attribute value not compatible with\n"
+"        other values of the product or some attribute values of optional and accessory products."
 msgstr ""
 
 #. module: product
@@ -1062,6 +1100,11 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: product
+#: selection:product.attribute,create_variant:0
+msgid "Never"
+msgstr "Không bao giờ"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1108,6 +1151,11 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Số thông điệp chưa đọc"
+
+#. module: product
+#: selection:product.attribute,create_variant:0
+msgid "Only when the product is added to a sales order"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1193,19 +1241,11 @@ msgid "Price Discount"
 msgstr "Chiết khấu"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__price_extra
-msgid "Price Extra"
-msgstr "Giá cộng thêm"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_attribute_value__price_extra
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
 msgid ""
-"Price Extra: Extra price for the variant with this attribute value on sale "
-"price. eg. 200 price extra, 1000 + 200 = 1200."
+"Price Extra: Extra price for the variant with\n"
+"        this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."
 msgstr ""
-"Giá cộng thêm: Cộng thêm giá cho biến thể với giá trị thuộc tính này trên "
-"giá bán. ví dụ: giá cộng thêm là 200, giá của sản phẩm là 1000 thì giá của "
-"biến thể = 1000 + 200 = 1200. Bạn có thể cộng với một số âm (-) để giảm giá."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -1250,7 +1290,6 @@ msgstr "Bảng giá"
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_id
 #: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
-#: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
 msgstr "Bảng giá"
@@ -1334,27 +1373,22 @@ msgstr "Sản phẩm"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
 msgstr "Thuộc tính sản phẩm"
 
 #. module: product
-#: model:ir.model,name:product.model_product_attribute_line
-msgid "Product Attribute Line"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_attribute_price
-msgid "Product Attribute Price"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_attribute_value
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__value_id
+#: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Attribute Value"
 msgstr "Giá trị thuộc tính"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_attribute_line_form
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
+msgid "Product Attribute Values"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
 msgstr "Thuộc tính và Giá trị Thuộc tính Sản phẩm"
 
@@ -1440,14 +1474,25 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
-#: model:ir.model.fields,field_description:product.field_product_attribute_line__product_tmpl_id
-#: model:ir.model.fields,field_description:product.field_product_attribute_price__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
 msgid "Product Template"
 msgstr "Mẫu sản phẩm"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template_attribute_exclusion
+msgid "Product Template Attribute Exclusion"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_template_attribute_line
+msgid "Product Template Attribute Line"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -1462,6 +1507,11 @@ msgstr "Loại sản phẩm"
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
 msgstr "Biến thể Sản phẩm"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_attribute_value_action
+msgid "Product Variant Values"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1498,7 +1548,7 @@ msgid "Products Price Search"
 msgstr "Tìm Giá sản phẩm"
 
 #. module: product
-#: code:addons/product/models/product.py:466
+#: code:addons/product/models/product.py:475
 #, python-format
 msgid "Products: "
 msgstr "Sản phẩm: "
@@ -1620,6 +1670,7 @@ msgstr "Chọn nhóm cho sản phẩm hiện tại"
 #: model:ir.model.fields,field_description:product.field_product_product__sequence
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__sequence
 #: model:ir.model.fields,field_description:product.field_product_template__sequence
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__sequence
 msgid "Sequence"
 msgstr "Trình tự"
 
@@ -1785,6 +1836,11 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
+msgid "Template Attribute Values"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
@@ -1792,7 +1848,7 @@ msgid ""
 msgstr "Giá tính toán được tính theo Đơn vị đó lường mặc định của sản phẩm."
 
 #. module: product
-#: code:addons/product/models/product_template.py:296
+#: code:addons/product/models/product_template.py:303
 #, python-format
 msgid ""
 "The default Unit of Measure and the purchase Unit of Measure must be in the "
@@ -1802,7 +1858,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr ""
+msgstr "Thứ tự đầu tiên trong chuỗi mặc định là 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -1831,7 +1887,7 @@ msgstr ""
 "nhóm này)"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:76
+#: code:addons/product/models/product_attribute.py:55
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -1848,8 +1904,8 @@ msgstr "Giá để mua một sản phẩ"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Variant "
-"Prices' button to set the extra attribute prices."
+"The sale price is managed from the product template. Click on the 'Configure"
+" Variants' button to set the extra attribute prices."
 msgstr ""
 
 #. module: product
@@ -1914,7 +1970,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
-#: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -1992,9 +2047,15 @@ msgid "Validity"
 msgstr "Hợp lệ"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__name
+msgid "Value"
+msgstr "Giá trị"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
-#: model_terms:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Values"
 msgstr "Giá trị"
 
@@ -2019,29 +2080,27 @@ msgid "Variant Price Extra"
 msgstr "Giá Cộng thêm cho Biến thể"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Variant Prices"
-msgstr "Giá Biến thể"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_attribute_value_action
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
 msgstr "Giá trị Biến thể"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value__product_ids
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
 msgstr "Biến thể"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
+msgid "Variants and Options"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
@@ -2177,7 +2236,7 @@ msgstr ""
 "số làm tròn của tiền tệ chính của công ty"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:105
+#: code:addons/product/models/product_attribute.py:79
 #, python-format
 msgid "You cannot use this attribute with the following value."
 msgstr ""
@@ -2213,7 +2272,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:29
+#: code:addons/product/models/product_template.py:31
 #, python-format
 msgid ""
 "You must define at least one product category in order to be able to create "
@@ -2242,8 +2301,8 @@ msgid "e.g. USD Retailers"
 msgstr "e.g. Giá bán lẻ bằng USD"
 
 #. module: product
-#: code:addons/product/models/product.py:572
-#: code:addons/product/models/product_template.py:485
+#: code:addons/product/models/product.py:586
+#: code:addons/product/models/product_template.py:566
 #, python-format
 msgid "product"
 msgstr ""

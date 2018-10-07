@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
 "Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -364,6 +364,13 @@ msgid "Can Upload"
 msgstr "Kan uploaden"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:55
+#, python-format
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category_global
@@ -373,7 +380,7 @@ msgstr "Categorieën"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:252
+#: code:addons/website_slides/static/src/js/slides_upload.js:254
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -384,11 +391,14 @@ msgid "Category"
 msgstr "Categorie"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:81
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#, python-format
 msgid "Channel"
 msgstr "Kanaal"
 
@@ -409,7 +419,7 @@ msgstr "Instellingen kanaal"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:172
+#: code:addons/website_slides/static/src/js/slides_upload.js:174
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
@@ -462,7 +472,7 @@ msgstr ""
 "toegangsrechten zijn niet beschikbaar. Foutmelding: %s"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
+#: code:addons/website_slides/models/slides.py:330
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -483,7 +493,7 @@ msgstr "Maak een nieuwe categorie aan"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:221
+#: code:addons/website_slides/static/src/js/slides_upload.js:223
 #, python-format
 msgid "Create new tag '%s'"
 msgstr "Maak nieuw label '%s'"
@@ -654,7 +664,7 @@ msgstr "Beleidsregelsopties"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:274
-#: code:addons/website_slides/static/src/js/slides_upload.js:89
+#: code:addons/website_slides/static/src/js/slides_upload.js:91
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr "Bestand is te groot. Bestand mag niet groter zijn dan 5MB"
@@ -776,7 +786,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:84
+#: code:addons/website_slides/static/src/js/slides_upload.js:86
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr "Ongeldig bestandstype. Kies een pdf- of beeldbestand"
@@ -899,6 +909,13 @@ msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr "Nieuwe ${object.slide_type} gepubliceerd in ${object.channel_id.name}"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:39
+#, python-format
+msgid "New slide"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Newest"
 msgstr "Nieuwste"
@@ -989,6 +1006,13 @@ msgstr "Aantal ongelezen berichten"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:40
+#, python-format
+msgid "On which channel do you want to add a slide?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
 msgid "PDF or Image File"
@@ -1014,8 +1038,8 @@ msgstr ""
 "kunnen stemmen"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:328
-#: code:addons/website_slides/models/slides.py:557
+#: code:addons/website_slides/models/slides.py:333
+#: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Geef een geldige Youtube of Google Doc URL in"
@@ -1124,7 +1148,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO geoptimaliseerd"
 
 #. module: website_slides
 #. openerp-web
@@ -1159,6 +1183,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Security"
 msgstr "Beveiliging"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:44
+#, python-format
+msgid "Select"
+msgstr "Selecteren"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
@@ -1280,7 +1311,7 @@ msgstr "Label"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:275
+#: code:addons/website_slides/static/src/js/slides_upload.js:277
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -1392,7 +1423,7 @@ msgid "Uncategorized presentation"
 msgstr "Presentatie niet gecategoriseerd"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:546
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
 msgstr "Document onbekend"
@@ -1545,7 +1576,7 @@ msgstr "Website opengraph afbeelding"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:114
+#: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
 msgstr "Bestanden beveiligd met een wachtwoord kunt u niet uploaden."

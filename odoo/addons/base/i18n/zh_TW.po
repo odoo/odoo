@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-25 12:33+0000\n"
-"PO-Revision-Date: 2018-09-25 12:33+0000\n"
+"POT-Creation-Date: 2018-10-02 10:14+0000\n"
+"PO-Revision-Date: 2018-10-02 10:14+0000\n"
 "Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -454,19 +454,6 @@ msgid ""
 msgstr ""
 "\n"
 "烏拉圭會計報告\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_account_extension
-msgid ""
-"\n"
-"        Adapt base accounting module for Enterprise Edition.\n"
-"\n"
-"        This module will be auto installed if account module and enterprise edition are present\n"
-"    "
-msgstr ""
-"\n"
-"為適應企業版基礎會計模組\n"
-"這個模組將被自動安裝，如果帳戶模組和企業版都存在"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -1789,18 +1776,10 @@ msgid ""
 "================================\n"
 "\n"
 "This module allows the web client to access a remotely installed barcode\n"
-"scanner, and is used by the posbox to provide barcode scanner support to the\n"
+"scanner, and is used by the IoTBox to provide barcode scanner support to the\n"
 "point of sale module. \n"
 "\n"
 msgstr ""
-"\n"
-"條碼掃瞄器硬體驅動\n"
-"================================\n"
-"\n"
-"這個模組運行網頁客戶端讀取遠程安裝的條碼掃瞄器，\n"
-"被用來使postbox為POS模組提供條碼掃瞄器支援。\n"
-" \n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -2875,6 +2854,7 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_hw_drivers
 #: model:ir.module.module,description:base.module_hw_proxy
 msgid ""
 "\n"
@@ -3152,6 +3132,35 @@ msgstr ""
 "Odoo裡的具體的和易於使用的發票系統可以讓您保持您的會計的軌跡，即使您不是一個 會計。它提供了一個簡單的方式來跟進您的客戶和客戶。\n"
 "\n"
 "萬一您使用(外部的)帳戶,您可以使用這個簡化得的會計來保留您的帳簿，追蹤付款。該模組還為您提供了註冊費用的簡單方法，而不必考慮完整的摘要進行編碼。"
+
+#. module: base
+#: model:ir.module.module,description:base.module_hw_posbox_homepage
+msgid ""
+"\n"
+"IoT Box Homepage\n"
+"================\n"
+"\n"
+"This module overrides Odoo web interface to display a simple\n"
+"Homepage that explains what's the iotbox and show the status,\n"
+"and where to find documentation.\n"
+"\n"
+"If you activate this module, you won't be able to access the \n"
+"regular Odoo interface anymore.\n"
+"\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_hw_posbox_upgrade
+msgid ""
+"\n"
+"IoTBox Software Upgrader\n"
+"========================\n"
+"\n"
+"This module allows to remotely upgrade the IoTBox software to a\n"
+"new version. This module is specific to the IoTBox setup and environment\n"
+"and should not be installed on regular Odoo servers.\n"
+"\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -3469,7 +3478,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_sale_stock_options
+#: model:ir.module.module,description:base.module_website_sale_stock
 msgid ""
 "\n"
 "Manage the inventory of your products and display their availability status in your eCommerce store.\n"
@@ -4237,54 +4246,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_hw_posbox_homepage
-msgid ""
-"\n"
-"PosBox Homepage\n"
-"===============\n"
-"\n"
-"This module overrides Odoo web interface to display a simple\n"
-"Homepage that explains what's the posbox and show the status,\n"
-"and where to find documentation.\n"
-"\n"
-"If you activate this module, you won't be able to access the \n"
-"regular Odoo interface anymore.\n"
-"\n"
-msgstr ""
-"\n"
-"PosBox 主頁\n"
-"===============\n"
-"\n"
-" 此模組會覆蓋 Odoo web 界面以顯示簡單的\n"
-" 主頁，該主頁會說明什麼是 posbox 、顯示其狀態，\n"
-" 並說明文檔的所在位置。 \n"
-"\n"
-" 如果啟動此模組，將無法再訪問\n"
-" 常規的 Odoo 界面。\n"
-"\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_hw_posbox_upgrade
-msgid ""
-"\n"
-"PosBox Software Upgrader\n"
-"========================\n"
-"\n"
-"This module allows to remotely upgrade the PosBox software to a\n"
-"new version. This module is specific to the PosBox setup and environment\n"
-"and should not be installed on regular Odoo servers.\n"
-"\n"
-msgstr ""
-"\n"
-" PosBox 軟體升級程序\n"
-"========================\n"
-"\n"
-" 此模組支援遠程升級 PosBox 軟體\n"
-" 新版本。此模組專門針對於 PosBox 安裝和環境，\n"
-" 不應該將其安裝在常規的 Odoo 伺服器上。\n"
-"\n"
-
-#. module: base
 #: model:ir.module.module,description:base.module_mrp_plm
 msgid ""
 "\n"
@@ -4722,15 +4683,6 @@ msgstr ""
 " 詞插件允許使用者顯示所有鏈接至特定\n"
 " 模型的網站表單。此外，您可以創建新的網站表單或編輯現有的網站表單。\n"
 "\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_website_sale_options
-msgid ""
-"\n"
-"Suggest optional products when shoppers add products to their cart (e.g. for computers: warranty, OS software, extra components).\n"
-"Optional products are defined in the product form.\n"
-"    "
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey_crm
@@ -6607,8 +6559,8 @@ msgstr "%p - 等價於 AM 或 PM。\""
 #: code:addons/base/models/ir_filters.py:38
 #: code:addons/base/models/res_partner.py:336
 #: code:addons/base/models/res_users.py:163
+#: code:addons/base/models/res_users.py:505
 #: code:addons/base/models/res_users.py:507
-#: code:addons/base/models/res_users.py:509
 #, python-format
 msgid "%s (copy)"
 msgstr "%s(副本)"
@@ -7368,7 +7320,7 @@ msgid "A AGRICULTURE, FORESTRY AND FISHING"
 msgstr "A 農業、林業和漁業"
 
 #. module: base
-#: code:addons/models.py:2982
+#: code:addons/models.py:2986
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "自您上次查看過以後該單據已被修改(%s:%d)"
@@ -7387,8 +7339,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
-msgid "A homepage for the PosBox"
-msgstr "PosBox的主頁"
+msgid "A homepage for the IoT Box"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_exceptions
@@ -7502,6 +7454,12 @@ msgid "ABA Credit Transfer"
 msgstr ""
 
 #. module: base
+#: code:addons/fields.py:1760
+#, python-format
+msgid "ASCII characters are required for %s in %s"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_title__shortcut
 msgid "Abbreviation"
 msgstr "簡稱"
@@ -7576,11 +7534,6 @@ msgid "Account Charts"
 msgstr "科目表"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_extension
-msgid "Account Extension"
-msgstr "會計擴展"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
 msgid "Account Holder"
 msgstr "帳戶持有人"
@@ -7588,7 +7541,7 @@ msgstr "帳戶持有人"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "賬戶持有人姓名"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -7924,6 +7877,12 @@ msgid "Address format..."
 msgstr "地址格式..."
 
 #. module: base
+#: code:addons/base/models/ir_qweb_fields.py:630
+#, python-format
+msgid "Address separator"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_auth_ldap
 msgid ""
 "Adds support for authentication by LDAP server.\n"
@@ -8071,18 +8030,12 @@ msgid ""
 msgstr "管理國家或地區的分類。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:957
-#: code:addons/base/models/ir_model.py:1070
-#: code:addons/base/models/ir_model.py:1523
+#: code:addons/base/models/ir_model.py:959
+#: code:addons/base/models/ir_model.py:1072
+#: code:addons/base/models/ir_model.py:1525
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "卸載模組要求管理訪問。"
-
-#. module: base
-#: code:addons/base/models/ir_qweb_fields.py:629
-#, python-format
-msgid "Adress separator"
-msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -8240,8 +8193,8 @@ msgstr "可在優惠券獎勵中提供免費運送服務"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_upgrade
-msgid "Allows to remotely upgrade the PosBox software"
-msgstr "允許遠程升級posbox軟體"
+msgid "Allows to remotely upgrade the IoTBox software"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon
@@ -8351,7 +8304,7 @@ msgid "Application"
 msgstr "應用"
 
 #. module: base
-#: code:addons/base/models/res_users.py:970
+#: code:addons/base/models/res_users.py:968
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Application Accesses"
@@ -8756,7 +8709,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 毫米"
 
 #. module: base
-#: code:addons/translate.py:1074
+#: code:addons/translate.py:1076
 #, python-format
 msgid "Bad file format: %s"
 msgstr "錯誤的文件格式: %s"
@@ -8857,13 +8810,13 @@ msgid "Barcode scan in Mobile"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:602
+#: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:602
+#: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Barcode type, eg: UPCA, EAN13, Code128"
 msgstr ""
@@ -8972,7 +8925,7 @@ msgid "Before Amount"
 msgstr "金額前面"
 
 #. module: base
-#: code:addons/base/models/res_users.py:1242
+#: code:addons/base/models/res_users.py:1240
 #, python-format
 msgid ""
 "Before clicking on 'Change Password', you have to write a new password."
@@ -9235,7 +9188,7 @@ msgid "By"
 msgstr "由"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:279
+#: code:addons/base/models/ir_qweb_fields.py:280
 #, python-format
 msgid "By default the widget uses the field informations"
 msgstr ""
@@ -9319,7 +9272,7 @@ msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "不能升級模組 「%s「，因為它尚未安裝。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:706
+#: code:addons/base/models/ir_model.py:718
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr "字段改名只能一次一個!"
@@ -9382,7 +9335,7 @@ msgid "Cancel Upgrade"
 msgstr "取消升級"
 
 #. module: base
-#: code:addons/models.py:2116
+#: code:addons/models.py:2118
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr ""
@@ -9400,7 +9353,7 @@ msgid "Cannot duplicate configuration!"
 msgstr "不能複製配置信息！"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:606
+#: code:addons/base/models/ir_model.py:618
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
 msgstr "無法重命名/刪除還在視圖中使用的字段："
@@ -9484,13 +9437,13 @@ msgstr ""
 "如果沒有被正確設定，則只能改變聯絡人的公司。如果一個已經存在的聯絡人屬於新公司，則在這個新公司裡一個新聯絡人應該被創建，您可以使用「取消」按鈕來放棄這個改變。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:693
+#: code:addons/base/models/ir_model.py:705
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "改變字段的模型是禁止的！"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:696
+#: code:addons/base/models/ir_model.py:708
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
@@ -9873,7 +9826,7 @@ msgid "Companies count"
 msgstr "公司個數"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:395
+#: code:addons/base/models/ir_qweb_fields.py:396
 #: model:ir.model.fields,field_description:base.field_ir_attachment__company_id
 #: model:ir.model.fields,field_description:base.field_ir_default__company_id
 #: model:ir.model.fields,field_description:base.field_ir_property__company_id
@@ -9946,7 +9899,7 @@ msgid "Company Type"
 msgstr "公司類別"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:395
+#: code:addons/base/models/ir_qweb_fields.py:396
 #, python-format
 msgid ""
 "Company used for the original currency (only used for t-esc). By default use"
@@ -10073,6 +10026,7 @@ msgid "Congo"
 msgstr "剛果"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hw_drivers
 #: model:ir.module.module,summary:base.module_hw_proxy
 msgid "Connect the Web Client to Hardware Peripherals"
 msgstr "連接網站客戶端到並行硬體"
@@ -10789,7 +10743,7 @@ msgid "Custom View"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:394
+#: code:addons/base/models/ir_model.py:406
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "自定義的字段名稱必須以「x_」開始！"
@@ -10919,7 +10873,7 @@ msgid "Database Structure"
 msgstr "資料庫結構"
 
 #. module: base
-#: code:addons/models.py:2913
+#: code:addons/models.py:2916
 #, python-format
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
@@ -10927,7 +10881,7 @@ msgid ""
 msgstr "資料庫讀取不到 ids ({}) 與extra ids ({})，可能是因為上個請求的類型不一致所造成的"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:394
+#: code:addons/base/models/ir_qweb_fields.py:395
 #: model:ir.model.fields,field_description:base.field_res_currency__date
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__name
 #: model:ir.model.fields,field_description:base.field_res_partner__date
@@ -10944,31 +10898,31 @@ msgid "Date Format"
 msgstr "日期格式"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:205
+#: code:addons/base/models/ir_qweb_fields.py:206
 #, python-format
 msgid "Date format"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:566
+#: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:510
+#: code:addons/base/models/ir_qweb_fields.py:511
 #, python-format
 msgid "Date unit"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:510
+#: code:addons/base/models/ir_qweb_fields.py:511
 #, python-format
 msgid "Date unit used for comparison and formatting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:511
+#: code:addons/base/models/ir_qweb_fields.py:512
 #, python-format
 msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
@@ -10976,7 +10930,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:394
+#: code:addons/base/models/ir_qweb_fields.py:395
 #, python-format
 msgid ""
 "Date used for the original currency (only used for t-esc). by default use "
@@ -11247,7 +11201,7 @@ msgid "Digital Products"
 msgstr "數位產品"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:509
+#: code:addons/base/models/ir_qweb_fields.py:510
 #, python-format
 msgid "Digital formating"
 msgstr ""
@@ -11423,7 +11377,7 @@ msgid ""
 msgstr "顯示和管理所有可分配給您的夥伴記錄的國家名單。您可以創建或刪除，以確保您正在使用國家名稱的能夠保留。"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:393
+#: code:addons/base/models/ir_qweb_fields.py:394
 #, python-format
 msgid "Display currency"
 msgstr ""
@@ -11448,37 +11402,37 @@ msgstr ""
 "%(country_code)s：國家代碼"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:224
+#: code:addons/base/models/ir_qweb_fields.py:225
 #, python-format
 msgid "Display only the time"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:633
+#: code:addons/base/models/ir_qweb_fields.py:634
 #, python-format
 msgid "Display the country image if the field is present on the record"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:632
+#: code:addons/base/models/ir_qweb_fields.py:633
 #, python-format
 msgid "Display the phone icons even if no_marker is True"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:633
+#: code:addons/base/models/ir_qweb_fields.py:634
 #, python-format
 msgid "Displayed contry image"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:628
+#: code:addons/base/models/ir_qweb_fields.py:629
 #, python-format
 msgid "Displayed fields"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:632
+#: code:addons/base/models/ir_qweb_fields.py:633
 #, python-format
 msgid "Displayed phone icons"
 msgstr ""
@@ -11529,8 +11483,8 @@ msgid "Document management"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1226
-#: code:addons/base/models/ir_model.py:1229
+#: code:addons/base/models/ir_model.py:1228
+#: code:addons/base/models/ir_model.py:1231
 #, python-format
 msgid "Document model"
 msgstr "單據模型"
@@ -11594,9 +11548,9 @@ msgid "Dominican Republic - Accounting"
 msgstr "多米尼加共和國 - 會計"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:630
+#: code:addons/base/models/ir_qweb_fields.py:631
 #, python-format
-msgid "Don't display the font awsome marker"
+msgid "Don't display the font awesome marker"
 msgstr ""
 
 #. module: base
@@ -11660,19 +11614,19 @@ msgid "EDI for Mexico"
 msgstr "墨西哥的 EDI"
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:542
+#: code:addons/base/models/ir_attachment.py:541
 #, python-format
 msgid "ERROR: Invalid PDF file!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:583
+#: code:addons/base/models/ir_attachment.py:588
 #, python-format
 msgid "ERROR: Invalid list of pages to split. Example: 1,5-9,10"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:579
+#: code:addons/base/models/ir_attachment.py:583
 #, python-format
 msgid "ERROR: the file must be a PDF"
 msgstr ""
@@ -11844,7 +11798,7 @@ msgid "Employees"
 msgstr "員工"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:450
+#: code:addons/base/models/ir_model.py:462
 #, python-format
 msgid "Empty dependency in %r"
 msgstr "空白依賴在 %r"
@@ -11911,13 +11865,13 @@ msgstr ""
 "視圖 `%(view_name)s`"
 
 #. module: base
-#: code:addons/models.py:1089
+#: code:addons/models.py:1091
 #, python-format
 msgid "Error details:"
 msgstr "錯誤詳情:"
 
 #. module: base
-#: code:addons/models.py:1102
+#: code:addons/models.py:1104
 #, python-format
 msgid "Error while validating constraint"
 msgstr "constraint 檢查錯誤"
@@ -12498,19 +12452,19 @@ msgid "Field"
 msgstr "字段"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:202
+#: code:addons/base/models/ir_model.py:214
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr "字段\"Model\" 不能在模型上更改 。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:206
+#: code:addons/base/models/ir_model.py:218
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr "字段\"Transient  Model\" 不能在模型上更改 。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:204
+#: code:addons/base/models/ir_model.py:216
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr "字段\"Type\" 不能在模型上更改 。"
@@ -12554,7 +12508,7 @@ msgid "Field `%(field_name)s` does not exist"
 msgstr "字段`%(field_name)s`不存在"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:398
+#: code:addons/base/models/ir_model.py:410
 #, python-format
 msgid ""
 "Field names can only contain characters, digits and underscores (up to 63)."
@@ -12588,7 +12542,7 @@ msgid "Fields Description"
 msgstr "字段說明"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:607
+#: code:addons/base/models/ir_model.py:619
 #, python-format
 msgid "Fields: %s"
 msgstr "字段: %s"
@@ -12787,13 +12741,13 @@ msgid ""
 msgstr "出於安全原因，您不能在一起合併超過 3 聯繫人.如果需要 您可以重新打開該嚮導幾次。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:649
+#: code:addons/base/models/ir_model.py:661
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "對於選擇字段，必須給出選擇選項！"
 
 #. module: base
-#: code:addons/models.py:3042
+#: code:addons/models.py:3015
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created yourself.\n"
@@ -13513,6 +13467,7 @@ msgid "Hardware Drivers"
 msgstr "硬體驅動"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_drivers
 #: model:ir.module.module,shortdesc:base.module_hw_proxy
 msgid "Hardware Proxy"
 msgstr "硬體代理"
@@ -13538,7 +13493,7 @@ msgid "Heard Island and McDonald Islands"
 msgstr "赫德島和麥克唐納群島"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:604
+#: code:addons/base/models/ir_qweb_fields.py:605
 #, python-format
 msgid "Height"
 msgstr "高度"
@@ -13705,13 +13660,13 @@ msgid "Here is the exported translation file:"
 msgstr "這是已經導出的翻譯文件："
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:630
+#: code:addons/base/models/ir_qweb_fields.py:631
 #, python-format
-msgid "Hide marker"
+msgid "Hide badges"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:225
+#: code:addons/base/models/ir_qweb_fields.py:226
 #, python-format
 msgid "Hide seconds"
 msgstr ""
@@ -13795,7 +13750,7 @@ msgid "Human  Resources"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:605
+#: code:addons/base/models/ir_qweb_fields.py:606
 #, python-format
 msgid "Human Readable"
 msgstr ""
@@ -13951,6 +13906,11 @@ msgstr "定義在 XML 文件裡的視圖ID"
 #: model:ir.module.module,shortdesc:base.module_bus
 msgid "IM Bus"
 msgstr "IM 總線"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_iot
+msgid "IOT"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__code
@@ -14436,13 +14396,13 @@ msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr "您可以通過即時消息總線給使用者發送線上即時信息，類似QQ，但限於odoo的web框架內。"
 
 #. module: base
-#: code:addons/models.py:1334
+#: code:addons/models.py:1336
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "日曆視圖缺少字段！"
 
 #. module: base
-#: code:addons/models.py:1344
+#: code:addons/models.py:1346
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -14541,7 +14501,7 @@ msgid "Introspection report on objects"
 msgstr "對象的自省報告"
 
 #. module: base
-#: code:addons/models.py:3832
+#: code:addons/models.py:3837
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -14556,7 +14516,7 @@ msgid "Invalid 'group by' parameter"
 msgstr "無效的「分組」參數"
 
 #. module: base
-#: code:addons/models.py:2118
+#: code:addons/models.py:2120
 #, python-format
 msgid "Invalid aggregation function %r."
 msgstr ""
@@ -14582,7 +14542,7 @@ msgid "Invalid field %s.%s"
 msgstr "無效的字段 %s.%s"
 
 #. module: base
-#: code:addons/models.py:2108
+#: code:addons/models.py:2110
 #, python-format
 msgid "Invalid field specification %r."
 msgstr ""
@@ -14704,8 +14664,18 @@ msgid "Invoicing Management"
 msgstr "開立發票管理"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
+msgid "IoT Box Homepage"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_iot
 msgid "IoT features for Work Order Quality Control"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_posbox_upgrade
+msgid "IoTBox Software Upgrader"
 msgstr ""
 
 #. module: base
@@ -15443,7 +15413,7 @@ msgid "Link using field"
 msgstr "鏈接使用字段"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:628
+#: code:addons/base/models/ir_qweb_fields.py:629
 #, python-format
 msgid "List of contact fields to display in the widget"
 msgstr ""
@@ -15504,7 +15474,7 @@ msgstr "加載翻譯"
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
-msgstr ""
+msgstr "加載演示數據"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
@@ -15837,7 +15807,7 @@ msgid "Manage financial and analytic accounting"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_website_sale_stock_options
+#: model:ir.module.module,summary:base.module_website_sale_stock
 msgid "Manage product inventory & availability"
 msgstr ""
 
@@ -15899,7 +15869,7 @@ msgid "Many2One"
 msgstr "多對一"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:660
+#: code:addons/base/models/ir_model.py:672
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr "多對一 %s 模型 %s 不存在！"
@@ -16197,13 +16167,13 @@ msgid "Missing SMTP Server"
 msgstr "缺少 SMTP 伺服器"
 
 #. module: base
-#: code:addons/models.py:3011
+#: code:addons/models.py:3028
 #, python-format
 msgid "Missing document(s)"
 msgstr "缺失單據"
 
 #. module: base
-#: code:addons/models.py:5484
+#: code:addons/models.py:5505
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "找不到字段 '%s' (%s)所需的值"
@@ -16252,19 +16222,19 @@ msgid "Model"
 msgstr "模型"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:492
+#: code:addons/base/models/ir_model.py:504
 #, python-format
 msgid "Model %s does not exist"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:656
+#: code:addons/base/models/ir_model.py:668
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "模型 %s 不存在！"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:182
+#: code:addons/base/models/ir_model.py:194
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed."
 msgstr ""
@@ -16546,6 +16516,11 @@ msgid "N ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
 msgstr "N 行政和支援服務活動"
 
 #. module: base
+#: model:res.country,vat_label:base.gt
+msgid "NIT"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_close__name
 #: model:ir.model.fields,field_description:base.field_ir_actions_actions__name
@@ -16719,7 +16694,7 @@ msgid "No Record Found"
 msgstr "沒有找到記錄"
 
 #. module: base
-#: code:addons/models.py:1423
+#: code:addons/models.py:1425
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr " 類型'%s' 無預設視圖 !"
@@ -16730,7 +16705,7 @@ msgid "No gap"
 msgstr "無間隔"
 
 #. module: base
-#: code:addons/fields.py:2357
+#: code:addons/fields.py:2360
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "未找到%r對應的字段%r"
@@ -16774,13 +16749,13 @@ msgid "Non Updatable"
 msgstr "不可更新"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:459
+#: code:addons/base/models/ir_model.py:471
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr "依賴%r中無相關的字段%r"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:416
+#: code:addons/base/models/ir_model.py:428
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr "非關係字段名 '%s' 在關聯字段 '%s'"
@@ -16850,7 +16825,7 @@ msgid "Not done"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1405
+#: code:addons/base/models/ir_model.py:1407
 #, python-format
 msgid "Not enough access rights on the external ID:"
 msgstr ""
@@ -18770,7 +18745,7 @@ msgid "On delete property for many2one fields"
 msgstr "多對一（many2one）字段的 on delete 屬性"
 
 #. module: base
-#: code:addons/models.py:3011
+#: code:addons/models.py:3028
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -18778,7 +18753,7 @@ msgid ""
 msgstr "一個您試圖訪問的單據已經被刪除，請刷新後重試。"
 
 #. module: base
-#: code:addons/models.py:3358
+#: code:addons/models.py:3363
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -18864,7 +18839,7 @@ msgid ""
 msgstr "只有目標聯繫人可鏈接到現有日誌項。如果您需要合併幾個聯繫人鏈接到現有日誌項，請詢問管理員。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1226
+#: code:addons/base/models/ir_model.py:1228
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -18900,11 +18875,6 @@ msgstr "商機到報價單"
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Option"
 msgstr "選項"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_options
-msgid "Optional Products"
-msgstr "可選產品"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__domain
@@ -19174,14 +19144,14 @@ msgid "Original View"
 msgstr "原始視圖"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:392
+#: code:addons/base/models/ir_qweb_fields.py:393
 #, python-format
 msgid "Original currency"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:997
-#: code:addons/base/models/res_users.py:1180
+#: code:addons/base/models/res_users.py:995
+#: code:addons/base/models/res_users.py:1178
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -19255,7 +19225,7 @@ msgid "Output DPI"
 msgstr "輸出DPI"
 
 #. module: base
-#: code:addons/models.py:2130
+#: code:addons/models.py:2132
 #, python-format
 msgid "Output name %r is used twice."
 msgstr ""
@@ -19498,7 +19468,7 @@ msgid "Path"
 msgstr "路徑"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:223
+#: code:addons/base/models/ir_qweb_fields.py:224
 #, python-format
 msgid "Pattern to format"
 msgstr ""
@@ -19651,7 +19621,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1229
+#: code:addons/base/models/ir_model.py:1231
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
@@ -19671,7 +19641,7 @@ msgid "Please set the Model to Create before choosing values"
 msgstr "在選擇值之前，請將模型設定為創建"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:493
+#: code:addons/base/models/ir_model.py:505
 #, python-format
 msgid "Please specify a valid model for the object relation"
 msgstr ""
@@ -19743,16 +19713,6 @@ msgstr "葡萄牙"
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Accounting"
 msgstr "葡萄牙 - 會計"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
-msgid "PosBox Homepage"
-msgstr "PosBox 主頁"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hw_posbox_upgrade
-msgid "PosBox Software Upgrader"
-msgstr "PosBox 軟體升級程序"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -19857,7 +19817,7 @@ msgid "Private methods (such as %s) cannot be called remotely."
 msgstr "私有方法 (比如 %s) 不能遠程調用。"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_stock_options
+#: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Product Availability"
 msgstr ""
 
@@ -20014,7 +19974,7 @@ msgid "Properties"
 msgstr "屬性"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:688
+#: code:addons/base/models/ir_model.py:700
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -20409,7 +20369,7 @@ msgid ""
 msgstr "現在無法修改記錄：此計劃任務目前正在執行，不允許被修改，請在幾分鐘後重試"
 
 #. module: base
-#: code:addons/base/models/ir_actions.py:250 code:addons/models.py:4233
+#: code:addons/base/models/ir_actions.py:250 code:addons/models.py:4251
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "記錄不存在或已刪除"
@@ -20432,13 +20392,13 @@ msgid "Recursion error in modules dependencies !"
 msgstr "模組的依賴包含循環錯誤！"
 
 #. module: base
-#: code:addons/base/models/ir_actions.py:412
+#: code:addons/base/models/ir_actions.py:413
 #, python-format
 msgid "Recursion found in child server actions"
 msgstr "服務端動作存在循環調用"
 
 #. module: base
-#: code:addons/models.py:3698
+#: code:addons/models.py:3703
 #, python-format
 msgid "Recursivity Detected."
 msgstr "檢測到循環。"
@@ -20450,7 +20410,7 @@ msgid "Reference"
 msgstr "參照"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:566
+#: code:addons/base/models/ir_qweb_fields.py:567
 #, python-format
 msgid "Reference date"
 msgstr ""
@@ -20482,13 +20442,13 @@ msgid "Related field"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:428
+#: code:addons/base/models/ir_model.py:440
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr "關聯字段 '%s' 沒有 comodel '%s'"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:426
+#: code:addons/base/models/ir_model.py:438
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
 msgstr "關聯字段 '%s' 沒有類型'%s'"
@@ -20653,7 +20613,7 @@ msgid "Resellers"
 msgstr "經銷商"
 
 #. module: base
-#: code:addons/models.py:905
+#: code:addons/models.py:907
 #, python-format
 msgid "Resolve other errors first"
 msgstr "先解決其它錯誤"
@@ -20736,13 +20696,13 @@ msgid "Rounding Factor"
 msgstr "捨入係數"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:160
+#: code:addons/base/models/ir_qweb_fields.py:161
 #, python-format
 msgid "Rounding precision"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:511
+#: code:addons/base/models/ir_qweb_fields.py:512
 #, python-format
 msgid "Rounding unit"
 msgstr ""
@@ -21204,7 +21164,7 @@ msgstr ""
 "消息寫入下一個字段。"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:279
+#: code:addons/base/models/ir_qweb_fields.py:280
 #: selection:base.partner.merge.automatic.wizard,state:0
 #: selection:ir.property,type:0 selection:ir.translation,type:0
 #, python-format
@@ -21294,7 +21254,7 @@ msgid "Separator Format"
 msgstr "分割符格式"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:629
+#: code:addons/base/models/ir_qweb_fields.py:630
 #, python-format
 msgid "Separator use to split the address from the display_name."
 msgstr ""
@@ -21423,7 +21383,7 @@ msgid ""
 msgstr "設定一個值使得這個動作在給定模型的選單中可用。"
 
 #. module: base
-#: code:addons/base/models/res_users.py:658
+#: code:addons/base/models/res_users.py:656
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr "根據安全考慮，不允許設定空密碼！"
@@ -21635,25 +21595,25 @@ msgstr "有時也叫 BIC 或 Swift。"
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:381
-#: code:addons/base/models/ir_model.py:1220
+#: code:addons/base/models/ir_model.py:1222
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "對不起，您沒有訪問此文檔的權限。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1222
+#: code:addons/base/models/ir_model.py:1224
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "對不起，您沒有創建這種類型的文檔的權限。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1223
+#: code:addons/base/models/ir_model.py:1225
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "對不起，您沒有刪除這個文檔的權限。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1221
+#: code:addons/base/models/ir_model.py:1223
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "對不起，您沒有修改此文檔的權限。"
@@ -21664,7 +21624,7 @@ msgid "Sort"
 msgstr "排序"
 
 #. module: base
-#: code:addons/models.py:3973
+#: code:addons/models.py:3978
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr "模型%s 中未找到排序字段 %s "
@@ -21969,11 +21929,6 @@ msgstr "後綴"
 #: model:ir.model.fields,help:base.field_ir_sequence__suffix
 msgid "Suffix value of the record for the sequence"
 msgstr "序列號的後綴"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_website_sale_options
-msgid "Suggest optional products when adding to cart"
-msgstr "在添加到購物車時推薦可選產品"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__summary
@@ -22320,7 +22275,7 @@ msgstr ""
 " 您可以使用此字段進行快速搜尋。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:387
+#: code:addons/base/models/ir_model.py:399
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression. Please "
@@ -22447,7 +22402,7 @@ msgid "The demonstration data of"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:586
+#: code:addons/base/models/ir_model.py:598
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
 msgstr "字段 '%s' 不能刪除，因為字段 '%s' 與其相關。"
@@ -22544,7 +22499,7 @@ msgid ""
 msgstr "這個篩選應用的選單動作。如果留空，篩選將應用於這個模型的所有選單。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:138
+#: code:addons/base/models/ir_model.py:150
 #, python-format
 msgid ""
 "The model name can only contain lowercase characters, digits, underscores "
@@ -22552,7 +22507,7 @@ msgid ""
 msgstr "型號名稱只能包含小寫字元、數字、下劃線和點。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:136
+#: code:addons/base/models/ir_model.py:148
 #, python-format
 msgid "The model name must start with 'x_'."
 msgstr "自定義的模型名稱必須以「x_」開始。"
@@ -22674,7 +22629,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2920
+#: code:addons/models.py:2923
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to record rules: Document "
@@ -22682,8 +22637,8 @@ msgid ""
 msgstr "由於記錄規則：文檔類型：%s，操作：%s，記錄：%s，使用者：%s，請求的操作而無法完成"
 
 #. module: base
-#: code:addons/models.py:2715 code:addons/models.py:2924
-#: code:addons/models.py:3001
+#: code:addons/models.py:2718 code:addons/models.py:2927
+#: code:addons/models.py:3018
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -22725,7 +22680,7 @@ msgid "The state code."
 msgstr "州/省代碼。"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:519
+#: code:addons/base/models/ir_model.py:531
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr "如果該表 %r 用於其他用途，可能會造成字段不兼容。"
@@ -22752,7 +22707,7 @@ msgid ""
 msgstr "使用者的這個篩選是私有的。留空的話，這個篩選是公開，所有使用者都可用。"
 
 #. module: base
-#: code:addons/models.py:5516
+#: code:addons/models.py:5537
 #, python-format
 msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
@@ -22760,13 +22715,13 @@ msgid ""
 msgstr "字段 '%s' 的值已經存在（可能是目前模型中的 '%s'）。"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:404
+#: code:addons/base/models/ir_qweb_fields.py:405
 #, python-format
 msgid "The value send to monetary field is not a number."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5522
+#: code:addons/models.py:5543
 #, python-format
 msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
@@ -22802,7 +22757,7 @@ msgid "This Window"
 msgstr "本窗口"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:622
+#: code:addons/base/models/ir_model.py:634
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "此字段包含模組數據，不能刪除！"
@@ -23043,7 +22998,7 @@ msgid "Tonga"
 msgstr "湯加"
 
 #. module: base
-#: code:addons/base/models/res_users.py:792
+#: code:addons/base/models/res_users.py:790
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
 msgstr ""
@@ -23429,7 +23384,7 @@ msgid "Ukraine"
 msgstr "烏克蘭"
 
 #. module: base
-#: code:addons/models.py:3077
+#: code:addons/models.py:3082
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -23530,25 +23485,25 @@ msgid "Unknown"
 msgstr "未知"
 
 #. module: base
-#: code:addons/models.py:1056
+#: code:addons/models.py:1058
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "未知資料庫標識符 '%s'"
 
 #. module: base
-#: code:addons/models.py:904
+#: code:addons/models.py:906
 #, python-format
 msgid "Unknown error during import:"
 msgstr "導入時發生未知錯誤:"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:457
+#: code:addons/base/models/ir_model.py:469
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr "未知字段 %r 在依賴 %r"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:414
+#: code:addons/base/models/ir_model.py:426
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr "未知字段名 '%s' 在關係字段 '%s'"
@@ -23704,13 +23659,13 @@ msgid "Use barcode scanners to process logistics operations"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:631
+#: code:addons/base/models/ir_qweb_fields.py:632
 #, python-format
 msgid "Use comma"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:631
+#: code:addons/base/models/ir_qweb_fields.py:632
 #, python-format
 msgid "Use comma instead of the <br> tag to display the address"
 msgstr ""
@@ -23815,7 +23770,7 @@ msgid "User Login"
 msgstr "使用者登錄"
 
 #. module: base
-#: code:addons/base/models/res_users.py:969
+#: code:addons/base/models/res_users.py:967
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "User Type"
@@ -24114,7 +24069,7 @@ msgid ""
 msgstr "視圖類型：'樹形'用於裡列表類型並顯示為樹形結構，而'表單'用於一般的列表視圖"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:608
+#: code:addons/base/models/ir_model.py:620
 #, python-format
 msgid "View: %s"
 msgstr "視圖：%s"
@@ -24189,9 +24144,9 @@ msgstr "倉庫管理：批量揀貨"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:499
-#: code:addons/base/models/ir_model.py:436
-#: code:addons/base/models/ir_model.py:518
-#: code:addons/base/models/res_partner.py:349
+#: code:addons/base/models/ir_model.py:448
+#: code:addons/base/models/ir_model.py:530
+#: code:addons/base/models/res_partner.py:349 code:addons/models.py:5270
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -24203,7 +24158,7 @@ msgid "Warning!"
 msgstr "警告!"
 
 #. module: base
-#: code:addons/models.py:5260
+#: code:addons/models.py:5392
 #, python-format
 msgid "Warnings"
 msgstr "警告"
@@ -24322,11 +24277,6 @@ msgid "Website Rating"
 msgstr "網站評分"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_stock
-msgid "Website Sale Stock - Website Delivery Information"
-msgstr "網站銷售庫存-網站配送信息"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_dashboard
 msgid "Website Sales Dashboard"
 msgstr ""
@@ -24418,7 +24368,7 @@ msgid "Wholesale/Retail"
 msgstr "批發/零售"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:603
+#: code:addons/base/models/ir_qweb_fields.py:604
 #, python-format
 msgid "Width"
 msgstr "寬度"
@@ -24541,7 +24491,7 @@ msgid "You can not have two users with the same login !"
 msgstr "使用者名必須唯一！"
 
 #. module: base
-#: code:addons/base/models/res_users.py:484
+#: code:addons/base/models/res_users.py:482
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -24554,6 +24504,12 @@ msgstr "您不能刪除 admin 使用者，因為其由 Odoo 創建並被系統�
 msgid ""
 "You can select either a format or a specific page width/height, but not "
 "both."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:435
+#, python-format
+msgid "You cannot activate the superuser."
 msgstr ""
 
 #. module: base
@@ -24582,12 +24538,6 @@ msgstr "您不能創建遞歸繼承視圖。"
 
 #. module: base
 #: code:addons/base/models/res_users.py:437
-#, python-format
-msgid "You cannot deactivate the admin user."
-msgstr "不能停用admin使用者。"
-
-#. module: base
-#: code:addons/base/models/res_users.py:439
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "不能停用您目前正在使用的使用者。"

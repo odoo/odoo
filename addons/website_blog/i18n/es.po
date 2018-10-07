@@ -25,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
 "Last-Translator: Miquel Torner <miq@odoo.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -622,7 +622,6 @@ msgstr "Estrecho"
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:37
-#: model_terms:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
 msgid "New Blog Post"
 msgstr "Nueva entrada del blog"
@@ -650,14 +649,14 @@ msgid "No blog post yet."
 msgstr "Sin entradas aún."
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
-msgid "No keywords defined!"
-msgstr "¡No se han definido palabras clave!"
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__visits
 msgid "No of Views"
 msgstr "Nº de visitas"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid "No tags defined!"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
@@ -809,6 +808,13 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
+#: code:addons/website_blog/static/src/js/website_blog.editor.js:38
+#, python-format
+msgid "Select Blog"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:15
 #, python-format
 msgid "Select this menu item to create a new blog post."
@@ -907,6 +913,7 @@ msgstr "¡El nombre de etiqueta ya existe!"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__tag_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag_global
+#: model_terms:ir.ui.view,arch_db:website_blog.latest_blogs
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_rc_tags
 msgid "Tags"
 msgstr "Etiquetas"
