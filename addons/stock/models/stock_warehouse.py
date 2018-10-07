@@ -251,7 +251,7 @@ class Warehouse(models.Model):
         """ return a route record set from an xml_id or its name. """
         route = self.env.ref(xml_id, raise_if_not_found=False)
         if not route:
-            route = self.env['stock.location.route'].search([('name', 'like', _(route_name))], limit=1)
+            route = self.env['stock.location.route'].with_context(lang='en').search([('name', 'like', route_name)], limit=1)
         if not route:
             raise UserError(_('Can\'t find any generic route %s.') % (route_name))
         return route
