@@ -17,7 +17,7 @@ class AccountReconcileModel(models.Model):
 
     rule_type = fields.Selection(selection=[
         ('writeoff_button', _('Manually create a write-off on clicked button.')),
-        ('writeoff_suggestion', _('Suggest a write-off.')),
+        ('writeoff_suggestion', _('Suggest counterpart values.')),
         ('invoice_matching', _('Match existing invoices/bills.'))
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
