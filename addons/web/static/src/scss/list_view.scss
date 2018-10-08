@@ -93,8 +93,10 @@
 
     // Grouped list views
     tbody > tr.o_group_header {
-        height: 31px;
-
+        > th, > td {
+            padding-top: ($table-cell-padding-sm*2);
+            padding-bottom: ($table-cell-padding-sm*2);
+        }
         .o_group_name {
             white-space: nowrap;
         }
