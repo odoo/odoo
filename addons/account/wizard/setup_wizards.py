@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from datetime import date
+
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class FinancialYearOpeningWizard(models.TransientModel):
@@ -22,6 +25,19 @@ class FinancialYearOpeningWizard(models.TransientModel):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
 
+    @api.constrains('fiscalyear_last_day', 'fiscalyear_last_month')
+    def _check_fiscalyear(self):
+        # We try if the date exists in 2020, which is a leap year.
+        # We do not define the constrain on res.company, since the recomputation of the related
+        # fields is done one field at a time.
+        for wiz in self:
+            try:
+                date(2020, wiz.fiscalyear_last_month, wiz.fiscalyear_last_day)
+            except ValueError:
+                raise ValidationError(
+                    _('Incorrect fiscal year date: day is out of range for month. Month: %s; Day: %s') %
+                    (wiz.fiscalyear_last_month, wiz.fiscalyear_last_day)
+                )
 
     @api.multi
     def action_save_onboarding_fiscal_year(self):
