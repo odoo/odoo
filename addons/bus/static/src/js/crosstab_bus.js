@@ -3,6 +3,7 @@ odoo.define('bus.CrossTab', function (require) {
 
 var Longpolling = require('bus.Longpolling');
 
+var session = require('web.session');
 
 /**
  * CrossTab
@@ -43,7 +44,6 @@ var CrossTabBus = Longpolling.extend({
     init: function () {
         this._super.apply(this, arguments);
         var now = new Date().getTime();
-        var session = this.getSession();
         // used to prefix localStorage keys
         this._sanitizedOrigin = session.origin.replace(/:\/{0,2}/g, '_');
         // prevents collisions between different tabs and in tests
