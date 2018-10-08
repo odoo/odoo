@@ -1392,6 +1392,15 @@ class AssetsBundle(object):
                 source = '\n'.join([asset.get_source() for asset in assets])
                 compiled = self.compile_css(cmd, source)
 
+                # Log a message if the CSS compiler returned no output.
+                # This might happen if e.g. the `lessc` version is incompatible.
+                if compiled == "":
+                    command = cmd[0]
+                    message = "CSS complier command %s returned no output! " \
+                              "Please check this executable for correct " \
+                              "functionality or version." % command
+                    self.css_errors.append(message)
+
                 fragments = self.rx_css_split.split(compiled)
                 at_rules = fragments.pop(0)
                 if at_rules:
