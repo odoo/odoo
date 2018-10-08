@@ -1852,6 +1852,40 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('image fields in x2many list are loaded correctly', function (assert) {
+        assert.expect(2);
+
+        this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
+        this.data.partner_type.records[0].image = 'product_image';
+        this.data.partner.records[0].timmy = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="image" widget="image"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === 'data:image/png;base64,product_image') {
+                    assert.ok(true, "The list's image should have been fetched");
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            'There should be one record in the many2many');
+
+        form.destroy();
+    });
+
     QUnit.test('image fields with required attribute', function (assert) {
         assert.expect(2);
 
