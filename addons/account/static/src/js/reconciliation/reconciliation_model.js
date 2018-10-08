@@ -510,13 +510,15 @@ var StatementModel = BasicModel.extend({
         line.mode = (id || line.mode !== "create") && isNaN(id) && !this.avoidCreate ? 'create' : 'match';
         defs.push(this._computeLine(line));
         if (line.mode === 'create') {
-            return $.when(defs).then(function () {
+            return $.when.apply($, defs).then(function () {
                 return self.createProposition(handle);
             });
         } else if (line.mode === 'match') {
-            return $.when(defs, self._performMoveLine(handle));
+            return $.when.apply($, defs).then(function () {
+                return self._performMoveLine(handle);
+            });
         }
-        return $.when(defs);
+        return $.when.apply($, defs);
     },
     searchBalanceAmount: function (handle) {
         var line = this.getLine(handle);
