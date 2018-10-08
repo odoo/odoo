@@ -123,6 +123,8 @@
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <!-- Odoo JS Framework -->
             <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
@@ -144,6 +146,8 @@
             <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/ram_storage.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/chrome/public_root_widget.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/services/ajax_service.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
             <!-- Bus, Mail, Livechat -->
                 <!-- thread windows -->
@@ -195,10 +199,10 @@
 
                     odoo.define('im_livechat.livesupport', function (require) {
             <t t-if="info['available']" t-translation="off">
-                        var websiteRoot = require('root.widget');
+                        var rootWidget = require('root.widget');
                         var im_livechat = require('im_livechat.im_livechat');
                         var button = new im_livechat.LivechatButton(
-                            websiteRoot,
+                            rootWidget,
                             "<t t-esc="info['server_url']"/>",
                             <t t-raw="json.dumps(info.get('options', {}))"/>
                         );
