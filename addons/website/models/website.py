@@ -125,6 +125,12 @@ class Website(models.Model):
 
         res = super(Website, self).create(vals)
         res._bootstrap_homepage()
+
+        if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
+            all_user_groups = 'base.group_portal,base.group_user,base.group_public'
+            groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in all_user_groups.split(',')))
+            groups.write({'implied_ids': [(4, self.env.ref('website.group_multi_website').id)]})
+
         return res
 
     @api.multi
@@ -456,7 +462,7 @@ class Website(models.Model):
         country = request.session.geoip.get('country_code') if request and request.session.geoip else False
         country_id = False
         if country:
-            country_id = request.env['res.country'].search([('code', '=', country)], limit=1).id
+            country_id = self.env['res.country'].search([('code', '=', country)], limit=1).id
 
         website_id = self._get_current_website_id(domain_name, country_id, fallback=fallback)
         return self.browse(website_id)
@@ -638,7 +644,7 @@ class Website(models.Model):
     @api.multi
     def get_website_pages(self, domain=[], order='name', limit=None):
         domain += self.get_current_website().website_domain()
-        pages = request.env['website.page'].search(domain, order='name', limit=limit)
+        pages = self.env['website.page'].search(domain, order='name', limit=limit)
         return pages
 
     @api.multi

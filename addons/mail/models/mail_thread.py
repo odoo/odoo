@@ -32,7 +32,6 @@ from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
-BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
 
 class MailThread(models.AbstractModel):
@@ -1471,14 +1470,6 @@ class MailThread(models.AbstractModel):
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented.
-        In addition, an auto blacklist rule check if the email can be blacklisted
-        to avoid sending mails indefinitely to this email address.
-        This rule checks if the email bounced too much. If this is the case,
-        the email address is added to the blacklist in order to avoid continuing
-        to send mass_mail to that email address. If it bounced too much times
-        in the last month and the bounced are at least separated by one week,
-        to avoid blacklist someone because of a temporary mail server error,
-        then the email is considered as invalid and is blacklisted.
 
         :param mail_id: ID of the sent email that bounced. It may not exist anymore
                         but it could be usefull if the information was kept. This is
@@ -1488,14 +1479,6 @@ class MailThread(models.AbstractModel):
         if 'message_bounce' in self._fields:
             for record in self:
                 record.message_bounce = record.message_bounce + 1
-                three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
-                stats = self.env['mail.mail.statistics']\
-                    .search(['&', ('bounced', '>', three_months_ago), ('email','=ilike',email)])\
-                    .mapped('bounced')
-                if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT:
-                    if max(stats) > min(stats) + datetime.timedelta(weeks=1):
-                        blacklist_rec = self.env['mail.blacklist'].sudo()._add(email)
-                        blacklist_rec._message_log('This email has been automatically blacklisted because of too much bounced.')
 
     def _message_extract_payload_postprocess(self, message, body, attachments):
         """ Perform some cleaning / postprocess in the body and attachments

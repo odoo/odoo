@@ -95,20 +95,6 @@
     </t>
 </t>
 
-<t t-extend="DashboardShare">
-    <t t-jquery=".user-heading h3" t-operation="replace">
-        <h3>
-            Odoo <t t-esc="server_version"/> (Enterprise Edition)
-        </h3>
-    </t>
-    <t t-jquery=".user-heading h3" t-operation="after">
-        <t t-set="expiration_date" t-value="new moment(widget.data.expiration_date).format('LL')"/>
-        <t t-if="expiration_date">
-            <h5>Database expiration: <t t-esc="expiration_date"/></h5>
-        </t>
-    </t>
-</t>
-
 <t t-extend="UserMenu.Actions">
     <t t-jquery=".dropdown-divider" t-operation="before">
         <a href="#" data-menu="shortcuts" class="dropdown-item d-none d-md-inline-block">Shortcuts</a>
