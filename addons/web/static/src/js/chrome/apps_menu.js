@@ -55,7 +55,7 @@ var AppsMenu = Widget.extend({
      */
     _openApp: function (app) {
         this._setActiveApp(app);
-        this.trigger_up('app_clicked', {
+        this.trigger('app_clicked', {
             action_id: app.actionID,
             menu_id: app.menuID,
         });

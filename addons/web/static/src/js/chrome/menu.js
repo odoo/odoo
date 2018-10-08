@@ -107,7 +107,7 @@ var Menu = Widget.extend({
         core.bus.trigger('resize');
     },
     _trigger_menu_clicked: function (menu_id, action_id) {
-        this.trigger_up('menu_clicked', {
+        this.trigger('menu_clicked', {
             id: menu_id,
             action_id: action_id,
             previous_menu_id: this.current_secondary_menu || this.current_primary_menu,

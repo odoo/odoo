@@ -48,7 +48,7 @@ return AbstractWebClient.extend({
                 if (href.value[0] === '#' && href.value.length > 1) {
                     if (self.$("[id='"+href.value.substr(1)+"']").length) {
                         ev.preventDefault();
-                        self.trigger_up('scrollTo', {'selector': href.value});
+                        self.trigger('scrollTo', {'selector': href.value});
                     }
                 }
             }
