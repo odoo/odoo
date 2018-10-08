@@ -224,6 +224,15 @@ var FormRenderer = BasicRenderer.extend({
         });
     },
     /**
+     * Called each time the form view is attached into the DOM
+     */
+    on_attach_callback: function () {
+        _.forEach(this.allFieldWidgets, function (widgets){
+            _.invoke(widgets, 'on_attach_callback');
+        });
+        this._super.apply(this, arguments);
+    },
+    /**
      * @override method from AbstractRenderer
      * @param {Object} state a valid state given by the model
      * @param {Object} params
