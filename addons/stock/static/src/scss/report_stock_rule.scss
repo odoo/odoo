@@ -5,30 +5,24 @@
     }
     .o_report_stock_rule_legend {
         display: flex;
-        flex-flow: row wrap;
-        max-width: 1000px;
+        margin: 0 0.5em 0 1.5em;
+        >div {
+           margin-right: 5em;
+           -webkit-box-flex: 1;
+        }
     }
 
     .o_report_stock_rule_legend_line {
-        flex: 0 1 auto;
-        display: flex;
-        flex-flow: row nowrap;
-        width: 29%;
-        margin-right: 20px;
-        margin-left: 20px;
-        margin-top: 15px;
-        min-width: 200px;
         >.o_report_stock_rule_legend_label {
-            flex: 1 1 auto;
-            width: 30%;
-            min-width: 100px;
-        }
-        >.o_report_stock_rule_legend_symbol {
-            flex: 1 1 auto;
-            width: 70%;
+            color: $text-muted;
         }
     }
 
+    @include media-breakpoint-between(xs, sm) {
+        .o_report_stock_rule_legend {
+            display: contents;
+        }
+    }
 
     .o_report_stock_rule_putaway {
         >p {
@@ -52,6 +46,7 @@
         flex: 0 0 auto;
         height: 20px;
         width: 20px;
+        margin: 0 0.5em 0 0.5em;
         >svg {
             >line {
                 stroke: black;
