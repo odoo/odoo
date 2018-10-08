@@ -118,10 +118,13 @@ class StockQuant(models.Model):
             else:
                 self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_dest, journal_id)
 
-        if move.company_id.anglo_saxon_accounting and move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'customer':
+        if move.company_id.anglo_saxon_accounting:
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
-            self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_src, acc_dest, journal_id)
+            if move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'customer':
+                self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_src, acc_dest, journal_id)
+            if move.location_id.usage == 'customer' and move.location_dest_id.usage == 'supplier':
+                self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_dest, acc_src, journal_id)
 
     def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
         # group quants by cost
