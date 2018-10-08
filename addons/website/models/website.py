@@ -462,7 +462,7 @@ class Website(models.Model):
         country = request.session.geoip.get('country_code') if request and request.session.geoip else False
         country_id = False
         if country:
-            country_id = request.env['res.country'].search([('code', '=', country)], limit=1).id
+            country_id = self.env['res.country'].search([('code', '=', country)], limit=1).id
 
         website_id = self._get_current_website_id(domain_name, country_id, fallback=fallback)
         return self.browse(website_id)
@@ -644,7 +644,7 @@ class Website(models.Model):
     @api.multi
     def get_website_pages(self, domain=[], order='name', limit=None):
         domain += self.get_current_website().website_domain()
-        pages = request.env['website.page'].search(domain, order='name', limit=limit)
+        pages = self.env['website.page'].search(domain, order='name', limit=limit)
         return pages
 
     @api.multi
