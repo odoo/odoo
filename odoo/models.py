@@ -5141,7 +5141,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     f = Model._fields.get(path)
                     if f and f.store and f.type not in ('one2many', 'many2many'):
                         # path is direct (not dotted), stored, and inline -> optimise to raw sql
-                        self.env.cr.execute("SELECT id FROM %s WHERE %s in %%s" % (Model._table, path), [tuple(self.ids)])
+                        self.env.cr.execute('SELECT id FROM "%s" WHERE "%s" in %%s' % (Model._table, path), [tuple(self.ids)])
                         target0 = Model.browse(i for [i] in self.env.cr.fetchall())
                     else:
                         env = self.env(user=SUPERUSER_ID, context={'active_test': False})
