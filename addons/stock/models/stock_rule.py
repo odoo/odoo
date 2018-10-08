@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.tools.misc import split_every
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models, registry, _
+from odoo import api, fields, models, registry, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 
@@ -245,7 +245,7 @@ class StockRule(models.Model):
             self.env['mail.activity'].create({
                 'activity_type_id': activity_type_id,
                 'note': note,
-                'user_id': product_id.responsible_id.id,
+                'user_id': product_id.responsible_id.id or SUPERUSER_ID,
                 'res_id': product_id.product_tmpl_id.id,
                 'res_model_id': self.env.ref('product.model_product_template').id,
             })

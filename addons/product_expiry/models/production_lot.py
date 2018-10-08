@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 
 
 class StockProductionLot(models.Model):
@@ -81,7 +81,7 @@ class StockProductionLot(models.Model):
                 ('mail_activity_type_id','=', mail_activity_type)]))
         for lot in lots:
             lot.activity_schedule('product_expiry.mail_activity_type_alert_date_reached',
-            user_id=lot.product_id.responsible_id.id, note=_("The alert date has been reached for this lot/serial number")
+            user_id=lot.product_id.responsible_id.id or SUPERUSER_ID, note=_("The alert date has been reached for this lot/serial number")
         )
 
 class ProcurementGroup(models.Model):
