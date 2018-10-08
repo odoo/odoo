@@ -48,14 +48,14 @@ class account_abstract_payment(models.AbstractModel):
     payment_method_code = fields.Char(related='payment_method_id.code',
         help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
 
-    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
-    partner_id = fields.Many2one('res.partner', string='Partner')
+    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], tracking=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', tracking=True)
 
-    amount = fields.Monetary(string='Payment Amount', required=True)
+    amount = fields.Monetary(string='Payment Amount', required=True, tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
-    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
+    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, tracking=True)
     communication = fields.Char(string='Memo')
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, tracking=True, domain=[('type', 'in', ('bank', 'cash'))])
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
