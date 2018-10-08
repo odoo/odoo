@@ -2011,6 +2011,15 @@ class _Relational(Field):
     def _description_domain(self, env):
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
+    def _description_can_write(self, env):
+        return env[self.comodel_name].check_access_rights('write', raise_exception=False)
+
+    def _description_can_create(self, env):
+        return env[self.comodel_name].check_access_rights('create', raise_exception=False)
+
+    def _description_can_unlink(self, env):
+        return env[self.comodel_name].check_access_rights('unlink', raise_exception=False)
+
     def null(self, record):
         return record.env[self.comodel_name]
 

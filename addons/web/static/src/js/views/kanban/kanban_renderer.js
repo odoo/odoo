@@ -454,6 +454,12 @@ var KanbanRenderer = BasicRenderer.extend({
             grouped_by_m2o: this.groupedByM2O,
             relation: relation,
         });
+        // Updating column option deletable, editable and group_creatable based on group_by filds's comodel access
+        if (this.groupedByM2O) {
+            this.columnOptions.deletable = this.columnOptions.deletable && (!_.isUndefined(groupByFieldAttrs.can_unlink) ? groupByFieldAttrs.can_unlink : true);
+            this.columnOptions.editable = this.columnOptions.editable && (!_.isUndefined(groupByFieldAttrs.can_write) ? groupByFieldAttrs.can_write : true);
+            this.columnOptions.group_creatable = this.columnOptions.group_creatable && (!_.isUndefined(groupByFieldAttrs.can_create) ? groupByFieldAttrs.can_create : true);
+        }
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
     },
     /**
