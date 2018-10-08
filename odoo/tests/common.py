@@ -99,10 +99,7 @@ def at_install(flag):
         ``at_install`` is now a flag, you can use :func:`tagged` to
         add/remove it, although ``tagged`` only works on test classes
     """
-    def decorator(obj):
-        obj.at_install = flag
-        return obj
-    return decorator
+    return tagged('at_install' if flag else '-at_install')
 
 def post_install(flag):
     """ Sets the post-install state of a test. The flag is a boolean
@@ -117,10 +114,7 @@ def post_install(flag):
         ``post_install`` is now a flag, you can use :func:`tagged` to
         add/remove it, although ``tagged`` only works on test classes
     """
-    def decorator(obj):
-        obj.post_install = flag
-        return obj
-    return decorator
+    return tagged('post_install' if flag else '-post_install')
 
 class TreeCase(unittest.TestCase):
     def __init__(self, methodName='runTest'):
