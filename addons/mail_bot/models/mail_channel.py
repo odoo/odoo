@@ -27,3 +27,7 @@ class Channel(models.Model):
             channel.sudo().message_post(body=message, author_id=odoobot_id, message_type="comment", subtype="mail.mt_comment")
             self.env.user.odoobot_state = 'onboarding_emoji'
             return channel
+
+    def _message_post_after_hook(self, message, values, model_description=False, mail_auto_delete=True):
+        self.env['mail.bot']._apply_logic(self, values)
+        return super(Channel, self)._message_post_after_hook(message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)

@@ -24,7 +24,7 @@ class MailBot(models.AbstractModel):
         odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
         if len(record) != 1 or values.get("author_id") == odoobot_id:
             return
-        if self._is_bot_pinged(values) or self._is_bot_in_private_channel(record):
+        if self._is_bot_in_private_channel(record):
             body = values.get("body", "").replace(u'\xa0', u' ').strip().lower().strip(".?!")
             answer = self._get_answer(record, body, values, command)
             if answer:
@@ -75,8 +75,6 @@ class MailBot(models.AbstractModel):
                     _("I'm afraid I don't understand. Sorry!"),
                     _("Sorry I'm sleepy. Or not! Maybe I'm just trying to hide my unawareness of human language...<br/>I can show you features if you write")+ ": '<b>"+_('start the tour')+"</b>'.",
                 ])
-        elif self._is_bot_pinged(values):
-            return random.choice([_("Yep, OdooBot is in the place!"), _("Pong.")])
         return False
 
     def _body_contains_emoji(self, body):
