@@ -40,10 +40,10 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <filter string="My Project" name="my_project" domain="[('user_id','=', uid)]"/>
                 <group expand="1" string="Group By">
-                    <filter string="Project" name="group_by_project" context="{'group_by':'project_id'}"/>
-                    <filter string="Project Manager" name="group_by_user_id" context="{'group_by':'user_id'}"/>
-                    <filter string="Customer" name="group_by_partner_id" context="{'group_by':'partner_id'}"/>
-                    <filter string="Company" name="group_by_company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Project" name="groupby_project_id" context="{'group_by':'project_id'}"/>
+                    <filter string="Project Manager" name="groupby_user_id" context="{'group_by':'user_id'}"/>
+                    <filter string="Customer" name="groupby_partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Company" name="groupby_company_id" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 </group>
             </search>
         </field>

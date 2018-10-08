@@ -213,13 +213,13 @@
                             domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                             ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Report" name="report" domain="[]" context="{'group_by': 'sheet_id'}"/>
-                        <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
-                        <filter string="Analytic Account" name="analyticacc" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
-                        <filter string="Date" name="expensesmonth" domain="[]" context="{'group_by': 'date'}" help="Expense Date"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Report" name="groupby_sheet_id" domain="[]" context="{'group_by': 'sheet_id'}"/>
+                        <filter string="Employee" name="groupby_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Company" name="groupby_company_id" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
+                        <filter string="Analytic Account" name="groupby_analytic_account_id" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}" help="Expense Date"/>
+                        <filter string="Status" name="groupby_state" domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                     <separator />
                     <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
@@ -600,11 +600,11 @@
                             domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                             ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Date" name="expenses_month" domain="[]" context="{'group_by': 'accounting_date'}" help="Expenses by Date"/>
-                        <filter string="State" domain="[]" context="{'group_by': 'state'}" name="state"/>
+                        <filter string="Employee" name="groupby_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Department" name="groupby_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter string="Company" name="groupby_company_id" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Date" name="groupby_accounting_date" domain="[]" context="{'group_by': 'accounting_date'}" help="Expenses by Date"/>
+                        <filter string="State" domain="[]" context="{'group_by': 'state'}" name="groupby_state"/>
                     </group>
                     <separator />
                     <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>

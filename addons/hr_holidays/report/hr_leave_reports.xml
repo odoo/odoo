@@ -28,12 +28,12 @@
                 <field name="department_id"/>
                 <field name="holiday_status_id"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
-                    <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
-                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <filter name="groupby_name" string="Description" context="{'group_by':'name'}"/>
+                    <filter name="groupby_employee_id" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="groupby_category_id" string="Category" context="{'group_by':'category_id'}"/>
+                    <filter name="groupby_holiday_status_id" string="Type" context="{'group_by':'holiday_status_id'}"/>
                     <separator/>
-                    <filter name="group_date_from" string="Start Date" context="{'group_by':'date_from'}"/>
+                    <filter name="groupby_date_from" string="Start Date" context="{'group_by':'date_from'}"/>
                 </group>
             </search>
         </field>
@@ -118,7 +118,7 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" eval="hr_leave_report_tree"/>
         <field name="context">{
-            'search_default_group_type': 1,
+            'search_default_groupby_holiday_status_id': 1,
             'search_default_year': 1 ,
             'search_default_my_leaves': 1,
         }</field>
@@ -140,8 +140,8 @@
         <field name="view_mode">tree,form</field>
         <field name="context">{
             'search_default_employee_id': [active_id],
-            'default_employee_id': active_id,
-            'search_default_group_type': 1,
+            'default_employee_id': active_id, 
+            'search_default_groupby_holiday_status_id': 1,
             'search_default_year': 1}</field>
         <field name="domain">[('holiday_type','=','employee')]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter_report"/>

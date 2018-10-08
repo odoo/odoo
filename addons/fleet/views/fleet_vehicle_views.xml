@@ -163,9 +163,9 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <group expand="1" string="Group By">
-                    <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
-                    <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>
-                    <filter name="groupby_make" context="{'group_by' : 'brand_id'}" string="Make"/>
+                    <filter name="groupby_state_id" context="{'group_by' : 'state_id'}" string="Status"/>
+                    <filter name="groupby_model_id" context="{'group_by' : 'model_id'}" string="Model"/>
+                    <filter name="groupby_brand_id" context="{'group_by' : 'brand_id'}" string="Make"/>
                 </group>
            </search>
         </field>
@@ -326,7 +326,7 @@
                 <field name="unit"/>
                 <field name="date"/>
                 <group expand="0" string="Group By">
-                    <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
                 </group>
             </search>
         </field>

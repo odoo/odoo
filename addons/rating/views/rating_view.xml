@@ -145,11 +145,11 @@
                     <separator/>
                     <filter string="My Ratings" name="my_ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Rated User" name="responsible" context="{'group_by':'rated_partner_id'}"/>
-                        <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
-                        <filter string="Rating" name="rating_text" context="{'group_by':'rating_text'}"/>
-                        <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
-                        <filter string="Date" name="month" context="{'group_by':'create_date:month'}"/>
+                        <filter string="Rated User" name="groupby_rated_partner_id" context="{'group_by':'rated_partner_id'}"/>
+                        <filter string="Customer" name="groupby_partner_id" context="{'group_by':'partner_id'}"/>
+                        <filter string="Rating" name="groupby_rating_text" context="{'group_by':'rating_text'}"/>
+                        <filter string="Resource" name="groupby_res_name" context="{'group_by':'res_name'}"/>
+                        <filter string="Date" name="groupby_create_date_month" context="{'group_by':'create_date:month'}"/>
                     </group>
                 </search>
             </field>

@@ -15,8 +15,8 @@
                     <filter string="Inactive" name="inactive" domain="[('active','=',0)]"/>
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
-                        <filter string='Category' name="category" domain="[]" context="{'group_by' : 'categ_id'}"/>
-                        <filter string='Start Date' name="from_month" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
+                        <filter string='Category' name="groupby_category_id" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                        <filter string='Start Date' name="groupby_membership_date_from" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
                     </group>
                 </search>
             </field>

@@ -21,7 +21,7 @@
                 <filter string="Date" name="current_year" date="date_order" default_period="this_year"/>
                 <filter string="Last 365 Days" name="last_year" domain="[('date_order', '&gt;=', (context_today() - datetime.timedelta(days=365)).strftime('%Y-%m-%d'))]"/>
                 <group expand="1" string="Group By">
-                    <filter string="Sales Team" name="team_id" context="{'group_by':'team_id'}"/>
+                    <filter string="Sales Team" name="groupby_team_id" context="{'group_by':'team_id'}"/>
                 </group>
             </search>
         </field>
@@ -33,6 +33,6 @@
         <field name="view_mode">pivot</field>
         <field name="view_id" ref="report_all_channels_sales_view_pivot"/>
         <field name="search_view_id" ref="report_all_channels_sales_view_search"/>
-        <field name="context">{'search_default_team_id': 1, 'search_default_current_year': 1}</field>
+        <field name="context">{'search_default_groupby_team_id': 1, 'search_default_current_year': 1}</field>
     </record>
 </odoo>

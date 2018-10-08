@@ -260,10 +260,10 @@
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Work Center" name="work_center" domain="[]" context="{'group_by':'workcenter_id'}"/>
-                    <filter string="Production" name="production" domain="[]" context="{'group_by':'production_id'}"/>
-                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Scheduled Date" name="scheduled_month" domain="[]" context="{'group_by':'date_planned_start'}"/>
+                    <filter string="Work Center" name="groupby_workcenter_id" domain="[]" context="{'group_by':'workcenter_id'}"/>
+                    <filter string="Production" name="groupby_production_id" domain="[]" context="{'group_by':'production_id'}"/>
+                    <filter string="Status" name="groupby_state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Scheduled Date" name="groupby_date_planned_start" domain="[]" context="{'group_by':'date_planned_start'}"/>
                 </group>
              </search>
         </field>
@@ -376,7 +376,7 @@
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="view_id" ref="mrp_workorder_view_gantt"/>
-        <field name="context">{'search_default_work_center': True}</field>
+        <field name="context">{'search_default_groupby_workcenter_id': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Start a new work order
@@ -397,7 +397,7 @@
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="view_id" ref="workcenter_line_gantt_production"/>
-        <field name="context">{'search_default_production': True}</field>
+        <field name="context">{'search_default_groupby_production_id': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Start a new work order

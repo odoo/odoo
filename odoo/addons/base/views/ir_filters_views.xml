@@ -48,8 +48,8 @@
                     <filter string="My filters" domain="[('user_id','=',uid)]" name="my_filters" help="Filters created by myself"/>
                     <separator/>
                     <group expand="0" string="Group By">
-                        <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="User" name="groupby_user_id" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Model" name="groupby_model_id" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                     <field name="model_id"/>
                     <field name="user_id"/>

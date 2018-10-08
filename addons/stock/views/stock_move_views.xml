@@ -332,13 +332,13 @@
                     <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                     <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','child_of',self)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Product" name="by_product" domain="[]"  context="{'group_by':'product_id'}"/>
+                        <filter string="Product" name="groupby_product_id" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" domain="[]"  context="{'group_by':'picking_id'}"/>
                         <filter string="Source" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
-                        <filter string="Destination" name="groupby_dest_location_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Destination" name="groupby_location_dest_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Status" name="groupby_state" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Creation" name="groupby_create_date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
-                        <filter string="Scheduled" name="groupby_date" domain="[]" context="{'group_by':'date_expected'}"/>
+                        <filter string="Scheduled" name="groupby_date_expected" domain="[]" context="{'group_by':'date_expected'}"/>
                     </group>
                 </search>
             </field>

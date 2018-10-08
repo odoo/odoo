@@ -296,9 +296,9 @@
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Availability" name="availability" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" name="privacy" domain="[]" context="{'group_by':'privacy'}"/>
+                    <filter string="Responsible" name="groupby_user_id" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Availability" name="groupby_show_as" domain="[]" context="{'group_by':'show_as'}"/>
+                    <filter string="Privacy" name="groupby_privacy" domain="[]" context="{'group_by':'privacy'}"/>
                 </group>
             </search>
         </field>

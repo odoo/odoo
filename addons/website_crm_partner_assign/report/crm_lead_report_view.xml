@@ -19,13 +19,13 @@
                       <field name="date_closed"/>
                     </group>
                     <group  expand="1" string="Group By">
-                        <filter string="Salesperson" name="user"
+                        <filter string="Salesperson" name="groupby_user_id"
                             context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" name="sales_channel" context="{'group_by':'team_id'}"/>
-                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
-                        <filter string="Company" name="company" context="{'group_by':'company_id'}" />
+                        <filter string="Sales Team" name="groupby_team_id" context="{'group_by':'team_id'}"/>
+                        <filter string="Country" name="groupby_country_id" context="{'group_by':'country_id'}" />
+                        <filter string="Company" name="groupby_company_id" context="{'group_by':'company_id'}" />
                         <separator/>
-                        <filter string="Assign Date" name="assign_month" context="{'group_by':'date_assign:month'}"/>
+                        <filter string="Assign Date" name="groupby_date_assign_month" context="{'group_by':'date_assign:month'}"/>
                     </group>
                 </search>
             </field>

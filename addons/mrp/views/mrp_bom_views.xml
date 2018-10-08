@@ -146,9 +146,9 @@
                     <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
                     <filter string="Normal" name="normal" domain="[('type', '=', 'normal')]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
-                        <filter string='Default Unit of Measure' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
-                        <filter string="Routings" name="routings" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string="Product" name="groupby_product_tmpl_id" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
+                        <filter string='Default Unit of Measure' name="groupby_product_uom_id" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
+                        <filter string="Routings" name="groupby_routing_id" domain="[]" context="{'group_by':'routing_id'}"/>
                    </group>
                 </search>
             </field>

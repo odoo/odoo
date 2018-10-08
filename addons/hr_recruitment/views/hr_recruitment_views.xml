@@ -224,12 +224,12 @@
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by':'user_id'}"/>
-                    <filter string="Job" name="job" domain="[]" context="{'group_by':'job_id'}"/>
-                    <filter string="Degree" name="degree" domain="[]" context="{'group_by':'type_id'}"/>
-                    <filter string="Stage" name="stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="Creation Date" name="creation_date" context="{'group_by':'create_date'}"/>
-                    <filter string="Last Stage Update" name="last_stage_update" context="{'group_by':'date_last_stage_update'}"/>
+                    <filter string="Responsible" name="groupby_user_id" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter string="Job" name="groupby_job_id" domain="[]" context="{'group_by':'job_id'}"/>
+                    <filter string="Degree" name="groupby_type_id" domain="[]" context="{'group_by':'type_id'}"/>
+                    <filter string="Stage" name="groupby_stage_id" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="Creation Date" name="groupby_create_date" context="{'group_by':'create_date'}"/>
+                    <filter string="Last Stage Update" name="groupby_date_last_stage_update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
         </field>
@@ -947,13 +947,13 @@
                     <field name="date_closed"/>
                 </group>
                 <group expand="1" string="Group By">
-                   <filter string="Responsible" name='User' context="{'group_by':'user_id'}"/>
-                   <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                   <filter string="Jobs" name="job" context="{'group_by':'job_id'}"/>
-                   <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
-                   <filter string="Stage" name="stage" context="{'group_by':'stage_id'}" />
+                   <filter string="Responsible" name='groupby_user_id' context="{'group_by':'user_id'}"/>
+                   <filter string="Company" name="groupby_company_id" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                   <filter string="Jobs" name="groupby_job_id" context="{'group_by':'job_id'}"/>
+                   <filter string="Department" name="groupby_department_id" context="{'group_by':'department_id'}"/>
+                   <filter string="Stage" name="groupby_stage_id" context="{'group_by':'stage_id'}" />
                    <separator/>
-                   <filter string="Creation Date" name="creation_week" context="{'group_by':'create_date:week'}" help="Creation Date"/>
+                   <filter string="Creation Date" name="groupby_create_date_week" context="{'group_by':'create_date:week'}" help="Creation Date"/>
                 </group>
             </search>
         </field>

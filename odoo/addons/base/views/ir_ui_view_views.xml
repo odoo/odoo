@@ -77,9 +77,9 @@
                     <field name="type"/>
                     <field name="arch_db" string="View Architecture"/>
                     <group expand="0" string="Group By">
-                        <filter string="Object" name="object" domain="[]" context="{'group_by':'model'}"/>
-                        <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
-                        <filter string="Inherit" name="inherit" domain="[]" context="{'group_by':'inherit_id'}"/>
+                        <filter string="Object" name="groupby_model" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Type" name="groupby_type" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Inherit" name="groupby_inherit_id" domain="[]" context="{'group_by':'inherit_id'}"/>
                     </group>
                 </search>
             </field>

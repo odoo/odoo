@@ -144,11 +144,11 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By">
-                        <filter string="Bank" name="bank_id" context="{'group_by':'bank_id'}"/>
+                        <filter string="Bank" name="groupby_bank_id" context="{'group_by':'bank_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Status" name="state" context="{'group_by':'state'}"/>
+                        <filter string="Status" name="groupby_state" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
-                        <filter string="Company" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                        <filter string="Company" name="groupby_company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     </group>
                 </search>
             </field>

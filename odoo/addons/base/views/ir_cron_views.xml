@@ -70,8 +70,8 @@
                     <separator/>
                     <filter string="All" name="all" domain="['|', ('active', '=', False), ('active', '=', True)]" />
                     <group expand="0" string="Group By">
-                        <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Execution" name="execution" domain="[]" context="{'group_by':'nextcall'}" />
+                        <filter string="User" name="groupby_user_id" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Execution" name="groupby_nextcall" domain="[]" context="{'group_by':'nextcall'}" />
                     </group>
                 </search>
             </field>

@@ -51,14 +51,14 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
-                    <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
-                    <filter name="group_manager" string="Manager" context="{'group_by':'manager_id'}"/>
-                    <filter name="group_second_approver_id" string="Validator" context="{'group_by':'second_approver_id'}"/>
-                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <filter name="groupby_name" string="Description" context="{'group_by':'name'}"/>
+                    <filter name="groupby_employee_id" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="groupby_category_id" string="Category" context="{'group_by':'category_id'}"/>
+                    <filter name="groupby_manager_id" string="Manager" context="{'group_by':'manager_id'}"/>
+                    <filter name="groupby_second_approver_id" string="Validator" context="{'group_by':'second_approver_id'}"/>
+                    <filter name="groupby_holiday_status_id" string="Type" context="{'group_by':'holiday_status_id'}"/>
                     <separator/>
-                    <filter name="group_date_from" string="Start Date" context="{'group_by':'date_from'}"/>
+                    <filter name="groupby_date_from" string="Start Date" context="{'group_by':'date_from'}"/>
                 </group>
             </search>
         </field>
@@ -363,7 +363,7 @@
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">calendar</field>
-        <field name="context">{'search_default_year': 1, 'search_default_group_employee': 1}</field>
+        <field name="context">{'search_default_year': 1, 'search_default_groupby_employee_id': 1}</field>
         <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse')]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
     </record>

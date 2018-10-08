@@ -13,8 +13,8 @@
             <xpath expr="//filter[@name='my_requests']" position="replace">
                 <filter string="My Requests" name="my_requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
             </xpath>
-            <xpath expr="//filter[@name='created_by']" position="replace">
-                <filter string='Created By' name='created_by' domain="[]" context="{'group_by': 'employee_id'}"/>
+            <xpath expr="//filter[@name='groupby_owner_user_id']" position="replace">
+                <filter string='Created By' name='groupby_employee_id' domain="[]" context="{'group_by': 'employee_id'}"/>
             </xpath>
         </field>
     </record>
@@ -70,8 +70,8 @@
           <field name="department_id"/>
         </field>
         <group position="inside">
-          <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-          <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
+          <filter string="Employee" name="groupby_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+          <filter string="Department" name="groupby_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
         </group>
       </field>
     </record>

@@ -131,7 +131,7 @@
                 <field name="name" string="Category"/>
                 <field name="journal_id"/>
                 <group expand="0" string="Group By...">
-                    <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
+                    <filter string="Type" name="groupby_type" domain="[]" context="{'group_by':'type'}"/>
                 </group>
             </search>
         </field>
@@ -306,8 +306,8 @@
                 <field name="category_id" string="Asset Category"/>
                 <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                 <group expand="0" string="Group By...">
-                        <filter string="Date" name="month" domain="[]" context="{'group_by':'date'}"/>
-                        <filter string="Asset Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Asset Category" name="groupby_category_id" domain="[]" context="{'group_by':'category_id'}"/>
                 </group>
             </search>
         </field>

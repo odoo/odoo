@@ -44,8 +44,8 @@
                     <filter name="not_installed" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                     <field name="category_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Author" name="author" domain="[]" context="{'group_by':'author'}"/>
-                        <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Author" name="groupby_author" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" name="groupby_category_id" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
                </search>
             </field>

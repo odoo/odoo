@@ -93,7 +93,7 @@
                     <separator/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Creation Date" name="group_create_date"
+                        <filter string="Creation Date" name="groupby_create_date"
                             context="{'group_by': 'create_date'}"/>
                     </group>
                 </search>
@@ -279,7 +279,7 @@
                     <field name="is_public"/>
                     <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Creation Period" name="group_create_date"
+                        <filter string="Creation Month" name="groupby_create_date"
                             context="{'group_by': 'create_date'}"/>
                     </group>
                 </search>
@@ -445,13 +445,13 @@
                             help="Mailings that are assigned to me"/>
                     <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Status" name="group_state"
+                        <filter string="Status" name="groupby_state"
                             context="{'group_by': 'state'}"/>
-                        <filter string="Sent By" name="sent_by" domain="[]"
+                        <filter string="Sent By" name="groupby_email_from" domain="[]"
                             context="{'group_by':'email_from'}"/>
                         <separator/>
-                        <filter string="Sent Period" name="sent_date"
-                            domain="[]" context="{'group_by':'sent_date'}"/>
+                        <filter string="Sent Month" name="groupby_sent_date_month"
+                            domain="[]" context="{'group_by':'sent_date:month'}"/>
                     </group>
                 </search>
             </field>
@@ -907,9 +907,9 @@
                     <field name="tag_ids"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Stage" name="group_stage_id"
+                        <filter string="Stage" name="groupby_stage_id"
                             context="{'group_by': 'stage_id'}"/>
-                        <filter string="Responsible" name="group_user_id"
+                        <filter string="Responsible" name="groupby_user_id"
                             context="{'group_by': 'user_id'}"/>
                     </group>
                 </search>
