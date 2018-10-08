@@ -271,7 +271,7 @@
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="CAD" />
             <field eval="1" name="phone_code" />
-            <field name="vat_label">HST</field>            
+            <field name="vat_label">HST</field>
         </record>
         <record id="cc" model="res.country">
             <field name="name">Cocos (Keeling) Islands</field>
@@ -1734,7 +1734,7 @@
             <field file="base/static/img/country_flags/vn.png" name="image" type="base64" />
             <field name="currency_id" ref="VND" />
             <field eval="84" name="phone_code" />
-            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(name)s %(zip)s %(country_name)s'" name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s %(country_name)s'" name="address_format" />
         </record>
         <record id="vu" model="res.country">
             <field name="name">Vanuatu</field>
