@@ -10,6 +10,7 @@ from functools import partial
 from operator import attrgetter
 import itertools
 import logging
+import base64
 
 import pytz
 
@@ -27,6 +28,7 @@ from .tools import float_repr, float_round, frozendict, html_sanitize, human_siz
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
+from .tools.mimetypes import guess_mimetype
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -421,6 +423,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
             attrs['copy'] = attrs.get('copy', False)
+            attrs['readonly'] = attrs.get('readonly', True)
         if attrs.get('company_dependent'):
             # by default, company-dependent fields are not stored and not copied
             attrs['store'] = False
@@ -621,7 +624,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
-    _related_readonly = property(attrgetter('readonly'))
     _related_groups = property(attrgetter('groups'))
     _related_group_operator = property(attrgetter('group_operator'))
 
@@ -1752,9 +1754,20 @@ class Binary(Field):
         # on purpose - non base64 data must be passed as a 8bit byte strings.
         if not value:
             return None
+        # Detect if the binary content is an SVG for restricting its upload
+        # only to system users.
+        if value[:1] == b'P':  # Fast detection of first 6 bits of '<' (0x3C)
+            decoded_value = base64.b64decode(value)
+            # Full mimetype detection
+            if (guess_mimetype(decoded_value).startswith('image/svg') and
+                    not record.env.user._is_system()):
+                raise UserError(_("Only admins can upload SVG files."))
         if isinstance(value, bytes):
             return psycopg2.Binary(value)
-        return psycopg2.Binary(pycompat.text_type(value).encode('ascii'))
+        try:
+            return psycopg2.Binary(pycompat.text_type(value).encode('ascii'))
+        except UnicodeEncodeError:
+            raise UserError(_("ASCII characters are required for %s in %s") % (value, self.name))
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
@@ -1790,7 +1803,9 @@ class Binary(Field):
         # create the attachments that store the values
         env = record_values[0][0].env
         with env.norecompute():
-            env['ir.attachment'].sudo().create([{
+            env['ir.attachment'].sudo().with_context(
+                binary_field_real_user=env.user,
+            ).create([{
                     'name': self.name,
                     'res_model': self.model_name,
                     'res_field': self.name,

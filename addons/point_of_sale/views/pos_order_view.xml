@@ -303,9 +303,10 @@
                 <field name="user_id"/>
                 <field name="partner_id"/>
                 <field name="session_id"/>
+                <field name="config_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <filter string="Salesman" name="salesman" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Salesperson" name="salesman" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Session" name="session" domain="[]" context="{'group_by':'session_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Order Date" name="order_month" domain="[]" context="{'group_by':'date_order'}"/>

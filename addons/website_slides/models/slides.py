@@ -25,7 +25,7 @@ class Channel(models.Model):
     allowing to configure slide upload and access. Slides can be promoted in
     channels. """
     _name = 'slide.channel'
-    _description = 'Channel for Slides'
+    _description = 'Slide Channel'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'sequence, id'
     _order_by_strategy = {
@@ -182,6 +182,11 @@ class Channel(models.Model):
                 subtype = 'mail.mt_note'
         return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
+    def list_all(self):
+        return {
+            'channels': [{'id': channel.id, 'name': channel.name, 'website_url': channel.website_url} for channel in self.search([])]
+        }
+
 
 class Category(models.Model):
     """ Channel contain various categories to manage its slides """
@@ -270,7 +275,7 @@ class Slide(models.Model):
     _PROMOTIONAL_FIELDS = [
         '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
         'channel_id', 'description', 'tag_ids', 'write_date', 'create_date',
-        'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords']
+        'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE(channel_id, name)', 'The slide name must be unique within a channel')
@@ -487,8 +492,8 @@ class Slide(models.Model):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context(base_url=base_url).render_template(publish_template.body_html, 'slide.slide', slide.id)
-            subject = publish_template.render_template(publish_template.subject, 'slide.slide', slide.id)
+            html_body = publish_template.with_context(base_url=base_url)._render_template(publish_template.body_html, 'slide.slide', slide.id)
+            subject = publish_template._render_template(publish_template.subject, 'slide.slide', slide.id)
             slide.channel_id.message_post(
                 subject=subject,
                 body=html_body,

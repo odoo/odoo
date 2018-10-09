@@ -5,18 +5,24 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
 # Shane Tsoi <sso@odoo.com>, 2018
 # SUMMER XIA <sxi@odoo.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
+# bower Guo <124358678@qq.com>, 2018
+# roye w <159820@qq.com>, 2018
+# 演奏王 <wangwhai@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: SUMMER XIA <sxi@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +87,33 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        你好,<br/>\n"
+"                        您的文档尚未创建，因为您的电子邮件地址不被识别。请发送电子邮件的电子邮件地址记录在您的员工信息，或联系您的人力资源经理。\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"    </td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        版权所有 <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
@@ -132,7 +165,7 @@ msgstr "已归档"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "附件数量"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -147,12 +180,12 @@ msgstr "验证的业务伙伴"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "自动订阅部门"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
+msgstr "自动将这些部门的成员订阅到该频道。"
 
 #. module: hr
 #: selection:hr.employee,certificate:0
@@ -220,6 +253,11 @@ msgstr "公司的上班时间"
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
 msgid "Complete Name"
 msgstr "完整名称"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -325,6 +363,11 @@ msgstr "教育"
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
 msgstr "Email别名"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "Email Aliases Mixin"
+msgstr "电子邮件别名 Mixin"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
@@ -478,7 +521,7 @@ msgstr "HR 部门"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "人力资源部门"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -540,7 +583,7 @@ msgstr "如果这有效字段设为否，那么可以隐藏此记录且并不删
 #: code:addons/hr/models/hr.py:296
 #, python-format
 msgid "Import Template for Employees"
-msgstr ""
+msgstr "导入员工模板"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -598,7 +641,7 @@ msgstr "工作"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 msgid "Km home-work"
-msgstr ""
+msgstr "家与公司相距公里数"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -639,7 +682,7 @@ msgstr "让我们创建一个工作职位"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "附件"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -1016,7 +1059,7 @@ msgstr "配偶生日"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 msgid "Spouse Complete Name"
-msgstr ""
+msgstr "配偶全名"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1088,7 +1131,7 @@ msgstr "此用户将能审批员工创建的单据"
 msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
-msgstr ""
+msgstr "用户可以访问人力资源配置以及统计报表。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__image
@@ -1173,6 +1216,20 @@ msgid "Visa No"
 msgstr "签证号"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
+
+#. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
 msgstr "配偶已去世"
@@ -1240,13 +1297,13 @@ msgstr "工作时间"
 #: code:addons/hr/models/hr.py:206
 #, python-format
 msgid "You cannot create a recursive hierarchy."
-msgstr ""
+msgstr "你不能创建递归的层级。"
 
 #. module: hr
 #: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "你不能创建递归的部门"
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
@@ -1267,13 +1324,3 @@ msgstr "例如： 部分时间"
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "例如：销售经理"
-
-#. module: hr
-#: model:ir.model,name:hr.model_mail_alias_mixin
-msgid "mail.alias.mixin"
-msgstr "mail.alias.mixin"
-
-#. module: hr
-#: model:ir.model,name:hr.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

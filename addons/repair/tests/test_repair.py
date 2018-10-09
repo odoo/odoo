@@ -25,14 +25,12 @@ class TestRepair(AccountingTestCase):
         self.res_repair_user = self.ResUsers.create({
             'name': 'Repair User',
             'login': 'maru',
-            'password': 'maru',
             'email': 'repair_user@yourcompany.com',
             'groups_id': [(6, 0, [self.res_group_user.id])]})
 
         self.res_repair_manager = self.ResUsers.create({
             'name': 'Repair Manager',
             'login': 'marm',
-            'password': 'marm',
             'email': 'repair_manager@yourcompany.com',
             'groups_id': [(6, 0, [self.res_group_manager.id])]})
 

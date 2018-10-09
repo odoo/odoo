@@ -187,6 +187,7 @@ class IrTranslationImport(object):
 
 class IrTranslation(models.Model):
     _name = "ir.translation"
+    _description = 'Translation'
     _log_access = False
 
     name = fields.Char(string='Translated field', required=True)

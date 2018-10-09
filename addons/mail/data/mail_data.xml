@@ -229,7 +229,6 @@
             <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
             <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
             <t t-set="access_url" t-value="is_online and record._get_share_url(redirect=True, signup_partner=True) or ''"/>
-            <t t-set="access_code" t-value="'view'"/>
             <t t-set="access_name">
                 View <t t-esc="record._description.lower()"/>
             </t>
@@ -365,23 +364,15 @@
 </div>
         </template>
 
-        <record id="mail_template_channel_send_guidelines" model="mail.template">
-            <field name="name">Partner: Send channel guidelines</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="email_from">${object.company_id.catchall or object.company_id.email|safe}</field>
-            <field name="partner_to">${object.id}</field>
-            <field name="subject">Guidelines of channel ${ctx['channel'].name}</field>
-            <field name="body_html" type="xml">
+       <template id="mail_channel_send_guidelines">
 <div>
-<p>Hello ${object.name or ''},</p>
-<p>Please find below the guidelines of the ${ctx['channel'].name} channel.</p>
+<p>Hello <t t-esc="partner.name"/>,</p>
+<p>Please find below the guidelines of the <t t-esc="channel.name"/> channel.</p>
 <p>
-${ctx['channel'].moderation_guidelines_msg}
+<t t-esc="channel.moderation_guidelines_msg"/>
 </p>
 <p></p>
 </div>
-</field>
-            <field name="user_signature" eval="False"/>
-        </record>
+        </template>
     </data>
 </odoo>

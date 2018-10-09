@@ -518,6 +518,7 @@ class AssetsBundle(object):
         compiled = re.sub(r'(display: ((?:inline-)?)flex((?: ?!important)?);)', r'display: -webkit-\2box\3; display: -webkit-\2flex\3; \1', compiled)  # For PhantomJS tests and wkhtmltopdf
         compiled = re.sub(r'(justify-content: flex-(\w+)((?: ?!important)?);)', r'-webkit-box-pack: \2\3; \1', compiled)  # For wkhtmltopdf
         compiled = re.sub(r'(flex-flow: (\w+ \w+);)', r'-webkit-flex-flow: \2; \1', compiled) # For PhantomJS tests
+        compiled = re.sub(r'(flex-direction: (column);)', r'-webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: \2; \1', compiled)  # For wkhtmltopdf
         compiled = re.sub(r'(flex: ((\d)+ \d+ (?:\d+|auto));)', r'-webkit-box-flex: \3; -webkit-flex: \2; \1', compiled)  # For PhantomJS tests and wkhtmltopdf
 
         return compiled
@@ -613,9 +614,7 @@ class WebAsset(object):
                 return
             try:
                 # Test url against ir.attachments
-                fields = ['__last_update', 'datas', 'mimetype']
-                domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                attach = self.bundle.env['ir.attachment'].sudo().search_read(domain, fields)
+                attach = self.bundle.env['ir.attachment'].sudo().get_serve_attachment(self.url)
                 self._ir_attach = attach[0]
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)

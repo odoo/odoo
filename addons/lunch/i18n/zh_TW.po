@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -566,6 +566,7 @@ msgstr "午餐提醒"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:393
+#: model:ir.model,name:lunch.model_lunch_cashmove
 #, python-format
 msgid "Lunch Cashmove"
 msgstr "午餐現金轉移"
@@ -582,6 +583,26 @@ msgstr "午餐訂單"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Lunch Order Form"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line
+msgid "Lunch Order Line"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line_lucky
+msgid "Lunch Order Line Lucky"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "Lunch Product"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "Lunch Product Category"
 msgstr ""
 
 #. module: lunch
@@ -673,7 +694,7 @@ msgid "No previous order found"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/wizard/lucky_order.py:39
+#: code:addons/lunch/wizard/lucky_order.py:40
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
 msgstr "沒有產品符合您的需求，您要餓死了。"
@@ -1096,7 +1117,6 @@ msgid "cashmove tree"
 msgstr "現金轉移列表"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
 msgstr "午餐現金轉移"
@@ -1105,23 +1125,3 @@ msgstr "午餐現金轉移"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
 msgstr "午餐員工付款"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line
-msgid "lunch order line"
-msgstr "午餐訂單行"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product
-msgid "lunch product"
-msgstr "午餐產品"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product_category
-msgid "lunch product category"
-msgstr "午餐產品目錄"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line_lucky
-msgid "lunch.order.line.lucky"
-msgstr "午餐.訂單.行.幸運"

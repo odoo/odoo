@@ -5,19 +5,19 @@
 # Translators:
 # Martin Trigaux, 2018
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2018
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
 # e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 # e2f_es_ t7 <e2f_es_t7@outlook.com>, 2018
 # e2f_es_ t8 <e2f_es_t8@outlook.com>, 2018
 # Rubi Navarro <ren@odoo.com>, 2018
+# Cristopher Cravioto <ccr@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Rubi Navarro <ren@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:04+0000\n"
+"PO-Revision-Date: 2018-10-02 10:04+0000\n"
+"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,11 +48,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Optional Products</span>"
 msgstr ""
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid "About us"
-msgstr "Acerca de"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -101,12 +96,19 @@ msgid "Archived"
 msgstr "Archivado"
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"As a leading professional services firm,\n"
-"                                we know that success is all about the\n"
-"                                commitment we put on strong services."
-msgstr ""
+#: model:ir.ui.menu,name:sale_management.menu_catalog_variants_action
+msgid "Attribute Values"
+msgstr "Valores de atributo"
+
+#. module: sale_management
+#: model:ir.ui.menu,name:sale_management.menu_product_attribute_action
+msgid "Attributes"
+msgstr "Atributos"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de Configuración"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -171,7 +173,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Digerir"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -198,12 +200,8 @@ msgstr "Tipo de pantalla"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order__require_payment
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
-msgid "Electronic Payment"
-msgstr "Pago Electrónico"
+"No tiene acceso, saltar esta información para el email de resumen del "
+"usuario"
 
 #. module: sale_management
 #: sql_constraint:sale.order.template.line:0
@@ -225,31 +223,12 @@ msgstr ""
 "de venta."
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"Great quotation templates will significantly\n"
-"                            <strong>boost your success rate</strong>. The\n"
-"                            first section is usually about your company,\n"
-"                            your references, your methodology or\n"
-"                            guarantees, your team, SLA, terms and conditions, etc."
-msgstr ""
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"If edit a quotation from the 'Preview' of a quotation, you will\n"
-"                    update the quotation for this customer only. If you edit the quotation\n"
-"                    template (from the Configuration menu), all future quotations will\n"
-"                    use this modified template."
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -259,22 +238,6 @@ msgid ""
 msgstr ""
 "Si se elimina la selección, podrá ocultar la plantilla de presupuestos sin "
 "eliminarla."
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:138
-#, python-format
-msgid ""
-"If we store your payment information on our server, subscription payments "
-"will be made automatically."
-msgstr ""
-"Si guardamos la información de su pago en nuestro servidor, los pagos de la "
-"suscripción se realizarán automáticamente."
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:18
-#, python-format
-msgid "Invalid order"
-msgstr "Orden inválida"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -334,16 +297,14 @@ msgstr ""
 "Número de días para el cálculo de la la fecha de validez del presupuesto"
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order__require_signature
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
+msgid "Online Payment"
+msgstr "Pago en línea"
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
 msgid "Online Signature"
 msgstr "Firma en línea"
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:23
-#, python-format
-msgid "Operation not allowed"
-msgstr "Operacion no permitida"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
@@ -360,47 +321,7 @@ msgid "Optional Products Lines"
 msgstr "Líneas de productos opcionales"
 
 #. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:20
-#, python-format
-msgid "Order is not in a state requiring customer validation."
-msgstr ""
-"El pedido no está en un estado que requiera la validación del cliente."
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:40
-#, python-format
-msgid "Order signed by %s"
-msgstr "Pedido firmado por %s"
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid "Our Offer"
-msgstr "Nuestra oferta"
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid "Our Quality"
-msgstr "Nuestra calidad"
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid "Our Service"
-msgstr "Nuestro servicio"
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:135
-#, python-format
-msgid "Pay & Confirm"
-msgstr "Pagar y confirmar"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "Preview"
-msgstr "Previsualizar"
-
-#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
 msgid "Price"
 msgstr "Precio"
 
@@ -413,12 +334,9 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"Product quality is the foundation we\n"
-"                                stand on; we build it with a relentless\n"
-"                                focus on fabric, performance and craftsmanship."
-msgstr ""
+#: model:ir.ui.menu,name:sale_management.menu_product_settings
+msgid "Products"
+msgstr "Productos"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__quantity
@@ -426,11 +344,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__quantity
 msgid "Quantity"
 msgstr "Cantidad"
-
-#. module: sale_management
-#: model:ir.model,name:sale_management.model_sale_order
-msgid "Quotation"
-msgstr "Presupuesto"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
@@ -497,7 +410,6 @@ msgid "Remove one"
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order__require_signature
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
@@ -505,10 +417,9 @@ msgid ""
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order__require_payment
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
 msgid ""
-"Request an electronic payment to the customer in order to confirm orders "
+"Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
 
@@ -516,6 +427,11 @@ msgstr ""
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
 msgstr "Opciones de venta"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order
+msgid "Sale Order"
+msgstr "Pedido de venta"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
@@ -555,12 +471,6 @@ msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:25
-#, python-format
-msgid "Signature is missing."
-msgstr "Falta la firma."
-
-#. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
 msgstr ""
@@ -590,15 +500,6 @@ msgstr ""
 " blanco si no quiere enviar nada."
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"This is a <strong>sample quotation template</strong>. You should\n"
-"                            customize it to fit your own needs from the <i>Sale</i>\n"
-"                            application, using the menu: Configuration /\n"
-"                            Quotation Templates."
-msgstr ""
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__price_unit
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__price_unit
@@ -626,47 +527,12 @@ msgid ""
 msgstr ""
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"We always ensure that our products are\n"
-"                                set at a fair price so that you will be\n"
-"                                happy to buy them."
-msgstr ""
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"You can <strong>set a description per product</strong>. Odoo will\n"
-"                    automatically create a quotation using the descriptions\n"
-"                    of all products in the proposal. The table of content\n"
-"                    on the left is generated automatically using the styles you\n"
-"                    used in your description (heading 1, heading 2, ...)"
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/models/sale_order.py:262
+#: code:addons/sale_management/models/sale_order.py:178
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "No puede añadir opciones a un pedido confirmado."
 
 #. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:31
-#, python-format
-msgid "Your order has been confirmed."
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:27
-#, python-format
-msgid "Your order has been signed but still needs to be paid to be confirmed."
-msgstr ""
-
-#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "days"
 msgstr "días"
-
-#. module: sale_management
-#: model:ir.model,name:sale_management.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

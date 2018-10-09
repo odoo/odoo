@@ -23,7 +23,7 @@
             <t t-set="head" t-value="head_website + (head or '')"/>
 
             <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
-            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{wrapwrap_classes or ''}">
+            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{'o_portal' if is_portal else ''}">
                 <header>
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
@@ -73,8 +73,17 @@
         </ol>
     </template>
 
+    <template id="portal_back_in_edit_mode" name="Back to edit mode">
+        <div t-ignore="true" class="text-center">
+            This is a preview of the customer portal. <a t-att-href="backend_url"><i class="fa fa-arrow-right"/> Back to edit mode</a>
+        </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
+    </template>
+
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
+            <t t-set="is_portal" t-value="True"/>
+
             <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                 <div class="container">
                     <t t-raw="o_portal_fullwidth_alert"/>
@@ -83,7 +92,7 @@
             </div>
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
-                <div class="row align-items-center bg-white no-gutters border rounded-top">
+                <div class="row align-items-center bg-white no-gutters border rounded">
                     <div class="col">
                         <t t-call="portal.portal_breadcrumbs"></t>
                     </div>
@@ -137,12 +146,12 @@
         <t t-call="portal.portal_layout">
             <t t-set="my_details" t-value="True"/>
             <div class="o_portal_my_home">
-                <div class="oe_structure"></div>
+                <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <h3>Your Documents</h3>
                 <div class="o_portal_docs list-group">
                 </div>
             </div>
-            <div class="col-lg-12 oe_structure"/>
+            <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
         </t>
     </template>
 
@@ -154,8 +163,8 @@
     </template>
 
     <template id="portal_table" name="My Portal Table">
-        <div t-attf-class="table-responsive border border-top-0 #{classes if classes else ''}">
-            <table class="table mb-0 o_portal_my_doc_table">
+        <div t-attf-class="table-responsive border rounded border-top-0 #{classes if classes else ''}">
+            <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
                 <t t-raw="0"/>
             </table>
         </div>
@@ -200,7 +209,7 @@
         :param classes : navbar classes
     -->
     <template id="portal_searchbar" name="Portal Search Bar">
-        <nav t-attf-class="navbar navbar-light navbar-expand-lg border py-0 o_portal_navbar {{classes if classes else ''}} {{'mt-4 rounded-top border-bottom-0' if breadcrumbs_searchbar else 'border-top-0 mb-2'}}">
+        <nav t-attf-class="navbar navbar-light navbar-expand-lg border py-0 mb-2 o_portal_navbar {{classes if classes else ''}} {{'mt-3 rounded' if breadcrumbs_searchbar else 'border-top-0' }}">
             <!--  Navbar breadcrumb or title  -->
             <t t-if="breadcrumbs_searchbar">
                 <t t-call="portal.portal_breadcrumbs"/>
@@ -494,7 +503,7 @@
         <t t-call="portal.portal_layout">
             <body data-spy="scroll" data-target=".navspy" data-offset="50">
                 <div class="container o_portal_sidebar"></div>
-                <div class="oe_structure mb32"/>
+                <div class="oe_structure mb32" id="oe_structure_portal_sidebar_1"/>
             </body>
         </t>
     </template>

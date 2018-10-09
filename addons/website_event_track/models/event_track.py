@@ -8,7 +8,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 
 class TrackTag(models.Model):
     _name = "event.track.tag"
-    _description = 'Track Tag'
+    _description = 'Event Track Tag'
     _order = 'name'
 
     name = fields.Char('Tag')
@@ -22,14 +22,14 @@ class TrackTag(models.Model):
 
 class TrackLocation(models.Model):
     _name = "event.track.location"
-    _description = 'Track Location'
+    _description = 'Event Track Location'
 
     name = fields.Char('Room')
 
 
 class TrackStage(models.Model):
     _name = 'event.track.stage'
-    _description = 'Track Stage'
+    _description = 'Event Track Stage'
     _order = 'sequence, id'
 
     name = fields.Char(string='Stage Name', required=True, translate=True)
@@ -88,7 +88,7 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', related='partner_id.image_medium', store=True, attachment=True)
+    image = fields.Binary('Image', related='partner_id.image_medium', store=True, attachment=True, readonly=False)
 
     @api.multi
     @api.depends('name')
@@ -209,5 +209,5 @@ class Sponsor(models.Model):
     sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Type', required=True)
     partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
     url = fields.Char('Sponsor Website')
-    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence')
-    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, attachment=True)
+    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence', readonly=False)
+    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, attachment=True, readonly=False)

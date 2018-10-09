@@ -7,6 +7,7 @@ class CrmLeadConvert2Task(models.TransientModel):
 
     _name = "crm.lead.convert2task"
     _inherit = 'crm.partner.binding'
+    _description = 'Lead convert to Task'
 
     @api.model
     def default_get(self, fields):

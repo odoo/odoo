@@ -87,7 +87,7 @@ tour.register('event_buy_tickets', {
         },
         {
             content: "Last step",
-            trigger: '.oe_website_sale:contains("Thank you for your order")',
+            trigger: '.oe_website_sale:contains("Pending... The order will be validated after the payment.")',
             timeout: 30000,
         }
     ]

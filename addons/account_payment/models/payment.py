@@ -12,9 +12,8 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    def render_invoice_button(self, invoice, return_url, submit_txt=None, render_values=None):
+    def render_invoice_button(self, invoice, submit_txt=None, render_values=None):
         values = {
-            'return_url': return_url,
             'partner_id': invoice.partner_id.id,
         }
         if render_values:

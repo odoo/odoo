@@ -922,7 +922,7 @@ class TestFields(common.TransactionCase):
     def test_50_search_many2one(self):
         """ test search through a path of computed fields"""
         messages = self.env['test_new_api.message'].search(
-            [('author_partner.name', '=', 'Marc Brown')])
+            [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
     def test_60_x2many_domain(self):
@@ -963,6 +963,96 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(discussion.messages), 5)
         self.assertEqual(len(discussion.important_messages), 2)
         self.assertEqual(len(discussion.very_important_messages), 2)
+
+    def test_80_copy(self):
+        Translations = self.env['ir.translation']
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = self.env.ref('test_new_api.message_0_0')
+        message1 = self.env.ref('test_new_api.message_0_1')
+
+        email = self.env.ref('test_new_api.emailmessage_0_0')
+        self.assertEqual(email.message, message)
+
+        french = self.env['res.lang']._lang_get('fr_FR')
+        french.active = True
+
+        def count(msg):
+            # return the number of translations of msg.label
+            return Translations.search_count([
+                ('name', '=', 'test_new_api.message,label'),
+                ('res_id', '=', msg.id),
+            ])
+
+        # set a translation for message.label
+        email.with_context(lang='fr_FR').label = "bonjour"
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting the parent record should not copy its translations
+        email.copy({'message': message1.id})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting a one2many should not copy translations on the lines
+        discussion.copy({'messages': [(6, 0, message1.ids)]})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+    def test_90_binary_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This should work without problems
+        self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': SVG,
+        })
+        # And this gives error
+        with self.assertRaises(UserError):
+            self.env['test_new_api.binary_svg'].sudo(
+                self.env.ref('base.user_demo'),
+            ).create({
+                'name': 'Test without attachment',
+                'image_wo_attachment': SVG,
+            })
+
+    def test_91_binary_svg_attachment(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This doesn't neuter SVG with admin
+        record = self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
+        # ...but this should be neutered with demo user
+        record = self.env['test_new_api.binary_svg'].sudo(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
+    def test_92_binary_self_avatar_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        demo_user = self.env.ref('base.user_demo')
+        # User demo changes his own avatar
+        demo_user.sudo(demo_user).image = SVG
+        # The SVG file should have been neutered
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', demo_user.partner_id._name),
+            ('res_field', '=', 'image'),
+            ('res_id', '=', demo_user.partner_id.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
 
 
 class TestX2many(common.TransactionCase):

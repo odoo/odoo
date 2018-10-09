@@ -18,13 +18,15 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2018
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2018
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2018
+# Cristopher Cravioto <ccr@odoo.com>, 2018
+# Miquel Torner <miq@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
+"Last-Translator: Miquel Torner <miq@odoo.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -559,7 +561,7 @@ msgstr "Añadir un comentario"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:43
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:45
 #, python-format
 msgid "Add to menu"
 msgstr ""
@@ -575,7 +577,7 @@ msgstr ""
 "del contenido del foro."
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:201
+#: code:addons/website_forum/controllers/main.py:203
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -592,7 +594,7 @@ msgid "Answer"
 msgstr "Respuesta"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:520
+#: code:addons/website_forum/models/forum.py:521
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -766,7 +768,7 @@ msgstr "Haciendo una pregunta"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_attachment_count
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Conteo de archivos adjuntos"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -794,9 +796,9 @@ msgstr ""
 "Evitar introducciones innecesarias (Hola,... Por favor... Gracias...),"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
 #: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:345
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Bad Request"
 msgstr "Solicitud incorrecta"
@@ -824,11 +826,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Biography"
 msgstr "Biografía"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid "Bronwe badge"
-msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -1566,7 +1563,10 @@ msgid "Forum Karma"
 msgstr "Karma del foro"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:34
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
+#, python-format
 msgid "Forum Name"
 msgstr "Nombre del foro"
 
@@ -1601,18 +1601,18 @@ msgstr "Foros"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
-msgid "Gamification badge"
-msgstr "Insignia de gamificación"
+msgid "Gamification Badge"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
-msgid "Gamification challenge"
-msgstr "Desafío de gamificación"
+msgid "Gamification Challenge"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
-msgid "Gamification user badge"
-msgstr "Insignia de gamificación de usuario"
+msgid "Gamification User Badge"
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
@@ -1707,6 +1707,11 @@ msgid "Help"
 msgstr "Ayuda"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Hide Intro"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "How to create a physical inventory at an anterior date?, How is the "
@@ -1750,7 +1755,7 @@ msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
@@ -1850,8 +1855,8 @@ msgid "It appears your email has not been verified."
 msgstr "Parece ser que su correo electrónico no ha sido verificado."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:889
-#: code:addons/website_forum/models/forum.py:909
+#: code:addons/website_forum/models/forum.py:890
+#: code:addons/website_forum/models/forum.py:910
 #, python-format
 msgid "It is not allowed to vote for its own post."
 msgstr ""
@@ -1965,7 +1970,7 @@ msgstr "Vínculos"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Adjuntos principales"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1978,7 +1983,7 @@ msgstr "Marcar como ofensivo"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Error de Envío de Mensaje"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_ids
@@ -2058,8 +2063,7 @@ msgstr "Nueva discusión"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:32
-#: model_terms:ir.ui.view,arch_db:website_forum.content_new_forum
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:33
 #, python-format
 msgid "New Forum"
 msgstr "Nuevo foro"
@@ -2112,7 +2116,7 @@ msgid "Nofollow links"
 msgstr "Enlaces \"Nofollow\""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:510
+#: code:addons/website_forum/models/forum.py:511
 #, python-format
 msgid "Not enough karma to retag."
 msgstr "No hay suficiente karma para cambiar etiqueta."
@@ -2150,7 +2154,7 @@ msgstr "Número de respuestas"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Número de error"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
@@ -2169,7 +2173,7 @@ msgstr "Número de mensajes que requieren una acción"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Número de mensajes con error de envío"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
@@ -2326,6 +2330,11 @@ msgid "Post Types"
 msgstr "Tipos de posts"
 
 #. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_vote
+msgid "Post Vote"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
 msgstr "Publicar su pregunta"
@@ -2351,7 +2360,7 @@ msgid "Posted 100 comments"
 msgstr "Publicados 100 comentarios"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:447
+#: code:addons/website_forum/models/forum.py:448
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
@@ -2404,7 +2413,7 @@ msgid "Question"
 msgstr "Pregunta"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:523
+#: code:addons/website_forum/models/forum.py:524
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2442,7 +2451,7 @@ msgid "Question set as favorite by 5 users"
 msgstr "Pregunta establecida como favorita por 5 usuarios"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:345
 #, python-format
 msgid "Question should not be empty."
 msgstr "El campo de la pregunta no debe quedar vacío."
@@ -2481,7 +2490,7 @@ msgid "Questions"
 msgstr "Cuestionario"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:541
+#: code:addons/website_forum/models/forum.py:542
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2526,6 +2535,11 @@ msgstr "Redirigir a enlace externo"
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Refuse"
 msgstr "Rechazar"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Register"
+msgstr "Registro"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2895,6 +2909,7 @@ msgstr ""
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -2917,7 +2932,7 @@ msgstr ""
 "desde su publicación"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:410
+#: code:addons/website_forum/models/forum.py:411
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Este foro no permite %s"
@@ -2972,8 +2987,8 @@ msgid "Title must not be empty"
 msgstr "El título no puede estar vacío"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Title should not be empty."
 msgstr "El título no debería estar vacío."
@@ -3145,7 +3160,6 @@ msgid "Views"
 msgstr "Vistas"
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_forum_post_vote
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
 msgid "Vote"
 msgstr "Votar"
@@ -3240,6 +3254,11 @@ msgid "Welcome Message"
 msgstr "Mensaje de bienvenida"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Welcome!"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "What kinds of questions can I ask here?"
 msgstr "¿Qué tipos de preguntas se pueden hacer aquí?"
@@ -3287,7 +3306,7 @@ msgstr ""
 "            Espere a que un moderador valide su publicación anterior para continuar."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:138
+#: code:addons/website_forum/models/forum.py:139
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."
@@ -3296,7 +3315,7 @@ msgstr ""
 "permite."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:437
+#: code:addons/website_forum/models/forum.py:438
 #, python-format
 msgid "You cannot create recursive forum posts."
 msgstr ""
@@ -3307,7 +3326,7 @@ msgid "You cannot post an empty answer"
 msgstr "No puede publicar una respuesta vacía."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:952
+#: code:addons/website_forum/models/forum.py:953
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
 msgstr ""

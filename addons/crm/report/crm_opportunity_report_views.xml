@@ -75,9 +75,6 @@
                     <filter string="Creation Date" name="filter_create_date" date="create_date"/>
                     <filter string="Expected Closing" name="filter_date_deadline" date="date_deadline"/>
                     <filter string="Date Closed" name="date_closed_filter" date="date_closed"/>
-                    <separator/>
-                    <filter string="Current" name="current" domain="[('active', '=', True)]"/>
-                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Extended Filters">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" widget="selection" domain="['|', ('team_id', '=', False), ('team_id', '=', 'team_id')]"/>
@@ -126,7 +123,7 @@ mainly used by the sales manager in order to do the periodic review with the
 teams of the sales pipeline.</field>
         </record>
         <menuitem id="crm_opportunity_report_menu" name="Pipeline"
-            parent="crm_menu_report" action="crm_opportunity_report_action" sequence="5"/>
+            parent="crm_menu_report" action="crm_opportunity_report_action" sequence="2"/>
 
         <record id="crm_opportunity_report_action_graph" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>

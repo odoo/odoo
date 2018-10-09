@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.partner.autcomplete</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="partner_autocomplete_settings" position="inside">
+                <widget name="iap_credit_checker" service_name="partner_autocomplete"/>
+            </div>
+
+            <xpath expr="//div[hasclass('app_settings_block')][@data-key='general_settings']/div[1]" position="before">
+                <div class="alert alert-info alert-dismissible fade show pt-2 pb-2" role="alert" attrs="{'invisible': [('partner_autocomplete_insufficient_credit', '=', False)]}" data-showfor="crm,general_settings">
+                    <field name="partner_autocomplete_insufficient_credit" invisible="1"/>
+                    <i class="fa fa-exclamation-triangle text-warning"></i> &amp;nbsp; You don't have credits to auto-complete companies' data anymore.
+                    <button name="redirect_to_buy_autocomplete_credit" type="object" class="btn-link">
+                        <i class="fa fa-arrow-right"/>
+                        Buy more credits
+                    </button>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span>&amp;times;</span>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

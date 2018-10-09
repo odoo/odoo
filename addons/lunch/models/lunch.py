@@ -46,7 +46,7 @@ class LunchOrder(models.Model):
                              'Status', readonly=True, index=True, copy=False,
                              compute='_compute_order_state', store=True)
     alerts = fields.Text(compute='_compute_alerts_get', string="Alerts")
-    company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
+    company_id = fields.Many2one('res.company', related='user_id.company_id', store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     cash_move_balance = fields.Monetary(compute='_compute_cash_move_balance', multi='cash_move_balance')
     balance_visible = fields.Boolean(compute='_compute_cash_move_balance', multi='cash_move_balance')
@@ -160,7 +160,7 @@ class LunchOrder(models.Model):
 
 class LunchOrderLine(models.Model):
     _name = 'lunch.order.line'
-    _description = 'lunch order line'
+    _description = 'Lunch Order Line'
     _order = 'date desc, id desc'
 
     name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
@@ -183,7 +183,7 @@ class LunchOrderLine(models.Model):
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
     cashmove = fields.One2many('lunch.cashmove', 'order_id', 'Cash Move')
-    currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
+    currency_id = fields.Many2one('res.currency', related='order_id.currency_id', readonly=False)
 
     def _check_supplier_availibility(self):
         products = self.mapped('product_id')
@@ -321,7 +321,7 @@ class LunchOrderLine(models.Model):
 class LunchProduct(models.Model):
     """ Products available to order. A product is linked to a specific vendor. """
     _name = 'lunch.product'
-    _description = 'lunch product'
+    _description = 'Lunch Product'
 
     name = fields.Char('Product', required=True)
     category_id = fields.Many2one('lunch.product.category', 'Product Category', required=True)
@@ -369,7 +369,7 @@ class LunchProduct(models.Model):
 class LunchProductCategory(models.Model):
     """ Category of the product such as pizza, sandwich, pasta, chinese, burger... """
     _name = 'lunch.product.category'
-    _description = 'lunch product category'
+    _description = 'Lunch Product Category'
 
     name = fields.Char('Product Category', required=True)
 
@@ -377,7 +377,7 @@ class LunchProductCategory(models.Model):
 class LunchCashMove(models.Model):
     """ Two types of cashmoves: payment (credit) or order (debit) """
     _name = 'lunch.cashmove'
-    _description = 'lunch cashmove'
+    _description = 'Lunch Cashmove'
 
     user_id = fields.Many2one('res.users', 'User',
                               default=lambda self: self.env.uid)

@@ -32,7 +32,6 @@
         <div t-if="widget._initialState.valuemax &gt; widget._initialState.defaultDisplayQty">
             <button class="btn btn-secondary js_load_more">Load more</button>
         </div>
-        <div class="float-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
     <div t-else="" class="o_view_noreconciliation">
         <p>Nothing to do!</p>
@@ -53,7 +52,11 @@
 
 <div t-name="reconciliation.done" class="done_message">
     <h2>Congrats, you're all done!</h2>
-    <p>You reconciled <strong><t t-esc="number"/></strong> transactions in <strong><t t-esc="duration"/></strong>.<br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.</p>
+    <p>You reconciled <strong><t t-esc="number"/></strong> transactions in <strong><t t-esc="duration"/></strong>.
+        <t t-if="number > 1">
+            <br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.
+        </t>
+    </p>
     <t t-if="context &amp;&amp; context.active_model">
         <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement'" class="actions_buttons">
             <t t-if="context.journal_id">
@@ -157,7 +160,11 @@
     <div class="quick_add">
         <div class="btn-group o_reconcile_models" t-if="state.reconcileModels">
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
-                <button class="btn btn-primary" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
+                <button class="btn btn-primary"
+                        t-if="reconcileModel.rule_type === 'writeoff_button' &amp;&amp; (reconcileModel.match_journal_ids.length == 0 || reconcileModel.match_journal_ids.includes(state.st_line.journal_id))"
+                        t-att-data-reconcile-model-id="reconcileModel.id">
+                    <t t-esc="reconcileModel.name"/>
+                </button>
             </t>
             <p t-if="!state.reconcileModels.length" style="color: #bbb;">To speed up reconciliation, define <a style="cursor: pointer;" class="reconcile_model_create">reconciliation models</a>.</p>
         </div>
@@ -214,7 +221,7 @@
 
 
 <t t-name="reconciliation.line.mv_line.triangle">
-    <t t-if="display_triangle || line.display_triangle">
+    <t t-if="line.display_triangle">
         <t t-if="line.partial_reconcile">
             <span t-att-class="'do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle'"
                   data-content="Undo the partial reconciliation."/>
@@ -231,7 +238,12 @@
     <tr t-if="line.display !== false" t-attf-class="mv_line #{line.already_paid ? ' already_reconciled' : ''} #{line.__invalid ? 'invalid' : ''} #{line.is_tax ? 'is_tax' : ''}" t-att-data-line-id="line.id" t-att-data-selected="selected">
         <td class="cell_action"><span class="fa fa-add-remove" role="img" aria-label="Set" title="Set"/></td>
         <td class="cell_account_code"><t t-esc="line.account_code"/></td>
-        <td class="cell_due_date"><t t-esc="line.date_maturity === false ? line.date : line.date_maturity"/></td>
+        <td class="cell_due_date">
+            <t t-if="typeof(line.id) != 'number'">
+                <span class="badge badge-secondary">New</span>
+            </t>
+            <t t-else="" t-esc="line.date_maturity === false ? line.date : line.date_maturity"/>
+        </td>
         <td class="cell_label">
             <t t-if="line.partner_id &amp;&amp; line.partner_id !== state.st_line.partner_id">
                 <t t-if="line.partner_name.length">
@@ -297,16 +309,41 @@
     </table>
 </t>
 
+
+<t t-name="reconciliation.notification.reconciled">
+    <t t-if="details !== undefined">
+        <a rel="do_action" href="#" aria-label="External link" title="External link"
+            t-att-data-action_name="details.name"
+            t-att-data-model="details.model"
+            t-att-data-ids="details.ids">
+            <t t-esc="nb_reconciled_lines"/>
+            statement lines
+        </a>
+        have been reconciled automatically.
+    </t>
+</t>
+
+
+<t t-name="reconciliation.notification.default">
+    <t t-esc="message"/>
+    <t t-if="details !== undefined">
+        <a class="fa fa-external-link" rel="do_action" href="#" aria-label="External link" title="External link"
+            t-att-data-action_name="details.name"
+            t-att-data-model="details.model"
+            t-att-data-ids="details.ids">
+        </a>
+    </t>
+</t>
+
+
 <t t-name="reconciliation.notification">
     <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span title="Close" class="fa fa-times"></span></button>
-        <t t-esc="message" />
-        <t t-if="details !== undefined">
-            <a class="fa fa-external-link" rel="do_action" href="#" aria-label="External link" title="External link"
-                t-att-data-action_name="details.name"
-                t-att-data-model="details.model"
-                t-att-data-ids="details.ids">
-            </a>
+        <t t-if="template">
+            <t t-call="{{template}}"/>
+        </t>
+        <t t-else="">
+            <t t-call="reconciliation.notification.default"/>
         </t>
     </div>
 </t>

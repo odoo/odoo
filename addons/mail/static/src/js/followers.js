@@ -204,7 +204,9 @@ var Followers = AbstractField.extend({
         return $.when(def).then(function (results) {
             if (results) {
                 self.followers = _.uniq(results.followers.concat(self.followers), 'id');
-                self.subtypes = results.subtypes;
+                if (results.subtypes) { //read_followers will return False if current user is not in the list
+                    self.subtypes = results.subtypes;
+                }
             }
             // filter out previously fetched followers that are no longer following
             self.followers = _.filter(self.followers, function (follower) {
@@ -291,6 +293,15 @@ var Followers = AbstractField.extend({
             });
         } else {
             var kwargs = _.extend({}, ids);
+            if (followerID === undefined || followerID === this.partnerID) {
+                //this.subtypes will only be updated if the current user
+                //just added himself to the followers. We need to update
+                //the subtypes manually when editing subtypes
+                //for current user
+                _.each(this.subtypes, function (subtype) {
+                    subtype.followed = checklist.indexOf(subtype.id) > -1;
+                });
+            }
             kwargs.subtype_ids = checklist;
             kwargs.context = {}; // FIXME
             this._rpc({

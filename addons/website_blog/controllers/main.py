@@ -177,7 +177,7 @@ class WebsiteBlog(http.Controller):
         return response
 
     @http.route(['''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>/feed'''], type='http', auth="public")
-    def blog_feed(self, blog, limit='15'):
+    def blog_feed(self, blog, limit='15', **kwargs):
         v = {}
         v['blog'] = blog
         v['base_url'] = request.env['ir.config_parameter'].sudo().get_param('web.base.url')

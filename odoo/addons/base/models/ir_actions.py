@@ -31,6 +31,7 @@ dateutil = wrap_module(dateutil, mods | attribs)
 
 class IrActions(models.Model):
     _name = 'ir.actions.actions'
+    _description = 'Actions'
     _table = 'ir_actions'
     _order = 'name'
 
@@ -126,6 +127,7 @@ class IrActions(models.Model):
 
 class IrActionsActWindow(models.Model):
     _name = 'ir.actions.act_window'
+    _description = 'Action Window'
     _table = 'ir_act_window'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -269,6 +271,7 @@ VIEW_TYPES = [
 
 class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
+    _description = 'Action Window View'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
     _order = 'sequence,id'
@@ -289,6 +292,7 @@ class IrActionsActWindowView(models.Model):
 
 class IrActionsActWindowclose(models.Model):
     _name = 'ir.actions.act_window_close'
+    _description = 'Action Window Close'
     _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
 
@@ -297,6 +301,7 @@ class IrActionsActWindowclose(models.Model):
 
 class IrActionsActUrl(models.Model):
     _name = 'ir.actions.act_url'
+    _description = 'Action URL'
     _table = 'ir_act_url'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -331,6 +336,7 @@ class IrActionsServer(models.Model):
       server actions
     """
     _name = 'ir.actions.server'
+    _description = 'Server Actions'
     _table = 'ir_act_server'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -562,6 +568,9 @@ class IrActionsServer(models.Model):
                 active_id = self._context.get('active_id')
                 if not active_id and self._context.get('onchange_self'):
                     active_id = self._context['onchange_self']._origin.id
+                    if not active_id:  # onchange on new record
+                        func = getattr(self, 'run_action_%s' % action.state)
+                        res = func(action, eval_context=eval_context)
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
@@ -741,6 +750,7 @@ class IrActionsTodo(models.Model):
 
 class IrActionsActClient(models.Model):
     _name = 'ir.actions.client'
+    _description = 'Client Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_client'
     _sequence = 'ir_actions_id_seq'

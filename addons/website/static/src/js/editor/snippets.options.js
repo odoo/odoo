@@ -290,6 +290,58 @@ options.registry.carousel = options.Class.extend({
     },
 });
 
+options.registry.navTabs = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this.$navLinks = this.$target.find('.nav-link');
+        var $el = this.$target;
+        do {
+            $el = $el.parent();
+            this.$tabPanes = $el.find('.tab-pane');
+        } while (this.$tabPanes.length === 0 && !$el.is('body'));
+
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this._generateUniqueIDs();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._generateUniqueIDs();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _generateUniqueIDs: function () {
+        for (var i = 0 ; i < this.$navLinks.length ; i++) {
+            var id = _.now() + '_' + _.uniqueId();
+            var idLink = 'nav_tabs_link_' + id;
+            var idContent = 'nav_tabs_content_' + id;
+            this.$navLinks.eq(i).attr({
+                'id': idLink,
+                'href': '#' + idContent,
+                'aria-controls': idContent,
+            });
+            this.$tabPanes.eq(i).attr({
+                'id': idContent,
+                'aria-labelledby': idLink,
+            });
+        }
+    },
+});
+
 options.registry.sizing_x = options.registry.sizing.extend({
     /**
      * @override
@@ -410,7 +462,7 @@ options.registry.layout_column = options.Class.extend({
         var colClass = 'col-lg-' + colSize;
         _.each($columns, function (column) {
             var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\bcol-lg-(offset-)?\d+\b/g, ''));
+            $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
             $column.addClass(colClass);
         });
         if (colOffset) {
@@ -938,6 +990,7 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with the "masonry" layout.
      */
     masonry: function () {
+        var self = this;
         var imgs = this._getImages();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
@@ -960,7 +1013,7 @@ options.registry.gallery = options.Class.extend({
             var $lowest;
             _.each(cols, function (col) {
                 var $col = $(col);
-                var height = $col.height();
+                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
                 if (height < min) {
                     min = height;
                     $lowest = $col;

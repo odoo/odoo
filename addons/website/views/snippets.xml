@@ -14,9 +14,8 @@
 </template>
 
 <template id="s_cover" name="Cover">
-    <section class="s_cover parallax oe_img_bg oe_custom_bg pt96 pb96" data-scroll-background-ratio="1">
+    <section class="s_cover parallax bg-black-50 oe_img_bg oe_custom_bg pt96 pb96" data-scroll-background-ratio="1">
         <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
-        <span class="s_parallax_filter"/>
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="col-lg-12 s_title" data-name="Title">
@@ -77,24 +76,23 @@
 <template id="s_banner" name="Banner">
     <section class="s_banner parallax s_parallax_is_fixed oe_img_bg pt96 pb96" data-scroll-background-ratio="1">
         <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
-        <span class="s_parallax_filter"/>
         <div class="container">
-           <div class="row s_nb_column_fixed">
-               <div class="col-lg-7 jumbotron pt32 pb32" style="background-color: rgb(255, 255, 255);" data-name="Box">
-                   <div class="row">
-                       <div class="col-lg-12 s_title s_col_no_bgcolor" data-name="Title">
-                           <h1 class="s_title_thin"><font style="font-size: 62px;"><b>Sell Online.</b> Easily.</font></h1>
-                       </div>
-                       <div class="col-lg-12 pt8 pb32 s_col_no_bgcolor" data-name="Text">
-                           <p class="lead">This is a simple hero unit, a simple jumbotron-style component <br/>for calling extra attention to featured content or information.</p>
-                       </div>
-                       <div class="col-lg-12 s_btn text-left pt16 pb16" data-name="Button">
-                           <a href="#" class="btn btn-epsilon rounded-circle">Do something</a>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-7 jumbotron pt32 pb32" style="background-color: rgb(255, 255, 255);" data-name="Box">
+                    <div class="row">
+                        <div class="col-lg-12 s_title s_col_no_bgcolor" data-name="Title">
+                            <h1 class="s_title_thin"><font style="font-size: 62px;"><b>Sell Online.</b> Easily.</font></h1>
+                        </div>
+                        <div class="col-lg-12 pt8 pb32 s_col_no_bgcolor" data-name="Text">
+                            <p class="lead">This is a simple hero unit, a simple jumbotron-style component <br/>for calling extra attention to featured content or information.</p>
+                        </div>
+                        <div class="col-lg-12 s_btn text-left pt16 pb16" data-name="Button">
+                            <a href="#" class="btn btn-epsilon rounded-circle">Do something</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -237,7 +235,7 @@
                             </div>
                             <p class="lead">Storytelling is powerful.<br/> It draws readers in and engages them.</p>
                             <div class="s_btn text-center pt16 pb16" data-name="Buttons">
-                                <a href="/start" class="btn btn-epsilon rounded-circle">Start your journey</a>
+                                <a href="/" class="btn btn-epsilon rounded-circle">Start your journey</a>
                             </div>
                         </div>
                     </div>
@@ -670,32 +668,59 @@
 <template id="s_tabs" name="Tabs">
     <section class="s_tabs">
         <div class="container">
-            <div class="row">
+            <div class="row s_col_no_bgcolor">
                 <div class="col-lg-8 offset-lg-2 pt48 pb48">
                     <div class="card">
                         <div class="card-header">
-                            <ul class="nav nav-tabs card-header-tabs">
+                            <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link text-primary active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+                                    <a class="nav-link active"
+                                        id="nav_tabs_link_1"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_1"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_1"
+                                        aria-selected="true">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-primary" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
+                                    <a class="nav-link"
+                                        id="nav_tabs_link_2"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_2"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_2"
+                                        aria-selected="false">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-primary" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>
+                                    <a class="nav-link"
+                                        id="nav_tabs_link_3"
+                                        data-toggle="tab"
+                                        href="#nav_tabs_content_3"
+                                        role="tab"
+                                        aria-controls="nav_tabs_content_3"
+                                        aria-selected="false">Contact</a>
                                 </li>
                             </ul>
                         </div>
-                        <div class="card-body tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="card-body tab-content">
+                            <div class="tab-pane fade show active"
+                                id="nav_tabs_content_1"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_1">
                                 <h3>Details</h3>
                                 <p><b>Great stories have personality.</b> Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
                             </div>
-                            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="tab-pane fade"
+                                id="nav_tabs_content_2"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_2">
                                 <h3>Shipping</h3>
                                 <p><b>Great stories are for everyone even when only written for just one person.</b> If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
                             </div>
-                            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                            <div class="tab-pane fade"
+                                id="nav_tabs_content_3"
+                                role="tabpanel"
+                                aria-labelledby="nav_tabs_link_3">
                                 <h3>Review</h3>
                                 <blockquote>
                                     <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
@@ -711,9 +736,8 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="s_parallax s_parallax_is_fixed parallax pt160 pb160" data-scroll-background-ratio="1">
+    <section class="s_parallax s_parallax_is_fixed parallax bg-black-50 pt160 pb160" data-scroll-background-ratio="1">
         <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 75%;"/>
-        <span class="s_parallax_filter bg-black-50"/>
         <div class="oe_structure">
             <section>
                 <div class="container">
@@ -882,7 +906,7 @@
 
     <!-- COLOR | .s_three_columns | .s_comparisons -->
     <div data-js="colorpicker"
-        data-selector=".s_three_columns [class*='col-lg-'], .s_comparisons [class*='col-lg-']"
+        data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_tabs .row > div"
         data-target=".card"
         data-palette-title="Box Color">
         <div class="dropdown-submenu">
@@ -1085,6 +1109,8 @@
         <a href="#" class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
     </div>
 
+    <div data-js="navTabs" data-selector="section .row > div" data-target=".nav-tabs"/>
+
     <!-- Parallax -->
     <div data-js="parallax" data-selector=".parallax">
         <div class="dropdown-submenu">
@@ -1237,7 +1263,7 @@
 
     <!-- FILTER | .s_parallax -->
     <div data-js="colorpicker"
-        data-selector=".parallax" data-target="> .s_parallax_filter"
+        data-selector=".parallax"
         data-palette-exclude="common, theme"
         data-palette-default="transparent_grayscale"
         data-palette-title="Overlay Color">
@@ -1272,8 +1298,7 @@
     </div>
 
     <div data-js="sizing_y"
-        data-selector="section, .row > [class*='col-lg-'], :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn">
-    </div>
+        data-selector="section, .row > [class*='col-lg-'], :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn"/>
 
     <div data-js="sizing_x"
         data-selector=".row > [class*='col-lg-']"
@@ -1281,7 +1306,8 @@
         data-exclude=".s_col_no_resize > [class*='col-lg-']">
     </div>
 
-    <div data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
+    <div id="so_snippet_addition"
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
     <div data-js="content"

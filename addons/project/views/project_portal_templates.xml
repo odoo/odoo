@@ -66,16 +66,10 @@
 
     <template id="portal_my_project" name="My Project">
         <t t-call="portal.portal_layout">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
-                <div t-ignore="true" class="text-center">
-                    This is a preview of the customer portal <i class="fa fa-chevron-right"/>
-                    <a title="Edit in the backend" target="_blank" t-att-href="'/web#return_label=Website&amp;model=project.project&amp;id=%s&amp;view_type=form' % (project.id)">
-                        <b>Back in edit mode</b>.
-                    </a>
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">&#215;</button>
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=project.project&amp;id=%s&amp;view_type=form' % (project.id)"/>
+                </t>
             </t>
 
             <t t-call="portal.portal_record_layout">
@@ -97,7 +91,7 @@
                             <h6>Customer</h6>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
-                                    <img t-if="project.partner_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-attf-src="data:image/png;base64,#{project.partner_id.image}" alt="Contact"/>
+                                    <img t-if="project.partner_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.partner_id.image)" alt="Contact"/>
                                     <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                 </div>
                                 <div class="col pl-sm-0">
@@ -109,7 +103,7 @@
                             <h6>Project Manager</h6>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
-                                    <img t-if="project.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-attf-src="data:image/png;base64,#{project.user_id.image}" alt="Contact"/>
+                                    <img t-if="project.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(project.user_id.image)" alt="Contact"/>
                                     <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                 </div>
                                 <div class="col pl-sm-0">
@@ -171,16 +165,10 @@
 
     <template id="portal_my_task" name="My Task">
         <t t-call="portal.portal_layout">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
-                <div t-ignore="true" class="text-center">
-                    This is a preview of the customer portal <i class="fa fa-chevron-right"/>
-                    <a title="Edit in the backend" target="_blank" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)">
-                        <b>Back in edit mode</b>.
-                    </a>
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">&#215;</button>
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)"/>
+                </t>
             </t>
 
             <t t-call="portal.portal_record_layout">
@@ -217,7 +205,7 @@
                             <strong>Assigned to</strong>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
-                                    <img t-if="task.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-attf-src="data:image/png;base64,#{task.user_id.image}" alt="Contact"/>
+                                    <img t-if="task.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.user_id.image)" alt="Contact"/>
                                     <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                 </div>
                                 <div class="col pl-md-0">
@@ -229,7 +217,7 @@
                             <strong>Reported by</strong>
                             <div class="row">
                                 <div class="col flex-grow-0 pr-3">
-                                    <img t-if="task.partner_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-attf-src="data:image/png;base64,#{task.partner_id.image}" alt="Contact"/>
+                                    <img t-if="task.partner_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.image)" alt="Contact"/>
                                     <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                 </div>
                                 <div class="col pl-md-0">

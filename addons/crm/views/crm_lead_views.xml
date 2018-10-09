@@ -47,14 +47,21 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
+                    <button name="toggle_active"
+                        string="Restore"
+                        type="object"
+                        attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
+                    <button name="action_set_lost"
+                        string="Mark as Lost"
+                        type="object"
+                        attrs="{'invisible': ['&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
                 </header>
                 <sheet>
+                    <field name="active" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
                     </div>
-                    <div class="badge badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
+                    <div class="badge-pill badge-danger float-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
+                    <div class="badge-pill badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Lead"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
@@ -63,7 +70,9 @@
                         <group>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website}" groups="base.group_no_one"/>
+                                    widget="res_partner_many2one"
+                                    context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website, 'show_vat': True}"
+                                    groups="base.group_no_one"/>
                             <field name="partner_name" string="Company Name"/>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
@@ -86,7 +95,7 @@
                             <label for="email_from" class="oe_inline"/>
                             <div class="o_row o_row_readonly">
                                 <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                    aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}"></i>
+                                    aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
                                 <field name="email_from" widget="email"/>
                             </div>
                             <field name="function"/>
@@ -171,7 +180,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" archivable="false">
                     <field name="name"/>
                     <field name="contact_name"/>
                     <field name="priority"/>
@@ -235,7 +244,7 @@
                         <group>
                             <group>
                                 <field name="name" string="Opportunity Title" placeholder="e.g. Customer Deal"/>
-                                <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}"/>
+                                <field name="partner_id" widget="res_partner_many2one" domain="[('customer', '=', True)]" context="{'search_default_customer': 1, 'show_vat': True}"/>
                                 <field name="partner_name" invisible="1"/>
                                 <field name="street" invisible="1"/>
                                 <field name="street2" invisible="1"/>
@@ -293,7 +302,7 @@
                 <form>
                     <group>
                         <field name="name"/>
-                        <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}"/>
+                        <field name="partner_id" widget="res_partner_many2one" domain="[('customer', '=', True)]" context="{'search_default_customer': 1, 'show_vat': True}"/>
                         <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
@@ -308,7 +317,8 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
+                    archivable="false">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -337,8 +347,6 @@
                                     <div class="dropdown-menu" role="menu">
                                         <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
                                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                                        <a t-if="! record.active.value"  role="menuitem" name="action_set_active" type="object" class="dropdown-item">Restore</a>
-                                        <a t-if="record.active.value" role="menuitem" name="action_set_unactive" type="object" class="dropdown-item">Archive</a>
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
                                 </div>
@@ -366,7 +374,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="oe_clear"></div>
+                                <div class="oe_clear"/>
                             </div>
                         </t>
                     </templates>
@@ -402,7 +410,7 @@
                     <filter string="Won" name="won"
                             domain="[('probability', '=', 100)]"/>
                     <filter string="Lost" name="lost"
-                            domain="[('probability', '=', 0), ('active', '=', False)]"/>
+                            domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
@@ -441,12 +449,17 @@
                                 type="action" class="oe_highlight"
                                 context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False),('probability', '&lt;', 100)]}"/>
+                        <button name="toggle_active"
+                            string="Restore"
+                            type="object"
+                            attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <field name="stage_id" widget="statusbar"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
+                        <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object"
                                 context="{'partner_id': partner_id}"
@@ -457,13 +470,9 @@
                                     <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&gt;', 1)]}"> Meeting</span>
                                 </div>
                             </button>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive"
-                                    attrs="{'invisible': [('active', '=', True), ('probability', '&lt;', 100)]}">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
-                        <div class="badge badge-danger float-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
-                        <div class="badge badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
+                        <div class="badge-pill badge-danger float-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
+                        <div class="badge-pill badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
@@ -488,6 +497,7 @@
                         <group>
                             <group>
                                 <field name="partner_id"
+                                    widget="res_partner_many2one"
                                     string="Customer" domain="[('customer', '=', True)]"
                                     context="{'search_default_customer': 1,
                                         'default_name': partner_name, 'default_street': street,
@@ -496,19 +506,22 @@
                                         'default_country_id': country_id, 'default_function': function,
                                         'default_phone': phone, 'default_mobile': mobile,
                                         'default_email': email_from,
-                                        'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website}"/>
+                                        'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website,
+                                        'show_vat': True,
+                                    }"
+                                />
                                 <field name="is_blacklisted" invisible="1"/>
                                 <field name="partner_is_blacklisted" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}"></i>
+                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('is_blacklisted', '=', False), ('partner_address_email', '!=', False)]}" groups="base.group_user"></i>
                                     <field name="email_from"
                                        attrs="{'invisible': [('partner_address_email', '!=', False)]}"
                                        string="Email"
                                        widget="email"/>
                                     <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
-                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}"></i>
+                                        aria-label="Blacklisted" attrs="{'invisible': ['|', ('partner_is_blacklisted', '=', False), ('partner_address_email', '=', False)]}" groups="base.group_user"></i>
                                     <field name="partner_address_email"
                                        attrs="{'invisible': [('partner_address_email', '==', False)]}"
                                        widget="email"
@@ -834,27 +847,34 @@ for rec in records:
             Menu Actions
         -->
         <menuitem
-            id="crm_menu_pipeline"
-            name="Pipeline"
+            id="crm_menu_sales"
+            name="Sales"
             parent="crm_menu_root"
             sequence="1"/>
 
-        <menuitem id="res_partner_menu_crm"
-            parent="crm_menu_root"
-            action="base.action_partner_form"
-            sequence="2"/>
-
-        <menuitem id="sales_team_menu_report_crm"
-            name="Sales Teams"
-            parent="crm_menu_pipeline"
+        <menuitem id="sales_team_menu_team_pipeline"
+            name="Team Pipelines"
+            parent="crm_menu_sales"
             action="sales_team.crm_team_salesteams_act"
-            sequence="10"/>
+            sequence="4"/>
+
+        <menuitem id="res_partner_menu_customer"
+            name="Customers"
+            parent="crm_menu_sales"
+            action="base.action_partner_form"
+            sequence="5"/>
+
+        <menuitem id="crm_menu_leads"
+            name="Leads"
+            parent="crm_menu_root"
+            groups="crm.group_use_lead"
+            sequence="5"/>
 
         <!-- Lead Menu -->
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree,kanban,graph,pivot,calendar,form</field>
+            <field name="view_mode">tree,kanban,graph,pivot,calendar,form,activity</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
@@ -903,7 +923,7 @@ for rec in records:
         <menuitem
             id="menu_crm_leads"
             name="Leads"
-            parent="crm_menu_pipeline"
+            parent="crm_menu_leads"
             sequence="1"
             action="crm_lead_all_leads"
             groups="crm.group_use_lead"/>
@@ -912,7 +932,7 @@ for rec in records:
         <record model="ir.actions.act_window" id="crm_lead_opportunities">
             <field name="name">Opportunities</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form,calendar,activity</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
@@ -974,7 +994,7 @@ for rec in records:
         <record model="ir.actions.act_window" id="crm_lead_opportunities_tree_view">
             <field name="name">Pipeline</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form,calendar,activity</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
@@ -1029,9 +1049,9 @@ for rec in records:
         <menuitem
             id="menu_crm_opportunities"
             action="action_your_pipeline"
-            name="Pipeline"
-            parent="crm_menu_pipeline"
-            sequence="5"/>
+            name="My Pipeline"
+            parent="crm_menu_sales"
+            sequence="1"/>
 
         <menuitem
             id="crm.crm_menu_root"

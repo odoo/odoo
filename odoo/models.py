@@ -519,6 +519,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for base in reversed(cls.__bases__):
             if not getattr(base, 'pool', None):
                 # the following attributes are not taken from model classes
+                if not base._inherit and not base._description:
+                    _logger.warning("The model %s has no _description", cls._name)
                 cls._description = base._description or cls._description
                 cls._table = base._table or cls._table
                 cls._sequence = base._sequence or cls._sequence
@@ -2478,6 +2480,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     related=(parent_field, name),
                     related_sudo=False,
                     copy=field.copy,
+                    readonly=field.readonly,
                 )
 
         # add inherited fields that are not redefined locally
@@ -2951,7 +2954,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         xml_data = dict((x['res_id'], x) for x in IrModelData.search_read([('model', '=', self._name),
                                                                            ('res_id', 'in', self.ids)],
                                                                           ['res_id', 'noupdate', 'module', 'name'],
-                                                                          order='id'))
+                                                                          order='id',
+                                                                          limit=1))
         for r in res:
             value = xml_data.get(r['id'], {})
             r['xmlid'] = '%(module)s.%(name)s' % value if value else False
@@ -2981,35 +2985,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # mention the first one only to keep the error message readable
                 raise ValidationError(_('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
-    @api.multi
-    def _check_record_rules_result_count(self, result_ids, operation):
-        """ Verify the returned rows after applying record rules matches the
-            length of ``self``, and raise an appropriate exception if it does not.
-        """
-        ids, result_ids = set(self.ids), set(result_ids)
-        missing_ids = ids - result_ids
-        if missing_ids:
-            # Attempt to distinguish record rule restriction vs deleted records,
-            # to provide a more specific error message
-            self._cr.execute('SELECT id FROM %s WHERE id IN %%s' % self._table, (tuple(missing_ids),))
-            forbidden_ids = [x[0] for x in self._cr.fetchall()]
-            if forbidden_ids:
-                # the missing ids are (at least partially) hidden by access rules
-                if self._uid == SUPERUSER_ID:
-                    return
-                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, self._uid, self._name)
-                raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                    (self._description, operation))
-            else:
-                # If we get here, the missing_ids are not in the database
-                if operation in ('read','unlink'):
-                    # No need to warn about deleting an already deleted record.
-                    # And no error when reading a record that was deleted, to prevent spurious
-                    # errors for non-transactional search/read sequences coming from clients
-                    return
-                _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
-                raise MissingError(_('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
-
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
         """ Verifies that the operation given by ``operation`` is allowed for
@@ -3029,26 +3004,56 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self._uid == SUPERUSER_ID:
             return
 
+        invalid = self - self._filter_access_rules(operation)
+        if not invalid:
+            return
+
+        forbidden = invalid.exists()
+        if forbidden:
+            # the invalid records are (partially) hidden by access rules
+            if self.is_transient():
+                raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
+            else:
+                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden.ids, self._uid, self._name)
+                raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                  (self._description, operation))
+
+        # If we get here, the invalid records are not in the database.
+        if operation in ('read', 'unlink'):
+            # No need to warn about deleting an already deleted record.
+            # And no error when reading a record that was deleted, to prevent spurious
+            # errors for non-transactional search/read sequences coming from clients.
+            return
+        _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
+        raise MissingError(_('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+
+    def _filter_access_rules(self, operation):
+        """ Return the subset of ``self`` for which ``operation`` is allowed. """
+        if self._uid == SUPERUSER_ID:
+            return self
+
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
             # have log_access enabled so that the create_uid column is always there.
             # And even with _inherits, these fields are always present in the local
             # table too, so no need for JOINs.
-            query = "SELECT DISTINCT create_uid FROM %s WHERE id IN %%s" % self._table
-            self._cr.execute(query, (tuple(self.ids),))
-            uids = [x[0] for x in self._cr.fetchall()]
-            if len(uids) != 1 or uids[0] != self._uid:
-                raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
-        else:
-            where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
-            if where_clause:
-                query = "SELECT %s.id FROM %s WHERE %s.id IN %%s AND " % (self._table, ",".join(tables), self._table)
-                query = query + " AND ".join(where_clause)
-                for sub_ids in self._cr.split_for_in_conditions(self.ids):
-                    self._cr.execute(query, [sub_ids] + where_params)
-                    returned_ids = [x[0] for x in self._cr.fetchall()]
-                    self.browse(sub_ids)._check_record_rules_result_count(returned_ids, operation)
+            query = "SELECT id FROM {} WHERE id IN %s AND create_uid=%s".format(self._table)
+            self._cr.execute(query, (tuple(self.ids), self._uid))
+            return self.browse([row[0] for row in self._cr.fetchall()])
+
+        where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
+        if not where_clause:
+            return self
+
+        valid_ids = []
+        query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
+            self._table, ",".join(tables), self._table, " AND ".join(where_clause),
+        )
+        for sub_ids in self._cr.split_for_in_conditions(self.ids):
+            self._cr.execute(query, [sub_ids] + where_params)
+            valid_ids.extend(row[0] for row in self._cr.fetchall())
+        return self.browse(valid_ids)
 
     @api.multi
     def unlink(self):
@@ -4129,7 +4134,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return [default]
 
     @api.multi
-    def copy_translations(old, new):
+    def copy_translations(old, new, excluded=()):
+        """ Recursively copy the translations from original to new record
+
+        :param old: the original record
+        :param new: the new record (copy of the original one)
+        :param excluded: a container of user-provided field names
+        """
         # avoid recursion through already copied records in case of circular relationship
         if '__copy_translations_seen' not in old._context:
             old = old.with_context(__copy_translations_seen=defaultdict(set))
@@ -4155,13 +4166,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if not field.copy:
                 continue
 
-            if field.type == 'one2many':
+            if field.inherited and field.related[0] in excluded:
+                # inherited fields that come from a user-provided parent record
+                # must not copy translations, as the parent record is not a copy
+                # of the old parent record
+                continue
+
+            if field.type == 'one2many' and field.name not in excluded:
                 # we must recursively copy the translations for o2m; here we
                 # rely on the order of the ids to match the translations as
                 # foreseen in copy_data()
                 old_lines = old[name].sorted(key='id')
                 new_lines = new[name].sorted(key='id')
                 for (old_line, new_line) in pycompat.izip(old_lines, new_lines):
+                    # don't pass excluded as it is not about those lines
                     old_line.copy_translations(new_line)
 
             elif field.translate:
@@ -4203,7 +4221,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         vals = self.copy_data(default)[0]
         # To avoid to create a translation in the lang of the user, copy_translation will do it
         new = self.with_context(lang=None).create(vals)
-        self.with_context(from_copy_translation=True).copy_translations(new)
+        self.with_context(from_copy_translation=True).copy_translations(new, excluded=default or ())
         return new
 
     @api.multi
@@ -5248,18 +5266,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if res.get('domain'):
                 result.setdefault('domain', {}).update(res['domain'])
             if res.get('warning'):
-                if result.get('warning'):
-                    # Concatenate multiple warnings
-                    warning = result['warning']
-                    warning['message'] = '\n\n'.join(s for s in [
-                        warning.get('title'),
-                        warning.get('message'),
-                        res['warning'].get('title'),
-                        res['warning'].get('message'),
-                    ] if s)
-                    warning['title'] = _('Warnings')
-                else:
-                    result['warning'] = res['warning']
+                result['warnings'].add((
+                    res['warning'].get('title') or _("Warning"),
+                    res['warning'].get('message') or "",
+                ))
 
         if onchange in ("1", "true"):
             for method in self._onchange_methods.get(field_name, ()):
@@ -5328,7 +5338,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     continue
                 record[name] = value
 
-        result = {}
+        result = {'warnings': OrderedSet()}
         dirty = set()
 
         # process names in order (or the keys of values if no name given)
@@ -5371,6 +5381,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
                 for name in dirty
             }
+
+        # format warnings
+        warnings = result.pop('warnings')
+        if len(warnings) == 1:
+            title, message = warnings.pop()
+            result['warning'] = dict(title=title, message=message)
+        elif len(warnings) > 1:
+            # concatenate warning titles and messages
+            title = _("Warnings")
+            message = "\n\n".join(itertools.chain(*warnings))
+            result['warning'] = dict(title=title, message=message)
 
         return result
 

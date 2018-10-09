@@ -91,7 +91,7 @@ tour.register('project_tour', {
     content: _t('<b>Assign the task</b> to someone. <i>You can create and invite a new user on the fly.</i>'),
     position: "bottom",
     run: function (actions) {
-        actions.text("Marc Brown", this.$anchor.find("input"));
+        actions.text("Marc Demo", this.$anchor.find("input"));
     },
 }, {
     trigger: ".ui-autocomplete > li > a",

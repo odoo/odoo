@@ -240,8 +240,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 if post_init:
                     getattr(py_module, post_init)(cr, registry)
 
-            # validate all the views at a whole
-            env['ir.ui.view']._validate_module_views(module_name)
+            if mode == 'update':
+                # validate the views that have not been checked yet
+                env['ir.ui.view']._validate_module_views(module_name)
 
             # need to commit any modification the module's installation or
             # update made to the schema or data so the tests can run
@@ -333,6 +334,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     with db.cursor() as cr:
         if not odoo.modules.db.is_initialized(cr):
+            if not update_module:
+                _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
+                return
             _logger.info("init db")
             odoo.modules.db.initialize(cr)
             update_module = True # process auto-installed modules

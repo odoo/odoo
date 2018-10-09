@@ -36,6 +36,8 @@ ActivityMenu.include({
     },
     /**
      * Save the note to database using datepicker date and field as note
+     * By default, when no datetime is set, it uses the current datetime.
+     *
      * @private
      */
     _saveNote: function () {
@@ -47,6 +49,8 @@ ActivityMenu.include({
         var noteDateTime = this.noteDateTimeWidget.getValue();
         if (noteDateTime) {
             params = _.extend(params, {'date_deadline': noteDateTime});
+        } else {
+            params = _.extend(params, {'date_deadline': moment()});
         }
         this.$('.o_note_show').removeClass('d-none');
         this.$('.o_note').addClass('d-none');

@@ -222,7 +222,7 @@
                                     <field name="module_account_payment"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="module_account_payment" string="Online Payment"/>
+                                    <label for="module_account_payment"/>
                                     <div class="text-muted">
                                         Let your customers pay their invoices online
                                     </div>
@@ -279,19 +279,6 @@
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Add a payment QR code to your invoices
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('qr_code', '=', False)]}">
-                                        <div class="row">
-                                            <label for="qr_code_payment_journal_id" class="col-md-3 o_light_label"/>
-                                            <field name="qr_code_payment_journal_id" class="oe_inline"/>
-                                        </div>
-                                    </div>
-                                    <div class="badge-danger" attrs="{'invisible': ['|',('qr_code_payment_journal_id', '!=', False), ('qr_code', '=', False)]}">
-                                        A bank journal must be set to use the SEPA QR code
-                                    </div>
-                                    <field name="qr_code_valid" invisible='1'/>
-                                    <div class="badge-danger" attrs="{'invisible': ['|','|',('qr_code_payment_journal_id', '=', False), ('qr_code', '=', False), ('qr_code_valid','!=',False)]}">
-                                        Please check that following information are set on the journal: bank account, BIC, EUR as currency.
                                     </div>
                                 </div>
                             </div>
@@ -501,17 +488,6 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_print_docsaway" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_print_docsaway"/>
-                                    <div class="text-muted">
-                                        Mail your invoices in one-click using <a target="_blank" href="https://www.docsaway.com/">Docsaway</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
                                     <field name="group_cash_rounding"/>
                                 </div>
                                 <div class="o_setting_right_pane">
@@ -577,6 +553,25 @@
                                         Automate deferred revenues entries for multi-year contracts
                                     </div>
                                     <div id="msg_automate_deferred_revenues" class="content-group" attrs="{'invisible': [('module_account_deferred_revenue', '=', False)]}">
+                                        <div class="text-warning mt16 mb4">
+                                            Save this page and come back here to set up the feature.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Autocomplete Vendor Bills (OCR + AI)</h2>
+                        <div class="row mt16 o_settings_container" id="account_ocr_settings">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_invoice_extract" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_account_invoice_extract"/>
+                                    <div class="text-muted">
+                                        When receiving an email with a bill, or uploading scanned bills, Odoo will parse them (OCR) and auto-complete (AI) Draft Bills to validate.
+                                    </div>
+                                    <div id="msg_invoice_extract" class="content-group" attrs="{'invisible': [('module_account_invoice_extract', '=', False)]}">
                                         <div class="text-warning mt16 mb4">
                                             Save this page and come back here to set up the feature.
                                         </div>

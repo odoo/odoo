@@ -53,6 +53,22 @@ var GreetingMessage = AbstractAction.extend({
         this.employee_name = action.employee_name;
     },
 
+    willStart: function() {
+        var self = this;
+        var def;
+        if (this.attendance && this.attendance.employee_id) {
+            def = this._rpc({
+                model: 'hr.employee',
+                method: 'read',
+                args: [this.attendance.employee_id[0], ['barcode']],
+             })
+            .then(function (employee) {
+                self.attendanceBarcode = employee[0].barcode;
+            });
+        }
+        return $.when(this._super.apply(this, arguments), def);
+    },
+
     start: function() {
         if (this.attendance) {
             this.attendance.check_out ? this.farewell_message() : this.welcome_message();
@@ -136,21 +152,24 @@ var GreetingMessage = AbstractAction.extend({
 
     _onBarcodeScanned: function(barcode) {
         var self = this;
-        if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
-            clearTimeout(this.return_to_main_menu);
+        if (this.attendanceBarcode !== barcode){
+            if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
+                clearTimeout(this.return_to_main_menu);
+            }
+            core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
+            this._rpc({
+                    model: 'hr.employee',
+                    method: 'attendance_scan',
+                    args: [barcode, ],
+                })
+                .then(function (result) {
+                    if (result.action) {
+                        self.do_action(result.action);
+                    } else if (result.warning) {
+                        self.do_warn(result.warning);
+                    }
+                });
         }
-        this._rpc({
-                model: 'hr.employee',
-                method: 'attendance_scan',
-                args: [barcode, ],
-            })
-            .then(function (result) {
-                if (result.action) {
-                    self.do_action(result.action);
-                } else if (result.warning) {
-                    self.do_warn(result.warning);
-                }
-            });
     },
 
     destroy: function () {

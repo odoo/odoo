@@ -3,6 +3,8 @@ odoo.define('hr_timesheet.timesheet_uom', function (require) {
 
 var AbstractField = require('web.AbstractField');
 var basicFields = require('web.basic_fields');
+var fieldUtils = require('web.field_utils');
+
 var fieldRegistry = require('web.field_registry');
 var session = require('web.session');
 
@@ -80,6 +82,27 @@ var FieldTimesheetUom = widgetName === 'float_toggle' ?
          FieldTimesheetToggle : (fieldRegistry.get(widgetName) || FieldTimesheetFactor);
 
 fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
+
+
+// bind the formatter and parser method, and tweak the options
+var _tweak_options = function(options) {
+    if (!_.contains(options, 'factor')) {
+        options.factor = session.timesheet_uom_factor;
+    }
+    return options;
+}
+
+fieldUtils.format.timesheet_uom = function(value, field, options) {
+    options = _tweak_options(options || {});
+    var formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
+    return formatter(value, field, options);
+};
+
+fieldUtils.parse.timesheet_uom = function(value, field, options) {
+    options = _tweak_options(options || {});
+    var parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
+    return parser(value, field, options);
+};
 
 return FieldTimesheetUom;
 });

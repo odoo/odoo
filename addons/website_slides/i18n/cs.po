@@ -8,14 +8,14 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter, 2018
+# J. Podhorecky <j.podhorecky@volny.cz>, 2018
 # Jakub Lohnisky <jakub@lepremier.cz>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
 "Last-Translator: Jakub Lohnisky <jakub@lepremier.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -351,6 +351,13 @@ msgid "Can Upload"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:55
+#, python-format
+msgid "Cancel"
+msgstr "Zrušit"
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category_global
@@ -360,7 +367,7 @@ msgstr "Kategorie"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:252
+#: code:addons/website_slides/static/src/js/slides_upload.js:254
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -371,11 +378,14 @@ msgid "Category"
 msgstr "Kategorie"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:81
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#, python-format
 msgid "Channel"
 msgstr "Kanál"
 
@@ -396,15 +406,10 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:172
+#: code:addons/website_slides/static/src/js/slides_upload.js:174
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel
-msgid "Channel for Slides"
 msgstr ""
 
 #. module: website_slides
@@ -424,6 +429,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
 msgstr "Kanály"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
@@ -446,7 +456,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
+#: code:addons/website_slides/models/slides.py:330
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -456,7 +466,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_channels
 msgid "Create a channel"
-msgstr ""
+msgstr "Vytvořit kanál"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_ir_slide_category
@@ -465,7 +475,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:221
+#: code:addons/website_slides/static/src/js/slides_upload.js:223
 #, python-format
 msgid "Create new tag '%s'"
 msgstr ""
@@ -587,7 +597,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Embed in your website"
-msgstr ""
+msgstr "Vložte na své webové stránky"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
@@ -633,7 +643,7 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:274
-#: code:addons/website_slides/static/src/js/slides_upload.js:89
+#: code:addons/website_slides/static/src/js/slides_upload.js:91
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr ""
@@ -698,6 +708,8 @@ msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
 msgstr ""
+"Skupiny mohou nahrát prezentace v tomto kanálu. V případě neplatnosti může "
+"každý uživatel nahrát."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__id
@@ -718,13 +730,13 @@ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image
@@ -751,7 +763,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:84
+#: code:addons/website_slides/static/src/js/slides_upload.js:86
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr "Neplatný typ souboru. Vyberte soubor PDF nebo obrázek"
@@ -766,7 +778,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_published
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_published
 msgid "Is published"
-msgstr ""
+msgstr "Je zveřejněno"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category____last_update
@@ -803,7 +815,7 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Latest Published"
-msgstr ""
+msgstr "Nejnovější publikování"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
@@ -815,7 +827,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hlavní příloha"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_medium
@@ -826,7 +838,7 @@ msgstr "Střední"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Chyba při doručování zpráv"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__access_error_msg
@@ -849,13 +861,13 @@ msgstr "Mime-type"
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Viewed"
-msgstr ""
+msgstr "Nejsledovanější"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Voted"
-msgstr ""
+msgstr "Nejvíce hlasovali"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__name
@@ -869,6 +881,13 @@ msgstr "Název"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:39
+#, python-format
+msgid "New slide"
 msgstr ""
 
 #. module: website_slides
@@ -916,19 +935,19 @@ msgstr "Počet akcí"
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_documents
 msgid "Number of Documents"
-msgstr ""
+msgstr "Počet dokumentů"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_infographics
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographics
 msgid "Number of Infographics"
-msgstr ""
+msgstr "Počet infografik"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_presentations
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_presentations
 msgid "Number of Presentations"
-msgstr ""
+msgstr "Počet prezentací"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_videos
@@ -958,6 +977,13 @@ msgstr "Počet zpráv s chybou při doručení"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread_counter
 msgid "Number of unread messages"
+msgstr "Počet nepřečtených zpráv"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:40
+#, python-format
+msgid "On which channel do you want to add a slide?"
 msgstr ""
 
 #. module: website_slides
@@ -975,7 +1001,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
-msgstr ""
+msgstr "Prosím"
 
 #. module: website_slides
 #. openerp-web
@@ -985,8 +1011,8 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:328
-#: code:addons/website_slides/models/slides.py:557
+#: code:addons/website_slides/models/slides.py:333
+#: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Zadejte prosím platnou adresu z Youtube nebo URL z Google Doc"
@@ -1093,7 +1119,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO optimalizováno"
 
 #. module: website_slides
 #. openerp-web
@@ -1128,6 +1154,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Security"
 msgstr "Zabezpečení"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:44
+#, python-format
+msgid "Select"
+msgstr "Vybrat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
@@ -1201,6 +1234,11 @@ msgid "Slide"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Slide Channel"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
 msgstr ""
@@ -1244,7 +1282,7 @@ msgstr "Štítek"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:275
+#: code:addons/website_slides/static/src/js/slides_upload.js:277
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -1305,7 +1343,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_thumb
 msgid "Thumbnail"
-msgstr ""
+msgstr "Náhled"
 
 #. module: website_slides
 #. openerp-web
@@ -1350,7 +1388,7 @@ msgid "Uncategorized presentation"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:546
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
 msgstr ""
@@ -1358,7 +1396,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Unpublished"
-msgstr ""
+msgstr "Nepublikovaný"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread
@@ -1418,7 +1456,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Videos"
-msgstr ""
+msgstr "Videa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1445,7 +1483,7 @@ msgstr "Viditelné na aktuálním webu"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr ""
+msgstr "Čeká na ověření"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website
@@ -1499,7 +1537,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:114
+#: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
 msgstr ""
@@ -1560,11 +1598,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr ""
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_search

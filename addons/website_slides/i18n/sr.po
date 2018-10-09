@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * website_slides
 # 
+# Translators:
+# Martin Trigaux, 2018
+# Slobodan Simić <slsimic@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
+"Last-Translator: Slobodan Simić <slsimic@gmail.com>, 2018\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -301,13 +305,13 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
-msgstr ""
+msgstr "Радње"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
-msgstr ""
+msgstr "Активно"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slides_slides
@@ -342,16 +346,23 @@ msgid "Can Upload"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:55
+#, python-format
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category_global
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Categories"
-msgstr ""
+msgstr "Kategorije"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:252
+#: code:addons/website_slides/static/src/js/slides_upload.js:254
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -359,16 +370,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slides_category_tree
 #, python-format
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:81
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#, python-format
 msgid "Channel"
-msgstr ""
+msgstr "Канал"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -387,15 +401,10 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:172
+#: code:addons/website_slides/static/src/js/slides_upload.js:174
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel
-msgid "Channel for Slides"
 msgstr ""
 
 #. module: website_slides
@@ -417,9 +426,14 @@ msgid "Channels"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
 msgid "Content"
-msgstr ""
+msgstr "Sadržaj"
 
 #. module: website_slides
 #. openerp-web
@@ -437,7 +451,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
+#: code:addons/website_slides/models/slides.py:330
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -456,7 +470,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:221
+#: code:addons/website_slides/static/src/js/slides_upload.js:223
 #, python-format
 msgid "Create new tag '%s'"
 msgstr ""
@@ -477,7 +491,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Kreiran"
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.channel_public
@@ -495,7 +509,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: website_slides
 #. openerp-web
@@ -528,7 +542,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #: selection:slide.slide,slide_type:0
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_id
@@ -543,7 +557,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Documents"
-msgstr ""
+msgstr "Dokumenti"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -624,7 +638,7 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:274
-#: code:addons/website_slides/static/src/js/slides_upload.js:89
+#: code:addons/website_slides/static/src/js/slides_upload.js:91
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr ""
@@ -650,12 +664,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see_full
 msgid "Full Access"
-msgstr ""
+msgstr "Potpuni pristup"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "General"
-msgstr ""
+msgstr "Opšte"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
@@ -676,7 +690,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupiši po"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__group_ids
@@ -697,7 +711,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__id
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread
@@ -720,7 +734,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image
 msgid "Image"
-msgstr ""
+msgstr "Slika"
 
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
@@ -742,7 +756,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:84
+#: code:addons/website_slides/static/src/js/slides_upload.js:86
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr ""
@@ -828,7 +842,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Poruke"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__mime_type
@@ -855,11 +869,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:39
+#, python-format
+msgid "New slide"
 msgstr ""
 
 #. module: website_slides
@@ -953,6 +974,13 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:40
+#, python-format
+msgid "On which channel do you want to add a slide?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
 msgid "PDF or Image File"
@@ -976,8 +1004,8 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:328
-#: code:addons/website_slides/models/slides.py:557
+#: code:addons/website_slides/models/slides.py:333
+#: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr ""
@@ -1014,7 +1042,7 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Private"
-msgstr ""
+msgstr "Privatno"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
@@ -1035,7 +1063,7 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Public"
-msgstr ""
+msgstr "Javno"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
@@ -1103,7 +1131,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Search"
-msgstr ""
+msgstr "Pronađi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1118,6 +1146,13 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Security"
+msgstr "Bezbednost"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:44
+#, python-format
+msgid "Select"
 msgstr ""
 
 #. module: website_slides
@@ -1134,7 +1169,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Niz"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
@@ -1192,6 +1227,11 @@ msgid "Slide"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Slide Channel"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
 msgstr ""
@@ -1235,7 +1275,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:275
+#: code:addons/website_slides/static/src/js/slides_upload.js:277
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -1243,7 +1283,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 #, python-format
 msgid "Tags"
-msgstr ""
+msgstr "Oznake"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1253,7 +1293,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.home
 msgid "The"
-msgstr ""
+msgstr "(the)"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
@@ -1305,13 +1345,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
 #, python-format
 msgid "Title"
-msgstr ""
+msgstr "Naslov"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__total
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total
 msgid "Total"
-msgstr ""
+msgstr "Ukupno"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
@@ -1327,7 +1367,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:156
@@ -1341,7 +1381,7 @@ msgid "Uncategorized presentation"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:546
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
 msgstr ""
@@ -1415,7 +1455,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Views"
-msgstr ""
+msgstr "Pregledi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.related_slides
@@ -1425,7 +1465,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
 msgid "Visibility"
-msgstr ""
+msgstr "Vidljivost"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
@@ -1444,7 +1484,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Website"
-msgstr ""
+msgstr "Web stranica"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
@@ -1490,7 +1530,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:114
+#: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
 msgstr ""
@@ -1550,11 +1590,6 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_res_config_settings
-msgid "res.config.settings"
 msgstr ""
 
 #. module: website_slides

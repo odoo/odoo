@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # AleEscandon <alejandra.escandon@jarsa.com.mx>, 2018
+# Cristopher Cravioto <ccr@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: AleEscandon <alejandra.escandon@jarsa.com.mx>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +88,16 @@ msgid "Attach Google documents to any record"
 msgstr "Adjuntar documentos de Google a cualquier registro"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Autocomplete company data (name, logo, address, etc.)"
+msgstr ""
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Business Documents"
 msgstr "Documentos de negocios"
@@ -105,7 +116,7 @@ msgid "Change Document Template"
 msgstr "Cambie el modelo del documento"
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:99
+#: code:addons/base_setup/models/res_config_settings.py:100
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Elija el diseño de tu documento"
@@ -134,6 +145,11 @@ msgstr "Compañías"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
 msgid "Company"
 msgstr "Compañía"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de Configuración"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -224,8 +240,8 @@ msgstr "Hojas de cálculo de Google"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
-msgid "HTTP routing"
-msgstr "Enrutado HTTP"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -375,6 +391,9 @@ msgid "Users"
 msgstr "Usuarios"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""

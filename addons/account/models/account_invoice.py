@@ -279,7 +279,7 @@ class AccountInvoice(models.Model):
              "means direct payment.")
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         readonly=True, states={'draft': [('readonly', False)]},
-        track_visibility='always')
+        track_visibility='always', help="You can find a contact by its Name, TIN, Email or Internal Reference.")
     vendor_bill_id = fields.Many2one('account.invoice', string='Vendor Bill',
         help="Auto-complete from a past bill.")
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
@@ -528,7 +528,7 @@ class AccountInvoice(models.Model):
         reconciled = self.filtered(lambda invoice: invoice.reconciled)
         not_reconciled = self - reconciled
         (reconciled & pre_reconciled).filtered(lambda invoice: invoice.state == 'open').action_invoice_paid()
-        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_re_open()
+        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state in ('in_payment', 'paid')).action_invoice_re_open()
         return res
 
     @api.model
@@ -579,7 +579,7 @@ class AccountInvoice(models.Model):
         """ Print the invoice and mark it as sent, so that we can see more
             easily the next step of the workflow
         """
-        self.write({'sent': True})
+        self.filtered(lambda inv: not inv.sent).write({'sent': True})
         if self.user_has_groups('account.group_account_invoice'):
             return self.env.ref('account.account_invoices').report_action(self)
         else:
@@ -916,7 +916,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_re_open(self):
-        if self.filtered(lambda inv: inv.state != 'paid'):
+        if self.filtered(lambda inv: inv.state not in ('in_payment', 'paid')):
             raise UserError(_('Invoice must be paid in order to set it to register payment.'))
         return self.write({'state': 'open'})
 
@@ -1575,7 +1575,7 @@ class AccountInvoiceLine(models.Model):
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
-    product_image = fields.Binary('Product Image', related="product_id.image", store=False)
+    product_image = fields.Binary('Product Image', related="product_id.image", store=False, readonly=True)
     account_id = fields.Many2one('account.account', string='Account', domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
@@ -1602,7 +1602,7 @@ class AccountInvoiceLine(models.Model):
         related='invoice_id.company_id', store=True, readonly=True, related_sudo=False)
     partner_id = fields.Many2one('res.partner', string='Partner',
         related='invoice_id.partner_id', store=True, readonly=True, related_sudo=False)
-    currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, related_sudo=False)
+    currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, related_sudo=False, readonly=False)
     company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True, related_sudo=False)
     is_rounding_line = fields.Boolean(string='Rounding Line', help='Is a rounding line in case of cash rounding.')
 
@@ -1720,9 +1720,9 @@ class AccountInvoiceLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return ''
-
+        invoice_type = self.invoice_id.type
         rslt = self.product_id.partner_ref
-        if type in ('in_invoice', 'in_refund'):
+        if invoice_type in ('in_invoice', 'in_refund'):
             if self.product_id.description_purchase:
                 rslt += '\n' + self.product_id.description_purchase
         else:

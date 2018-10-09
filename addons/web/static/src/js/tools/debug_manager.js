@@ -504,7 +504,7 @@ DebugManager.include({
                         model: 'ir.default',
                         method: 'set',
                         args: [
-                            self._controller.fields_view.model,
+                            self._action.res_model,
                             fieldToSet,
                             value,
                             selfUser,

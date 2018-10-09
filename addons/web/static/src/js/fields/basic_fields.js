@@ -334,7 +334,8 @@ var InputField = DebouncedField.extend({
             }
             if (ev.data.direction ==='next' &&
                 this.attrs.modifiersValue &&
-                this.attrs.modifiersValue.required) {
+                this.attrs.modifiersValue.required &&
+                this.viewType !== 'list') {
                 if (!this.$input.val()){
                     this.setInvalidClass();
                     ev.stopPropagation();
@@ -388,7 +389,7 @@ var NumericField = InputField.extend({
      *
      * Note: We have to overwrite this method to set the input's type to number if
      * option setted into the field.
-     * 
+     *
      * @override
      * @private
      */
@@ -537,7 +538,7 @@ var FieldDate = InputField.extend({
      * @override
      */
     activate: function () {
-        if (this.datewidget) {
+        if (this.isFocusable() && this.datewidget) {
             this.datewidget.focus();
             return true;
         }
@@ -1470,12 +1471,19 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         },
     }),
     supportedFieldTypes: ['binary'],
+    file_type_magic_word: {
+        '/': 'jpg',
+        'R': 'gif',
+        'i': 'png',
+        'P': 'svg+xml',
+    },
     _render: function () {
         var self = this;
         var url = this.placeholder;
         if (this.value) {
             if (!utils.is_bin_size(this.value)) {
-                url = 'data:image/png;base64,' + this.value;
+                // Use magic-word technique for detecting image type
+                url = 'data:image/' + (this.file_type_magic_word[this.value[0]] || 'png') + ';base64,' + this.value;
             } else {
                 url = session.url('/web/image', {
                     model: this.model,

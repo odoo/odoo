@@ -7,10 +7,10 @@
 # Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -20,21 +20,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_questions
-#: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
 msgid "<strong>Questions</strong>"
 msgstr "<strong>Spørsmål</strong>"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__name
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__answer_id
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Answer"
 msgstr "Svar"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__answer_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__answer_ids
-#: model:ir.ui.view,arch_db:website_event_questions.view_registration_search_inherit_question
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_registration_search_inherit_question
 msgid "Answers"
 msgstr "Svar"
 
@@ -42,11 +42,6 @@ msgstr "Svar"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_individual
 msgid "Ask each attendee"
 msgstr "Spør hver deltaker"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration
-msgid "Attendee"
-msgstr "Deltaker"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__create_uid
@@ -74,11 +69,12 @@ msgstr "Visningsnavn"
 #: model:ir.model,name:website_event_questions.model_event_event
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__event_id
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Event"
 msgstr "Arrangement"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_answer
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_answer_id
 msgid "Event Answer"
 msgstr "Arrangementssvar"
@@ -89,9 +85,25 @@ msgid "Event Category"
 msgstr "Arrangementskategori"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question
+msgid "Event Question"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question_report
+msgid "Event Question Report"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_registration_id
 msgid "Event Registration"
 msgstr "Registrering til arrangement"
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration_answer
+msgid "Event Registration Answer"
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -104,7 +116,7 @@ msgid "General Questions"
 msgstr "Generelle spørsmål"
 
 #. module: website_event_questions
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Group By"
 msgstr "Grupper etter"
 
@@ -151,14 +163,14 @@ msgstr "Sist oppdatert"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__question_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__question_id
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_answer_simplified_form
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_form
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_answer_simplified_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Question"
 msgstr "Spørsmål"
 
 #. module: website_event_questions
-#: code:addons/website_event_questions/models/event.py:78
+#: code:addons/website_event_questions/models/event.py:80
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
@@ -167,15 +179,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_type__question_ids
 #: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
 msgid "Questions"
 msgstr "Spørsmål"
 
 #. module: website_event_questions
 #: model:ir.actions.act_window,name:website_event_questions.action_event_question_report
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_graph
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_pivot
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_graph
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_pivot
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Questions Analysis"
 msgstr "Spørsmålsanalyse"
 
@@ -186,7 +198,7 @@ msgstr "Spørsmål til deltakere"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__attendee_id
-#: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Registration"
 msgstr "Registrering"
 
@@ -205,23 +217,3 @@ msgstr "Spesifikke spørsmål"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
 msgid "Title"
 msgstr "Tittel"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_answer
-msgid "event.answer"
-msgstr "event.answer"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question
-msgid "event.question"
-msgstr "event.question"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question_report
-msgid "event.question.report"
-msgstr "event.question.report"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration_answer
-msgid "event.registration.answer"
-msgstr "event.registration.answer"

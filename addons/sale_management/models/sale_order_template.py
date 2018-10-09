@@ -23,12 +23,21 @@ class SaleOrderTemplate(models.Model):
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
     require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature, help='Request a online signature to the customer in order to confirm orders automatically.')
-    require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment, help='Request an electronic payment to the customer in order to confirm orders automatically.')
+    require_payment = fields.Boolean('Online Payment', default=_get_default_require_payment, help='Request an online payment to the customer in order to confirm orders automatically.')
     mail_template_id = fields.Many2one(
         'mail.template', 'Confirmation Mail',
         domain=[('model', '=', 'sale.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
+
+    @api.multi
+    def write(self, vals):
+        if 'active' in vals and not vals.get('active'):
+            template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
+            for template in self:
+                if template_id and template_id == template.id:
+                    raise UserError('Before archiving "%s" please select another default template in the settings.' % template.name)
+        return super(SaleOrderTemplate, self).write(vals)
 
 
 class SaleOrderTemplateLine(models.Model):

@@ -3,24 +3,14 @@
 # * base_import_module
 # 
 # Translators:
-# Niki Waibel, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Martin Trigaux, 2017
-# Wolfgang Taferner, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Renzo Meister, 2017
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,12 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
 msgstr "Schließen"
 
@@ -84,7 +74,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
 msgstr "App importieren"
 
@@ -97,12 +87,12 @@ msgstr "Mitteilung importieren"
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Importiere Modul"
 
 #. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
 msgstr "Modul importieren"
 
@@ -155,12 +145,12 @@ msgid "Only zip files are supported."
 msgstr ""
 
 #. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "Öffne Module"
 
 #. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Select module package to import (.zip file):"
 msgstr "Wählen Sie das Module (zip Datei) für den Import"
 
@@ -188,6 +178,11 @@ msgid "Unmet module dependencies: %s"
 msgstr "Es gibt abhängige Module: %s"
 
 #. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "View"
+msgstr "Ansicht"
+
+#. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "done"
 msgstr "abgeschlossen"
@@ -196,8 +191,3 @@ msgstr "abgeschlossen"
 #: selection:base.import.module,state:0
 msgid "init"
 msgstr "init"
-
-#. module: base_import_module
-#: model:ir.model,name:base_import_module.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"

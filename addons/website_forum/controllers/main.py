@@ -83,6 +83,8 @@ class WebsiteForum(http.Controller):
     def forum(self, **kwargs):
         domain = request.website.get_current_website().website_domain()
         forums = request.env['forum.forum'].search(domain)
+        if len(forums) == 1:
+            return werkzeug.utils.redirect('/forum/%s' % slug(forums[0]), code=302)
         return request.render("website_forum.forum_all", {'forums': forums})
 
     @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
@@ -453,7 +455,7 @@ class WebsiteForum(http.Controller):
     # --------------------------------------------------
 
     @http.route('/forum/<model("forum.forum"):forum>/validation_queue', type='http', auth="user", website=True)
-    def validation_queue(self, forum):
+    def validation_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -471,7 +473,7 @@ class WebsiteForum(http.Controller):
         return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/flagged_queue', type='http', auth="user", website=True)
-    def flagged_queue(self, forum):
+    def flagged_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -489,7 +491,7 @@ class WebsiteForum(http.Controller):
         return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/offensive_posts', type='http', auth="user", website=True)
-    def offensive_posts(self, forum):
+    def offensive_posts(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -507,7 +509,7 @@ class WebsiteForum(http.Controller):
         return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
-    def post_accept(self, forum, post):
+    def post_accept(self, forum, post, **kwargs):
         url = "/forum/%s/validation_queue" % (slug(forum))
         if post.state == 'flagged':
             url = "/forum/%s/flagged_queue" % (slug(forum))
@@ -517,7 +519,7 @@ class WebsiteForum(http.Controller):
         return werkzeug.utils.redirect(url)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
-    def post_refuse(self, forum, post):
+    def post_refuse(self, forum, post, **kwargs):
         post.refuse()
         return self.question_ask_for_close(forum, post)
 
@@ -528,7 +530,7 @@ class WebsiteForum(http.Controller):
         return post.flag()[0]
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
-    def post_ask_for_mark_as_offensive(self, forum, post):
+    def post_ask_for_mark_as_offensive(self, forum, post, **kwargs):
         offensive_reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'offensive')])
 
         values = self._prepare_forum_values(forum=forum)

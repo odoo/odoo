@@ -4,13 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# Sophia Anastasopoulos <sophiaanast1@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +29,13 @@ msgid ""
 " karma is required to perform this action. You can earn karma by having your"
 " answers upvoted by the community."
 msgstr ""
+"το karma απαιτείται για να εκτελέσει αυτήν την ενέργεια. Μπορεί να αυξηθεί "
+"το κάρμα σας όταν οι απαντήσεις σας ψηφίζονται από την κοινότητα."
 
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Επικύρωση φόρουμ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -42,12 +47,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
-msgstr ""
+msgstr "(Η παραπάνω ενότητα εμπνεύστηκε από τις Ε &amp; Α του Stackoverflow.)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -66,12 +71,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "(votes - 1) **"
-msgstr ""
+msgstr "(ψήφοι- 1) **"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "/ (days + 2) **"
-msgstr ""
+msgstr "/ (ημέρες + 2) **"
 
 #. module: website_forum
 #. openerp-web
@@ -264,6 +269,9 @@ msgid ""
 "                    Flagged\n"
 "                </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                    Με Σημαία\n"
+"                </small>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -289,7 +297,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted\">or</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">ή</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -312,7 +320,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>By </span>"
-msgstr ""
+msgstr "<span>Από </span>"
 
 #. module: website_forum
 #: model:mail.template,body_html:website_forum.validation_email
@@ -464,7 +472,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Απαιτείται ενέργεια"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -476,7 +484,7 @@ msgstr "Σε Ισχύ"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Activity"
-msgstr ""
+msgstr "Δραστηριότητα"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -485,7 +493,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:43
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:45
 #, python-format
 msgid "Add to menu"
 msgstr ""
@@ -498,7 +506,7 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:201
+#: code:addons/website_forum/controllers/main.py:203
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -512,10 +520,10 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Answer"
-msgstr ""
+msgstr "Απάντηση"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:520
+#: code:addons/website_forum/models/forum.py:521
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -599,7 +607,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
-msgstr ""
+msgstr "Απαντήσεις"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_gamification_challenge__category
@@ -708,7 +716,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 #: model_terms:ir.ui.view,arch_db:website_forum.users
 msgid "Avatar"
-msgstr ""
+msgstr "Άβαταρ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -716,9 +724,9 @@ msgid "Avoid unnecessary introductions (Hi,... Please... Thanks...),"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
 #: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:345
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Bad Request"
 msgstr ""
@@ -742,11 +750,6 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Biography"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid "Bronwe badge"
 msgstr ""
 
 #. module: website_forum
@@ -840,7 +843,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_view
 msgid "Can View"
-msgstr ""
+msgstr "Μπορεί να Προβληθεί"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
@@ -874,7 +877,7 @@ msgstr "Πόλη"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Clear"
-msgstr ""
+msgstr "Καθαρισμός"
 
 #. module: website_forum
 #. openerp-web
@@ -1021,12 +1024,14 @@ msgid ""
 "Congratulations! Your email has just been validated. You may now participate"
 " to our forums."
 msgstr ""
+"Συγχαρητήρια! Το email σας έχει μόλις επικυρωθεί. Τώρα μπορείτε να "
+"συμμετάσχετε στα φόρουμ μας."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__content
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Content"
-msgstr ""
+msgstr "Περιεχόμενα"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_all
@@ -1071,7 +1076,7 @@ msgstr "Χώρα"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Country..."
-msgstr ""
+msgstr "Χώρα..."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_date
@@ -1149,7 +1154,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Delete"
-msgstr ""
+msgstr "Διαγραφή"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_all
@@ -1194,12 +1199,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Discussion"
-msgstr ""
+msgstr "Συζήτηση"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_discussion
 msgid "Discussions"
-msgstr ""
+msgstr "Συζητήσεις"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__display_name
@@ -1226,7 +1231,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
-msgstr ""
+msgstr "Επεξεργασία"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -1416,21 +1421,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_follower_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Ακόλουθοι"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_channel_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_channel_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Ακόλουθοι (Κανάλια)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Ακόλουθοι (Συνεργάτες)"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1472,7 +1477,10 @@ msgid "Forum Karma"
 msgstr ""
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:34
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
+#, python-format
 msgid "Forum Name"
 msgstr ""
 
@@ -1480,18 +1488,18 @@ msgstr ""
 #: model:ir.model,name:website_forum.model_forum_post
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Forum Post"
-msgstr ""
+msgstr "Ανάρτηση Φόρουμ"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Forum Posts"
-msgstr ""
+msgstr "Αναρτήσεις Φόρουμ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Forum Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Φόρουμ"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
@@ -1503,21 +1511,21 @@ msgstr ""
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Forums"
-msgstr ""
+msgstr "Φόρουμ"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
-msgid "Gamification badge"
+msgid "Gamification Badge"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
-msgid "Gamification challenge"
+msgid "Gamification Challenge"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
-msgid "Gamification user badge"
+msgid "Gamification User Badge"
 msgstr ""
 
 #. module: website_forum
@@ -1613,6 +1621,11 @@ msgid "Help"
 msgstr "Βοήθεια"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Hide Intro"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "How to create a physical inventory at an anterior date?, How is the "
@@ -1639,14 +1652,14 @@ msgstr "Κωδικός"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_unread
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error
@@ -1718,7 +1731,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_is_follower
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Είναι Ακόλουθος"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__has_validated_answer
@@ -1733,11 +1746,11 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Φαίνεται ότι το email σας δεν έχει επαληθευτεί."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:889
-#: code:addons/website_forum/models/forum.py:909
+#: code:addons/website_forum/models/forum.py:890
+#: code:addons/website_forum/models/forum.py:910
 #, python-format
 msgid "It is not allowed to vote for its own post."
 msgstr ""
@@ -1800,7 +1813,7 @@ msgstr "Τελευταία τροποποίηση στις"
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 msgid "Last Updated"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__write_uid
@@ -1826,7 +1839,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση:"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_25
@@ -1838,13 +1851,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Link"
-msgstr ""
+msgstr "Σύνδεσμος"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_link
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Links"
-msgstr ""
+msgstr "Σύνδεσμοι"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_main_attachment_id
@@ -1871,7 +1884,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Μηνύματα"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_moderate
@@ -1891,7 +1904,7 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 msgid "Most Voted"
-msgstr ""
+msgstr "Περισσότερο Ψηφισμένα"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -1938,12 +1951,11 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "New Discussion"
-msgstr ""
+msgstr "Νέα Συζήτηση"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:32
-#: model_terms:ir.ui.view,arch_db:website_forum.content_new_forum
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:33
 #, python-format
 msgid "New Forum"
 msgstr ""
@@ -1965,7 +1977,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Newest"
-msgstr ""
+msgstr "Νεότερα"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_2
@@ -1996,7 +2008,7 @@ msgid "Nofollow links"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:510
+#: code:addons/website_forum/models/forum.py:511
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -2012,7 +2024,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Πλήθος ενεργειών"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__posts_count
@@ -2022,7 +2034,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__views
 msgid "Number of Views"
-msgstr ""
+msgstr "Αριθμός Προβολών"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_count
@@ -2046,7 +2058,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error_counter
@@ -2058,14 +2070,14 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
 msgid "Number of posts waiting for validation"
-msgstr ""
+msgstr "Αριθμός αναρτήσεων που αναμένουν επικύρωση"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_unread_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_unread_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -2081,7 +2093,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "On"
-msgstr ""
+msgstr "Ενεργό"
 
 #. module: website_forum
 #. openerp-web
@@ -2093,17 +2105,17 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Options"
-msgstr ""
+msgstr "Επιλογές"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Orders"
-msgstr ""
+msgstr "Ταξινομήσεις"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all
 msgid "Our forums"
-msgstr ""
+msgstr "Τα δικά μας Φόρουμ"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
@@ -2116,12 +2128,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Pending"
-msgstr ""
+msgstr "Εκρεμμής"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Άνθρωποι"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__plain_content
@@ -2176,7 +2188,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr ""
+msgstr "Καταχωρηση"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -2198,11 +2210,16 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
 msgid "Post Title"
-msgstr ""
+msgstr "Τίτλος Ανάρτησης"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Post Types"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_vote
+msgid "Post Vote"
 msgstr ""
 
 #. module: website_forum
@@ -2231,7 +2248,7 @@ msgid "Posted 100 comments"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:447
+#: code:addons/website_forum/models/forum.py:448
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
@@ -2241,7 +2258,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Posts"
-msgstr ""
+msgstr "Αναρτήσεις"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -2281,10 +2298,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Question"
-msgstr ""
+msgstr "Ερώτηση"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:523
+#: code:addons/website_forum/models/forum.py:524
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2299,7 +2316,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Question has accepted answer"
-msgstr ""
+msgstr "Η ερώτηση έχει αποδεκτή απάντηση"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2322,7 +2339,7 @@ msgid "Question set as favorite by 5 users"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:345
 #, python-format
 msgid "Question should not be empty."
 msgstr ""
@@ -2358,10 +2375,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Questions"
-msgstr ""
+msgstr "Ερωτήσεις"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:541
+#: code:addons/website_forum/models/forum.py:542
 #, python-format
 msgid "Re: %s"
 msgstr ""
@@ -2379,7 +2396,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_reason_id
 msgid "Reason"
-msgstr ""
+msgstr "Αιτία"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__reason_type
@@ -2389,7 +2406,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "Reason:"
-msgstr ""
+msgstr "Αιτία:"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_1
@@ -2399,11 +2416,16 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
-msgstr ""
+msgstr "Ανακατεύθυνση σε εξωτερικό σύνδεσμο"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Refuse"
+msgstr "Άρνηση"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Register"
 msgstr ""
 
 #. module: website_forum
@@ -2432,7 +2454,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reply"
-msgstr ""
+msgstr "Απάντηση"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__self_reply
@@ -2479,7 +2501,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Αναζήτηση σε Ανάρτηση"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_time_decay
@@ -2536,7 +2558,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Share"
-msgstr ""
+msgstr "Κοινοποίηση"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
@@ -2558,7 +2580,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
 msgid "Sharing Options"
-msgstr ""
+msgstr "Επιλογές Κοινής Χρήσης"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -2614,12 +2636,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Sort by"
-msgstr ""
+msgstr "Ταξινόμηση κατά"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Stats"
-msgstr ""
+msgstr "Στατιστικά"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__state
@@ -2664,7 +2686,7 @@ msgstr "Εικέτα"
 #. module: website_forum
 #: sql_constraint:forum.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Το όνομα ετικέτας υπάρχει ήδη !"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__tag_ids
@@ -2712,7 +2734,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "The"
-msgstr ""
+msgstr "Το"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2755,6 +2777,7 @@ msgstr ""
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -2771,7 +2794,7 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:410
+#: code:addons/website_forum/models/forum.py:411
 #, python-format
 msgid "This forum does not allow %s"
 msgstr ""
@@ -2821,14 +2844,14 @@ msgstr "Τίτλος"
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Title must not be empty"
-msgstr ""
+msgstr "Ο Τίτλος δεν μπορεί να είναι κενός."
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Title should not be empty."
-msgstr ""
+msgstr "Ο Τίτλος δεν μπορεί να είναι κενός."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__recipient_id
@@ -2897,14 +2920,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_unread
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Μη αναγνωσμένα μηνύματα"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_unread_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_unread_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -2914,12 +2937,12 @@ msgstr "Ενημέρωση"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date
 msgid "Update on"
-msgstr ""
+msgstr "Ενημέρωση από"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_uid
 msgid "Updated by"
-msgstr ""
+msgstr "Ενημερώθηκε από"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
@@ -2970,7 +2993,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Validate"
-msgstr ""
+msgstr "Επικύρωση"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -2993,7 +3016,6 @@ msgid "Views"
 msgstr "Προβολές"
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_forum_post_vote
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
 msgid "Vote"
 msgstr ""
@@ -3002,17 +3024,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Votes"
-msgstr ""
+msgstr "Ψήφοι"
 
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Waiting Validation"
-msgstr ""
+msgstr "Αναμονή Επικύρωσης"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
-msgstr ""
+msgstr "Αναμονή για επικύρωση"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__forum_waiting_posts_count
@@ -3043,35 +3065,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Μηνύματα Ιστότοπου"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_description
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "Μετά περιγραφή ιστότοπου"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_keywords
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_keywords
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Μετά λέξεις-κλειδιά ιστότοπου"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_title
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_title
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "Μετά-τίτλος Ιστότοπου"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_og_img
@@ -3083,6 +3105,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
 msgid "Welcome Message"
+msgstr "Μήνυμα Καλωσορίσματος"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Welcome!"
 msgstr ""
 
 #. module: website_forum
@@ -3127,14 +3154,14 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:138
+#: code:addons/website_forum/models/forum.py:139
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:437
+#: code:addons/website_forum/models/forum.py:438
 #, python-format
 msgid "You cannot create recursive forum posts."
 msgstr ""
@@ -3145,7 +3172,7 @@ msgid "You cannot post an empty answer"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:952
+#: code:addons/website_forum/models/forum.py:953
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
 msgstr ""
@@ -3167,12 +3194,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "Your Discussion Title..."
-msgstr ""
+msgstr "Ο Τίτλος της Συζήτησής σας..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Your Question Title..."
-msgstr ""
+msgstr "Ο Τίτλος της Ερώτησής σας..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_reply
@@ -3207,7 +3234,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "από"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3272,7 +3299,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "π.χ. https://www.odoo.com"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
@@ -3511,7 +3538,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "views"
-msgstr ""
+msgstr "προβολές"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_12
@@ -3526,7 +3553,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "waiting for validation"
-msgstr ""
+msgstr "αναμονή για επικύρωση"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3538,7 +3565,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "website"
-msgstr ""
+msgstr "ιστότοπος"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help

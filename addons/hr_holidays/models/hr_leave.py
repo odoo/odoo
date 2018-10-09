@@ -115,7 +115,7 @@ class HolidaysRequest(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         domain=[('valid', '=', True)])
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
-    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
+    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=False)
     # HR data
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True,
@@ -387,7 +387,7 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             domain = [
                 ('date_from', '<=', holiday.date_to),
-                ('date_to', '>=', holiday.date_from),
+                ('date_to', '>', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
                 ('id', '!=', holiday.id),
                 ('state', 'not in', ['cancel', 'refuse']),

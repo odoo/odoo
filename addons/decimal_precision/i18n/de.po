@@ -3,21 +3,14 @@
 # * decimal_precision
 # 
 # Translators:
-# Tina Rittmüller <tr@ife.de>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Niki Waibel, 2017
-# Martin Trigaux, 2017
-# Thomas Neu <t.neu@runbox.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Wolfgang Taferner, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Anja Funk <anja.funk@afimage.de>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,10 +37,16 @@ msgid "Decimal Accuracy"
 msgstr "Dezimalstellen"
 
 #. module: decimal_precision
-#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
-#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
+#: model:ir.model,name:decimal_precision.model_decimal_precision
+#: model_terms:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
+#: model_terms:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
 msgid "Decimal Precision"
 msgstr "Dezimalstellen"
+
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_decimal_precision_test
+msgid "Decimal Precision Test"
+msgstr ""
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__digits
@@ -105,21 +104,11 @@ msgid "Only one value can be defined for each given usage!"
 msgstr "Es kann nur ein Wert für alle Anwendungsfälle hinterlegt werden"
 
 #. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
+msgid "Qweb Field Float"
+msgstr ""
+
+#. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__name
 msgid "Usage"
 msgstr "Verwendung"
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision
-msgid "decimal.precision"
-msgstr "Nachkommastellen"
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision_test
-msgid "decimal.precision.test"
-msgstr "decimal.precision.test"
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
-msgid "ir.qweb.field.float"
-msgstr "ir.qweb.field.float"

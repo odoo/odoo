@@ -110,6 +110,7 @@ class MailTestAlias(models.Model):
 
 class MailModel(models.Model):
     _name = 'test_performance.mail'
+    _description = 'Test Performance Mail'
     _inherit = 'mail.thread'
 
     name = fields.Char()

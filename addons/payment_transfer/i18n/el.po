@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +23,13 @@ msgstr ""
 #: code:addons/payment_transfer/models/payment.py:83
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr ", βρέθηκαν πολλαπλές παραγγελίες"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:81
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr ", δεν βρέθηκε παραγγελία"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:41
@@ -42,22 +43,29 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<h3>Παρακαλώ χρησιμοποιήστε τις παρακάτω λεπτομέρειες για το έμβασμα</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Επικοινωνία</h4>\n"
+"<p>Χρησιμοποιήστε το όνομα της παραγγελίας ως αναφορά επικοινωνίας.</p>\n"
+"</div>"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Account"
-msgstr ""
+msgstr "Τραπεζικός Λογαριασμός"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:39
@@ -68,22 +76,22 @@ msgstr "Τραπεζικοί Λογαριασμοί"
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Μη αυτόματη διαμόρφωση"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
@@ -93,35 +101,35 @@ msgstr "Αποδέκτης Πληρωμής"
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Συναλλαγή Πληρωμής"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment_transfer
 #: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
 msgid "Provider"
-msgstr ""
+msgstr "Πάροχος"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "Έμβασμα"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:79
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "λήφθηκαν δεδομένα αναφοράς %s"

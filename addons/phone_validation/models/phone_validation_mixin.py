@@ -7,6 +7,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 
 class PhoneValidationMixin(models.AbstractModel):
     _name = 'phone.validation.mixin'
+    _description = 'Phone Validation Mixin'
 
     def _phone_get_country(self):
         if 'country_id' in self and self.country_id:

@@ -6,13 +6,14 @@
 # Martin Trigaux, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # amos lin <seeing@edirect168.com>, 2018
+# sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: amos lin <seeing@edirect168.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-10-02 10:05+0000\n"
+"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,7 +157,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "<b>Communication: </b>"
-msgstr ""
+msgstr "<b>通訊：</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -406,6 +407,7 @@ msgstr "遺棄的購物車"
 #: model:ir.actions.act_window,name:website_sale.action_abandoned_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #, python-format
 msgid "Abandoned Carts"
 msgstr "遺棄的購物車"
@@ -424,23 +426,19 @@ msgstr "放棄時長"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"Abandoned carts are all carts for which no transaction has been confirmed "
-"while the customer has filled in their address. You can find them in "
-"*Website > Orders > Abandoned Carts*. From there you can send a recovery "
-"email to stimulate the customers to resume their order."
+"Abandoned carts are all carts left unconfirmed by website visitors. You can "
+"find them in *Website > Orders > Abandoned Carts*. From there you can send "
+"recovery emails to visitors who entered their contact details."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
-"Accessories show up when the customer reviews the cart before paying (cross-"
-"sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
-"figures out a list of accessories based on all the products added to cart."
-msgstr "當客戶付款前審查購物車時，顯示貨物相關配件（交叉銷售策略，例如對於電腦：鼠標，鍵盤等）。一種可以得出購物車中所有產品配件列表的算法。"
+"Accessories show up when the customerreviews the cart before payment (cross-"
+"sell strategy)."
+msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__accessory_product_ids
 msgid "Accessory Products"
 msgstr "附件產品"
@@ -460,6 +458,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Add to Cart"
 msgstr "加入購物車"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_options.js:88
+#, python-format
+msgid "Add to cart"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -488,7 +493,6 @@ msgid "Allow to use on"
 msgstr "允許用於"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 msgid "Alternative Products"
 msgstr "替代產品"
@@ -502,6 +506,13 @@ msgstr "替代產品:"
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
 msgstr "遺棄購物車數量"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"An error occured while processing your payment. Please try again or contact "
+"your administrator."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -641,17 +652,6 @@ msgstr ""
 "觸摸屏界面來瀏覽您的產品。"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
-#: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
-msgid ""
-"Categories can be published on the Shop page (online catalog grid) to help "
-"customers find all the items within a category. To publish them, go to the "
-"Shop page, hit Customize and turn *Product Categories* on. A product can "
-"belong to several categories."
-msgstr ""
-"可以在「商店」頁面（線上目錄網格）上發佈類別，幫助客戶查找某一類別的所有產品。要發佈類別，請轉到「商店」頁面，點選「定制」並啟用「產品類別」。一件產品可以屬於多個類別。"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "兒童類"
@@ -690,11 +690,6 @@ msgstr "點選<EM>繼續</em> 以打造產品。"
 #, python-format
 msgid "Click on this button so your customers can see it."
 msgstr "點選此按鈕後，您的客戶便能夠看到該產品。"
-
-#. module: website_sale
-#: selection:product.attribute,type:0
-msgid "Color"
-msgstr "顏色"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -742,6 +737,11 @@ msgid "Compute shipping costs on orders"
 msgstr "按訂單計算運費"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設置"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Confirm Order"
 msgstr "確認訂單"
@@ -760,8 +760,8 @@ msgstr "在收到付款後確認訂單。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
-msgid "Confirmed"
-msgstr "已確認"
+msgid "Confirmation Date"
+msgstr "確認日期"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -773,6 +773,13 @@ msgstr "已確認訂單"
 #: model:ir.model,name:website_sale.model_res_partner
 msgid "Contact"
 msgstr "聯絡人"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_options.js:87
+#, python-format
+msgid "Continue Shopping"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -825,6 +832,16 @@ msgid "Custom payment instructions"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Customer"
+msgstr "客戶"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Customer Country"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
 msgid "Customers"
 msgstr "客戶"
@@ -864,13 +881,11 @@ msgid ""
 msgstr "交貨方式可在網站中選擇：客戶支付運費"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
 msgstr "網站的說明"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr "判斷在電子商務網站顯示順序"
@@ -897,7 +912,7 @@ msgstr "顯示名稱"
 #: code:addons/website_sale/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "無權訪問，跳過用戶摘要電子郵件的此數據"
 
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
@@ -968,7 +983,7 @@ msgid "Enter a name for your new product"
 msgstr "為您的新產品輸入一個名稱"
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:92
+#: code:addons/website_sale/models/product.py:93
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "錯誤！您不能創建循環類別。"
@@ -1003,7 +1018,7 @@ msgstr "從準備好開發票的訂單中生成發票。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"Generate the invoice automatically when the electronic payment is confirmed"
+"Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
 
 #. module: website_sale
@@ -1022,26 +1037,19 @@ msgid "Grant discounts on sales order lines"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Group By"
+msgstr "分組"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style__html_class
 msgid "HTML Classes"
 msgstr "HTML 類"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_attribute_value__html_color
-msgid "HTML Color Index"
-msgstr "HTML 顏色索引"
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP 路由"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_attribute_value__html_color
-msgid ""
-"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
-"color on the website if the attibute type is 'Color'."
-msgstr "在這裡您可以設定一個特定的HTML顏色索引（例如# FF0000）來顯示網站上的顏色，如果屬性類型是「顏色」。"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
@@ -1089,7 +1097,6 @@ msgid "Image Name"
 msgstr "圖像名稱"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__product_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_image_ids
 msgid "Images"
 msgstr "圖片"
@@ -1100,7 +1107,7 @@ msgid "Installs the \"Website Delivery Information\" application"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:542
+#: code:addons/website_sale/controllers/main.py:521
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "無效電郵！請輸入有效的電子信件地址。"
@@ -1127,18 +1134,12 @@ msgid "Invoicing"
 msgstr "開立發票"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__is_published
-#: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
-msgid "Is published"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
 msgstr "向客戶開發票"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:150
+#: code:addons/website_sale/models/sale_order.py:166
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
 msgstr ""
@@ -1163,7 +1164,6 @@ msgstr "最後修改時間"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
-#: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
 msgid "Last Online Sales Order"
 msgstr "最近的線上銷售訂單"
 
@@ -1210,6 +1210,11 @@ msgid ""
 msgstr "讓我們查看您的管理儀表盤來立即準備好您的電子商務網站。"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
+msgid "Linked Order Line"
+msgstr "鏈接的訂單明細"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Log In"
 msgstr "登錄"
@@ -1251,7 +1256,7 @@ msgstr "我的購物車"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale.editor.js:33
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:31
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1276,9 +1281,8 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:1008
-#: code:addons/website_sale/static/src/js/website_sale.editor.js:32
-#: model_terms:ir.ui.view,arch_db:website_sale.content_new_product
+#: code:addons/website_sale/controllers/main.py:993
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:30
 #, python-format
 msgid "New Product"
 msgstr "新產品"
@@ -1350,9 +1354,15 @@ msgstr "一旦您點選<b>保存</b>，將會更新您的產品。"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:39
+#: model:ir.ui.menu,name:website_sale.menu_report_sales
 #, python-format
 msgid "Online Sales"
 msgstr "線上銷售"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
+msgid "Online Sales Analysis"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -1372,9 +1382,26 @@ msgid "Open your website app here."
 msgstr "在此打開網站應用。"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_options
-msgid "Optional Products"
-msgstr "可選產品"
+#: code:addons/website_sale/models/sale_order.py:236
+#, python-format
+msgid "Option for:"
+msgstr "選項:"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_price
+msgid "Option not available"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:238
+#, python-format
+msgid "Option:"
+msgstr "選項:"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__option_line_ids
+msgid "Options Linked"
+msgstr "鏈接選項"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -1383,6 +1410,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Order Date"
 msgstr "訂購日期"
 
@@ -1588,6 +1616,13 @@ msgid "Print"
 msgstr "列印"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_options.js:86
+#, python-format
+msgid "Proceed to Checkout"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
@@ -1599,19 +1634,25 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_product_product
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #, python-format
 msgid "Product"
 msgstr "產品"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_product_attribute
-msgid "Product Attribute"
-msgstr "產品屬性"
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Product Category"
+msgstr "產品類別"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 msgid "Product Comparison Tool"
 msgstr "產品比較工具"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_image
+msgid "Product Image"
+msgstr "產品圖片"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1635,6 +1676,11 @@ msgid "Product Public Categories"
 msgstr "產品公開類別"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_product_style
+msgid "Product Style"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
 msgid "Product Template"
 msgstr "產品模板"
@@ -1643,11 +1689,6 @@ msgstr "產品模板"
 #: model:ir.ui.menu,name:website_sale.product_catalog_variants
 msgid "Product Variants"
 msgstr "產品變體"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_price
-msgid "Product not available"
-msgstr "產品不可用"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
@@ -1724,53 +1765,12 @@ msgid "Quantity"
 msgstr "數量"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_sale_order
-msgid "Quotation"
-msgstr "報價"
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Recovery Email Sent"
+msgstr ""
 
 #. module: website_sale
-#: selection:product.attribute,type:0
-msgid "Radio"
-msgstr "單選"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__rating_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
-msgid "Rating"
-msgstr "評分"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__rating_last_feedback
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
-msgid "Rating Last Feedback"
-msgstr "最新回饋評級"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__rating_last_image
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_image
-msgid "Rating Last Image"
-msgstr "最新圖像評級"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__rating_last_value
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_value
-msgid "Rating Last Value"
-msgstr "最新值評級"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__rating_count
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_count
-msgid "Rating count"
-msgstr "點評數"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__rating_last_feedback
-#: model:ir.model.fields,help:website_sale.field_product_template__rating_last_feedback
-msgid "Reason of the rating"
-msgstr "點評的理由"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
 msgstr "要發送的恢復電子信件"
 
@@ -1798,9 +1798,8 @@ msgstr "報告"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_id
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
-#: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "限制發佈到本網站。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
@@ -1813,9 +1812,7 @@ msgid "Review Order"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__is_seo_optimized
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
-#: model:ir.model.fields,field_description:website_sale.field_product_template__is_seo_optimized
 msgid "SEO optimized"
 msgstr ""
 
@@ -1823,6 +1820,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Sale"
 msgstr "銷售"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_order
+msgid "Sale Order"
+msgstr "銷售訂單"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
@@ -1834,8 +1836,6 @@ msgstr "銷售報表"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:35
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:49
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
-#: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
-#: model:ir.ui.menu,name:website_sale.menu_report_sales
 #: model_terms:ir.ui.view,arch_db:website_sale.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #, python-format
@@ -1843,14 +1843,19 @@ msgid "Sales"
 msgstr "銷售"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_crm_team
+msgid "Sales Channels"
+msgstr "銷售團隊"
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "銷售訂單行"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "銷售訂單統計"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
@@ -1866,7 +1871,6 @@ msgid "Sales Since Last"
 msgstr "自上段時間以來的銷售情況"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_crm_team
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesteam_id
 #: model:ir.model.fields,field_description:website_sale.field_website__salesteam_id
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1885,9 +1889,9 @@ msgid "Saved Payment Data"
 msgstr "保存的付款數據"
 
 #. module: website_sale
-#: selection:product.attribute,type:0
-msgid "Select"
-msgstr "選擇"
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Search Abandoned Sales Orders"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -1897,13 +1901,6 @@ msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr "選擇<b>新產品</b>來創建產品和管理它的屬性來提高您的銷售額。"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"Select optional products from the configuration form of your main products "
-"(in Sales tab)."
-msgstr "在主要產品的配置表格中選擇可選產品（位於「銷售」選項卡中）。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -2024,13 +2021,11 @@ msgid "Size"
 msgstr "尺寸："
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_x
 msgid "Size X"
 msgstr "尺寸 X"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_y
 msgid "Size Y"
 msgstr "尺寸 Y"
@@ -2057,7 +2052,7 @@ msgid "Sold"
 msgstr "已售出"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:560
+#: code:addons/website_sale/controllers/main.py:539
 #, python-format
 msgid "Some required fields are empty."
 msgstr "一些必須的字段是空的。"
@@ -2088,6 +2083,11 @@ msgid "State of the website sale onboarding payment acquirer step"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Status"
+msgstr "狀態"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Street 2"
 msgstr "街道 2"
@@ -2113,7 +2113,6 @@ msgid "Style Name"
 msgstr "樣式名稱"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_style_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_style_ids
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Styles"
@@ -2125,17 +2124,11 @@ msgid "Subtotal:"
 msgstr "小計:"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid ""
-"Suggest more expensive alternatives to your customers (upsell strategy). "
-"Those products show up on the product page."
-msgstr "向您的客戶推薦更貴的替代品（增銷策略）。這些產品顯示在產品頁面中。"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Suggest optional products when adding to cart"
-msgstr "在添加到購物車時推薦可選產品"
+"Suggest alternatives to your customer(upsell strategy).Those product show up"
+" on the product page."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -2176,17 +2169,19 @@ msgid "The SEPA QR Code informations are not set correctly."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__website_url
-#: model:ir.model.fields,help:website_sale.field_product_template__website_url
-msgid "The full URL to access the document through the website."
-msgstr "通過網站訪問單據的完整網址。"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
 msgstr "此處選擇的模式適用於任何新創建的產品的發票政策，但不適用於已有產品的發票政策。"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
+msgid ""
+"The product will be available in each mentioned e-commerce category. Go "
+"toShop > Customize and enable 'E-commerce categories' to view all e-commerce"
+" categories."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -2256,11 +2251,6 @@ msgid "True"
 msgstr "真"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_attribute__type
-msgid "Type"
-msgstr "類型"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "UPS"
 msgstr "UPS"
@@ -2276,6 +2266,7 @@ msgstr "USPS"
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #, python-format
 msgid "Unpaid Orders"
 msgstr "未支付的訂單"
@@ -2305,25 +2296,18 @@ msgid "View Cart ("
 msgstr "查看購物車("
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_published
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
-msgid "Visible on current website"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_website
 #: model:ir.model.fields,field_description:website_sale.field_account_invoice__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_id
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Website"
 msgstr "網站"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
-#: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
 msgstr "網站產品目錄"
@@ -2334,7 +2318,6 @@ msgid "Website Public Categories"
 msgstr "網站公眾種類"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_sequence
 msgid "Website Sequence"
 msgstr "網站序列"
@@ -2345,36 +2328,22 @@ msgid "Website Shop"
 msgstr "購物網站"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
-msgid "Website URL"
-msgstr "網站網址"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_meta_description
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_description
 msgid "Website meta description"
 msgstr "網站元說明"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_meta_keywords
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_keywords
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_keywords
 msgid "Website meta keywords"
 msgstr "網站元關鍵詞"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_meta_title
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_title
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_title
 msgid "Website meta title"
 msgstr "網站元標題"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_meta_og_img
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_og_img
 msgid "Website opengraph image"
 msgstr ""
 
@@ -2449,8 +2418,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid ""
-"You'll find here all the carts abandoned by your visitors, if they completed their address.\n"
-"                You should send them a recovery email!"
+"You'll find here all the carts abandoned by your visitors.\n"
+"                If they completed their address, you should send them a recovery email!"
 msgstr ""
 
 #. module: website_sale
@@ -2563,26 +2532,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "o_website_sale_search"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_product_attribute_value
-msgid "product.attribute.value"
-msgstr "product.attribute.value"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_product_image
-msgid "product.image"
-msgstr "product.image"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_product_style
-msgid "product.style"
-msgstr "產品.風格"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note

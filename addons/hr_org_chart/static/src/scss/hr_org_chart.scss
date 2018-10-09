@@ -50,6 +50,7 @@
     // ORGANIGRAM LINES
     .o_field_widget, .o_org_chart_group_up, .o_org_chart_group_down {
         position: relative;
+        width: 100%;
     }
 
     .o_org_chart_group_up {
@@ -85,6 +86,7 @@
 
     .o_org_chart_group_down {
         margin-left: $tmp-gap-base;
+        padding-right: $tmp-gap-base;
 
         &:before {
             @include o-hr-org-chart-line;
@@ -199,7 +201,7 @@
             }
             .media-body > a {
                 padding-left: 10px;
-                max-width: calc(100% - 40px);
+                max-width: 100%;
                 display: block;
 
                 .o_media_heading {

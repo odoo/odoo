@@ -22,4 +22,23 @@
         </t>
     </t>
 
+    <div t-name="iap.credit_checker" class="mt-2 row">
+        <div class="col-sm">
+            <div class="loading text-muted">
+                <i class="fa fa-spinner fa-spin"/> Checking remaining credit ...
+            </div>
+            <div class="insufficient">
+                <i class="fa fa-exclamation-triangle text-warning"/> Insufficient credit
+            </div>
+            <div class="sufficient">
+                <i class="fa fa-check-circle text-success"/> Remaining : <b class="remaining_credits"/> credits
+            </div>
+            <div class="error">
+                <i class="fa fa-question-circle text-muted"/> Temporarily unavailable
+            </div>
+        </div>
+        <div class="col-sm text-right">
+            <button class="btn btn-link buy_credits"><i class="fa fa-arrow-right"/> Buy more credits</button>
+        </div>
+    </div>
 </template>

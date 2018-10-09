@@ -16,6 +16,7 @@ class Users(models.Model):
     """
     _name = 'res.users'
     _inherit = ['res.users']
+    _description = 'Users'
 
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
             help="Email address internally associated with this user. Incoming "\
@@ -23,7 +24,7 @@ class Users(models.Model):
     alias_contact = fields.Selection([
         ('everyone', 'Everyone'),
         ('partners', 'Authenticated Partners'),
-        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact')
+        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact', readonly=False)
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],
@@ -149,6 +150,7 @@ class res_groups_mail_channel(models.Model):
     """
     _name = 'res.groups'
     _inherit = 'res.groups'
+    _description = 'Access Groups'
 
     @api.multi
     def write(self, vals, context=None):

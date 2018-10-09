@@ -7,13 +7,15 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
+# Thomas Pot <thomas@open2bizz.nl>, 2018
+# Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,9 +31,9 @@ msgid "%s changed cost from %s to %s - %s"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_move
-msgid "Account Entry"
-msgstr "Boeking"
+#: model:ir.model,name:stock_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Rekeningstelsel sjabloom"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
@@ -94,7 +96,7 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:502
+#: code:addons/stock_account/models/stock.py:510
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -105,7 +107,7 @@ msgstr ""
 "verwerken van deze bewerking."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:504
+#: code:addons/stock_account/models/stock.py:512
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -150,7 +152,12 @@ msgid "Choose your date"
 msgstr "KIes uw datum"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:579
+#: model:ir.model,name:stock_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:587
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -266,6 +273,7 @@ msgstr "Voorraad locaties"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_quantity_history.py:25
+#: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
 #: model:ir.actions.act_window,name:stock_account.product_valuation_action
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_product__property_valuation
@@ -286,6 +294,11 @@ msgstr "Factuur"
 #: model:ir.model,name:stock_account.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Factuurregel"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_move
+msgid "Journal Entries"
+msgstr "Boekingen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -344,11 +357,6 @@ msgid "No difference between the standard price and the new price."
 msgstr "Geen verschil tussen de kostprijs en de nieuwe prijs."
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_move_line
-msgid "Packing Operation"
-msgstr "Verpakking bewerking"
-
-#. module: stock_account
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
 msgstr "Periodiek (handmatig)"
@@ -365,8 +373,8 @@ msgstr "Prijs"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Verwervingsaanvraag"
+msgid "Procurement Group"
+msgstr "Verwervingsgroep"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -377,6 +385,11 @@ msgstr "Product"
 #: model:ir.model,name:stock_account.model_product_category
 msgid "Product Category"
 msgstr "Productcategorie"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Productmutaties (voorraadmutatieregels)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -415,6 +428,11 @@ msgid "Return Picking"
 msgstr "Retour boeken"
 
 #. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_return_picking_line
+msgid "Return Picking Line"
+msgstr ""
+
+#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Standard Price"
@@ -448,12 +466,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__stock_fifo_manual_move_ids
 msgid "Stock Fifo Manual Move"
-msgstr "Stock fifo manuele voorraadmutatie"
+msgstr "Voorraad FIFO handmatige voorraadmutatie"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__stock_fifo_real_time_aml_ids
 msgid "Stock Fifo Real Time Aml"
-msgstr "Stock FIFO real time aml"
+msgstr "Voorraad FIFO real time aml"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -512,12 +530,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Voorraadwaarde rekening (uitgaand)"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Sjabloon voor grootboekschema"
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:528
+#: code:addons/stock_account/models/stock.py:536
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -527,7 +540,7 @@ msgstr ""
 "verkeerde waardering te voorkomen."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:350
+#: code:addons/stock_account/models/stock.py:358
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
@@ -535,7 +548,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:361
+#: code:addons/stock_account/models/stock.py:369
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -547,7 +560,7 @@ msgstr ""
 "moeten gaan."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:359
+#: code:addons/stock_account/models/stock.py:367
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
@@ -621,11 +634,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_product_tree2
 msgid "Valuation"
 msgstr "Waarde"
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
-msgid "Valuation Report"
-msgstr "Voorraadwaarde rapport"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:246
@@ -726,7 +734,7 @@ msgstr ""
 " deze rekening de huidige waarde van de producten bevatten."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:500
+#: code:addons/stock_account/models/stock.py:508
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -735,7 +743,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:506
+#: code:addons/stock_account/models/stock.py:514
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."
@@ -748,13 +756,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "_Apply"
 msgstr "_Toepassen"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_return_picking_line
-msgid "stock.return.picking.line"
-msgstr "stock.return.picking.line"

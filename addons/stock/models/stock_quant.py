@@ -24,7 +24,7 @@ class StockQuant(models.Model):
     # so user can filter on template in webclient
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
-        related='product_id.product_tmpl_id')
+        related='product_id.product_tmpl_id', readonly=False)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
@@ -340,7 +340,7 @@ class StockQuant(models.Model):
 class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
     _name = "stock.quant.package"
-    _description = "Physical Packages"
+    _description = "Packages"
     _order = 'name'
 
     name = fields.Char(
@@ -418,7 +418,7 @@ class QuantPackage(models.Model):
         return action
 
     def _get_contained_quants(self):
-        return self.env['stock.quant'].search([('package_id', 'child_of', self.ids)])
+        return self.env['stock.quant'].search([('package_id', 'in', self.ids)])
 
     def _get_all_products_quantities(self):
         '''This function computes the different product quantities for the given package

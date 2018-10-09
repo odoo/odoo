@@ -148,7 +148,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('basic grouped rendering with active field', function (assert) {
+    QUnit.test('basic grouped rendering with active field (archivable by default)', function (assert) {
         assert.expect(9);
 
         // add active field on partner model and make all records active
@@ -190,6 +190,75 @@ QUnit.module('Views', {
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
         $('.modal-footer .btn-primary').click(); // Click on 'Ok'
         assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 0, "last column should not contain any records");
+        kanban.destroy();
+    });
+
+    QUnit.test('basic grouped rendering with active field and archive enabled (archivable true)', function (assert) {
+        assert.expect(7);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" archivable="true">' +
+                        '<field name="active"/>' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        // check archive/restore all actions in kanban header's config dropdown
+        assert.ok(kanban.$('.o_kanban_header:first .o_kanban_config .o_column_archive_records').length, "should be able to archive all the records");
+        assert.ok(kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive_records').length, "should be able to restore all the records");
+
+        // archive the records of the first column
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3,
+            "last column should contain 3 records");
+        envIDs = [4];
+        kanban.$('.o_kanban_group:last .o_column_archive_records').click(); // Click on 'Archive All'
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-secondary').click(); // Click on 'Cancel'
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3, "still last column should contain 3 records");
+        kanban.$('.o_kanban_group:last .o_column_archive_records').click();
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-primary').click(); // Click on 'Ok'
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 0, "last column should not contain any records");
+        kanban.destroy();
+    });
+
+    QUnit.test('basic grouped rendering with active field and hidden archive buttons (archivable false)', function (assert) {
+        assert.expect(2);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" archivable="false">' +
+                        '<field name="active"/>' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        // check archive/restore all actions in kanban header's config dropdown
+        assert.strictEqual(
+            kanban.$('.o_kanban_header:first .o_kanban_config .o_column_archive_records').length, 0,
+            "should not be able to archive all the records");
+        assert.strictEqual(
+            kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive_records').length, 0,
+            "should not be able to restore all the records");
         kanban.destroy();
     });
 
@@ -2090,6 +2159,72 @@ QUnit.module('Views', {
         kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
         assert.ok(kanban.$('.o_kanban_group:first() > div:nth(1)').hasClass('o_kanban_quick_create'),
             "clicking on create should open the quick_create in the first column");
+        kanban.destroy();
+    });
+
+    QUnit.test('auto fold group when reach the limit', function (assert) {
+        assert.expect(7);
+
+        var data = this.data;
+        for (var i = 0; i < 12; i++) {
+            data.product.records.push({
+                id: (8 + i),
+                name: ("column"),
+            });
+            data.partner.records.push({
+                id: (20 + i),
+                foo: ("dumb entry"),
+                product_id: (8 + i),
+            });
+        }
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    return this._super.apply(this, arguments).then(function (result) {
+                        result[2].__fold = true;
+                        result[8].__fold = true;
+                        return result;
+                    });
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // we look if column are fold/unfold according what is expected
+        assert.notOk(kanban.$('.o_kanban_group:nth-child(2)').hasClass('o_column_folded'),
+            'second column must be unfolded by default');
+        assert.notOk(kanban.$('.o_kanban_group:nth-child(4)').hasClass('o_column_folded'),
+            'fourth column must be unfolded by default');
+        assert.notOk(kanban.$('.o_kanban_group:nth-child(10)').hasClass('o_column_folded'),
+            'tenth column must be unfolded by default');
+        assert.ok(
+            kanban.$('.o_kanban_group:nth-child(3)').hasClass('o_column_folded')
+            && kanban.$('.o_kanban_group:nth-child(9)').hasClass('o_column_folded'),
+            'third and ninth columns must be folded by default');
+        // we look if columns are actually fold after we reached the limit
+        assert.ok(
+            kanban.$('.o_kanban_group:nth-child(13)').hasClass('o_column_folded')
+            && kanban.$('.o_kanban_group:nth-child(14)').hasClass('o_column_folded'),
+            'thirteenth and fourtheenth columns must be folded because we reached the limit');
+        // we look if we have the right count of folded/unfolded column
+        assert.strictEqual(
+            kanban.$('.o_kanban_group:not(.o_column_folded)').length,
+            10, 'must have ten opened columns');
+        assert.strictEqual(
+            kanban.$('.o_kanban_group.o_column_folded').length,
+            4, 'must have four folded columns');
+
         kanban.destroy();
     });
 

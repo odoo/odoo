@@ -197,29 +197,19 @@
             <field name="image" type="base64" file="product/static/img/table01.png"/>
         </record>
 
-        <record id="product_attribute_line_1" model="product.attribute.line">
+        <record id="product_template_attribute_line_1" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="attribute_id" ref="product_attribute_1"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
         </record>
-        <record id="product_attribute_line_2" model="product.attribute.line">
+        <record id="product_template_attribute_line_2" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="attribute_id" ref="product_attribute_2"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"/>
         </record>
 
         <record id="product_product_4_product_template" model="product.template">
-            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2')])]"/>
-        </record>
-
-        <record id="product_product_4d" model="product.product">
-            <field name="active" eval="False"/>
-        </record>
-
-        <record id="product_attribute_price_1" model="product.attribute.price">
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="value_id" ref="product_attribute_value_2"/>
-            <field name="price_extra">50.40</field>
+            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_template_attribute_line_1'), ref('product.product_template_attribute_line_2')])]"/>
         </record>
 
         <record id="product_product_5" model="product.product">
@@ -315,19 +305,39 @@
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
         </record>
 
-        <record id="product_attribute_line_4" model="product.attribute.line">
+        <record id="product_template_attribute_line_4" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="attribute_id" ref="product_attribute_1"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
         </record>
 
         <record id="product_product_11_product_template" model="product.template">
-            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_4')])]"/>
+            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_template_attribute_line_4')])]"/>
         </record>
 
-        <record id="product_attribute_price_2" model="product.attribute.price">
-            <field name="product_tmpl_id" ref="product_product_11_product_template"/>
-            <field name="value_id" ref="product_attribute_value_2"/>
+        <!--
+        Handle automatically created product.template.attribute.value.
+        Meaning that the combination between the "customizable desk" and the attribute value "black" will be materialized
+        into a "product.template.attribute.value" with the ref "product.product_template_attribute_value_1".
+        This will allow setting fields like "price_extra" and "exclude_for"
+         -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'product.product_template_attribute_value_1',
+                'record': obj().env.ref('product.product_template_attribute_line_1').product_template_value_ids[1],
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_template_attribute_value_2',
+                'record': obj().env.ref('product.product_template_attribute_line_4').product_template_value_ids[1],
+                'noupdate': True,
+            }]"/>
+        </function>
+
+        <record id="product_template_attribute_value_1" model="product.template.attribute.value">
+            <field name="price_extra">50.40</field>
+        </record>
+
+        <record id="product_template_attribute_value_2" model="product.template.attribute.value">
             <field name="price_extra">6.40</field>
         </record>
 

@@ -4,13 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# Giota Dandidou <giotadandidou@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +88,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Μεταφορέας</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -115,7 +118,7 @@ msgstr "Σε Ισχύ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
 msgid "Amount"
-msgstr ""
+msgstr "Ποσό"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
@@ -123,6 +126,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Ποσό της παραγγελίας για να επωφεληθεί από δωρεάν αποστολή, εκφραζόμενο στο "
+"νόμισμα της εταιρίας"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -150,7 +155,6 @@ msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
@@ -158,7 +162,7 @@ msgstr "Ακύρωση"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr ""
+msgstr "Μεταφορέας"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
@@ -169,6 +173,11 @@ msgstr "Εταιρία"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
 msgstr "Κατάσταση"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -207,17 +216,17 @@ msgstr ""
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
 msgid "Deliveries"
-msgstr ""
+msgstr "Παραδόσεις"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr ""
+msgstr "Παράδοση"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Μεταφορέας Παράδοσης"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -227,7 +236,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Πληροφορίες Αποστολής"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
@@ -240,15 +249,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
-msgstr ""
+msgstr "Μέθοδος Παράδοσης"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Μέθοδοι Παράδοσης"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
@@ -260,7 +270,7 @@ msgstr ""
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Συσκευασίες Παράδοσης"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
@@ -271,12 +281,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "Κανόνες Τιμών Παράδοσης"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
 msgid "Delivery Product"
-msgstr ""
+msgstr "Παράδοση Είδους"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
@@ -286,12 +296,12 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "Διαθεσιμότητα Προορισμού"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "Καθορισμός σειράς εμφάνισης"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -321,7 +331,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
 msgid "Environment"
-msgstr ""
+msgstr "Περιβάλλον"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:217
@@ -333,7 +343,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
 msgid "Estimated Delivery Price"
-msgstr ""
+msgstr "Εκτιμώμενη Τιμή Παράδοσης"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -346,24 +356,26 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"Η συμπλήρωση αυτής της φόρμας σας επιτρέπει να φιλτράρετε τους μεταφορείς "
+"παράδοσης σύμφωνα με τη διεύθυνση παράδοσης του πελάτη σας."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
 msgid "Fixed Price"
-msgstr ""
+msgstr "Σταθερή τιμή"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
-msgstr ""
+msgstr "Δωρεάν τέλη παράδοσης"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Δωρεάν εάν το ποσό παραγγελίας είναι παραπάνω"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -373,7 +385,7 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Λήψη Τιμής και Δημιουργία Αποστολής"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -383,7 +395,7 @@ msgstr "Ομαδοποίηση κατά"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__height
 msgid "Height"
-msgstr ""
+msgstr "Ύψος"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -403,6 +415,9 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
+"Εάν το συνολικό ποσό της παραγγελίας (εξαιρουμένης της αποστολής) είναι "
+"ανώτερο ή ίσο με αυτήν την αξία, ο πελάτης επωφελείται από μια δωρεάν "
+"αποστολή"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:126
@@ -431,7 +446,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Είναι μια Παράδοση"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package____last_update
@@ -457,7 +472,7 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__length
 msgid "Length"
-msgstr ""
+msgstr "Μήκος"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -472,7 +487,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
-msgstr ""
+msgstr "Περιθώριο"
 
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
@@ -482,7 +497,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "Περιθώριο στο κόμιστρο"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
@@ -497,7 +512,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
-msgstr ""
+msgstr "Μέγιστη Τιμή"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
@@ -526,21 +541,23 @@ msgstr ""
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"Κανένας κανόνας τιμής δεν ταιριάζει με αυτήν την εντολή, το κόστος παράδοσης"
+" δεν μπορεί να υπολογιστεί."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
 msgid "Operator"
-msgstr ""
+msgstr "Χειριστής"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr ""
+msgstr "Πακέτο"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
@@ -549,7 +566,7 @@ msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
-#: code:addons/delivery/models/stock_picking.py:119
+#: code:addons/delivery/models/stock_picking.py:122
 #, python-format
 msgid "Package Details"
 msgstr ""
@@ -561,28 +578,14 @@ msgid "Package too heavy!"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_product_packaging
-msgid "Packaging"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_stock_move_line
-msgid "Packing Operation"
-msgstr ""
+msgstr "Συσκευασίες"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_stock_quant_package
-msgid "Physical Packages"
 msgstr ""
 
 #. module: delivery
@@ -597,18 +600,18 @@ msgstr ""
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 msgid "Price"
-msgstr ""
+msgstr "ΤΙΜΗ"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr ""
+msgstr "Κανόνες Τιμών"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr ""
+msgstr "Τιμολόγηση"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
@@ -616,43 +619,53 @@ msgid "Pricing Rules"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Product Packaging"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr ""
+msgstr "Πάροχος"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Quantity"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Quotation"
-msgstr ""
+msgstr "Ποσότητα"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Επιστροφή Συλλογής"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
-msgstr ""
+msgstr "Βάση Τιμής Πώλησης"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sale Order"
+msgstr "Παραγγελία"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
 msgid "Sale Price"
-msgstr ""
+msgstr "Τιμή Πώλησης"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Γραμμή Παραγγελίας"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -662,7 +675,7 @@ msgstr "Αποθήκευση"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "Αποστολή Email Επιβεβαίωσης"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -681,7 +694,7 @@ msgid "Set to True if your credentials are certified for production."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:166
+#: code:addons/delivery/models/stock_picking.py:171
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
@@ -713,7 +726,7 @@ msgstr "Νομοί/Πολιτείες"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Κίνηση Αποθέματος"
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:53
@@ -742,6 +755,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
+"Αυτή η μέθοδος παράδοσης θα χρησιμοποιηθεί όταν τιμολογείτε από στην συλλογή"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -756,12 +770,12 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr ""
+msgstr "Παρακολούθηση"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Αναφορά Παρακολούθησης"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_url
@@ -771,40 +785,40 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Μεταφορά"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Μονάδα Μέτρησης"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_uom_id
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Μονάδα Μέτρησης για το Βάρος"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Unit(s)"
-msgstr ""
+msgstr "Μονάδες"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
 msgid "Variable"
-msgstr ""
+msgstr "Μεταβλητή"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
 msgid "Variable Factor"
-msgstr ""
+msgstr "Παράγοντας Μεταβλητής"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__volume
 msgid "Volume"
-msgstr ""
+msgstr "Όγκος"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -814,13 +828,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
-msgstr ""
+msgstr "Βάρος"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 msgid "Weight * Volume"
-msgstr ""
+msgstr "Βάρος * Όγκος"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
@@ -830,7 +844,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Βάρος για την Μεταφορά"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
@@ -846,7 +860,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__width
 msgid "Width"
-msgstr ""
+msgstr "Πλάτος"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -854,7 +868,7 @@ msgid "Width must be positive"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:217
+#: code:addons/delivery/models/stock_picking.py:222
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -873,7 +887,7 @@ msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:180
+#: code:addons/delivery/models/stock_picking.py:185
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
@@ -883,25 +897,20 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from
 msgid "Zip From"
-msgstr ""
+msgstr "Από ΤΚ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_to
 msgid "Zip To"
-msgstr ""
+msgstr "Έως ΤΚ"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr ""
+msgstr "π.χ. UPS Express"
 
 #. module: delivery
 #: model:product.product,weight_uom_name:delivery.product_product_delivery
 #: model:product.template,weight_uom_name:delivery.product_product_delivery_product_template
 msgid "kg"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr "κιλά"

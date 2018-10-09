@@ -6,7 +6,7 @@
 # e2f <projects@e2f.com>, 2018
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # Siyuan Gu <siyuancn@hotmail.com>, 2018
 # liulixia <liu.lixia@elico-corp.com>, 2018
@@ -17,17 +17,20 @@
 # waveyeung <waveyeung@qq.com>, 2018
 # Joray <13637815@qq.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
 # Fisher <fisher@kdomi.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
 # Lisa Zhang <lzh@odoo.com>, 2018
+# bower Guo <124358678@qq.com>, 2018
+# roye w <159820@qq.com>, 2018
+# Youfu Sheng <wdmsyf@sina.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Lisa Zhang <lzh@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
+"Last-Translator: Youfu Sheng <wdmsyf@sina.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +121,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        尊敬的<br/><br/>\n"
+"        ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\">\n"
+"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"            </a>\n"
+"        </div>\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">查看 <strong>${object.name}</strong></a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -138,6 +156,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        尊敬的<br/><br/>\n"
+"        一个新的 ${object.slide_type} <strong>${object.name}</strong> 已经发布 ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\">\n"
+"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"            </a>\n"
+"        </div>\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">查看  <strong>${object.name}</strong></a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -168,7 +201,7 @@ msgstr "<i class=\"fa fa-cloud-upload\"/> 上传"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-code\"/> Embedded Views"
-msgstr ""
+msgstr "<i class=\"fa fa-code\"/> 内嵌视图"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -178,7 +211,7 @@ msgstr "<i class=\"fa fa-comments-o\"/> 评论"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<i class=\"fa fa-envelope-o\"/> Send Email"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/> 发送邮件"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -188,6 +221,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
 "label=\"Attention\" title=\"Attention\"/> This"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Attention\" title=\"Attention\"/> 此"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -219,24 +254,24 @@ msgstr "<i class=\"fa fa-share-alt\"/> 分享"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-spinner fa-spin\"/> Loading ..."
-msgstr "<i class=\"fa fa-spinner fa-spin\"/> 载入 ..."
+msgstr "<i class=\"fa fa-spinner fa-spin\"/> 加载中 ..."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-down\"/> Dislikes"
-msgstr "<i class=\"fa fa-thumbs-down\"/> 不喜欢"
+msgstr "<i class=\"fa fa-thumbs-down\"/> 踩"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
-msgstr "<i class=\"fa fa-thumbs-up\"/> 喜欢"
+msgstr "<i class=\"fa fa-thumbs-up\"/> 顶"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:107
 #, python-format
 msgid ""
 "<p>This channel is private and its content is restricted to some users.</p>"
-msgstr ""
+msgstr "<p>此频道是私有的，其内容仅限于某些用户。</p>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -244,6 +279,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"facebook-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -251,6 +288,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"google-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"google-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -258,6 +297,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"linkedin-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"linkedin-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn领英"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -265,6 +306,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"total-share\">0</span>\n"
 "                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"total-share\">0</span>\n"
+"                                                    <i class=\"fa fa-share-alt\"/> 社交分享"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -272,6 +315,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"twitter-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"twitter-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -279,17 +324,19 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"/>\n"
 "                                    Create a Google Project and Get a Key"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"                                    创建一个Google 项目以及获取密钥"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"form-text\">Send presentation through email</span>"
-msgstr ""
+msgstr "<span class=\"form-text\">通过电子邮件发送演示</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
 "<span class=\"form-text\">Use permanent link to share in social media</span>"
-msgstr ""
+msgstr "<span class=\"form-text\">使用永久链接在社交媒体中分享</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -297,6 +344,8 @@ msgid ""
 "<span class=\"o_form_label\">Slides</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">幻灯片</span>\n"
+"  <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -338,7 +387,7 @@ msgstr "有效"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slides_slides
 msgid "Add a new slide"
-msgstr ""
+msgstr "添加一个新的侧边栏"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -350,7 +399,7 @@ msgstr "已归档"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "附件数量"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
@@ -368,6 +417,13 @@ msgid "Can Upload"
 msgstr "可以上传"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:55
+#, python-format
+msgid "Cancel"
+msgstr "取消"
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category_global
@@ -377,7 +433,7 @@ msgstr "类别"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:252
+#: code:addons/website_slides/static/src/js/slides_upload.js:254
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -388,18 +444,21 @@ msgid "Category"
 msgstr "类别"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:81
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#, python-format
 msgid "Channel"
 msgstr "频道"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Channel #{slide.channel_id.name}"
-msgstr ""
+msgstr "频道 #{slide.channel_id.name}"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__group_ids
@@ -413,16 +472,11 @@ msgstr "频道设定"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:172
+#: code:addons/website_slides/static/src/js/slides_upload.js:174
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
 msgstr "标题在频道里已经存在，请在保存或者发布前修改标题。"
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel
-msgid "Channel for Slides"
-msgstr "幻灯片频道"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -432,7 +486,7 @@ msgstr "频道可见"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
 msgid "Channel without promoted slide"
-msgstr ""
+msgstr "频道没有推广幻灯片"
 
 #. module: website_slides
 #: model:ir.actions.act_url,name:website_slides.action_open_channels
@@ -441,6 +495,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
 msgstr "频道"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
@@ -465,7 +524,7 @@ msgstr ""
 "这是已收到的回复：%s"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
+#: code:addons/website_slides/models/slides.py:330
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -477,16 +536,16 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_channels
 msgid "Create a channel"
-msgstr ""
+msgstr "创建频道"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_ir_slide_category
 msgid "Create a new category"
-msgstr ""
+msgstr "创建一个新的分类"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:221
+#: code:addons/website_slides/static/src/js/slides_upload.js:223
 #, python-format
 msgid "Create new tag '%s'"
 msgstr "创建新的标签 '%s'"
@@ -654,7 +713,7 @@ msgstr "特性政策"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:274
-#: code:addons/website_slides/static/src/js/slides_upload.js:89
+#: code:addons/website_slides/static/src/js/slides_upload.js:91
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr "文件太大。文件大小不能超过 25 MB"
@@ -774,7 +833,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:84
+#: code:addons/website_slides/static/src/js/slides_upload.js:86
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr "错误的文件类型。请选择pfd文件或者图像"
@@ -821,7 +880,7 @@ msgstr "最后更新时间"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Last slide"
-msgstr ""
+msgstr "最后一个幻灯片"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -838,7 +897,7 @@ msgstr "喜爱"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "附件"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_medium
@@ -895,6 +954,13 @@ msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr "在${object.channel_id.name}发布的新的${object.slide_type}"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:39
+#, python-format
+msgid "New slide"
+msgstr "新幻灯片"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Newest"
 msgstr "最新"
@@ -902,7 +968,7 @@ msgstr "最新"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Next slide"
-msgstr ""
+msgstr "下一幻灯片"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -985,6 +1051,13 @@ msgstr "未读消息的数量"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:40
+#, python-format
+msgid "On which channel do you want to add a slide?"
+msgstr "你想在哪个频道增加幻灯片？"
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
 msgid "PDF or Image File"
@@ -1005,11 +1078,11 @@ msgstr "请"
 #: code:addons/website_slides/static/src/js/slides.js:56
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
-msgstr "请<a href=\"/web?redirect=%s\">登录</A> 以对幻灯片投票"
+msgstr "请 <a href=\"/web?redirect=%s\">登录</a> 以对幻灯片投票"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:328
-#: code:addons/website_slides/models/slides.py:557
+#: code:addons/website_slides/models/slides.py:333
+#: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "请输入有效的YouTube或谷歌文档的URL"
@@ -1041,7 +1114,7 @@ msgstr "展示"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Previous slide"
-msgstr ""
+msgstr "前一幻灯片"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1056,13 +1129,13 @@ msgstr "私人频道"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Promote this #{slide.slide_type}"
-msgstr ""
+msgstr "Promote this #{slide.slide_type}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
 #: model_terms:ir.ui.view,arch_db:website_slides.home
 msgid "Promoted slide"
-msgstr ""
+msgstr "推广幻灯片"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1116,7 +1189,7 @@ msgstr "查看你的频道设置，以促进你的观看次数最多或最近发
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO优化"
 
 #. module: website_slides
 #. openerp-web
@@ -1145,12 +1218,19 @@ msgstr "搜索幻灯片"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Search in #{channel.name}"
-msgstr ""
+msgstr "搜索 #{channel.name}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Security"
 msgstr "安全"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:44
+#, python-format
+msgid "Select"
+msgstr "选择"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
@@ -1181,17 +1261,17 @@ msgstr "分享数"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Facebook"
-msgstr ""
+msgstr "分享至 Facebook"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Google Plus"
-msgstr ""
+msgstr "分享到 Google Plus"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on LinkedIn"
-msgstr ""
+msgstr "分享至 LinkedIn"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
@@ -1201,7 +1281,7 @@ msgstr "分享到社交网络"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Twitter"
-msgstr ""
+msgstr "分享至 Twitter"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1222,6 +1302,11 @@ msgstr "显示频道，但限制演示"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Slide"
 msgstr "幻灯片"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Slide Channel"
+msgstr "幻灯片频道"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -1267,7 +1352,7 @@ msgstr "标签"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:275
+#: code:addons/website_slides/static/src/js/slides_upload.js:277
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -1373,7 +1458,7 @@ msgid "Uncategorized presentation"
 msgstr "未分类的演示"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:546
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
 msgstr "未知文档"
@@ -1522,7 +1607,7 @@ msgstr "网站opengraph图像"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:114
+#: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
 msgstr "你无法上传密码保护的文件。"
@@ -1585,11 +1670,6 @@ msgid "login"
 msgstr "登录"
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_res_config_settings
-msgid "res.config.settings"
-msgstr "设置-基础设置"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_search
 msgid "results found for the given criteria"
 msgstr "发现对于给定的标准结果"
@@ -1598,7 +1678,7 @@ msgstr "发现对于给定的标准结果"
 #: model_terms:ir.ui.view,arch_db:website_slides.related_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "slide.name"
-msgstr ""
+msgstr "slide.name"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide

@@ -5,6 +5,7 @@ from odoo import models, fields
 
 class Extension0(models.Model):
     _name = 'extension.0'
+    _description = 'Extension zero'
 
     name = fields.Char(default="A")
 

@@ -3,27 +3,14 @@
 # * pos_mercury
 # 
 # Translators:
-# Wolfgang Taferner, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Andi, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Niki Waibel, 2017
-# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Martin Trigaux, 2017
-# e2f <projects@e2f.com>, 2018
-# JackTheHunter <Maximilian.N98@gmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: JackTheHunter <Maximilian.N98@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:04+0000\n"
+"PO-Revision-Date: 2018-10-02 10:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,12 +26,12 @@ msgid "&nbsp;&nbsp;APPROVAL CODE:"
 msgstr "&nbsp;&nbsp;APPROVAL CODE:"
 
 #. module: pos_mercury
-#: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>"
 
 #. module: pos_mercury
-#: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "<i>Mercury Configurations</i> define what Mercury account will be used when\n"
 "                                processing credit card transactions in the Point Of Sale. Setting up a Mercury\n"
@@ -78,9 +65,19 @@ msgid "Alias"
 msgstr "Alias"
 
 #. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Kontoauszugszeile"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "Strichcoderegel"
 
 #. module: pos_mercury
 #. openerp-web
@@ -96,7 +93,7 @@ msgstr "Kartenmarke"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_number
-#: model:ir.ui.view,arch_db:pos_mercury.view_pos_order
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_order
 msgid "Card Number"
 msgstr "Kartennummer"
 
@@ -111,8 +108,8 @@ msgid "Card Owner Name"
 msgstr "Name des Kartenbesitzers"
 
 #. module: pos_mercury
-#: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
-#: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_tree
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_tree
 msgid "Card Reader"
 msgstr "Kartenlesegerät"
 
@@ -127,7 +124,7 @@ msgid "Client"
 msgstr "Kunde"
 
 #. module: pos_mercury
-#: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
+#: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
 msgstr ""
 
@@ -151,9 +148,7 @@ msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:16
 #: selection:barcode.rule,type:0
-#, python-format
 msgid "Credit Card"
 msgstr "Kreditkarte"
 
@@ -180,20 +175,13 @@ msgstr "Anzeigename"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:7
-#, python-format
-msgid "Electronic Payment"
-msgstr "Elektronische Zahlung"
-
-#. module: pos_mercury
-#. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:651
 #, python-format
 msgid "Error"
 msgstr "Fehler"
 
 #. module: pos_mercury
-#: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "For quickly handling orders: just swiping a credit card when on the payment screen\n"
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
@@ -229,7 +217,7 @@ msgstr ""
 "Händler-ID, um ihn auf dem Zahlungsanbieter-Server zu authentifizieren"
 
 #. module: pos_mercury
-#: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
@@ -322,13 +310,13 @@ msgid "Name of this Mercury configuration"
 msgstr "Name dieser Mercury-Konfiguration"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury_transaction.py:33
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:34
 #, python-format
 msgid "No Mercury configuration associated with the journal."
 msgstr "Keine Mercury-Konfiguration, die mit dem Journal verknüpft ist."
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury_transaction.py:21
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:22
 #, python-format
 msgid "No opened point of sale session for user %s found."
 msgstr ""
@@ -361,6 +349,13 @@ msgstr "Odoo-Fehler bei der Transaktionsabwicklung."
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "Ein Kreditkartenleser ausstehend."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:7
+#, python-format
+msgid "Online Payment"
+msgstr "Online-Zahlung"
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -397,6 +392,16 @@ msgstr "Zahlungs-Referenznummer von Mercury Pay"
 #, python-format
 msgid "Please setup your Mercury merchant account."
 msgstr "Bitte richten Sie Ihr Mercury-Händlerkonto ein."
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
+msgid "Point of Sale Mercury Configuration"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
+msgid "Point of Sale Mercury Transaction"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -498,7 +503,7 @@ msgid "Unit Product"
 msgstr "Produkteinheit"
 
 #. module: pos_mercury
-#: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Mercury integration in the Point Of Sale is easy: just press the\n"
 "                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
@@ -511,7 +516,7 @@ msgstr ""
 " durch das Kartenlesegerät gezogen werden."
 
 #. module: pos_mercury
-#: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
 msgstr "Vantiv-Konten"
 
@@ -530,13 +535,11 @@ msgid "WAITING FOR SWIPE"
 msgstr "AUF EINLESEN WARTEN"
 
 #. module: pos_mercury
-#: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
+#: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
-"                                directly to the Point Of Sale device or it can be connected to the POSBox."
+"                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
-"Derzeit unterstützen wir das MagTek Dynamag-Kartenlesegerät. Es kann direkt mit\n"
-" dem Point-of-Sale-Gerät oder mit der PoSBox verbunden werden."
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -549,23 +552,3 @@ msgstr "Gewogenes Produkt"
 #, python-format
 msgid "X______________________________"
 msgstr "X______________________________"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_barcode_rule
-msgid "barcode.rule"
-msgstr "barcode.rule"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
-msgid "pos_mercury.configuration"
-msgstr "pos_mercury.configuration"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
-msgid "pos_mercury.mercury_transaction"
-msgstr "pos_mercury.mercury_transaction"

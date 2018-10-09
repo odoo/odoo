@@ -206,13 +206,14 @@ class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
     _order = "sequence, id"
     _rec_name = "product_id"
+    _description = 'Bill of Material Line'
 
     def _get_default_product_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
 
     product_id = fields.Many2one(
         'product.product', 'Component', required=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits=dp.get_precision('Product Unit of Measure'), required=True)
@@ -226,13 +227,14 @@ class MrpBomLine(models.Model):
         help="Gives the sequence order when displaying.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
-        related='bom_id.routing_id', store=True,
+        related='bom_id.routing_id', store=True, readonly=False,
         help="The list of operations to produce the finished product. The routing is mainly used to "
              "compute work center costs during operations and to plan future loads on work centers "
              "based on production planning.")
     bom_id = fields.Many2one(
         'mrp.bom', 'Parent BoM',
         index=True, ondelete='cascade', required=True)
+    parent_product_tmpl_id = fields.Many2one('product.template', 'Parent Product Template', related='bom_id.product_tmpl_id')
     attribute_value_ids = fields.Many2many(
         'product.attribute.value', string='Apply on Variants',
         help="BOM Product Variants needed form apply this line.")
@@ -292,6 +294,13 @@ class MrpBomLine(models.Model):
     def onchange_product_id(self):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
+
+    @api.onchange('parent_product_tmpl_id')
+    def onchange_parent_product(self):
+        return {'domain': {'attribute_value_ids': [
+            ('id', 'in', self.parent_product_tmpl_id.mapped('attribute_line_ids.value_ids.id')),
+            ('attribute_id.create_variant', '!=', 'no_variant')
+        ]}}
 
     @api.model_create_multi
     def create(self, vals_list):

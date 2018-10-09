@@ -3,16 +3,15 @@
 # * base_vat
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Martin Trigaux, 2018
-# Michael Yeung, 2018
+# sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Michael Yeung, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,12 +25,17 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設置"
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "聯絡人"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
@@ -56,8 +60,9 @@ msgid ""
 msgstr "這個業務夥伴 [%s] 的VAT號碼 [%s] VIES VAT驗證依然失效或者格式%s不符合標準。"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.view_partner_form
-#: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
+#: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
 msgstr "增值稅"
 
@@ -68,11 +73,6 @@ msgid "Verify VAT Numbers"
 msgstr "驗證增值稅號碼"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
 msgstr "使用歐洲 VIES 服務驗證增值稅號碼"
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

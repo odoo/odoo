@@ -14,12 +14,11 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
 
 
-@tests.tagged('mail_activity')
-class TestMailActivity(BaseFunctionalTest):
+class TestActivityCommon(BaseFunctionalTest):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMailActivity, cls).setUpClass()
+        super(TestActivityCommon, cls).setUpClass()
         cls.test_record = cls.env['mail.test.activity'].with_context(cls._quick_create_ctx).create({'name': 'Test'})
         # reset ctx
         cls.test_record = cls.test_record.with_context(
@@ -27,6 +26,41 @@ class TestMailActivity(BaseFunctionalTest):
             mail_create_nosubscribe=False,
             mail_notrack=False
         )
+
+
+@tests.tagged('mail_activity')
+class TestActivityRights(TestActivityCommon):
+
+    def test_activity_security_user_access(self):
+        activity = self.test_record.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_employee.id)
+
+        activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
+        activity2.write({'user_id': self.user_employee.id})
+
+    def test_activity_security_user_noaccess(self):
+
+        def _employee_crash(*args, **kwargs):
+            """ If employee is test employee, consider he has no access on document """
+            recordset = args[0]
+            if recordset.env.uid == self.user_employee.id:
+                raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
+            return DEFAULT
+
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.UserError):
+                activity = self.test_record.activity_schedule(
+                    'test_mail.mail_act_test_todo',
+                    user_id=self.user_employee.id)
+
+            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
+            with self.assertRaises(exceptions.UserError):
+                activity2.write({'user_id': self.user_employee.id})
+
+
+@tests.tagged('mail_activity')
+class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
         with self.sudoAs('ernest'):
@@ -74,6 +108,30 @@ class TestMailActivity(BaseFunctionalTest):
                     'res_model_id': self.env['ir.model']._get(test_record._name).id,
                     'res_id': test_record.id,
                 })
+
+    def test_activity_notify_other_user(self):
+        self.user_admin.notification_type = 'email'
+        rec = self.test_record.sudo(self.user_employee)
+        with self.assertNotifications(partner_admin=(1, 'email', 'read')):
+            activity = rec.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_admin.id)
+        self.assertEqual(activity.create_user_id, self.user_employee)
+        self.assertEqual(activity.user_id, self.user_admin)
+
+    def test_activity_notify_same_user(self):
+        self.user_employee.notification_type = 'email'
+        rec = self.test_record.sudo(self.user_employee)
+        with self.assertNotifications(partner_employee=(0, 'email', 'read')):
+            activity = rec.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_employee.id)
+        self.assertEqual(activity.create_user_id, self.user_employee)
+        self.assertEqual(activity.user_id, self.user_employee)
+
+
+@tests.tagged('mail_activity')
+class TestActivityMixin(TestActivityCommon):
 
     def test_activity_mixin(self):
         self.user_employee.tz = self.user_admin.tz
@@ -176,50 +234,3 @@ class TestMailActivity(BaseFunctionalTest):
             user_id=self.user_admin.id,
             new_user_id=self.user_employee.id)
         self.assertEqual(rec.activity_ids[0].user_id, self.user_employee)
-
-    def test_activity_notify_other_user(self):
-        self.user_admin.notification_type = 'email'
-        rec = self.test_record.sudo(self.user_employee)
-        with self.assertNotifications(partner_admin=(1, 'email', 'read')):
-            activity = rec.activity_schedule(
-                'test_mail.mail_act_test_todo',
-                user_id=self.user_admin.id)
-        self.assertEqual(activity.create_user_id, self.user_employee)
-        self.assertEqual(activity.user_id, self.user_admin)
-
-    def test_activity_notify_same_user(self):
-        self.user_employee.notification_type = 'email'
-        rec = self.test_record.sudo(self.user_employee)
-        with self.assertNotifications(partner_employee=(0, 'email', 'read')):
-            activity = rec.activity_schedule(
-                'test_mail.mail_act_test_todo',
-                user_id=self.user_employee.id)
-        self.assertEqual(activity.create_user_id, self.user_employee)
-        self.assertEqual(activity.user_id, self.user_employee)
-
-    def test_activity_security_user_access(self):
-        activity = self.test_record.activity_schedule(
-            'test_mail.mail_act_test_todo',
-            user_id=self.user_employee.id)
-
-        activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
-        activity2.write({'user_id': self.user_employee.id})
-
-    def test_activity_security_user_noaccess(self):
-
-        def _employee_crash(*args, **kwargs):
-            """ If employee is test employee, consider he has no access on document """
-            recordset = args[0]
-            if recordset.env.uid == self.user_employee.id:
-                raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
-            return DEFAULT
-
-        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.UserError):
-                activity = self.test_record.activity_schedule(
-                    'test_mail.mail_act_test_todo',
-                    user_id=self.user_employee.id)
-
-            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
-            with self.assertRaises(exceptions.UserError):
-                activity2.write({'user_id': self.user_employee.id})

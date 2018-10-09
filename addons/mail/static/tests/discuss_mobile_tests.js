@@ -24,7 +24,7 @@ QUnit.test('mobile basic rendering', function (assert) {
     // /mail/client_action route is always called when the test suite is
     // launched), and we must wait for this RPC to be done before starting to
     // test the interface. This should be refactored to facilitate the testing.
-    assert.expect(8);
+    assert.expect(19);
     var done = assert.async();
 
     createDiscuss({
@@ -45,14 +45,44 @@ QUnit.test('mobile basic rendering', function (assert) {
             "inbox/starred buttons should be visible");
         assert.ok(discuss.$('.o_mail_discuss_mobile_mailboxes_buttons .o_mailbox_inbox_item[data-type=mailbox_inbox]').hasClass('btn-primary'),
             "should be in inbox");
+        assert.ok($('.o_mail_discuss_button_dm_chat').hasClass('d-none'),
+            "should have invisible button 'New Message'");
+        assert.ok($('.o_mail_discuss_button_public').hasClass('d-none'),
+            "should have invisible button 'New Channel'");
 
-        // move to DMs tab
+        // move to 'Chat' tab
         discuss.$('.o_mail_mobile_tab[data-type=dm_chat]').click();
         assert.ok(discuss.$('.o_mail_mobile_tab[data-type=dm_chat]').hasClass('active'),
-            "should be in DMs chat tab");
+            "should be in 'Chat' tab");
         assert.strictEqual(discuss.$('.o_mail_discuss_content .o_mail_no_content').length, 0,
             "should display the no content message");
-        $('.o_mail_discuss_button_dm').click(); // click to add a channel
+        assert.strictEqual($('.o_mail_discuss_button_dm_chat').length, 1,
+            "should have a button to open DM chat in 'Chat' tab");
+        assert.notOk($('.o_mail_discuss_button_dm_chat').hasClass('d-none'),
+            "should be visible in 'Chat' tab");
+        assert.ok($('.o_mail_discuss_button_public').hasClass('d-none'),
+            "should have invisible button 'New Channel' in 'Chat' tab");
+        $('.o_mail_discuss_button_dm_chat').click(); // click to open a chat
+        assert.strictEqual(discuss.$('.o_mail_add_thread input:visible').length, 1,
+            "should display the input to add a channel");
+
+        // move to 'Channels' tab
+        discuss.$('.o_mail_mobile_tab[data-type=public]').click();
+        assert.ok($('.o_mail_discuss_button_dm_chat').hasClass('d-none'),
+            "should have invisible button 'New Message' in 'Channels' tab");
+        assert.notOk($('.o_mail_discuss_button_public').hasClass('d-none'),
+            "should have visible button 'New Channel' in 'Channels' tab");
+        $('.o_mail_discuss_button_public').click(); // click to open a chat
+        assert.strictEqual(discuss.$('.o_mail_add_thread input:visible').length, 1,
+            "should display the input to add a channel");
+
+        // move to Private Channels tab
+        discuss.$('.o_mail_mobile_tab[data-type=private]').click();
+        assert.ok($('.o_mail_discuss_button_dm_chat').hasClass('d-none'),
+            "should have invisible button 'New Message' in 'Private Channels' tab");
+        assert.notOk($('.o_mail_discuss_button_private').hasClass('d-none'),
+            "should have invisible button 'New Channel' in 'Private Channels' tab");
+        $('.o_mail_discuss_button_private').click(); // click to open a chat
         assert.strictEqual(discuss.$('.o_mail_add_thread input:visible').length, 1,
             "should display the input to add a channel");
 
@@ -85,5 +115,4 @@ QUnit.test('on_{attach/detach}_callback', function (assert) {
 });
 
 });
-
 });

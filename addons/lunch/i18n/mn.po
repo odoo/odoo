@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -572,6 +572,7 @@ msgstr "Өдрийн хоолны анхааруулга"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:393
+#: model:ir.model,name:lunch.model_lunch_cashmove
 #, python-format
 msgid "Lunch Cashmove"
 msgstr "Үдийн цайны Кассын хөдөлгөөн"
@@ -588,6 +589,26 @@ msgstr "Өдрийн хоолны захиалга"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Lunch Order Form"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line
+msgid "Lunch Order Line"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line_lucky
+msgid "Lunch Order Line Lucky"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "Lunch Product"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "Lunch Product Category"
 msgstr ""
 
 #. module: lunch
@@ -679,7 +700,7 @@ msgid "No previous order found"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/wizard/lucky_order.py:39
+#: code:addons/lunch/wizard/lucky_order.py:40
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
 msgstr "Таны хүсэлтэнд таарах бүтээгдэхүүн алга. Та одоо өлсөж үхэх нь дээ."
@@ -1112,7 +1133,6 @@ msgid "cashmove tree"
 msgstr "кассын хөдөлгөөний мод"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
 msgstr "үдийн цайны кассын хөдөлгөөн"
@@ -1121,23 +1141,3 @@ msgstr "үдийн цайны кассын хөдөлгөөн"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
 msgstr "ажилтны өдрийн хоолны төлбөр"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line
-msgid "lunch order line"
-msgstr "Үдийн зоог захиалгын мөр"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product
-msgid "lunch product"
-msgstr "Өдрийн хоолны бараа"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product_category
-msgid "lunch product category"
-msgstr "Өдрийн хоолны барааны ангилал"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line_lucky
-msgid "lunch.order.line.lucky"
-msgstr "lunch.order.line.lucky"

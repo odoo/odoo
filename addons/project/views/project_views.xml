@@ -8,11 +8,6 @@
             web_icon="project,static/description/icon.png"
             sequence="50"/>
 
-        <menuitem name="Search"
-            id="menu_project_management"
-            parent="menu_main_pm"
-            sequence="2" groups="base.group_no_one,group_project_user"/>
-
         <menuitem id="menu_project_config" name="Configuration" parent="menu_main_pm"
             sequence="100" groups="project.group_project_manager"/>
 
@@ -82,7 +77,7 @@
         <record id="project_task_action_sub_task" model="ir.actions.act_window">
             <field name="name">Sub-tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
         </record>
 
@@ -100,7 +95,7 @@
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
-                        <button class="oe_stat_button" type="action" attrs="{'invisible': [('task_count', '=', 0)]}"
+                        <button class="oe_stat_button" type="action"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
@@ -125,7 +120,7 @@
                         <h1>
                             <field name="name" placeholder="Project Name"/>
                         </h1>
-                        <div name="options_active" class="oe_edit_only">
+                        <div name="options_active">
                             <div>
                                 <label for="label_tasks" class="oe_inline" string="Name of the tasks :"/>
                                 <field name="label_tasks" class="oe_inline oe_input_align"/>
@@ -197,8 +192,8 @@
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Manager" name="Manager" context="{'group_by':'user_id'}"/>
-                        <filter string="Contact" name="Partner" context="{'group_by':'partner_id'}"/>
+                        <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
+                        <filter string="Customer" name="Partner" context="{'group_by': 'partner_id'}"/>
                     </group>
                 </search>
             </field>
@@ -567,7 +562,6 @@
                                             <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Task</a>
                                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                             <div role="separator" class="dropdown-divider"></div>
-                                            <div role="separator" class="dropdown-header">Record's Colour</div>
                                             <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
                                     </div>
@@ -673,7 +667,7 @@
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="context">{'search_default_my_tasks': 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -696,22 +690,8 @@
             <field name="act_window_id" ref="action_view_task"/>
         </record>
 
-        <record id="project_task_action_activity" model="ir.actions.act_window">
-            <field name="name">My Next Activities</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban,calendar</field>
-            <field name="view_id" ref="project_task_view_tree_activity"/>
-            <field name="context">{'search_default_activities_my':1}</field>
-            <field name="domain">[('activity_date_deadline', '!=', False)]</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_empty_folder">
-                    No scheduled activity at the moment
-                </p>
-            </field>
-        </record>
-
-        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="5"/>
+        <menuitem name="All Tasks" id="menu_project_management" parent="menu_main_pm"
+            action="action_view_task" sequence="2" groups="base.group_no_one,group_project_user"/>
 
         <record id="project_task_action_from_partner" model="ir.actions.act_window">
             <field name="name">Tasks</field>
@@ -719,12 +699,6 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-
-        <menuitem id="project_task_menu_activity"
-            name="Next Activities"
-            parent="project.menu_project_management"
-            action="project_task_action_activity"
-            sequence="25"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
@@ -742,7 +716,7 @@
             <field name="name">Project's tasks</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('project_id', 'child_of', [active_id])]</field>
+            <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{'project_id':active_id}</field>
         </record>
 

@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class RestaurantFloor(models.Model):
 
     _name = 'restaurant.floor'
+    _description = 'Restaurant Floor'
 
     name = fields.Char('Floor Name', required=True, help='An internal identification of the restaurant floor')
     pos_config_id = fields.Many2one('pos.config', string='Point of Sale')
@@ -19,6 +20,7 @@ class RestaurantFloor(models.Model):
 class RestaurantTable(models.Model):
 
     _name = 'restaurant.table'
+    _description = 'Restaurant Table'
 
     name = fields.Char('Table Name', required=True, help='An internal identification of a table')
     floor_id = fields.Many2one('restaurant.floor', string='Floor')
@@ -54,6 +56,7 @@ class RestaurantTable(models.Model):
 class RestaurantPrinter(models.Model):
 
     _name = 'restaurant.printer'
+    _description = 'Restaurant Printer'
 
     name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
     proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")

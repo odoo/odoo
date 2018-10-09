@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "<b>Total</b>"
-msgstr ""
+msgstr "<b>Toplam</b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -62,7 +62,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
 msgid "<span class=\"o_label\">Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Genel Bakış</span>"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:53
@@ -255,7 +255,7 @@ msgstr "Şirket"
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_costs_and_revenues
 msgid "Costs and Revenues"
-msgstr ""
+msgstr "Maliyetler ve Gelirler"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:355
@@ -265,6 +265,21 @@ msgstr ""
 #, python-format
 msgid "Create Invoice"
 msgstr "Fatura Oluştur"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_invoice
+msgid "Create Invoice from project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
+msgid "Create SO Line from project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
+msgid "Create SO from project"
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:102
@@ -280,16 +295,6 @@ msgid "Create Sales Order from Project"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_invoice
-msgid "Create a Invoice from project"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
-msgid "Create a SO from project"
-msgstr ""
-
-#. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:344
 #: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_sale_order
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -300,17 +305,17 @@ msgstr ""
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a new project but no task"
-msgstr ""
+msgstr "Yeni bir proje oluştur görevleri olmadan"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a task in a new project"
-msgstr ""
+msgstr "Yeni bir proje ve görevleri oluştur"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a task in an existing project"
-msgstr ""
+msgstr "Mevcut bir projede görevleri oluştur"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
@@ -363,7 +368,7 @@ msgstr "Görünüm Adı"
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Don't create task"
-msgstr ""
+msgstr "Görev oluşturmayın"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
@@ -565,12 +570,12 @@ msgstr ""
 #: selection:account.analytic.line,timesheet_invoice_type:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "No task found"
-msgstr ""
+msgstr "Görev bulunamadı"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 msgid "Non Billable"
-msgstr ""
+msgstr "Faturalanamayan"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
@@ -660,7 +665,7 @@ msgstr "Ürünler"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Profitability"
-msgstr ""
+msgstr "Karlılık"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_graph
@@ -708,7 +713,12 @@ msgstr "Proje Yöneticisi"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
-msgid "Project Profitability Analysis"
+msgid "Project Profitability Report"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
+msgid "Project Sales line, employee mapping"
 msgstr ""
 
 #. module: sale_timesheet
@@ -735,7 +745,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project(s) Overview"
-msgstr ""
+msgstr "Projeye Genel Bakış"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:101
@@ -748,11 +758,6 @@ msgstr "Projeler"
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_ids
 msgid "Projects used in this sales order."
 msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_sale_order
-msgid "Quotation"
-msgstr "Teklif"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -771,6 +776,7 @@ msgid "Remaining"
 msgstr "Kalan"
 
 #. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
 msgid "Sale Order"
 msgstr "Satış Siparişi"
@@ -820,7 +826,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Satış Siparişi Öğesi"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -896,7 +902,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_tracking
 msgid "Service Tracking"
-msgstr ""
+msgstr "Hizmet Takibi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1030,7 +1036,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There is no timesheet for now."
-msgstr ""
+msgstr "Şimdilik bir zaman çizelgesi yok."
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
@@ -1193,6 +1199,11 @@ msgid "Wizard"
 msgstr "Sihirbaz"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__partner_id
+msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:62
 #, python-format
 msgid ""
@@ -1220,14 +1231,4 @@ msgstr ""
 #, python-format
 msgid ""
 "You have to unlink the task from the sale order item in order to delete it."
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
-msgid "project.create.sale.order.line"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
-msgid "project.sale.line.employee.map"
 msgstr ""

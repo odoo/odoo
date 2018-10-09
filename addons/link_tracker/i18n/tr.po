@@ -13,10 +13,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr "Kampanya"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_click_ids
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Clicks"
 msgstr "Tıklamalar"
 
@@ -57,7 +57,7 @@ msgid "Create Date"
 msgstr "Oluşturma Tarihi"
 
 #. module: link_tracker
-#: model:ir.actions.act_window,help:link_tracker.action_link_tracker
+#: model_terms:ir.actions.act_window,help:link_tracker.action_link_tracker
 msgid "Create a new link tracker"
 msgstr ""
 
@@ -138,9 +138,20 @@ msgstr "Bağlantı"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker
 #: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
 msgid "Link Tracker"
 msgstr "Bağlantı İzleyici"
+
+#. module: link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker_code
+msgid "Link Tracker Code"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
@@ -211,12 +222,12 @@ msgstr ""
 "listesi adı"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Title and URL"
 msgstr "Başlık ve URL"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Tracked Link"
 msgstr "İzlenen Bağlantı"
 
@@ -226,57 +237,42 @@ msgid "Tracked URL"
 msgstr "İzlenen URL"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Visit Page"
 msgstr "Sayfayı Ziyaret Et"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:141
+#: code:addons/link_tracker/models/link_tracker.py:142
 #, python-format
 msgid "Visit Webpage"
 msgstr "Web Sayfasını Ziyaret Et"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Website Link"
 msgstr "Website Linki"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
 msgid "Website Link Clicks"
 msgstr "Website Link Tıklamaları"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
 msgid "Website Link Graph"
 msgstr "Website Link Grafiği"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
 msgid "Website Links"
 msgstr "Website Linkleri"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
 msgid "Website Links Clicks"
 msgstr "Website Link Tıklamaları"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker
-msgid "link.tracker"
-msgstr "link.tracker"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker_click
-msgid "link.tracker.click"
-msgstr "link.tracker.click"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker_code
-msgid "link.tracker.code"
-msgstr "link.tracker.code"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker_stats

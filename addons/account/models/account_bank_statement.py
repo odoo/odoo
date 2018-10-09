@@ -34,7 +34,7 @@ class AccountBankStmtCashWizard(models.Model):
     Account Bank Statement popup that allows entering cash details.
     """
     _name = 'account.bank.statement.cashbox'
-    _description = 'Account Bank Statement Cashbox Details'
+    _description = 'Bank Statement Cashbox'
 
     cashbox_lines_ids = fields.One2many('account.cashbox.line', 'cashbox_id', string='Cashbox Lines')
 
@@ -59,7 +59,7 @@ class AccountBankStmtCloseCheck(models.TransientModel):
     Account Bank Statement wizard that check that closing balance is correct.
     """
     _name = 'account.bank.statement.closebalance'
-    _description = 'Account Bank Statement closing balance'
+    _description = 'Bank Statement Closing Balance'
 
     @api.multi
     def validate(self):
@@ -143,7 +143,7 @@ class AccountBankStatement(models.Model):
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
-    journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes")
+    journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes", readonly=False)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env['res.company']._company_default_get('account.bank.statement'))
 
@@ -281,7 +281,7 @@ class AccountBankStatement(models.Model):
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
-    _order = "statement_id desc, date desc, sequence, id desc"
+    _order = "statement_id desc, date, sequence, id desc"
 
     name = fields.Char(string='Label', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))

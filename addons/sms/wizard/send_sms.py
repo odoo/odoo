@@ -24,6 +24,7 @@ except ImportError:
 
 class SendSMS(models.TransientModel):
     _name = 'sms.send_sms'
+    _description = 'Send SMS'
 
     recipients = fields.Char('Recipients', required=True)
     message = fields.Text('Message', required=True)

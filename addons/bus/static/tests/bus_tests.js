@@ -77,6 +77,60 @@ QUnit.module('Bus', {
         parent.destroy();
     });
 
+    QUnit.test('provide notification ID of 0 by default', function (assert) {
+        // This test is important in order to ensure that we provide the correct
+        // sentinel value 0 when we are not aware of the last notification ID
+        // that we have received. We cannot provide an ID of -1, otherwise it
+        // may likely be handled incorrectly (before this test was written,
+        // it was providing -1 to the server, which in return sent every stored
+        // notifications related to this user).
+        assert.expect(3);
+
+        // Simulate no ID of last notification in the local storage
+        testUtils.patch(LocalStorageServiceMock, {
+            getItem: function (key) {
+                if (key === 'last_ts') {
+                    return 0;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var pollDeferred = $.Deferred();
+        var parent = new Widget();
+        testUtils.addMockEnvironment(parent, {
+            data: {},
+            services: {
+                bus_service: BusService,
+                local_storage: LocalStorageServiceMock,
+            },
+            mockRPC: function (route, args) {
+                if (route === '/longpolling/poll') {
+                    assert.step(route);
+                    assert.strictEqual(args.last, 0,
+                        "provided last notification ID should be 0");
+
+                    pollDeferred = $.Deferred();
+                    pollDeferred.abort = (function () {
+                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
+                    }).bind(pollDeferred);
+                    return pollDeferred;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        var widget = new Widget(parent);
+        widget.appendTo($('#qunit-fixture'));
+
+        // trigger longpolling poll RPC
+        widget.call('bus_service', 'addChannel', 'lambda');
+        assert.verifySteps(['/longpolling/poll']);
+
+        testUtils.unpatch(LocalStorageServiceMock);
+        parent.destroy();
+    });
+
     QUnit.test('cross tab bus share message from a channel', function (assert) {
         var done = assert.async();
         assert.expect(5);

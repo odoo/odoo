@@ -10,6 +10,7 @@ import pytz
 from odoo import api, exceptions, fields, models, _
 
 from odoo.tools import pycompat
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 
@@ -58,7 +59,7 @@ class MailActivityType(models.Model):
              ' and not available when managing activities for other models.')
     default_next_type_id = fields.Many2one('mail.activity.type', 'Default Next Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
-    force_next = fields.Boolean("Auto-launched next activity", default=False)
+    force_next = fields.Boolean("Auto Schedule Next Activity", default=False)
     next_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
@@ -121,9 +122,9 @@ class MailActivity(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
-    activity_category = fields.Selection(related='activity_type_id.category')
-    activity_decoration = fields.Selection(related='activity_type_id.decoration_type')
-    icon = fields.Char('Icon', related='activity_type_id.icon')
+    activity_category = fields.Selection(related='activity_type_id.category', readonly=False)
+    activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=False)
+    icon = fields.Char('Icon', related='activity_type_id.icon', readonly=False)
     summary = fields.Char('Summary')
     note = fields.Html('Note')
     feedback = fields.Html('Feedback')
@@ -151,8 +152,8 @@ class MailActivity(models.Model):
         'Next activities available',
         compute='_compute_has_recommended_activities',
         help='Technical field for UX purpose')
-    mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids')
-    force_next = fields.Boolean(related='activity_type_id.force_next')
+    mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=False)
+    force_next = fields.Boolean(related='activity_type_id.force_next', readonly=False)
 
     @api.multi
     @api.onchange('previous_activity_type_id')
@@ -374,7 +375,7 @@ class MailActivity(models.Model):
     @api.multi
     def action_feedback_schedule_next(self, feedback=False):
         ctx = dict(
-                    self.env.context,
+                    clean_context(self.env.context),
                     default_previous_activity_type_id=self.activity_type_id.id,
                     activity_previous_deadline=self.date_deadline,
                     default_res_id=self.res_id,
@@ -445,7 +446,7 @@ class MailActivity(models.Model):
             }
         res_ids_sorted = sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item])
         activity_type_infos = []
-        for elem in activity_type_ids:
+        for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
             mail_template_info = []
             for mail_template_id in elem.mail_template_ids:
                 mail_template_info.append({"id": mail_template_id.id, "name": mail_template_id.name})
@@ -501,12 +502,12 @@ class MailActivityMixin(models.AbstractModel):
              'Today: Activity date is today\nPlanned: Future activities.')
     activity_user_id = fields.Many2one(
         'res.users', 'Responsible User',
-        related='activity_ids.user_id',
+        related='activity_ids.user_id', readonly=False,
         search='_search_activity_user_id',
         groups="base.group_user")
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Next Activity Type',
-        related='activity_ids.activity_type_id',
+        related='activity_ids.activity_type_id', readonly=False,
         search='_search_activity_type_id',
         groups="base.group_user")
     activity_date_deadline = fields.Date(
@@ -516,7 +517,7 @@ class MailActivityMixin(models.AbstractModel):
         groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
-        related='activity_ids.summary',
+        related='activity_ids.summary', readonly=False,
         search='_search_activity_summary',
         groups="base.group_user",)
 

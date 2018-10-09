@@ -8,13 +8,14 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Paolo Valier, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
-"Last-Translator: Paolo Valier, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,30 +24,30 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.recommended_product
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
 msgid "<i class=\"fa fa-exchange\"/> Compare"
 msgstr "<i class=\"fa fa-exchange\"/> Confronta"
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
 msgstr "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Aggiungi al Carrello"
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.recommended_product
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.recommended_product
 msgid "<span class=\"h3\">Suggested alternatives: </span>"
-msgstr ""
+msgstr "<span class=\"h3\">Alternative suggerite: </span>"
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
-msgstr ""
+msgstr "<strong>Prezzo:</strong>"
 
 #. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
 #: model:ir.ui.menu,name:website_sale_comparison.menu_attribute_category_action
 msgid "Attribute Categories"
-msgstr ""
+msgstr "Categorie di attributi"
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
@@ -62,8 +63,8 @@ msgstr "Nome Categoria"
 #. openerp-web
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:8
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:20
-#: model:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
 #, python-format
 msgid "Compare"
 msgstr "Confronta"
@@ -71,7 +72,7 @@ msgstr "Confronta"
 #. module: website_sale_comparison
 #. openerp-web
 #: code:addons/website_sale_comparison/static/src/js/website_sale_comparison.js:48
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 #, python-format
 msgid "Compare Products"
 msgstr "Confronta Prodotti"
@@ -125,9 +126,9 @@ msgstr "Attributo prodotto"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_attribute_category
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_attribute_category_tree_view
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attribute_category_tree_view
 msgid "Product Attribute Category"
-msgstr ""
+msgstr "Categoria di attributi di prodotto"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template
@@ -135,13 +136,13 @@ msgid "Product Template"
 msgstr "Modello prodotto"
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_compare
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_product
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Product image"
-msgstr ""
+msgstr "Immagine del prodotto"
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_product
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
 msgid "Remove"
 msgstr "Rimuovi"
 
@@ -156,14 +157,16 @@ msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce"
 msgstr ""
+"Definisci una categoria per raggruppare attributi simili sotto la stessa "
+"sezione nella pagina di confronto di eCommerce."
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Shop Comparator"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications for"
 msgstr ""
 
@@ -186,9 +189,9 @@ msgstr "Avviso"
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:15
 #, python-format
 msgid "You can compare max 4 products."
-msgstr ""
+msgstr "Puoi confrontare fino ad un massimo di 4 prodotti."
 
 #. module: website_sale_comparison
-#: model:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "or"
 msgstr "o"

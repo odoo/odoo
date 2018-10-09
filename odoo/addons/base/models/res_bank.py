@@ -74,8 +74,8 @@ class ResPartnerBank(models.Model):
     acc_holder_name = fields.Char(string='Account Holder Name', help="Account holder name, in case it is different than the name of the Account Holder")
     partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)], required=True)
     bank_id = fields.Many2one('res.bank', string='Bank')
-    bank_name = fields.Char(related='bank_id.name')
-    bank_bic = fields.Char(related='bank_id.bic')
+    bank_name = fields.Char(related='bank_id.name', readonly=False)
+    bank_bic = fields.Char(related='bank_id.bic', readonly=False)
     sequence = fields.Integer()
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, ondelete='cascade')
@@ -129,11 +129,11 @@ class ResPartnerBank(models.Model):
 
     @api.multi
     def _validate_qr_code_arguments(self):
-        for bank in self:            
+        for bank in self:
             if bank.currency_id.name == False:
                 currency = bank.company_id.currency_id
             else:
-                currency = bank.currency_id            
+                currency = bank.currency_id
             bank.qr_code_valid = (bank.bank_bic
                                             and bank.company_id.name
                                             and bank.acc_number

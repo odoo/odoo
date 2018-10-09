@@ -194,13 +194,17 @@ Discuss.include({
 
             // update control panel
             self.$buttons.find('button')
-                         .addClass('o_hidden');
+                         .removeClass('d-block')
+                         .addClass('d-none');
             self.$buttons.find('.o_mail_discuss_button_' + type)
-                         .removeClass('o_hidden');
+                         .removeClass('d-none')
+                         .addClass('d-block');
             self.$buttons.find('.o_mail_discuss_button_mark_all_read')
-                         .toggleClass('o_hidden', type !== 'mailbox_inbox');
+                         .toggleClass('d-none', type !== 'mailbox_inbox')
+                         .toggleClass('d-block', type === 'mailbox_inbox');
             self.$buttons.find('.o_mail_discuss_button_unstar_all')
-                         .toggleClass('o_hidden', type !== 'mailbox_starred');
+                         .toggleClass('d-none', type !== 'mailbox_starred')
+                         .toggleClass('d-block', type === 'mailbox_starred');
 
             // update Mailbox page buttons
             if (inMailbox) {

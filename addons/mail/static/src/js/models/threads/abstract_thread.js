@@ -191,6 +191,14 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     _postMessage: function () {
         return $.when();
     },
+    /**
+     * Warn views (e.g. discuss app, thread window, etc.) to update visually
+     * the unread counter of this thread.
+     *
+     * @abstract
+     * @private
+     */
+    _warnUpdatedUnreadCounter: function () {},
 });
 
 return AbstractThread;

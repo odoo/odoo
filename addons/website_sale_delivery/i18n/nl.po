@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -37,11 +37,6 @@ msgstr ""
 "factuur/creditfactuur"
 
 #. module: website_sale_delivery
-#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
-msgid "Carrier"
-msgstr "Vervoerder"
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose a delivery method"
 msgstr "Kies een verzendwijze"
@@ -62,6 +57,7 @@ msgid "Delivery Amount"
 msgstr "Afleveringsbedrag"
 
 #. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Delivery Methods"
@@ -152,19 +148,19 @@ msgid "Published"
 msgstr "Gepubliceerd"
 
 #. module: website_sale_delivery
-#: model:ir.model,name:website_sale_delivery.model_sale_order
-msgid "Quotation"
-msgstr "Offerte"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
 msgid "Restrict publishing to this website."
 msgstr "Publiceren op deze website beperken."
 
 #. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_sale_order
+msgid "Sale Order"
+msgstr "Verkooporder"
+
+#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid "Select to compute delivery rate"
-msgstr ""
+msgstr "Selecteer om leveringskosten te berekenen"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:43

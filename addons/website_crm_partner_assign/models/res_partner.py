@@ -8,6 +8,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 class ResPartnerGrade(models.Model):
     _name = 'res.partner.grade'
     _inherit = ['website.published.mixin']
+    _description = 'Partner Grade'
 
     website_published = fields.Boolean(default=True)
     sequence = fields.Integer('Sequence')
@@ -26,6 +27,7 @@ class ResPartnerGrade(models.Model):
 class ResPartnerActivation(models.Model):
     _name = 'res.partner.activation'
     _order = 'sequence'
+    _description = 'Partner Activation'
 
     sequence = fields.Integer('Sequence')
     name = fields.Char('Name', required=True)
@@ -35,7 +37,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     partner_weight = fields.Integer('Level Weight', default=0, track_visibility='onchange',
-        help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
+        help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.")
     grade_id = fields.Many2one('res.partner.grade', 'Level', track_visibility='onchange')
     grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)
     activation = fields.Many2one('res.partner.activation', 'Activation', index=True, track_visibility='onchange')

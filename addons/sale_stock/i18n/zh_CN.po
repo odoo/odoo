@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# Talway <9010446@qq.com>, 2018
+# v2exerer <9010446@qq.com>, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # xiaobin wu <bd5dml@gmail.com>, 2018
@@ -15,13 +15,17 @@
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Felix Yuen <fyu@odoo.com>, 2018
 # guohuadeng <guohuadeng@hotmail.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
+# roye w <159820@qq.com>, 2018
+# diaojiaolou <124412206@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
+"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,13 +34,16 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:269
+#: code:addons/sale_stock/models/sale_order.py:273
 #, python-format
 msgid ""
 "\n"
 "There are %s %s available across all warehouses.\n"
 "\n"
 msgstr ""
+"\n"
+"所有仓库都有%s%s可用。\n"
+"\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -44,6 +51,8 @@ msgid ""
 ".\n"
 "                Manual actions may be needed."
 msgstr ""
+".\n"
+"                可能需要手动操作."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -51,6 +60,8 @@ msgid ""
 "<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
 "times\"/> Cancelled</span>"
 msgstr ""
+"<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
+"times\"/> 取消</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -58,6 +69,8 @@ msgid ""
 "<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Preparation</span>"
 msgstr ""
+"<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> 准备</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -65,6 +78,8 @@ msgid ""
 "<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
 "truck\"/> Shipped</span>"
 msgstr ""
+"<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
+"truck\"/> 发货</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -72,11 +87,13 @@ msgid ""
 "<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Partially Available</span>"
 msgstr ""
+"<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> 部分可用</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sale Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">销售订单</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -122,7 +139,7 @@ msgstr "售后"
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr "从费用分析"
+msgstr "分析费用"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -137,7 +154,7 @@ msgstr "应用特定路线"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
+msgstr "选择应用的订单明细行特定路线."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -147,7 +164,12 @@ msgstr "公司"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "第一个交货订单的完成日期."
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -192,12 +214,12 @@ msgstr "开启销售订单行上的路线"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr ""
+msgstr "拣货出现异常："
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "销售订单发生异常:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -211,7 +233,7 @@ msgid ""
 "If you deliver all products at once, the delivery order will be scheduled "
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
-msgstr ""
+msgstr "如果您同时交付所有产品，发货单将根据最大的产品交货时间来计划。否则，它将基于最短的交货时间。"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -274,7 +296,7 @@ msgstr "手动"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "可能需要手动操作."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -305,7 +327,7 @@ msgid "Move forward expected delivery dates by"
 msgstr "将预期交货日期提前"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:276
+#: code:addons/sale_stock/models/sale_order.py:280
 #, python-format
 msgid "Not enough inventory!"
 msgstr "没有足够的库存！"
@@ -316,7 +338,7 @@ msgid "Order-Specific Routes"
 msgstr "订单特定路线"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:290
+#: code:addons/sale_stock/models/sale_order.py:294
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "订购数量减少！"
@@ -337,24 +359,15 @@ msgid "Pickings"
 msgstr "拣货"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_procurement_group
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
 msgstr "补货组"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "补货申请"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
 msgid "Product Template"
 msgstr "产品模板"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
-msgid "Quotation"
-msgstr "报价单"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -381,6 +394,7 @@ msgid "Sale Line"
 msgstr "销售明细行"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
 msgstr "销售订单"
@@ -394,6 +408,11 @@ msgstr "销售订单"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
 msgstr "销售订单个数"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "销售分析报告"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
@@ -414,11 +433,6 @@ msgstr "销售订单明细"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_ids
 msgid "Sales Orders"
 msgstr "销售订单"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "销售订单统计"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
@@ -482,6 +496,16 @@ msgid "Stock Rule"
 msgstr "库存规则"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rules_report
+msgid "Stock Rules report"
+msgstr "库存规则报告"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr "库存规则报告"
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
 "This allows to apply a special route on sales order lines (e.g. "
@@ -492,7 +516,7 @@ msgstr ""
 "在不寻常的情况下，这允许应用销售订单行的一种特殊的路径（如直运、订造）。为了向销售订单提供，路线必须在“销售订单线”选项并在他们的设置表格中被勾选。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:393
+#: code:addons/sale_stock/models/sale_order.py:397
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "这个产品是由%.2f%s包装的。你应该销售%.2f%s。"
@@ -514,7 +538,7 @@ msgid "Warehouse"
 msgstr "仓库"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:392
+#: code:addons/sale_stock/models/sale_order.py:396
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -530,7 +554,7 @@ msgid "When to start shipping"
 msgstr "何时开始装运"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:291
+#: code:addons/sale_stock/models/sale_order.py:295
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -538,19 +562,22 @@ msgid ""
 msgstr "您正在减少订购的数量！ 如果需要，不要忘记手动更新交货订单。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:433
+#: code:addons/sale_stock/models/sale_order.py:437
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
+"你不能减少订购数量低于接收数量。\n"
+"     首先创建一个退货。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:265
+#: code:addons/sale_stock/models/sale_order.py:269
 #, python-format
 msgid ""
-"You plan to sell %s %s but you only have %s %s available in %s warehouse."
-msgstr "您计划出售%s%s，但只有%s%s在%s仓库中可用。"
+"You plan to sell %s %s of %s but you only have %s %s available in %s "
+"warehouse."
+msgstr "你计划售出 %s %s of %s 但是你只有 %s %s 可用 %s 在仓库."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -571,24 +598,9 @@ msgstr "的"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "替代采购"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
-msgid "report.stock.report_stock_rule"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "设置-基础设置"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_rules_report
-msgid "stock.rules.report"
-msgstr ""
+msgstr "已做替代处理"

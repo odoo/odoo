@@ -44,7 +44,7 @@ class RecruitmentSource(models.Model):
 
 class RecruitmentStage(models.Model):
     _name = "hr.recruitment.stage"
-    _description = "Stage of Recruitment"
+    _description = "Recruitment Stages"
     _order = 'sequence'
 
     name = fields.Char("Stage name", required=True, translate=True)
@@ -79,7 +79,7 @@ class RecruitmentStage(models.Model):
 
 class RecruitmentDegree(models.Model):
     _name = "hr.recruitment.degree"
-    _description = "Degree of Recruitment"
+    _description = "Applicant Degree"
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
@@ -157,16 +157,16 @@ class Applicant(models.Model):
     emp_id = fields.Many2one('hr.employee', string="Employee", track_visibility="onchange", help="Employee linked to the applicant.")
     user_email = fields.Char(related='user_id.email', type="char", string="User Email", readonly=True)
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
-    employee_name = fields.Char(related='emp_id.name', string="Employee Name")
+    employee_name = fields.Char(related='emp_id.name', string="Employee Name", readonly=False)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], string='Attachments')
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
         copy=False, default='normal', required=True)
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked')
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid')
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing')
+    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked', readonly=False)
+    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid', readonly=False)
+    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing', readonly=False)
     
 
     @api.depends('date_open', 'date_closed')
@@ -452,6 +452,7 @@ class Applicant(models.Model):
         employee_action = self.env.ref('hr.open_view_employee_list')
         dict_act_window = employee_action.read([])[0]
         dict_act_window['context'] = {'form_view_initial_mode': 'edit'}
+        dict_act_window['res_id'] = employee.id
         return dict_act_window
 
     @api.multi

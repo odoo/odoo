@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Timo Koukkari <ti.ko@netikka.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -569,6 +569,7 @@ msgstr ""
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:393
+#: model:ir.model,name:lunch.model_lunch_cashmove
 #, python-format
 msgid "Lunch Cashmove"
 msgstr ""
@@ -585,6 +586,26 @@ msgstr "Lounastilaus"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Lunch Order Form"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line
+msgid "Lunch Order Line"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line_lucky
+msgid "Lunch Order Line Lucky"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "Lunch Product"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "Lunch Product Category"
 msgstr ""
 
 #. module: lunch
@@ -676,7 +697,7 @@ msgid "No previous order found"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/wizard/lucky_order.py:39
+#: code:addons/lunch/wizard/lucky_order.py:40
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
 msgstr ""
@@ -1099,7 +1120,6 @@ msgid "cashmove tree"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
 msgstr ""
@@ -1107,24 +1127,4 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line
-msgid "lunch order line"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product
-msgid "lunch product"
-msgstr "lounastuote"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product_category
-msgid "lunch product category"
-msgstr "lounastuotteiden ryhmä"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line_lucky
-msgid "lunch.order.line.lucky"
 msgstr ""

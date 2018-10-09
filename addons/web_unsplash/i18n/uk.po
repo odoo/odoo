@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Bohdan Lisnenko, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: web_unsplash
-#: model:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Generate an Access Key"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:70
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:66
 #, python-format
 msgid "Add"
 msgstr "Додати"
@@ -51,6 +51,11 @@ msgid "Apply"
 msgstr "Застосувати"
 
 #. module: web_unsplash
+#: model:ir.model,name:web_unsplash.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: web_unsplash
 #. openerp-web
 #: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:40
 #, python-format
@@ -60,7 +65,7 @@ msgstr ""
 #. module: web_unsplash
 #. openerp-web
 #: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:43
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:69
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:65
 #, python-format
 msgid "Paste your access key here"
 msgstr ""
@@ -74,14 +79,14 @@ msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:81
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:75
 #, python-format
 msgid "Please check your internet connection or contact administrator."
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:65
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:61
 #, python-format
 msgid "Please check your unsplash api key."
 msgstr ""
@@ -95,21 +100,21 @@ msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:52
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:50
 #, python-format
 msgid "Search is temporary unavailable"
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:78
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:72
 #, python-format
 msgid "Something went wrong"
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:55
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:53
 #, python-format
 msgid ""
 "The max number of searches is exceeded. Please retry in an hour or extend to"
@@ -118,7 +123,7 @@ msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:62
+#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:58
 #, python-format
 msgid "Unauthorized Key"
 msgstr ""
@@ -127,11 +132,6 @@ msgstr ""
 #: model:ir.model,name:web_unsplash.model_res_users
 msgid "Users"
 msgstr "Користувачі"
-
-#. module: web_unsplash
-#: model:ir.model,name:web_unsplash.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: web_unsplash
 #. openerp-web

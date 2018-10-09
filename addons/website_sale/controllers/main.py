@@ -8,9 +8,11 @@ from odoo import fields, http, tools, _
 from odoo.http import request
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
 from odoo.addons.website.controllers.main import Website
+from odoo.addons.sale.controllers.product_configurator import ProductConfiguratorController
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
 
@@ -129,7 +131,7 @@ class Website(Website):
         return views
 
 
-class WebsiteSale(http.Controller):
+class WebsiteSale(ProductConfiguratorController):
 
     def _get_compute_currency_and_context(self):
         pricelist_context = dict(request.env.context)
@@ -145,31 +147,6 @@ class WebsiteSale(http.Controller):
         compute_currency = lambda price: from_currency._convert(price, to_currency, request.env.user.company_id, fields.Date.today())
 
         return compute_currency, pricelist_context, pricelist
-
-    def get_attribute_value_ids(self, product):
-        """ list of selectable attributes of a product
-
-        :return: list of product variant description
-           (variant id, [visible attribute ids], variant price, variant sale price)
-        """
-        # product attributes with at least two choices
-        quantity = product._context.get('quantity') or 1
-        product = product.with_context(quantity=quantity)
-
-        visible_attrs_ids = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id').ids
-        to_currency = request.website.get_current_pricelist().currency_id
-        attribute_value_ids = []
-        for variant in product.product_variant_ids:
-            if to_currency != product.currency_id:
-                price = variant.currency_id._convert(
-                    variant.website_public_price, to_currency,
-                    request.env.user.company_id, fields.Date.today()
-                ) / quantity
-            else:
-                price = variant.website_public_price / quantity
-            visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
-            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price / quantity, price])
-        return attribute_value_ids
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
@@ -343,7 +320,8 @@ class WebsiteSale(http.Controller):
             'categories': categs,
             'main_object': product,
             'product': product,
-            'get_attribute_value_ids': self.get_attribute_value_ids,
+            'optional_product_ids': [p.with_context({'active_id': p.id}) for p in product.optional_product_ids],
+            'get_attribute_exclusions': self._get_attribute_exclusions,
         }
         return request.render("website_sale.product", values)
 
@@ -416,16 +394,17 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
+        product_custom_attribute_values = None
+        if kw.get('product_custom_attribute_values'):
+            product_custom_attribute_values = json.loads(kw.get('product_custom_attribute_values'))
+
         request.website.sale_get_order(force_create=1)._cart_update(
             product_id=int(product_id),
             add_qty=add_qty,
             set_qty=set_qty,
-            attributes=self._filter_attributes(**kw),
+            product_custom_attribute_values=product_custom_attribute_values
         )
         return request.redirect("/shop/cart")
-
-    def _filter_attributes(self, **kw):
-        return {k: v for k, v in kw.items() if "attribute" in k}
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update_json(self, product_id, line_id=None, add_qty=None, set_qty=None, display=True):
@@ -798,8 +777,8 @@ class WebsiteSale(http.Controller):
         acquirers = request.env['payment.acquirer'].search(domain)
 
         values['access_token'] = order.access_token
-        values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
-        values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
+        values['acquirers'] = [acq for acq in acquirers if (acq.payment_flow == 'form' and acq.view_template_id) or
+                                    (acq.payment_flow == 's2s' and acq.registration_view_template_id)]
         values['tokens'] = request.env['payment.token'].search(
             [('partner_id', '=', order.partner_id.id),
             ('acquirer_id', 'in', acquirers.ids)])
@@ -870,7 +849,8 @@ class WebsiteSale(http.Controller):
         assert order.partner_id.id != request.website.partner_id.id
 
         # Create transaction
-        vals = {'acquirer_id': acquirer_id}
+        vals = {'acquirer_id': acquirer_id,
+                'return_url': '/shop/payment/validate'}
 
         if save_token:
             vals['type'] = 'form_save'
@@ -879,7 +859,15 @@ class WebsiteSale(http.Controller):
 
         transaction = order._create_payment_transaction(vals)
 
-        return transaction.render_sale_button(order, '/shop/payment/validate')
+        # store the new transaction into the transaction list and if there's an old one, we remove it
+        # until the day the ecommerce supports multiple orders at the same time
+        last_tx_id = request.session.get('__website_sale_last_tx_id')
+        last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
+        if last_tx:
+            PaymentProcessing.remove_payment_transaction(last_tx)
+        PaymentProcessing.add_payment_transaction(transaction)
+        request.session['__website_sale_last_tx_id'] = transaction.id
+        return transaction.render_sale_button(order)
 
     @http.route('/shop/payment/token', type='http', auth='public', website=True)
     def payment_token(self, pm_id=None, **kwargs):
@@ -904,10 +892,11 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop/?error=token_not_found')
 
         # Create transaction
-        vals = {'payment_token_id': pm_id}
+        vals = {'payment_token_id': pm_id, 'return_url': '/shop/payment/validate'}
 
-        order._create_payment_transaction(vals)
-        return request.redirect('/shop/payment/validate')
+        tx = order._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(tx)
+        return request.redirect('/payment/process')
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
@@ -950,6 +939,7 @@ class WebsiteSale(http.Controller):
         if tx and tx.state == 'draft':
             return request.redirect('/shop')
 
+        PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect('/shop/confirmation')
 
 
@@ -974,7 +964,7 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop')
 
     @http.route(['/shop/print'], type='http', auth="public", website=True)
-    def print_saleorder(self):
+    def print_saleorder(self, **kwargs):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             pdf, _ = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([sale_order_id])
@@ -992,11 +982,6 @@ class WebsiteSale(http.Controller):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             ret = self.order_2_return_dict(order)
         return ret
-
-    @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
-    def get_unit_price(self, product_ids, add_qty, **kw):
-        products = request.env['product.product'].with_context({'quantity': add_qty}).browse(product_ids)
-        return {product.id: product.website_price / add_qty for product in products}
 
     # ------------------------------------------------------
     # Edit
@@ -1085,3 +1070,77 @@ class WebsiteSale(http.Controller):
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
             phone_code=country.phone_code
         )
+
+    @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
+    def cart_options_update_json(self, product_id, add_qty=1, set_qty=0, goto_shop=None, lang=None, **kw):
+        if lang:
+            request.website = request.website.with_context(lang=lang)
+
+        order = request.website.sale_get_order(force_create=1)
+        optional_product_ids = []
+        for k, v in kw.items():
+            if "optional-product-" in k and int(kw.get(k.replace("product", "add"))):
+                optional_product_ids.append(int(v))
+
+        custom_values = []
+        if kw.get('custom_values'):
+            custom_values = json.loads(kw.get('custom_values'))
+
+        value = {}
+        if add_qty or set_qty:
+            value = order._cart_update(
+                product_id=int(product_id),
+                add_qty=add_qty,
+                set_qty=set_qty,
+                optional_product_ids=optional_product_ids,
+                product_custom_attribute_values=self._get_product_custom_value(
+                    int(product_id),
+                    custom_values,
+                    'product_custom_attribute_values'
+                ),
+                no_variant_attribute_values=self._get_product_custom_value(
+                    int(product_id),
+                    custom_values,
+                    'no_variant_attribute_values'
+                )
+            )
+
+        # options have all time the same quantity
+        for option_id in optional_product_ids:
+            order._cart_update(
+                product_id=option_id,
+                set_qty=value.get('quantity'),
+                linked_line_id=value.get('line_id'),
+                product_custom_attribute_values=self._get_product_custom_value(
+                    option_id,
+                    custom_values,
+                    'product_custom_attribute_values'
+                ),
+                no_variant_attribute_values=self._get_product_custom_value(
+                    option_id,
+                    custom_values,
+                    'no_variant_attribute_values'
+                )
+            )
+
+        return str(order.cart_quantity)
+
+    def _get_product_custom_value(self, product_id, custom_values, field):
+        if custom_values:
+            for custom_value in custom_values:
+                if custom_value['product_id'] == product_id:
+                    return custom_value[field]
+
+        return None
+
+    @http.route(['/product_configurator/show_optional_products_website'], type='json', auth="public", methods=['POST'], website=True)
+    def show_optional_products_website(self, product_id, variant_values, **kw):
+        return self._show_optional_products(product_id, variant_values, request.website.get_current_pricelist(), True, **kw)
+
+    @http.route(['/product_configurator/optional_product_items_website'], type='json', auth="public", methods=['POST'], website=True)
+    def optional_product_items_website(self, product_id, **kw):
+        return self._optional_product_items(product_id, request.website.get_current_pricelist(), **kw)
+
+    @http.route(['/product_configurator/get_combination_info_website'], type='json', auth="public", methods=['POST'], website=True)
+    def get_combination_info_website(self, product_template_id, product_id, combination, add_qty, **kw):
+        return self._get_combination_info(product_template_id, product_id, combination, add_qty, request.website.get_current_pricelist())

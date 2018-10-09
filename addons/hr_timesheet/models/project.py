@@ -22,7 +22,7 @@ class Project(models.Model):
 
     @api.onchange('analytic_account_id')
     def _onchange_analytic_account(self):
-        if not self.analytic_account_id:
+        if not self.analytic_account_id and self._origin:
             self.allow_timesheets = False
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
@@ -96,7 +96,7 @@ class Task(models.Model):
     _inherit = "project.task"
 
     analytic_account_active = fields.Boolean("Analytic Account", related='project_id.analytic_account_id.active', readonly=True)
-    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.")
+    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=False)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")

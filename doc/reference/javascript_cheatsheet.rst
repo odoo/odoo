@@ -50,8 +50,8 @@ field registry, then adding the widget to the field in the form view
 
         var FieldChar = require('web.basic_fields').FieldChar;
 
-        var CustomFieldChar = Fieldchar.extend({
-            renderReadonly: function () {
+        var CustomFieldChar = FieldChar.extend({
+            _renderReadonly: function () {
                 // implement some custom logic here
             },
         });
@@ -120,9 +120,9 @@ This is usually done with code looking like this:
 
 .. code-block:: javascript
 
-    var AppSwitcher = require('web_enterprise.AppSwitcher');
+    var HomeMenu = require('web_enterprise.HomeMenu');
 
-    AppSwitcher.include({
+    HomeMenu.include({
         render: function () {
             this._super();
             // do something else here...
@@ -130,51 +130,6 @@ This is usually done with code looking like this:
     });
 
 
-Adding a client action
-======================
-
-A client action is a widget which will control the part of the screen below the
-menu bar.  It can have a control panel, if necessary.  Defining a client action
-can be done in two steps: implementing a new widget, and registering the widget
-in the action registry.
-
-- Implementing a new client action:
-    This is done by creating a widget:
-
-    .. code-block:: javascript
-
-        var ControlPanelMixin = require('web.ControlPanelMixin');
-        var AbstractAction = require('web.AbstractAction');
-
-        var ClientAction = AbstractAction.extend(ControlPanelMixin, {
-            ...
-        });
-
-    Do not add the controlpanel mixin if you do not need it.  Note that some
-    code is needed to interact with the control panel (via the
-    ``update_control_panel`` method given by the mixin).
-
-- Registering the client action:
-    As usual, we need to make the web client aware of the mapping between
-    client actions and the actual class:
-
-    .. code-block:: javascript
-
-        var core = require('web.core');
-
-        core.action_registry.add('my-custom-action', ClientAction);
-
-
-    Then, to use the client action in the web client, we need to create a client
-    action record (a record of the model ``ir.actions.client``) with the proper
-    ``tag`` attribute:
-
-    .. code-block:: xml
-
-        <record id="my_client_action" model="ir.actions.client">
-            <field name="name">Some Name</field>
-            <field name="tag">my-custom-action</field>
-        </record>
 
 Creating a new view (from scratch)
 ==================================

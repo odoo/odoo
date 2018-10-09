@@ -70,7 +70,9 @@ var SlideDialog = Widget.extend({
             model: 'slide.slide',
             method: 'search_count',
             args: [[['channel_id', '=', self.channel_id], ['name', '=', file_name]]],
-            kwargs: {}
+            kwargs: {
+                context: weContext.get(), // TODO use this._rpc
+            }
         });
     },
     slide_upload: function (ev) {
@@ -258,7 +260,7 @@ var SlideDialog = Widget.extend({
                     kwargs: {
                         fields: ['name'],
                         domain: [['channel_id', '=', self.channel_id]],
-                        context: weContext.get()
+                        context: weContext.get(), // TODO use this._rpc
                     }
                 });
             }));
@@ -279,7 +281,7 @@ var SlideDialog = Widget.extend({
                 args: [],
                 kwargs: {
                     fields: ['name'],
-                    context: weContext.get()
+                    context: weContext.get(), // TODO use this._rpc
                 }
             });
         }));
@@ -296,6 +298,7 @@ var SlideDialog = Widget.extend({
             });
         return res;
     },
+    // TODO: Remove this part, as now SVG support in image resize tools is included
     //Python PIL does not support SVG, so converting SVG to PNG
     svg_to_png: function () {
         var img = this.$el.find("img#slide-image")[0];
@@ -378,4 +381,10 @@ $('.oe_slide_js_upload').on('click', function () {
     var channel_id = $(this).attr('channel_id');
     slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
 });
+
+// automatically open the upload dialog if requested from query string
+if ($.deparam.querystring().enable_slide_upload !== undefined) {
+    $('.oe_slide_js_upload').click();
+}
+
 });

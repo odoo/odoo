@@ -161,7 +161,7 @@ class Product(models.Model):
         if self.env.context.get('company_owned', False):
             company_id = self.env.user.company_id.id
             return (
-                [('location_id.company_id', '=', company_id)],
+                [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
                 [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
                 [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
             ])
@@ -415,11 +415,11 @@ class ProductTemplate(models.Model):
         help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory.")
     sale_delay = fields.Float(
         'Customer Lead Time', default=0,
-        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the order and the delivery.")
+        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the sales order and the delivery.")
     tracking = fields.Selection([
         ('serial', 'By Unique Serial Number'),
         ('lot', 'By Lots'),
-        ('none', 'No Tracking')], string="Tracking", default='none', required=True)
+        ('none', 'No Tracking')], string="Tracking", help="Ensure the traceability of a storable product in your warehouse.", default='none', required=True)
     description_picking = fields.Text('Description on Picking', translate=True)
     description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
     description_pickingin = fields.Text('Description on Receptions', translate=True)
@@ -443,7 +443,7 @@ class ProductTemplate(models.Model):
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
-        help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,...")
+        help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO, etc.")
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     # TDE FIXME: really used ?
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
@@ -451,7 +451,7 @@ class ProductTemplate(models.Model):
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids')
+        related='categ_id.total_route_ids', readonly=False)
 
     def _is_cost_method_standard(self):
         return True

@@ -13,13 +13,14 @@
 # Mehmet Demirel <mdemirell@gmail.com>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,8 @@ msgid ""
 "<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give "
 "the reason thanks to the hereunder message tool</p>"
 msgstr ""
+"<p>Raporu buradan onaylayın.</p><p>İpucu: Reddederseniz, buradaki mesaj "
+"aracı sayesinde sebebini belirtmeyi unutmayın.</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -53,6 +56,8 @@ msgid ""
 "<p>Click on <b> Action Create Report </b> to submit selected expenses to "
 "your manager</p>"
 msgstr ""
+"<p>Tıkla<b>Eylem Oluşturma Raporu</b>Seçilen masrafları yöneticine "
+"gönder</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -169,7 +174,7 @@ msgstr "Reddedilmeyen, gerçekleşen masraflar"
 #: code:addons/hr_expense/models/hr_expense.py:158
 #, python-format
 msgid "Add a new expense,"
-msgstr ""
+msgstr "Yeni Bir Masraf Ekle,"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
@@ -217,7 +222,7 @@ msgstr "Onaylı Masraflar"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Document"
-msgstr ""
+msgstr "Doküman Ekle"
 
 #. module: hr_expense
 #. openerp-web
@@ -230,7 +235,7 @@ msgstr "Makbuzu buraya ekleyiniz."
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Ek Sayısı"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -245,7 +250,7 @@ msgstr "Belge Numarası"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
 msgid "Can Reset"
-msgstr ""
+msgstr "Resetlenebilir"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
@@ -280,6 +285,11 @@ msgid "Company related to this journal"
 msgstr "Bu yevmiyeyle ilişkili şirket"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigürasyon Ayarları"
+
+#. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
 msgstr "Yapılandırma"
@@ -293,7 +303,7 @@ msgstr "Onaylı Masraflar"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
-msgstr ""
+msgstr "Rapor Oluştur"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
@@ -302,12 +312,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Create a new expense"
-msgstr ""
+msgstr "Yeni Bir Masraf Oluştur"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Create a new expense category"
-msgstr ""
+msgstr "Yeni bir masraf kategorisi oluştur"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -315,7 +325,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "Create a new expense report"
-msgstr ""
+msgstr "Yeni Bir Gider Raporu Oluştur."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -417,7 +427,7 @@ msgstr "Personel (geri ödenecek)"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Employee Expenses"
-msgstr ""
+msgstr "Personel Masrafları"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id
@@ -461,16 +471,21 @@ msgid "Expense Products"
 msgstr "Masraf Ürünleri"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
+msgid "Expense Refuse Reason Wizard"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_sheet_register_payment_wizard
+msgid "Expense Register Payment Wizard"
+msgstr "Gider Kayıt Ödeme Sihirbazı"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
 msgstr "Masraf Bildirimi"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_sheet_register_payment_wizard
-msgid "Expense Report Register Payment wizard"
-msgstr "Masraf Bildirimi Ödeme Kaydetme Sihirbazı"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__state
@@ -515,11 +530,6 @@ msgstr "Onaylanacak Masraf Bildirimleri"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
 msgid "Expense Responsible"
 msgstr ""
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
-msgid "Expense refuse Reason wizard"
-msgstr "Masraf red nedeni sihirbazı"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -814,7 +824,7 @@ msgstr "Kısa Not"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Mesaj İletilme Hatası"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_ids
@@ -826,7 +836,7 @@ msgstr "Mesajlar"
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
 msgid "My Expense Reports"
-msgstr ""
+msgstr "Benim Gider Raporlarım"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
@@ -860,7 +870,7 @@ msgstr "İsim"
 #: code:addons/hr_expense/models/hr_expense.py:186
 #, python-format
 msgid "New Expense Report"
-msgstr ""
+msgstr "Yeni Gider Raporu"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1251,8 +1261,8 @@ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr "Ürünün İK masrafı olarak kullanılıp kullanılamayacağını belirtiniz."
+msgid "Specify whether the product can be selected in an expense."
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
@@ -1284,7 +1294,7 @@ msgstr "Masrafın durumu."
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
 msgid "Submit Report"
-msgstr ""
+msgstr "Rapor onayla"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1373,7 +1383,7 @@ msgstr "Gönderilecek"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "To report"
-msgstr ""
+msgstr "Raporla"
 
 #. module: hr_expense
 #: selection:hr.expense,activity_state:0
@@ -1395,7 +1405,7 @@ msgstr "Toplam"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
 msgid "Total (Company Currency)"
-msgstr ""
+msgstr "Toplam (Şirket para birimi)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
@@ -1441,7 +1451,7 @@ msgstr "Bildirilmemiş Masraflar"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid "User responsible of expense approval. Should be Expense Manager."
-msgstr ""
+msgstr "Gider onayından sorumlu kullanıcı. Gider Yöneticisi olmalı."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
@@ -1469,7 +1479,7 @@ msgstr "Bildirimi Göster"
 #: code:addons/hr_expense/static/src/js/tour.js:18
 #, python-format
 msgid "Want to manage your expenses? It starts here."
-msgstr ""
+msgstr "Masraflarınızı yönetmek ister misiniz? Buradan başlıyor."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -1487,7 +1497,7 @@ msgstr "Web Sitesi iletişim geçmişi"
 #: code:addons/hr_expense/models/hr_expense.py:674
 #, python-format
 msgid "You can only approve your department expenses"
-msgstr ""
+msgstr "Sadece kendi departman masraflarınızı onaylayabilirsiniz"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:620
@@ -1499,7 +1509,7 @@ msgstr "Sadece onaylanmış masraflar için muhasebe girişi oluşturabilirsiniz
 #: code:addons/hr_expense/models/hr_expense.py:695
 #, python-format
 msgid "You can only refuse your department expenses"
-msgstr ""
+msgstr "Sadece kendi departman masraflarınızı reddedebilirsiniz"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1520,19 +1530,19 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:575
 #, python-format
 msgid "You cannot add expenses of another employee."
-msgstr ""
+msgstr "Başka çalışanlara masraf ekleyemezsiniz."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:671
 #, python-format
 msgid "You cannot approve your own expenses"
-msgstr ""
+msgstr "Kendi masraflarınızı onaylayamazsınız"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:145
 #, python-format
 msgid "You cannot delete a posted or approved expense."
-msgstr ""
+msgstr "Gönderilmiş veya onaylanmış masrafları silemezsiniz."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:587
@@ -1544,13 +1554,13 @@ msgstr "İşlenmiş veya ödenmiş masrafı silemezsiniz."
 #: code:addons/hr_expense/models/hr_expense.py:692
 #, python-format
 msgid "You cannot refuse your own expenses"
-msgstr ""
+msgstr "Kendi masraflarınızı reddedemezsiniz"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:182
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
-msgstr ""
+msgstr "Aynı raporda farklı çalışanların harcamalarını rapor edemezsiniz."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:180
@@ -1594,8 +1604,3 @@ msgstr "kg"
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr "veya makbuzları %s ya epostayla gönderin."
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

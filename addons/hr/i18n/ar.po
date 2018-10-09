@@ -17,14 +17,16 @@
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
+# Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2018
+# amal ahmed <amalalhashemy88@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Mustafa J. Kadhem <safi2266@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: amal ahmed <amalalhashemy88@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,6 +91,9 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"مستندك لم يتم انشائه و ذلك لان البريد الالكتروني الخاص بك غير معرف, فضلا "
+"ارسل الرسائل الالكترونية باستخدام بريد الكتروني مسجل في بياناتك الوظيفية او "
+"قم بالاتصال بادارة الموارد البشرية"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
@@ -111,23 +116,23 @@ msgstr "الأنشطة"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "حالة النشاط"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "إضافة موظف جديد"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 msgid "Additional Note"
-msgstr ""
+msgstr "ملاحظات إضافية"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "الاسم المستعار للاتصال الأمن"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
@@ -140,32 +145,32 @@ msgstr "مؤرشف"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "عدد المرفقات"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Employees"
-msgstr ""
+msgstr "الموظفون المعتمدون"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
-msgstr ""
+msgstr "الشركاء المعتمدون"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "اشتراك تلقائي للاقسام"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
+msgstr "الاشتراك تلقائيا لهذه القناة لأعضاء تلك الإدارات."
 
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Bachelor"
-msgstr ""
+msgstr " البكالريوس"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
@@ -180,7 +185,7 @@ msgstr "الميلاد"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 msgid "Certificate Level"
-msgstr ""
+msgstr "مستوى الشهادة"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -230,6 +235,11 @@ msgid "Complete Name"
 msgstr "الاسم الكامل"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Configuration"
 msgstr "الإعدادات"
@@ -247,12 +257,12 @@ msgstr "معلومات التواصل"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "بلد الميلاد"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr ""
+msgstr "إنشاء إدارة جديدة"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
@@ -335,14 +345,19 @@ msgid "Email Aliases"
 msgstr "ألقاب البريد"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "Email Aliases Mixin"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
 msgid "Emergency Contact"
-msgstr ""
+msgstr "اتصال الطوارىء"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 msgid "Emergency Phone"
-msgstr ""
+msgstr "هاتف الطوارئ"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -358,7 +373,7 @@ msgstr "تصنيف الموظف"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__google_drive_link
 msgid "Employee Documents"
-msgstr ""
+msgstr "مستندات الموظف"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -413,7 +428,7 @@ msgstr "الكلمات الدليلية للموظف"
 msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
-msgstr ""
+msgstr "أدخل هنا العنوان الخاص للموظف ، وليس الشخص المرتبط بشركتك."
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -439,7 +454,7 @@ msgstr "أنثى"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "مجال الدراسة"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -486,7 +501,7 @@ msgstr "قسم الموارد البشرية"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "أقسام الموارد البشرية"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -535,7 +550,7 @@ msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديد�
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "إذا تم تحديده ، فإن بعض الرسائل بها خطأ في التسليم."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -549,7 +564,7 @@ msgstr ""
 #: code:addons/hr/models/hr.py:296
 #, python-format
 msgid "Import Template for Employees"
-msgstr ""
+msgstr "قالب الاستيراد للموظفين"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -607,7 +622,7 @@ msgstr "الوظائف"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 msgid "Km home-work"
-msgstr ""
+msgstr "كم المنزل العمل"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -636,19 +651,19 @@ msgstr "آخر تحديث في"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "معاش قانوني"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
-msgstr ""
+msgstr "لنقم بإنشاء وظيفة."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "المرفق الاساسي"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -676,7 +691,7 @@ msgstr "متزوّج"
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Master"
-msgstr ""
+msgstr "الرئيسي"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_medium
@@ -703,7 +718,7 @@ msgstr "الأعضاء"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "خطأ في تسليم الرسائل"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -725,22 +740,22 @@ msgstr "الجنسية (البلد)"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "الموعد النهائي للنشاط التالي"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "ملخص النشاط التالي"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "نوع النشاط التالي"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr ""
+msgstr "لا توظيف"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -774,7 +789,7 @@ msgstr "عدد الموظفين الذين يحملون هذا المنصب"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "عدد الاخطاء"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
@@ -794,7 +809,7 @@ msgstr "عدد الرسائل التي تتطلب اجراء"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "عدد الرسائل مع خطأ في التسليم"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -815,11 +830,13 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
+"هيكل اودوو للادارات يستخدم لادارة كل المستندات\n"
+"المتعلقى بالموظفين (الاقسام, المصورفات, جدول العمل, الاجازات, التوظيف, ...)."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer"
-msgstr "Officer"
+msgstr "مسئول"
 
 #. module: hr
 #: selection:hr.employee,certificate:0 selection:hr.employee,gender:0
@@ -859,7 +876,7 @@ msgstr "مكان الميلاد"
 #. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "مخطط"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
@@ -869,6 +886,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"سياسة لنشر رسالة على المستند باستخدام بوابة البريد الالكتروني.\n"
+"- الجميع: يمكن للجميع النشر\n"
+"- الشركاء: الشركاء المعتمدون فقط\n"
+"- المتابعين: فقط متابعو الوثيقة ذات الصلة أو أعضاء القنوات التالية.\n"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -888,7 +909,7 @@ msgstr "معلومات سرية"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr ""
+msgstr "على استعداد لتوظيف أكثر كفاءة؟"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -948,7 +969,7 @@ msgstr "رقم SSN"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 msgid "School"
-msgstr ""
+msgstr "مدرسة"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -956,12 +977,14 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
+"تعيين التقويم الافتراضي المستخدم لحساب تخصيص الوقت للأوراق والجداول الزمنية "
+"..."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
-msgstr ""
+msgstr "حدد ما إذا كانت عملية التوظيف مفتوحة أو مغلقة لهذا المنصب الوظيفي."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -973,17 +996,17 @@ msgstr "الإعدادات"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
 msgid "Show Organizational Chart"
-msgstr ""
+msgstr "إظهار الهيكل التنظيمي"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
-msgstr ""
+msgstr "عرض الهيكل التنظيمي على ملف الموظف"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
-msgstr ""
+msgstr "عرض الهيكل التنظيمي على ملف الموظف"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1018,17 +1041,17 @@ msgstr "رقم الضمان الإجتماعي"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr ""
+msgstr "تاريخ ميلاد الزوج"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 msgid "Spouse Complete Name"
-msgstr ""
+msgstr "اسم الزوج الكامل"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
-msgstr ""
+msgstr "ابدأ التوظيف"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
@@ -1045,6 +1068,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"الحالة على أساس الأنشطة\n"
+"المتأخرة: تاريخ الاستحقاق مر\n"
+"اليوم: تاريخ النشاط هو اليوم\n"
+"المخطط: الأنشطة المستقبلية"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1074,7 +1101,7 @@ msgstr "الوسوم"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "عنوان الموظف مرتبط بالشركة"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -1086,6 +1113,7 @@ msgstr ""
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
 msgstr ""
+"سيتمكن المستخدم من الموافقة على المستند الذي تم إنشاؤه بواسطة الموظفين."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -1093,6 +1121,8 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"سيتمكن المستخدم من الوصول إلى اعدادات الموارد البشرية وكذلك التقارير "
+"الإحصائية."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__image
@@ -1106,7 +1136,7 @@ msgstr "هذه الخانة تستخدم لصورة الموظف، أكبر حج
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr ""
+msgstr "يُستخدم هذا الحقل لتحديد المنطقة الزمنية التي ستعمل فيها الموارد."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -1147,6 +1177,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"استخدم هنا عنوان المنزل للموظف.\n"
+"يتم استخدام هذا العنوان الخاص في مستند سداد تقرير النفقات.\n"
+"يجب أن يكون مختلفًا عن عنوان العمل."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
@@ -1161,7 +1194,7 @@ msgstr "المستخدمون"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "الشواغر :"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -1172,6 +1205,20 @@ msgstr "تاريخ انتهاء التأشيرة"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
 msgid "Visa No"
 msgstr "رقم التأشيرة"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
+msgid "Website communication history"
+msgstr "سجل تواصل الموقع"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1186,6 +1233,9 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
+"مع نظرة سريعة على شاشة الموظف في اودوو ، أنت\n"
+"يمكنك بسهولة العثور على جميع المعلومات التي تحتاجها لكل شخص ؛\n"
+"بيانات الاتصال ، وموقع الوظيفة ، والتوافر ، وما إلى ذلك."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -1215,7 +1265,7 @@ msgstr "محمول العمل"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "تنظيم العمل"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1241,18 +1291,18 @@ msgstr "ساعات العمل"
 #: code:addons/hr/models/hr.py:206
 #, python-format
 msgid "You cannot create a recursive hierarchy."
-msgstr ""
+msgstr "لا يمكنك إنشاء تسلسل هرمي عودي."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "لا يمكنك إنشاء أقسام متكررة."
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
 msgid "Your document has not been created"
-msgstr ""
+msgstr "لم يتم إنشاء المستند الخاص بك"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -1268,13 +1318,3 @@ msgstr "على سبيل المثال دوام جزئي"
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "مثلا مدير مبيعات"
-
-#. module: hr
-#: model:ir.model,name:hr.model_mail_alias_mixin
-msgid "mail.alias.mixin"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_res_config_settings
-msgid "res.config.settings"
-msgstr "الدقة.التكوين.إعدادات"

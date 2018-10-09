@@ -6,19 +6,34 @@
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # Emily JIA <eji@odoo.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
+# keecome <7017511@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Emily JIA <eji@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
+msgid ""
+"A code server action can be executed from the website, using a dedicated "
+"controller. The address is <base>/website/action/<website_path>. Set this "
+"field as True to allow users to run this action. If it is set to False the "
+"action cannot be run through the website."
+msgstr ""
+"使用专用控制器可从网站上执行代码服务器操作。地址为<base> /website/action/<website_path>。将此字段设置为 "
+"True，可允许用户运行此操作。如果将此字段设置为 False，则无法通过网站运行该操作。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -29,16 +44,6 @@ msgstr "动作说明"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Action Name"
 msgstr "动作名称"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_line_test
-msgid "Action Rule Line Test"
-msgstr "动作规则测试"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_lead_test
-msgid "Action Rule Test"
-msgstr "动作规则测试"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
@@ -99,9 +104,24 @@ msgid "Automated Actions"
 msgstr "自动的动作"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_line_test
+msgid "Automated Rule Line Test"
+msgstr "自动化规则行测试"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_lead_test
+msgid "Automated Rule Test"
+msgstr "自动化规则测试"
+
+#. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "自动化"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
+msgid "Available on the Website"
+msgstr "可用于网站"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -142,8 +162,10 @@ msgstr "已取消"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
-msgid "Check this box if this contact is a customer."
-msgstr "如果该联系人是客户就选择这个框。"
+msgid ""
+"Check this box if this contact is a customer. It can be selected in sales "
+"orders."
+msgstr "如果这个联系人是客户，勾选此项。它就能够在销售订单中被选择。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -257,6 +279,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "在 XML 文件中定义的动作的 ID"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
 "If present, this condition must be satisfied before executing the action "
@@ -334,7 +361,7 @@ msgstr "分钟"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "型号"
+msgstr "模型"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
@@ -430,7 +457,7 @@ msgstr "优先级"
 msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
-msgstr ""
+msgstr "提供用于将新创建的记录链接到服务器操作所使用的记录的字段。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -465,6 +492,7 @@ msgstr "序列"
 
 #. module: base_automation
 #: selection:ir.actions.server,usage:0
+#: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
 msgstr "服务器动作"
 
@@ -483,7 +511,7 @@ msgstr "设置一个值使得这个动作在给定模型的菜单中可用。"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "建立一个新的自动化系统"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -503,7 +531,7 @@ msgstr "摘要"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "记录上用户的技术名称"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87
@@ -511,7 +539,12 @@ msgstr ""
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
-msgstr ""
+msgstr "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value)s\" 动作类型"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
+msgid "The full URL to access the server action through the website."
+msgstr "通过网站访问单据的完整URL。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -554,7 +587,7 @@ msgid ""
 "Use 'Specific User' to always assign the same user on the next activity. Use"
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
-msgstr ""
+msgstr "使用 '特定用户' 总是在下一个活动中分配相同的用户。使用 '记录中的通用用户' 指定在记录上选择的用户的字段名。 "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -570,6 +603,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"使用自动操作来自动触发操作\n"
+"                不同的屏幕。例如：由特定用户创建的线索可以\n"
+"                被自动设置为一个特定的销售团队，或者\n"
+"                在14天之后仍处于等待状态的机会可以\n"
+"                触发一个自动提醒的邮件。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -579,7 +617,7 @@ msgstr "用户"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "用户字段名字"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -591,6 +629,16 @@ msgstr "映射的值"
 #, python-format
 msgid "Warning"
 msgstr "警告"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
+msgid "Website Path"
+msgstr "网站路径"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
+msgid "Website Url"
+msgstr "网站网址"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -625,9 +673,4 @@ msgstr "如果不选中，此规则被隐藏且不被执行"
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"
+msgstr "编写动作将执行的Python代码。一些变量可供使用;有关python表达式的帮助在帮助选项卡中给出。"

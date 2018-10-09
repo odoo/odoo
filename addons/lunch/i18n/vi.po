@@ -4,13 +4,17 @@
 # 
 # Translators:
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
+# Martin Trigaux, 2018
+# fanha99 <fanha99@hotmail.com>, 2018
+# Tuan Tran <tmtuan.projects@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Tuan Tran <tmtuan.projects@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +30,7 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Tổng</strong>"
 
 #. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
@@ -168,14 +172,14 @@ msgstr "Thêm"
 #: code:addons/lunch/models/lunch.py:425
 #, python-format
 msgid "Alert"
-msgstr ""
+msgstr "Báo động"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_alert_action
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__alerts
 #: model:ir.ui.menu,name:lunch.lunch_alert_menu
 msgid "Alerts"
-msgstr ""
+msgstr "Cảnh báo"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
@@ -192,7 +196,7 @@ msgstr "Tổng tiền"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__end_hour
 msgid "And"
-msgstr ""
+msgstr "Và"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -203,7 +207,7 @@ msgstr "Lưu trữ"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__available
 msgid "Available"
-msgstr ""
+msgstr "Khả dụng"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__balance_visible
@@ -223,7 +227,7 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "By Employee"
-msgstr ""
+msgstr "Bởi nhân viên"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -233,7 +237,7 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "By User"
-msgstr ""
+msgstr "Theo người dùng"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -371,7 +375,7 @@ msgstr "Ngày"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__specific_day
 msgid "Day"
-msgstr ""
+msgstr "Ngày"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__description
@@ -440,7 +444,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__friday
 msgid "Friday"
-msgstr ""
+msgstr "Thứ sáu"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
@@ -546,7 +550,7 @@ msgstr "Cập nhật lần cuối vào"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "List"
-msgstr ""
+msgstr "Danh sách"
 
 #. module: lunch
 #: model:ir.module.category,name:lunch.module_lunch_category
@@ -561,6 +565,7 @@ msgstr ""
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:393
+#: model:ir.model,name:lunch.model_lunch_cashmove
 #, python-format
 msgid "Lunch Cashmove"
 msgstr ""
@@ -572,11 +577,31 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
 #, python-format
 msgid "Lunch Order"
-msgstr ""
+msgstr "Đặt bữa trưa"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Lunch Order Form"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line
+msgid "Lunch Order Line"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line_lucky
+msgid "Lunch Order Line Lucky"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "Lunch Product"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "Lunch Product Category"
 msgstr ""
 
 #. module: lunch
@@ -603,12 +628,12 @@ msgstr ""
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
 #: model:res.groups,name:lunch.group_lunch_manager
 msgid "Manager"
-msgstr ""
+msgstr "Quản lý"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__max_budget
 msgid "Max Budget"
-msgstr ""
+msgstr "Ngân sách tối đa"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
@@ -619,7 +644,7 @@ msgstr "Thông điệp"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__monday
 msgid "Monday"
-msgstr ""
+msgstr "Thư Hai"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -629,12 +654,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr ""
+msgstr "Bữa trưa của tôi"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "My Orders"
-msgstr ""
+msgstr "Đơn hàng của tôi"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
@@ -668,7 +693,7 @@ msgid "No previous order found"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/wizard/lucky_order.py:39
+#: code:addons/lunch/wizard/lucky_order.py:40
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
 msgstr ""
@@ -714,12 +739,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
 #: selection:lunch.cashmove,state:0
 msgid "Order"
-msgstr ""
+msgstr "Lệnh"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Order Date"
-msgstr ""
+msgstr "Ngày đặt hàng"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -756,7 +781,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 #: selection:lunch.cashmove,state:0
 msgid "Payment"
-msgstr ""
+msgstr "Thanh toán"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
@@ -785,12 +810,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Price"
-msgstr ""
+msgstr "Giá"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban
 msgid "Price:"
-msgstr ""
+msgstr "Giá:"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__product_id
@@ -804,7 +829,7 @@ msgstr "Sản phẩm"
 #: model:ir.actions.act_window,name:lunch.lunch_product_category_action
 #: model:ir.ui.menu,name:lunch.lunch_product_category_menu
 msgid "Product Categories"
-msgstr ""
+msgstr "Nhóm Sản phẩm"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__category_id
@@ -817,12 +842,12 @@ msgstr "Nhóm sản phẩm"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Category:"
-msgstr ""
+msgstr "Nhóm sản phẩm"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__name
 msgid "Product Name"
-msgstr ""
+msgstr "Tên Sản phẩm"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -869,7 +894,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Received"
-msgstr ""
+msgstr "Đã nhận"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__alert_type
@@ -889,12 +914,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__saturday
 msgid "Saturday"
-msgstr ""
+msgstr "Thứ Bảy"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Schedule"
-msgstr ""
+msgstr "Ấn định (thời gian)"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -938,7 +963,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__sunday
 msgid "Sunday"
-msgstr ""
+msgstr "Chủ nhật"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order__company_id
@@ -968,7 +993,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thursday
 msgid "Thursday"
-msgstr ""
+msgstr "Thứ năm"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
@@ -987,7 +1012,7 @@ msgstr "Tổng"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__tuesday
 msgid "Tuesday"
-msgstr ""
+msgstr "Thứ Ba"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.report_lunch_order
@@ -1050,7 +1075,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday
 msgid "Wednesday"
-msgstr ""
+msgstr "Thứ Tư"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
@@ -1091,7 +1116,6 @@ msgid "cashmove tree"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
 msgstr ""
@@ -1099,24 +1123,4 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line
-msgid "lunch order line"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product
-msgid "lunch product"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product_category
-msgid "lunch product category"
-msgstr ""
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line_lucky
-msgid "lunch.order.line.lucky"
 msgstr ""

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
 "Last-Translator: José Vicente <txusev@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -97,9 +97,19 @@ msgid "Point of Sale"
 msgstr "Punto de Venta"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configuración del TPV"
+
+#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
 msgstr "Pedidos del TPV"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesión TPV"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
@@ -123,6 +133,16 @@ msgid "Sales"
 msgstr "Ventas"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_crm_team
+msgid "Sales Channels"
+msgstr "Canales de Ventas"
+
+#. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
 msgstr "Orden de venta completa"
@@ -133,12 +153,6 @@ msgid "Sales Order"
 msgstr "Pedido de venta"
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "Estadísticas de pedidos de ventas"
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_crm_team
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
 msgid "Sales Team"
@@ -208,13 +222,3 @@ msgstr "Sitio web"
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Week"
 msgstr "Semana"
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_pos_config
-msgid "pos.config"
-msgstr "Configuración del TPV"
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_pos_session
-msgid "pos.session"
-msgstr "Sesión TPV"

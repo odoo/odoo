@@ -17,13 +17,15 @@
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # amal ahmed <amalalhashemy88@hotmail.com>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
+# Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
+# Ali Alrehawi <alrehawi@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Zuhair Hammadi <zuhair12@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -264,7 +266,7 @@ msgstr "الأنشطة"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "حالة النشاط"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__add_sign
@@ -344,7 +346,7 @@ msgstr "مؤرشف"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "عدد المرفقات"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__attachment_ids
@@ -375,6 +377,11 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_avatar
 msgid "Author's avatar"
+msgstr ""
+
+#. module: survey
+#: model:ir.model,name:survey.model_ir_autovacuum
+msgid "Automatic Vacuum"
 msgstr ""
 
 #. module: survey
@@ -603,6 +610,7 @@ msgid "Delete sent emails (mass mailing only)"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__description
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
@@ -653,7 +661,7 @@ msgstr "مسودة"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "القائمة المنسدلة"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__email
@@ -797,7 +805,7 @@ msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديد�
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "إذا تم تحديده ، فإن بعض الرسائل بها خطأ في التسليم."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -958,7 +966,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "المرفق الرئيسي"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
@@ -1029,12 +1037,17 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "خطأ في تسليم الرسائل"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__record_name
 msgid "Message Record Name"
 msgstr "اسم سجل الرسالة"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
@@ -1147,17 +1160,17 @@ msgstr "جديد"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "الموعد النهائي للنشاط القادم"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "ملخص النشاط القادم"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "نوع النشاط التالي"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -1249,7 +1262,7 @@ msgstr "عدد الاستطلاعات الكاملة"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "عدد الاخطاء"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
@@ -1259,7 +1272,7 @@ msgstr "عدد الرسائل التي تتطلب اجراء"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "عدد الرسائل مع خطأ في التسليم"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__tot_sent_survey
@@ -1351,6 +1364,10 @@ msgstr "الرسالة الأصل"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+msgid "Partially Completed"
+msgstr ""
+
+#. module: survey
 #: selection:survey.user_input,state:0
 msgid "Partially completed"
 msgstr ""
@@ -1379,7 +1396,7 @@ msgstr "دائم"
 #. module: survey
 #: selection:survey.survey,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "مخطط"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:188
@@ -1436,6 +1453,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url
 msgid "Public url"
 msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__website_published
+msgid "Published"
+msgstr "منشور"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__question_id
@@ -1745,6 +1767,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"الحالة على أساس الأنشطة\n"
+"المتأخرة: تاريخ الاستحقاق مر\n"
+"اليوم: تاريخ النشاط هو اليوم\n"
+"المخطط: الأنشطة المستقبلية"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__subject
@@ -1888,9 +1914,13 @@ msgstr "إخطارات النظام"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test"
 msgstr "اختبار"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+msgid "Test Entries"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__test_entry
@@ -2074,7 +2104,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__use_active_domain
 msgid "Use active domain"
-msgstr ""
+msgstr "استخدم نطاق نشط"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__template_id
@@ -2159,6 +2189,11 @@ msgid "View results"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__website_published
+msgid "Visible on the website as a comment"
+msgstr "ظاهر على الموقع كتعليق"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Vote"
 msgstr "التصويت"
@@ -2227,11 +2262,6 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
 msgid "free website"
-msgstr ""
-
-#. module: survey
-#: model:ir.model,name:survey.model_ir_autovacuum
-msgid "ir.autovacuum"
 msgstr ""
 
 #. module: survey

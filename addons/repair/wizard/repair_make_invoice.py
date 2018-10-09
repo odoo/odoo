@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class MakeInvoice(models.TransientModel):
     _name = 'repair.order.make_invoice'
-    _description = 'Make Invoice'
+    _description = 'Create Mass Invoice (repair)'
 
     group = fields.Boolean('Group by partner invoice address')
 

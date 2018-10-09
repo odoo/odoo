@@ -7,13 +7,14 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,12 +292,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "<i class=\"fa fa-arrow-right\"/> Read Guidelines"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/>Lees guidelines"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<i class=\"fa fa-arrow-right\"/>Edit Your Profile"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/>Wijzig uw profiel"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -546,10 +547,10 @@ msgstr "Voeg een reactie toe"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:43
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:45
 #, python-format
 msgid "Add to menu"
-msgstr ""
+msgstr "Toevoegen aan menu"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
@@ -562,7 +563,7 @@ msgstr ""
 "de foruminhoud gebeurd. "
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:201
+#: code:addons/website_forum/controllers/main.py:203
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -579,7 +580,7 @@ msgid "Answer"
 msgstr "Antwoord"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:520
+#: code:addons/website_forum/models/forum.py:521
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -753,7 +754,7 @@ msgstr "Een vraag stellen"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_attachment_count
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Aantal bijlagen"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -780,9 +781,9 @@ msgid "Avoid unnecessary introductions (Hi,... Please... Thanks...),"
 msgstr "Vermijd onnodige introducties (Hoi, ... Alsjeblieft... Bedankt...),"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
 #: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:345
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Bad Request"
 msgstr "Slechte aanvraag"
@@ -813,14 +814,9 @@ msgstr "Biografie"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid "Bronwe badge"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Bronze badge"
-msgstr ""
+msgstr "Bronze badge"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__bronze_badge
@@ -1553,7 +1549,10 @@ msgid "Forum Karma"
 msgstr "Forum Karma"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:34
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
+#, python-format
 msgid "Forum Name"
 msgstr "Forum naam"
 
@@ -1588,18 +1587,18 @@ msgstr "Forums"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
-msgid "Gamification badge"
-msgstr "Gamification badge"
+msgid "Gamification Badge"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
-msgid "Gamification challenge"
-msgstr "Gamification uitdaging"
+msgid "Gamification Challenge"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
-msgid "Gamification user badge"
-msgstr "Gamification gebruikers badge"
+msgid "Gamification User Badge"
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
@@ -1692,6 +1691,11 @@ msgstr "Heeft beantwoord"
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
 msgstr "Help"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Hide Intro"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1836,8 +1840,8 @@ msgid "It appears your email has not been verified."
 msgstr "Het lijkt erop alsof uw e-mail adres nog niet is gecontroleerd."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:889
-#: code:addons/website_forum/models/forum.py:909
+#: code:addons/website_forum/models/forum.py:890
+#: code:addons/website_forum/models/forum.py:910
 #, python-format
 msgid "It is not allowed to vote for its own post."
 msgstr "Het is niet toegestaan om te stellen op uw eigen bericht."
@@ -1951,7 +1955,7 @@ msgstr "Links"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hoofd bijlage"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -2044,8 +2048,7 @@ msgstr "Nieuwe discussie"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:32
-#: model_terms:ir.ui.view,arch_db:website_forum.content_new_forum
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:33
 #, python-format
 msgid "New Forum"
 msgstr "Nieuw forum"
@@ -2098,7 +2101,7 @@ msgid "Nofollow links"
 msgstr "Nofollow links"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:510
+#: code:addons/website_forum/models/forum.py:511
 #, python-format
 msgid "Not enough karma to retag."
 msgstr "Niet genoeg karma om opnieuw te labellen."
@@ -2311,6 +2314,11 @@ msgid "Post Types"
 msgstr "Plaats soorten"
 
 #. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_vote
+msgid "Post Vote"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
 msgstr "Plaats uw vraag"
@@ -2336,7 +2344,7 @@ msgid "Posted 100 comments"
 msgstr "Heeft 100 reacties geplaatst"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:447
+#: code:addons/website_forum/models/forum.py:448
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
@@ -2391,7 +2399,7 @@ msgid "Question"
 msgstr "Vraag"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:523
+#: code:addons/website_forum/models/forum.py:524
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2429,7 +2437,7 @@ msgid "Question set as favorite by 5 users"
 msgstr "Vraag ingesteld als favoriet door 5 gebruikers"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:345
 #, python-format
 msgid "Question should not be empty."
 msgstr "Vraag kan niet leeg zijn."
@@ -2468,7 +2476,7 @@ msgid "Questions"
 msgstr "Vragen"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:541
+#: code:addons/website_forum/models/forum.py:542
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2514,6 +2522,11 @@ msgstr "Doorverwijzen naar externe link"
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Refuse"
 msgstr "Weiger"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Register"
+msgstr "Registreer"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2570,7 +2583,7 @@ msgstr "Gecontroleerd door"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO geoptimaliseerd"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -2628,7 +2641,7 @@ msgstr "zelflerende"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Send answer"
-msgstr ""
+msgstr "Verstuur antwoord"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -2680,7 +2693,7 @@ msgstr "Deelopties"
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Silver badge"
-msgstr ""
+msgstr "Zilveren badge"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__silver_badge
@@ -2883,6 +2896,7 @@ msgstr ""
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -2905,7 +2919,7 @@ msgstr ""
 "aantal dagen sinds de aanmaak van de vraag"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:410
+#: code:addons/website_forum/models/forum.py:411
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Dit forum staat niet %s toe"
@@ -2960,8 +2974,8 @@ msgid "Title must not be empty"
 msgstr "Titel mag niet leeg zijn"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Title should not be empty."
 msgstr "Titel zou niet leeg moeten zijn."
@@ -3133,7 +3147,6 @@ msgid "Views"
 msgstr "Weergaven"
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_forum_post_vote
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
 msgid "Vote"
 msgstr "Stem"
@@ -3228,6 +3241,11 @@ msgid "Welcome Message"
 msgstr "Welkomstbericht"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Welcome!"
+msgstr "Welkom!"
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "What kinds of questions can I ask here?"
 msgstr "Welke soort vragen kan ik hier stellen?"
@@ -3277,7 +3295,7 @@ msgstr ""
 "Wacht op een moderator om uw vorige bericht te valideren alvorens verder te gaan."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:138
+#: code:addons/website_forum/models/forum.py:139
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."
@@ -3286,7 +3304,7 @@ msgstr ""
 "toestaat."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:437
+#: code:addons/website_forum/models/forum.py:438
 #, python-format
 msgid "You cannot create recursive forum posts."
 msgstr "U kan geen recursieve forum posts aanmaken."
@@ -3297,7 +3315,7 @@ msgid "You cannot post an empty answer"
 msgstr "Je kunt geen leeg antwoord ingeven"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:952
+#: code:addons/website_forum/models/forum.py:953
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
 msgstr "U heeft niet genoeg karma om een nieuw label aan te maken."

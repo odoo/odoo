@@ -2,6 +2,7 @@
 
 from . import partner
 from . import account
+from . import account_reconcile_model
 from . import account_payment
 from . import account_invoice
 from . import account_bank_statement

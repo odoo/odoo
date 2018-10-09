@@ -5,7 +5,6 @@ var config = require('web.config');
 var core = require('web.core');
 var ColorpickerDialog = require('web.colorpicker');
 var Dialog = require('web.Dialog');
-var weContext = require('web_editor.context');
 var widgets = require('web_editor.widget');
 var websiteNavbarData = require('website.navbar');
 
@@ -31,6 +30,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         options = options || {};
         this._super(parent, _.extend({
             title: _t("Customize this theme"),
+            buttons: [],
         }, options));
 
         this.defaultTab = options.tab || 0;
@@ -43,7 +43,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             templateDef = this._rpc({
                 model: 'ir.ui.view',
                 method: 'read_template',
-                args: ['website.theme_customize', weContext.get()],
+                args: ['website.theme_customize'],
             }).then(function (data) {
                 return core.qweb.add_template(data);
             });
@@ -312,7 +312,6 @@ var ThemeCustomizeDialog = Dialog.extend({
                         data[1],
                         '#wrapwrap { background-image: url("' + src + '"); }',
                         '//style',
-                        weContext.get(),
                     ],
                 });
             }).then(function () {
@@ -503,17 +502,12 @@ var ThemeCustomizeDialog = Dialog.extend({
             }).then(function (data) {
                 var files = data.scss[0][1];
                 var file = _.find(files, function (file) {
-                    switch (colorType) {
-                        case 'theme':
-                            return file.url === '/website/static/src/scss/options/colors/user_theme_color_palette.scss';
-                        case 'typo':
-                            return file.url === '/website/static/src/scss/options/colors/user_color_palette_typo.scss';
-                    }
-                    return file.url === '/website/static/src/scss/options/colors/user_color_palette_' + colorName + '.scss';
+                    var baseURL = '/website/static/src/scss/options/colors/';
+                    return file.url === _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
                 });
 
                 var colors = {};
-                colors[colorName] = ev.data.hex;
+                colors[colorName] = ev.data.cssColor;
                 if (colorName === 'alpha') {
                     colors['beta'] = 'null';
                     colors['gamma'] = 'null';
@@ -523,7 +517,16 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                 var updatedFileContent = file.arch;
                 _.each(colors, function (colorValue, colorName) {
-                    updatedFileContent = updatedFileContent.replace(new RegExp(colorName + ': (?:null|#[a-fA-F0-9]{6}),'), colorName + ': ' + colorValue + ',');
+                    var pattern = _.str.sprintf("'%s': %%s,\n", colorName);
+                    var regex = new RegExp(_.str.sprintf(pattern, ".+"));
+                    var replacement = _.str.sprintf(pattern, colorValue);
+                    if (regex.test(updatedFileContent)) {
+                        updatedFileContent = updatedFileContent
+                            .replace(regex, replacement);
+                    } else {
+                        updatedFileContent = updatedFileContent
+                            .replace(/( *)(.*hook.*)/, _.str.sprintf('$1%s$1$2', replacement));
+                    }
                 });
 
                 return self._rpc({

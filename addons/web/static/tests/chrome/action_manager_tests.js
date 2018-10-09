@@ -811,6 +811,43 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('lazy load multi record view with previous action', function (assert) {
+        assert.expect(6);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            debug: 1,
+        });
+        actionManager.doAction(4);
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4',
+            "breadcrumbs should contain the display_name of the opened record");
+
+        actionManager.doAction(3, {
+            resID: 2,
+            viewType: 'form',
+        });
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 3,
+            "there should be three controllers in the breadcrumbs");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4PartnersSecond record',
+            "the breadcrumb elements should be correctly ordered");
+
+        // go back to List
+        $('.o_control_panel .breadcrumb a:last').click();
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 2,
+            "there should be two controllers in the breadcrumbs");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4Partners',
+            "the breadcrumb elements should be correctly ordered");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('change the viewType of the current action', function (assert) {
         assert.expect(13);
 
@@ -2598,21 +2635,21 @@ QUnit.module('ActionManager', {
 
         assert.ok($('.o_control_panel  .fa-bar-chart-o').hasClass('active'),
             "bar chart button is active");
-        assert.ok(!$('.o_control_panel  .fa-line-chart').hasClass('active'),
+        assert.ok(!$('.o_control_panel  .fa-area-chart').hasClass('active'),
             "line chart button is not active");
 
         // display line chart
-        $('.o_control_panel  .fa-line-chart').click();
-        assert.ok($('.o_control_panel  .fa-line-chart').hasClass('active'),
+        $('.o_control_panel  .fa-area-chart').click();
+        assert.ok($('.o_control_panel  .fa-area-chart').hasClass('active'),
             "line chart button is now active");
 
         // switch to kanban and back to graph view
         $('.o_control_panel .o_cp_switch_kanban').click();
-        assert.strictEqual($('.o_control_panel  .fa-line-chart').length, 0,
+        assert.strictEqual($('.o_control_panel  .fa-area-chart').length, 0,
             "graph buttons are no longer in control panel");
 
         $('.o_control_panel .o_cp_switch_graph').click();
-        assert.ok($('.o_control_panel  .fa-line-chart').hasClass('active'),
+        assert.ok($('.o_control_panel  .fa-area-chart').hasClass('active'),
             "line chart button is still active");
         actionManager.destroy();
     });

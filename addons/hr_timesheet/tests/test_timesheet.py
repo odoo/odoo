@@ -148,6 +148,52 @@ class TestTimesheet(TestCommonTimesheet):
         })
         self.assertEquals(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
 
+    def test_create_unlink_project(self):
+        """ Check project creation, and if necessary the analytic account generated when project should track time. """
+        # create project wihtout tracking time, nor provide AA
+        non_tracked_project = self.env['project.project'].create({
+            'name': 'Project without timesheet',
+            'allow_timesheets': False,
+            'partner_id': self.partner.id,
+        })
+        self.assertFalse(non_tracked_project.analytic_account_id, "A non time-tracked project shouldn't generate an analytic account")
+
+        # create a project tracking time
+        tracked_project = self.env['project.project'].create({
+            'name': 'Project with timesheet',
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+        })
+        self.assertTrue(tracked_project.analytic_account_id, "A time-tracked project should generate an analytic account")
+        self.assertTrue(tracked_project.analytic_account_id.active, "A time-tracked project should generate an active analytic account")
+        self.assertEquals(tracked_project.partner_id, tracked_project.analytic_account_id.partner_id, "The generated AA should have the same partner as the project")
+        self.assertEquals(tracked_project.name, tracked_project.analytic_account_id.name, "The generated AA should have the same name as the project")
+        self.assertEquals(tracked_project.analytic_account_id.project_count, 1, "The generated AA should be linked to the project")
+
+        # create a project without tracking time, but with analytic account
+        analytic_project = self.env['project.project'].create({
+            'name': 'Project without timesheet but with AA',
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+            'analytic_account_id': tracked_project.analytic_account_id.id,
+        })
+        self.assertNotEquals(analytic_project.name, tracked_project.analytic_account_id.name, "The name of the associated AA can be different from the project")
+        self.assertEquals(tracked_project.analytic_account_id.project_count, 2, "The AA should be linked to 2 project")
+
+        # analytic linked to projects containing tasks can not be removed
+        task = self.env['project.task'].create({
+            'name': 'task in tracked project',
+            'project_id': tracked_project.id,
+        })
+        with self.assertRaises(UserError):
+            tracked_project.analytic_account_id.unlink()
+
+        # task can be removed, as there is no timesheet
+        task.unlink()
+
+        # since both projects linked to the same analytic account are empty (no task), it can be removed
+        tracked_project.analytic_account_id.unlink()
+
     def test_transfert_project(self):
         """ Transfert task with timesheet to another project should not modified past timesheets (they are still linked to old project. """
         Timesheet = self.env['account.analytic.line']

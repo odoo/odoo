@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -211,10 +211,10 @@ msgstr "Нельзя отменить отремонтированное."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
-msgid "Choose partner for whom the order will be invoiced and delivered."
+msgid ""
+"Choose partner for whom the order will be invoiced and delivered. You can "
+"find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Выберите партнера, по заказу которого будет выставлен счёт и произведена "
-"доставка."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
@@ -251,6 +251,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
 msgstr "Создать счёт"
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_order_make_invoice
+msgid "Create Mass Invoice (repair)"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -338,6 +343,11 @@ msgstr "Черновик"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "End Repair"
 msgstr "Конец ремонта"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -543,11 +553,6 @@ msgstr "Партия/Серия"
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
-
-#. module: repair
-#: model:ir.model,name:repair.model_repair_order_make_invoice
-msgid "Make Invoice"
-msgstr "Сформировать счёт-фактуру"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
@@ -796,14 +801,18 @@ msgstr "Ремонт"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
-msgid "Repair Fees Line"
-msgstr "Строка стоимости ремонта"
+msgid "Repair Fees"
+msgstr ""
 
 #. module: repair
-#: model:ir.model,name:repair.model_repair_line
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Line"
 msgstr "Строка ремонта"
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_line
+msgid "Repair Line (parts)"
+msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -1047,6 +1056,11 @@ msgid "Total amount"
 msgstr "Итоговая сумма"
 
 #. module: repair
+#: model:ir.model,name:repair.model_stock_traceability_report
+msgid "Traceability Report"
+msgstr "Отслеживание отчета"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
 msgid "Tracking"
 msgstr "Отслеживание"
@@ -1094,6 +1108,11 @@ msgid "Untaxed amount"
 msgstr "Сумма без налога"
 
 #. module: repair
+#: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
+msgid "Warn Insufficient Repair Quantity"
+msgstr ""
+
+#. module: repair
 #: code:addons/repair/models/repair.py:172
 #, python-format
 msgid "Warning"
@@ -1135,14 +1154,4 @@ msgstr ""
 #: code:addons/repair/models/repair.py:296
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr ""
-
-#. module: repair
-#: model:ir.model,name:repair.model_stock_traceability_report
-msgid "stock.traceability.report"
-msgstr "stock.traceability.report"
-
-#. module: repair
-#: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
-msgid "stock.warn.insufficient.qty.repair"
 msgstr ""

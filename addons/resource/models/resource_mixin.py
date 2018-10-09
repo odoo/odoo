@@ -22,13 +22,13 @@ class ResourceMixin(models.AbstractModel):
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get(),
-        index=True, related='resource_id.company_id', store=True)
+        index=True, related='resource_id.company_id', store=True, readonly=False)
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Hours',
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
-        index=True, related='resource_id.calendar_id', store=True)
+        index=True, related='resource_id.calendar_id', store=True, readonly=False)
     tz = fields.Selection(
-        string='Timezone', related='resource_id.tz',
+        string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
 
     @api.model

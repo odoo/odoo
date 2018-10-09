@@ -65,8 +65,8 @@ class Lead(models.Model):
 
     name = fields.Char('Opportunity', required=True, index=True)
     partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
-        help="Linked partner (optional). Usually created when converting the lead.")
-    active = fields.Boolean('Active', default=True)
+        help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
+    active = fields.Boolean('Active', default=True, track_visibility=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", track_visibility='onchange', track_sequence=4, index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
@@ -252,8 +252,9 @@ class Lead(models.Model):
     @api.onchange('user_id')
     def _onchange_user_id(self):
         """ When changing the user, also set a team_id or restrict team id to the ones user_id is member of. """
-        values = self._onchange_user_values(self.user_id.id)
-        self.update(values)
+        if self.user_id.sale_team_id:
+            values = self._onchange_user_values(self.user_id.id)
+            self.update(values)
 
     @api.constrains('user_id')
     @api.multi
@@ -355,14 +356,6 @@ class Lead(models.Model):
         return self.write({'probability': 0, 'active': False})
 
     @api.multi
-    def action_set_active(self):
-        return self.write({'active': True})
-
-    @api.multi
-    def action_set_unactive(self):
-        return self.write({'active': False})
-
-    @api.multi
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         for lead in self:
@@ -458,6 +451,14 @@ class Lead(models.Model):
             'target': 'inline',
             'context': {'default_type': 'opportunity'}
         }
+
+    def toggle_active(self):
+        """ When re-activating leads and opportunities set their probability
+        to the default stage one. """
+        res = super(Lead, self).toggle_active()
+        for lead in self.filtered(lambda lead: lead.active and lead.stage_id.probability):
+            lead.probability = lead.stage_id.probability
+        return res
 
     # ----------------------------------------
     # Business Methods
@@ -1234,7 +1235,7 @@ class Lead(models.Model):
 class Tag(models.Model):
 
     _name = "crm.lead.tag"
-    _description = "Category of lead"
+    _description = "Lead Tag"
 
     name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer('Color Index')
@@ -1246,7 +1247,7 @@ class Tag(models.Model):
 
 class LostReason(models.Model):
     _name = "crm.lost.reason"
-    _description = 'Reason for loosing leads'
+    _description = 'Opp. Lost Reason'
 
     name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True)

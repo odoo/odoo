@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-10-02 10:04+0000\n"
+"PO-Revision-Date: 2018-10-02 10:04+0000\n"
 "Last-Translator: Dharmraj Jhala <dja@openerp.com>, 2018\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
@@ -43,11 +43,6 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Optional Products</span>"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid "About us"
 msgstr ""
 
 #. module: sale_management
@@ -97,11 +92,18 @@ msgid "Archived"
 msgstr ""
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"As a leading professional services firm,\n"
-"                                we know that success is all about the\n"
-"                                commitment we put on strong services."
+#: model:ir.ui.menu,name:sale_management.menu_catalog_variants_action
+msgid "Attribute Values"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.ui.menu,name:sale_management.menu_product_attribute_action
+msgid "Attributes"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: sale_management
@@ -196,12 +198,6 @@ msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order__require_payment
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
-msgid "Electronic Payment"
-msgstr ""
-
-#. module: sale_management
 #: sql_constraint:sale.order.template.line:0
 msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
@@ -219,16 +215,6 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"Great quotation templates will significantly\n"
-"                            <strong>boost your success rate</strong>. The\n"
-"                            first section is usually about your company,\n"
-"                            your references, your methodology or\n"
-"                            guarantees, your team, SLA, terms and conditions, etc."
-msgstr ""
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__id
@@ -237,33 +223,10 @@ msgid "ID"
 msgstr "ઓળખ"
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"If edit a quotation from the 'Preview' of a quotation, you will\n"
-"                    update the quotation for this customer only. If you edit the quotation\n"
-"                    template (from the Configuration menu), all future quotations will\n"
-"                    use this modified template."
-msgstr ""
-
-#. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:138
-#, python-format
-msgid ""
-"If we store your payment information on our server, subscription payments "
-"will be made automatically."
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:18
-#, python-format
-msgid "Invalid order"
 msgstr ""
 
 #. module: sale_management
@@ -323,15 +286,13 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order__require_signature
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
-msgid "Online Signature"
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
+msgid "Online Payment"
 msgstr ""
 
 #. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:23
-#, python-format
-msgid "Operation not allowed"
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
+msgid "Online Signature"
 msgstr ""
 
 #. module: sale_management
@@ -349,46 +310,7 @@ msgid "Optional Products Lines"
 msgstr ""
 
 #. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:20
-#, python-format
-msgid "Order is not in a state requiring customer validation."
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:40
-#, python-format
-msgid "Order signed by %s"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid "Our Offer"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid "Our Quality"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid "Our Service"
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:135
-#, python-format
-msgid "Pay & Confirm"
-msgstr ""
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "Preview"
-msgstr ""
-
-#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
 msgid "Price"
 msgstr "કિંમત"
 
@@ -401,11 +323,8 @@ msgid "Product"
 msgstr "ઉત્પાદન"
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"Product quality is the foundation we\n"
-"                                stand on; we build it with a relentless\n"
-"                                focus on fabric, performance and craftsmanship."
+#: model:ir.ui.menu,name:sale_management.menu_product_settings
+msgid "Products"
 msgstr ""
 
 #. module: sale_management
@@ -414,11 +333,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__quantity
 msgid "Quantity"
 msgstr "જથ્થો"
-
-#. module: sale_management
-#: model:ir.model,name:sale_management.model_sale_order
-msgid "Quotation"
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
@@ -485,7 +399,6 @@ msgid "Remove one"
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order__require_signature
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
@@ -493,16 +406,20 @@ msgid ""
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order__require_payment
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
 msgid ""
-"Request an electronic payment to the customer in order to confirm orders "
+"Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order
+msgid "Sale Order"
 msgstr ""
 
 #. module: sale_management
@@ -543,12 +460,6 @@ msgid "Sequence"
 msgstr "ક્રમ"
 
 #. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:25
-#, python-format
-msgid "Signature is missing."
-msgstr ""
-
-#. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
 msgstr ""
@@ -570,15 +481,6 @@ msgstr ""
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
-msgstr ""
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"This is a <strong>sample quotation template</strong>. You should\n"
-"                            customize it to fit your own needs from the <i>Sale</i>\n"
-"                            application, using the menu: Configuration /\n"
-"                            Quotation Templates."
 msgstr ""
 
 #. module: sale_management
@@ -609,47 +511,12 @@ msgid ""
 msgstr ""
 
 #. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"We always ensure that our products are\n"
-"                                set at a fair price so that you will be\n"
-"                                happy to buy them."
-msgstr ""
-
-#. module: sale_management
-#: model_terms:sale.order.template,website_description:sale_management.sale_order_template_default
-msgid ""
-"You can <strong>set a description per product</strong>. Odoo will\n"
-"                    automatically create a quotation using the descriptions\n"
-"                    of all products in the proposal. The table of content\n"
-"                    on the left is generated automatically using the styles you\n"
-"                    used in your description (heading 1, heading 2, ...)"
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/models/sale_order.py:262
+#: code:addons/sale_management/models/sale_order.py:178
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:31
-#, python-format
-msgid "Your order has been confirmed."
-msgstr ""
-
-#. module: sale_management
-#: code:addons/sale_management/controllers/portal.py:27
-#, python-format
-msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "days"
 msgstr "દિવસો"
-
-#. module: sale_management
-#: model:ir.model,name:sale_management.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""

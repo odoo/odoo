@@ -4,13 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# xu xiaohu <xu.xiaohu@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: xu xiaohu <xu.xiaohu@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +42,8 @@ msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
 "title=\"Period\"/><strong> From: </strong>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> 来自: </strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -49,9 +54,9 @@ msgstr "<strong>到：</strong>"
 #: model:ir.model.fields,help:membership.field_res_partner__associate_member
 #: model:ir.model.fields,help:membership.field_res_users__associate_member
 msgid ""
-"A member with whom you want to associate your membership. It will consider "
+"A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr "想要与其关联您的会员资格的成员。该工具将会考虑已关联成员的会员资格状态。"
+msgstr "你将作为哪个客户的附属会籍。你的会员资格会随着主会籍的状态变化。"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
@@ -66,7 +71,7 @@ msgstr "添加描述"
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid "Add a new member"
-msgstr ""
+msgstr "新增会员"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -244,7 +249,7 @@ msgstr "会籍终止日期"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Ending Date Of Membership"
-msgstr ""
+msgstr "会籍终止日期"
 
 #. module: membership
 #: sql_constraint:product.template:0
@@ -268,7 +273,7 @@ msgstr "免费会员"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
 msgid "From"
-msgstr "从"
+msgstr "来自"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -458,6 +463,11 @@ msgid "Membership Invoice"
 msgstr "会籍发票"
 
 #. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Membership Line"
+msgstr "会籍明细行"
+
+#. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
 msgstr "会籍合作伙伴"
@@ -534,6 +544,8 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
+"Odoo帮你轻松地跟踪所有相关的活动：\n"
+"当前会员状态,讨论和会员历史等等。"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -614,7 +626,7 @@ msgstr "开始日期"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Date Of Membership"
-msgstr ""
+msgstr "会籍开始日期"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -663,9 +675,4 @@ msgstr "等待会员"
 #: code:addons/membership/models/partner.py:162
 #, python-format
 msgid "You cannot create recursive associated members."
-msgstr ""
-
-#. module: membership
-#: model:ir.model,name:membership.model_membership_membership_line
-msgid "membership.membership_line"
-msgstr "membership.membership_line"
+msgstr "错误，不能创建循环关系的会员。"

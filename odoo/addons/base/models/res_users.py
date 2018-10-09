@@ -179,6 +179,7 @@ class Groups(models.Model):
 class ResUsersLog(models.Model):
     _name = 'res.users.log'
     _order = 'id desc'
+    _description = 'Users Log'
     # Currenly only uses the magical fields: create_uid, create_date,
     # for recording logins. To be extended for other uses (chat presence, etc.)
 
@@ -227,7 +228,7 @@ class Users(models.Model):
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
-    login_date = fields.Datetime(related='log_ids.create_date', string='Latest connection')
+    login_date = fields.Datetime(related='log_ids.create_date', string='Latest connection', readonly=False)
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
@@ -247,8 +248,8 @@ class Users(models.Model):
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True)
-    email = fields.Char(related='partner_id.email', inherited=True)
+    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
+    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -430,12 +431,10 @@ class Users(models.Model):
 
     @api.multi
     def write(self, values):
-        if values.get('active') == False:
-            for user in self:
-                if user.id == SUPERUSER_ID:
-                    raise UserError(_("You cannot deactivate the admin user."))
-                elif user.id == self._uid:
-                    raise UserError(_("You cannot deactivate the user you're currently logged in as."))
+        if values.get('active') and SUPERUSER_ID in self._ids:
+            raise UserError(_("You cannot activate the superuser."))
+        if values.get('active') == False and self._uid in self._ids:
+            raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if values.get('active'):
             for user in self:
@@ -450,7 +449,7 @@ class Users(models.Model):
                     if values['company_id'] not in self.env.user.company_ids.ids:
                         del values['company_id']
                 # safe fields only, so we write as super-user to bypass access rights
-                self = self.sudo()
+                self = self.sudo().with_context(binary_field_real_user=self.env.user)
 
         res = super(Users, self).write(values)
         if 'company_id' in values:
@@ -512,20 +511,19 @@ class Users(models.Model):
     @tools.ormcache('self._uid')
     def context_get(self):
         user = self.env.user
-        result = {}
-        for k in self._fields:
-            if k.startswith('context_'):
-                context_key = k[8:]
-            elif k in ['lang', 'tz']:
-                context_key = k
-            else:
-                context_key = False
-            if context_key:
-                res = getattr(user, k) or False
-                if isinstance(res, models.BaseModel):
-                    res = res.id
-                result[context_key] = res or False
-        return result
+        # determine field names to read
+        name_to_key = {
+            name: name[8:] if name.startswith('context_') else name
+            for name in self._fields
+            if name.startswith('context_') or name in ('lang', 'tz')
+        }
+        # use read() to not read other fields: this must work while modifying
+        # the schema of models res.users or res.partner
+        values = user.read(list(name_to_key), load=False)[0]
+        return {
+            key: values[name]
+            for name, key in name_to_key.items()
+        }
 
     @api.model
     @api.returns('ir.actions.act_window', lambda record: record.id)
@@ -1040,7 +1038,7 @@ class GroupsView(models.Model):
         def linearize(app, gs):
             # 'User Type' is an exception
             if app.xml_id == 'base.module_category_user_type':
-                return (app, 'selection', gs)
+                return (app, 'selection', gs.sorted('id'))
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
@@ -1228,7 +1226,7 @@ class ChangePasswordWizard(models.TransientModel):
 class ChangePasswordUser(models.TransientModel):
     """ A model to configure users in the change password wizard. """
     _name = 'change.password.user'
-    _description = 'Change Password Wizard User'
+    _description = 'User, Change Password Wizard'
 
     wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')

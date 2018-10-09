@@ -352,7 +352,7 @@ class InventoryLine(models.Model):
         'Theoretical Quantity', compute='_compute_theoretical_qty',
         digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
     inventory_location_id = fields.Many2one(
-        'stock.location', 'Inventory Location', related='inventory_id.location_id', related_sudo=False)
+        'stock.location', 'Inventory Location', related='inventory_id.location_id', related_sudo=False, readonly=False)
     product_tracking = fields.Selection('Tracking', related='product_id.tracking', readonly=True)
 
     @api.one

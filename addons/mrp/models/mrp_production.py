@@ -11,7 +11,7 @@ from odoo.tools import float_compare, float_round
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
     _name = 'mrp.production'
-    _description = 'Manufacturing Order'
+    _description = 'Production Order'
     _date_name = 'date_planned_start'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_planned_start asc,id'
@@ -52,7 +52,7 @@ class MrpProduction(models.Model):
         domain=[('type', 'in', ['product', 'consu'])],
         readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
     product_qty = fields.Float(
         'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
@@ -163,7 +163,7 @@ class MrpProduction(models.Model):
                                 readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
     is_locked = fields.Boolean('Is Locked', default=True, copy=False)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
-    production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production')
+    production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production', readonly=False)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
@@ -588,8 +588,9 @@ class MrpProduction(models.Model):
             if not (raw_finished_lots <= finished_lots):
                 lots_short = raw_finished_lots - finished_lots
                 error_msg = _(
-                    'Some raw materials were produced for a lot without finished product. '
-                    'You can correct the following components by unlocking:\n'
+                    'Some raw materials have been consumed for a lot/serial number that has not been produced. '
+                    'Unlock the MO and click on the components lines to correct it.\n'
+                    'List of the components:\n'
                 )
                 move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda x: x.lot_produced_id in lots_short)
                 for ml in move_lines:

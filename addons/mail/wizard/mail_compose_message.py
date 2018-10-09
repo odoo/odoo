@@ -281,14 +281,17 @@ class MailComposer(models.TransientModel):
 
         blacklisted_rec_ids = []
         if mass_mail_mode and hasattr(self.env[self.model], "_primary_email"):
-            blacklist = self.env['mail.blacklist'].sudo().search([]).mapped('email')
+            BL_sudo = self.env['mail.blacklist'].sudo()
+            blacklist = set(BL_sudo.search([]).mapped('email'))
             if blacklist:
                 [email_field] = self.env[self.model]._primary_email
-                sql = """ SELECT id from %s WHERE LOWER(%s) = any (array[%s]) AND id in (%s)""" % \
-                      (self.env[self.model]._table, email_field, ', '.join("'" + rec + "'" for rec in blacklist),
-                       ', '.join(str(res_id) for res_id in res_ids))
-                self._cr.execute(sql)
-                blacklisted_rec_ids = [rec[0] for rec in self._cr.fetchall()]
+                targets = self.env[self.model].browse(res_ids).read([email_field])
+                # First extract email from recipient before comparing with blacklist
+                for target in targets:
+                    sanitized_email = self.env['mail.blacklist']._sanitize_email(target.get(email_field))
+                    if sanitized_email and sanitized_email in blacklist:
+                        blacklisted_rec_ids.append(target['id'])
+
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
@@ -457,10 +460,10 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
-        subjects = self.render_template(self.subject, self.model, res_ids)
-        bodies = self.render_template(self.body, self.model, res_ids, post_process=True)
-        emails_from = self.render_template(self.email_from, self.model, res_ids)
-        replies_to = self.render_template(self.reply_to, self.model, res_ids)
+        subjects = self.env['mail.template']._render_template(self.subject, self.model, res_ids)
+        bodies = self.env['mail.template']._render_template(self.body, self.model, res_ids, post_process=True)
+        emails_from = self.env['mail.template']._render_template(self.email_from, self.model, res_ids)
+        replies_to = self.env['mail.template']._render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
         if not self.partner_ids:
             default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
@@ -519,7 +522,3 @@ class MailComposer(models.TransientModel):
             values[res_id] = res_id_values
 
         return multi_mode and values or values[res_ids[0]]
-
-    @api.model
-    def render_template(self, template, model, res_ids, post_process=False):
-        return self.env['mail.template'].render_template(template, model, res_ids, post_process=post_process)

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_reveal_rule_form" model="ir.ui.view">
+        <field name="name">crm.reveal.rule.form</field>
+        <field name="model">crm.reveal.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_opportunity_tree_view" class="oe_stat_button" type="object" icon="fa-handshake-o" attrs="{'invisible': [('lead_type', '!=', 'opportunity'), ('opportunity_count', '=' , 0)]}">
+                            <div class="o_stat_info">
+                                <field name="opportunity_count"/>
+                                <span class="o_stat_text"> Opportunities </span>
+                            </div>
+                        </button>
+                        <button name="action_get_lead_tree_view" class="oe_stat_button" type="object" icon="fa-handshake-o" groups="crm.group_use_lead" attrs="{'invisible': [('lead_type', '!=', 'lead'), ('leads_count', '=' , 0)]}">
+                            <div class="o_stat_info">
+                                <field name="leads_count"/>
+                                <span class="o_stat_text"> Leads </span>
+                            </div>
+                        </button>
+                        <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                    </div>
+                    <div>
+                        <div class="alert alert-info pull-right" role="alert">
+                            No credit is consumed if the company is not found.<br/>
+                            1 credit is consumed if the company is found.<br/>
+                            <span attrs="{'invisible': [('lead_for', '!=', 'people')]}"><field name="calculate_credits" class="mb0"/> credits are consumed if the company matches the rule.</span>
+                        </div>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1 class="o_row">
+                            <field name="name" placeholder="e.g. US Visitors"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="lead_for" widget="radio"/>
+                    </group>
+                    <group>
+                        <group string="Website Traffic Conditions">
+                            <field name="country_ids" widget="many2many_tags"/>
+                            <field name="regex_url" widget="website_urls"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Opportunity Generation Conditions">
+                            <field name="industry_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <label for="company_size_min"/>
+                            <div>
+                                <field name="company_size_min" class="oe_inline" />
+                                <span> people </span>
+                            </div>
+                            <label for="company_size_max"/>
+                            <div>
+                                <field name="company_size_max" class="oe_inline" />
+                                <span> people </span>
+                            </div>
+                        </group>
+                        <group string="Contact Filter" attrs="{'invisible': [('lead_for', '!=', 'people')]}">
+                            <field name="preferred_role_id" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="other_role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" attrs="{'invisible': [('preferred_role_id','=', False)]}"/>
+                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="extra_contacts"/>
+                        </group>
+                    </group>
+                    <separator attrs="{'invisible': [('lead_type', '!=', 'lead')]}" string="Lead Data" />
+                    <separator attrs="{'invisible': [('lead_type', '!=', 'opportunity')]}" string="Opportunity Data" />
+                    <group>
+                        <group>
+                            <field name="lead_type" groups="crm.group_use_lead"/>
+                            <field name="suffix"/>
+                            <field name="team_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_reveal_rule_tree" model="ir.ui.view">
+        <field name="name">crm.reveal.rule.tree</field>
+        <field name="model">crm.reveal.rule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="lead_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_reveal_rule_action" model="ir.actions.act_window">
+        <field name="name">Lead Generation Rules</field>
+        <field name="res_model">crm.reveal.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No rule found
+            </p><p>
+                Create rules to generate B2B leads/opportunities by tracking data of your website visitors.
+            </p>
+        </field>
+    </record>
+
+    <record id="crm_reveal_view_form" model="ir.ui.view">
+        <field name="name">crm.reveal.view.form</field>
+        <field name="model">crm.reveal.view</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="reveal_state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="reveal_ip"/>
+                        <field name="reveal_rule_id"/>
+                        <field name="reveal_state"/>
+                        <field name="create_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_reveal_view_tree" model="ir.ui.view">
+        <field name="name">crm.reveal.view.tree</field>
+        <field name="model">crm.reveal.view</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="reveal_ip"/>
+                <field name="reveal_rule_id"/>
+                <field name="reveal_state"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_reveal_view_action" model="ir.actions.act_window">
+        <field name="name">Lead Generation Views</field>
+        <field name="res_model">crm.reveal.view</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- This menu is display in CRM app when crm_reveal is installed-->
+    <menuitem
+        id="crm_reveal_rule_menu_action"
+        action="crm_reveal_rule_action"
+        parent="crm.crm_menu_config"/>
+
+    <menuitem
+        id="crm_reveal_view_menu_action"
+        parent="crm.crm_menu_report"
+        action="crm_reveal_view_action"
+        groups="base.group_no_one"/>
+
+</odoo>

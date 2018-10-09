@@ -396,7 +396,7 @@ class AccountVoucher(models.Model):
 
 class AccountVoucherLine(models.Model):
     _name = 'account.voucher.line'
-    _description = 'Voucher Lines'
+    _description = 'Accounting Voucher Line'
 
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(default=10,
@@ -416,7 +416,7 @@ class AccountVoucherLine(models.Model):
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Tax', help="Only for tax excluded from price")
-    currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id')
+    currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id', readonly=False)
 
     @api.one
     @api.depends('price_unit', 'tax_ids', 'quantity', 'product_id', 'voucher_id.currency_id')

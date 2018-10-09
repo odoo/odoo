@@ -12,6 +12,7 @@ from odoo.tools.safe_eval import safe_eval
 
 class IrRule(models.Model):
     _name = 'ir.rule'
+    _description = 'Record Rule'
     _order = 'model_id DESC'
     _MODES = ['read', 'write', 'create', 'unlink']
 
