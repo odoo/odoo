@@ -48,6 +48,7 @@ class IrModuleModule(models.Model):
             'type': 'url',
             'name': attach.name,
             'url': attach.url,
+            'mimetype': attach.copy_ids.mimetype,
             'website_id': website.id,
             'theme_template_id': attach.id,
         }

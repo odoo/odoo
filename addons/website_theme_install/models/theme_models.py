@@ -37,6 +37,7 @@ class ThemeAttachment(models.Model):
     key = fields.Char(required=True)
     url = fields.Char()
     copy_ids = fields.One2many('ir.attachment', 'theme_template_id', 'Attachment using a copy of me', copy=False, readonly=True)
+    mimetype = fields.Char('Mime Type')
 
 
 class ThemeMenu(models.Model):
