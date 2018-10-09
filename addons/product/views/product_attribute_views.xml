@@ -21,6 +21,7 @@
                     <group name="main_fields">
                         <label for="name" string="Attribute Name"/>
                         <field name="name" nolabel="1"/>
+                        <field name="create_variant" widget="radio"/>
                     </group>
                 </group>
                 <group name="values_ids">
@@ -31,7 +32,6 @@
                             <field name="name"/>
                         </tree>
                     </field>
-                    <field name="create_variant" widget="radio"/>
                 </group>
             </form>
         </field>
@@ -111,7 +111,7 @@
                     <field name="name" />
                     <field name="price_extra" />
                     <field name="exclude_for" widget="one2many_list" mode="tree">
-                        <tree editable="top">
+                        <tree editable="bottom">
                             <field name="product_tmpl_id" />
                             <field name="value_ids" widget="many2many_tags" options="{'no_create': true}" />
                         </tree>
