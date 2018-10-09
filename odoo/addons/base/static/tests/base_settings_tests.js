@@ -1,9 +1,11 @@
 odoo.define('base.settings_tests', function (require) {
 "use strict";
 
+var field_registry = require('web.field_registry');
 var testUtils = require('web.test_utils');
 var view_registry = require('web.view_registry');
 
+var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
 var BaseSettingsView = view_registry.get('base_settings');
 var createActionManager = testUtils.createActionManager;
@@ -176,6 +178,83 @@ QUnit.module('base_settings_tests', {
         form.reload();
         assert.strictEqual(form.$('.app_settings_block').text().replace(/\s/g,''), 'CRMcrmtab');
         form.destroy();
+    });
+
+    QUnit.test('settings view works with deferred field', function (assert) {
+        assert.expect(7);
+
+        var def = $.Deferred();
+        testUtils.patch(field_registry.map.boolean, {
+            willStart: function () {
+                var res = this._super.apply(this, arguments);
+                return $.when(def, res);
+            }
+        });
+
+        createAsyncView({
+            View: BaseSettingsView,
+            model: 'project',
+            data: this.data,
+            arch: '<form string="Settings" class="oe_form_configuration o_base_settings">' +
+                    '<div class="o_control_panel">' +
+                        '<div class="o_panel">' +
+                            '<div class="o_setting_search">' +
+                                '<input type="text" class="searchInput" placeholder="Search..."/>' +
+                                '<span class="searchIcon"><i class="fa fa-search" role="img" aria-label="Search" title="Search"/></span>' +
+                            '</div> ' +
+                        '</div> ' +
+                    '<header>' +
+                        '<button string="Save" type="object" name="execute" class="oe_highlight" />' +
+                        '<button string="Cancel" type="object" name="cancel" class="oe_link" />' +
+                    '</header>' +
+                    '</div>' +
+                    '<div class="o_setting_container">' +
+                        '<div class="settings_tab"/>'+
+                        '<div class="settings">' +
+                            '<div class="notFound o_hidden">No Record Found</div>' +
+                            '<div class="app_settings_block" string="CRM" data-key="crm">' +
+                                '<div class="o_setting_left_pane">' +
+                                    '<field name="foo"/>'+
+                                '</div>'+
+                                '<div class="o_setting_right_pane">'+
+                                    '<label for="foo"/>'+
+                                    '<div class="text-muted">'+
+                                        'this is foo'+
+                                    '</div>'+
+                                '</div>' +
+                            '</div>' +
+                            '<div class="app_settings_block" string="Other App" data-key="otherapp">' +
+                                '<div class="o_setting_left_pane">' +
+                                    '<field name="bar"/>'+
+                                '</div>'+
+                                '<div class="o_setting_right_pane">'+
+                                    '<label for="bar"/>'+
+                                    '<div class="text-muted">'+
+                                        'this is bar'+
+                                    '</div>'+
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</form>',
+        }).then(function (form) {
+            assert.notOk(form.$('.oe_form_configuration').is(':empty'),
+               "render should finish once deferred fields are resolved");
+            assert.ok(form.$('.tab.selected').is('[data-key="crm"]'));
+            assert.ok(form.$('.tab').is('[data-key="otherapp"]'));
+            assert.ok(form.$('.app_settings_block[data-key="crm"]').is(':visible'));
+            assert.ok(form.$('.app_settings_block[data-key="otherapp"]').is(':hidden'));
+            assert.ok($(document.activeElement).is('.searchInput'), "search has focus");
+            form.destroy();
+        }).always(function () {
+            testUtils.unpatch(field_registry.map.boolean);
+        });
+
+        assert.strictEqual($('.oe_form_configuration').length, 0,
+           "view is not attached until deferred are resolved");
+
+        // resolve fields widget deferred so view is attached
+        def.resolve();
     });
 
 });
