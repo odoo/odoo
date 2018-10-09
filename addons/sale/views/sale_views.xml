@@ -1252,4 +1252,17 @@
             <field name="context">{'search_default_month':1}</field>
             <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
         </record>
+
+        <record id="action_sale_portal_domain" model="ir.actions.server">
+            <field name="name">Sale portal Domain</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+action = [
+    ('message_partner_ids', 'child_of', [env.user.partner_id.commercial_partner_id.id]),
+    ('state', 'in', env.context.get('state'))
+]
+            </field>
+        </record>
 </odoo>

@@ -39,13 +39,8 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
+        domain = request.env.ref('sale.action_sale_portal_domain').with_context(state=['sent', 'cancel']).run()
         SaleOrder = request.env['sale.order']
-
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
-        ]
 
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
@@ -91,13 +86,8 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_orders(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
+        domain = request.env.ref('sale.action_sale_portal_domain').with_context(state=['sale', 'done']).run()
         SaleOrder = request.env['sale.order']
-
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
-        ]
 
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
