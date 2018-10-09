@@ -419,7 +419,7 @@ class Applicant(models.Model):
             contact_name = False
             if applicant.partner_id:
                 address_id = applicant.partner_id.address_get(['contact'])['contact']
-                contact_name = applicant.partner_id.name_get()[0][1]
+                contact_name = applicant.partner_id.display_name
             else :
                 new_partner_id = self.env['res.partner'].create({
                     'is_company': False,
