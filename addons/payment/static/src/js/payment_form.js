@@ -125,7 +125,7 @@ odoo.define('payment.payment_form', function (require) {
                         $(button).attr('disabled', false);
                         $(button).children('.fa').addClass('fa-plus-circle')
                         $(button).find('span.o_loader').remove();
-                    }).fail(function (data, event) {
+                    }).fail(function (error, event) {
                         // if the rpc fails, pretty obvious
                         $(button).attr('disabled', false);
                         $(button).children('.fa').addClass('fa-plus-circle')
@@ -134,7 +134,7 @@ odoo.define('payment.payment_form', function (require) {
                         self.displayError(
                             _t('Server Error'),
                             _t("We are not able to add your payment method at the moment.") +
-                               message.data.message
+                               error.data.message
                         );
                     });
                 }
@@ -176,11 +176,11 @@ odoo.define('payment.payment_form', function (require) {
                                     _t("We are not able to redirect you to the payment form.")
                                 );
                             }
-                        }).fail(function (data, event) {
+                        }).fail(function (error, event) {
                             self.displayError(
                                 _t('Server Error'),
                                 _t("We are not able to redirect you to the payment form. ") +
-                                   message.data.message
+                                   error.data.message
                             );
                         });
                     }
@@ -292,7 +292,7 @@ odoo.define('payment.payment_form', function (require) {
                     $(button).attr('disabled', false);
                     $(button).children('.fa').addClass('fa-plus-circle')
                     $(button).find('span.o_loader').remove();
-                }).fail(function (data, event) {
+                }).fail(function (error, event) {
                     // if the rpc fails, pretty obvious
                     $(button).attr('disabled', false);
                     $(button).children('.fa').addClass('fa-plus-circle')
@@ -301,7 +301,7 @@ odoo.define('payment.payment_form', function (require) {
                     self.displayError(
                         _t('Server error'),
                         _t("We are not able to add your payment method at the moment.</p>") +
-                           data.data.message
+                           error.data.message
                     );
                 });
             }
