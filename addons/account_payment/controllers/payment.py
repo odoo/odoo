@@ -3,6 +3,7 @@
 
 from odoo import http, _
 from odoo.addons.portal.controllers.portal import _build_url_w_params
+from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.http import request, route
 
 
@@ -27,20 +28,21 @@ class PaymentPortal(http.Controller):
         except:
             return False
 
-        if request.env.user == request.env.ref('base.public_user'):
+        if request.env.user._is_public():
             save_token = False # we avoid to create a token for the public user
         vals = {
             'acquirer_id': acquirer_id,
+            'return_url': success_url,
         }
 
         if save_token:
             vals['type'] = 'form_save'
 
         transaction = invoice_sudo._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(transaction)
 
         return transaction.render_invoice_button(
             invoice_sudo,
-            success_url,
             submit_txt=_('Pay & Confirm'),
             render_values={
                 'type': 'form_save' if save_token else 'form',
@@ -67,7 +69,7 @@ class PaymentPortal(http.Controller):
             token = request.env['payment.token'].sudo().browse(int(pm_id))
         except (ValueError, TypeError):
             token = False
-        token_owner = invoice_sudo.partner_id if request.env.user == request.env.ref('base.public_user') else request.env.user.partner_id
+        token_owner = invoice_sudo.partner_id if request.env.user._is_public() else request.env.user.partner_id
         if not token or token.partner_id != token_owner:
             params['error'] = 'pay_invoice_invalid_token'
             return request.redirect(_build_url_w_params(error_url, params))
@@ -75,9 +77,11 @@ class PaymentPortal(http.Controller):
         vals = {
             'payment_token_id': token.id,
             'type': 'server2server',
+            'return_url': success_url,
         }
 
-        invoice_sudo._create_payment_transaction(vals)
+        tx = invoice_sudo._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(tx)
 
         params['success'] = 'pay_invoice'
         return request.redirect(_build_url_w_params(success_url, params))

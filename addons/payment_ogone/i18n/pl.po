@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # * payment_ogone
 # 
+# Translators:
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2018
+# Martin Trigaux, 2018
+# zbik2607 <darek@krokus.com.pl>, 2018
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,58 +27,58 @@ msgstr ""
 #: code:addons/payment_ogone/models/payment.py:242
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; znaleziono wielokrotne zamówienie"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment.py:240
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; nie znaleziono zamówienia"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "API User ID"
-msgstr ""
+msgstr "API użytkownika ID"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
 msgid "API User Password"
-msgstr ""
+msgstr "API Hasło użytkownika"
 
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_alias_usage
 msgid "Alias Usage"
-msgstr ""
+msgstr "Alias Usage"
 
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_ogone
 #: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_ogone
 #: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Card number"
-msgstr ""
+msgstr "Numer karty"
 
 #. module: payment_ogone
 #: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Imię właściciela karty"
 
 #. module: payment_ogone
 #: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
@@ -80,7 +88,7 @@ msgstr ""
 #. module: payment_ogone
 #: model_terms:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
 msgid "How to configure your Ogone account?"
-msgstr ""
+msgstr "Jak konfigurować twoje konto Ogone?"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_alias_usage
@@ -92,12 +100,12 @@ msgstr ""
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Manualna Konfiguracja"
 
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment.py:249
@@ -118,11 +126,13 @@ msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
 "(%s)"
 msgstr ""
+"Ogone: odebrane dane z brakującą referencją (%s) lub pay_id (%s) lub shasign"
+" (%s)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "PSPID"
-msgstr ""
+msgstr "PSPID"
 
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
@@ -132,37 +142,42 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Beneficjent płatności"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "Token płatności"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transakcja płatności"
 
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
 msgid "Provider"
-msgstr ""
+msgstr "Dostawca"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
 msgid "SHA Key IN"
-msgstr ""
+msgstr "SHA Key IN"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr ""
+msgstr "SHA Key OUT"
 
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
@@ -172,9 +187,4 @@ msgstr ""
 #. module: payment_ogone
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_token
-msgid "payment.token"
-msgstr ""
+msgstr "Przelew bankowy"

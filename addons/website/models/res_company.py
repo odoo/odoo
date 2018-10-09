@@ -28,7 +28,7 @@ class Company(models.Model):
         else:
             return self.env.ref('base.public_user').sudo().copy({
                 'name': 'Public user for %s' % self.name,
-                'login': 'public_company_%s' % self.id,
+                'login': 'public_user@company_%s.com' % self.id,
                 'company_id': self.id,
                 'company_ids': [(6, 0, [self.id])],
             })

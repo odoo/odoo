@@ -140,7 +140,7 @@
     <template id="survey_init" name="Survey">
         <t t-call="survey.layout">
             <div class="wrap">
-                <div class="oe_structure" />
+                <div class="oe_structure" id="oe_structure_survey_init_1"/>
                 <div class="container">
                     <t t-call="survey.back" />
                     <div class='jumbotron mt32'>
@@ -151,7 +151,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="oe_structure" />
+                <div class="oe_structure" id="oe_structure_survey_init_2"/>
             </div>
         </t>
     </template>
@@ -160,12 +160,12 @@
     <template id="survey" name="Survey">
         <t t-call="survey.layout">
             <div class="wrap">
-                <div class="oe_structure"/>
+                <div class="oe_structure" id="oe_structure_survey_survey_1"/>
                 <div class="container">
                     <t t-call="survey.back" />
                     <t t-call="survey.page" />
                 </div>
-                <div class="oe_structure"/>
+                <div class="oe_structure" id="oe_structure_survey_survey_2"/>
             </div>
         </t>
     </template>
@@ -238,7 +238,7 @@
 
     <template id="date" name="Date box">
         <div class='input-group date'>
-            <input type="text" date="true" class="form-control date" t-att-name="prefix"/>
+            <input type="date" class="form-control" t-att-name="prefix"/>
         </div>
     </template>
 

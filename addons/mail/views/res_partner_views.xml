@@ -34,7 +34,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
-                    <filter name="supplier" position="after">
+                    <filter name="inactive" position="after">
                         <separator />
                         <filter string="My Activities" name="activities_my"
                                 domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -59,6 +59,17 @@
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="auto_delete" eval="True"/>
             <field name="partner_to">${object.id}</field>
+        </record>
+
+        <!-- Add mail-defined activity view to standard action on partners to manage activities related to partner model -->
+        <record id="base.action_partner_form" model="ir.actions.act_window">
+            <field name="view_mode">kanban,tree,form,activity</field>
+        </record>
+        <record id="base.action_partner_customer_form" model="ir.actions.act_window">
+            <field name="view_mode">kanban,tree,form,activity</field>
+        </record>
+        <record id="base.action_partner_supplier_form" model="ir.actions.act_window">
+            <field name="view_mode">kanban,tree,form,activity</field>
         </record>
 
         <!--  Replace the default mass-mailing wizard in base with the composition wizard -->

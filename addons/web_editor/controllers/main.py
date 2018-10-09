@@ -140,7 +140,7 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     # add attachment (images or link)
     #------------------------------------------------------
-    @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'])
+    @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, upload=None, url=None, disable_optimization=None, filters=None, **kwargs):
         # the upload argument doesn't allow us to access the files if more than
         # one file is uploaded, as upload references the first file
@@ -215,7 +215,7 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     # remove attachment (images or link)
     #------------------------------------------------------
-    @http.route('/web_editor/attachment/remove', type='json', auth='user')
+    @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)
     def remove(self, ids, **kwargs):
         """ Removes a web-based image attachment if it is used by no view (template)
 
@@ -249,7 +249,7 @@ class Web_Editor(http.Controller):
     ## This route is used from CropImageDialog to get image info.
     ## It is used to display the original image when we crop a previously
     ## cropped image
-    @http.route('/web_editor/get_image_info', type='json', auth='user')
+    @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
     def get_image_info(self, image_id=None, xml_id=None):
         if xml_id:
             record = request.env.ref(xml_id)
@@ -289,7 +289,8 @@ class Web_Editor(http.Controller):
             excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
             # Load already customized scss files attachments
-            custom_attachments = request.env["ir.attachment"].search([("url", "=like", self._make_custom_scss_file_url("%%.%%", "%%"))])
+            custom_url = self._make_custom_scss_file_url("%%.%%", "%%")
+            custom_attachments = self.get_custom_attachment(custom_url, op='=like')
 
             # First check the t-call-assets used in the related views
             url_infos = dict()
@@ -379,72 +380,87 @@ class Web_Editor(http.Controller):
             scss = get_scss and scss_files_data_by_bundle or [],
         )
 
+    def save_scss_view_hook(self):
+        return {}
+
+    def save_scss_attachment_hook(self):
+        return {}
+
     ## The save_scss route is in charge of saving a given modification of a scss file.
     ## @param url - the original url of the scss file which has to be modified
     ## @param bundle_xmlid - the xmlid of the bundle in which the scss file addition can be found
     ## @param content - the new content of the scss file
-    @http.route("/web_editor/save_scss", type="json", auth="user")
+    @http.route("/web_editor/save_scss", type="json", auth="user", website=True)
     def save_scss(self, url, bundle_xmlid, content):
         IrAttachment = request.env["ir.attachment"]
 
         custom_url = self._make_custom_scss_file_url(url, bundle_xmlid)
 
         # Check if the file to save had already been modified
-        custom_attachment = IrAttachment.search([("url", "=", custom_url)])
+        custom_attachment = self.get_custom_attachment(custom_url)
         datas = base64.b64encode((content or "\n").encode("utf-8"))
         if custom_attachment:
             # If it was already modified, simply override the corresponding attachment content
             custom_attachment.write({"datas": datas})
         else:
             # If not, create a new attachment to copy the original scss file content, with its modifications
-            IrAttachment.create(dict(
-                name = custom_url,
-                type = "binary",
-                mimetype = "text/scss",
-                datas = datas,
-                datas_fname = url.split("/")[-1],
-                url = custom_url, # Having an attachment of "binary" type with an non empty "url" field
-                                  # is quite of an hack. This allows to fetch the "datas" field by adding
-                                  # a <link/> with the "url" content in the bundle template (see qweb)
-            ))
+            new_attach = {
+                'name': custom_url,
+                'type': "binary",
+                'mimetype': "text/scss",
+                'datas': datas,
+                'datas_fname': url.split("/")[-1],
+                'url': custom_url,
+            }
+            new_attach.update(self.save_scss_attachment_hook())
+            IrAttachment.create(new_attach)
 
             # Create a view to extend the template which adds the original file to link the new modified version instead
             IrUiView = request.env["ir.ui.view"]
             view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(lambda v: v.arch.find(url) >= 0)
-            IrUiView.create(dict(
-                name = custom_url,
-                key='web_editor.scss_%s' % str(uuid.uuid4())[:6],
-                mode = "extension",
-                inherit_id = view_to_xpath.id,
-                arch = """
+            new_view = {
+                'name': custom_url,
+                'key': 'web_editor.scss_%s' % str(uuid.uuid4())[:6],
+                'mode': "extension",
+                'inherit_id': view_to_xpath.id,
+                'arch': """
                     <data inherit_id="%(inherit_xml_id)s" name="%(name)s">
                         <xpath expr="//link[@href='%(url_to_replace)s']" position="attributes">
                             <attribute name="href">%(new_url)s</attribute>
                         </xpath>
                     </data>
-                """ % dict(
-                    inherit_xml_id = view_to_xpath.xml_id,
-                    name = custom_url,
-                    url_to_replace = url,
-                    new_url = custom_url,
-                )
-            ))
+                """ % {
+                    'inherit_xml_id': view_to_xpath.xml_id,
+                    'name': custom_url,
+                    'url_to_replace': url,
+                    'new_url': custom_url,
+                }
+            }
+            new_view.update(self.save_scss_view_hook())
+            IrUiView.create(new_view)
 
         request.env["ir.qweb"].clear_caches()
 
     ## The reset_scss route is in charge of reverting all the changes that were done to a scss file.
     ## @param url - the original URL of the scss file to reset
     ## @param bundle_xmlid - the xmlid of the bundle in which the scss file addition can be found
-    @http.route("/web_editor/reset_scss", type="json", auth="user")
+    @http.route("/web_editor/reset_scss", type="json", auth="user", website=True)
     def reset_scss(self, url, bundle_xmlid):
-        IrAttachment = request.env["ir.attachment"]
-        IrUiView = request.env["ir.ui.view"]
-
         custom_url = self._make_custom_scss_file_url(url, bundle_xmlid)
 
         # Simply delete the attachement which contains the modified scss file and the xpath view which links it
-        IrAttachment.search([("url", "=", custom_url)]).unlink()
-        IrUiView.search([("name", "=", custom_url)]).unlink()
+        self.get_custom_attachment(custom_url).unlink()
+        self.get_custom_view(custom_url).unlink()
+
+    def get_custom_attachment(self, custom_url, op='='):
+        assert op in ('=like', '='), 'Invalid operator'
+        IrAttachment = request.env["ir.attachment"]
+        return IrAttachment.search([("url", op, custom_url)])
+
+    def get_custom_view(self, custom_url, op='='):
+        assert op in ('=like', '='), 'Invalid operator'
+        IrUiView = request.env["ir.ui.view"]
+        return IrUiView.search([("name", op, custom_url)])
 
     def _make_custom_scss_file_url(self, url, bundle):
         parts = url.rsplit(".", 1)
@@ -455,9 +471,9 @@ class Web_Editor(http.Controller):
         m = self._match_scss_file_url_regex.match(url)
         if not m:
             return False
-        return dict(
-            module = m.group(1),
-            resource_path = "%s.%s" % (m.group(2), m.group(5)),
-            customized = bool(m.group(3)),
-            bundle = m.group(4) or False
-        )
+        return {
+            'module': m.group(1),
+            'resource_path': "%s.%s" % (m.group(2), m.group(5)),
+            'customized': bool(m.group(3)),
+            'bundle': m.group(4) or False
+        }

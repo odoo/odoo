@@ -283,7 +283,8 @@
                     <group>
                         <group>
                             <field string="Vendor" name="partner_id"
-                              context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'default_company_type': 'company'}"
+                              widget="res_partner_many2one"
+                              context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'default_is_company': True, 'show_vat': True}"
                               domain="[('supplier', '=', True)]"/>
                             <field name="reference" string="Vendor Reference"/>
                             <field name="vendor_bill_id" attrs="{'invisible': [('state','not in',['draft'])]}"
@@ -436,7 +437,8 @@
                     <group>
                         <group>
                             <field string="Customer" name="partner_id"
-                                context="{'search_default_customer':1, 'show_address': 1, 'default_company_type': 'company'}"
+                                widget="res_partner_many2one"
+                                context="{'search_default_customer':1, 'show_address': 1, 'default_is_company': True, 'show_vat': True}"
                                 options='{"always_reload": True, "no_quick_create": True}'
                                 domain="[('customer', '=', True)]" required="1"/>
                             <field name="payment_term_id"/>
@@ -579,7 +581,6 @@
                                     <field domain="[('company_id', '=', company_id),('internal_type','=', 'receivable'), ('deprecated', '=', False)]"
                                         name="account_id" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field domain="[('partner_id.ref_company_ids', 'in', [company_id])]" name="partner_bank_id" invisible="1"/>
                                     <field name="reference" attrs="{'readonly':[('state','!=','draft')]}"/>
                                     <field name="name"/>
                                 </group>
@@ -588,6 +589,7 @@
                                     <field name="fiscal_position_id" options="{'no_create': True}" />
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
+                                    <field name="partner_bank_id" domain="[('partner_id.ref_company_ids', 'in', [company_id])]" context="{'default_partner_id':company_id}"/>
                                 </group>
                             </group>
                             <field name="tax_line_ids">
@@ -632,7 +634,8 @@
             <field name="arch" type="xml">
                 <search string="Search Invoice">
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
-                    <field name="journal_id" />
+                    <filter domain="[('user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
+                    <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="unpaid" string="Open" domain="[('state', '=', 'open')]"/>
                     <filter name="in_payment" string="In Payment" domain="[('state', '=', 'in_payment')]"/>
@@ -642,8 +645,6 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson" domain="[('share','=', False)]"/>
                     <field name="date" string="Period"/>
-                    <separator/>
-                    <filter domain="[('user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -731,7 +732,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
@@ -765,7 +766,7 @@
             <field name="name">Credit Notes</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type': 'out_refund', 'type': 'out_refund', 'journal_type': 'sale'}</field>
@@ -803,7 +804,7 @@
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
@@ -850,7 +851,7 @@ action = action_values
             <field name="name">Refund</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>

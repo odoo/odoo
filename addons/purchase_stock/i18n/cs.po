@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
 # Ladislav Tomm <tomm@helemik.cz>, 2018
 # trendspotter, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
 msgstr ""
 
@@ -32,7 +31,7 @@ msgid "Action"
 msgstr "Akce"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
 #: selection:stock.rule,action:0
 msgid "Buy"
@@ -49,6 +48,11 @@ msgid "Buy to Resupply"
 msgstr ""
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
 msgid "Created Purchase Order Line"
 msgstr ""
@@ -62,10 +66,8 @@ msgstr ""
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+"of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
-"V závislosti na nainstalovaných modulech vám toto umožní definovat trasu "
-"produktu: jestli bude koupený, vyrobený, MTO / MTS, ..."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -83,12 +85,12 @@ msgid "Dropshipping"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
 msgstr ""
 
@@ -98,7 +100,7 @@ msgid "Incoming  Products"
 msgstr "Příchozí výrobky"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
 msgstr "Příchozí zásilky"
 
@@ -113,6 +115,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Mezinárodní obchodní podmínky jsou série předem definovaných obchodních "
+"termínů používaných v mezinárodních transakcích."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_invoice
@@ -130,7 +134,7 @@ msgid "Is the Sale Module Installed"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Logistics"
 msgstr "Logistika"
 
@@ -140,7 +144,7 @@ msgid "Lot/Serial"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
 msgstr ""
 
@@ -150,7 +154,7 @@ msgid "Manufacture"
 msgstr "Vyrobit"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier"
@@ -163,12 +167,12 @@ msgid "Minimum Inventory Rule"
 msgstr "Pravidlo minimálních skladových zásob"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
 msgstr ""
 
@@ -216,9 +220,14 @@ msgstr "Řádek objednávky"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_ids
-#: model:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
 msgstr "Objednávky"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_report
+msgid "Purchase Report"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
@@ -226,22 +235,17 @@ msgid "Purchase order count"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_purchase_report
-msgid "Purchases Orders"
-msgstr "Nákupní objednávky"
-
-#. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Push To"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
 msgstr "Účtenka"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
 msgstr "Obdržet výrobky"
 
@@ -252,7 +256,7 @@ msgid "Receptions"
 msgstr "Příjem zboží"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
 msgstr ""
 
@@ -272,7 +276,7 @@ msgid "Routes"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
 msgstr ""
 
@@ -282,13 +286,18 @@ msgid "Stock Move"
 msgstr "Pohyb zásob"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
 msgstr "Pohyby zásob"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
 msgstr ""
 
 #. module: purchase_stock
@@ -303,6 +312,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
 msgstr ""
+"Množství v objednávce jsou nižší než účtované. Měli byste požádat o vrácení "
+"peněz."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:38
@@ -313,7 +324,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
 "This adds a dropshipping route to apply on products in order to request your"
 " vendors to deliver to your customers. A product to dropship will generate a"
@@ -374,26 +385,16 @@ msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "days"
 msgstr "dnů"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "of"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
 msgstr ""
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
-msgid "report.stock.report_stock_rule"
-msgstr ""
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

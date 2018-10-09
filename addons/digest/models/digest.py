@@ -32,7 +32,7 @@ class Digest(models.Model):
                                   domain="[('model','=','digest.digest')]",
                                   default=lambda self: self.env.ref('digest.digest_mail_template'),
                                   required=True)
-    currency_id = fields.Many2one(related="company_id.currency_id", string='Currency')
+    currency_id = fields.Many2one(related="company_id.currency_id", string='Currency', readonly=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id.id)
     available_fields = fields.Char(compute='_compute_available_fields')
     is_subscribed = fields.Boolean('Is user subscribed', compute='_compute_is_subscribed')
@@ -51,7 +51,7 @@ class Digest(models.Model):
         for digest in self:
             kpis_values_fields = []
             for field_name, field in digest._fields.items():
-                if field.type == 'boolean' and (field_name.startswith('kpi_') or field_name.startswith('x_kpi_')) and digest[field_name]:
+                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and digest[field_name]:
                     kpis_values_fields += [field_name + '_value']
             digest.available_fields = ', '.join(kpis_values_fields)
 
@@ -112,7 +112,7 @@ class Digest(models.Model):
             previous_digest = self.with_context(start_date=tf[1][0], end_date=tf[1][1], company=company).sudo(user.id)
             kpis = {}
             for field_name, field in self._fields.items():
-                if field.type == 'boolean' and (field_name.startswith('kpi_') or field_name.startswith('x_kpi_')) and self[field_name]:
+                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]:
 
                     try:
                         compute_value = digest[field_name + '_value']
@@ -135,7 +135,7 @@ class Digest(models.Model):
             return False
         tip.user_ids = [4, user.id]
         body = tools.html_sanitize(tip.tip_description)
-        tip_description = self.env['mail.template'].render_template(body, 'digest.tip', self.id)
+        tip_description = self.env['mail.template']._render_template(body, 'digest.tip', self.id)
         return tip_description
 
     def compute_kpis_actions(self, company, user):

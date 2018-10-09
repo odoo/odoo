@@ -132,6 +132,9 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 self.action_manager.$el.on('scroll', core.bus.trigger.bind(core.bus, 'scroll'));
                 core.bus.trigger('web_client_ready');
                 odoo.isReady = true;
+                if (session.uid === 1) {
+                    self.$el.addClass('o_is_superuser');
+                }
             });
     },
 
@@ -382,7 +385,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 size: 'medium',
                 title: data.title,
                 $content: qweb.render("CrashManager.warning", data),
-            }).open();
+            }).open({shouldFocusButtons: true});
         } else {
             this.call('notification', 'notify', e.data);
         }

@@ -14,6 +14,15 @@ from odoo.tools import pycompat
 Image.preinit()
 Image._initialized = 2
 
+# Maps only the 6 first bits of the base64 data, accurate enough
+# for our purpose and faster than decoding the full blob first
+FILETYPE_BASE64_MAGICWORD = {
+    b'/': 'jpg',
+    b'R': 'gif',
+    b'i': 'png',
+    b'P': 'svg+xml',
+}
+
 # ----------------------------------------
 # Image resizing
 # ----------------------------------------
@@ -51,7 +60,10 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     """
     if not base64_source:
         return False
-    if size == (None, None):
+    # Return unmodified content if no resize or we etect first 6 bits of '<'
+    # (0x3C) for SVG documents - This will bypass XML files as well, but it's
+    # harmless for these purposes
+    if size == (None, None) or base64_source[:1] == b'P':
         return base64_source
     image_stream = io.BytesIO(codecs.decode(base64_source, encoding))
     image = Image.open(image_stream)
@@ -309,6 +321,15 @@ def image_resize_images(vals, big_name='image', medium_name='image_medium', smal
     elif big_name in vals or medium_name in vals or small_name in vals:
         vals[big_name] = vals[medium_name] = vals[small_name] = False
 
+def image_data_uri(base64_source):
+    """This returns data URL scheme according RFC 2397
+    (https://tools.ietf.org/html/rfc2397) for all kind of supported images
+    (PNG, GIF, JPG and SVG), defaulting on PNG type if not mimetype detected.
+    """
+    return 'data:image/%s;base64,%s' % (
+        FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png'),
+        base64_source.decode(),
+    )
 
 if __name__=="__main__":
     import sys

@@ -236,6 +236,9 @@
                     <button name="action_send_confirmation_email" string="Send Confirmation Email" type="object" attrs="{'invisible':['|', ('state', '!=', 'done'), ('carrier_id', '=', False)]}"/>
                  </xpath>
               </data>
+              <xpath expr="//field[@name='partner_id']" position="attributes">
+                  <attribute name="attrs">{'required': ['&amp;', ('delivery_type', '!=', False), ('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}</attribute>
+              </xpath>
             </field>
         </record>
 

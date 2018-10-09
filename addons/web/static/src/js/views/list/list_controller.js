@@ -27,6 +27,7 @@ var ListController = BasicController.extend({
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
         toggle_group: '_onToggleGroup',
+        navigation_move: '_onNavigationMove',
     }),
     /**
      * @constructor

@@ -17,9 +17,11 @@ $o-portal-table-th-pb: map-get($spacers, 2) !default; // bts4 pb-2
 $o-portal-table-td-pt: map-get($spacers, 1) !default; // bts4 pt-1
 $o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
 
-// Page custom bg (eg. 'Invoice')
-$o-portal-bg: true; // Enable/Disable page custom bg.
+// Portal custom bg color
 $o-portal-bg-color: desaturate($gray-200, 100%);
+
+// Check if portal uses default colors
+$o-portal-use-default-colors: $body-bg == $white;
 
 // Frontend general
 #wrapwrap {
@@ -164,11 +166,7 @@ hr {
 }
 
 %o-portal-breadcrumbs {
-    background-color: transparent;
-
-    .breadcrumb-item {
-        display: inline-flex;
-    }
+    background-color: inherit;
 }
 
 // Replaces old BS3 page-header class
@@ -306,12 +304,10 @@ img.o_we_custom_image {
 }
 
 // Portal specific
-
-// ===  Page custom bg (eg. 'Invoice') ===
-// This could have been achieved easily using a class (eg. bg-200), but we
-// don't want to force the design because of themes.
-@if ($o-portal-bg) {
-    #wrapwrap.o_portal_bg_dark {
+// ===  Page custom bg ===
+// To be applied to all portal pages if bg-color is white (default).
+@if ($o-portal-use-default-colors) {
+    #wrapwrap.o_portal {
         @include o-bg-color($o-portal-bg-color);
     }
 }
@@ -336,20 +332,10 @@ img.o_we_custom_image {
             padding-left: 0;
             padding-right: 0;
             @extend %o-portal-breadcrumbs;
+        }
 
-            .breadcrumb-item.active {
-                // In this context, active breadcrumb act as title
-                color:  $headings-color;
-                line-height: $h5-font-size/$font-size-base;
-                font: {size: $h5-font-size; weight: $headings-font-weight};
-
-                &:before {
-                    // Restore breadcrumb divider to default
-                    color: $breadcrumb-divider-color;
-                    line-height: $line-height-base;
-                    font: {size: $font-size-base; weight: $font-weight-base};
-                }
-            }
+        @if ($o-portal-use-default-colors) {
+            background-color: white!important;
         }
     }
 
@@ -362,6 +348,11 @@ img.o_we_custom_image {
         td {
             padding-top: $o-portal-table-td-pt;
             padding-bottom: $o-portal-table-td-pb;
+
+        }
+
+        tr:last-child td {
+            padding-bottom: $o-portal-table-td-pb * 1.5;
         }
 
         td, th {
@@ -473,18 +464,34 @@ form label {
 }
 
 .o_portal_sidebar {
-    .o_portal_contact_block {
-        @include media-breakpoint-down(md) {
+    #sidebar_content.card {
+        border-left: 0;
+        border-bottom: 0;
+
+        > div.card-body {
             border-left: $border-width solid $border-color;
-            border-bottom: 0;
         }
+
+        > ul > li {
+            border-left: $border-width solid $border-color;
+            margin-bottom: -1px;
+        }
+
+        > div.card-footer {
+            border-left: $border-width solid $border-color;
+            border-bottom: $border-width solid $border-color;
+        }
+    }
+
+    .o_portal_page_size {
+        width: 100%;
+        max-width: 210mm; // A4 page's width
     }
 
     .o_portal_html_view {
         overflow: hidden;
-        width: 100%;
-        max-width: 210mm; // A4 page's width
         background: white;
+        position: relative;
 
         .o_portal_html_loader {
             @include o-position-absolute(45%, 0, auto, 0);

@@ -5,6 +5,7 @@ require('web.dom_ready');
 var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
+var weContext = require('web_editor.context');
 var core = require('web.core');
 
 var _t = core._t;
@@ -139,6 +140,7 @@ if (!$('.o_website_links_chart').length) {
                     model: 'link.tracker.click',
                     method: 'search_count',
                     args: [[links_domain]],
+                    context: weContext.get(), // TODO use this._rpc
                 });
         };
 
@@ -148,6 +150,7 @@ if (!$('.o_website_links_chart').length) {
                     method: 'read_group',
                     args: [[links_domain], ['create_date']],
                     kwargs: {groupby:'create_date:day'},
+                    context: weContext.get(), // TODO use this._rpc
                 });
         };
 
@@ -157,6 +160,7 @@ if (!$('.o_website_links_chart').length) {
                     method: 'read_group',
                     args: [[links_domain], ['country_id']],
                     kwargs: {groupby:'country_id'},
+                    context: weContext.get(), // TODO use this._rpc
                 });
         };
 
@@ -167,6 +171,7 @@ if (!$('.o_website_links_chart').length) {
                     method: 'read_group',
                     args: [[links_domain, ['create_date', '>', interval]], ['country_id']],
                     kwargs: {groupby:'country_id'},
+                    context: weContext.get(), // TODO use this._rpc
                 });
         };
 
@@ -177,6 +182,7 @@ if (!$('.o_website_links_chart').length) {
                     method: 'read_group',
                     args: [[links_domain, ['create_date', '>', interval]], ['country_id']],
                     kwargs: {groupby: 'country_id'},
+                    context: weContext.get(), // TODO use this._rpc
                 });
         };
 

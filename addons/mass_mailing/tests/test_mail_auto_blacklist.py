@@ -13,7 +13,7 @@ class TestAutoBlacklist(common.TransactionCase):
         mail_thread = self.env['mail.thread']
 
         # create mailing contact record
-        self.mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email 1', 'email': 'test1@email.com'})
+        self.mailing_contact_1 = mass_mailing_contacts.create({'name': 'test email 1', 'email': 'Test1@email.com'})
 
         # create bounced history
         mail_statistics.create({

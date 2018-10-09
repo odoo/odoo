@@ -12,7 +12,7 @@ class FleetVehicleCost(models.Model):
     _description = 'Cost related to a vehicle'
     _order = 'date desc, vehicle_id asc'
 
-    name = fields.Char(related='vehicle_id.name', string='Name', store=True)
+    name = fields.Char(related='vehicle_id.name', string='Name', store=True, readonly=False)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
     cost_subtype_id = fields.Many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost')
     amount = fields.Float('Total Price')
@@ -110,8 +110,8 @@ class FleetVehicleLogContract(models.Model):
     state = fields.Selection([
         ('futur', 'Incoming'),
         ('open', 'In Progress'),
-        ('expired', 'Expired'),
         ('diesoon', 'Expiring Soon'),
+        ('expired', 'Expired'),
         ('closed', 'Closed')
         ], 'Status', default='open', readonly=True,
         help='Choose whether the contract is still valid or not',
@@ -134,7 +134,7 @@ class FleetVehicleLogContract(models.Model):
     # we need to keep this field as a related with store=True because the graph view doesn't support
     # (1) to address fields from inherited table
     # (2) fields that aren't stored in database
-    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
+    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)
     odometer = fields.Float(string='Odometer at creation', 
         help='Odometer measure of the vehicle at the moment of the contract creation')
 
@@ -317,7 +317,7 @@ class FleetVehicleLogFuel(models.Model):
     # we need to keep this field as a related with store=True because the graph view doesn't support
     # (1) to address fields from inherited table
     # (2) fields that aren't stored in database
-    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
+    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)
 
     @api.onchange('vehicle_id')
     def _onchange_vehicle(self):
@@ -366,7 +366,7 @@ class FleetVehicleLogServices(models.Model):
     vendor_id = fields.Many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]")
     # we need to keep this field as a related with store=True because the graph view doesn't support
     # (1) to address fields from inherited table and (2) fields that aren't stored in database
-    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
+    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)
     notes = fields.Text()
     cost_id = fields.Many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade')
 

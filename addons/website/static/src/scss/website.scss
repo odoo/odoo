@@ -2,20 +2,20 @@
 /// This file regroups the website design rules.
 ///
 
-$-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
-@if $-theme-font {
-    @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
-}
-@if $o-theme-headings-font-number != $o-theme-font-number {
-    $-theme-font: nth($o-theme-font-urls, $o-theme-headings-font-number);
-    @if $-theme-font {
-        @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
-    }
-}
-@if $o-theme-buttons-font-number != $o-theme-font-number and $o-theme-buttons-font-number != $o-theme-headings-font-number {
-    $-theme-font: nth($o-theme-font-urls, $o-theme-buttons-font-number);
-    @if $-theme-font {
-        @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+$-seen: ();
+$-font-numbers: (
+    $o-theme-font-number,
+    $o-theme-headings-font-number,
+    $o-theme-buttons-font-number,
+    $o-theme-navbar-font-number
+);
+@each $-number in $-font-numbers {
+    @if index($-seen, $-number) == null {
+        $-seen: append($-seen, $-number);
+        $-theme-font: nth($o-theme-font-urls, $-number);
+        @if $-theme-font {
+            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+        }
     }
 }
 
@@ -29,11 +29,17 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
         @include media-breakpoint-up(md) {
             padding: 0 7.5%;
         }
+
+        #wrap {
+            background-color: $white;
+        }
     }
 }
 
 .navbar {
-    @include o-bg-color(color('menu'));
+    @if ($o-theme-navbar-font-number != $o-theme-font-number) {
+        font-family: nth($o-theme-fonts, $o-theme-navbar-font-number);
+    }
 
     .nav-item {
         transition: opacity 1000ms ease 0s;
@@ -44,6 +50,18 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
         opacity: 0 !important;
     }
 }
+
+.navbar-light {
+    // Style only navbar-light which Odoo is only supposed to use in standard
+    // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
+    // Note: this only works because navbar-light is defined before navbar-dark,
+    // we may want to use a safest way when possible.
+    background-color: color('menu') !important;
+    @if (color-yiq(color('menu')) != $yiq-text-dark) {
+        @extend .navbar-dark;
+    }
+}
+
 .o_footer {
     @include o-bg-color(color('footer'));
 
@@ -752,7 +770,11 @@ table.table_desc tr td {
     &.o_slideshow {
         .carousel {
             height: 100%;
-            .item {
+            .carousel-inner {
+                height: 100%;
+            }
+            .carousel-item {
+                height: 100%;
                 padding-bottom: 64px;
             }
             img {
@@ -761,40 +783,32 @@ table.table_desc tr td {
                 margin: auto;
             }
             ul.carousel-indicators {
-                display: block;
                 height: auto;
                 padding: 0;
                 border-width: 0;
                 position: absolute;
                 bottom: 0;
+                width: 100%;
+                margin-left: 0;
+                left: 0%;
                 > * {
                     list-style-image: none;
                     display: inline-block;
                     width: 40px;
                     height: 40px;
-                    margin: 0 0px 5px 5px;
+                    margin: 2.5px 2.5px 2.5px 2.5px;
                     padding: 0;
                     border: 1px solid #aaa;
                     text-indent: initial;
                     background-size: cover;
                     background-color: #fff;
                     border-radius: 0;
+                    vertical-align: bottom;
+                    flex: 0 0 40px;
                     &:not(.active) {
                         opacity: 0.8;
-                        -webkit-filter: grayscale(100%);
-                        filter: grayscale(100%);
-                        filter: gray;
-                        filter: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' height='0'><filter id='greyscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0' /></filter></svg>#greyscale");
+                        filter: grayscale(1);
                     }
-                    &:first-child {
-                        margin-left: 0;
-                    }
-                }
-            }
-            .carousel-control {
-                &.right, &.left {
-                    background-image: none;
-                    background-color: transparent;
                 }
             }
         }
@@ -810,11 +824,20 @@ table.table_desc tr td {
     > * {
         position: relative;
     }
-    > .s_parallax_bg, > .s_parallax_filter {
+    > .s_parallax_bg {
         @include o-position-absolute(0, 0, 0, 0);
+        display: block;
+        background-color: inherit;
         background-size: cover;
         background-attachment: scroll;
         pointer-events: none;
+
+        &::after {
+            content: "";
+            @include o-position-absolute(0, 0, 0, 0);
+            display: block;
+            background-color: inherit;
+        }
     }
     &.s_parallax_is_fixed > .s_parallax_bg {
         background-attachment: fixed;
@@ -1027,5 +1050,11 @@ table.table_desc tr td {
                 }
             }
         }
+    }
+}
+
+@each $color, $value in $theme-colors {
+    .bg-#{$color}-light {
+        background-color: rgba($value, 0.1);
     }
 }

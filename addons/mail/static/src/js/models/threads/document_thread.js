@@ -188,6 +188,10 @@ var DocumentThread = Thread.extend({
      * Add this message to this document thread.
      *
      * This is ignored if the message is already linked to this document thread.
+     * Also, there is no fetch of unread message counter in a document thread,
+     * as this object is built from messages and/or thread field widget. The
+     * unread counter of a document thread is the sum of needaction messages
+     * linked to this document thread.
      *
      * @override
      * @private
@@ -206,6 +210,10 @@ var DocumentThread = Thread.extend({
         // update message ids associated to this document thread
         if (!_.contains(this._messageIDs, message.getID())) {
             this._messageIDs.push(message.getID());
+        }
+        // update unread counter
+        if (message.isNeedaction()) {
+            this._unreadCounter++;
         }
     },
     /**

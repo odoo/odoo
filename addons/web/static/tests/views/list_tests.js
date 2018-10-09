@@ -23,7 +23,7 @@ QUnit.module('Views', {
                     foo: {string: "Foo", type: "char"},
                     bar: {string: "Bar", type: "boolean"},
                     date: {string: "Some Date", type: "date"},
-                    int_field: {string: "int_field", type: "integer", sortable: true},
+                    int_field: {string: "int_field", type: "integer", sortable: true, group_operator: "sum"},
                     qux: {string: "my float", type: "float"},
                     m2o: {string: "M2O field", type: "many2one", relation: "bar"},
                     o2m: {string: "O2M field", type: "one2many", relation: "bar"},
@@ -868,7 +868,6 @@ QUnit.module('Views', {
 
     QUnit.test('groups can be sorted on aggregates', function (assert) {
         assert.expect(10);
-
         var list = createView({
             View: ListView,
             model: 'foo',
@@ -901,6 +900,47 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('groups cannot be sorted on non-aggregable fields', function (assert) {
+        assert.expect(6);
+        this.data.foo.fields.sort_field = {string: "sortable_field", type: "sting", sortable: true, default: "value"};
+        _.each(this.data.records, function(elem) {
+            elem.sort_field = "value" + elem.id;
+        });
+        this.data.foo.fields.foo.sortable= true;
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['foo'],
+            arch: '<tree editable="bottom"><field name="foo" /><field name="int_field"/><field name="sort_field"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.step(args.kwargs.orderby || 'default order');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        //we cannot sort by sort_field since it doesn't have a group_operator
+        list.$('.o_column_sortable:eq(2)').click(); // sort (sort_field ASC(invalid) -> default order)
+        //we can sort by int_field since it has a group_operator
+        list.$('.o_column_sortable:eq(1)').click(); // sort (int_field ASC)
+        //we keep previous order
+        list.$('.o_column_sortable:eq(2)').click(); // sort (sort_field ASC(invalid) -> int_field ASC)
+        //we can sort on foo since we are groupped by foo + previous order
+        list.$('.o_column_sortable:eq(0)').click(); // sort (foo ASC, int_field ASK")
+
+        assert.verifySteps([
+            'default order',
+            'default order',
+            'int_field ASC',
+            'int_field ASC',
+            'foo ASC, int_field ASC'
+        ]);
+
+        list.destroy();
+    });
+
 
     QUnit.test('properly apply onchange in simple case', function (assert) {
         assert.expect(2);
@@ -2352,7 +2392,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('pressing tab on last cell of editable list view', function (assert) {
-        assert.expect(7);
+        assert.expect(9);
 
         var list = createView({
             View: ListView,
@@ -2369,6 +2409,10 @@ QUnit.module('Views', {
         assert.strictEqual(document.activeElement.name, "foo",
             "focus should be on an input with name = foo");
 
+        //it will not create a new line unless a modification is made
+        document.activeElement.value = "blip-changed";
+        $(document.activeElement).trigger({type: 'change'});
+
         list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: 9}); // tab
         assert.strictEqual(document.activeElement.name, "int_field",
             "focus should be on an input with name = int_field");
@@ -2380,7 +2424,10 @@ QUnit.module('Views', {
         assert.strictEqual(document.activeElement.name, "foo",
             "focus should be on an input with name = foo");
 
-        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/default_get']);
+        assert.verifySteps(['/web/dataset/search_read',
+            '/web/dataset/call_kw/foo/write',
+            '/web/dataset/call_kw/foo/read',
+            '/web/dataset/call_kw/foo/default_get']);
         list.destroy();
     });
 
@@ -2499,31 +2546,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('inputs are disabled when unselecting rows', function (assert) {
-        assert.expect(1);
-
-        var list = createView({
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch: '<tree editable="bottom"><field name="foo"/></tree>',
-            mockRPC: function (route, args) {
-                if (args.method === 'write') {
-                    assert.strictEqual($input.prop('disabled'), true,
-                        "input should be disabled");
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        list.$('td:contains(gnap)').click();
-        var $input = list.$('tr.o_selected_row input[name="foo"]');
-        $input.val('lemon').trigger('input');
-        $input.trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
-        list.destroy();
-    });
-
-    QUnit.test('navigation with tab and readonly field', function (assert) {
+    QUnit.test('navigation with tab and readonly field (no modification)', function (assert) {
         // This test makes sure that if we have 2 cells in a row, the first in
         // edit mode, and the second one readonly, then if we press TAB when the
         // focus is on the first, then the focus skip the readonly cells and
@@ -2539,6 +2562,43 @@ QUnit.module('Views', {
 
         // click on first td and press TAB
         list.$('td:contains(yop)').last().click();
+
+        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+
+        assert.ok(list.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
+            "2nd row should be selected");
+
+        // we do it again. This was broken because the this.currentRow variable
+        // was not properly set, and the second TAB could cause a crash.
+        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+        assert.ok(list.$('tr.o_data_row:eq(2)').hasClass('o_selected_row'),
+            "3rd row should be selected");
+
+        list.destroy();
+    });
+
+
+    QUnit.test('navigation with tab and readonly field (with modification)', function (assert) {
+        // This test makes sure that if we have 2 cells in a row, the first in
+        // edit mode, and the second one readonly, then if we press TAB when the
+        // focus is on the first, then the focus skips the readonly cells and
+        // directly goes to the next line instead.
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field" readonly="1"/></tree>',
+        });
+
+        // click on first td and press TAB
+        list.$('td:contains(yop)').last().click();
+
+        //modity the cell content
+        document.activeElement.value = "blip-changed";
+        $(document.activeElement).trigger({type: 'change'});
+
         list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
 
         assert.ok(list.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
@@ -2602,6 +2662,7 @@ QUnit.module('Views', {
                             '<field name="display_name"/>' +
                         '</tree>' +
                     '</field>' +
+                    '<field name="foo"/>' +
                 '</sheet></form>',
             res_id: 1,
             viewOptions: {
@@ -2621,10 +2682,10 @@ QUnit.module('Views', {
         assert.ok(form.$('.o_field_widget[name=o2m] .o_data_row:nth(1)').hasClass('o_selected_row'),
             "second row should be in edition");
 
-        // Press 'Tab' -> should go back to first line as the create action isn't available
+        // Press 'Tab' -> should get out of the one to many and go to the next field of the form
         form.$('.o_field_widget[name=o2m] .o_selected_row input').trigger({type: 'keydown', which: 9});
-        assert.ok(form.$('.o_field_widget[name=o2m] .o_data_row:first').hasClass('o_selected_row'),
-            "first row should be in edition");
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "the next field should be selected");
 
         form.destroy();
     });
@@ -2647,12 +2708,12 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            fieldDebounce: 1
+            fieldDebounce: 1,
         });
 
         // click on first td and press TAB
         list.$('td:contains(yop)').click();
-        list.$('tr.o_selected_row input[name="foo"]').val('new value').trigger('input');
+        list.$('tr.o_selected_row input[name="foo"]').val('new value').trigger('change');
         list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.TAB});
 
         assert.strictEqual(list.$('tbody tr:first td:contains(new value)').length, 1,
@@ -2737,7 +2798,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('navigation: moving down with keydown', function (assert) {
+    QUnit.test('navigation: not moving down with keydown', function (assert) {
         assert.expect(2);
 
         var list = createView({
@@ -2751,12 +2812,12 @@ QUnit.module('Views', {
         assert.ok(list.$('tr.o_data_row:eq(0)').hasClass('o_selected_row'),
             "1st row should be selected");
         list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
-        assert.ok(list.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
-            "2nd row should be selected");
+        assert.ok(list.$('tr.o_data_row:eq(0)').hasClass('o_selected_row'),
+            "1st row should still be selected");
         list.destroy();
     });
 
-    QUnit.test('navigation: moving right with keydown from text field', function (assert) {
+    QUnit.test('navigation: moving right with keydown from text field does not move the focus', function (assert) {
         assert.expect(6);
 
         this.data.foo.fields.foo.type = 'text';
@@ -2785,7 +2846,7 @@ QUnit.module('Views', {
         assert.ok(textarea.selectionStart === 3 && textarea.selectionEnd === 3,
             "textarea value ('yop') should not be selected and cursor should be at the end");
         $(textarea).trigger({type: 'keydown', which: $.ui.keyCode.RIGHT});
-        assert.strictEqual(document.activeElement, list.$('[name="bar"] input')[0],
+        assert.strictEqual(document.activeElement, list.$('textarea[name="foo"]')[0],
             "next field (checkbox) should now be focused");
         list.destroy();
     });

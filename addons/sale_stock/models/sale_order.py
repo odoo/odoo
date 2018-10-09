@@ -201,14 +201,15 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
-        lines = False
+        lines = self.env['sale.order.line']
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             lines = self.filtered(
                 lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
-            lines._action_launch_stock_rule()
+            lines.with_context(previous_product_uom_qty=previous_product_uom_qty)._action_launch_stock_rule()
         return res
 
     @api.depends('order_id.state')
@@ -257,13 +258,16 @@ class SaleOrderLine(models.Model):
             return {}
         if self.product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product = self.product_id.with_context(warehouse=self.order_id.warehouse_id.id)
+            product = self.product_id.with_context(
+                warehouse=self.order_id.warehouse_id.id,
+                lang=self.order_id.partner_id.lang or self.env.user.lang or 'en_US'
+            )
             product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
             if float_compare(product.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
                 if not is_available:
-                    message =  _('You plan to sell %s %s but you only have %s %s available in %s warehouse.') % \
-                            (self.product_uom_qty, self.product_uom.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
+                    message =  _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
+                            (self.product_uom_qty, self.product_uom.name, self.product_id.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
                     # We check if some products are available in other warehouses.
                     if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
                         message += _('\nThere are %s %s available across all warehouses.\n\n') % \

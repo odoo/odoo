@@ -7,7 +7,7 @@ from odoo import fields, models, tools
 class ProfitabilityAnalysis(models.Model):
 
     _name = "project.profitability.report"
-    _description = "Project Profitability Analysis"
+    _description = "Project Profitability Report"
     _order = 'project_id, sale_line_id'
     _auto = False
 

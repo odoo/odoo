@@ -14,6 +14,7 @@
     'auto_install': True,
     'data': [
         'views/assets.xml',
+        'views/res_users_views.xml',
         'data/mailbot_data.xml',
     ],
     'demo': [

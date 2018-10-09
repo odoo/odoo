@@ -582,7 +582,8 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                         msg = _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
                     }
                 } else {
-                    msg = error.data.arguments ? error.data.arguments[1] : error.message;
+                    msg = (error.data.arguments && error.data.arguments[1] || error.data.arguments[0])
+                        || error.message;
                 }
 
                 return $.when({'messages': [{

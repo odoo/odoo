@@ -75,4 +75,19 @@
         </div>
     </t>
 
+    <t t-name="website.slide.create">
+        <form>
+            <div class="form-group row">
+                <label class="col-form-label col-md-3" for="slide_channel_id">Channel</label>
+                <div class="col-md-9">
+                    <select class="form-control" id="slide_channel_id" required="">
+                        <t t-foreach="channels" t-as="channel">
+                            <option t-att-value="channel.website_url"><t t-esc="channel.name"/></option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </t>
+
 </templates>

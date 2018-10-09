@@ -57,7 +57,7 @@
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.template</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product.product_template_kanban_view"/>
             <field name="search_view_id" ref="product.product_template_search_view"/>
@@ -72,22 +72,28 @@
             </field>
         </record>
 
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.product.website.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='sales']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//group[@name='sale']" position="after">
+                    <group name="options" groups="product.group_product_variant">
+                        <group string="Options">
+                            <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('id', '!=', active_id)]" />
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <menuitem id="product_menu_catalog" name="Products" action="product_template_action" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/>
         <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="base.group_no_one" active="False"/>
         <menuitem action="product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
         <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
-        <menuitem id="menu_attribute_action" action="product.attribute_action" parent="prod_config_main" sequence="1" groups="base.group_no_one" active="False"/>
-        <menuitem id="menu_product_category_config_sale"
-                  action="product.product_category_action_form"
-                  parent="sale.prod_config_main"
-                  sequence="1"
-                  groups="base.group_no_one"/>
-        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="base.group_no_one" active="False"/>
-        <menuitem id="menu_product_category_config_sale"
-                  action="product.product_category_action_form"
-                  parent="sale.prod_config_main"
-                  sequence="1"
-                  groups="base.group_no_one"/>
         <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2" active="False"/>
         <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="uom.group_uom" active="False"/>
         <menuitem action="uom.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="uom.group_uom" active="False"/>
@@ -236,6 +242,7 @@
                     <button name="action_confirm"
                         string="Confirm" type="object"
                         attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+                    <button name="preview_sale_order" type="object" string="Preview"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="sent,sale" class="o_sale_print"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
@@ -263,7 +270,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
+                            <field name="partner_id" widget="res_partner_many2one" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
                         </group>
@@ -376,6 +383,7 @@
                                 >
                                     <control>
                                         <create string="Add a product"/>
+                                        <create string="Configure a product" context="{'open_product_configurator': True}" groups="product.group_product_variant"/>
                                         <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                         <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
@@ -402,6 +410,8 @@
                                             'default_description_sale': name
                                         }"
                                     />
+                                    <field name="product_custom_attribute_value_ids" invisible="1" />
+                                    <field name="product_no_variant_attribute_value_ids" invisible="1" />
                                     <field name="name" widget="section_and_note_text"/>
                                     <field
                                         name="product_uom_qty"
@@ -543,6 +553,8 @@
                                     <field name="user_id"/>
                                     <field name="team_id" options="{'no_create': True}"/>
                                     <field name="client_order_ref"/>
+                                    <field name="require_signature"/>
+                                    <field name="require_payment"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
@@ -600,8 +612,6 @@
                     <field name="order_line" string="Product" filter_domain="[('order_line.product_id.name', 'ilike', self)]"/>
                     <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                    <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
@@ -628,14 +638,14 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
                     <separator/>
-                    <filter string="Quotations" name="draft" domain="[('state','=','draft')]"/>
-                    <filter string="Quotations Sent" name="sent" domain="[('state','=','sent')]"/>
-                    <filter string="Sales" name="sales" domain="[('state','in',('sale','done'))]"/>
+                    <filter string="My Quotations" name="my_quotation" domain="[('state','=','draft'), ('user_id','=',uid)]"/>
                     <separator/>
-                    <filter string="Creation Date" name="filter_create_date" date="create_date"/>
-                    <filter string="Expiration Date" name="filter_validity_date" date="validity_date"/>
+                    <filter string="Quotations" name="draft" domain="[('state','in',('draft', 'sent'))]"/>
+                    <filter string="Sales Orders" name="sales" domain="[('state','in',('sale','done'))]"/>
+                    <separator/>
+                    <filter string="Order Date" name="filter_order_date" date="date_order"/>
                 </xpath>
             </field>
         </record>
@@ -647,12 +657,11 @@
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
-                    <filter string="To Invoice" name="to_invoice" domain="[('invoice_status','=','to invoice')]" />
-                    <filter string="Upselling" name="upselling" domain="[('invoice_status','=','upselling')]" />
-                </xpath>
-                <xpath expr="//filter[@name='activities_upcoming_all']" position="after">
                     <separator/>
-                    <filter string="Confirmation Date" name="confirmation_date_filter" date="confirmation_date"/>
+                    <filter string="To Invoice" name="to_invoice" domain="[('invoice_status','=','to invoice')]" />
+                    <filter string="To Upsell" name="upselling" domain="[('invoice_status','=','upselling')]" />
+                    <separator/>
+                    <filter string="Order Date" name="order_date" date="date_order"/>
                 </xpath>
             </field>
         </record>
@@ -662,7 +671,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
             <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
@@ -728,7 +737,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,pivot,kanban</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
             <field name="context">{'create': False}</field>
             <field name="domain">[('invoice_status','=','to invoice')]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
@@ -757,7 +766,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,pivot,kanban</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
             <field name="domain">[('invoice_status','=','upselling')]</field>
             <field name="context">{'create': False}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
@@ -785,8 +794,9 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree_with_onboarding"/>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'search_default_my_quotation': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new quotation, the first step of a new sale!
@@ -800,7 +810,9 @@
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'search_default_my_quotation': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new quotation, the first step of a new sale!
@@ -999,7 +1011,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='email_template_and_project']" position="before">
-                    <group string="Invoicing" name="invoicing">
+                    <group string="Invoicing" name="invoicing" invisible="1">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>
                         <field name="hide_expense_policy" invisible="1"/>
@@ -1102,6 +1114,9 @@
                 <field name="currency_id" position="before">
                     <field name="discount_policy" groups="sale.group_discount_per_so_line" widget="radio"/>
                 </field>
+                <button name="toggle_active" position="attributes">
+                    <attribute name="groups">sales_team.group_sale_manager</attribute>
+                </button>
             </field>
         </record>
 

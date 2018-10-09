@@ -699,6 +699,7 @@ registry.gallery = Animation.extend({
      * @param {Event} ev
      */
     _onClickImg: function (ev) {
+        var self = this;
         var $cur = $(ev.currentTarget);
 
         var urls = [];
@@ -743,7 +744,12 @@ registry.gallery = Animation.extend({
         $modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
         $modal.appendTo(document.body);
 
-        this.carousel = new registry.gallery_slider($modal.find('.carousel').carousel());
+        $modal.one('shown.bs.modal', function () {
+            self.trigger_up('animation_start_demand', {
+                editableMode: false,
+                $target: $modal.find('.modal-body.o_slideshow'),
+            });
+        });
     },
 });
 
@@ -758,9 +764,9 @@ registry.gallerySlider = Animation.extend({
         var self = this;
         this.$carousel = this.$target.is('.carousel') ? this.$target : this.$target.find('.carousel');
         this.$indicator = this.$carousel.find('.carousel-indicators');
-        this.$prev = this.$indicator.find('li.fa:first').css('visibility', ''); // force visibility as some databases have it hidden
-        this.$next = this.$indicator.find('li.fa:last').css('visibility', '');
-        var $lis = this.$indicator.find('li:not(.fa)');
+        this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
+        this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');
+        var $lis = this.$indicator.find('li[data-slide-to]');
         var nbPerPage = Math.floor(this.$indicator.width() / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
         var realNbPerPage = nbPerPage || 1;
         var nbPages = Math.ceil($lis.length / realNbPerPage);
@@ -796,14 +802,14 @@ registry.gallerySlider = Animation.extend({
 
         this.$carousel.on('slide.bs.carousel.gallery_slider', function () {
             setTimeout(function () {
-                var $item = self.$carousel.find('.carousel-inner .prev, .carousel-inner .next');
+                var $item = self.$carousel.find('.carousel-inner .carousel-item-prev, .carousel-inner .carousel-item-next');
                 var index = $item.index();
                 $lis.removeClass('active')
                     .filter('[data-slide-to="'+index+'"]')
                     .addClass('active');
             }, 0);
         });
-        this.$indicator.on('click.gallery_slider', '> li.fa', function () {
+        this.$indicator.on('click.gallery_slider', '> li:not([data-slide-to])', function () {
             page += ($(this).hasClass('o_indicators_left') ? -1 : 1);
             page = Math.max(0, Math.min(nbPages - 1, page)); // should not be necessary
             self.$carousel.carousel(page * realNbPerPage);

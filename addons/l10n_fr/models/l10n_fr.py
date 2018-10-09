@@ -7,7 +7,7 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    siret = fields.Char(related='partner_id.siret', string='SIRET', size=14)
+    siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)
     ape = fields.Char(string='APE')
 
 class ResPartner(models.Model):

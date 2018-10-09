@@ -186,7 +186,8 @@ class Project(models.Model):
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', string='Show Project on dashboard',
         help="Whether this project should be displayed on the dashboard or not")
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Gives label to tasks on project's kanban view.")
+    label_tasks = fields.Char(string='Use Tasks as', default=lambda s: _('Tasks'), translate=True,
+        help="Gives label to tasks on project's kanban view.")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
@@ -284,7 +285,9 @@ class Project(models.Model):
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         tasks = self.env['project.task']
-        for task in self.tasks:
+        # We want to copy archived task, but do not propagate an active_test context key
+        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)]).ids
+        for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task)
             tasks += task.copy(defaults)
@@ -295,7 +298,6 @@ class Project(models.Model):
     def copy(self, default=None):
         if default is None:
             default = {}
-        self = self.with_context(active_test=False)
         if not default.get('name'):
             default['name'] = _("%s (copy)") % (self.name)
         project = super(Project, self).copy(default)
@@ -963,7 +965,7 @@ class Task(models.Model):
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
     _name = "project.tags"
-    _description = "Tasks Tags"
+    _description = "Project Tags"
 
     name = fields.Char(required=True)
     color = fields.Integer(string='Color Index')

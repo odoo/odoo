@@ -20,6 +20,7 @@ class EventType(models.Model):
 
 class EventMenu(models.Model):
     _name = "website.event.menu"
+    _description = "Website Event Menu"
 
     menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
     event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')

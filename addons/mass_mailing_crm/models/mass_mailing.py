@@ -20,15 +20,15 @@ class MassMailing(models.Model):
     @api.depends('crm_lead_activated')
     def _compute_crm_lead_count(self):
         for mass_mailing in self:
-            if mass_mailing.mailing_model_name != 'crm.lead' or not mass_mailing.crm_lead_activated:
-                mass_mailing.crm_lead_count = 0
-            else:
+            if mass_mailing.crm_lead_activated:
                 mass_mailing.crm_lead_count = self.env['crm.lead'].search_count(self._get_crm_utm_domain())
+            else:
+                mass_mailing.crm_lead_count = 0
 
     @api.depends('crm_lead_activated')
     def _compute_crm_opportunities_count(self):
         for mass_mailing in self:
-            if mass_mailing.mailing_model_name != 'crm.lead' or mass_mailing.crm_lead_activated:
+            if mass_mailing.crm_lead_activated:
                 mass_mailing.crm_opportunities_count = 0
             else:
                 mass_mailing.crm_opportunities_count = self.env['crm.lead'].search_count(self._get_crm_utm_domain())
@@ -56,5 +56,5 @@ class MassMailing(models.Model):
         if self.medium_id:
             res.append(('medium_id', '=', self.medium_id.id))
         if not res:
-            res.append(('1', '=', '0'))
+            res.append((0, '=', 1))
         return res

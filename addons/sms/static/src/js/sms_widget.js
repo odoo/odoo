@@ -4,9 +4,12 @@ odoo.define('sms.sms_widget', function (require) {
 var basicFields = require('web.basic_fields');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
+var dom = require('web.dom');
 var framework = require('web.framework');
 
+
 var FieldText = basicFields.FieldText;
+var InputField = basicFields.InputField;
 var QWeb = core.qweb;
 
 var _t = core._t
@@ -15,7 +18,7 @@ var _t = core._t
  * the number of SMS and the number of characters. This text is computed every
  * time the user changes the body.
  */
-var SmsWidget = FieldText.extend({
+var SmsWidget = InputField.extend({
     /**
      * @constructor
      */

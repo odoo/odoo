@@ -61,6 +61,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/datepicker.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/banner.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/colorpicker.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/keyboard.scss"/>
 
         <t t-if="request and request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl'">
             <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
@@ -107,6 +108,7 @@
         <script type="text/javascript" src="/web/static/src/js/libs/jquery.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/underscore.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
@@ -408,11 +410,15 @@
                     <t t-esc="message"/>
                 </p>
 
-                <input type="hidden" name="redirect" t-att-value="redirect"/>
                 <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
                     <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                    <t t-if="debug">
+                        <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
+                    </t>
                     <div class="o_login_auth"/>
                 </div>
+
+                <input type="hidden" name="redirect" t-att-value="redirect"/>
             </form>
         </t>
     </template>
@@ -540,6 +546,7 @@
                 <script type="text/javascript" src="/web/static/tests/chrome/search_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/pager_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/keyboard_navigation_mixin_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/chrome/user_menu_tests.js"></script>
 
                 <script type="text/javascript" src="/web/static/tests/widgets/data_export_tests.js"/>
                 <script type="text/javascript" src="/web/static/tests/widgets/domain_selector_tests.js"/>

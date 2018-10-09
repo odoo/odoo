@@ -4,6 +4,7 @@ from odoo import fields, models
 
 class GroupOnDate(models.Model):
     _name = 'test_read_group.on_date'
+    _description = 'Group Test Read On Date'
 
     date = fields.Date("Date")
     value = fields.Integer("Value")
@@ -11,6 +12,7 @@ class GroupOnDate(models.Model):
 
 class BooleanAggregate(models.Model):
     _name = 'test_read_group.aggregate.boolean'
+    _description = 'Group Test Read Boolean Aggregate'
     _order = 'key DESC'
 
     key = fields.Integer()
@@ -22,6 +24,7 @@ class BooleanAggregate(models.Model):
 class Aggregate(models.Model):
     _name = 'test_read_group.aggregate'
     _order = 'id'
+    _description = 'Group Test Aggregate'
 
     key = fields.Integer()
     value = fields.Integer("Value")
@@ -30,6 +33,7 @@ class Aggregate(models.Model):
 
 class GroupOnSelection(models.Model):
     _name = 'test_read_group.on_selection'
+    _description = 'Group Test Read On Selection'
 
     state = fields.Selection([('a', "A"), ('b', "B")], group_expand='_expand_states')
     value = fields.Integer()
@@ -41,6 +45,7 @@ class GroupOnSelection(models.Model):
 
 class FillTemporal(models.Model):
     _name = 'test_read_group.fill_temporal'
+    _description = 'Group Test Fill Temporal'
 
     date = fields.Date()
     datetime = fields.Datetime()

@@ -77,7 +77,7 @@ class Survey(models.Model):
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     quizz_mode = fields.Boolean("Quizz Mode")
     active = fields.Boolean("Active", default=True)
-    is_closed = fields.Boolean("Is closed", related='stage_id.closed')
+    is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=False)
 
     def _is_designed(self):
         for survey in self:
@@ -424,7 +424,7 @@ class SurveyQuestion(models.Model):
     # Question metadata
     page_id = fields.Many2one('survey.page', string='Survey page',
             ondelete='cascade', required=True, default=lambda self: self.env.context.get('page_id'))
-    survey_id = fields.Many2one('survey.survey', related='page_id.survey_id', string='Survey')
+    survey_id = fields.Many2one('survey.survey', related='page_id.survey_id', string='Survey', readonly=False)
     sequence = fields.Integer('Sequence', default=10)
 
     # Question
@@ -716,8 +716,8 @@ class SurveyUserInput(models.Model):
     user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
 
     # URLs used to display the answers
-    result_url = fields.Char("Public link to the survey results", related='survey_id.result_url')
-    print_url = fields.Char("Public link to the empty survey", related='survey_id.print_url')
+    result_url = fields.Char("Public link to the survey results", related='survey_id.result_url', readonly=False)
+    print_url = fields.Char("Public link to the empty survey", related='survey_id.print_url', readonly=False)
 
     quizz_score = fields.Float("Score for the quiz", compute="_compute_quizz_score", default=0.0)
 
@@ -781,8 +781,8 @@ class SurveyUserInputLine(models.Model):
 
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True)
     question_id = fields.Many2one('survey.question', string='Question', ondelete='restrict', required=True)
-    page_id = fields.Many2one(related='question_id.page_id', string="Page")
-    survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True)
+    page_id = fields.Many2one(related='question_id.page_id', string="Page", readonly=False)
+    survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
     date_create = fields.Datetime('Create Date', default=fields.Datetime.now, required=True)
     skipped = fields.Boolean('Skipped')
     answer_type = fields.Selection([

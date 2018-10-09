@@ -292,16 +292,24 @@ class View(models.Model):
     def _read_template_keys(self):
         return super(View, self)._read_template_keys() + ['website_id']
 
+    @api.model
+    def _save_oe_structure_hook(self):
+        res = super(View, self)._save_oe_structure_hook()
+        res['website_id'] = self.env['website'].get_current_website().id
+        return res
+
     @api.multi
     def save(self, value, xpath=None):
         self.ensure_one()
-        # The first time a generic view is edited, it will send multiple rpc to this method.
-        # If there is already a website specific view, we need to divert the super to it
-        current_website_id = self._context.get('website_id')
-        if self.key and current_website_id:
+        # The first time a generic view is edited, if multiple editable parts
+        # were edited at the same time, multiple call to this method will be
+        # done but the first one may create a website specific view. So if there
+        # already is a website specific view, we need to divert the super to it.
+        current_website = self.env['website'].get_current_website()
+        if self.key and current_website:
             website_specific_view = self.env['ir.ui.view'].search([
                 ('key', '=', self.key),
-                ('website_id', '=', current_website_id)
+                ('website_id', '=', current_website.id)
             ], limit=1)
             if website_specific_view:
                 self = website_specific_view

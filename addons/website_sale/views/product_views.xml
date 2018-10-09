@@ -16,7 +16,7 @@
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
         <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
         <field name="search_view_id" ref="product_template_search_view_website"/>
         <field name="context">{'search_default_published': 1, 'default_website_published': True}</field>
         <field name="help" type="html">
@@ -25,35 +25,6 @@
             </p><p>
                 A product can be either a physical product or a service that you sell to your customers.
             </p>
-        </field>
-    </record>
-
-    <record id="product_attribute_line_form" model="ir.ui.view">
-        <field name="name">product.attribute.line.form.inherit</field>
-        <field name="model">product.attribute.line</field>
-        <field name="inherit_id" ref="product.product_attribute_line_form"/>
-        <field name="priority" eval="8"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
-                <field name="html_color"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="product_attribute_view_form" model="ir.ui.view">
-        <field name="name">product.attribute.form.inherit</field>
-        <field name="model">product.attribute</field>
-        <field name="inherit_id" ref="product.product_attribute_view_form"/>
-        <field name="priority" eval="8"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='main_fields']" position="after">
-                <group>
-                    <field name="type"/>
-                </group>
-            </xpath>
-            <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
-                <field name="html_color"/>
-            </xpath>
         </field>
     </record>
 
@@ -117,6 +88,7 @@
                     <group name="extra_images" string="Extra Images">
                         <field name="product_image_ids" class="o_website_sale_image_list" context="{'default_name': name, 'default_product_tmpl_id': active_id}" nolabel="1">
                             <kanban string="Product Images" class="o_attachments_previews">
+                                <field name="id"/>
                                 <field name="name"/>
                                 <field name="image"/>
                                 <templates>
@@ -124,7 +96,7 @@
                                         <div class="o_attachment oe_kanban_global_click o_website_sale_image_card">
                                             <div class="o_attachment_wrap">
                                                 <div class="o_image_box">
-                                                    <div class="o_attachment_image" t-att-style="'background-image:url(data:image/png;base64,'+record.image.raw_value +')'"/>
+                                                    <div class="o_attachment_image" t-attf-style="background-image:url({{kanban_image('product.image', 'image', record.id.raw_value)}});"/>
                                                     <div t-attf-class="o_image_overlay" t-att-title="record.name.value"/>
                                                     <div class="o_website_sale_image_card_title" t-att-title="record.name.value">
                                                         <field name="name"/>
@@ -151,39 +123,6 @@
                     </group>
                 </page>
             </xpath>
-        </field>
-    </record>
-
-    <!-- Product attribute -->
-
-    <record id="product_attribute_value_view_tree_inherit_website_sale" model="ir.ui.view">
-        <field name="name">product.attribute.value.view.tree.inherit.website.sale</field>
-        <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.product_attribute_value_view_tree"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="html_color"/>
-            </field>
-        </field>
-    </record>
-    <record id="variants_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
-        <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.variants_tree_view"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="html_color"/>
-            </field>
-        </field>
-    </record>
-    <record id="attribute_tree_view" model="ir.ui.view">
-        <field name="name">product.attribute.tree.type</field>
-        <field name="model">product.attribute</field>
-        <field name="inherit_id" ref="product.attribute_tree_view"></field>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="type"/>
-            </field>
         </field>
     </record>
 

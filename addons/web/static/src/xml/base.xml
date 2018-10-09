@@ -247,6 +247,7 @@
     <div class="dropdown-divider o_debug_leave_section" role="separator"/>
     <a role="menuitem" href="#" data-action="split_assets" class="dropdown-item">Activate Assets Debugging</a>
     <a role="menuitem" href="#" data-action="regenerateAssets" class="dropdown-item">Regenerate Assets Bundles</a>
+    <a t-if="manager._is_admin" role="menuitem" href="/web/become" class="dropdown-item">Become Superuser</a>
     <a role="menuitem" href="#" data-action="leave_debug_mode" class="dropdown-item">Leave the Developer Tools</a>
 </t>
 <t t-name="WebClient.DebugManager.Action">
@@ -512,7 +513,7 @@
     </div>
     <div class="btn-group" role="toolbar" aria-label="Change graph">
         <button class="btn btn-secondary fa fa-bar-chart-o o_graph_button" title="Bar Chart" aria-label="Bar Chart" data-mode="bar"/>
-        <button class="btn btn-secondary fa fa-line-chart o_graph_button" title="Line Chart" aria-label="Line Chart" data-mode="line"/>
+        <button class="btn btn-secondary fa fa-area-chart o_graph_button" title="Line Chart" aria-label="Line Chart" data-mode="line"/>
         <button class="btn btn-secondary fa fa-pie-chart o_graph_button" title="Pie Chart" aria-label="Pie Chart" data-mode="pie"/>
     </div>
 </t>
@@ -540,8 +541,8 @@
         </div>
     </div>
     <div class="btn-group" role="toolbar" aria-label="Pivot settings">
-        <button class="btn btn-secondary fa fa-expand o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
-        <button class="btn btn-secondary fa fa-arrows-alt o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
+        <button class="btn btn-secondary fa fa-exchange o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
+        <button class="btn btn-secondary fa fa-arrows o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
         <button class="btn btn-secondary fa fa-download o_pivot_download" title="Download xls" aria-label="Download xls"/>
     </div>
 </t>

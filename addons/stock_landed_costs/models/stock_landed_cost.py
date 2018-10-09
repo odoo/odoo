@@ -52,7 +52,7 @@ class LandedCost(models.Model):
         'account.journal', 'Account Journal',
         required=True, states={'done': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string="Company",
-        related='account_journal_id.company_id')
+        related='account_journal_id.company_id', readonly=False)
 
     @api.one
     @api.depends('cost_lines.price_unit')
@@ -107,9 +107,9 @@ class LandedCost(models.Model):
                 new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
                 line.move_id.write({
                     'landed_cost_value': new_landed_cost_value,
-                    'value': line.move_id.value + cost_to_add,
+                    'value': line.move_id.value + line.additional_landed_cost,
                     'remaining_value': line.move_id.remaining_value + cost_to_add,
-                    'price_unit': (line.move_id.value + cost_to_add) / line.move_id.product_qty,
+                    'price_unit': (line.move_id.value + line.additional_landed_cost) / line.move_id.product_qty,
                 })
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
@@ -230,7 +230,7 @@ class LandedCost(models.Model):
 
 class LandedCostLine(models.Model):
     _name = 'stock.landed.cost.lines'
-    _description = 'Stock Landed Cost Lines'
+    _description = 'Stock Landed Cost Line'
 
     name = fields.Char('Description')
     cost_id = fields.Many2one(
@@ -253,7 +253,7 @@ class LandedCostLine(models.Model):
 
 class AdjustmentLines(models.Model):
     _name = 'stock.valuation.adjustment.lines'
-    _description = 'Stock Valuation Adjustment Lines'
+    _description = 'Valuation Adjustment Lines'
 
     name = fields.Char(
         'Description', compute='_compute_name', store=True)

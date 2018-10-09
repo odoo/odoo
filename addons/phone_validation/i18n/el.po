@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,10 @@ msgid ""
 "coming from the company's country are nationaly formatted. International "
 "numbers are always using international format."
 msgstr ""
+"Κωδικοποιήστε πάντα τους αριθμούς τηλεφώνου χρησιμοποιώντας τη διεθνή μορφή."
+" Διαφορετικά οι αριθμοί που προέρχονται από τη χώρα της εταιρείας σας, θα "
+"είναι μορφοποιημένοι σε εθνικό επίπεδο. Οι διεθνείς αριθμοί χρησιμοποιούν "
+"πάντα διεθνή μορφή."
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_company
@@ -66,11 +71,16 @@ msgstr "Τελευταία τροποποίηση στις"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_res_company__phone_international_format
 msgid "Local Numbers"
-msgstr ""
+msgstr "Τοπικοί Αριθμοί"
 
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "No prefix"
+msgstr ""
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_validation_mixin
+msgid "Phone Validation Mixin"
 msgstr ""
 
 #. module: phone_validation
@@ -87,9 +97,4 @@ msgstr ""
 msgid ""
 "Unable to parse %s:\n"
 "%s"
-msgstr ""
-
-#. module: phone_validation
-#: model:ir.model,name:phone_validation.model_phone_validation_mixin
-msgid "phone.validation.mixin"
 msgstr ""

@@ -19,7 +19,7 @@ PURCHASE_REQUISITION_STATES = [
 
 class PurchaseRequisitionType(models.Model):
     _name = "purchase.requisition.type"
-    _description = "Purchase Agreement Type"
+    _description = "Purchase Requisition Type"
     _order = "sequence"
 
     name = fields.Char(string='Agreement Type', required=True, translate=True)
@@ -184,7 +184,7 @@ class SupplierInfo(models.Model):
     _inherit = "product.supplierinfo"
     _order = 'sequence, purchase_requisition_id desc, min_qty desc, price'
 
-    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Blanket order')
+    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Blanket order', readonly=False)
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line')
 
 
@@ -296,7 +296,7 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     requisition_id = fields.Many2one('purchase.requisition', string='Purchase Agreement', copy=False)
-    is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy')
+    is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy', readonly=False)
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -433,12 +433,17 @@ class ProductTemplate(models.Model):
     purchase_requisition = fields.Selection(
         [('rfq', 'Create a draft purchase order'),
          ('tenders', 'Propose a call for tenders')],
-        string='Procurement', default='rfq')
+        string='Procurement', default='rfq',
+        help="Create a draft purchase order: Based on your product configuration, the system will create a draft "
+             "purchase order.Propose a call for tender : If the 'purchase_requisition' module is installed and this option "
+             "is selected, the system will create a draft call for tender.")
+
 
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    requistion_line_ids =  fields.One2many('purchase.requisition.line', 'move_dest_id')
+    requistion_line_ids = fields.One2many('purchase.requisition.line', 'move_dest_id')
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

@@ -195,7 +195,7 @@
                 </div>
             </div>
         </div>
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
     </t>
     <t t-else="" t-call="website_forum.layout">
         <t t-set='head'>
@@ -324,7 +324,7 @@
 </template>
 
 <!-- FAQ Layout -->
-<template id="faq">
+<template id="faq" name="Frequently Asked Questions">
     <t t-call="website_forum.header">
         <div t-field="forum.faq"/>
         <table class="table table-striped">
@@ -369,7 +369,7 @@
 </template>
 
 <!-- All Forums Layout -->
-<template id="forum_all">
+<template id="forum_all" name="Our Forums">
     <t t-call="website.layout">
         <div class="container">
             <h1 class="mb32">Our forums</h1>
@@ -1106,7 +1106,7 @@
     </div>
 </template>
 
-<template id="tag">
+<template id="tag" name="Forum Tags">
     <t t-call="website_forum.header">
         <h1 class="mt0">
             Tags
@@ -1146,7 +1146,7 @@
     </t>
 </template>
 
-<template id="badge">
+<template id="badge" name="Forum Badges">
     <t t-call="website_forum.header">
         <h1 class="mt0">
             Badges
@@ -1162,7 +1162,7 @@
                     <span class="badge badge-pill float-left">
                         <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold" title="Gold badge" role="img" aria-label="Gold badge"/>
                         <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver" title="Silver badge" role="img" aria-label="Silver badge"/>
-                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze" title="Bronze badge" role="img" aria-label="Bronwe badge"/>
+                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze" title="Bronze badge" role="img" aria-label="Bronze badge"/>
                         <span> </span><span t-field="badge.name"/>
                     </span>
                 </td><td>
@@ -1176,7 +1176,7 @@
     </t>
 </template>
 
-<template id="moderation_queue">
+<template id="moderation_queue" name="Forum Moderation Queue">
     <t t-call="website_forum.header">
         <h2 class="o_page_header mt0">
             <t t-set="count_posts" t-value="len(posts_ids)"/>
@@ -1269,7 +1269,7 @@
     </t>
 </template>
 
-<template id="edit_profile">
+<template id="edit_profile" name="Forum Edit Profile">
     <t t-call="website_forum.header">
         <h3>Edit Profile</h3>
         <div class="row">
@@ -1529,9 +1529,12 @@
 </template>
 
 <!-- User Navbar -->
-<template id="content_new_forum" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
+<template id="user_navbar_inherit_website_forum" inherit_id="website.user_navbar">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_forum']" position="attributes">
+        <attribute name="name"/>
+        <attribute name="t-att-data-module-id"/>
+        <attribute name="t-att-data-module-shortdesc"/>
+        <attribute name="groups">website.group_website_designer</attribute>
     </xpath>
 </template>
 

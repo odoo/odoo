@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-10-02 10:06+0000\n"
 "Last-Translator: Collex100, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,11 @@ msgid "Channel"
 msgstr "Канал"
 
 #. module: website_livechat
+#: model:ir.model,name:website_livechat.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
 msgstr "Описание канала, отображается на странице веб-сайта"
@@ -44,11 +49,6 @@ msgstr "Описание канала, отображается на стран�
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Happy face"
-msgstr ""
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
-msgid "Is published"
 msgstr ""
 
 #. module: website_livechat
@@ -72,9 +72,23 @@ msgid "Livechat Support Channels"
 msgstr "Каналы поддержки Живого чата"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:30
+#, python-format
+msgid "Name"
+msgstr "Название"
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Neutral face"
 msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:29
+#, python-format
+msgid "New Channel"
+msgstr "Новый канал"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -97,11 +111,6 @@ msgid "The Team"
 msgstr "Команда"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Полный URL, чтобы получить доступ к документу через веб-сайт."
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "There is no public livechat channel to show."
 msgstr "Нет публичного канала Живого чата, для показа."
@@ -109,11 +118,6 @@ msgstr "Нет публичного канала Живого чата, для �
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "There is no rating for this channel for now."
-msgstr ""
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
-msgid "Visible on current website"
 msgstr ""
 
 #. module: website_livechat
@@ -132,11 +136,6 @@ msgid "Website Live Chat Channel"
 msgstr "Веб-сайт Живой чат канал"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
-msgid "Website URL"
-msgstr "URL Веб-сайта"
-
-#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
 msgstr "Описание веб-сайта"
@@ -145,8 +144,3 @@ msgstr "Описание веб-сайта"
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "last feedbacks"
 msgstr "последние отзывы"
-
-#. module: website_livechat
-#: model:ir.model,name:website_livechat.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

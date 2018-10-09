@@ -73,8 +73,8 @@
                         <field name="cost_method" invisible="1"/>
                     </field>
                     <field name="standard_price" position="replace">
+                        <label for="standard_price"/>
                         <div name="standard_price_div">
-                            <label for="standard_price"/>
                             <field name="standard_price"
                                 attrs="{'readonly':[('valuation','=','real_time')]}"
                                 widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="float-left"/>

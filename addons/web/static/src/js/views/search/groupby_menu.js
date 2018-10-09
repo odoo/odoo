@@ -6,6 +6,7 @@ var core = require('web.core');
 var DropdownMenu = require('web.DropdownMenu');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var GROUPABLE_TYPES = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
 
@@ -84,7 +85,7 @@ var GroupByMenu = DropdownMenu.extend({
         }
         var dropdownHeader = {
             category: 'groupByCategory',
-            title: 'Group By',
+            title: _t('Group By'),
             icon: 'fa fa-bars',
             symbol: this.isMobile ? 'fa fa-chevron-right float-right mt4' : false,
             style: style,

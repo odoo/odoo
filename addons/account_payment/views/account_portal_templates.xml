@@ -8,7 +8,7 @@
                 <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
                 <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
                 <a t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
-                    t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay now" aria-label="Pay now" class="btn btn-sm btn-success" role="button">
+                    t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
                     <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
             </td>
@@ -44,8 +44,8 @@
                             <h3 class="modal-title">Pay with</h3>
                             <button type="button" class="close" data-dismiss="modal">&amp;times;</button>
                         </div>
-                        <div class="modal-footer">
-                            <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left col-md-13">
+                        <div class="modal-body">
+                            <div t-if="pms or acquirers" id="payment_method" class="text-left col-md-13">
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
                                     <t t-set="partner_id" t-value="invoice.partner_id.id"/>
@@ -55,7 +55,7 @@
                                     <t t-set="callback_method" t-value="''"/>
                                     <t t-set="form_action" t-value="'/invoice/pay/' + str(invoice.id) + '/s2s_token_tx/'"/>
                                     <t t-set="prepare_tx_url" t-value="'/invoice/pay/' + str(invoice.id) + '/form_tx/'"/>
-                                    <t t-set="submit_txt" t-value="'Pay Now'"/>
+                                    <t t-set="submit_txt">Pay Now</t>
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
                                 </t>
                             </div>
@@ -72,7 +72,7 @@
             <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
             <div>
                 <a href="#" t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
-                    class="btn btn-success btn-block mb-2" data-toggle="modal" data-target="#pay_with">
+                    class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#pay_with">
                     <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
                 <div t-if="tx_ids and not pending_manual_txs and invoice.state != 'paid'" class="alert alert-info py-1 mb-2" >
@@ -92,11 +92,11 @@
             </div>
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
             <div t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total" id="portal_pay">
-                <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method">
+                <div t-if="pms or acquirers" id="payment_method">
                     <t t-call="account_payment.portal_invoice_payment"/>
                 </div>
             </div>
-            <div class="panel-body" t-if="existing_token"><!-- FIXME -->
+            <div class="panel-body" t-if="existing_token">
                 <div class="offset-lg-3 col-lg-6">
                     <i class="fa fa-info"></i> You have credits card registered, you can log-in to be able to use them.
                 </div>
@@ -137,7 +137,7 @@
                     <b>Communication: </b><span t-esc='invoice.reference'/>
                 </div>
             </t>
-            <t t-if="success == 'pay_invoice' and invoice.state == 'paid' and not invoice.payment_acquirer_id">
+            <t t-if="success == 'pay_invoice' and invoice.state == 'paid'">
                 Done, your online payment has been successfully processed. Thank you for your order.
             </t>
         </xpath>

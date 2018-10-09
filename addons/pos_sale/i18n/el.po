@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +23,7 @@ msgstr ""
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Ακυρώθηκε"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -32,47 +34,47 @@ msgstr "Ισοτιμία"
 #: code:addons/pos_sale/models/crm_team.py:107
 #, python-format
 msgid "Dashboard"
-msgstr ""
+msgstr "Ταμπλό"
 
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Day"
-msgstr ""
+msgstr "Ημέρα"
 
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "Πρόχειρη Προσφορά"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_form_inherit_pos_sale
 msgid "Group by"
-msgstr ""
+msgstr "Ομαδοποίηση κατά"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_crm_team__dashboard_graph_group_pos
 msgid "How this channel's dashboard graph will group the results."
-msgstr ""
+msgstr "Πώς θα ομαδοποιήσει αυτό το γράφημα καναλιού τα αποτελέσματα."
 
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Τιμολογημένα"
 
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Month"
-msgstr ""
+msgstr "Μήνας"
 
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "New"
-msgstr ""
+msgstr "Νέα"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
-msgstr ""
+msgstr "Ανοιχτές Βάρδιες POS"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
@@ -87,7 +89,7 @@ msgstr ""
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Εξοφλημένη"
 
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
@@ -96,9 +98,19 @@ msgid "Point of Sale"
 msgstr "Εντατική Λιανική"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Διαμόρφωση του Σταθμού Εργασίας"
+
+#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "Παραγγελίες Εντατικής Λιανικής"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Βάρδια Σταθμού Εργασίας"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
@@ -108,12 +120,12 @@ msgstr ""
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Καταχωρημένη"
 
 #. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Η Προσφορά Εστάλη"
 
 #. module: pos_sale
 #: selection:crm.team,team_type:0
@@ -122,32 +134,36 @@ msgid "Sales"
 msgstr "Πωλήσεις"
 
 #. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Sales Done"
-msgstr ""
-
-#. module: pos_sale
-#: selection:sale.report,state:0
-msgid "Sales Order"
-msgstr ""
-
-#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
-msgid "Sales Orders Statistics"
+msgid "Sales Analysis Report"
 msgstr ""
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
+msgid "Sales Channels"
+msgstr "Κανάλια Πωλήσεων"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Sales Done"
+msgstr "Ολοκληρωμένες Πωλήσεις"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Sales Order"
+msgstr "Παραγγελία"
+
+#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
 msgid "Sales Team"
-msgstr ""
+msgstr "Ομάδα Πώλησης"
 
 #. module: pos_sale
 #: code:addons/pos_sale/models/crm_team.py:119
 #, python-format
 msgid "Sales: Untaxed Amount"
-msgstr ""
+msgstr "Πωλήσεις: Αφορολόγητο Ποσό"
 
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
@@ -191,6 +207,8 @@ msgstr ""
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
 msgstr ""
+"Ο τύπος αυτού του καναλιού θα καθορίσει τους πόρους που χρησιμοποιεί το "
+"κανάλι αυτό."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -206,14 +224,4 @@ msgstr "Ιστότοπος"
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Week"
-msgstr ""
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_pos_config
-msgid "pos.config"
-msgstr ""
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_pos_session
-msgid "pos.session"
-msgstr ""
+msgstr "Εβδομάδα"

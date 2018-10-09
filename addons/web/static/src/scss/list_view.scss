@@ -85,6 +85,11 @@
         display: table-cell;
     }
 
+    // Contextual classes
+    @each $color, $value in $theme-colors {
+        $safe: saturate(theme-color-level($color, 2), 10%);
+        @include text-emphasis-variant(".text-#{$color}", $safe);
+    }
 
     // Grouped list views
     tbody > tr.o_group_header {
@@ -213,6 +218,13 @@
         }
         .o_field_boolean {
             width: auto!important; // Override the width computed in JS (needed for Chrome)
+        }
+    }
+
+    .o_field_x2many_list_row_add {
+        a:focus, a:active {
+            color: $link-hover-color;
+            outline: none;
         }
     }
 }

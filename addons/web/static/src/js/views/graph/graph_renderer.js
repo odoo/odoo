@@ -34,7 +34,9 @@ return AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.isComparison = !!state.comparisonData;
+        this.isEmbedded = params.isEmbedded;
         this.stacked = this.isComparison ? false : params.stacked;
+        this.title = params.title || '';
     },
     /**
      * @override
@@ -66,6 +68,16 @@ return AbstractRenderer.extend({
         this._super.apply(this, arguments);
         this.isInDOM = false;
     },
+    /**
+     * @override
+     * @param {Object} state
+     * @param {Object} params
+     */
+    updateState: function (state, params) {
+        this.isComparison = !!state.comparisonData;
+        this.stacked = this.isComparison ? false : params.stacked;
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -93,7 +105,7 @@ return AbstractRenderer.extend({
                 title: _t('Invalid mode for chart'),
                 message: _t('Cannot render chart with mode : ') + this.state.mode
             });
-        } else if (!this.state.data.length) {
+        } else if (!this.state.data.length &&  this.state.mode !== 'pie') {
             this.$el.empty();
             this.$el.append(qweb.render('GraphView.error', {
                 title: _t("No data to display"),
@@ -134,11 +146,7 @@ return AbstractRenderer.extend({
             }];
         } else if (this.state.groupedBy.length === 1) {
             values = this.state.data.map(function (datapt, index) {
-                if (self.state.comparisonData) {
-                    return {x: index, y: datapt.value};
-                } else {
-                    return {x: datapt.labels, y: datapt.value};
-                }
+                return {x: datapt.labels, y: datapt.value};
             });
             data.push({
                 values: values,
@@ -146,7 +154,7 @@ return AbstractRenderer.extend({
             });
             if (this.state.comparisonData) {
                 values = this.state.comparisonData.map(function (datapt, index) {
-                    return {x: index, y: datapt.value};
+                    return {x: datapt.labels, y: datapt.value};
                 });
                 data.push({
                     values: values,
@@ -225,7 +233,10 @@ return AbstractRenderer.extend({
      * Helper function to set up data properly for the pieChart model in
      * nvd3.
      *
-     * @returns {nvd3 chart}
+     * returns undefined in the case of an non-embedded pie chart with no data.
+     * (all zero data included)
+     *.
+     * @returns {nvd3 chart|undefined}
      */
     _renderPieChart: function (stateData) {
         var self = this;
@@ -251,23 +262,32 @@ return AbstractRenderer.extend({
             return;
         }
         if (all_zero) {
-            this.$el.append(qweb.render('GraphView.error', {
-                title: _t("Invalid data"),
-                description: _t("Pie chart cannot display all zero numbers.. " +
-                    "Try to change your domain to display positive results"),
-            }));
-            return;
-        }
-        if (this.state.groupedBy.length) {
-            data = stateData.map(function (datapt) {
-                return {x:datapt.labels.join("/"), y: datapt.value};
+            if (this.isEmbedded || this.isComparison) {
+                // add fake data to display an empty pie chart
+                data = [{
+                    x : "No data" ,
+                    y : 1
+                }];
+            } else {
+                this.$el.append(qweb.render('GraphView.error', {
+                    title: _t("Invalid data"),
+                    description: _t("Pie chart cannot display all zero numbers.. " +
+                        "Try to change your domain to display positive results"),
+                }));
+                return;
+            }
+        } else {
+            if (this.state.groupedBy.length) {
+                data = stateData.map(function (datapt) {
+                    return {x:datapt.labels.join("/"), y: datapt.value};
+                });
+            }
+
+            // We only keep groups where count > 0
+            data  = _.filter(data, function (elem, index) {
+                return stateData[index].count > 0;
             });
         }
-
-        // We only keep groups where count > 0
-        data  = _.filter(data, function (elem, index) {
-            return stateData[index].count > 0;
-        });
 
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
         this.$el.append($svgContainer);
@@ -276,15 +296,27 @@ return AbstractRenderer.extend({
 
         svg.transition().duration(100);
 
+        var color;
         var legend_right = config.device.size_class > config.device.SIZES.VSM;
+        if (all_zero) {
+            color = (['lightgrey']);
+            svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("x", "50%")
+                .attr("y", "50%")
+                .text(_t("No data to display"));
+        } else {
+            color = d3.scale.category10().range();
+        }
 
         var chart = nv.models.pieChart().labelType('percent');
         chart.options({
           delay: 250,
-          showLegend: legend_right || _.size(data) <= MAX_LEGEND_LENGTH,
+          showLegend: !all_zero && (legend_right || _.size(data) <= MAX_LEGEND_LENGTH),
           legendPosition: legend_right ? 'right' : 'top',
           transition: 100,
-          color: d3.scale.category10().range(),
+          color: color,
+          showLabels: all_zero ? false: true,
         });
 
         chart(svg);
@@ -308,8 +340,8 @@ return AbstractRenderer.extend({
         this.state.data.forEach(self._sanitizeLabel);
 
         var data = [];
-        var tickValues;
-        var tickFormat;
+        var ticksLabels = [];
+        var tickValues = [];
         var measure = this.state.fields[this.state.measure].string;
         var values;
 
@@ -339,13 +371,12 @@ return AbstractRenderer.extend({
                 }
             }
 
-            if (!tickValues) {
+            if (!tickValues.length) {
                 tickValues = graphData.map(function (d, i) {
                     return i;
                 });
             }
 
-            var ticksLabels = [];
             for (i = 0; i < graphData.length; i++) {
                 ticksLabels.push(graphData[i].labels);
             }
@@ -363,22 +394,17 @@ return AbstractRenderer.extend({
                     }
                 }
             }
-
-            tickFormat = function (d) {
-                return ticksLabels[d];
-            };
         } else if (this.state.groupedBy.length > 1) {
             var data_dict = {};
             var tick = 0;
-            var tickLabels = [];
             var serie, tickLabel;
             var identity = function (p) {return p;};
-            tickValues = [];
+
             for (var i = 0; i < this.state.data.length; i++) {
                 if (graphData[i].labels[0] !== tickLabel) {
                     tickLabel = this.state.data[i].labels[0];
                     tickValues.push(tick);
-                    tickLabels.push(tickLabel);
+                    ticksLabels.push(tickLabel);
                     tick++;
                 }
                 serie = graphData[i].labels[1];
@@ -393,8 +419,8 @@ return AbstractRenderer.extend({
                 });
                 data = _.map(data_dict, identity);
             }
-            tickFormat = function (d) {return tickLabels[d];};
         }
+
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
@@ -404,22 +430,39 @@ return AbstractRenderer.extend({
 
         var chart = nv.models.lineChart();
         chart.options({
-          margin: {left: 80, bottom: 100, top: 80, right: 80},
+          margin: {left: 0, bottom: 20, top: 0, right: 0},
           useInteractiveGuideline: true,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
-          wrapLabels: true,
         });
-        chart.xAxis.tickValues(tickValues)
-            .tickFormat(tickFormat);
-        chart.yAxis.tickFormat(function (d) {
-            return field_utils.format.float(d, {
-                digits : self.state.fields[self.state.measure] && self.state.fields[self.state.measure].digits || [69, 2],
+        chart.forceY([0]);
+        chart.xAxis
+            .tickValues(tickValues)
+            .tickFormat(function (d) {
+                return ticksLabels[d];
             });
-        });
+        chart.yAxis
+            .showMaxMin(false)
+            .tickFormat(function (d) {
+                return field_utils.format.float(d, {
+                    digits : self.state.fields[self.state.measure] && self.state.fields[self.state.measure].digits || [69, 2],
+                });
+            });
+        chart.yAxis.tickPadding(5);
+        chart.yAxis.orient("right");
 
         chart(svg);
+
+        // Bigger line (stroke-width 1.5 is hardcoded in nv.d3)
+        $svgContainer.find('.nvd3 .nv-groups g.nv-group').css('stroke-width', '2px')
+
+        // Delete first and last label because there is no enough space because
+        // of the tiny margins.
+        if (ticksLabels.length > 3) {
+            $svgContainer.find('svg .nv-x g.nv-axisMaxMin-x > text').hide();
+        }
+
         return chart;
     },
     /**
@@ -440,12 +483,55 @@ return AbstractRenderer.extend({
                 chart.tooltip.chartContainer(self.$('.o_graph_svg_container').last()[0]);
             }
         }
-        var chart1 = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
-        chartResize(chart1);
+        var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
+
+        if (chart) {
+            chart.dispatch.on('renderEnd', function () {
+                // FIXME: When 'orient' is right for Y axis, horizontal lines aren't displayed correctly
+                $('.nv-y .tick > line').attr('x2', function (i, value) {
+                    return Math.abs(value);
+                });
+
+                // We don't need to show all labels
+                $('.o_graph_svg_container svg .nv-x g.tick > text').show();
+                var $ticksText = $('svg .nv-x g.tick:not(.zero) > text');
+                var ticksLength = $ticksText.length;
+                var tickTextMargin = 5;
+                if (ticksLength) {
+                    var tickWidth = $ticksText[0].getBBox().width + tickTextMargin;
+                    var svgWidth = $('.o_graph_svg_container').width();
+                    var keepOneOf = Math.ceil(ticksLength / (svgWidth / tickWidth));
+                    // FIXME: should work with two line charts
+                    $('.o_graph_svg_container svg .nv-x g.tick:not(:nth-child(' + keepOneOf + 'n+1)) > text').hide();
+                }
+            })
+
+            chartResize(chart);
+        }
+
         if (this.state.mode === 'pie' && this.isComparison) {
-            var chart2 = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.comparisonData);
-            chartResize(chart2);
-            chart1.update();
+            // Render graph title
+            var timeRangeMenuData = this.state.context.timeRangeMenuData;
+            var chartTitle = this.title + ' (' + timeRangeMenuData.timeRangeDescription + ')';
+            this.$('.o_graph_svg_container').last().prepend($('<label/>', {
+                text: chartTitle,
+            }));
+
+            // Instantiate comparison graph
+            var comparisonChart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.comparisonData);
+            // Render comparison graph title
+            var comparisonChartTitle = this.title + ' (' + timeRangeMenuData.comparisonTimeRangeDescription + ')';
+            this.$('.o_graph_svg_container').last().prepend($('<label/>', {
+                text: comparisonChartTitle,
+            }));
+            chartResize(comparisonChart);
+            if (chart) {
+                chart.update();
+            }
+        } else if (this.title) {
+            this.$('.o_graph_svg_container').last().prepend($('<label/>', {
+                text: this.title,
+            }));
         }
     },
     /**

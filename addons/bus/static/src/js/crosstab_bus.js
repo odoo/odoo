@@ -51,7 +51,7 @@ var CrossTabBus = Longpolling.extend({
         if (this._callLocalStorage('getItem', 'last_ts', 0) + 50000 < now) {
             this._callLocalStorage('removeItem', 'last');
         }
-        this._lastNotificationID = this._callLocalStorage('getItem', 'last', -1);
+        this._lastNotificationID = this._callLocalStorage('getItem', 'last', 0);
         this.call('local_storage', 'onStorage', this, this._onStorage);
     },
     destroy: function () {
@@ -304,7 +304,7 @@ var CrossTabBus = Longpolling.extend({
 
         // last notification id changed
         if (key === this._generateKey('last')) {
-            this._lastNotificationID = value || -1;
+            this._lastNotificationID = value || 0;
         }
         // notifications changed
         else if (key === this._generateKey('notification')) {

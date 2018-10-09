@@ -6,6 +6,7 @@ from odoo import api, models
 
 class FichePayeParser(models.AbstractModel):
     _name = 'report.l10n_fr_hr_payroll.report_l10n_fr_fiche_paye'
+    _description = "French Pay Slip"
 
     def get_payslip_lines(self, objs):
         res = []

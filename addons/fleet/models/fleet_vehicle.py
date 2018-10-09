@@ -10,7 +10,7 @@ from odoo.osv import expression
 class FleetVehicle(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = 'fleet.vehicle'
-    _description = 'Information on a vehicle'
+    _description = 'Vehicle'
     _order = 'license_plate asc, acquisition_date asc'
 
     def _get_default_state(self):
@@ -26,7 +26,7 @@ class FleetVehicle(models.Model):
     driver_id = fields.Many2one('res.partner', 'Driver', track_visibility="onchange", help='Driver of the vehicle', copy=False)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         track_visibility="onchange", required=True, help='Model of the vehicle')
-    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True)
+    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignation Logs')
     log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
@@ -66,9 +66,9 @@ class FleetVehicle(models.Model):
     horsepower_tax = fields.Float('Horsepower Taxation')
     power = fields.Integer('Power', help='Power in kW of the vehicle')
     co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle')
-    image = fields.Binary(related='model_id.image', string="Logo")
-    image_medium = fields.Binary(related='model_id.image_medium', string="Logo (medium)")
-    image_small = fields.Binary(related='model_id.image_small', string="Logo (small)")
+    image = fields.Binary(related='model_id.image', string="Logo", readonly=False)
+    image_medium = fields.Binary(related='model_id.image_medium', string="Logo (medium)", readonly=False)
+    image_small = fields.Binary(related='model_id.image_small', string="Logo (small)", readonly=False)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew', multi='contract_info')
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
@@ -292,7 +292,7 @@ class FleetVehicleOdometer(models.Model):
     value = fields.Float('Odometer Value', group_operator="max")
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True)
     unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
-    driver_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver")
+    driver_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver", readonly=False)
 
     @api.depends('vehicle_id', 'date')
     def _compute_vehicle_log_name(self):
@@ -313,6 +313,7 @@ class FleetVehicleOdometer(models.Model):
 class FleetVehicleState(models.Model):
     _name = 'fleet.vehicle.state'
     _order = 'sequence asc'
+    _description = 'Vehicle Status'
 
     name = fields.Char(required=True)
     sequence = fields.Integer(help="Used to order the note stages")
@@ -322,6 +323,7 @@ class FleetVehicleState(models.Model):
 
 class FleetVehicleTag(models.Model):
     _name = 'fleet.vehicle.tag'
+    _description = 'Vehicle Tag'
 
     name = fields.Char(required=True, translate=True)
     color = fields.Integer('Color Index')
@@ -331,7 +333,7 @@ class FleetVehicleTag(models.Model):
 
 class FleetServiceType(models.Model):
     _name = 'fleet.service.type'
-    _description = 'Type of services available on a vehicle'
+    _description = 'Fleet Service Type'
 
     name = fields.Char(required=True, translate=True)
     category = fields.Selection([

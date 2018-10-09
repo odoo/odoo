@@ -1204,18 +1204,23 @@ QUnit.module('Views', {
         assert.expect(2);
 
         var data = this.data;
+        // It's important to compare capitalized and lowercased words
+        // to be sure the sorting is effective with both of them
         data.partner.fields.bouh = {string: "bouh", type: "integer"};
+        data.partner.fields.modd = {string: "modd", type: "integer"};
+        data.partner.fields.zip = {string: "Zip", type: "integer"};
 
         var pivot = createView({
             View: PivotView,
             model: "partner",
             data: data,
             arch: '<pivot>' +
+                        '<field name="zip" type="measure"/>' +
                         '<field name="foo" type="measure"/>' +
                         '<field name="bouh" type="measure"/>' +
+                        '<field name="modd" type="measure"/>' +
                   '</pivot>',
         });
-
         assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:first').data('field'), 'bouh',
             "Bouh should be the first measure");
         assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:last').data('field'), '__count',
@@ -1440,6 +1445,72 @@ QUnit.module('Views', {
             // rows values length
             [9]
         ]);
+
+        unpatchDate();
+        actionManager.destroy();
+    });
+
+    QUnit.test('rendering of pivot view with comparison and count measure', function (assert) {
+        assert.expect(10);
+
+        var mockMock = false;
+        var nbReadGroup = 0;
+
+        this.data.partner.records[0].date = '2016-12-15';
+        this.data.partner.records[1].date = '2016-12-17';
+        this.data.partner.records[2].date = '2016-12-22';
+        this.data.partner.records[3].date = '2016-12-03';
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+        // create an action manager to test the interactions with the search view
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': '<pivot>' +
+                        '<field name="customer" type="row"/>' +
+                  '</pivot>',
+                'partner,false,search': '<search></search>',
+            },
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'read_group' && mockMock) {
+                    nbReadGroup++;
+                    if (nbReadGroup === 4) {
+                        // this modification is necessary because mockReadGroup does not
+                        // properly reflect the server response when there is no record
+                        // and a groupby list of length at least one.
+                        return $.when([{}]);
+                    }
+                }
+                return result;
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+        });
+
+        mockMock = true;
+
+        // activate 'This Month' and 'Previous Period' in time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        $('.o_control_panel .o_time_range_selector').val('this_month');
+        $('.o_control_panel .o_time_range_menu .o_comparison_checkbox').click();
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+
+        var results = [
+            "4", "0", "100%",
+            "2", "0", "100%",
+            "2", "0", "100%"
+        ];
+
+        for (var i = 0; i < 9; i++) {
+            assert.strictEqual($('.o_pivot .o_pivot_cell_value div').eq(i).text().trim(), results.shift());
+        }
+        assert.strictEqual($('.o_pivot_header_cell_closed').length, 3, "there should be exactly three closed header ('Total','First', 'Second')");
 
         unpatchDate();
         actionManager.destroy();

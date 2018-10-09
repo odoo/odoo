@@ -53,6 +53,7 @@ class Forum(models.Model):
                             'build your professional profile and become a better marketer together.'))
     welcome_message = fields.Html(
         'Welcome Message',
+        translate=True,
         default = """<section class="bg-info" style="height: 168px;"><div class="container">
                         <div class="row">
                             <div class="col-lg-12">
@@ -863,14 +864,14 @@ class PostReason(models.Model):
 
 class Vote(models.Model):
     _name = 'forum.post.vote'
-    _description = 'Vote'
+    _description = 'Post Vote'
 
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
     create_date = fields.Datetime('Create Date', index=True, readonly=True)
-    forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True)
-    recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True)
+    forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True, readonly=False)
+    recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True, readonly=False)
 
     def _get_karma_value(self, old_vote, new_vote, up_karma, down_karma):
         _karma_upd = {

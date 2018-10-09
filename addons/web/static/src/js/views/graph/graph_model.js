@@ -101,6 +101,17 @@ return AbstractModel.extend({
             this.chart.groupedBy = params.context.graph_groupbys || this.chart.groupedBy;
             this.chart.measure = params.context.graph_measure || this.chart.measure;
             this.chart.mode = params.context.graph_mode || this.chart.mode;
+            var timeRangeMenuData = params.context.timeRangeMenuData;
+            if (timeRangeMenuData) {
+                this.chart.timeRange = timeRangeMenuData.timeRange || [];
+                this.chart.comparisonTimeRange = timeRangeMenuData.comparisonTimeRange || [];
+                this.chart.compare = this.chart.comparisonTimeRange.length > 0;
+            } else {
+                this.chart.timeRange = [];
+                this.chart.comparisonTimeRange = [];
+                this.chart.compare = false;
+                this.chart = _.omit(this.chart, 'comparisonData');
+            }
         }
         if ('domain' in params) {
             this.chart.domain = params.domain;

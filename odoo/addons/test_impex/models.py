@@ -40,6 +40,7 @@ MODELS = [
 for name, field in MODELS:
     class NewModel(models.Model):
         _name = 'export.%s' % name
+        _description = 'Export: %s' % name
         _rec_name = 'value'
         const = fields.Integer(default=4)
         value = field
@@ -58,6 +59,7 @@ for name, field in MODELS:
 
 class One2ManyChild(models.Model):
     _name = 'export.one2many.child'
+    _description = 'Export One to Many Child'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
 
@@ -80,6 +82,7 @@ class One2ManyChild(models.Model):
 
 class One2ManyMultiple(models.Model):
     _name = 'export.one2many.multiple'
+    _description = 'Export One To Many Multiple'
 
     parent_id = fields.Many2one('export.one2many.recursive')
     const = fields.Integer(default=36)
@@ -91,6 +94,7 @@ class One2ManyChildMultiple(models.Model):
     _name = 'export.one2many.multiple.child'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
+    _description = 'Export One To Many Multiple Child'
 
     parent_id = fields.Many2one('export.one2many.multiple')
     str = fields.Char()
@@ -104,15 +108,18 @@ class One2ManyChildMultiple(models.Model):
 class One2ManyChild1(models.Model):
     _name = 'export.one2many.child.1'
     _inherit = 'export.one2many.multiple.child'
+    _description = 'Export One to Many Child 1'
 
 
 class One2ManyChild2(models.Model):
     _name = 'export.one2many.child.2'
     _inherit = 'export.one2many.multiple.child'
+    _description = 'Export One To Many Child 2'
 
 
 class Many2ManyChild(models.Model):
     _name = 'export.many2many.other'
+    _description = 'Export Many to Many Other'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
 
@@ -134,6 +141,7 @@ class Many2ManyChild(models.Model):
 
 class SelectionWithDefault(models.Model):
     _name = 'export.selection.withdefault'
+    _description = 'Export Selection With Default'
 
     const = fields.Integer(default=4)
     value = fields.Selection([(1, "Foo"), (2, "Bar")], default=2)
@@ -141,6 +149,7 @@ class SelectionWithDefault(models.Model):
 
 class RecO2M(models.Model):
     _name = 'export.one2many.recursive'
+    _description = 'Export One To Many Recursive'
 
     value = fields.Integer()
     child = fields.One2many('export.one2many.multiple', 'parent_id')
@@ -148,6 +157,7 @@ class RecO2M(models.Model):
 
 class OnlyOne(models.Model):
     _name = 'export.unique'
+    _description = 'Export Unique'
 
     value = fields.Integer()
     value2 = fields.Integer()

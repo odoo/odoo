@@ -189,6 +189,7 @@ class Exclude(SyncOperation):
 class GoogleCalendar(models.AbstractModel):
     STR_SERVICE = 'calendar'
     _name = 'google.%s' % STR_SERVICE
+    _description = 'Google Calendar'
 
     def generate_data(self, event, isCreating=False):
         if event.allday:

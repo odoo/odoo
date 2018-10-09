@@ -6,13 +6,13 @@
     <t t-call="website.layout">
         <t t-set="additional_title">Resellers</t>
         <div id="wrap">
-            <div class="oe_structure"/>
+            <div class="oe_structure" id="oe_structure_website_crm_partner_assign_layout_1"/>
             <div class="container mt16">
                 <div class="row">
                     <t t-raw="ref_content" />
                 </div>
             </div>
-            <div class="oe_structure"/>
+            <div class="oe_structure" id="oe_structure_website_crm_partner_assign_layout_2"/>
         </div>
     </t>
 </template>
@@ -59,10 +59,10 @@
             </div>
 
             <div class="col-lg-8 offset-lg-1" id="ref_content">
-                <div class='d-flex m-2'>
+                <div class="d-flex p-2">
                     <t t-call="website.pager"/>
-                    <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
-                        <div class="form-group float-right">
+                    <form action="" method="get" class="form-inline ml-auto">
+                        <div class="form-group">
                             <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
                         </div>
                     </form>
@@ -501,7 +501,6 @@
 
     <template id="portal_my_opportunity" name="My Opportunity">
         <t t-call="portal.portal_layout">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
             <t t-call="portal.portal_record_layout">
                 <t t-set="card_header">
                     <div class="row no-gutters">

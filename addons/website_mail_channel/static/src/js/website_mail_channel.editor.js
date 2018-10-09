@@ -21,7 +21,7 @@ options.registry.subscribe = options.Class.extend({
                         model: 'mail.channel',
                         method: 'name_search',
                         args: ['', [['public','=','public']]],
-                        context: weContext.get(),
+                        context: weContext.get(), // TODO use this._rpc
                     });
             },
         }).then(function (mail_channel_id) {

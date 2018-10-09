@@ -40,6 +40,7 @@ class CashBox(models.TransientModel):
 
 class CashBoxIn(CashBox):
     _name = 'cash.box.in'
+    _description = 'Cash Box In'
 
     ref = fields.Char('Reference')
 
@@ -60,6 +61,7 @@ class CashBoxIn(CashBox):
 
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
+    _description = 'Cash Box Out'
 
     @api.multi
     def _calculate_values_for_statement_line(self, record):

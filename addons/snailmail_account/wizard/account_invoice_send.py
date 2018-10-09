@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class AccountInvoiceSend(models.TransientModel):
     _name = 'account.invoice.send'
     _inherit = 'account.invoice.send'
+    _description = 'Account Invoice Send'
 
     partner_id = fields.Many2one('res.partner', compute='_get_partner', string='Partner')
     snailmail_is_letter = fields.Boolean('Send by Post', help='Allows to send the document by snail mail (coventional posting delivery service)', default=lambda self: self.env.user.company_id.invoice_is_snailmail)
@@ -65,6 +66,7 @@ class AccountInvoiceSend(models.TransientModel):
         for wizard in self:
             letters = wizard._fetch_letters()
             letters.write({'state': 'pending'})
+            wizard.invoice_ids.filtered(lambda inv: not inv.sent).write({'sent': True})
             if len(letters) == 1:
                 letters._snailmail_print()
 

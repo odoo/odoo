@@ -37,16 +37,14 @@
                 </div>
                 <div>
                     <h6>Background colors</h6>
-                    <t t-foreach="{'body': _t('Body'), 'menu': _t('Menu'), 'footer': _t('Footer')}" t-as="color">
+                    <t t-foreach="{'body': _t('Body'), 'menu': _t('Menus'), 'footer': _t('Footer')}" t-as="color">
                         <t t-call="website.theme_customize_color_palette_button"/>
                     </t>
                 </div>
                 <div>
                     <h6>Text colors</h6>
                     <t t-foreach="{'text': _t('Text'), 'h1': _t('Headings 1'), 'h2': _t('Headings 2'), 'h3': _t('Headings 3'), 'h4': _t('Headings 4'), 'h5': _t('Headings 5'), 'h6': _t('Headings 6')}" t-as="color">
-                        <t t-call="website.theme_customize_color_palette_button">
-                            <t t-set="color_type" t-value="'typo'"/>
-                        </t>
+                        <t t-call="website.theme_customize_color_palette_button"/>
                     </t>
                 </div>
                 <div>

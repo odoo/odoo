@@ -14,6 +14,7 @@
                 <field name="owner_user_id"/>
                 <field name="stage_id"/>
                 <field name="maintenance_team_id"/>
+                <filter string="My Requests" name="my_requests" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="To do" domain="[('stage_id.done', '=', False)]" name="todo"/>
                 <filter string="Blocked" name="kanban_state_block" domain="[('kanban_state', '=', 'blocked')]"/>
@@ -22,8 +23,6 @@
                 <filter string="Top Priorities" name="top_priority" domain="[('priority', '=', '3')]"/>
                 <separator/>
                 <filter string="Unscheduled Maintenance" domain="[('schedule_date', '=', False)]" name="unscheduled"/>
-                <separator/>
-                <filter string="My Requests" name="my_requests" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="My Activities" name="activities_my"
                     domain="[('activity_ids.user_id', '=', uid)]"/>

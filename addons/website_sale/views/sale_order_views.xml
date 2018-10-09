@@ -4,14 +4,30 @@
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="mode">primary</field> 
         <field name="arch" type="xml">
-            <search>
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
                 <filter string="Confirmed Orders" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
+                <filter string="Unpaid Orders" name="order_unpaid" domain="[('state', '=', 'sent'), ('team_id.team_type', '=', 'website')]"/>
+                <filter string="Abandoned Carts" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
+                <separator/>
+                <filter string="Order Date" name="order_date" date="date_order"/>
                 <separator/>
                 <filter string="From Website" name="from_website" domain="[('team_id.team_type', '=', 'website')]"/>
                 <separator/>
-                <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
-            </search>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_ecommerce_unpaid" model="ir.ui.view">
+        <field name="name">sale.order.ecommerce.search.unpaid.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="mode">primary</field> 
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -41,7 +57,7 @@
     <record id="action_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">tree,form,kanban,activity</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">
@@ -54,7 +70,7 @@
     <record id="action_unpaid_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">tree,form,kanban,activity</field>
         <field name="domain">[('state', '=', 'sent'), ('team_id.team_type', '=', 'website')]</field>
         <field name="context">{'show_sale': True, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
@@ -67,10 +83,21 @@
         </field>
     </record>
 
+    <record id="view_sales_order_filter_ecommerce_abondand" model="ir.ui.view">
+        <field name="name">sale.order.ecommerce.abondand.view</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Abandoned Sales Orders">
+                <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
+                <filter string="Recovery Email Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
+            </search>
+        </field>
+    </record>
+
     <record id="action_abandoned_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Abandoned Carts</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">tree,form,kanban,activity</field>
         <field name="domain">[('is_abandoned_cart', '=', True)]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'search_default_recovery_email' : 1}"/>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
@@ -78,8 +105,8 @@
             <p class="o_view_nocontent_empty_folder">
                 No abandoned carts found
             </p><p>
-                You'll find here all the carts abandoned by your visitors, if they completed their address.
-                You should send them a recovery email!
+                You'll find here all the carts abandoned by your visitors.
+                If they completed their address, you should send them a recovery email!
             </p><p>
                 The time to mark a cart as abandoned can be changed in the settings.
             </p>
@@ -116,11 +143,12 @@
     <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
         <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
         <field name="view_type">form</field>
         <field name="domain">[('state', '=', 'sent'), ('team_id.team_type', '=', 'website')]</field>
         <field name="context" eval="{'show_sale': True, 'create': False}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce_unpaid"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 There is no unpaid order from the website yet
@@ -134,16 +162,17 @@
         <field name="name">Abandoned Carts</field>
         <field name="res_model">sale.order</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
         <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('partner_id', '!=', context.get('public_partner_id')), ('team_id.team_type', '=', 'website'), ('date_order', '&lt;=', (datetime.datetime.utcnow() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce_abondand"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No abandoned carts found
             </p><p>
-                You'll find here all the carts abandoned by your visitors, if they completed their address.
-                You should send them a recovery email!
+                You'll find here all the carts abandoned by your visitors.
+                If they completed their address, you should send them a recovery email!
             </p><p>
                 The time to mark a cart as abandoned can be changed in the settings.
             </p>

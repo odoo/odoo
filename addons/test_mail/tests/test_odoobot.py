@@ -13,7 +13,7 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
 
     def setUp(self):
         super(TestOdoobot, self).setUp()
-        self.odoobot = self.env.ref("mail_bot.partner_odoobot")
+        self.odoobot = self.env.ref("base.partner_root")
         self.message_post_default_kwargs = {
             'body': '',
             'attachment_ids': [],

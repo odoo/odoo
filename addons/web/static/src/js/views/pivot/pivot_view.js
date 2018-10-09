@@ -92,7 +92,7 @@ var PivotView = AbstractView.extend({
             }
         });
         if ((!activeMeasures.length) || this.arch.attrs.display_quantity) {
-            activeMeasures.push('__count');
+            activeMeasures = ['__count'].concat(activeMeasures);
         }
 
         this.loadParams.measures = activeMeasures;

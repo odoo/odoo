@@ -6,17 +6,15 @@
         <template id="rating_index" name="Project Rating List">
             <t t-call="portal.frontend_layout">
                 <t t-set="additional_title">Project Satisfaction</t>
-                <div id="wrap">
-                    <div class="oe_structure"/>
+                <div id="wrap" class="row mt4">
+                    <div class="oe_structure" id="oe_structure_project_rating_index_1"/>
                     <div class="container o_portal_project_rating">
-                        <div class="row text-center">
-                            <h2>Projects</h2>
-                        </div>
-                        <div class="oe_structure"/>
+                        <h3>Projects</h3>
+                        <div class="oe_structure" id="oe_structure_project_rating_index_2"/>
                         <div class="row">
                             <t t-if="not projects">
                               <div class="mt64 text-center">
-                                  No project rating puslished for now.
+                                  No project rating published for now.
                               </div>
                             </t>
                             <t t-foreach="projects" t-as="project">
@@ -52,7 +50,7 @@
                             </t>
                         </div>
                     </div>
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_project_rating_index_3"/>
               </div>
             </t>
         </template>
@@ -79,7 +77,7 @@
             <t t-foreach="partner_stats.values()" t-as="partner_stat">
                 <div class="row mt8" t-if="partner_stat['total']" title="Top 5 partner ratings of last 15 days.">
                     <div class="col-md-1">
-                        <img t-if="partner_stat['rated_partner'].image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{partner_stat['rated_partner'].image}" alt="Rated partner"/>
+                        <img t-if="partner_stat['rated_partner'].image" class="o_top_partner_image" t-att-src="image_data_uri(partner_stat['rated_partner'].image)" alt="Rated partner"/>
                         <img  t-if="not partner_stat['rated_partner'].image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
                     </div>
                     <div class="col-md-4 o_smiley_no_padding_right">
@@ -128,7 +126,7 @@
             <div t-attf-id="rating_#{rating.id}" class="container d-none">
                 <div class="row">
                     <div class="col-lg-2">
-                        <img t-if="rating.partner_id.image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{rating.partner_id.image}" alt="Rated partner"/>
+                        <img t-if="rating.partner_id.image" class="o_top_partner_image" t-att-src="image_data_uri(rating.partner_id.image)" alt="Rated partner"/>
                         <img  t-if="not rating.partner_id.image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
                     </div>
                     <div class="col-lg-10">
@@ -148,12 +146,12 @@
 
         <template id="rating_project_rating_page" name="Project Rating Page">
             <t t-call="portal.frontend_layout">
-                 <div id="wrap">
-                    <div class="oe_structure"/>
+                 <div id="wrap" class="row mt4">
+                    <div class="oe_structure" id="oe_structure_project_rating_page_1"/>
                     <div class="container o_project o_portal_project_rating">
-                        <h1 t-esc="project.name" class="text-center"/>
+                        <h2 t-esc="project.name"/>
                         <div class="row mb32">
-                            <div>
+                            <div class="col-lg-12">
                                 <h3 class="o_page_header">Customer Ratings</h3>
                                 <div class="row">
                                     <div class="col-lg-7">
@@ -195,7 +193,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_project_rating_page_2"/>
                 </div>
             </t>
         </template>

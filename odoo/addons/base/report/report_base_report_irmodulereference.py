@@ -6,6 +6,7 @@ from odoo import api, models
 
 class IrModelReferenceReport(models.AbstractModel):
     _name = 'report.base.report_irmodulereference'
+    _description = 'Module Reference Report (base)'
 
     @api.model
     def _object_find(self, module):

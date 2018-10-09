@@ -29,6 +29,10 @@
         background-color: $o-view-background-color;
         width: auto;  // bootstrap override
 
+        thead th:not(.o_pivot_header_cell_closed):not(.o_pivot_header_cell_opened) {
+            text-align: center;
+        }
+
         th {
             font-weight: normal;  // bootstrap override
             background-color: lighten($o-brand-secondary, 40%);

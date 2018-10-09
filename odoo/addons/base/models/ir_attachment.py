@@ -36,6 +36,7 @@ class IrAttachment(models.Model):
     on the local filesystem using name based on their sha1 hash
     """
     _name = 'ir.attachment'
+    _description = 'Attachment'
     _order = 'id desc'
 
     @api.depends('res_model', 'res_id')
@@ -253,7 +254,8 @@ class IrAttachment(models.Model):
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
-        force_text = (xml_like and (not self.env.user._is_admin() or
+        user = self.env.context.get('binary_field_real_user', self.env.user)
+        force_text = (xml_like and (not user._is_system() or
             self.env.context.get('attachments_mime_plainxml')))
         if force_text:
             values['mimetype'] = 'text/plain'
@@ -458,7 +460,6 @@ class IrAttachment(models.Model):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals:
             vals = self._check_contents(vals)
-            vals = self._make_thumbnail(vals)
             if all([not attachment.res_field for attachment in self]):
                 vals = self._make_thumbnail(vals)
         return super(IrAttachment, self).write(vals)
@@ -526,7 +527,7 @@ class IrAttachment(models.Model):
         except Exception:
             raise Exception
 
-    def _split_pdf_groups(self, pdf_groups, remainder=False):
+    def _split_pdf_groups(self, pdf_groups=None, remainder=False):
         """
         calls _make_pdf to create the a new attachment for each page section.
         :param pdf_groups: a list of lists representing the pages to split:  pages = [[1,1], [4,5], [7,7]]
@@ -542,6 +543,8 @@ class IrAttachment(models.Model):
             max_page = input_pdf.getNumPages()
             remainder_set = set(range(0, max_page))
             new_pdf_ids = []
+            if not pdf_groups:
+                pdf_groups = []
             for pages in pdf_groups:
                 pages[1] = min(max_page, pages[1])
                 pages[0] = min(max_page, pages[0])
@@ -562,9 +565,12 @@ class IrAttachment(models.Model):
                     output_page.addPage(input_pdf.getPage(i))
                     new_pdf_id = self._make_pdf(output_page, name_ext)
                     new_pdf_ids.append(new_pdf_id)
+                self.write({'active': False})
+            elif not len(remainder_set):
+                self.write({'active': False})
             return new_pdf_ids
 
-    def split_pdf(self, indices, remainder=False):
+    def split_pdf(self, indices=None, remainder=False):
         """
         called by the Document Viewer's Split PDF button.
         evaluates the input string and turns it into a list of lists to be processed by _split_pdf_groups
@@ -576,11 +582,16 @@ class IrAttachment(models.Model):
         self.ensure_one()
         if 'pdf' not in self.mimetype:
             raise exceptions.ValidationError(_("ERROR: the file must be a PDF"))
-        try:
-            pages = [[int(x) for x in x.split('-')] for x in indices.split(',')]
-        except ValueError:
-            raise exceptions.ValidationError(_("ERROR: Invalid list of pages to split. Example: 1,5-9,10"))
-        return self._split_pdf_groups([[min(x), max(x)] for x in pages], remainder=remainder)
+        if indices:
+            try:
+                pages = [[int(x) for x in x.split('-')] for x in indices.split(',')]
+            except ValueError:
+                raise exceptions.ValidationError(_("ERROR: Invalid list of pages to split. Example: 1,5-9,10"))
+            return self._split_pdf_groups(pdf_groups=[[min(x), max(x)] for x in pages], remainder=remainder)
+        return self._split_pdf_groups(remainder=remainder)
 
-
-
+    @api.model
+    def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
+        domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
+        fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
+        return self.search_read(domain, fieldNames, order=order, limit=1)

@@ -14,7 +14,7 @@ class Website(models.Model):
     _inherit = 'website'
 
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
-    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency')
+    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency', readonly=False)
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team', string='Sales Team')
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
@@ -177,7 +177,7 @@ class Website(models.Model):
             'partner_id': partner.id,
             'pricelist_id': pricelist.id,
             'payment_term_id': self.sale_get_payment_term(partner),
-            'team_id': self.salesteam_id.id,
+            'team_id': self.salesteam_id.id or partner.parent_id.team_id.id or partner.team_id.id,
             'partner_invoice_id': partner.id,
             'partner_shipping_id': addr['delivery'],
             'user_id': salesperson_id or self.salesperson_id.id or default_user_id,

@@ -54,7 +54,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
         <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template": 1}</field>
         <field name="search_view_id" ref="product.product_template_search_view"/>
         <field name="view_id" eval="False"/> <!-- Force empty -->
@@ -75,7 +75,7 @@
         <record id="product_product_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="res_model">product.product</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">tree,kanban,form,activity</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="context">{"search_default_filter_to_purchase": 1}</field>
@@ -165,7 +165,9 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+                            <field name="partner_id" widget="res_partner_many2one" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0, 'show_vat': True}" domain="[('supplier','=',True)]"
+                                placeholder="Name, TIN, Email, or Reference"
+                            />
                             <field name="partner_ref"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
@@ -199,6 +201,7 @@
                                 </tree>
                                 <form string="Purchase Order Line">
                                     <sheet>
+                                        <field name="state" invisible="1"/>
                                         <group>
                                             <group>
                                                 <field name="product_id"
@@ -283,14 +286,14 @@
                     <field name="product_id"/>
                     <field name="create_uid"/>
                     <field name="user_id"/>
+                    <filter name="my_purchases" string="My Purchases" domain="[('user_id','=', uid)]"/>
+                    <separator/>
                     <filter name="draft" string="Quotations" domain="[('state','in',('draft','sent','to approve'))]"/>
                     <filter name="approved" string="Purchase Orders" domain="[('state','in',('purchase','done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
-                    <filter name="my_purchases" string="My Purchases" domain="[('user_id','=', uid)]"/>
                     <separator/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -384,7 +387,7 @@
             <field name="name">Requests for Quotation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -403,7 +406,7 @@
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
             <field name="domain">[('state','in',('purchase', 'done'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">

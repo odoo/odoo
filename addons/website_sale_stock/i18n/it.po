@@ -7,13 +7,15 @@
 # Martin Trigaux, 2018
 # Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
+# Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: David Minneci <david@numeko.it>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,13 +27,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
-msgstr ""
+msgstr "<strong>Avvertenza!</strong>"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
 #: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
-msgstr ""
+msgstr "Aggiunge uno stato di disponibilità sulla pagina Web del prodotto."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -43,12 +45,17 @@ msgstr "Disponibilità"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
-msgstr ""
+msgstr "Soglia di disponibilità"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
 msgid "Cart Qty"
-msgstr ""
+msgstr "Quantità di articoli nel carrello"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
@@ -59,7 +66,7 @@ msgstr "Messaggio personalizzato"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default Mode"
-msgstr ""
+msgstr "Modalità predefinita"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -67,18 +74,21 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Modalità predefinita di disponibilità configurata per i nuovi prodotti "
+"immagazzinabili. Questa configurazione può essere modificata al livello del "
+"prodotto. "
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default threshold"
-msgstr ""
+msgstr "Soglia predefinita"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:16
 #, python-format
 msgid "In stock"
-msgstr ""
+msgstr "in magazzino"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -98,6 +108,8 @@ msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
 msgstr ""
+"Gestisci l'inventario dei tuoi prodotti e visualizza la loro disponibilità "
+"sul sito Web."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -111,8 +123,8 @@ msgstr "Modello prodotto"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Quotation"
-msgstr "Preventivo"
+msgid "Sale Order"
+msgstr "Ordini di Vendita"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
@@ -154,13 +166,15 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
 " for the inconvenience."
 msgstr ""
+"Alcuni prodotti non sono più disponibili e il tuo carrello è stato "
+"aggiornato. Ci scusiamo per il disagio."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
 #, python-format
 msgid "Temporarily out of stock"
-msgstr ""
+msgstr "Temporaneamente esaurito"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -188,20 +202,20 @@ msgstr "Sito Web"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "Sito Web a cui appartiene questo prelievo."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:19
 #, python-format
 msgid "You already added"
-msgstr ""
+msgstr "Hai già aggiunto"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:27
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr ""
+msgstr "Vuoi comprare%s prodotti ma solo %s sono disponibili "
 
 #. module: website_sale_stock
 #. openerp-web
@@ -216,16 +230,11 @@ msgstr "tutte"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:14
 #, python-format
 msgid "available"
-msgstr ""
+msgstr "disponibile"
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
 #, python-format
 msgid "in your cart."
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr "nel tuo carrello"

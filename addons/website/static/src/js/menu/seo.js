@@ -217,13 +217,10 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         this.initDescription = this.description();
     },
     url: function () {
-        var url = window.location.href;
-        var hashIndex = url.indexOf('?');
-        return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
+        return window.location.origin + window.location.pathname;
     },
     title: function () {
-        var $title = $('title');
-        return ($title.length > 0) && $title.text() && $title.text().trim();
+        return $('title').text().trim();
     },
     changeTitle: function (title) {
         // TODO create tag if missing
@@ -231,8 +228,7 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         this.trigger('title-changed', title);
     },
     description: function () {
-        var $description = $('meta[name=description]');
-        return ($description.length > 0) && ($description.attr('content') && $description.attr('content').trim());
+        return ($('meta[name=description]').attr('content') || '').trim();
     },
     changeDescription: function (description) {
         // TODO create tag if missing
@@ -483,7 +479,6 @@ var MetaKeywords = Widget.extend({
             model: 'website',
             method: 'get_languages',
             args: [[weContext.get().website_id]],
-            context: weContext.get(),
         }).then( function (data) {
             self.$('#language-box').html(core.qweb.render('Configurator.language_promote', {
                 'language': data,
@@ -526,6 +521,7 @@ var MetaImageSelector = Widget.extend({
         this.activeMetaImg = data.metaImg;
         this.serverUrl = data.htmlpage.url();
         data.pageImages.unshift(_.str.sprintf('/web/image/res.company/%s/logo', odoo.session_info.website_company_id));
+        data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/social_default_image', odoo.session_info.website_id));
         this.images = _.uniq(data.pageImages);
         this.customImgUrl = _.contains(data.pageImages, data.metaImg) ? false : data.metaImg;
         this._super(parent);
@@ -679,7 +675,7 @@ var SeoConfigurator = Dialog.extend({
             // - no reload if we are not editing a view (condition: website_id === undefined)
             // - reload if generic page (condition: website_id === false)
             self.reloadOnSave = data.website_id === undefined ? false : !data.website_id;
-            //If website.page, hide the google preview & tell user his page is currently unindexed 
+            //If website.page, hide the google preview & tell user his page is currently unindexed
             self.isIndexed = (data && ('website_indexed' in data)) ? data.website_indexed : true;
             self.canEditTitle = data && ('website_meta_title' in data);
             self.canEditDescription = data && ('website_meta_description' in data);
@@ -748,7 +744,7 @@ var SeoConfigurator = Dialog.extend({
             rpc.query({
                 model: obj.model,
                 method: 'read',
-                args: [[obj.id], fields, weContext.get()],
+                args: [[obj.id], fields],
             }).then(function (data) {
                 if (data.length) {
                     var meta = data[0];
@@ -771,7 +767,7 @@ var SeoConfigurator = Dialog.extend({
             return rpc.query({
                 model: obj.model,
                 method: 'write',
-                args: [[obj.id], data, weContext.get()],
+                args: [[obj.id], data],
             });
         }
     },
@@ -801,7 +797,7 @@ var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     init: function (parent, options) {
         this._super(parent, options);
 
-        if (window.location.href.includes('enable_seo')) {
+        if ($.deparam.querystring().enable_seo !== undefined) {
             this._promoteCurrentPage();
         }
     },

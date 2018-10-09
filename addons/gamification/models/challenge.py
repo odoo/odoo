@@ -56,7 +56,7 @@ class Challenge(models.Model):
     """
 
     _name = 'gamification.challenge'
-    _description = 'Gamification challenge'
+    _description = 'Gamification Challenge'
     _inherit = 'mail.thread'
     _order = 'end_date, start_date, name, id'
 
@@ -545,7 +545,7 @@ class Challenge(models.Model):
         if challenge.visibility_mode == 'ranking':
             lines_boards = challenge._get_serialized_challenge_lines(restrict_goals=subset_goals)
 
-            body_html = MailTemplates.with_context(challenge_lines=lines_boards).render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
+            body_html = MailTemplates.with_context(challenge_lines=lines_boards)._render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
 
             # send to every follower and participant of the challenge
             challenge.message_post(
@@ -566,7 +566,7 @@ class Challenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = MailTemplates.sudo(user).with_context(challenge_lines=lines).render_template(
+                body_html = MailTemplates.sudo(user).with_context(challenge_lines=lines)._render_template(
                     challenge.report_template_id.body_html,
                     'gamification.challenge',
                     challenge.id)
@@ -781,7 +781,7 @@ class ChallengeLine(models.Model):
     sequence = fields.Integer('Sequence', help='Sequence number for ordering', default=1)
     target_goal = fields.Float('Target Value to Reach', required=True)
 
-    name = fields.Char("Name", related='definition_id.name')
+    name = fields.Char("Name", related='definition_id.name', readonly=False)
     condition = fields.Selection("Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Unit", related='definition_id.suffix', readonly=True)
     definition_monetary = fields.Boolean("Monetary", related='definition_id.monetary', readonly=True)

@@ -876,6 +876,9 @@ following attributes:
   the name of a field to use in the view. If used for grouping (rather
   than aggregating)
 
+``title`` (optional)
+  string displayed on the top of the graph.
+
 ``type``
   indicates whether the field should be used as a grouping criteria or as an
   aggregated value within a group. Possible values are:
@@ -980,6 +983,10 @@ non-editable :ref:`form view <reference/views/form>`. Records may be grouped
 in columns for use in workflow visualisation or manipulation (e.g. tasks or
 work-progress management), or ungrouped (used simply to visualize records).
 
+.. note:: The kanban view will load and display a maximum of ten columns.
+          Any column after that will be closed (but can still be opened by
+          the user).
+
 The root element of the Kanban view is ``<kanban>``, it can use the following
 attributes:
 
@@ -998,6 +1005,9 @@ attributes:
   whether groups can be deleted via the context menu. Default: true.
 ``group_edit``
   whether groups can be edited via the context menu. Default: true.
+``archivable``
+  whether records belonging to a column can be archived / restored if an
+  ``active`` field is defined on the model. Default: true.
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
@@ -1427,6 +1437,11 @@ There are 5 possible type of tags in a dashboard view:
         Clicking on a clickable aggregate will change the measures used by the subviews
         and add the value of the domain attribute (if any) to the search view.
 
+    - ``value_label`` (optional)
+        A string put on the right of the aggregate value.
+        For example, it can be useful to indicate the unit of measure
+        of the aggregate value.
+
 ``formula``
     declares a derived value.  Formulas are values computed from aggregates.
 
@@ -1457,6 +1472,11 @@ There are 5 possible type of tags in a dashboard view:
 
     - ``help`` (optional)
         A help message to dipslay in a tooltip (equivalent of help for a field in python)
+
+    - ``value_label`` (optional)
+        A string put on the right of the formula value.
+        For example, it can be useful to indicate the unit of measure
+        of the formula value.
 
 ``widget``
     Declares a specialized widget to be used to display the information. This is

@@ -12,7 +12,7 @@
     <template id="add_to_wishlist" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Wishlist" priority="20">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
-            <button type="button" role="button" class="btn btn-secondary btn-sm o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
+            <button type="button" role="button" class="btn btn-secondary btn-sm o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id if product.product_variant_ids else '0'" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
         </xpath>
     </template>
 
@@ -20,7 +20,7 @@
         <xpath expr="//a[@id='add_to_cart']" position="after">
             <t t-if="product.env.ref('website_sale_wishlist.add_to_wishlist').active">
                 <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
-                <button type="button" role="button" class="btn btn-secondary btn-lg mt8 o_add_wishlist_dyn" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
+                <button type="button" role="button" class="btn btn-secondary btn-lg mt8 o_add_wishlist_dyn" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id if product.product_variant_ids else '0'" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
             </t>
         </xpath>
     </template>
@@ -43,7 +43,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Wishlist</t>
             <div id="wrap" class="js_sale">
-                <div class="oe_structure"/>
+                <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
                 <div class="container oe_website_sale">
                     <section class="container wishlist-section">
                         <h3>My Wishlist</h3>

@@ -18,9 +18,10 @@ var _t = core._t;
 var SnippetOption = Widget.extend({
     events: {
         'mouseenter': '_onLinkEnter',
+        'mouseenter .dropdown-item': '_onLinkEnter',
         'click': '_onLinkClick',
         'mouseleave': '_onMouseleave',
-        'mouseleave .dropdown-menu': '_onMouseleave',
+        'mouseleave .dropdown-item': '_onMouseleave',
     },
     /**
      * When editing a snippet, its options are shown alongside the ones of its
@@ -835,6 +836,9 @@ registry.background = SnippetOption.extend({
      * image is removed.
      */
     bindBackgroundEvents: function () {
+        if (this.$target.is('.parallax, .s_parallax_bg')) {
+            return;
+        }
         this.$target.off('.background-option')
             .on('background-color-event.background-option', (function (e, previewMode) {
                 e.stopPropagation();
@@ -1232,7 +1236,6 @@ registry.many2one = SnippetOption.extend({
             kwargs: {
                 order: [{name: 'name', asc: false}],
                 limit: 5,
-                context: weContext.get(),
             },
         }).then(function (result) {
             self.$search.siblings().remove();
@@ -1271,7 +1274,6 @@ registry.many2one = SnippetOption.extend({
                         args: [[self.ID]],
                         kwargs: {
                             options: options,
-                            context: weContext.get(),
                         },
                     }).then(function (html) {
                         $node.html(html);

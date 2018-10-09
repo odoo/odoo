@@ -4,6 +4,7 @@
     <record id="mass_mail_sale_order_0" model="mail.mass_mailing">
         <field name="name">Sale Newsletter</field>
         <field name="state">in_queue</field>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="schedule_date" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         <field name="mass_mailing_campaign_id" eval="ref('mass_mailing.mass_mail_campaign_1')"/>
         <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>

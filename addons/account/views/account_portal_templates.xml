@@ -74,7 +74,11 @@
 
     <template id="portal_invoice_page" name="Invoice Portal Template" inherit_id="portal.portal_sidebar" primary="True">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
+            <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (invoice._name, invoice.id, invoice.env.ref('account.action_invoice_tree1').id)"/>
+                </t>
+            </t>
 
             <div class="row mt16 o_portal_invoice_sidebar">
                 <!-- Sidebar -->
@@ -90,21 +94,21 @@
 
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
-                            <li class="list-group-item o_payment_button flex-grow-1 flex-sm-grow-0">
+                            <li class="list-group-item flex-grow-1">
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
                                     <div class="btn-group  flex-grow-1 mr-1 mb-1">
                                         <a class="btn btn-secondary btn-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
                                     </div>
                                     <div class="btn-group flex-grow-1 mb-1">
-                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="invoice.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
+                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="invoice.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
                                     </div>
                                 </div>
                             </li>
-                            <li t-if="invoice.user_id" class="list-group-item flex-grow-1 o_portal_contact_block">
-                                <div class="small mb-1"><strong class="text-muted">Your Contact:</strong></div>
+                            <li t-if="invoice.user_id" class="list-group-item flex-grow-1">
+                                <div class="small mb-1"><strong class="text-muted">Your Contact</strong></div>
                                 <div class="row">
                                     <div class="col flex-grow-0 pr-2">
-                                        <img t-if="invoice.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-attf-src="data:image/png;base64,#{invoice.user_id.image}" alt="Contact"/>
+                                        <img t-if="invoice.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(invoice.user_id.image)" alt="Contact"/>
                                         <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
                                     </div>
                                     <div class="col pl-0">
@@ -118,14 +122,17 @@
                 </t>
 
                 <!-- Page Content -->
-                <div id="invoice_content" class="o_portal_page_content col-12 col-lg d-flex justify-content-end">
-                    <t t-if="error or warning" t-call="account.portal_invoice_error"/>
-                    <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
-                    <div class="o_portal_html_view shadow">
-                        <div class="o_portal_html_loader text-center">
-                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
+                <div id="invoice_content" class="o_portal_page_content col-12 col-lg d-flex flex-column align-items-end">
+                    <div class="o_portal_page_size">
+                        <t t-if="error or warning" t-call="account.portal_invoice_error"/>
+                        <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
+
+                        <div class="o_portal_html_view shadow">
+                            <div class="o_portal_html_loader text-center">
+                                <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
+                            </div>
+                            <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                         </div>
-                        <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                     </div>
                 </div>
             </div>

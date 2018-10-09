@@ -11,14 +11,13 @@
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Waleed Mohsen <mohsen.waleed@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Waleed Mohsen <mohsen.waleed@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
 msgstr ""
 
@@ -38,7 +37,7 @@ msgid "Action"
 msgstr "الإجراء"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
 #: selection:stock.rule,action:0
 msgid "Buy"
@@ -55,6 +54,11 @@ msgid "Buy to Resupply"
 msgstr ""
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
 msgid "Created Purchase Order Line"
 msgstr ""
@@ -68,10 +72,8 @@ msgstr "التسليم الى"
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+"of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
-"اعتمادا على الوحدات المثبته ، هذا سوف يسمح لك بتحديد مسار المنتج: ما إذا كان"
-" سيتم شراؤها، وتصنيعها، متعهد النقل المتعدد الوسائط / MTS، ... "
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -89,12 +91,12 @@ msgid "Dropshipping"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
 msgstr ""
 
@@ -104,7 +106,7 @@ msgid "Incoming  Products"
 msgstr "منتجات واردة"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
 msgstr "الشحنات الواردة"
 
@@ -138,7 +140,7 @@ msgid "Is the Sale Module Installed"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Logistics"
 msgstr "اللوجستيات"
 
@@ -148,7 +150,7 @@ msgid "Lot/Serial"
 msgstr "اللوط/المسلسل"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
 msgstr ""
 
@@ -158,7 +160,7 @@ msgid "Manufacture"
 msgstr "الصناعة"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier"
@@ -171,12 +173,12 @@ msgid "Minimum Inventory Rule"
 msgstr "قاعدة إعادة الطلب"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
 msgstr ""
 
@@ -224,9 +226,14 @@ msgstr "بند طلب الشراء"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_ids
-#: model:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
 msgstr "أوامر الشراء"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_report
+msgid "Purchase Report"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
@@ -234,22 +241,17 @@ msgid "Purchase order count"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_purchase_report
-msgid "Purchases Orders"
-msgstr "أوامر الشراء"
-
-#. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Push To"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
 msgstr "استلام"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
 msgstr "استلم المنتجات"
 
@@ -260,7 +262,7 @@ msgid "Receptions"
 msgstr "الاستلامات"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
 msgstr ""
 
@@ -280,7 +282,7 @@ msgid "Routes"
 msgstr "مسارات "
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
 msgstr ""
 
@@ -290,13 +292,18 @@ msgid "Stock Move"
 msgstr "حركة المخزون"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
 msgstr "تحركات المخزون"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
 msgstr ""
 
 #. module: purchase_stock
@@ -321,7 +328,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
 "This adds a dropshipping route to apply on products in order to request your"
 " vendors to deliver to your customers. A product to dropship will generate a"
@@ -382,26 +389,16 @@ msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "days"
 msgstr "أيام"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "of"
 msgstr "من"
 
 #. module: purchase_stock
-#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
 msgstr ""
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
-msgid "report.stock.report_stock_rule"
-msgstr ""
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "الدقة.التكوين.إعدادات"

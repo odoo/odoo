@@ -3,16 +3,16 @@
 # * hr_payroll_account
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Mateus Lopes <mateus1@gmail.com>, 2016
-# grazziano <gra.negocia@gmail.com>, 2016
+# Martin Trigaux, 2018
+# Mateus Lopes <mateus1@gmail.com>, 2018
+# grazziano <gra.negocia@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: grazziano <gra.negocia@gmail.com>, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: grazziano <gra.negocia@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_payroll_account
-#: model:ir.ui.view,arch_db:hr_payroll_account.hr_contract_form_inherit
-#: model:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_contract_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_form_inherit
 msgid "Accounting"
 msgstr "Contabilidade"
 
@@ -32,8 +32,8 @@ msgid "Accounting Entry"
 msgstr "Entrada Contábil"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:114
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:129
 #, python-format
 msgid "Adjustment Entry"
 msgstr "Entrada de Ajuste"
@@ -93,7 +93,7 @@ msgid "Payslip Line"
 msgstr "Linha de Holerite"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:65
 #, python-format
 msgid "Payslip of %s"
 msgstr "Holerites de %s"
@@ -106,24 +106,24 @@ msgid "Salary Journal"
 msgstr "Diário de Salário"
 
 #. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
+
+#. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_tax_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_tax_id
 msgid "Tax"
 msgstr "Imposto"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:112
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
 msgstr "O diário de Despesas \"%s\" não possui uma Conta de Crédito configurada!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:127
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
 msgstr "O diário de Despesas  \"%s\" não possui uma Conta de Débito configurada"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"

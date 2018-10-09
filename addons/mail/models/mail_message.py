@@ -76,7 +76,7 @@ class Message(models.Model):
         'res.partner', 'Author', index=True,
         ondelete='set null', default=_get_default_author,
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
-    author_avatar = fields.Binary("Author's avatar", related='author_id.image_small')
+    author_avatar = fields.Binary("Author's avatar", related='author_id.image_small', readonly=False)
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     partner_ids = fields.Many2many('res.partner', string='Recipients',
@@ -178,15 +178,14 @@ class Message(models.Model):
 
     @api.model
     def _search_need_moderation(self, operator, operand):
-        if operator == '=' and operand:
+        if operator == '=' and operand is True:
             return ['&', '&',
                     ('moderation_status', '=', 'pending_moderation'),
                     ('model', '=', 'mail.channel'),
                     ('res_id', 'in', self.env.user.moderation_channel_ids.ids)]
-        return ['|', '|',
-                ('moderation_status', '!=', 'pending_moderation'),
-                ('model', '!=', 'mail.channel'),
-                ('res_id', 'not in', self.env.user.moderation_channel_ids.ids)]
+
+        # no support for other operators
+        return ValueError(_('Unsupported search filter on moderation status'))
 
     #------------------------------------------------------
     # Notification API
@@ -419,8 +418,19 @@ class Message(models.Model):
         return messages._format_mail_failures()
 
     @api.model
-    def message_fetch(self, domain, limit=20):
-        return self.search(domain, limit=limit).message_format()
+    def message_fetch(self, domain, limit=20, moderated_channel_ids=None):
+        messages = self.search(domain, limit=limit)
+        user_mod_channels = self.env.user.moderation_channel_ids.ids
+        if moderated_channel_ids and set(moderated_channel_ids).issubset(user_mod_channels):
+            # Split load moderated and regular messages, as the ORed domain can
+            # cause performance issues on large databases.
+            moderated_messages_dom = [['model', '=', 'mail.channel'],
+                                      ['res_id', 'in', moderated_channel_ids],
+                                      ['need_moderation', '=', True]]
+            messages |= self.search(moderated_messages_dom, limit=limit)
+            # Truncate the results to `limit`
+            messages = messages.sorted(key='id', reverse=True)[:limit]
+        return messages.message_format()
 
     @api.multi
     def message_format(self):

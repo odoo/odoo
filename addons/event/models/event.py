@@ -159,7 +159,7 @@ class EventEvent(models.Model):
         default=lambda self: self.env.user.company_id.partner_id,
         readonly=False, states={'done': [('readonly', True)]},
         track_visibility="onchange")
-    country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True)
+    country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
     twitter_hashtag = fields.Char('Twitter Hashtag')
     description = fields.Html(
         string='Description', oldname='note', translate=html_translate, sanitize_attributes=False,
@@ -334,7 +334,7 @@ class EventEvent(models.Model):
 
 class EventRegistration(models.Model):
     _name = 'event.registration'
-    _description = 'Attendee'
+    _description = 'Event Registration'
     _inherit = ['mail.thread']
     _order = 'name, create_date desc'
 

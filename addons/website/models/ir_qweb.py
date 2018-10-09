@@ -6,8 +6,7 @@ from collections import OrderedDict
 from odoo import models
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-
-
+from odoo.tools import html_escape as escape
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 

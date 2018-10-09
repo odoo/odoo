@@ -54,9 +54,9 @@ class MassMailingContactListRel(models.Model):
     opt_out = fields.Boolean(string='Opt Out',
                              help='The contact has chosen not to receive mails anymore from this list', default=False)
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
-    contact_count = fields.Integer(related='list_id.contact_nbr', store=False)
-    message_bounce = fields.Integer(related='contact_id.message_bounce', store=False)
-    is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False)
+    contact_count = fields.Integer(related='list_id.contact_nbr', store=False, readonly=False)
+    message_bounce = fields.Integer(related='contact_id.message_bounce', store=False, readonly=False)
+    is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False, readonly=False)
 
     _sql_constraints = [
         ('unique_contact_list', 'unique (contact_id, list_id)',
@@ -115,11 +115,11 @@ class MassMailingList(models.Model):
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
             where
                 COALESCE(r.opt_out,FALSE) = FALSE
-                AND c.email NOT IN (select email from mail_blacklist where active = TRUE)
                 AND substring(c.email, '%s') IS NOT NULL
+                AND LOWER(substring(c.email, '%s')) NOT IN (select email from mail_blacklist where active = TRUE)
             group by
                 list_id
-        ''' % EMAIL_PATTERN)
+        ''' % (EMAIL_PATTERN, EMAIL_PATTERN))
         data = dict(self.env.cr.fetchall())
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
@@ -172,7 +172,7 @@ class MassMailingList(models.Model):
                     mail_mass_mailing_list mailing_list
                 WHERE contact.id=contact_list_rel.contact_id
                 AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
-                AND contact.email NOT IN (select email from mail_blacklist where active = TRUE)
+                AND LOWER(substring(contact.email, %s)) NOT IN (select email from mail_blacklist where active = TRUE)
                 AND mailing_list.id=contact_list_rel.list_id
                 AND mailing_list.id IN %s
                 AND NOT EXISTS
@@ -186,7 +186,7 @@ class MassMailingList(models.Model):
                     AND contact_list_rel2.list_id = %s
                     )
                 ) st
-            WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
+            WHERE st.rn = 1;""", (self.id, EMAIL_PATTERN, tuple(src_lists.ids), self.id))
         self.invalidate_cache()
         if archive:
             (src_lists - self).write({'active': False})
@@ -287,7 +287,7 @@ class MassMailingCampaign(models.Model):
     mass_mailing_ids = fields.One2many(
         'mail.mass_mailing', 'mass_mailing_campaign_id',
         string='Mass Mailings')
-    unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=True,
+    unique_ab_testing = fields.Boolean(string='Allow A/B Testing', default=False,
         help='If checked, recipients will be mailed only once for the whole campaign. '
              'This lets you send different mailings to randomly selected recipients and test '
              'the effectiveness of the mailings, without causing duplicate messages.')
@@ -683,6 +683,42 @@ class MassMailing(models.Model):
         failed_mails.mapped('statistics_ids').unlink()
         failed_mails.sudo().unlink()
         self.write({'state': 'in_queue'})
+
+    def action_view_sent(self):
+        return self._action_view_documents_filtered('sent')
+
+    def action_view_opened(self):
+        return self._action_view_documents_filtered('opened')
+
+    def action_view_replied(self):
+        return self._action_view_documents_filtered('replied')
+
+    def action_view_bounced(self):
+        return self._action_view_documents_filtered('bounced')
+
+    def action_view_clicked(self):
+        return self._action_view_documents_filtered('clicked')
+
+    def action_view_delivered(self):
+        return self._action_view_documents_filtered('delivered')
+
+    def _action_view_documents_filtered(self, view_filter):
+        if view_filter in ('sent', 'opened', 'replied', 'bounced', 'clicked'):
+            opened_stats = self.statistics_ids.filtered(lambda stat: stat[view_filter])
+        elif view_filter == ('delivered'):
+            opened_stats = self.statistics_ids.filtered(lambda stat: stat.sent and not stat.bounced)
+        else:
+            opened_stats = self.env['mail.mail.statistics']
+        res_ids = opened_stats.mapped('res_id')
+        model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
+        return {
+            'name': model_name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree',
+            'res_model': self.mailing_model_real,
+            'domain': [('id', 'in', res_ids)],
+            'context': self.env.context,
+        }
 
     #------------------------------------------------------
     # Email Sending
