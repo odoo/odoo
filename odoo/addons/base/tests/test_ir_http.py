@@ -97,29 +97,29 @@ class test_ir_http_mimetype(common.TransactionCase):
 
         def test_access(**kwargs):
             status, _, _ = self.env['ir.http'].binary_content(
-                **defaults, **kwargs
+                **dict(defaults, **kwargs)
             )
             return status
 
         status = test_access()
         self.assertEqual(status, 403, "no access")
 
-        status = test_access(access_token='Secret')
+        status = test_access(access_token=u'Secret')
         self.assertEqual(status, 403,
             "no access if access token for attachment without access token")
 
-        attachment.access_token = 'Secret'
-        status = test_access(access_token='Secret')
+        attachment.access_token = u'Secret'
+        status = test_access(access_token=u'Secret')
         self.assertEqual(status, 200, "access for correct access token")
 
-        status = test_access(access_token='Wrong')
+        status = test_access(access_token=u'Wrong')
         self.assertEqual(status, 403, "no access for wrong access token")
 
         attachment.public = True
         status = test_access()
         self.assertEqual(status, 200, "access for attachment with access")
 
-        status = test_access(access_token='Wrong')
+        status = test_access(access_token=u'Wrong')
         self.assertEqual(status, 403,
             "no access for wrong access token for attachment with access")
 
@@ -127,6 +127,6 @@ class test_ir_http_mimetype(common.TransactionCase):
         status = test_access()
         self.assertEqual(status, 404, "no access for deleted attachment")
 
-        status = test_access(access_token='Secret')
+        status = test_access(access_token=u'Secret')
         self.assertEqual(status, 404,
             "no access with access token for deleted attachment")
