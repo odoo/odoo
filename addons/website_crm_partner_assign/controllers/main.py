@@ -20,22 +20,13 @@ from odoo.tools.translate import _
 
 class WebsiteAccount(CustomerPortal):
 
-    def get_domain_my_lead(self, user):
-        return [
-            ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
-            ('type', '=', 'lead')
-        ]
-
-    def get_domain_my_opp(self, user):
-        return [
-            ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
-            ('type', '=', 'opportunity')
-        ]
+    def get_domain(self, type):
+        return request.env.ref('website_crm_partner_assign.action_lead_portal_domain').with_context(type=type).run()
 
     def _prepare_portal_layout_values(self):
         values = super(WebsiteAccount, self)._prepare_portal_layout_values()
-        lead_count = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
-        opp_count = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
+        lead_count = request.env['crm.lead'].search_count(self.get_domain(type='lead'))
+        opp_count = request.env['crm.lead'].search_count(self.get_domain(type='opportunity'))
         values.update({
             'lead_count': lead_count,
             'opp_count': opp_count,
@@ -46,7 +37,7 @@ class WebsiteAccount(CustomerPortal):
     def portal_my_leads(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         CrmLead = request.env['crm.lead']
-        domain = self.get_domain_my_lead(request.env.user)
+        domain = self.get_domain(type='lead')
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
@@ -91,7 +82,7 @@ class WebsiteAccount(CustomerPortal):
     def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
         CrmLead = request.env['crm.lead']
-        domain = self.get_domain_my_opp(request.env.user)
+        domain = self.get_domain(type='opportunity')
 
         today = fields.Date.today()
         this_week_end_date = fields.Date.to_string(fields.Date.from_string(today) + datetime.timedelta(days=7))
