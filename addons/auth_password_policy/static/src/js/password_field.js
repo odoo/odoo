@@ -7,6 +7,7 @@
 odoo.define('auth_password_policy.PasswordField', function (require) {
 "use strict";
 var fields = require('web.basic_fields');
+var registry = require('web.field_registry');
 var policy = require('auth_password_policy');
 var Meter = require('auth_password_policy.Meter');
 var _formatValue = require('web.AbstractField').prototype._formatValue;
@@ -21,12 +22,12 @@ var PasswordField = fields.InputField.extend({
     },
     willStart: function () {
         var _this = this;
-        var getPolicy = this.nodeOptions['password_meter'] ? this._rpc({
+        var getPolicy = this._rpc({
             model: 'res.users',
             method: 'get_password_policy',
         }).then(function (p) {
             _this._meter = new Meter(_this, new policy.Policy(p), policy.recommendations);
-        }) : undefined;
+        });
         return $.when(
             this._super.apply(this, arguments),
             getPolicy
@@ -46,9 +47,6 @@ var PasswordField = fields.InputField.extend({
                 // insertAfter doesn't work and appendTo means the meter is
                 // ignored (as this.$el is an input[type=password])
                 _this.$el = t.add(meter.$el);
-                if (!_this.nodeOptions['password_meter']) {
-                    meter.$el.hide();
-                }
             }, _this.$el);
         }).then(function () {
             // initial meter update when re-editing
@@ -84,17 +82,6 @@ var PasswordField = fields.InputField.extend({
     }
 });
 
-fields.InputField.include({
-    init: function (parent, name, record, options) {
-        var fieldsInfo = record.fieldsInfo[options.viewType];
-        var attrs = options.attrs || (fieldsInfo && fieldsInfo[name]) || {};
-        if ('password' in attrs
-                && Object.getPrototypeOf(this) !== PasswordField.prototype) {
-            return new PasswordField(parent, name, record, options);
-        }
-        this._super.apply(this, arguments);
-    }
-});
-
+registry.add("password_meter", PasswordField);
 return PasswordField;
 });
