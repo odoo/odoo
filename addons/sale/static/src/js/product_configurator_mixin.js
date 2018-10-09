@@ -108,18 +108,26 @@ var ProductConfiguratorMixin = {
                     $variantContainer.find('.variant_custom_value_label').remove();
                     $variantContainer.find('.variant_custom_value').remove();
 
-                    var $label = $('<label>', {
-                        html: attributeValueName + ': ',
-                        class: 'variant_custom_value_label'
-                    });
-
                     var $input = $('<input>', {
                         type: 'text',
                         'data-attribute_value_id': attributeValueId,
                         'data-attribute_value_name': attributeValueName,
                         class: 'variant_custom_value form-control'
                     });
-                    $variantContainer.append($label).append($input);
+
+                    var isRadioInput = $target.is('input[type=radio]') &&
+                        $target.closest('label.css_attribute_color').length === 0;
+
+                    if (isRadioInput) {
+                        $input.addClass('custom_value_radio');
+                        $target.closest('div').after($input);
+                    } else {
+                        var $label = $('<label>', {
+                            html: attributeValueName + ': ',
+                            class: 'variant_custom_value_label'
+                        });
+                        $variantContainer.append($label).append($input);
+                    }
                 }
             } else {
                 $variantContainer.find('.variant_custom_value_label').remove();
