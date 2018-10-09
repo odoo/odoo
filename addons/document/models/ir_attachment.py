@@ -96,6 +96,25 @@ class IrAttachment(models.Model):
         if bin_data.startswith(b'%PDF-'):
             f = io.BytesIO(bin_data)
             try:
+                try:  # better extraction with the optional dependency pdfminer
+                    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+                    from pdfminer.converter import TextConverter
+                    from pdfminer.pdfpage import PDFPage
+                    logging.getLogger("pdfminer").setLevel(logging.CRITICAL)
+                    content = io.StringIO()
+                    resource_manager = PDFResourceManager()
+                    device = TextConverter(resource_manager, content)
+                    interpreter = PDFPageInterpreter(resource_manager, device)
+
+                    for page in PDFPage.get_pages(f):
+                        interpreter.process_page(page)
+
+                    buf = content.getvalue()
+                    device.close()
+                    content.close()
+                    return buf
+                except Exception:
+                    pass  # pdfminer failed, we backup to PyPDF
                 pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
                 for page in pdf.pages:
                     buf += page.extractText()
