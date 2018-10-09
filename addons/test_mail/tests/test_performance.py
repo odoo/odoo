@@ -524,7 +524,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=149, emp=172):  # test_mail only: 144 - 167
+        with self.assertQueryCount(admin=149, emp=175):  # test_mail only: 144 - 171
             rec.write({
                 'name': 'Test2',
                 'umbrella_id': self.umbrella.id,
