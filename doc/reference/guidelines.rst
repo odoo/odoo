@@ -44,7 +44,7 @@ Other optional directories compose the module.
 
 - *wizard/* : regroups the transient models (``models.TransientModel``) and their views
 - *report/* : contains the printable reports and models based on SQL views. Python objects and XML views are included in this directory
-- *tests/* : contains the Python/YML tests
+- *tests/* : contains the Python tests
 
 
 File naming

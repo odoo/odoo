@@ -17,19 +17,21 @@ In case of no country code set or no localization module found, the ``l10n_gener
 
 For example, ``l10n_be`` will be installed if the company has ``Belgium`` as country.
 
-This behavior is allowed by the presence of a *.yml* file containing the following code:
+This behavior is allowed by the presence of a *.xml* file containing the following code:
 
 .. code-block:: xml
 
-    -
-      !python {model: account.chart.template, id: pl_chart_template}: |
-        self[0].try_loading_for_current_company()
+   <function model="account.chart.template" name="try_loading_for_current_company">
+      <value eval="[ref(module.template_xmlid)]"/>
+   </function>
+
+Where ``module.template_xmlid`` is the **fully-qualified** xmlid of the corresponding template.
 
 Usually located in the ``data`` folder, it must be loaded at the very last in the ``__manifest__.py`` file.
 
 .. danger::
 
-    If the *.yml* file is missing, the right chart of accounts won't be loaded on time!
+    If the *.xml* file is missing, the right chart of accounts won't be loaded on time!
 
 
 Configuring my own Chart of Accounts?
