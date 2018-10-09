@@ -51,8 +51,38 @@ def _toledo8217StatusParse(status):
 ScaleProtocol = namedtuple(
     'ScaleProtocol',
     "name baudrate bytesize stopbits parity timeout writeTimeout weightRegexp statusRegexp "
-    "statusParse commandTerminator commandDelay weightDelay newWeightDelay "
-    "weightCommand zeroCommand tareCommand clearCommand emptyAnswerValid autoResetWeight")
+    "statusParse commandTerminator outputTerminator commandDelay weightDelay newWeightDelay "
+    "weightCommand zeroCommand tareCommand clearCommand emptyAnswerValid autoResetWeight maxConnectionTry")
+
+# The WeightOnlyProtocol with standard baudrate & bytesize : Scale with this protocol gives us continuous output of
+# Only Weight without sending any command to scale, output doesn't require to be parsed. We will identify
+# each new weight with outputTerminator.
+# Tested Scales: 1.) PointDigi Scale, Yes Yes Technologies (https://www.yesyestechnologies.com/007.php)
+#                2.) Essae Bench-scale (http://www.essae.com/ds-450ss-bench-scale)
+WeightOnlyProtocol = ScaleProtocol(
+    name='Weight Only Protocol',
+    baudrate=9600,
+    bytesize=serial.EIGHTBITS,
+    stopbits=serial.STOPBITS_ONE,
+    parity=serial.PARITY_NONE,
+    timeout=1,
+    writeTimeout=1,
+    weightRegexp=b"\s*([0-9.]+)",
+    statusRegexp=None,
+    statusParse=None,
+    commandDelay=0,
+    weightDelay=0,
+    newWeightDelay=0,
+    commandTerminator=b'',
+    outputTerminator=b'\r',
+    weightCommand='',
+    zeroCommand='',
+    tareCommand='',
+    clearCommand=None,
+    emptyAnswerValid=False,
+    autoResetWeight=False,
+    maxConnectionTry=3,
+)
 
 # 8217 Mettler-Toledo (Weight-only) Protocol, as described in the scale's Service Manual.
 #    e.g. here: https://www.manualslib.com/manual/861274/Mettler-Toledo-Viva.html?page=51#manual
@@ -75,12 +105,14 @@ Toledo8217Protocol = ScaleProtocol(
     weightDelay=0.5,
     newWeightDelay=0.2,
     commandTerminator=b'',
+    outputTerminator=None,
     weightCommand=b'W',
     zeroCommand=b'Z',
     tareCommand=b'T',
     clearCommand=b'C',
     emptyAnswerValid=False,
     autoResetWeight=False,
+    maxConnectionTry=1,
 )
 
 # The ADAM scales have their own RS232 protocol, usually documented in the scale's manual
@@ -99,6 +131,7 @@ ADAMEquipmentProtocol = ScaleProtocol(
     statusRegexp=None,
     statusParse=None,
     commandTerminator=b"\r\n",
+    outputTerminator=None,
     commandDelay=0.2,
     weightDelay=0.5,
     newWeightDelay=5,  # AZExtra beeps every time you ask for a weight that was previously returned!
@@ -110,10 +143,12 @@ ADAMEquipmentProtocol = ScaleProtocol(
     clearCommand=None, # No clear command -> Tare again
     emptyAnswerValid=True, # AZExtra does not answer unless a new non-zero weight has been detected
     autoResetWeight=True,  # AZExtra will not return 0 after removing products
+    maxConnectionTry=1,
 )
 
 
 SCALE_PROTOCOLS = (
+    WeightOnlyProtocol,
     Toledo8217Protocol,
     ADAMEquipmentProtocol, # must be listed last, as it supports no probing!
 )
@@ -158,11 +193,11 @@ class Scale(Thread):
             elif status == 'disconnected' and message:
                 _logger.info('Disconnected Scale: %s', message)
 
-    def _get_raw_response(self, connection):
+    def _get_raw_response(self, connection, protocol):
         answer = []
         while True:
             char = connection.read(1) # may return `bytes` or `str`
-            if not char:
+            if not char or protocol.outputTerminator == char:
                 break
             else:
                 answer.append(bytes(char))
@@ -222,32 +257,34 @@ class Scale(Thread):
                         continue
                     path = self.input_dir + device
                     for protocol in SCALE_PROTOCOLS:
-                        _logger.info('Probing %s with protocol %s', path, protocol)
-                        connection = serial.Serial(path,
-                                                   baudrate=protocol.baudrate,
-                                                   bytesize=protocol.bytesize,
-                                                   stopbits=protocol.stopbits,
-                                                   parity=protocol.parity,
-                                                   timeout=1,      # longer timeouts for probing
-                                                   writeTimeout=1) # longer timeouts for probing
-                        connection.write(protocol.weightCommand + protocol.commandTerminator)
-                        time.sleep(protocol.commandDelay)
-                        answer = self._get_raw_response(connection)
-                        weight, weight_info, status = self._parse_weight_answer(protocol, answer)
-                        if status:
-                            _logger.info('Probing %s: no valid answer to protocol %s', path, protocol.name)
-                        else:
-                            _logger.info('Probing %s: answer looks ok for protocol %s', path, protocol.name)
-                            self.path_to_scale = path
-                            self.protocol = protocol
-                            self.set_status(
-                                'connected',
-                                'Connected to %s with %s protocol' % (device, protocol.name)
-                            )
-                            connection.timeout = protocol.timeout
-                            connection.writeTimeout = protocol.writeTimeout
-                            hw_proxy.rs232_devices[path] = DRIVER_NAME
-                            return connection
+                        for tryCounter in range(protocol.maxConnectionTry):
+                            _logger.info('Try No:%s | Probing %s with protocol %s', tryCounter+1, path, protocol)
+                            connection = serial.Serial(path,
+                                                       baudrate=protocol.baudrate,
+                                                       bytesize=protocol.bytesize,
+                                                       stopbits=protocol.stopbits,
+                                                       parity=protocol.parity,
+                                                       timeout=1,      # longer timeouts for probing
+                                                       writeTimeout=1) # longer timeouts for probing
+                            if protocol.weightCommand:
+                                connection.write(protocol.weightCommand + protocol.commandTerminator)
+                                time.sleep(protocol.commandDelay)
+                            answer = self._get_raw_response(connection, protocol)
+                            weight, weight_info, status = self._parse_weight_answer(protocol, answer)
+                            if status:
+                                _logger.info('Probing %s: no valid answer to protocol %s', path, protocol.name)
+                            else:
+                                _logger.info('Probing %s: answer looks ok for protocol %s', path, protocol.name)
+                                self.path_to_scale = path
+                                self.protocol = protocol
+                                self.set_status(
+                                    'connected',
+                                    'Connected to %s with %s protocol' % (device, protocol.name)
+                                )
+                                connection.timeout = protocol.timeout
+                                connection.writeTimeout = protocol.writeTimeout
+                                hw_proxy.rs232_devices[path] = DRIVER_NAME
+                                return connection
 
                 self.set_status('disconnected', 'No supported RS-232 scale found')
             except Exception as e:
@@ -271,9 +308,10 @@ class Scale(Thread):
         with self.scalelock:
             p = self.protocol
             try:
-                self.device.write(p.weightCommand + p.commandTerminator)
-                time.sleep(p.commandDelay)
-                answer = self._get_raw_response(self.device)
+                if p.weightCommand:
+                    self.device.write(p.weightCommand + p.commandTerminator)
+                    time.sleep(p.commandDelay)
+                answer = self._get_raw_response(self.device, p)
                 weight, weight_info, status = self._parse_weight_answer(p, answer)
                 if status:
                     self.set_status('error', status)
@@ -292,7 +330,7 @@ class Scale(Thread):
 
     def set_zero(self):
         with self.scalelock:
-            if self.device:
+            if self.device and self.protocol.zeroCommand:
                 try:
                     self.device.write(self.protocol.zeroCommand + self.protocol.commandTerminator)
                     time.sleep(self.protocol.commandDelay)
@@ -305,7 +343,7 @@ class Scale(Thread):
 
     def set_tare(self):
         with self.scalelock:
-            if self.device:
+            if self.device and self.protocol.tareCommand:
                 try:
                     self.device.write(self.protocol.tareCommand + self.protocol.commandTerminator)
                     time.sleep(self.protocol.commandDelay)
@@ -318,7 +356,7 @@ class Scale(Thread):
 
     def clear_tare(self):
         with self.scalelock:
-            if self.device:
+            if self.device and self.protocol.clearCommand:
                 p = self.protocol
                 try:
                     # if the protocol has no clear, we can just tare again
