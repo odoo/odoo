@@ -21,11 +21,7 @@ class AdyenController(http.Controller):
         _logger.info('Beginning Adyen form_feedback with post data %s', pprint.pformat(post))  # debug
         if post.get('authResult') not in ['CANCELLED']:
             request.env['payment.transaction'].sudo().form_feedback(post, 'adyen')
-        return_url = post.pop('return_url', '')
-        if not return_url:
-            custom = json.loads(post.pop('merchantReturnData', '{}'))
-            return_url = custom.pop('return_url', '/')
-        return werkzeug.utils.redirect(return_url)
+        return werkzeug.utils.redirect('/payment/process')
 
     @http.route([
         '/payment/adyen/notification',

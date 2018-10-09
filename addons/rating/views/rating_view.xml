@@ -42,12 +42,14 @@
                             <group>
                                 <div colspan="2" class="text-center">
                                     <field name="rating_image" widget='image'/>
-                                    <div class="mt4">
+                                    <div class="mt4 text-left">
                                         <strong><field name="rating_text"/></strong>
                                     </div>
                                 </div>
                             </group>
-                            <field name="feedback" nolabel="1" attrs="{'invisible': [('feedback','=',False)]}"/>
+                            <group>
+                                <field name="feedback" attrs="{'invisible': [('feedback','=',False)]}"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -67,7 +69,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-attf-src="/rating/static/src/img/rating_#{record.rating.raw_value}.png" />
+                                    <img t-attf-src="/rating/static/src/img/rating_#{record.rating.raw_value}.png" t-att-alt="record.rating.name"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <strong>
@@ -94,7 +96,7 @@
                                             on <field name="create_date" />
                                         </li>
                                     </ul>
-                                    <i t-if="record.feedback.raw_value" class="fa fa-comment pull-right mt4" t-att-title="record.feedback.raw_value" />
+                                    <i t-if="record.feedback.raw_value" class="fa fa-comment float-right mt4" t-att-title="record.feedback.raw_value"  t-att-aria-label="record.feedback.raw_value" role="img"/>
                                 </div>
                             </div>
                         </t>
@@ -134,22 +136,20 @@
                     <field name="rated_partner_id"/>
                     <field name="rating"/>
                     <field name="partner_id"/>
-                    <field name="res_name"/>
+                    <field name="res_name" filter_domain="[('res_name','ilike',self)]"/>
                     <field name="res_id"/>
-                    <field name="parent_res_name"/>
+                    <field name="parent_res_name" filter_domain="[('parent_res_name','ilike',self)]"/>
                     <filter string="Satisfied" name="rating_happy" domain="[('rating_text', '=', 'satisfied')]"/>
                     <filter string="Not satisfied" name="rating_okay" domain="[('rating_text', '=', 'not_satisfied')]"/>
                     <filter string="Highly dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'highly_dissatisfied')]"/>
                     <separator/>
-                    <filter string="My Ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
+                    <filter string="My Ratings" name="my_ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
                     <group expand="0" string="Group By">
                         <filter string="Rated User" name="responsible" context="{'group_by':'rated_partner_id'}"/>
                         <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
                         <filter string="Rating" name="rating_text" context="{'group_by':'rating_text'}"/>
                         <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
-                        <filter string="Day" context="{'group_by':'create_date:day'}"/>
-                        <filter string="Month" context="{'group_by':'create_date:month'}"/>
-                        <filter string="Year" context="{'group_by':'create_date:year'}"/>
+                        <filter string="Date" name="month" context="{'group_by':'create_date:month'}"/>
                     </group>
                 </search>
             </field>
@@ -161,7 +161,9 @@
             <field name="view_mode">kanban,tree,graph,pivot,form</field>
             <field name="domain">[('consumed','=',True)]</field>
             <field name="help" type="html">
-                <p>
+                <p class="o_view_nocontent_empty_folder">
+                    No rating yet
+                </p><p>
                     There is no rating for this object at the moment.
                 </p>
             </field>

@@ -8,7 +8,7 @@ class ImLivechatReportChannel(models.Model):
     """ Livechat Support Report on the Channels """
 
     _name = "im_livechat.report.channel"
-    _description = "Livechat Support Report"
+    _description = "Livechat Support Channel Report"
     _order = 'start_date, technical_name'
     _auto = False
 
@@ -42,13 +42,15 @@ class ImLivechatReportChannel(models.Model):
                     EXTRACT('epoch' FROM (max((SELECT (max(M.create_date)) FROM mail_message M JOIN mail_message_mail_channel_rel R ON (R.mail_message_id = M.id) WHERE R.mail_channel_id = C.id))-C.create_date)) as duration,
                     count(distinct P.id) as nbr_speaker,
                     count(distinct M.id) as nbr_message,
-                    MAX(S.partner_id) as partner_id
+                    S.partner_id as partner_id
                 FROM mail_channel C
                     JOIN mail_message_mail_channel_rel R ON (C.id = R.mail_channel_id)
                     JOIN mail_message M ON (M.id = R.mail_message_id)
                     JOIN mail_channel_partner S ON (S.channel_id = C.id)
                     JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
-                    LEFT JOIN res_partner P ON (M.author_id = P.id)
-                GROUP BY C.id, C.name, C.livechat_channel_id, L.name, C.create_date, C.uuid
+                    JOIN res_partner P ON (S.partner_id = p.id)
+                    JOIN res_users U ON (U.partner_id = P.id)
+                    JOIN im_livechat_channel_im_user O ON (O.user_id = U.id and O.channel_id = L.id)
+                GROUP BY C.id, C.name, C.livechat_channel_id, L.name, C.create_date, C.uuid, S.partner_id
             )
         """)

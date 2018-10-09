@@ -56,7 +56,7 @@ class Challenge(models.Model):
     """
 
     _name = 'gamification.challenge'
-    _description = 'Gamification challenge'
+    _description = 'Gamification Challenge'
     _inherit = 'mail.thread'
     _order = 'end_date, start_date, name, id'
 
@@ -141,11 +141,11 @@ class Challenge(models.Model):
         report period.
         """
         for challenge in self:
-            last = fields.Datetime.from_string(challenge.last_report_date).date()
+            last = challenge.last_report_date
             offset = self.REPORT_OFFSETS.get(challenge.report_message_frequency)
 
             if offset:
-                challenge.next_report_date = fields.Date.to_string(last + offset)
+                challenge.next_report_date = last + offset
             else:
                 challenge.next_report_date = False
 
@@ -201,7 +201,7 @@ class Challenge(models.Model):
     ##### Update #####
 
     @api.model # FIXME: check how cron functions are called to see if decorator necessary
-    def _cron_update(self, ids=False):
+    def _cron_update(self, ids=False, commit=True):
         """Daily cron check.
 
         - Start planned challenges (in draft and with start_date = today)
@@ -228,7 +228,7 @@ class Challenge(models.Model):
 
         # in cron mode, will do intermediate commits
         # FIXME: replace by parameter
-        return records.with_context(commit_gamification=True)._update_all()
+        return records.with_context(commit_gamification=commit)._update_all()
 
     def _update_all(self):
         """Update the challenges and related goals
@@ -545,13 +545,15 @@ class Challenge(models.Model):
         if challenge.visibility_mode == 'ranking':
             lines_boards = challenge._get_serialized_challenge_lines(restrict_goals=subset_goals)
 
-            body_html = MailTemplates.with_context(challenge_lines=lines_boards).render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
+            body_html = MailTemplates.with_context(challenge_lines=lines_boards)._render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
 
             # send to every follower and participant of the challenge
             challenge.message_post(
                 body=body_html,
                 partner_ids=challenge.mapped('user_ids.partner_id.id'),
-                subtype='mail.mt_comment')
+                subtype='mail.mt_comment',
+                notif_layout='mail.mail_notification_light',
+                )
             if challenge.report_message_group_id:
                 challenge.report_message_group_id.message_post(
                     body=body_html,
@@ -564,7 +566,7 @@ class Challenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = MailTemplates.sudo(user).with_context(challenge_lines=lines).render_template(
+                body_html = MailTemplates.sudo(user).with_context(challenge_lines=lines)._render_template(
                     challenge.report_template_id.body_html,
                     'gamification.challenge',
                     challenge.id)
@@ -573,12 +575,15 @@ class Challenge(models.Model):
                 self.env['gamification.challenge'].message_post(
                     body=body_html,
                     partner_ids=[(4, user.partner_id.id)],
-                    subtype='mail.mt_comment'
+                    subtype='mail.mt_comment',
+                    notif_layout='mail.mail_notification_light',
                 )
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(
-                         body=body_html,
-                         subtype='mail.mt_comment')
+                        body=body_html,
+                        subtype='mail.mt_comment',
+                        notif_layout='mail.mail_notification_light',
+                    )
         return challenge.write({'last_report_date': fields.Date.today()})
 
     ##### Challenges #####
@@ -776,7 +781,7 @@ class ChallengeLine(models.Model):
     sequence = fields.Integer('Sequence', help='Sequence number for ordering', default=1)
     target_goal = fields.Float('Target Value to Reach', required=True)
 
-    name = fields.Char("Name", related='definition_id.name')
+    name = fields.Char("Name", related='definition_id.name', readonly=False)
     condition = fields.Selection("Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Unit", related='definition_id.suffix', readonly=True)
     definition_monetary = fields.Boolean("Monetary", related='definition_id.monetary', readonly=True)

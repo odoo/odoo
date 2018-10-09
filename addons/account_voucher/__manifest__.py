@@ -25,7 +25,6 @@ This module manages:
     """,
     'category': 'Accounting',
     'sequence': 20,
-    'website' : 'https://www.odoo.com/page/billing',
     'depends' : ['account'],
     'demo' : [],
     'data' : [
@@ -33,12 +32,6 @@ This module manages:
         'views/account_voucher_views.xml',
         'security/account_voucher_security.xml',
         'data/account_voucher_data.xml',
-    ],
-    'test' : [
-        'test/account_voucher_users.yml',
-        'test/account_voucher_chart.yml',
-        'test/account_voucher.yml',
-        'test/sales_receipt.yml',
     ],
     'auto_install': False,
     'installable': True,

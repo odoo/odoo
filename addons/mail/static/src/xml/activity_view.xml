@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ActivityViewHeaderCell">
+    <th class="o_activity_type_cell" t-att-data-activity-type-id="id">
+        <span><t t-esc="name"/></span>
+        <span t-if="template_list.length > 0" class="dropdown pull-right">
+            <i class="fa fa-ellipsis-v fa-fw" data-toggle="dropdown"/>
+            <div class="dropdown-menu">
+                <div t-foreach="template_list" t-as="template" title="This action will send an email." class="o_template_element o_send_mail_template" t-att-data-template-id="template.id">
+                    <i class="fa fa-envelope fa-fw"/> <t t-esc="template.name"/>
+                </div>
+            </div>
+        </span>
+    </th>
+</t>
+
+<div t-name="ActivityView.nodata">
+    <div class="o_view_nocontent" role="alert">
+        <div class="o_nocontent_help">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p><p>
+                Try to add some activity on records, or make sure that
+                there is no active filter in the search bar.
+            </p>
+        </div>
+    </div>
+</div>
+
+</templates>

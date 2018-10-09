@@ -264,7 +264,7 @@ ScreenWidget.include({
     }
 });
 
-// On Payment screen, allow electronic payments
+// On Payment screen, allow online payments
 PaymentScreenWidget.include({
     // How long we wait for the odoo server to deliver the response of
     // a Mercury transaction

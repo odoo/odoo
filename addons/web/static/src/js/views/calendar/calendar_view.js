@@ -28,10 +28,16 @@ var CalendarView = AbstractView.extend({
         Controller: CalendarController,
         Renderer: CalendarRenderer,
     },
+    viewType: 'calendar',
+    groupable: false,
+
+    /**
+     * @override
+     */
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
-        var arch = viewInfo.arch;
-        var fields = viewInfo.fields;
+        var arch = this.arch;
+        var fields = this.fields;
         var attrs = arch.attrs;
 
         if (!attrs.date_start) {
@@ -119,10 +125,10 @@ var CalendarView = AbstractView.extend({
             attrs.form_view_id ? parseInt(attrs.form_view_id, 10) : false;
         if (!this.controllerParams.formViewId && params.action) {
             var formViewDescr = _.find(params.action.views, function (v) {
-                return v[1] ===  'form';
+                return v.type ===  'form';
             });
             if (formViewDescr) {
-                this.controllerParams.formViewId = formViewDescr[0];
+                this.controllerParams.formViewId = formViewDescr.viewID;
             }
         }
 
@@ -146,7 +152,7 @@ var CalendarView = AbstractView.extend({
         this.loadParams.fieldColor = attrs.color;
 
         this.loadParams.filters = filters;
-        this.loadParams.mode = attrs.mode;
+        this.loadParams.mode = (params.context && params.context.default_mode) || attrs.mode;
         this.loadParams.initialDate = moment(params.initialDate || new Date());
     },
 });

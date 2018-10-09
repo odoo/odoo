@@ -3,17 +3,17 @@
 # * fetchmail
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Phạm Lân <phamquanglan@gmail.com>, 2017
-# Duy BQ <duybq86@gmail.com>, 2017
-# fanha99 <fanha99@hotmail.com>, 2017
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Martin Trigaux, 2018
+# fanha99 <fanha99@hotmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,49 +22,44 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
-msgid "# of emails"
-msgstr "SL Email"
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
 msgstr "Hành động cần Thực hiện khi có Email gửi đến"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__active
 msgid "Active"
-msgstr "Hiệu lực"
+msgstr "Có hiệu lực"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced"
 msgstr "Nâng cao"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
-msgstr "Tuỳ chọn Nâng cao"
+msgstr "Tùy chọn nâng cao"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__configuration
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
 msgstr "Cấu hình"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
-msgstr "Được xác nhận"
+msgstr "Đã được xác nhận"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:137
+#: code:addons/fetchmail/models/fetchmail.py:136
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Kiểm thử kết nối thất bại: %s"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__is_ssl
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
@@ -73,48 +68,53 @@ msgstr ""
 "IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__object_id
 msgid "Create a New Record"
 msgstr "Tạo mới một Bản ghi"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__create_date
 msgid "Created on"
-msgstr "Được tạo vào"
+msgstr "Thời điểm tạo"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__priority
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
 "Xác định trình tự xử lý, giá trị thấp hơn nghĩa là mức ưu tiên cao hơn"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "Email Count"
+msgstr ""
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "Lấy về Ngay"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__server
 msgid "Hostname or IP of the mail server"
 msgstr "Hostname hoặc IP của máy chủ email"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__id
 msgid "ID"
 msgstr "ID"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "IMAP"
 msgstr "IMAP"
 
@@ -124,23 +124,23 @@ msgid "IMAP Server"
 msgstr "Địa chỉ máy chủ IMAP"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "If SSL required."
 msgstr "Nếu yêu cầu SSL"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail__fetchmail_server_id
 msgid "Inbound Mail Server"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Incoming Email Servers"
 msgstr "Máy chủ Nhận Email"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
 msgstr "Máy chủ nhận Mail"
 
@@ -151,34 +151,34 @@ msgid "Incoming Mail Servers"
 msgstr "Máy chủ nhận Mail"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__attach
 msgid "Keep Attachments"
 msgstr "Giữ lại Đính kèm"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_original
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__original
 msgid "Keep Original"
 msgstr "Giữ lại Bản gốc"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_date
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__date
 msgid "Last Fetch Date"
 msgstr "Ngày lấy email Gần nhất"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server____last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối vào"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật Lần cuối Bởi"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -186,7 +186,7 @@ msgid "Local Server"
 msgstr "Máy chủ cục bộ"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "Thông tin đăng nhập"
 
@@ -199,12 +199,12 @@ msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__message_ids
 msgid "Messages"
 msgstr "Thông điệp"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_name
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__name
 msgid "Name"
 msgstr "Tên"
 
@@ -214,26 +214,17 @@ msgid "Not Confirmed"
 msgstr "Chưa được xác nhận"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_action_id
-msgid ""
-"Optional custom server action to trigger for each incoming mail, on the "
-"record that was created or updated by this mail"
-msgstr ""
-"Một hành động máy chủ (server action) tuỳ chọn để tri-gơ đối với mỗi email "
-"gửi đến, đối với bản ghi mà được tạo hoặc cập nhật bởi email này"
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
 msgstr "Máy chủ gửi Email"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Thư đi"
+msgstr "Thư gửi đi"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "POP"
 msgstr "POP"
 
@@ -248,22 +239,22 @@ msgid "POP/IMAP Server"
 msgstr "Máy chủ POP/IMAP"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
 msgstr "Máy chủ POP/IMAP"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_password
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__password
 msgid "Password"
 msgstr "Mật khẩu"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_port
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__port
 msgid "Port"
 msgstr "Cổng"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_object_id
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__object_id
 msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
@@ -274,87 +265,82 @@ msgstr ""
 " đính kèm các follow-up email và cuộc hội thoại (tài liệu) hiện có."
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
 msgstr "Đặt lại Chưa Xác nhận"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_is_ssl
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__is_ssl
 msgid "SSL/TLS"
 msgstr "SSL/TLS"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_script
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__script
 msgid "Script"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
 msgstr "Tìm các máy chủ nhận email"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server & Login"
 msgstr "Máy chủ & Đăng nhập"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_action_id
-msgid "Server Action"
-msgstr "Hành động Máy chủ"
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server Information"
 msgstr "Thông tin máy chủ"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_server
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server
 msgid "Server Name"
 msgstr "Tên máy chủ"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_priority
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__priority
 msgid "Server Priority"
 msgstr "Mức ưu tiên Máy chủ"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_type
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__type
 msgid "Server Type"
 msgstr "Kiểu Máy chủ"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
 msgstr "Kiểu máy chủ IMAP"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
 msgstr "Kiểu máy chủ POP"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_state
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__state
 msgid "Status"
-msgstr "Tình trạng"
+msgstr "Trạng thái"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "Kiểm thử & Xác nhận"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__user
 msgid "Username"
 msgstr "Tên đăng nhập"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__original
 msgid ""
 "Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
@@ -365,7 +351,7 @@ msgstr ""
 "cơ sở dữ liệu."
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"

@@ -11,11 +11,11 @@
                     <div class="app_settings_block" data-string="Inventory" string="Inventory" data-key="stock" groups="stock.group_stock_manager">
                         <h2>Operations</h2>
                         <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_stock_barcode" widget="upgrade_boolean"/>
                                 </div>
-                                <div class="o_setting_right_pane">
+                                <div class="o_setting_right_pane" id="barcode_settings">
                                     <label for="module_stock_barcode"/>
                                     <div class="text-muted">
                                         Process operations faster with barcodes
@@ -25,7 +25,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Put your products in packs (e.g. parcels, boxes) and track them">
+                            <div class="col-12 col-lg-6 o_setting_box" title="Put your products in packs (e.g. parcels, boxes) and track them">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_tracking_lot"/>
                                 </div>
@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_stock_picking_batch"/>
                                 </div>
@@ -47,12 +47,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="warning_info">
+                            <div class="col-12 col-lg-6 o_setting_box" id="warning_info">
                                 <div class="o_setting_left_pane">
                                     <field name="group_warning_stock"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="group_warning_stock"/>
+                                    <label for="group_warning_stock" string="Warnings"/>
                                     <div class="text-muted">
                                         Get informative or blocking warnings on partners
                                     </div>
@@ -61,7 +61,7 @@
                         </div>
                         <h2>Shipping Connectors</h2>
                         <div class="row mt16 o_settings_container" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods.">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_ups" widget="upgrade_boolean"/>
                                 </div>
@@ -75,7 +75,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_dhl" widget="upgrade_boolean"/>
                                 </div>
@@ -89,7 +89,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_fedex" widget="upgrade_boolean"/>
                                 </div>
@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_usps" widget="upgrade_boolean"/>
                                 </div>
@@ -117,7 +117,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_delivery_bpost" widget="upgrade_boolean"/>
                                 </div>
@@ -131,10 +131,25 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_easypost" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_easypost"/>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with Easypost
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_easypost"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Products</h2>
                         <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="group_product_variant"/>
                                 </div>
@@ -150,7 +165,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="group_uom"/>
                                 </div>
@@ -161,23 +176,23 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="mt16" attrs="{'invisible': [('group_uom', '=', False)]}">
-                                            <button name="%(product.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
+                                            <button name="%(uom.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)">
+                            <div class="col-12 col-lg-6 o_setting_box" title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_packaging"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="group_stock_packaging"/>
                                     <div class="text-muted">
-                                        Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)
+                                        Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)
                                     </div>
                                     <div class="content-group">
                                         <div class="mt16" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
-                                            <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Product Packages" class="btn-link"/>
+                                            <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Product Packagings" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +200,7 @@
                         </div>
                         <h2>Traceability</h2>
                         <div class="row mt16 o_settings_container" id="production_lot_info">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_production_lot"/>
                                 </div>
@@ -196,7 +211,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days).">
+                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days).">
                                 <div class="o_setting_left_pane">
                                     <field name="module_product_expiry"/>
                                 </div>
@@ -207,7 +222,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_delivery_slip">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_lot_on_delivery_slip"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_lot_on_delivery_slip"/>
+                                    <div class="text-muted">
+                                        Lots &amp; Serial numbers will appear on the delivery slip
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_tracking_owner"/>
                                 </div>
@@ -221,7 +247,7 @@
                         </div>
                         <h2 class="mt32">Warehouse</h2>
                         <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
+                            <div class="col-12 col-lg-6 o_setting_box" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_multi_locations"/>
                                 </div>
@@ -237,7 +263,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_multi_warehouses"/>
                                 </div>
@@ -253,7 +279,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
+                            <div class="col-12 col-lg-6 o_setting_box" title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
                                 <div class="o_setting_left_pane">
                                     <field name="group_stock_adv_location"/>
                                 </div>
@@ -275,7 +301,7 @@
                         <div class="row mt16 o_settings_container">
                             <div id="sale_security_lead"/>
                             <div id="purchase_po_lead"/>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="propagation_info" title="Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. This option allows to not propagate the rescheduling if the change is not critical.">
+                            <div class="col-12 col-lg-6 o_setting_box" id="propagation_info" title="Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. This option allows to not propagate the rescheduling if the change is not critical.">
                                 <div class="o_setting_left_pane">
                                     <field name="use_propagation_minimum_delta"/>
                                 </div>

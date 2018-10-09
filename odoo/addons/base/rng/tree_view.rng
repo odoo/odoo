@@ -30,6 +30,7 @@
             <rng:optional><rng:attribute name="decoration-primary"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
+            <rng:optional><rng:attribute name="banner_route"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="limit">
                     <rng:data type="int"/>
@@ -54,6 +55,7 @@
             </rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:ref name="control"/>
                     <rng:ref name="field"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="tree"/>

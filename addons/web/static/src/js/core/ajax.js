@@ -4,12 +4,19 @@ odoo.define('web.ajax', function (require) {
 var core = require('web.core');
 var utils = require('web.utils');
 var time = require('web.time');
+var download = require('web.download');
+var contentdisposition = require('web.contentdisposition');
+
+var _t = core._t;
 
 function genericJsonRpc (fct_name, params, settings, fct) {
     var shadow = settings.shadow || false;
     delete settings.shadow;
-    if (! shadow)
+    if (!shadow) {
         core.bus.trigger('rpc_request');
+    }
+
+    var deferred = $.Deferred();
 
     var data = {
         jsonrpc: "2.0",
@@ -22,7 +29,11 @@ function genericJsonRpc (fct_name, params, settings, fct) {
         core.bus.trigger('rpc:result', data, result);
         if (result.error !== undefined) {
             if (result.error.data.arguments[0] !== "bus.Bus not available in test mode") {
-                console.error("Server application error", JSON.stringify(result.error));
+                if (result.error.data.exception_type === "user_error") {
+                    console.log("Server application error", JSON.stringify(result.error));
+                } else {
+                    console.error("Server application error", JSON.stringify(result.error));
+                }
             }
             return $.Deferred().reject("server", result.error);
         } else {
@@ -34,13 +45,18 @@ function genericJsonRpc (fct_name, params, settings, fct) {
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
     // FIXME: jsonp?
-    result.abort = function () { if (xhr.abort) xhr.abort(); };
+    deferred.abort = function () {
+        deferred.reject({message: "XmlHttpRequestError abort"}, $.Event('abort'));
+        if (xhr.abort) {
+            xhr.abort();
+        }
+    };
 
-    var p = result.then(function (result) {
+    result.then(function (result) {
         if (!shadow) {
             core.bus.trigger('rpc_response');
         }
-        return result;
+        deferred.resolve(result);
     }, function (type, error, textStatus, errorThrown) {
         if (type === "server") {
             if (!shadow) {
@@ -49,7 +65,7 @@ function genericJsonRpc (fct_name, params, settings, fct) {
             if (error.code === 100) {
                 core.bus.trigger('invalidate_session');
             }
-            return $.Deferred().reject(error, $.Event());
+            deferred.reject(error, $.Event());
         } else {
             if (!shadow) {
                 core.bus.trigger('rpc_response_failed');
@@ -63,16 +79,17 @@ function genericJsonRpc (fct_name, params, settings, fct) {
                     objects: [error, errorThrown]
                 },
             };
-            return $.Deferred().reject(nerror, $.Event());
+            deferred.reject(nerror, $.Event());
         }
     });
-    return p.fail(function () { // Allow deferred user to disable rpc_error call in fail
-        p.fail(function (error, event) {
+    deferred.fail(function () { // Allow deferred user to disable rpc_error call in fail
+        deferred.fail(function (error, event) {
             if (!event.isDefaultPrevented()) {
                 core.bus.trigger('rpc_error', error, event);
             }
         });
     });
+    return deferred;
 }
 
 function jsonRpc(url, fct_name, params, settings) {
@@ -181,15 +198,39 @@ function realSetTimeout (fct, millis) {
     setTimeout(wait, millis);
 }
 
-function loadCSS(url) {
-    if (!$('link[href="' + url + '"]').length) {
-        $('head').append($('<link>', {
-            'href': url,
-            'rel': 'stylesheet',
-            'type': 'text/css'
-        }));
-    }
-}
+/**
+ * Load css asynchronously: fetch it from the url parameter and add a link tag
+ * to <head>.
+ * If the url has already been requested and loaded, the promise will resolve
+ * immediately.
+ *
+ * @param {String} url of the css to be fetched
+ * @returns {Deferred} resolved when the css has been loaded.
+ */
+var loadCSS = (function () {
+    var urlDefs = Object.create(null);
+
+    return function loadCSS(url) {
+        if (url in urlDefs) {
+            // nothing to do here
+        } else if ($('link[href="' + url + '"]').length) {
+            // the link is already in the DOM, the deferred can be resolved
+            urlDefs[url] = $.when();
+        } else {
+            var $link = $('<link>', {
+                'href': url,
+                'rel': 'stylesheet',
+                'type': 'text/css'
+            });
+            urlDefs[url] = $.Deferred();
+            $link.on('load', function () {
+                urlDefs[url].resolve();
+            });
+            $('head').append($link);
+        }
+        return urlDefs[url];
+    };
+})();
 
 var loadJS = (function () {
     var urls = [];
@@ -260,120 +301,85 @@ var loadJS = (function () {
  *   changed to make it work.
  */
 function get_file(options) {
-    // need to detect when the file is done downloading (not used
-    // yet, but we'll need it to fix the UI e.g. with a throbber
-    // while dump is being generated), iframe load event only fires
-    // when the iframe content loads, so we need to go smarter:
-    // http://geekswithblogs.net/GruffCode/archive/2010/10/28/detecting-the-file-download-dialog-in-the-browser.aspx
-    var timer, token = new Date().getTime(),
-        cookie_name = 'fileToken', cookie_length = cookie_name.length,
-        CHECK_INTERVAL = 1000, id = _.uniqueId('get_file_frame'),
-        remove_form = false;
+    var xhr = new XMLHttpRequest();
 
-
-    // iOS devices doesn't allow iframe use the way we do it,
-    // opening a new window seems the best way to workaround
-    if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-        var params = _.extend({}, options.data || {}, {token: token});
-        var url = options.session.url(options.url, params);
-        if (options.complete) { options.complete(); }
-
-        var w = window.open(url);
-        if (!w || w.closed || typeof w.closed === 'undefined') {
-            // popup was blocked
-            return false;
-        }
-        return true;
-    }
-
-    var $form, $form_data = $('<div>');
-
-    var complete = function () {
-        if (options.complete) { options.complete(); }
-        clearTimeout(timer);
-        $form_data.remove();
-        $target.remove();
-        if (remove_form && $form) { $form.remove(); }
-    };
-    var $target = $('<iframe style="display: none;">')
-        .attr({id: id, name: id})
-        .appendTo(document.body)
-        .load(function () {
-            try {
-                if (options.error) {
-                    var body = this.contentDocument.body;
-                    var nodes = body.children.length === 0 ? body.childNodes : body.children;
-                    var errorParams = {};
-
-                    try { // Case of a serialized Odoo Exception: It is Json Parsable
-                        var node = nodes[1] || nodes[0];
-                        errorParams = JSON.parse(node.textContent);
-                    } catch (e) { // Arbitrary uncaught python side exception
-                        errorParams = {
-                            message: nodes.length > 1 ? nodes[1].textContent : '',
-                            data: {
-                                title: nodes.length > 0 ? nodes[0].textContent : '',
-                            }
-                        }
-                    }
-                    options.error(errorParams);
-                }
-            } finally {
-                complete();
-            }
-        });
-
+    var data;
     if (options.form) {
-        $form = $(options.form);
+        xhr.open(options.form.method, options.form.action);
+        data = new FormData(options.form);
     } else {
-        remove_form = true;
-        $form = $('<form>', {
-            action: options.url,
-            method: 'POST'
-        }).appendTo(document.body);
-    }
-    if (core.csrf_token) {
-        $('<input type="hidden" name="csrf_token">')
-                .val(core.csrf_token)
-                .appendTo($form_data);
-    }
-
-    var hparams = _.extend({}, options.data || {}, {token: token});
-    _.each(hparams, function (value, key) {
-            var $input = $form.find('[name=' + key +']');
-            if (!$input.length) {
-                $input = $('<input type="hidden" name="' + key + '">')
-                    .appendTo($form_data);
-            }
-            $input.val(value);
+        xhr.open('POST', options.url);
+        data = new FormData();
+        _.each(options.data || {}, function (v, k) {
+            data.append(k, v)
         });
+    }
+    data.append('token', 'dummy-because-api-expects-one');
+    if (core.csrf_token) {
+        data.append('csrf_token', core.csrf_token);
+    }
+    // IE11 wants this after xhr.open or it throws
+    xhr.responseType = 'blob';
 
-    $form
-        .append($form_data)
-        .attr('target', id)
-        .get(0).submit();
+    // onreadystatechange[readyState = 4]
+    // => onload (success) | onerror (error) | onabort
+    // => onloadend
+    xhr.onload = function () {
+        var mimetype = xhr.response.type;
+        if (xhr.status === 200 && mimetype !== 'text/html') {
+            // replace because apparently we send some C-D headers with a trailing ";"
+            // todo: maybe a lack of CD[attachment] should be interpreted as an error case?
+            var header = (xhr.getResponseHeader('Content-Disposition') || '').replace(/;$/, '');
+            var filename = header ? contentdisposition.parse(header).parameters.filename : null;
 
-    var waitLoop = function () {
-        var cookies = document.cookie.split(';');
-        // setup next check
-        timer = setTimeout(waitLoop, CHECK_INTERVAL);
-        for (var i=0; i<cookies.length; ++i) {
-            var cookie = cookies[i].replace(/^\s*/, '');
-            if (!cookie.indexOf(cookie_name === 0)) { continue; }
-            var cookie_val = cookie.substring(cookie_length + 1);
-            if (parseInt(cookie_val, 10) !== token) { continue; }
-
-            // clear cookie
-            document.cookie = _.str.sprintf("%s=;expires=%s;path=/",
-                cookie_name, new Date().toGMTString());
+            download(xhr.response, filename, mimetype);
+            // not sure download is going to be sync so this may be called
+            // before the file is actually fetched (?)
             if (options.success) { options.success(); }
-            complete();
-            return;
+            return true;
+        }
+
+        if (!options.error) {
+            return true;
+        }
+        var decoder = new FileReader();
+        decoder.onload = function () {
+            var contents = decoder.result;
+
+            var err;
+            var doc = new DOMParser().parseFromString(contents, 'text/html');
+            var nodes = doc.body.children.length === 0 ? doc.body.childNodes : doc.body.children;
+            try { // Case of a serialized Odoo Exception: It is Json Parsable
+                var node = nodes[1] || nodes[0];
+                err = JSON.parse(node.textContent);
+            } catch (e) { // Arbitrary uncaught python side exception
+                err = {
+                    message: nodes.length > 1 ? nodes[1].textContent : '',
+                    data: {
+                        name: String(xhr.status),
+                        title: nodes.length > 0 ? nodes[0].textContent : '',
+                    }
+                }
+            }
+            options.error(err);
+        };
+        decoder.readAsText(xhr.response);
+    };
+    xhr.onerror = function () {
+        if (options.error) {
+            options.error({
+                message: _("Something happened while trying to contact the server, check that the server is online and that you still have a working network connection."),
+                data: { title: _t("Could not connect to the server") }
+            });
         }
     };
-    timer = setTimeout(waitLoop, CHECK_INTERVAL);
+    if (options.complete) {
+        xhr.onloadend = function () { options.complete(); }
+    }
+
+    xhr.send(data);
     return true;
-};
+}
 
 function post (controller_url, data) {
 

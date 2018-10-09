@@ -1,98 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-
+    <data noupdate="0">
         <!-- Casual leave -->
-        <record id="holiday_status_cl" model="hr.holidays.status">
+        <record id="holiday_status_cl" model="hr.leave.type">
             <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
-            <field name="limit" eval="False"/>
+            <field name="allocation_type">fixed</field>
             <field name="color_name">black</field>
+            <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+            <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
         </record>
 
         <!-- Sick leave -->
-        <record id="holiday_status_sl" model="hr.holidays.status">
+        <record id="holiday_status_sl" model="hr.leave.type">
             <field name="name">Sick Leaves</field>
-            <field name="limit" eval="True"/>
+            <field name="allocation_type">no</field>
             <field name="color_name">red</field>
+            <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
         </record>
 
         <!-- Compensatory Days -->
-        <record id="holiday_status_comp" model="hr.holidays.status">
+        <record id="holiday_status_comp" model="hr.leave.type">
             <field name="name">Compensatory Days</field>
-            <field name="limit" eval="False"/>
+            <field name="allocation_type">fixed_allocation</field>
+            <field name="request_unit">hour</field>
             <field name="color_name">lavender</field>
+            <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+            <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
         </record>
 
         <!--Unpaid Leave -->
-        <record id="holiday_status_unpaid" model="hr.holidays.status">
+        <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
-            <field name="limit" eval="True"/>
+            <field name="allocation_type">fixed_allocation</field>
+            <field name="validation_type">both</field>
             <field name="color_name">brown</field>
+            <field name="unpaid" eval="True"/>
+            <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
         </record>
-
-        <!-- Holidays-related subtypes for messaging / Chatter -->
-        <record id="mt_holidays_confirmed" model="mail.message.subtype">
-            <field name="name">Confirmed</field>
-            <field name="res_model">hr.holidays</field>
-            <field name="description">Request created and waiting confirmation</field>
-        </record>
-
-        <record id="mt_holidays_first_validated" model="mail.message.subtype">
-            <field name="name">Waiting Second Validation</field>
-            <field name="res_model">hr.holidays</field>
-            <field name="default" eval="False"/>
-            <field name="description">Request validated, waiting second validation</field>
-        </record>
-
-        <record id="mt_holidays_approved" model="mail.message.subtype">
-            <field name="name">Approved</field>
-            <field name="res_model">hr.holidays</field>
-            <field name="description">Request approved</field>
-        </record>
-
-        <record id="mt_holidays_refused" model="mail.message.subtype">
-            <field name="name">Refused</field>
-            <field name="res_model">hr.holidays</field>
-            <field name="default" eval="False"/>
-            <field name="description">Request refused</field>
-        </record>
-
-        <!-- Department related subtypes for messaging / Chatter -->
-        <record id="mt_department_holidays_confirmed" model="mail.message.subtype">
-            <field name="name">Leaves/Allocations Confirmed</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="True"/>
-            <field name="parent_id" eval="ref('mt_holidays_confirmed')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="6"/>
-        </record>
-
-        <record id="mt_department_holidays_first_validated" model="mail.message.subtype">
-            <field name="name">Leaves/Allocations First Approval</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_holidays_first_validated')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="7"/>
-        </record>
-
-        <record id="mt_department_holidays_approved" model="mail.message.subtype">
-            <field name="name">Leaves/Allocation Approved</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_holidays_approved')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="8"/>
-        </record>
-
-        <record id="mt_department_holidays_refused" model="mail.message.subtype">
-            <field name="name">Leaves/Allocation Refused</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_holidays_refused')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="9"/>
-        </record>
-
     </data>
 </odoo>

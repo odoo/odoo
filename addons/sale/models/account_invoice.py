@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from itertools import groupby
 from odoo import api, fields, models, _
 
 
@@ -17,7 +16,7 @@ class AccountInvoice(models.Model):
         if invoice_type == 'out_invoice' and self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
             return self.env.user.company_id.sale_note
 
-    team_id = fields.Many2one('crm.team', string='Sales Channel', default=_get_default_team, oldname='section_id')
+    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
     comment = fields.Text(default=_default_comment)
     partner_shipping_id = fields.Many2one(
         'res.partner',
@@ -34,6 +33,14 @@ class AccountInvoice(models.Model):
         fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
         if fiscal_position:
             self.fiscal_position_id = fiscal_position
+
+    @api.multi
+    def unlink(self):
+        downpayment_lines = self.mapped('invoice_line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment)
+        res = super(AccountInvoice, self).unlink()
+        if downpayment_lines:
+            downpayment_lines.unlink()
+        return res
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_delivery_address(self):
@@ -67,27 +74,6 @@ class AccountInvoice(models.Model):
         return result
 
     @api.multi
-    def order_lines_layouted(self):
-        """
-        Returns this sales order lines ordered by sale_layout_category sequence. Used to render the report.
-        """
-        self.ensure_one()
-        report_pages = [[]]
-        for category, lines in groupby(self.invoice_line_ids, lambda l: l.layout_category_id):
-            # If last added category induced a pagebreak, this one will be on a new page
-            if report_pages[-1] and report_pages[-1][-1]['pagebreak']:
-                report_pages.append([])
-            # Append category to current report page
-            report_pages[-1].append({
-                'name': category and category.name or 'Uncategorized',
-                'subtotal': category and category.subtotal,
-                'pagebreak': category and category.pagebreak,
-                'lines': list(lines)
-            })
-
-        return report_pages
-
-    @api.multi
     def get_delivery_partner_id(self):
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountInvoice, self).get_delivery_partner_id()
@@ -95,15 +81,18 @@ class AccountInvoice(models.Model):
     def _get_refund_common_fields(self):
         return super(AccountInvoice, self)._get_refund_common_fields() + ['team_id', 'partner_shipping_id']
 
+    def _get_intrastat_country_id(self):
+        if self.type in ['out_invoice', 'out_refund']:
+            return self.partner_shipping_id.country_id.id or super(AccountInvoice, self)._get_intrastat_country_id()
+        return super(AccountInvoice, self)._get_intrastat_country_id()
+
+
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
-    _order = 'invoice_id, layout_category_id, sequence, id'
+    _order = 'invoice_id, sequence, id'
 
     sale_line_ids = fields.Many2many(
         'sale.order.line',
         'sale_order_line_invoice_rel',
         'invoice_line_id', 'order_line_id',
         string='Sales Order Lines', readonly=True, copy=False)
-    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(string='Layout Sequence')
-    # TODO: remove layout_category_sequence in master or make it work properly

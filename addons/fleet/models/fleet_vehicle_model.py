@@ -12,9 +12,9 @@ class FleetVehicleModel(models.Model):
     name = fields.Char('Model name', required=True)
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Make', required=True, help='Make of the vehicle')
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
-    image = fields.Binary(related='brand_id.image', string="Logo")
-    image_medium = fields.Binary(related='brand_id.image_medium', string="Logo (medium)")
-    image_small = fields.Binary(related='brand_id.image_small', string="Logo (small)")
+    image = fields.Binary(related='brand_id.image', string="Logo", readonly=False)
+    image_medium = fields.Binary(related='brand_id.image_medium', string="Logo (medium)", readonly=False)
+    image_small = fields.Binary(related='brand_id.image_small', string="Logo (small)", readonly=False)
 
     @api.multi
     @api.depends('name', 'brand_id')
@@ -52,10 +52,11 @@ class FleetVehicleModelBrand(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
-    @api.model
-    def create(self, vals):
-        tools.image_resize_images(vals)
-        return super(FleetVehicleModelBrand, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            tools.image_resize_images(vals)
+        return super(FleetVehicleModelBrand, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

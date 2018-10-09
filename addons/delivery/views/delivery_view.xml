@@ -142,8 +142,8 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_group_by_provider': True}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new delivery method.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new delivery method
               </p><p>
                 Each carrier (e.g. UPS) can have several delivery methods (e.g.
                 UPS Express, UPS Standard) with a set of pricing rules attached
@@ -207,11 +207,11 @@
                 <separator string="Delivery Information"/>
                 <group>
                     <group name='carrier_data'>
-                        <field name="carrier_id" attrs="{'readonly': [('state', '=', 'done')]}" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="carrier_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" options="{'no_create': True, 'no_open': True}"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
-                            <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
                     </group>
@@ -222,7 +222,6 @@
                             <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
                         </div>
                         <field name="shipping_weight"/>
-                        <field name="number_of_packages" attrs="{'readonly': [('state', '=', 'done')]}"/>
                     </group>
                 </group>
                 </xpath>
@@ -236,10 +235,10 @@
                 <xpath expr="//button[@name='do_print_picking']" position="after">
                     <button name="action_send_confirmation_email" string="Send Confirmation Email" type="object" attrs="{'invisible':['|', ('state', '!=', 'done'), ('carrier_id', '=', False)]}"/>
                  </xpath>
-                <field name="result_package_id" position="before">
-                    <button name="manage_package_type" string="Manage Package Type" type="object" icon="fa-dropbox" groups="stock.group_tracking_lot" attrs="{'invisible': [('result_package_id','=', False)]}"/>
-                </field>
               </data>
+              <xpath expr="//field[@name='partner_id']" position="attributes">
+                  <attribute name="attrs">{'required': ['&amp;', ('delivery_type', '!=', False), ('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}</attribute>
+              </xpath>
             </field>
         </record>
 
@@ -260,9 +259,20 @@
             <field name="inherit_id" ref="stock.view_quant_package_form"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
-                    <field name="packaging_id"/>
+                    <field name="packaging_id" domain="[('product_id', '=', False)]"/>
                     <field name="weight"/>
                     <field name="shipping_weight"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_quant_package_packaging_tree" model="ir.ui.view">
+            <field name="name">stock.quant.package.packaging.tree</field>
+            <field name="model">stock.quant.package</field>
+            <field name="inherit_id" ref="stock.view_quant_package_tree"/>
+            <field name="arch" type="xml">
+                <field name="display_name" position="after">
+                    <field name="packaging_id"/>
                 </field>
             </field>
         </record>
@@ -275,18 +285,19 @@
                 <data>
                   <xpath expr="//field[@name='payment_term_id']" position="after">
                       <field name="id" invisible="1"/>
+                      <field name="available_carrier_ids" invisible="1"/>
                       <label for="carrier_id"/>
                       <div name='carrier_selection'>
                           <div>
-                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" aria-hidden="true" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
+                            <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" role="img" aria-label="Rating OK" title="Rating OK" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
                           </div>
                           <div>
                             <field name='delivery_price' widget='monetary' class="oe_inline" options="{'currency_field': 'currency_id'}" nolabel="1" attrs="{'invisible': [('carrier_id','=', False)]}" force_save="1"/>
-                            <button name="get_delivery_price" string="Check price" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
-                            <button name="set_delivery_line" string="Set price" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"/>
+                            <button name="get_delivery_price" type="object" class="oe_inline oe_link" attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"><i class="fa fa-arrow-right"/> Get rate</button>
+                            <button name="set_delivery_line" type="object" class="oe_inline oe_link" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"><i class="fa fa-arrow-right"/> Add to order</button>
                             <field name='delivery_rating_success' invisible="1" force_save="1"/>
                           </div>
-                          <div class="alert alert-info" role="alert" attrs="{'invisible': ['|',('carrier_id','=', False),('delivery_message','=',False)]}">
+                          <div class="alert alert-info" role="status" attrs="{'invisible': ['|',('carrier_id','=', False),('delivery_message','=',False)]}">
                             <field name='delivery_message' force_save="1"/>
                           </div>
                       </div>
@@ -298,4 +309,30 @@
             </field>
         </record>
 
+        <record id="delivery_tracking_url_warning_form" model="ir.ui.view">
+            <field name="name">delivery.carrier.warning.url.form</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Trackers URL">
+                    <group>
+                        <div class="alert alert-info" role="status">
+                            <p>You have multiple tracker links, they are available in the chatter.</p>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="OK" special="cancel" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_delivery_trackers_url" model="ir.actions.act_window">
+            <field name="name">Display tracking links</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="delivery.delivery_tracking_url_warning_form"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 </odoo>

@@ -25,8 +25,8 @@ class Channel(models.Model):
     allowing to configure slide upload and access. Slides can be promoted in
     channels. """
     _name = 'slide.channel'
-    _description = 'Channel for Slides'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _description = 'Slide Channel'
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'sequence, id'
     _order_by_strategy = {
         'most_viewed': 'total_views desc',
@@ -168,7 +168,7 @@ class Channel(models.Model):
         return res
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, parent_id=False, subtype=None, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
@@ -181,6 +181,11 @@ class Channel(models.Model):
                     kwargs['subtype_id'] = False
                 subtype = 'mail.mt_note'
         return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
+
+    def list_all(self):
+        return {
+            'channels': [{'id': channel.id, 'name': channel.name, 'website_url': channel.website_url} for channel in self.search([])]
+        }
 
 
 class Category(models.Model):
@@ -270,7 +275,7 @@ class Slide(models.Model):
     _PROMOTIONAL_FIELDS = [
         '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
         'channel_id', 'description', 'tag_ids', 'write_date', 'create_date',
-        'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords']
+        'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE(channel_id, name)', 'The slide name must be unique within a channel')
@@ -330,6 +335,7 @@ class Slide(models.Model):
                 self[key] = value
 
     # website
+    website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date')
     likes = fields.Integer('Likes')
     dislikes = fields.Integer('Dislikes')
@@ -397,7 +403,7 @@ class Slide(models.Model):
         if not self.user_has_groups('website.group_website_publisher'):
             values['website_published'] = False
         slide = super(Slide, self).create(values)
-        slide.channel_id.message_subscribe_users()
+        slide.channel_id.message_subscribe(partner_ids=self.env.user.partner_id.ids)
         slide._post_publication()
         return slide
 
@@ -458,10 +464,10 @@ class Slide(models.Model):
         return super(Slide, self).get_access_action(access_uid)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Slide, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Add access button to everyone if the document is active. """
+        groups = super(Slide, self)._notify_get_groups(message, groups)
 
-        self.ensure_one()
         if self.website_published:
             for group_name, group_method, group_data in groups:
                 group_data['has_button_access'] = True
@@ -469,32 +475,37 @@ class Slide(models.Model):
         return groups
 
     def get_related_slides(self, limit=20):
-        domain = [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
+        domain = request.website.website_domain()
+        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
         if self.category_id:
             domain += [('category_id', '=', self.category_id.id)]
         for record in self.search(domain, limit=limit):
             yield record
 
     def get_most_viewed_slides(self, limit=20):
-        for record in self.search([('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)], limit=limit, order='total_views desc'):
+        domain = request.website.website_domain()
+        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
+        for record in self.search(domain, limit=limit, order='total_views desc'):
             yield record
 
     def _post_publication(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context(base_url=base_url).render_template(publish_template.body_html, 'slide.slide', slide.id)
-            subject = publish_template.render_template(publish_template.subject, 'slide.slide', slide.id)
+            html_body = publish_template.with_context(base_url=base_url)._render_template(publish_template.body_html, 'slide.slide', slide.id)
+            subject = publish_template._render_template(publish_template.subject, 'slide.slide', slide.id)
             slide.channel_id.message_post(
                 subject=subject,
                 body=html_body,
-                subtype='website_slides.mt_channel_slide_published')
+                subtype='website_slides.mt_channel_slide_published',
+                notif_layout='mail.mail_notification_light',
+            )
         return True
 
     @api.one
     def send_share_email(self, email):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id)
+        return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id, notif_layout='mail.mail_notification_light')
 
     # --------------------------------------------------
     # Parsing methods
@@ -540,7 +551,7 @@ class Slide(models.Model):
         return {'error': _('Unknown document')}
 
     def _parse_youtube_document(self, document_id, only_preview_fields):
-        key = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')
+        key = self.env['website'].get_current_website().website_slide_google_app_key
         fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet', 'fields': 'items(id,snippet)'}, 'json')
         if fetch_res.get('error'):
             return fetch_res
@@ -590,7 +601,7 @@ class Slide(models.Model):
             if access_token:
                 params['access_token'] = access_token
         if not params.get('access_token'):
-            params['key'] = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')
+            params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
 
         fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
         if fetch_res.get('error'):
@@ -629,3 +640,10 @@ class Slide(models.Model):
             values['slide_type'] = get_slide_type(values)
 
         return {'values': values}
+
+    def _default_website_meta(self):
+        res = super(Slide, self)._default_website_meta()
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image_thumb" % (self.id)
+        return res

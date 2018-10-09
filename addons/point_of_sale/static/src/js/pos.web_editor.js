@@ -14,7 +14,7 @@ odoo.define('point_of_sale.editor', function (require) {
         start: function () {
             var self = this;
             setTimeout(function(){
-                self.$overlay.find('.pos-use_default_logo').removeClass("hidden");
+                self.$overlay.find('.pos-use_default_logo').removeClass('d-none');
             },500);
         }
     });
@@ -29,7 +29,7 @@ odoo.define('point_of_sale.editor', function (require) {
     // Hide 'remove' buttun for element that should not be removed
     s_options.registry.pos_no_remove = s_options.Class.extend({
         start:function() {
-            this.$overlay.find('.oe_snippet_remove').addClass('hidden');
+            this.$overlay.find('.oe_snippet_remove').addClass('d-none');
             this.$('.pos-adv').append($('<div class="pos_adv_onsave_remove text-center" style="color:#666666; padding:10px;">' + _t('Set your customized advertisement here') + '</span>'));
         },
 

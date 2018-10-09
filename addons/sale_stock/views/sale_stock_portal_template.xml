@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_content_inherit_sale_stock" name="Orders Shipping Followup" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='shipping_address']" position="inside">
+            <t t-if="sale_order.picking_ids">
+                <div>
+                    <strong>Delivery Orders</strong>
+                </div>
+                <div>
+                    <t t-foreach="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
+                        <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
+                        <div id='picking_info'>
+                            <a t-att-href="delivery_report_url"><span class="fa fa-download" role="img" aria-label="Download" title="Download"/></a>
+                            <a t-att-href="delivery_report_url"><span t-field="i.name"/></a>
+                            <span class="text-muted" t-field="i.date" t-options='{"widget": "date"}'/>
+                            <t t-if="i.state == 'done'">
+                                <span class="badge badge-success label-text-align"><i class="fa fa-fw fa-truck"/> Shipped</span>
+                            </t>
+                            <t t-if="i.state == 'partially_available'">
+                                <span class="badge badge-warning label-text-align"><i class="fa fa-fw fa-clock-o"/> Partially Available</span>
+                            </t>
+                            <t t-if="i.state == 'cancel'">
+                                <span class="badge badge-danger label-text-align"><i class="fa fa-fw fa-times"/> Cancelled</span>
+                            </t>
+                            <t t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']">
+                                <span class="badge badge-info label-text-align"><i class="fa fa-fw fa-clock-o"/> Preparation</span>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+  </template>
+
+</odoo>

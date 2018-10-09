@@ -20,7 +20,9 @@ odoo.define('web.dom', function (require) {
  * something happens in the DOM.
  */
 
+var config = require('web.config');
 var core = require('web.core');
+var _t = core._t;
 
 /**
  * Private function to notify that something has been attached in the DOM
@@ -72,12 +74,12 @@ return {
 
         function resize() {
             $fixedTextarea.insertAfter($textarea);
-            var heightOffset;
+            var heightOffset = 0;
             var style = window.getComputedStyle($textarea[0], null);
-            if (style.boxSizing === 'content-box') {
-                heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
-            } else {
-                heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+            if (style.boxSizing === 'border-box') {
+                var paddingHeight = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+                var borderHeight = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+                heightOffset = borderHeight + paddingHeight;
             }
             $fixedTextarea.width($textarea.width());
             $fixedTextarea.val($textarea.val());
@@ -85,33 +87,55 @@ return {
             $textarea.css({height: Math.max(height + heightOffset, minHeight)});
         }
 
+        function removeVerticalResize() {
+            // We already compute the correct height:
+            // we don't want the user to resize it vertically.
+            // On Chrome this needs to be called after the DOM is ready.
+            var style = window.getComputedStyle($textarea[0], null);
+            if (style.resize === 'vertical') {
+                $textarea[0].style.resize = 'none';
+            } else if (style.resize === 'both') {
+                $textarea[0].style.resize = 'horizontal';
+            }
+        }
+
         options = options || {};
         minHeight = (options && options.min_height) || 50;
 
         $fixedTextarea = $('<textarea disabled>', {
             class: $textarea[0].className,
-        }).css({
+        });
+
+        var direction = _t.database.parameters.direction === 'rtl' ? 'right' : 'left';
+        $fixedTextarea.css({
             position: 'absolute',
             opacity: 0,
             height: 10,
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+            padding: 0,
             top: -10000,
-            left: -10000,
-        });
+        }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
 
-        var style = window.getComputedStyle($textarea[0], null);
-        if (style.resize === 'vertical') {
-            $textarea[0].style.resize = 'none';
-        } else if (style.resize === 'both') {
-            $textarea[0].style.resize = 'horizontal';
-        }
+        // The following line is necessary to prevent the scrollbar to appear
+        // on the textarea on Firefox when adding a new line if the current line
+        // has just enough characters to completely fill the line.
+        // This fix should be fine since we compute the height depending on the
+        // content, there should never be an overflow.
+        // TODO ideally understand why and fix this another way if possible.
+        $textarea.css({'overflow-y': 'hidden'});
+
         resize();
+        removeVerticalResize();
         $textarea.data("auto_resize", true);
 
-        $textarea.on('input focus', resize);
+        $textarea.on('input focus change', resize);
         if (options.parent) {
-            core.bus.on('DOM_updated', options.parent, resize);
-            core.bus.on('view_shown', options.parent, resize);
+            core.bus.on('DOM_updated', options.parent, function () {
+                resize();
+                removeVerticalResize();
+            });
         }
     },
     /**
@@ -207,11 +231,11 @@ return {
      *
      * @param {Object} options
      * @param {Object} [options.attrs] - Attributes to put on the button element
-     * @param {string} [options.attrs.type="button"]
-     * @param {string} [options.attrs.class="btn-default"]
-     *        Note: automatically completed with "btn btn-X" (@see options.size
-     *        for the value of X)
-     * @param {string} [options.size=sm] - @see options.attrs.class
+     * @param {string} [options.attrs.type='button']
+     * @param {string} [options.attrs.class='btn-secondary']
+     *        Note: automatically completed with "btn btn-X"
+     *        (@see options.size for the value of X)
+     * @param {string} [options.size] - @see options.attrs.class
      * @param {string} [options.icon]
      *        The specific fa icon class (for example "fa-home") or an URL for
      *        an image to use as icon.
@@ -219,10 +243,28 @@ return {
      * @returns {jQuery}
      */
     renderButton: function (options) {
-        var params = options.attrs || {};
-        params.type = params.type || 'button';
-        params.class = 'btn btn-' + (options.size || 'sm') + ' ' + (params.class || 'btn-default');
-        var $button = $('<button/>', params);
+        var jQueryParams = _.extend({
+            type: 'button',
+        }, options.attrs || {});
+
+        var extraClasses = jQueryParams.class;
+        if (extraClasses) {
+            // If we got extra classes, check if old oe_highlight/oe_link
+            // classes are given and switch them to the right classes (those
+            // classes have no style associated to them anymore).
+            // TODO ideally this should be dropped at some point.
+            extraClasses = extraClasses.replace(/\boe_highlight\b/g, 'btn-primary')
+                                       .replace(/\boe_link\b/g, 'btn-link');
+        }
+
+        jQueryParams.class = 'btn';
+        if (options.size) {
+            jQueryParams.class += (' btn-' + options.size);
+        }
+        jQueryParams.class += (' ' + (extraClasses || 'btn-secondary'));
+
+        var $button = $('<button/>', jQueryParams);
+
         if (options.icon) {
             if (options.icon.substr(0, 3) === 'fa-') {
                 $button.append($('<i/>', {
@@ -239,36 +281,45 @@ return {
                 text: options.text,
             }));
         }
+
         return $button;
     },
     /**
-     * Renders a checkbox with standard odoo template. This does not use any xml
-     * template to avoid forcing the frontend part to lazy load a xml file for
-     * each widget which might want to create a simple checkbox.
+     * Renders a checkbox with standard odoo/BS template. This does not use any
+     * xml template to avoid forcing the frontend part to lazy load a xml file
+     * for each widget which might want to create a simple checkbox.
      *
      * @param {Object} [options]
      * @param {Object} [options.prop]
      *        Allows to set the input properties (disabled and checked states).
      * @param {string} [options.text]
      *        The checkbox's associated text. If none is given then a simple
-     *        checkbox without label structure is rendered.
+     *        checkbox is rendered.
      * @returns {jQuery}
      */
     renderCheckbox: function (options) {
-        var $container = $('<div class="o_checkbox"><input type="checkbox"/><span/></div>');
+        var id = _.uniqueId('checkbox-');
+        var $container = $('<div/>', {
+            class: 'custom-control custom-checkbox',
+        });
+        var $input = $('<input/>', {
+            type: 'checkbox',
+            id: id,
+            class: 'custom-control-input',
+        });
+        var $label = $('<label/>', {
+            for: id,
+            class: 'custom-control-label',
+            text: options && options.text || '',
+        });
+        if (!options || !options.text) {
+            $label.html('&#8203;'); // BS checkboxes need some label content (so
+                                // add a zero-width space when there is no text)
+        }
         if (options && options.prop) {
-            $container.children('input').prop(options.prop);
+            $input.prop(options.prop);
         }
-        if (options && options.text) {
-            $container = $('<label/>').append(
-                $container,
-                $('<span/>', {
-                    class: 'ml8',
-                    text: options.text,
-                })
-            );
-        }
-        return $container;
+        return $container.append($input, $label);
     },
     /**
      * Sets the selection range of a given input or textarea
@@ -286,6 +337,118 @@ return {
                 .moveEnd('character', range.start)
                 .moveStart('character', range.end)
                 .select();
+        }
+    },
+    /**
+     * Creates an automatic 'more' dropdown-menu for a set of navbar items.
+     *
+     * @param {jQuery} $el
+     * @param {Object} [options]
+     * @param {string} [options.unfoldable='none']
+     * @param {function} [options.maxWidth]
+     * @param {string} [options.sizeClass='SM']
+     */
+    initAutoMoreMenu: function ($el, options) {
+        options = _.extend({
+            unfoldable: 'none',
+            maxWidth: false,
+            sizeClass: 'SM',
+        }, options || {});
+
+        var $extraItemsToggle = null;
+
+        var debouncedAdapt = _.debounce(_adapt, 250);
+        core.bus.on('resize', null, debouncedAdapt);
+        _adapt();
+
+        $el.data('dom:autoMoreMenu:destroy', function () {
+            _restore();
+            core.bus.off('resize', null, debouncedAdapt);
+            $el.removeData('dom:autoMoreMenu:destroy');
+        });
+
+        function _restore() {
+            if ($extraItemsToggle === null) {
+                return;
+            }
+            var $items = $extraItemsToggle.children('.dropdown-menu').children();
+            $items.addClass('nav-item');
+            $items.children('.dropdown-item, a').removeClass('dropdown-item').addClass('nav-link');
+            $items.insertBefore($extraItemsToggle);
+            $extraItemsToggle.remove();
+            $extraItemsToggle = null;
+        }
+
+        function _adapt() {
+            if (!$el.is(':visible')) {
+                return;
+            }
+
+            _restore();
+            if (config.device.size_class <= config.device.SIZES[options.sizeClass]) {
+                return;
+            }
+
+            var $allItems = $el.children();
+            var $unfoldableItems = $allItems.filter(options.unfoldable);
+            var $items = $allItems.not($unfoldableItems);
+
+            var maxWidth = 0;
+            if (options.maxWidth) {
+                maxWidth = options.maxWidth();
+            } else {
+                var rect = $el[0].getBoundingClientRect();
+                var style = window.getComputedStyle($el[0]);
+                maxWidth = (rect.right - rect.left);
+                maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
+                maxWidth -= _.reduce($unfoldableItems, function (sum, el) {
+                    return sum + computeFloatOuterWidthWithMargins(el);
+                }, 0);
+            }
+
+            var nbItems = $items.length;
+            var menuItemsWidth = _.reduce($items, function (sum, el) {
+                return sum + computeFloatOuterWidthWithMargins(el);
+            }, 0);
+
+            if (maxWidth - menuItemsWidth >= -0.001) {
+                return;
+            }
+
+            var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
+            $extraItemsToggle = $('<li/>', {class: 'nav-item dropdown o_extra_menu_items'})
+                .append($('<a/>', {href: '#', class: 'nav-link dropdown-toggle o-no-caret', 'data-toggle': 'dropdown'})
+                    .append($('<i/>', {class: 'fa fa-plus'})))
+                .append($dropdownMenu);
+            $extraItemsToggle.insertAfter($items.last());
+
+            menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
+            do {
+                menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
+            } while (!(maxWidth - menuItemsWidth >= -0.001));
+
+            var $extraItems = $items.slice(nbItems).detach();
+            $extraItems.removeClass('nav-item');
+            $extraItems.children('.nav-link, a').removeClass('nav-link').addClass('dropdown-item');
+            $dropdownMenu.append($extraItems);
+            $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
+        }
+
+        function computeFloatOuterWidthWithMargins(el) {
+            var rect = el.getBoundingClientRect();
+            var style = window.getComputedStyle(el);
+            return rect.right - rect.left + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+        }
+    },
+    /**
+     * Cleans what has been done by ``initAutoMoreMenu``.
+     *
+     * @param {jQuery} $el
+     */
+    destroyAutoMoreMenu: function ($el) {
+        var destroyFunc = $el.data('dom:autoMoreMenu:destroy');
+        if (destroyFunc) {
+            destroyFunc.call(null);
         }
     },
 };

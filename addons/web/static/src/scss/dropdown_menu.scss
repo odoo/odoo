@@ -1,0 +1,45 @@
+.o_dropdown_menu {
+    > .dropdown-divider:first-child {
+        display: none;
+    }
+
+    min-width: 150px;
+    max-height: calc(100vh - 125px); // FIXME
+    overflow: auto;
+
+    .o_menu_item {
+        position: relative;
+
+        > .dropdown-item {
+            color: $o-main-text-color;
+
+            &:hover {
+                color: darken($o-main-text-color, 10%);
+            }
+        }
+        .dropdown-divider:first-child {
+            display: none;
+        }
+    }
+}
+
+.dropdown-item {
+    position: relative;
+    color: $o-main-text-color;
+
+    &:hover {
+        color: darken($o-main-text-color, 10%);
+    }
+
+    &.selected { // TODO why not using standard BS4 "active" class ?
+        color: darken($o-main-text-color, 10%);
+        font-weight: bold;
+
+        &:before {
+            font-family: FontAwesome;
+            position: absolute;
+            left: 4px;
+            content: "\f00c";
+        }
+    }
+}

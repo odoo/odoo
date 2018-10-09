@@ -10,6 +10,7 @@ the ORM does, in fact.
 
 from contextlib import contextmanager
 from functools import wraps
+import itertools
 import logging
 import time
 import uuid
@@ -25,12 +26,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
 
-types_mapping = {
-    'date': (1082,),
-    'time': (1083,),
-    'datetime': (1114,),
-}
-
 def unbuffer(symb, cr):
     if symb is None:
         return None
@@ -41,8 +36,6 @@ def undecimalize(symb, cr):
         return None
     return float(symb)
 
-for name, typeoid in types_mapping.items():
-    psycopg2.extensions.register_type(psycopg2.extensions.new_type(typeoid, name, lambda x, cr: x))
 psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
 
 
@@ -224,9 +217,9 @@ class Cursor(object):
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
-            now = time.time()
-            _logger.debug("query: %s", query)
-
+            encoding = psycopg2.extensions.encodings[self.connection.encoding]
+            _logger.debug("query: %s", self._obj.mogrify(query, params).decode(encoding, 'replace'))
+        now = time.time()
         try:
             params = params or None
             res = self._obj.execute(query, params)
@@ -237,10 +230,14 @@ class Cursor(object):
 
         # simple query count is always computed
         self.sql_log_count += 1
+        delay = (time.time() - now)
+        if hasattr(threading.current_thread(), 'query_count'):
+            threading.current_thread().query_count += 1
+            threading.current_thread().query_time += delay
 
         # advanced stats only if sql_log is enabled
         if self.sql_log:
-            delay = (time.time() - now) * 1E6
+            delay *= 1E6
 
             res_from = re_from.match(query.lower())
             if res_from:
@@ -425,42 +422,68 @@ class Cursor(object):
     def closed(self):
         return self._closed
 
-class TestCursor(Cursor):
-    """ A cursor to be used for tests. It keeps the transaction open across
-        several requests, and simulates committing, rolling back, and closing.
+
+class TestCursor(object):
+    """ A pseudo-cursor to be used for tests, on top of a real cursor. It keeps
+        the transaction open across requests, and simulates committing, rolling
+        back, and closing:
+
+              test cursor           | queries on actual cursor
+            ------------------------+---------------------------------------
+              cr = TestCursor(...)  | SAVEPOINT test_cursor_N
+                                    |
+              cr.execute(query)     | query
+                                    |
+              cr.commit()           | SAVEPOINT test_cursor_N
+                                    |
+              cr.rollback()         | ROLLBACK TO SAVEPOINT test_cursor_N
+                                    |
+              cr.close()            | ROLLBACK TO SAVEPOINT test_cursor_N
+                                    |
+
     """
-    def __init__(self, *args, **kwargs):
-        super(TestCursor, self).__init__(*args, **kwargs)
+    _savepoint_seq = itertools.count()
+
+    def __init__(self, cursor, lock):
+        self._closed = False
+        self._cursor = cursor
+        # we use a lock to serialize concurrent requests
+        self._lock = lock
+        self._lock.acquire()
         # in order to simulate commit and rollback, the cursor maintains a
         # savepoint at its last commit
-        self.execute("SAVEPOINT test_cursor")
-        # we use a lock to serialize concurrent requests
-        self._lock = threading.RLock()
-
-    def acquire(self):
-        self._lock.acquire()
-
-    def release(self):
-        self._lock.release()
-
-    def force_close(self):
-        super(TestCursor, self).close()
+        self._savepoint = "test_cursor_%s" % next(self._savepoint_seq)
+        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
 
     def close(self):
         if not self._closed:
-            self.rollback()             # for stuff that has not been committed
-        self.release()
+            self._closed = True
+            self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
+            self._lock.release()
 
     def autocommit(self, on):
         _logger.debug("TestCursor.autocommit(%r) does nothing", on)
 
     def commit(self):
-        self.execute("RELEASE SAVEPOINT test_cursor")
-        self.execute("SAVEPOINT test_cursor")
+        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
 
     def rollback(self):
-        self.execute("ROLLBACK TO SAVEPOINT test_cursor")
-        self.execute("SAVEPOINT test_cursor")
+        self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is None:
+            self.commit()
+        self.close()
+
+    def __getattr__(self, name):
+        value = getattr(self._cursor, name)
+        if callable(value) and self._closed:
+            raise psycopg2.OperationalError('Unable to use a closed cursor.')
+        return value
+
 
 class LazyCursor(object):
     """ A proxy object to a cursor. The cursor itself is allocated only if it is
@@ -632,11 +655,6 @@ class Connection(object):
         cursor_type = serialized and 'serialized ' or ''
         _logger.debug('create %scursor to %r', cursor_type, self.dsn)
         return Cursor(self.__pool, self.dbname, self.dsn, serialized=serialized)
-
-    def test_cursor(self, serialized=True):
-        cursor_type = serialized and 'serialized ' or ''
-        _logger.debug('create test %scursor to %r', cursor_type, self.dsn)
-        return TestCursor(self.__pool, self.dbname, self.dsn, serialized=serialized)
 
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor

@@ -87,7 +87,7 @@ Opportunities can be converted into quotations in just one click.
 Drive Engagement with Gamification
 ----------------------------------
 
-Align sales channels on clear targets. Define clear commission plans. Get real
+Align Sales Teams on clear targets. Define clear commission plans. Get real
 time statistics on the performance of individual sales or channels. Motivate your
 teams with challenges, rewards and leaderboards.
 
@@ -96,5 +96,5 @@ Have Clear Pricing Strategies
 
 Use pricelists to record special conditions for a specific customer or to
 define prices for a segment of customers. Define promotions and have them
-applied automatically for all your sales channels.
+applied automatically for all your Sales Teams.
 

@@ -1,12 +1,15 @@
 odoo.define('web_tour.Tip', function(require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
+var _t = core._t;
 
 var Tip = Widget.extend({
     template: "Tip",
     events: {
+        click: '_onTipClicked',
         mouseenter: "_to_info_mode",
         mouseleave: "_to_bubble_mode",
     },
@@ -129,7 +132,14 @@ var Tip = Widget.extend({
             $location = $location.parent();
             o = $location.css("overflow");
             p = $location.css("position");
-        } while ((o === "visible" || o === "hidden") && p !== "fixed" && $location[0] !== document.body);
+        } while (
+            $location.hasClass('dropdown-menu') ||
+            (
+                (o === "visible" || o === "hidden") &&
+                p !== "fixed" &&
+                $location[0].tagName.toUpperCase() !== 'BODY'
+            )
+        );
 
         return $location;
     },
@@ -137,19 +147,27 @@ var Tip = Widget.extend({
         if (this.tip_opened) return;
         this.$el.removeClass("o_animated");
 
+        // Reverse left/right position if direction is right to left
+        var appendAt = this.info.position;
+        if (_t.database.parameters.direction === 'rtl') {
+            appendAt = appendAt === 'right' ? 'left': 'right';
+        }
         this.$el.position({
-            my: this._get_spaced_inverted_position(this.info.position),
-            at: this.info.position,
+            my: this._get_spaced_inverted_position(appendAt),
+            at: appendAt,
             of: this.$anchor,
             collision: "none",
         });
 
+        // Reverse overlay if direction is right to left
+        var positionRight = _t.database.parameters.direction === 'rtl' ? "right" : "left";
+        var positionLeft = _t.database.parameters.direction === 'rtl' ? "left" : "right";
         var offset = this.$el.offset();
         this.$tooltip_overlay.css({
             top: -Math.min((this.info.position === "bottom" ? this.info.space : this.info.overlay.y), offset.top),
-            right: -Math.min((this.info.position === "left" ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width + this.double_border_width)),
+            right: -Math.min((this.info.position === positionRight ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width + this.double_border_width)),
             bottom: -Math.min((this.info.position === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height + this.double_border_width)),
-            left: -Math.min((this.info.position === "right" ? this.info.space : this.info.overlay.x), offset.left),
+            left: -Math.min((this.info.position === positionLeft ? this.info.space : this.info.overlay.x), offset.left),
         });
 
         this.position = this.$el.position();
@@ -215,7 +233,7 @@ var Tip = Widget.extend({
         } else {
             overflow = (offset.top + this.content_height + this.double_border_width + this.info.overlay.y > this.$window.height());
         }
-        if (posVertical && overflow || this.info.position === "left") {
+        if (posVertical && overflow || this.info.position === "left" || (_t.database.parameters.direction === 'rtl' && this.info.position == "right")) {
             mbLeft -= (this.content_width - this.init_width);
         }
         if (!posVertical && overflow || this.info.position === "top") {
@@ -259,6 +277,21 @@ var Tip = Widget.extend({
             height: this.init_height,
             margin: 0,
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * On touch devices, closes the tip when clicked.
+     *
+     * @private
+     */
+    _onTipClicked: function () {
+        if (config.device.touch && this.tip_opened) {
+            this._to_bubble_mode();
+        }
     },
 });
 

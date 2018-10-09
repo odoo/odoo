@@ -19,12 +19,13 @@ def environment():
     reg = registry(common.get_db_name())
     with reg.cursor() as cr:
         yield api.Environment(cr, SUPERUSER_ID, {})
-        cr.commit()
 
 
 MODULE = 'test_uninstall'
 MODEL = 'test_uninstall.model'
 
+
+@common.tagged('standard', 'at_install')
 class TestUninstall(unittest.TestCase):
     """
     Test the install/uninstall of a test module. The module is available in

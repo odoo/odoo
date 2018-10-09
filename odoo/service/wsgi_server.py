@@ -99,48 +99,13 @@ def _patch_xmlrpc_marshaller():
 
     xmlrpclib.Marshaller.dispatch[bytes] = dump_bytes
 
-def wsgi_xmlrpc(environ, start_response):
-    """ Two routes are available for XML-RPC
-
-    /xmlrpc/<service> route returns faultCode as strings. This is a historic
-    violation of the protocol kept for compatibility.
-
-    /xmlrpc/2/<service> is a new route that returns faultCode as int and is
-    therefore fully compliant.
-    """
-    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/xmlrpc/'):
-        length = int(environ['CONTENT_LENGTH'])
-        data = environ['wsgi.input'].read(length)
-
-        # Distinguish betweed the 2 faultCode modes
-        string_faultcode = True
-        service = environ['PATH_INFO'][len('/xmlrpc/'):]
-        if environ['PATH_INFO'].startswith('/xmlrpc/2/'):
-            service = service[len('2/'):]
-            string_faultcode = False
-
-        params, method = xmlrpclib.loads(data)
-        try:
-            result = odoo.http.dispatch_rpc(service, method, params)
-            response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False)
-        except Exception as e:
-            if string_faultcode:
-                response = xmlrpc_handle_exception_string(e)
-            else:
-                response = xmlrpc_handle_exception_int(e)
-
-        return werkzeug.wrappers.Response(
-            response=response,
-            mimetype='text/xml',
-        )(environ, start_response)
-
 def application_unproxied(environ, start_response):
     """ WSGI entry point."""
     # cleanup db/uid trackers - they're set at HTTP dispatch in
     # web.session.OpenERPSession.send() and at RPC dispatch in
     # odoo.service.web_services.objects_proxy.dispatch().
     # /!\ The cleanup cannot be done at the end of this `application`
-    # method because werkzeug still produces relevant logging afterwards 
+    # method because werkzeug still produces relevant logging afterwards
     if hasattr(threading.current_thread(), 'uid'):
         del threading.current_thread().uid
     if hasattr(threading.current_thread(), 'dbname'):
@@ -149,11 +114,8 @@ def application_unproxied(environ, start_response):
         del threading.current_thread().url
 
     with odoo.api.Environment.manage():
-        # Try all handlers until one returns some result (i.e. not None).
-        for handler in [wsgi_xmlrpc, odoo.http.root]:
-            result = handler(environ, start_response)
-            if result is None:
-                continue
+        result = odoo.http.root(environ, start_response)
+        if result is not None:
             return result
 
     # We never returned from the loop.

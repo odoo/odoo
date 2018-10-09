@@ -8,6 +8,7 @@ var fieldRegistry = require('web.field_registry');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+var NotificationService = require('web.NotificationService');
 
 var createView = testUtils.createView;
 var triggerKeypressEvent = testUtils.triggerKeypressEvent;
@@ -42,8 +43,8 @@ QUnit.module('Barcodes', {
                     barcode: {string: "Barcode", type: "char"},
                 },
                 records: [
-                    {id: 1, name: "iPad Mini", barcode: '1234567890'},
-                    {id: 2, name: "Mouse, Optical", barcode: '0987654321'},
+                    {id: 1, name: "Large Cabinet", barcode: '1234567890'},
+                    {id: 2, name: "Cabinet with Doors", barcode: '0987654321'},
                 ],
             },
         };
@@ -64,13 +65,17 @@ QUnit.test('Button with barcode_trigger', function (assert) {
                 '</header>' +
             '</form>',
         res_id: 2,
+        services: {
+            notification: NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            }),
+        },
         intercepts: {
             execute_action: function (event) {
                 assert.strictEqual(event.data.action_data.name, 'do_something',
                     "do_something method call verified");
-            },
-            warning: function () {
-                assert.step('warn');
             },
         },
     });
@@ -142,19 +147,19 @@ QUnit.test('pager buttons', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-NEXT
     _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-PREV
     _.each(["O","-","C","M","D",".","P","R","E","V","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-LAST
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-FIRST
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","F","I","R","S","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
 
     form.destroy();
 });
@@ -509,10 +514,12 @@ QUnit.test('barcode_scanned only trigger error for active view', function (asser
                 '</form>',
         },
         res_id: 1,
-        intercepts: {
-            warning: function (event) {
-                assert.step(event.name);
-            }
+        services: {
+            notification: NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            }),
         },
         viewOptions: {
             mode: 'edit',
@@ -521,7 +528,7 @@ QUnit.test('barcode_scanned only trigger error for active view', function (asser
 
     form.$('.o_data_row:first').click();
 
-    // We do not trigger on the body since modal and 
+    // We do not trigger on the body since modal and
     // form view are both inside it.
     function modalTriggerKeypressEvent(char) {
         var keycode;

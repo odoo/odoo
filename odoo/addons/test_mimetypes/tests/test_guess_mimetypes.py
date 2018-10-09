@@ -2,6 +2,7 @@
 import os.path
 import unittest
 
+from odoo.tests.common import tagged
 from odoo.tools.mimetypes import guess_mimetype
 
 def contents(extension):
@@ -12,6 +13,8 @@ def contents(extension):
     ), 'rb') as f:
         return f.read()
 
+
+@tagged('standard', 'at_install')
 class TestMimeGuessing(unittest.TestCase):
     def test_doc(self):
         self.assertEqual(

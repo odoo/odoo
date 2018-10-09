@@ -278,12 +278,18 @@ Common ORM methods
    .. tip:: to just check if any record matches a domain, or count the number
              of records which do, use
              :meth:`~odoo.models.Model.search_count`
-:meth:`~odoo.models.Model.create`
-    Takes a number of field values, and returns a recordset containing the
-    record created::
 
-        >>> self.create({'name': "New Name"})
+:meth:`~odoo.models.Model.create`
+    Takes a dictionary of field values, or a list of such dictionaries, and
+    returns a recordset containing the records created::
+
+        >>> self.create({'name': "Joe"})
         res.partner(78)
+        >>> self.create([{'name': "Jack"}, {'name': "William"}, {'name': "Averell"}])
+        res.partner(79, 80, 81)
+
+    See :ref:`how to define method \`create\` with one API or the other
+    <reference/orm/oldapi>`.
 
 :meth:`~odoo.models.Model.write`
     Takes a number of field values, writes them to all the records in its
@@ -568,6 +574,19 @@ Two decorators can expose a new-style method to the old API:
             pass
         # can be called as
         old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
+
+Note that a method `create` decorated with :func:`~odoo.api.model` will always
+be called with a single dictionary. A method `create` decorated with the variant
+:func:`~odoo.api.model_create_multi` will always be called with a list of dicts.
+The decorators take care of converting the argument to one form or the other::
+
+    @api.model
+    def create(self, vals):
+        ...
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        ...
 
 Because new-style APIs tend to return recordsets and old-style APIs tend to
 return lists of ids, there is also a decorator managing this:
@@ -866,13 +885,57 @@ Basic fields
 .. autoclass:: odoo.fields.Html
     :show-inheritance:
 
+.. _reference/orm/fields/date_datetime:
+
+Date and Datetime fields
+------------------------
+
+Dates and Datetimes are very important fields in any kind of business
+application, they are heavily used in many popular Odoo applications such as
+logistics or accounting and their misuse can create invisible yet painful
+bugs, this excerpt aims to provide Odoo developers with the knowledge required
+to avoid misusing these fields.
+
+When assigning a value to a Date/Datetime field, the following options are valid:
+    * A string in the proper server format **(YYYY-MM-DD)** for Date fields,
+      **(YYYY-MM-DD HH:MM:SS)** for Datetime fields.
+    * A `date` or `datetime` object.
+    * `False` or `None`.
+
+If not sure of the type of the value being assigned to a Date/Datetime object,
+the best course of action is to pass the value to
+:func:`~odoo.fields.Date.to_date` or :func:`~odoo.fields.Datetime.to_datetime`
+which will attempt to convert the value to a date or datetime object
+respectively, which can then be assigned to the field in question.
+
+.. admonition:: Example
+
+    To parse date/datetimes coming from external sources::
+
+        fields.Date.to_date(self._context.get('date_from'))
+
+Date / Datetime comparison best practices:
+    * Date fields can **only** be compared to date objects.
+    * Datetime fields can **only** be compared to datetime objects.
+
+    .. warning:: Strings representing dates and datetimes can be compared
+                 between each other, however the result may not be the expected
+                 result, as a datetime string will always be greater than a
+                 date string, therefore this practice is **heavily**
+                 discouraged.
+
+Common operations with dates and datetimes such as addition, substraction or
+fetching the start/end of a period are exposed through both
+:class:`~odoo.fields.Date` and :class:`~odoo.fields.Datetime`.
+These helpers are also available by importing `odoo.tools.date_utils`.
+
 .. autoclass:: odoo.fields.Date
     :show-inheritance:
-    :members: today, context_today, from_string, to_string
+    :members: today, context_today, to_date, to_string, start_of, end_of, add, subtract
 
 .. autoclass:: odoo.fields.Datetime
     :show-inheritance:
-    :members: now, context_timestamp, from_string, to_string
+    :members: now, today, context_timestamp, to_datetime, to_string, start_of, end_of, add, subtract
 
 .. _reference/orm/fields/relational:
 

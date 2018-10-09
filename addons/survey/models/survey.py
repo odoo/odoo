@@ -58,7 +58,7 @@ class Survey(models.Model):
     title = fields.Char('Title', required=True, translate=True)
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
-                               ondelete="set null", copy=False, group_expand='_read_group_stage_ids')
+                               ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey",
         oldname="authenticate")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
@@ -77,7 +77,7 @@ class Survey(models.Model):
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     quizz_mode = fields.Boolean("Quizz Mode")
     active = fields.Boolean("Active", default=True)
-    is_closed = fields.Boolean("Is closed", related='stage_id.closed')
+    is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=False)
 
     def _is_designed(self):
         for survey in self:
@@ -326,7 +326,8 @@ class Survey(models.Model):
             default_survey_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            default_composition_mode='comment'
+            default_composition_mode='comment',
+            notif_layout='mail.mail_notification_light',
         )
         return {
             'type': 'ir.actions.act_window',
@@ -363,7 +364,7 @@ class Survey(models.Model):
 
     @api.multi
     def action_test_survey(self):
-        """ Open the website page with the survey form into test mode"""
+        ''' Open the website page with the survey form into test mode'''
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
@@ -423,7 +424,7 @@ class SurveyQuestion(models.Model):
     # Question metadata
     page_id = fields.Many2one('survey.page', string='Survey page',
             ondelete='cascade', required=True, default=lambda self: self.env.context.get('page_id'))
-    survey_id = fields.Many2one('survey.survey', related='page_id.survey_id', string='Survey')
+    survey_id = fields.Many2one('survey.survey', related='page_id.survey_id', string='Survey', readonly=False)
     sequence = fields.Integer('Sequence', default=10)
 
     # Question
@@ -684,7 +685,7 @@ class SurveyLabel(models.Model):
     def _check_question_not_empty(self):
         """Ensure that field question_id XOR field question_id_2 is not null"""
         if not bool(self.question_id) != bool(self.question_id_2):
-            raise ValidationError("A label must be attached to one and only one question")
+            raise ValidationError(_("A label must be attached to only one question."))
 
 
 class SurveyUserInput(models.Model):
@@ -715,8 +716,8 @@ class SurveyUserInput(models.Model):
     user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
 
     # URLs used to display the answers
-    result_url = fields.Char("Public link to the survey results", related='survey_id.result_url')
-    print_url = fields.Char("Public link to the empty survey", related='survey_id.print_url')
+    result_url = fields.Char("Public link to the survey results", related='survey_id.result_url', readonly=False)
+    print_url = fields.Char("Public link to the empty survey", related='survey_id.print_url', readonly=False)
 
     quizz_score = fields.Float("Score for the quiz", compute="_compute_quizz_score", default=0.0)
 
@@ -727,7 +728,6 @@ class SurveyUserInput(models.Model):
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
-        ('deadline_in_the_past', 'CHECK (deadline >= date_create)', 'The deadline cannot be in the past')
     ]
 
     @api.model
@@ -781,8 +781,8 @@ class SurveyUserInputLine(models.Model):
 
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True)
     question_id = fields.Many2one('survey.question', string='Question', ondelete='restrict', required=True)
-    page_id = fields.Many2one(related='question_id.page_id', string="Page")
-    survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True)
+    page_id = fields.Many2one(related='question_id.page_id', string="Page", readonly=False)
+    survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
     date_create = fields.Datetime('Create Date', default=fields.Datetime.now, required=True)
     skipped = fields.Boolean('Skipped')
     answer_type = fields.Selection([
@@ -803,7 +803,7 @@ class SurveyUserInputLine(models.Model):
     def _answered_or_skipped(self):
         for uil in self:
             if not uil.skipped != bool(uil.answer_type):
-                raise ValidationError(_('A question cannot be unanswered and skipped'))
+                raise ValidationError(_('This question cannot be unanswered or skipped.'))
 
     @api.constrains('answer_type')
     def _check_answer_type(self):
@@ -823,12 +823,13 @@ class SurveyUserInputLine(models.Model):
         mark = label.quizz_mark if label.exists() else 0.0
         return mark
 
-    @api.model
-    def create(self, vals):
-        value_suggested = vals.get('value_suggested')
-        if value_suggested:
-            vals.update({'quizz_mark': self._get_mark(value_suggested)})
-        return super(SurveyUserInputLine, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            value_suggested = vals.get('value_suggested')
+            if value_suggested:
+                vals.update({'quizz_mark': self._get_mark(value_suggested)})
+        return super(SurveyUserInputLine, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

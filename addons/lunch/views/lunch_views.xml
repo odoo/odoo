@@ -19,12 +19,12 @@
                     <filter name="confirmed" string="Received" domain="[('state','=','confirmed')]"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
                     <separator/>
-                    <filter name="today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                    <filter name="date_filter" string="Date" date="date" default_period="today"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_order_id" string="By Order" context="{'group_by':'order_id'}"/>
                         <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier'}"/>
-                        <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Vendor Orders by Month"/>
+                        <filter name="group_by_date" string="Order Date" context="{'group_by':'date'}" help="Vendor Orders by Date"/>
                     </group>
                 </search>
             </field>
@@ -98,24 +98,24 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row mb4">
-                                    <div class="col-xs-8">
+                                    <div class="col-8">
                                         <span>
                                             <strong class="o_kanban_record_title"><t t-esc="record.description.value"/></strong>
                                         </span>
                                     </div>
-                                    <div class="col-xs-4 text-right">
-                                        <span class="badge">
-                                            <strong><i class="fa fa-money"/> <field name="amount"/></strong>
+                                    <div class="col-4 text-right">
+                                        <span class="badge badge-pill">
+                                            <strong><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount"/></strong>
                                         </span>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6">
-                                        <i class="fa fa-clock-o"/>
+                                    <div class="col-6">
+                                        <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/>
                                         <t t-esc="record.date.value"/>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="col-6">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +159,9 @@
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_is_mine":1}</field>
             <field name="help" type="html">
-            <p>
+            <p class="o_view_nocontent_empty_folder">
+                No previous order found
+            </p><p>
                 There is no previous order recorded. Click on "My Lunch" and then create a new lunch order.
             </p>
             </field>
@@ -187,8 +189,10 @@
             <field name="context">{"search_default_is_mine_group":1}</field>
             <field name="view_id" ref="lunch_cashmove_view_tree_2"/>
             <field name="help" type="html">
-              <p>
-                Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.
+              <p class="o_view_nocontent_empty_folder">
+                No cash move yet
+              </p><p>
+                Here you can see your cash moves.<br/>A cash move can either be an expense or a payment.
                 An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager.
               </p>
             </field>
@@ -204,13 +208,14 @@
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_group_by_supplier":1, "search_default_today":1}</field>
             <field name="help" type="html">
-              <p>
+              <p class="o_view_nocontent_empty_folder">
+                Nothing to order today
+              </p><p>
                 Here you can see today's orders grouped by vendors.
-              </p>
-              <p>
-                - Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered <br/>
-                - Click on the <span class="fa fa-check text-success"/> to announce that the order is received <br/>
-                - Click on the <span class="fa fa-times-circle text-danger"/> to announce that the order isn't available
+              </p><p>
+                Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
+                Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
+                Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
               </p>
             </field>
         </record>
@@ -224,13 +229,14 @@
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_group_by_date":1, "search_default_group_by_supplier":1}</field>
             <field name="help" type="html">
-              <p>
+              <p class="o_view_nocontent_empty_folder">
+                No lunch order yet
+              </p><p>
                 Summary of all lunch orders, grouped by vendor and by date.
-              </p>
-              <p>
-                - Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered <br/>
-                - Click on the <span class="fa fa-check text-success"/> to announce that the order is received <br/>
-                - Click on the <span class="fa fa-times-circle text-danger"/> red X to announce that the order isn't available
+              </p><p>
+                Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
+                Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
+                Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> red X to announce that the order isn't available.
               </p>
             </field>
         </record>
@@ -245,10 +251,9 @@
             <field name="context">{"search_default_group_by_user":1}</field>
             <field name="view_id" ref="lunch_cashmove_view_tree"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a new payment.
-            </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new payment
+              </p><p>
                 A cashmove can either be an expense or a payment.<br/>
                 An expense is automatically created at the order receipt.<br/>
                 A payment represents the employee reimbursement to the company.
@@ -266,11 +271,10 @@
             <field name="context">{"search_default_is_payment":1}</field>
             <field name="view_id" ref="lunch_cashmove_view_tree"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a payment.
-            </p>
-              <p>
-                Here you can see the employees' payment. A payment is a cash move from the employee to the company.
+              <p class="o_view_nocontent_smiling_face">
+                Register a payment
+              </p><p>
+                Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
               </p>
             </field>
         </record>
@@ -282,10 +286,9 @@
             <field name="res_model">lunch.product</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a product for lunch.
-            </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new product for lunch
+              </p><p>
                 A product is defined by its name, category, price and vendor.
               </p>
             </field>
@@ -298,10 +301,9 @@
             <field name="res_model">lunch.product.category</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a lunch category.
-            </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new lunch category
+              </p><p>
                 Here you can access all categories for the lunch products.
               </p>
             </field>
@@ -328,18 +330,16 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="lunch_alert_view_search"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a lunch alert.
-            </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new lunch alert
+              </p><p>
                 Alerts are used to warn employee from possible issues concerning the lunch orders.
                 To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display.
-            </p>
-            <p>
-                Example: <br/>
-                - Recurency: Everyday<br/>
-                - Time interval: from 00h00 am to 11h59 pm<br/>
-                - Message: "You must order before 10h30 am"
+              </p><p>
+                Example:<br/>
+                Recurency: Everyday,<br/>
+                Time interval: from 00h00 am to 11h59 pm,<br/>
+                Message: "You must order before 10h30 am".
               </p>
             </field>
         </record>
@@ -389,27 +389,27 @@
                                     <field name="note"/>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6">
-                                        <i class="fa fa-money"/> <field name="price"/>
+                                    <div class="col-6">
+                                        <i class="fa fa-money" role="img" aria-label="Money" title="Money"/> <field name="price"/>
                                     </div>
-                                    <div class="col-xs-6 text-right">
-                                        <i class="fa fa-clock-o"/> <field name="date"/>
+                                    <div class="col-6 text-right">
+                                        <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date"/>
                                     </div>
                                 </div>
                                 <div class="row mt4">
-                                    <div class="col-xs-6">
-                                        <a class="btn btn-xs btn-success" name="order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
-                                            <i class="fa fa-phone"/>
+                                    <div class="col-6">
+                                        <a class="btn btn-sm btn-success" role="button" name="order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
+                                            <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
                                         </a>
-                                        <a class="btn btn-xs btn-info" name="confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
-                                            <i class="fa fa-check"/>
+                                        <a class="btn btn-sm btn-info" role="button" name="confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
+                                            <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
                                         </a>
-                                        <a class="btn btn-xs btn-danger" name="cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
-                                            <i class="fa fa-times"/>
+                                        <a class="btn btn-sm btn-danger" role="button" name="cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
+                                            <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
                                         </a>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="col-6">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -464,7 +464,7 @@
                                 <field name='date'/>
                             </group>
                             <div>
-                                <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="alert alert-danger oe_edit_only">
+                                <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="alert alert-danger oe_edit_only" role="alert">
                                     <field name='alerts'/>
                                 </div>
                             </div>
@@ -477,12 +477,19 @@
                         <separator string='Select your order'/>
                         <field name='order_line_ids'>
                             <tree string='List' editable='bottom'>
-                                <field name='product_id'/>
+                                <field name='product_id' context="{'lunch_date': parent.date}"/>
                                 <field name='note' />
                                 <field name='price'/>
                                 <field name='supplier' invisible="1"/>
                                 <field name="state" invisible="1"/>
                             </tree>
+                            <form string='Lunch Order Form'>
+                                <group>
+                                    <field name='product_id' context="{'lunch_date': parent.date}"/>
+                                    <field name='note' />
+                                    <field name='price'/>
+                                </group>
+                            </form>
                         </field>
                         <group class='oe_subtotal_footer oe_right'>
                             <field name='total' widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -524,7 +531,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
                                     </div>
-                                    <span class="badge pull-right">
+                                    <span class="badge badge-pill float-right">
                                         Price: <t t-esc="record.price.value"/>
                                     </span>
                                 </div>
@@ -562,7 +569,7 @@
                     <field name="description"/>
                     <group expand="0" string="Group By">
                         <filter name="supplier" string="Vendor" context="{'group_by': 'supplier'}"/>
-                        <filter name="category" string="Category" context="{'group_by': 'category_id'}"/>
+                        <filter name="category" string="Product Category" context="{'group_by': 'category_id'}"/>
                         <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     </group>
                 </search>
@@ -631,12 +638,12 @@
                                     <strong class="o_kanban_record_title"><t t-esc="record.message.value"/></strong>
                                 </div>
                                 <div class="row mb4">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         Between: <t t-esc="record.start_hour.value"/> -
                                         <t t-esc="record.end_hour.value"/>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="badge pull-right">
+                                    <div class="col-6">
+                                        <span class="badge badge-pill float-right">
                                             <t t-esc="record.alert_type.value"/>
                                         </span>
                                     </div>
@@ -653,37 +660,52 @@
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
                 <form>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object"
-                            class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
-                    <group>
-                        <group string="Schedule Date">
-                            <field name="alert_type"/>
-                            <field name="specific_day" attrs="{'invisible': [('alert_type','!=','specific')], 'required':[('alert_type','=','specific')]}"/>
-                        </group>
-                        <group string="Schedule Hour">
-                            <field name='start_hour' widget='float_time'/>
-                            <field name='end_hour' widget='float_time'/>
-                        </group>
-                        <group attrs="{'invisible': [('alert_type','!=','week')]}">
-                            <group col="4">
-                                <field name="monday"/>
-                                <field name="tuesday"/>
-                                <field name="wednesday"/>
-                                <field name="thursday"/>
-                                <field name="friday"/>
-                                <field name="saturday"/>
-                                <field name="sunday"/>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <group string="Schedule">
+                                <group colspan="4">
+                                    <field name="alert_type"/>
+                                    <field name="specific_day"
+                                           attrs="{'invisible': [('alert_type','!=','specific')], 'required':[('alert_type','=','specific')]}"/>
+                                    <field name='start_hour' widget='float_time' />
+                                    <field name='end_hour' widget='float_time' />
+                                </group>
+                                <group col="4" attrs="{'invisible': [('alert_type','!=','week')]}">
+                                    <field name="monday"/>
+                                    <field name="tuesday"/>
+                                    <field name="wednesday"/>
+                                    <field name="thursday"/>
+                                    <field name="friday"/>
+                                    <field name="saturday"/>
+                                    <field name="sunday"/>
+                                </group>
+                            </group>
+                            <group string="Vendor">
+                                <group colspan="4">
+                                    <field name="partner_id"/>
+                                    <field name="display" invisible="True"/>
+                                </group>
+                                <div class="oe_grey" colspan="4"
+                                    attrs="{'invisible': ['|', ('partner_id', '=', False), ('display', '=', True)]}">
+                                    Products from this vendor can <strong>not</strong> be ordered at that moment.
+                                </div>
+                                <div class="oe_grey" colspan="4"
+                                    attrs="{'invisible': ['|', ('partner_id', '=', False), ('display', '=', False)]}">
+                                    Products from this vendor can be ordered at that moment.
+                                </div>
                             </group>
                         </group>
-                    </group>
-                    <group string='Message'>
-                        <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>
-                    </group>
+                        <group string='Message'>
+                            <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

@@ -840,6 +840,16 @@ var ProductListWidget = PosBaseWidget.extend({
             options.click_product_action(product);
         };
 
+        this.keypress_product_handler = function(ev){
+            if (e.which != 13 && e.which != 32) {
+                // Key is not space or enter
+                return;
+            }
+            ev.preventDefault();
+            var product = self.pos.db.get_product_by_id(this.dataset.productId);
+            options.click_product_action(product);
+        };
+
         this.product_list = options.product_list || [];
         this.product_cache = new DomCache();
 
@@ -912,6 +922,7 @@ var ProductListWidget = PosBaseWidget.extend({
         for(var i = 0, len = this.product_list.length; i < len; i++){
             var product_node = this.render_product(this.product_list[i]);
             product_node.addEventListener('click',this.click_product_handler);
+            product_node.addEventListener('keypress',this.keypress_product_handler);
             list_container.appendChild(product_node);
         }
     },

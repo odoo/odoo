@@ -78,9 +78,26 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
+          <field name="partner_id" position="replace">
+            <field name="is_quantity_copy" invisible="1"/>
+            <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'readonly': ['|', ('is_quantity_copy', '=', 'none'), ('state', 'in', ['purchase', 'done', 'cancel'])]}" force_save="1"/>
+            </field>
             <field name="partner_ref" position="after">
                 <field name="requisition_id"
-                    domain="[('state', 'in', ('in_progress', 'open')), ('vendor_id', 'in', (partner_id, False))]"/>
+                    domain="[('state', 'in', ('in_progress', 'open', 'ongoing')), ('vendor_id', 'in', (partner_id, False))]"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="supplier_info_form_inherit">
+        <field name="name">product.supplierinfo.requisition.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+        <field name="arch" type="xml">
+            <field name="product_code" position="after">
+                <field name="purchase_requisition_id"
+                    attrs="{'invisible': [('purchase_requisition_id', '=', False)]}"
+                    />
             </field>
         </field>
     </record>
@@ -91,7 +108,7 @@
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='approved']" position="after">
-                <filter string="Requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
+                <filter string="Requisition" name="requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
@@ -126,13 +143,14 @@
                     attrs="{'invisible': [('state', '!=', 'open')]}"/>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation" class="btn-primary"
-                    attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                    attrs="{'invisible': [('state', 'not in', ('in_progress', 'ongoing'))]}"/>
                 <button name="action_in_progress" states="draft" string="Confirm" type="object" class="btn-primary"/>
                 <button name="action_open" states="in_progress" string="Validate" type="object" class="btn-primary"/>
-                <button name="action_done" states="open" string="Done" type="object" class="btn-primary"/>
+                <button name="action_done" states="open,ongoing" string="Close" type="object" class="btn-primary"/>
                 <button name="action_draft" states="cancel" string="Reset to Draft" type="object"/>
-                <button name="action_cancel" states="draft,in_progress" string="Cancel Call" type="object"/>
-                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done"/>
+                <button name="action_cancel" states="draft,in_progress,ongoing" string="Cancel" type="object"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" attrs="{'invisible': [('is_quantity_copy', '=', 'none')]}"/>
+                <field name="state_blanket_order" widget="statusbar" statusbar_visible="draft,ongoing,done" attrs="{'invisible': [('is_quantity_copy', '!=', 'none')]}"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -141,23 +159,24 @@
                         <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
                     </button>
                 </div>
-                <div class="pull-left">
+                <div class="float-left">
                     <label for="name" class="oe_edit_only oe_inline"/>
                     <h1>
-                        <field name="name" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="name"/>
                     </h1>
                 </div>
                 <group>
                     <group>
+                        <field name="is_quantity_copy" invisible='1'/>
                         <field name="user_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
-                        <field name="type_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}" widget="selection"/>
-                        <field name="vendor_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
-                        <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
+                        <field name="vendor_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'required': [('is_quantity_copy', '=', 'none')], 'readonly': [('state', 'in', ['ongoing','done'])]}"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
                     </group>
                     <group>
-                        <field name="date_end" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
-                        <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
-                        <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
+                        <field name="date_end" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
+                        <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
+                        <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
                         <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="picking_type_id" widget="selection" groups="stock.group_adv_location" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
@@ -170,9 +189,10 @@
                                 <field name="product_id"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                                 <field name="schedule_date" groups="base.group_no_one"/>
-                                <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/>
+                                <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="price_unit"/>
                             </tree>
                             <form string="Products">
@@ -182,7 +202,7 @@
                                     <field name="qty_ordered"/>
                                     <field name="product_uom_id" />
                                     <field name="schedule_date"/>
-                                    <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/>
+                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                             </form>
@@ -195,7 +215,7 @@
             <div class="oe_chatter">
               <field name="message_follower_ids" widget="mail_followers"/>
               <field name="message_ids" widget="mail_thread"/>
-            </div> 
+            </div>
             </form>
         </field>
     </record>
@@ -242,7 +262,7 @@
                                     <field name="vendor_id"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                 </div>
                             </div>
                         </div>
@@ -260,17 +280,18 @@
                     <field name="name" string="Purchase Agreements" filter_domain="['|', ('name','ilike',self), ('origin','ilike',self)]"/>
                     <field name="type_id"/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="New Agreements"/>
-                    <filter string="Confirmed" domain="[('state','in',('in_progress','open'))]" help="In negotiation"/>
-                    <filter string="Done" domain="[('state','=','done')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state','in',('in_progress','open'))]" help="In negotiation"/>
+                    <filter string="Done" name="done" domain="[('state','=','done')]"/>
                     <separator/>
-                    <filter string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <filter string="My Agreements" name="my_agreements" domain="[('user_id','=', uid)]"/>
                     <field name="user_id" />
                     <group expand="0" string="Group By">
-                        <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Source" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Ordering Date" domain="[]" context="{'group_by':'ordering_date'}"/>
-                        <filter string="End Month" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" name="source" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Ordering Date" name="ordering_date" domain="[]" context="{'group_by':'ordering_date'}"/>
+                        <filter string="End Date" name="end_month" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>
             </field>
@@ -283,11 +304,11 @@
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="context">{"search_default_user_id":uid}</field>
+        <field name="context">{}</field>
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to start a new purchase agreement.
+          <p class="o_view_nocontent_smiling_face">
+            Start a new purchase agreement
           </p><p>
             Example of purchase agreements include call for tenders and blanket orders.
           </p><p>
@@ -314,11 +335,22 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
         <field name="arch" type="xml">
-            <group name="vendors" position="after">
-                <group string="Reordering">
+            <group name="bill" position="before">
+                <group string="Reordering" attrs="{'invisible': [('type', '=', 'service')]}">
                     <field name="purchase_requisition" widget="radio"/>
                 </group>
             </group>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_supplierinfo_tree_view_inherit">
+        <field name="name">product.template.product.form.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='min_qty']" position="before">
+              <field name="purchase_requisition_id"/>
+          </xpath>
         </field>
     </record>
 

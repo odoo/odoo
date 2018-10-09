@@ -19,7 +19,6 @@ from . import assertion_report, pycompat
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
-from .yaml_import import convert_yaml_import
 from odoo import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
@@ -130,7 +129,7 @@ def _eval_xml(self, node, env):
                 # bytestring of n nuls. In Python 2 it obviously returns the
                 # stringified number, which is what we're expecting here
                 s = s.replace(found, pycompat.text_type(self.idref[id]))
-            s = s.replace('%%', '%') # Quite wierd but it's for (somewhat) backward compatibility sake
+            s = s.replace('%%', '%') # Quite weird but it's for (somewhat) backward compatibility sake
             return s
 
         if t == 'xml':
@@ -242,6 +241,11 @@ class xml_import(object):
             return self.id_get(node_uid)
         return self.uid
 
+    def make_xml_id(self, xml_id):
+        if not xml_id or '.' in xml_id:
+            return xml_id
+        return "%s.%s" % (self.module, xml_id)
+
     def _test_xml_id(self, xml_id):
         id = xml_id
         if '.' in xml_id:
@@ -317,17 +321,17 @@ form: module.record_id""" % (xml_id,)
             pf_id = self.id_get(pf_name)
             res['paperformat_id'] = pf_id
 
-        id = self.env['ir.model.data']._update("ir.actions.report", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
-        self.idref[xml_id] = int(id)
+        xid = self.make_xml_id(xml_id)
+        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        report = self.env['ir.actions.report']._load_records([data], self.mode == 'update')
+        self.idref[xml_id] = report.id
 
         if not rec.get('menu') or safe_eval(rec.get('menu','False')):
-            report = self.env['ir.actions.report'].browse(id)
             report.create_action()
         elif self.mode=='update' and safe_eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
-            report = self.env['ir.actions.report'].browse(id)
             report.unlink_action()
-        return id
+        return report.id
 
     def _tag_function(self, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
@@ -435,8 +439,10 @@ form: module.record_id""" % (xml_id,)
             if rec.get('key2') in (None, 'client_action_relate'):
                 if not res.get('multi'):
                     res['binding_type'] = 'action_form_only'
-        id = self.env['ir.model.data']._update('ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
-        self.idref[xml_id] = int(id)
+
+        xid = self.make_xml_id(xml_id)
+        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
     def _tag_menuitem(self, rec, data_node=None, mode=None):
         rec_id = rec.get("id")
@@ -462,16 +468,14 @@ form: module.record_id""" % (xml_id,)
             a_action = rec.get('action')
 
             # determine the type of action
-            action_type, action_id = self.model_id_get(a_action)
-            action_type = action_type.split('.')[-1] # keep only type part
+            action_model, action_id = self.model_id_get(a_action)
+            action_type = action_model.split('.')[-1] # keep only type part
             values['action'] = "ir.actions.%s,%d" % (action_type, action_id)
 
             if not values.get('name') and action_type in ('act_window', 'wizard', 'url', 'client', 'server'):
-                a_table = 'ir_act_%s' % action_type.replace('act_', '')
-                self.cr.execute('select name from "%s" where id=%%s' % a_table, (int(action_id),))
-                resw = self.cr.fetchone()
+                resw = self.env[action_model].sudo().browse(action_id).name
                 if resw:
-                    values['name'] = resw[0]
+                    values['name'] = resw
 
         if not values.get('name'):
             # ensure menu has a name
@@ -498,12 +502,9 @@ form: module.record_id""" % (xml_id,)
             if rec.get('web_icon'):
                 values['web_icon'] = rec.get('web_icon')
 
-        pid = self.env['ir.model.data']._update('ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
-
-        if rec_id and pid:
-            self.idref[rec_id] = int(pid)
-
-        return 'ir.ui.menu', pid
+        xid = self.make_xml_id(rec_id)
+        data = dict(xml_id=xid, values=values, noupdate=self.isnoupdate(data_node))
+        self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
 
     def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)
@@ -570,38 +571,31 @@ form: module.record_id""" % (xml_id,)
     def _tag_record(self, rec, data_node=None, mode=None):
         rec_model = rec.get("model")
         model = self.env[rec_model]
-        rec_id = rec.get("id",'')
+        rec_id = rec.get("id", '')
         rec_context = rec.get("context", {})
         if rec_context:
             rec_context = safe_eval(rec_context)
 
         if self.xml_filename and rec_id:
-            rec_context['install_mode_data'] = dict(
-                xml_file=self.xml_filename,
-                xml_id=rec_id,
-                model=rec_model,
-                module=self.module
-            )
+            rec_context['install_module'] = self.module
+            rec_context['install_filename'] = self.xml_filename
 
         self._test_xml_id(rec_id)
-        # in update mode, the record won't be updated if the data node explicitely
+        xid = self.make_xml_id(rec_id)
+
+        # in update mode, the record won't be updated if the data node explicitly
         # opt-out using @noupdate="1". A second check will be performed in
-        # ir.model.data#_update() using the record's ir.model.data `noupdate` field.
+        # model._load_records() using the record's ir.model.data `noupdate` field.
         if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has no id, skip
             if not rec_id:
                 return None
 
-            if '.' in rec_id:
-                module,rec_id2 = rec_id.split('.')
-            else:
-                module = self.module
-                rec_id2 = rec_id
-            id = self.env['ir.model.data']._update_dummy(rec_model, module, rec_id2)
-            if id:
+            record = self.env['ir.model.data']._load_xmlid(xid)
+            if record:
                 # if the resource already exists, don't update it but store
                 # its database id (can be useful)
-                self.idref[rec_id] = int(id)
+                self.idref[rec_id] = record.id
                 return None
             elif not self.nodeattr2bool(rec, 'forcecreate', True):
                 # if it doesn't exist and we shouldn't create it, skip it
@@ -621,7 +615,11 @@ form: module.record_id""" % (xml_id,)
             f_val = False
 
             if f_search:
-                q = safe_eval(f_search, self.idref)
+                context = self.get_context(data_node, rec, {'ref': self.id_get})
+                uid = self.get_uid(data_node, rec)
+                env = self.env(user=uid, context=context)
+                idref2 = _get_idref(self, env, f_model, self.idref)
+                q = safe_eval(f_search, idref2)
                 assert f_model, 'Define an attribute model="..." in your .XML file !'
                 # browse the objects searched
                 s = self.env[f_model].search(q)
@@ -651,12 +649,13 @@ form: module.record_id""" % (xml_id,)
                         f_val = str2bool(f_val)
             res[f_name] = f_val
 
-        id = self.env(context=rec_context)['ir.model.data']._update(rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode)
+        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        record = model.with_context(rec_context)._load_records([data], self.mode == 'update')
         if rec_id:
-            self.idref[rec_id] = int(id)
+            self.idref[rec_id] = record.id
         if config.get('import_partial'):
             self.cr.commit()
-        return rec_model, id
+        return rec_model, record.id
 
     def _tag_template(self, el, data_node=None, mode=None):
         # This helper transforms a <template> element into a <record> and forwards it
@@ -672,9 +671,14 @@ form: module.record_id""" % (xml_id,)
             el.tag = 'data'
         el.attrib.pop('id', None)
 
+        if self.module.startswith('theme_'):
+            model = 'theme.ir.ui.view'
+        else:
+            model = 'ir.ui.view'
+
         record_attrs = {
             'id': tpl_id,
-            'model': 'ir.ui.view',
+            'model': model,
         }
         for att in ['forcecreate', 'context']:
             if att in el.attrib:
@@ -743,7 +747,6 @@ form: module.record_id""" % (xml_id,)
                 try:
                     self._tags[rec.tag](rec, de, mode=mode)
                 except Exception as e:
-                    self.cr.rollback()
                     exc_info = sys.exc_info()
                     pycompat.reraise(
                         ParseError,
@@ -785,8 +788,6 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
             convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate)
         elif ext == '.sql':
             convert_sql_import(cr, fp)
-        elif ext == '.yml':
-            convert_yaml_import(cr, module, fp, kind, idref, mode, noupdate, report)
         elif ext == '.xml':
             convert_xml_import(cr, module, fp, idref, mode, noupdate, report)
         elif ext == '.js':

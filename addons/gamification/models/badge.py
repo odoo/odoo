@@ -12,7 +12,7 @@ class BadgeUser(models.Model):
     """User having received a badge"""
 
     _name = 'gamification.badge.user'
-    _description = 'Gamification user badge'
+    _description = 'Gamification User Badge'
     _order = "create_date desc"
     _rec_name = "badge_name"
 
@@ -21,9 +21,7 @@ class BadgeUser(models.Model):
     badge_id = fields.Many2one('gamification.badge', string='Badge', required=True, ondelete="cascade", index=True)
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge originating', help="If this badge was rewarded through a challenge")
     comment = fields.Text('Comment')
-    badge_name = fields.Char(related='badge_id.name', string="Badge Name")
-    create_date = fields.Datetime('Created', readonly=True)
-    create_uid = fields.Many2one('res.users', string='Creator', readonly=True)
+    badge_name = fields.Char(related='badge_id.name', string="Badge Name", readonly=False)
 
     def _send_badge(self):
         """Send a notification to a user for receiving a badge
@@ -62,7 +60,7 @@ class GamificationBadge(models.Model):
     TOO_MANY = 5
 
     _name = 'gamification.badge'
-    _description = 'Gamification badge'
+    _description = 'Gamification Badge'
     _inherit = ['mail.thread']
 
     name = fields.Char('Badge', required=True, translate=True)
@@ -157,18 +155,18 @@ class GamificationBadge(models.Model):
     @api.depends('owner_ids.badge_id', 'owner_ids.create_date', 'owner_ids.user_id')
     def _get_badge_user_stats(self):
         """Return stats related to badge users"""
-        first_month_day = fields.Date.to_string(date.today().replace(day=1))
+        first_month_day = date.today().replace(day=1)
 
         for badge in self:
             owners = badge.owner_ids
             badge.stat_my = sum(o.user_id == self.env.user for o in owners)
-            badge.stat_this_month = sum(o.create_date >= first_month_day for o in owners)
+            badge.stat_this_month = sum(o.create_date.date() >= first_month_day for o in owners)
             badge.stat_my_this_month = sum(
-                o.user_id == self.env.user and o.create_date >= first_month_day
+                o.user_id == self.env.user and o.create_date.date() >= first_month_day
                 for o in owners
             )
             badge.stat_my_monthly_sending = sum(
-                o.create_uid == self.env.user and o.create_date >= first_month_day
+                o.create_uid == self.env.user and o.create_date.date() >= first_month_day
                 for o in owners
             )
 

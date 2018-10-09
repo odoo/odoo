@@ -3,16 +3,17 @@
 # * account_tax_python
 # 
 # Translators:
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
+# Francesco <francesco.bianchi.88@gmail.com>, 2018
 # Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
-# Francesco <francesco.bianchi.88@gmail.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -22,13 +23,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
 msgstr "Codice Applicabile"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -39,9 +40,9 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
+"Calcola l'importo dell'imposta impostando la variabile \"result\".\n"
 "\n"
-":param base_amount: effettivo, importo attuale a cui si applica l'imposta\n"
+":param base_amount: effettivo, importo effettivo a cui si applica l'imposta\n"
 ":param price_unit: effettivo\n"
 ":param quantity: effettivo\n"
 ":param company: registrazione di res.company\n"
@@ -49,7 +50,7 @@ msgstr ""
 ":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -59,7 +60,7 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
+"Calcola l'importo dell'imposta impostando la variabile \"result\".\n"
 "\n"
 ":param base_amount: effettivo, importo attuale a cui si applica l'imposta\n"
 ":param price_unit: effettivo\n"
@@ -68,7 +69,7 @@ msgstr ""
 ":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
@@ -78,7 +79,7 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Determina se l'imposta sarà applicata impostando la variabile \"risultato\" su Vero o Falso.\n"
+"Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
 "\n"
 ":param price_unit: effettivo\n"
 ":param quantity: effettivo\n"
@@ -87,7 +88,7 @@ msgstr ""
 ":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
@@ -104,8 +105,34 @@ msgstr ""
 ":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Fixed"
+msgstr "Fisso"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Group of Taxes"
+msgstr "Gruppo di imposte"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Percentage of Price"
+msgstr "Percentuale del prezzo"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Percentage of Price Tax Included"
+msgstr "Percentuale del prezzo, tasse incluse"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 msgid "Python Code"
 msgstr "Codice Python"
 
@@ -113,6 +140,12 @@ msgstr "Codice Python"
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
 msgstr "Imposta"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
+msgid "Tax Computation"
+msgstr "Calcolo imposte"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template

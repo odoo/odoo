@@ -1,18 +1,20 @@
 odoo.define('account.ReconciliationClientAction', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var ReconciliationModel = require('account.ReconciliationModel');
 var ReconciliationRenderer = require('account.ReconciliationRenderer');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var Widget = require('web.Widget');
 var core = require('web.core');
+var _t = core._t;
 
 
 /**
  * Widget used as action for 'account.bank.statement' reconciliation
  */
-var StatementAction = Widget.extend(ControlPanelMixin, {
-    title: core._t('Bank reconciliation'),
+var StatementAction = AbstractAction.extend(ControlPanelMixin, {
+    title: core._t('Bank Reconciliation'),
     template: 'reconciliation',
     custom_events: {
         change_mode: '_onAction',
@@ -26,24 +28,22 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         create_proposition: '_onAction',
         quick_create_proposition: '_onAction',
         toggle_partial_reconcile: '_onAction',
-        auto_reconciliation: '_onValidate',
         validate: '_onValidate',
-        validate_all_balanced: '_onValidate',
         change_name: '_onChangeName',
         close_statement: '_onCloseStatement',
         load_more: '_onLoadMore',
     },
     config: {
-        // used to instanciate the model
+        // used to instantiate the model
         Model: ReconciliationModel.StatementModel,
-        // used to instanciate the action interface
+        // used to instantiate the action interface
         ActionRenderer: ReconciliationRenderer.StatementRenderer,
-        // used to instanciate each widget line
+        // used to instantiate each widget line
         LineRenderer: ReconciliationRenderer.LineRenderer,
         // used context params
         params: ['statement_ids'],
         // number of moves lines displayed in 'match' mode
-        limitMoveLines: 5,
+        limitMoveLines: 15,
     },
 
     /**
@@ -57,7 +57,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         this.action_manager = parent;
         this.params = params;
         this.model = new this.config.Model(this, {
-            modelName: "account.bank.statement.line",
+            modelName: "account.reconciliation.widget",
             limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
         });
         this.widgets = [];
@@ -106,12 +106,22 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         var self = this;
 
         this.set("title", this.title);
-        var breadcrumbs = this.action_manager && this.action_manager.get_breadcrumbs() || [{ title: this.title, action: this }];
-        this.update_control_panel({breadcrumbs: breadcrumbs, search_view_hidden: true}, {clear: true});
+        this.update_control_panel({search_view_hidden: true}, {clear: true});
 
         this.renderer.prependTo(self.$('.o_form_sheet'));
         this._renderLines();
-        this._openFirstLine();
+
+        // No more lines to reconcile, trigger the rainbowman.
+        var initialState = this.renderer._initialState;
+        if(initialState.valuenow === initialState.valuemax){
+            initialState.context = this.model.getContext();
+            this.renderer.showRainbowMan(initialState);
+        }else{
+            // Create a notification if some lines has been reconciled automatically.
+            if(initialState.valuenow > 0)
+                this.renderer._renderNotifications(this.model.statement.notifications);
+            this._openFirstLine();
+        }
     },
 
     /**
@@ -122,18 +132,11 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
     do_show: function () {
         this._super.apply(this, arguments);
         if (this.action_manager) {
-            var breadcrumbs = this.action_manager && this.action_manager.get_breadcrumbs() || [{ title: this.title, action: this }];
-            while (breadcrumbs.length) {
-                if (breadcrumbs[breadcrumbs.length-1].action.widget === this) {
-                    break;
-                }
-                breadcrumbs.pop();
-            }
-            this.update_control_panel({breadcrumbs: breadcrumbs, search_view_hidden: true}, {clear: true});
+            this.update_control_panel({search_view_hidden: true}, {clear: true});
             this.action_manager.do_push_state({
                 action: this.params.tag,
                 active_id: this.params.res_id,
-            });   
+            });
         }
     },
 
@@ -278,7 +281,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         return this._loadMore(this.model.defaultDisplayQty);
     },
     /**
-     * call 'validate' or 'autoReconciliation' model method then destroy the
+     * call 'validate' model method then destroy the
      * validated lines and update the action renderer with the new status bar 
      * values and notifications then open the first available line
      *
@@ -288,7 +291,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
     _onValidate: function (event) {
         var self = this;
         var handle = event.target.handle;
-        var method = event.name.indexOf('auto_reconciliation') === -1 ? 'validate' : 'autoReconciliation';
+        var method = 'validate';
         this.model[method](handle).then(function (result) {
             self.renderer.update({
                 'valuenow': self.model.valuenow,
@@ -326,7 +329,7 @@ var ManualAction = StatementAction.extend({
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
         LineRenderer: ReconciliationRenderer.ManualLineRenderer,
         params: ['company_ids', 'mode', 'partner_ids', 'account_ids'],
-        limitMoveLines: 10,
+        limitMoveLines: 15,
     },
 
     //--------------------------------------------------------------------------
@@ -334,7 +337,7 @@ var ManualAction = StatementAction.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * call 'validate' or 'autoReconciliation' model method then destroy the
+     * call 'validate' model method then destroy the
      * reconcilied lines, update the not reconcilied and update the action
      * renderer with the new status bar  values and notifications then open the
      * first available line
@@ -345,7 +348,7 @@ var ManualAction = StatementAction.extend({
     _onValidate: function (event) {
         var self = this;
         var handle = event.target.handle;
-        var method = event.name.indexOf('auto_reconciliation') === -1 ? 'validate' : 'autoReconciliation';
+        var method = 'validate';
         this.model[method](handle).then(function (result) {
             _.each(result.reconciled, function (handle) {
                 self._getWidget(handle).destroy();

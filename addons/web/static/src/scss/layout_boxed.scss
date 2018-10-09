@@ -1,0 +1,74 @@
+.o_boxed_footer, .o_boxed_header, .o_report_layout_boxed {
+    font-family: 'Lato';
+    color: gray('700');
+    font-size: 12px;
+}
+.o_boxed_header {
+    border-bottom: 1px solid gray('200');
+    img {
+        max-height: 100px;
+    }
+    h4 {
+        color: $o-we-color-text-normal;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+}
+.o_boxed_footer {
+    margin-top: 200px;
+    white-space: nowrap;
+    border-top: 3px solid gray('700');
+    ul {
+        margin: 4px 0;
+    }
+}
+.o_report_layout_boxed {
+    // This is not a general rule since the id is not used in all the reports,
+    // we should make a general structure for report body to use it everywhere
+    #informations {
+        border: 1px solid gray('700');
+        padding-top: 10px;
+        margin: 0;
+    }
+    > h2 {
+        text-transform: uppercase;
+    }
+    table {
+        border: 1px solid gray('700');
+        thead {
+            tr th {
+                border-bottom: 3px solid gray('700') !important;
+                text-transform: uppercase;
+            }
+        }
+        tbody {
+            color: gray('700');
+            tr {
+                td {
+                    border-top: none;
+                    border-right: 1px solid gray('700');
+                }
+                td:last-child {
+                    background-color: gray('200');
+                }
+            }
+        }
+    }
+    /*Total table*/
+    .row > .col-4 > table {
+        td {
+            border-right: none;
+        }
+        tr:last-child td, tr:first-child td {
+            /*we could get rid of this rule if .border-black td would be terminated in report.scss*/
+            border-top: none !important;
+        }
+        tr:first-child td {
+            background-color: transparent;
+        }
+        tr:last-child td {
+            background-color: gray('700');
+            color: #fff;
+        }
+    }
+}

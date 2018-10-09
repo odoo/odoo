@@ -3,48 +3,45 @@
 <template id="report_purchaseorder_document">
     <t t-call="web.external_layout">
         <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+        <t t-set="address">
+            <div t-field="o.partner_id"
+            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+            <p t-if="o.partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_id.vat"/></p>
+        </t>
+        <t t-if="o.dest_address_id">
+            <t t-set="information_block">
+                <strong>Shipping address:</strong>
+                <div t-if="o.dest_address_id">
+                    <div t-field="o.dest_address_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
+                </div>
+
+            </t>
+        </t>
         <div class="page">
             <div class="oe_structure"/>
-            <div class="row">
-                <div class="col-xs-6">
-                    <strong>Shipping address:</strong>
-                    <div t-if="o.dest_address_id">
-                        <div t-field="o.dest_address_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                    </div>
 
-                    <div t-if="not o.dest_address_id and o.picking_type_id and o.picking_type_id.warehouse_id">
-                        <span t-field="o.picking_type_id.warehouse_id.name"/>
-                        <div t-field="o.picking_type_id.warehouse_id.partner_id"
-                            t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
-                    </div>
-                </div>
-                <div class="col-xs-5 col-xs-offset-1">
-                    <div t-field="o.partner_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        <p t-if="o.partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></p>
-                </div>
-            </div>
-
-            <h2 t-if="o.state != 'draft'">Purchase Order Confirmation #<span t-field="o.name"/></h2>
             <h2 t-if="o.state == 'draft'">Request for Quotation #<span t-field="o.name"/></h2>
+            <h2 t-if="o.state in ['sent', 'to approve']">Purchase Order #<span t-field="o.name"/></h2>
+            <h2 t-if="o.state in ['purchase', 'done']">Purchase Order Confirmation #<span t-field="o.name"/></h2>
+            <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></h2>
 
             <div class="row mt32 mb32">
-                <div t-if="o.name" class="col-xs-3">
+                <div t-if="o.name" class="col-3">
                     <strong>Our Order Reference:</strong>
                     <p t-field="o.name"/>
                 </div>
-                <div t-if="o.partner_ref" class="col-xs-3">
+                <div t-if="o.partner_ref" class="col-3">
                     <strong>Your Order Reference:</strong>
                     <p t-field="o.partner_ref"/>
                 </div>
-                <div t-if="o.date_order" class="col-xs-3">
+                <div t-if="o.date_order" class="col-3">
                     <strong>Order Date:</strong>
                     <p t-field="o.date_order"/>
                 </div>
             </div>
 
-            <table class="table table-condensed">
+            <table class="table table-sm">
                 <thead>
                     <tr>
                         <th><strong>Description</strong></th>
@@ -68,7 +65,7 @@
                         </td>
                         <td class="text-right">
                             <span t-field="line.product_qty"/>
-                            <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                            <span t-field="line.product_uom.name" groups="uom.group_uom"/>
                         </td>
                         <td class="text-right">
                             <span t-field="line.price_unit"/>
@@ -81,9 +78,9 @@
                 </tbody>
             </table>
 
-            <div class="row">
-                <div class="col-xs-4 pull-right">
-                    <table class="table table-condensed">
+            <div class="row justify-content-end">
+                <div class="col-4">
+                    <table class="table table-sm">
                         <tr class="border-black">
                             <td><strong>Subtotal</strong></td>
                             <td class="text-right">

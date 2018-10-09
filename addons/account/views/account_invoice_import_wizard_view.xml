@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_invoice_import_wizard_form_view" model="ir.ui.view">
+            <field name="name">account.invoice.import.wizard.form</field>
+            <field name="model">account.invoice.import.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="journal_id" context="{'default_type': 'purchase'}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="attachment_ids" widget="many2many_binary" colspan="2"
+                               string="Upload Files" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button string="Import" name="create_invoices" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_invoice_import_wizard_action" model="ir.actions.act_window">
+            <field name="name">Import Vendor Bills</field>
+            <field name="res_model">account.invoice.import.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'type': 'in_invoice', 'default_journal_id': active_id}</field>
+        </record>
+    </data>
+</odoo>

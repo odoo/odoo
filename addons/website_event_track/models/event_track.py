@@ -8,12 +8,12 @@ from odoo.addons.http_routing.models.ir_http import slug
 
 class TrackTag(models.Model):
     _name = "event.track.tag"
-    _description = 'Track Tag'
+    _description = 'Event Track Tag'
     _order = 'name'
 
     name = fields.Char('Tag')
     track_ids = fields.Many2many('event.track', string='Tracks')
-    color = fields.Integer(string='Color Index', default=10)
+    color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -22,14 +22,14 @@ class TrackTag(models.Model):
 
 class TrackLocation(models.Model):
     _name = "event.track.location"
-    _description = 'Track Location'
+    _description = 'Event Track Location'
 
     name = fields.Char('Room')
 
 
 class TrackStage(models.Model):
     _name = 'event.track.stage'
-    _description = 'Track Stage'
+    _description = 'Event Track Stage'
     _order = 'sequence, id'
 
     name = fields.Char(string='Stage Name', required=True, translate=True)
@@ -65,7 +65,7 @@ class Track(models.Model):
     partner_biography = fields.Html('Speaker Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
-        'event.track.stage', string='Stage',
+        'event.track.stage', string='Stage', ondelete='restrict',
         index=True, copy=False, default=_get_default_stage_id,
         group_expand='_read_group_stage_ids',
         required=True, track_visibility='onchange')
@@ -88,7 +88,7 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', related='partner_id.image_medium', store=True, attachment=True)
+    image = fields.Binary('Image', related='partner_id.image_medium', store=True, attachment=True, readonly=False)
 
     @api.multi
     @api.depends('name')
@@ -139,7 +139,12 @@ class Track(models.Model):
         track = self[0]
         changes, tracking_value_ids = tracking[track.id]
         if 'stage_id' in changes and track.stage_id.mail_template_id:
-            res['stage_id'] = (track.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
+            res['stage_id'] = (track.stage_id.mail_template_id, {
+                'composition_mode': 'comment',
+                'auto_delete_message': True,
+                'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+                'notif_layout': 'mail.mail_notification_light'
+            })
         return res
 
     @api.multi
@@ -159,7 +164,7 @@ class Track(models.Model):
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 
-    def _message_post_after_hook(self, message):
+    def _message_post_after_hook(self, message, *args, **kwargs):
         if self.partner_email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -171,7 +176,7 @@ class Track(models.Model):
                     ('partner_email', '=', new_partner.email),
                     ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner.id})
-        return super(Track, self)._message_post_after_hook(message)
+        return super(Track, self)._message_post_after_hook(message, *args, **kwargs)
 
     @api.multi
     def open_track_speakers_list(self):
@@ -204,5 +209,5 @@ class Sponsor(models.Model):
     sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Type', required=True)
     partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
     url = fields.Char('Sponsor Website')
-    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence')
-    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, attachment=True)
+    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence', readonly=False)
+    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, attachment=True, readonly=False)

@@ -3,19 +3,14 @@
 # * hr_recruitment_survey
 # 
 # Translators:
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Martin Trigaux, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Thomas Neu <t.neu@runbox.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Katharina Moritz <kmo@e2f.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,22 +59,18 @@ msgid "71+"
 msgstr "71+"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid ""
 "<span class=\"o_stat_text\">Print</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
-msgstr ""
-"<span class=\"o_stat_text\">Vorstellungsgespräch</span>\n"
-" <span class=\"o_stat_text\">drucken</span>"
+msgstr "<span class=\"o_stat_text\"/><span class=\"o_stat_text\"/>"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid ""
 "<span class=\"o_stat_text\">Start</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
-msgstr ""
-"<span class=\"o_stat_text\">Vorstellungsgespräch</span>\n"
-" beginnen<span class=\"o_stat_text\"/>"
+msgstr "<span class=\"o_stat_text\"/><span class=\"o_stat_text\"/>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_2_4
@@ -87,7 +78,7 @@ msgid "Activities"
 msgstr "Aktivitäten"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid "Answer related job question"
 msgstr "Beantworte das Bewerberinterview"
 
@@ -102,8 +93,8 @@ msgid "Basic information"
 msgstr "Allgemeine Informationen"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant_survey_id
-#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job_survey_id
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
+#: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid ""
 "Choose an interview form for this job position and you will be able to "
 "print/answer this interview from all applicants who apply for this job"
@@ -117,8 +108,8 @@ msgid "Desk space"
 msgstr "Bürogröße"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
 msgstr "Bewerberinterview drucken"
 
@@ -200,20 +191,20 @@ msgid "Important"
 msgstr "Wichtig"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job_survey_id
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interview Form"
 msgstr "Interview Formular"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Forms"
-msgstr "Vorstellungsgesprächsformulare"
+msgstr "Vorstellungsgesprächsarten"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
 msgid "Job Position"
-msgstr "Position"
+msgstr "Beruf"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_2_1
@@ -231,7 +222,7 @@ msgid "Most important"
 msgstr "Extrem Wichtig"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "No Interview Form"
 msgstr "Kein Bewerberformular"
 
@@ -261,7 +252,7 @@ msgid "Perks such as free parking, gym passes"
 msgstr "Zusatzvergünstigungen (Parkplatz, Fitness)"
 
 #. module: hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_form_view_job_inherit
 msgid "Print interview report"
 msgstr "Drucke Interview"
 
@@ -281,7 +272,7 @@ msgid "Regular meetings"
 msgstr "Regelmässige Beurteilungen"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant_response_id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_id
 msgid "Response"
 msgstr "Rückmeldung"
 
@@ -296,7 +287,7 @@ msgid "State of the art technology"
 msgstr "Moderne Technologie"
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant_survey_id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "Umfrage"
 
@@ -313,7 +304,7 @@ msgid "The answer you entered has an invalid format."
 msgstr "Ihre Antwort hat ein ungültiges Format."
 
 #. module: hr_recruitment_survey
-#: model:survey.survey,description:hr_recruitment_survey.recruitment_form
+#: model_terms:survey.survey,description:hr_recruitment_survey.recruitment_form
 msgid ""
 "This form is intended to help the responsible of a recruitment interview."
 msgstr ""

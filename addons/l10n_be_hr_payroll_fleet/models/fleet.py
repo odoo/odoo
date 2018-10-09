@@ -5,14 +5,14 @@ import babel.dates
 
 from odoo import api, fields, models
 
-from odoo.fields import Datetime
+from odoo.fields import Datetime, Date
 
 
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
-    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee")
-    total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost',
+    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee", store=True)
+    total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost', store=True,
         string="Total Cost (Depreciated)", track_visibility="onchange",
         help="This includes all the depreciated costs and the CO2 fee")
     total_cost = fields.Float(compute='_compute_total_cost', string="Total Cost", help="This include all the costs and the CO2 fee")
@@ -66,20 +66,32 @@ class FleetVehicle(models.Model):
             acquisition_date = vehicle._get_acquisition_date()
             vehicle.name += u" \u2022 " + str(round(vehicle.total_depreciated_cost, 2)) + u" \u2022 " + acquisition_date
 
+    @api.model
+    def create(self, vals):
+        res = super(FleetVehicle, self).create(vals)
+        if not res.log_contracts:
+            self.env['fleet.vehicle.log.contract'].create({
+                'vehicle_id': res.id,
+                'recurring_cost_amount_depreciated': res.model_id.default_recurring_cost_amount_depreciated,
+                'purchaser_id': res.driver_id.id,
+            })
+        return res
+
     def _get_acquisition_date(self):
         self.ensure_one()
         return babel.dates.format_date(
-            date=Datetime.from_string(self.acquisition_date),
+            date=self.acquisition_date,
             format='MMMM y',
             locale=self._context.get('lang') or 'en_US'
         )
 
     def _get_car_atn(self, acquisition_date, car_value, fuel_type, co2):
         # Compute the correction coefficient from the age of the car
-        now = Datetime.from_string(Datetime.now())
-        start = Datetime.from_string(acquisition_date)
-        if start:
-            number_of_month = (now.year - start.year) * 12.0 + now.month - start.month + int(bool(now.day - start.day + 1))
+        now = Date.today()
+        if acquisition_date:
+            number_of_month = ((now.year - acquisition_date.year) * 12.0 + now.month -
+                               acquisition_date.month +
+                               int(bool(now.day - acquisition_date.day + 1)))
             if number_of_month <= 12:
                 age_coefficient = 1.00
             elif number_of_month <= 24:
@@ -109,11 +121,18 @@ class FleetVehicle(models.Model):
                     atn = car_value * min(0.18, (0.055 + 0.001 * (co2 - reference))) * magic_coeff
             return max(1280, atn) / 12.0
 
+    @api.onchange('model_id')
+    def _onchange_model_id(self):
+        self.car_value = self.model_id.default_car_value
+        self.co2 = self.model_id.default_co2
+        self.fuel_type = self.model_id.default_fuel_type
+
 
 class FleetVehicleLogContract(models.Model):
     _inherit = 'fleet.vehicle.log.contract'
 
-    recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)")
+    recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)", track_visibility="onchange")
+
 
 class FleetVehicleModel(models.Model):
     _inherit = 'fleet.vehicle.model'

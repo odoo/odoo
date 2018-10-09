@@ -30,6 +30,7 @@ var KanbanColumnProgressBar = Widget.extend({
         this.fieldName = columnState.progressBarValues.field;
         this.colors = columnState.progressBarValues.colors;
         this.sumField = columnState.progressBarValues.sum_field;
+        this.progressBarHelp = columnState.progressBarValues.help;
 
         // Previous progressBar state
         var state = options.progressBarStates[this.columnID];
@@ -130,6 +131,13 @@ var KanbanColumnProgressBar = Widget.extend({
                 }
             },
         });
+        if (this.progressBarHelp && _.every(this.subgroupCounts, function (val) { return val === 0; })) {
+            this.$el.tooltip({
+                delay: 0,
+                trigger: 'hover',
+                title: this.progressBarHelp,
+            });
+        }
 
         // Display and animate the progress bars
         var barNumber = 0;
@@ -145,9 +153,8 @@ var KanbanColumnProgressBar = Widget.extend({
             // Adapt tooltip
             $bar.attr('data-original-title', count + ' ' + key);
             $bar.tooltip({
-                delay: '0',
-                trigger:'hover',
-                placement: 'top'
+                delay: 0,
+                trigger: 'hover',
             });
 
             // Adapt active state
@@ -164,6 +171,9 @@ var KanbanColumnProgressBar = Widget.extend({
                 self.$('.progress-bar.o_bar_has_records').css('max-width', maxWidth + '%');
                 $bar.css('width', (count * 100 / self.groupCount) + '%');
                 barNumber++;
+                $bar.attr('aria-valuemin', 0);
+                $bar.attr('aria-valuemax', self.groupCount);
+                $bar.attr('aria-valuenow', count);
             } else {
                 $bar.css('width', '');
             }
@@ -173,9 +183,24 @@ var KanbanColumnProgressBar = Widget.extend({
         // Display and animate the counter number
         var start = this.prevTotalCounterValue;
         var end = this.totalCounterValue;
+
+        if (this.activeFilter) {
+            if (this.sumField) {
+                end = 0;
+                _.each(self.columnState.data, function (record) {
+                    var recordData = record.data;
+                    if (self.activeFilter === recordData[self.fieldName]) {
+                        end += parseFloat(recordData[self.sumField]);
+                    }
+                });
+            } else {
+                end = this.subgroupCounts[this.activeFilter];
+            }
+        }
+        this.prevTotalCounterValue = end;
         var animationClass = start > 999 ? 'o_kanban_grow' : 'o_kanban_grow_huge';
 
-        if (start !== undefined && end > start && this.ANIMATE) {
+        if (start !== undefined && (end > start || this.activeFilter) && this.ANIMATE) {
             $({currentValue: start}).animate({currentValue: end}, {
                 duration: 1000,
                 start: function () {

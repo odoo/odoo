@@ -1,0 +1,223 @@
+@mixin o-search-options-dropdown-custom-item {
+    width: auto;
+    max-width: 250px;
+}
+
+.o_searchview {
+    align-items: flex-end;
+    position: relative;
+    padding: 0 20px 1px 0;
+
+    .o_searchview_more {
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .o_searchview_input_container {
+        display: flex;
+        flex-flow: row wrap;
+
+        .o_searchview_facet {
+            $o-searchview-facet-remove-width: 18px;
+            flex: 0 0 auto;
+            max-width: 100%;
+            display: flex;
+            position: relative;
+            margin: 1px 3px 0 0;
+
+            .o_searchview_facet_label {
+                flex: 0 0 auto;
+                @include o-text-overflow;
+                padding: 0 3px;
+                color: white;
+
+                display: flex;
+                align-items: center;
+            }
+
+            .o_facet_values {
+                direction: ltr#{"/*rtl:ignore*/"};
+                padding: 0 $o-searchview-facet-remove-width 0 5px;
+                .o_facet_values_sep {
+                    font-style: italic;
+                }
+            }
+            .o_facet_remove {
+                flex: 0 0 auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                @include o-position-absolute(0, 0, 0);
+                width: $o-searchview-facet-remove-width;
+                cursor: pointer;
+            }
+        }
+        .o_searchview_input {
+            width: 100px;
+            flex: 1 0 auto;
+        }
+
+        .o_searchview_more {
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .o_searchview_autocomplete {
+            @include o-position-absolute(100%, $left: auto);
+            width: 100%;
+
+            li {
+                padding-left: 25px;
+                position: relative;
+                &.o-indent {
+                    padding-left: 50px;
+                }
+                a {
+                    display: inline-block;
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    &:hover {
+                        background-color: inherit;
+                    }
+                    &.o-expand, &.o-expanded { // caret
+                        @include o-position-absolute($left: 6px);
+                        padding: 3px;
+                    }
+                    &.o-expand:before {
+                        @include o-caret-right;
+                    }
+                    &.o-expanded:before {
+                        @include o-caret-down;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Searchview and Sidebar dropdowns
+// FIXME: move me out of here
+.o_dropdown {
+    white-space: nowrap;  // prevent the arrow from going under the dropdown when too little space
+    .dropdown-toggle:first-child {
+        // apply the padding to the first element so that when the `favorites` menu goes under
+        // the `filters` menu, they're still aligned
+        padding-right: 10px;
+    }
+
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;  // Prevent text selection when toggling the dropdowns
+    > a { // dropdown togglers
+        color: $o-main-text-color;
+        &:hover {
+            text-decoration: none;
+            font-weight: bold;
+            color: darken($o-main-text-color, 10%);
+        }
+    }
+    &.show > a {
+        font-weight: bold;
+        color: darken($o-main-text-color, 10%);
+    }
+}
+
+
+
+// Open and closed carets in dropdowns
+.o_closed_menu {
+    position: relative;
+    &:before {
+        @include o-caret-right;
+        @include o-position-absolute($top: 50%, $left: 10px);
+        margin-top: (-$caret-width);
+    }
+}
+.o_open_menu {
+    position: relative;
+    &:before {
+        @include o-caret-down;
+        @include o-position-absolute($top: 50%, $left: 10px);
+        margin-top: (-$caret-width);
+    }
+}
+
+.o_filters_menu, .o_group_by_menu, .o_time_range_menu {
+    max-height: calc(100vh - 125px);
+    overflow: auto;
+}
+
+.o_filters_menu, .o_group_by_menu {
+    .o_submenu_switcher {
+        @include o-position-absolute($right: $dropdown-item-padding-x * 0.5);
+    }
+}
+
+// Filters
+.o_filters_menu {
+    .o_filter_condition {
+        @include o-search-options-dropdown-custom-item;
+        margin-bottom: 8px;
+        .o_or_filter { // or between conditions
+            display: none;  // hidden for the first condition
+            @include o-position-absolute($top: 7px, $left: -18px);
+        }
+    }
+    .o_filter_condition + .o_filter_condition {
+        .o_or_filter {
+            display: block; // displayed from second condition
+        }
+    }
+    .o_searchview_extended_prop_op {
+        margin: 3px 0px; // vertical gap between selects
+    }
+    .o_searchview_extended_prop_value { // date fields: datepicker position
+        .datepickerbutton {
+            @include o-position-absolute(3px, -20px);
+            cursor: pointer;
+        }
+    }
+    .o_searchview_extended_delete_prop { // delete condition button position
+        @include o-position-absolute(3px, -18px);
+        cursor: pointer;
+    }
+    .o_add_filter_menu { // apply and add buttons
+        display: none;  // Needed by the webclient
+        @include o-search-options-dropdown-custom-item;
+    }
+}
+
+// Favorites
+.o_favorites_menu {
+    max-height: 75vh;
+    overflow-y: auto;
+
+    max-height: calc(100vh - 125px);
+    overflow: auto;
+
+    .dropdown-divider {display: none;} // hide the divider by default (no favorite)
+    .o-searchview-custom-private, .o-searchview-custom-public {
+        .o-remove-filter {
+            @include o-position-absolute(50%, 12px);
+            margin-top: -6px;
+            cursor: pointer;
+        }
+    }
+    .o-searchview-custom-public a:after {
+        font-family: FontAwesome;
+        content: "\f0c0";
+        margin-left: 5px;
+        font-weight: normal;
+    }
+    .o_save_name { // save button
+        display: none; // hidden by default
+        @include o-search-options-dropdown-custom-item;
+    }
+}
+
+// Time Ranges
+.o_time_range_menu {
+    .dropdown-item-text > label,  .custom-control-label {
+        font-weight: bold;
+    }
+}

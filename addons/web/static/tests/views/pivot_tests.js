@@ -5,6 +5,9 @@ var core = require('web.core');
 var PivotView = require('web.PivotView');
 var testUtils = require('web.test_utils');
 
+var createActionManager = testUtils.createActionManager;
+var patchDate = testUtils.patchDate;
+
 var _t = core._t;
 var createView = testUtils.createView;
 
@@ -15,10 +18,12 @@ QUnit.module('Views', {
                 fields: {
                     foo: {string: "Foo", type: "integer"},
                     bar: {string: "bar", type: "boolean"},
-                    date: {string: "Date", type: "date", store: true},
+                    date: {string: "Date", type: "date", store: true, sortable: true},
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
+                    other_product_id: {string: "Other Product", type: "many2one", relation: 'product', store: true},
                     non_stored_m2o: {string: "Non Stored M2O", type: "many2one", relation: 'product'},
                     customer: {string: "Customer", type: "many2one", relation: 'customer', store: true},
+                    computed_field: {string: "Computed and not stored", compute:true},
                 },
                 records: [
                     {
@@ -28,6 +33,7 @@ QUnit.module('Views', {
                         date: '2016-12-14',
                         product_id: 37,
                         customer: 1,
+                        computed_field: 19,
                     }, {
                         id: 2,
                         foo: 1,
@@ -35,6 +41,7 @@ QUnit.module('Views', {
                         date: '2016-10-26',
                         product_id: 41,
                         customer: 2,
+                        computed_field: 23,
                     }, {
                         id: 3,
                         foo: 17,
@@ -42,12 +49,14 @@ QUnit.module('Views', {
                         date: '2016-12-15',
                         product_id: 41,
                         customer: 2,
+                        computed_field: 26,
                     }, {id: 4,
                         foo: 2,
                         bar: false,
                         date: '2016-04-11',
                         product_id: 41,
                         customer: 1,
+                        computed_field: 19,
                     },
                 ]
             },
@@ -138,6 +147,22 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot view add computed fields explicitly defined as measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="computed_field" type="measure"/>' +
+                '</pivot>',
+        });
+
+        assert.ok(pivot.measures.computed_field, "measures contains the field 'computed_field'");
+        pivot.destroy();
+    });
+
     QUnit.test('clicking on a cell triggers a do_action', function (assert) {
         assert.expect(2);
 
@@ -169,7 +194,12 @@ QUnit.module('Views', {
             },
             viewOptions: {
                 action: {
-                    views: [[2, 'form'], [5, 'kanban'], [false, 'list'], [false, 'pivot']],
+                    views: [
+                        { viewID: 2, type: 'form' },
+                        { viewID: 5, type: 'kanban' },
+                        { viewID: false, type: 'list' },
+                        { viewID: false, type: 'pivot' },
+                    ],
                 },
                 context: {someKey: true, search_default_test: 3},
                 title: 'Partners',
@@ -249,7 +279,7 @@ QUnit.module('Views', {
             }
         });
 
-        var $countMeasure = pivot.$buttons.find('li[data-field=__count]');
+        var $countMeasure = pivot.$buttons.find('.dropdown-item[data-field=__count]:first');
         assert.ok($countMeasure.hasClass('selected'), "The count measure should be activated");
         pivot.destroy();
     });
@@ -334,14 +364,15 @@ QUnit.module('Views', {
         // click on closed header to open dropdown
         pivot.$('tbody .o_pivot_header_cell_closed').click();
 
-        assert.strictEqual(pivot.$('ul.o_pivot_field_menu > li[data-field="date"]').length, 1,
+        assert.strictEqual(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:first').length, 1,
             "should have the date field as proposition");
-        assert.strictEqual(pivot.$('.o_field_selection li[data-field="product_id"]').length, 1,
+        assert.strictEqual(pivot.$('.o_field_selection .dropdown-item[data-field="product_id"]:first').length, 1,
             "should have the product_id field as proposition");
-        assert.strictEqual(pivot.$('.o_field_selection li[data-field="non_stored_m2o"]').length, 0,
+        assert.strictEqual(pivot.$('.o_field_selection .dropdown-item[data-field="non_stored_m2o"]:first').length, 0,
             "should not have the non_stored_m2o field as proposition");
 
-        pivot.$('ul.o_pivot_field_menu > li[data-field="date"] a').click();
+
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:first').click();
 
         assert.strictEqual(pivot.$('tbody tr').length, 4,
             "should have 4 rows: one for header, 3 for data");
@@ -366,7 +397,7 @@ QUnit.module('Views', {
         // open dropdown to zoom into first row
         pivot.$('tbody .o_pivot_header_cell_closed').first().click();
         // click on date by day
-        pivot.$('ul.o_pivot_field_menu > li[data-field="date"] a[data-interval="day"]').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"][data-interval="day"]').click();
 
         // open dropdown to zoom into second row
         pivot.$('tbody td.o_pivot_header_cell_closed:eq(1)').first().click();
@@ -427,22 +458,22 @@ QUnit.module('Views', {
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 3,
             "should have 3 cells: 1 for the open header, and 2 for data");
-        assert.ok(!pivot.$buttons.find('li[data-field=__count]').hasClass('selected'),
+        assert.ok(!pivot.$buttons.find('.dropdown-item[data-field=__count]:first').hasClass('selected'),
             "the __count measure should not be selected");
 
         rpcCount = 0;
-        pivot.$buttons.find('li[data-field=__count] a').click();
+        pivot.$buttons.find('.dropdown-item[data-field=__count]:first').click();
 
-        assert.ok(pivot.$buttons.find('li[data-field=__count]').hasClass('selected'),
+        assert.ok(pivot.$buttons.find('.dropdown-item[data-field=__count]:first').hasClass('selected'),
             "the __count measure should be selected");
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 6,
             "should have 6 cells: 2 for the open header, and 4 for data");
         assert.strictEqual(rpcCount, 2,
             "should have done 2 rpcs to reload data");
 
-        pivot.$buttons.find('li[data-field=__count] a').click();
+        pivot.$buttons.find('.dropdown-item[data-field=__count]:first').click();
 
-        assert.ok(!pivot.$buttons.find('li[data-field=__count]').hasClass('selected'),
+        assert.ok(!pivot.$buttons.find('.dropdown-item[data-field=__count]:first').hasClass('selected'),
             "the __count measure should not be selected");
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 3,
             "should have 3 cells: 1 for the open header, and 2 for data");
@@ -462,14 +493,14 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
-        pivot.$buttons.find('li[data-field=__count] a').click();
+        pivot.$buttons.find('.dropdown-item[data-field=__count]:first').click();
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
@@ -487,14 +518,14 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
         pivot.update({domain: [['foo', '=', 12345]]});
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
@@ -513,7 +544,7 @@ QUnit.module('Views', {
             arch: '<pivot string="Partners"></pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         pivot.destroy();
     });
@@ -531,19 +562,19 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         pivot.update({domain: [['foo', '=', 12345]]});
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should still have a no_content_helper");
         pivot.update({domain: []});
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
 
         // tries to open a field selection menu, to make sure it was not
         // removed from the dom.
         pivot.$('.o_pivot_header_cell_closed').first().click();
-        assert.strictEqual(pivot.$('ul.o_pivot_field_menu').length, 1,
+        assert.strictEqual(pivot.$('.o_pivot_field_menu').length, 1,
             "the field selector menu exists");
         pivot.destroy();
     });
@@ -806,7 +837,7 @@ QUnit.module('Views', {
 
         // expand header on field customer
         pivot.$('thead .o_pivot_header_cell_closed:nth(1)').click();
-        pivot.$('ul.o_pivot_field_menu > li[data-field="customer"] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]:first').click();
         assert.deepEqual(pivot.getContext(), {
             pivot_column_groupby: ['date:day', 'customer'],
             pivot_measures: ['foo'],
@@ -815,7 +846,7 @@ QUnit.module('Views', {
 
         // expand row on field product_id
         pivot.$('tbody .o_pivot_header_cell_closed').first().click();
-        pivot.$('ul.o_pivot_field_menu > li[data-field="product_id"] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first').click();
         assert.deepEqual(pivot.getContext(), {
             pivot_column_groupby: ['date:day', 'customer'],
             pivot_measures: ['foo'],
@@ -972,9 +1003,126 @@ QUnit.module('Views', {
             },
         });
 
-        var $countMeasure = pivot.$buttons.find('li[data-field=__count]');
+        var $countMeasure = pivot.$buttons.find('.dropdown-item[data-field=__count]:first');
         assert.ok($countMeasure.hasClass('selected'), "The count measure should be activated");
 
+        pivot.destroy();
+    });
+
+    QUnit.test('not use a many2one as a measure by default', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+        });
+        assert.notOk(pivot.measures.product_id,
+            "should not have product_id as measure");
+        pivot.destroy();
+    });
+
+    QUnit.test('use a many2one as a measure with specified additional measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        assert.ok(pivot.measures.product_id,
+            "should have product_id as measure");
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with many2one field as a measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('table tbody tr').text().trim(), "Total2112",
+            "should display product_id count as measure");
+        pivot.destroy();
+    });
+
+    QUnit.test('m2o as measure, drilling down into data', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</pivot>',
+        });
+        pivot.$('tbody .o_pivot_header_cell_closed').first().click();
+        // click on date by month
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"][data-interval="month"]').click();
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '2211',
+            'should have loaded the proper data');
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with same many2one field as a measure and grouped by', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="row"/>' +
+                '</pivot>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+
+        pivot.$buttons.find('.dropdown-item[data-field=product_id]:first').click();
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '421131',
+            'should have loaded the proper data');
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with same many2one field as a measure and grouped by (and drill down)', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</pivot>',
+        });
+
+        pivot.$('tbody .o_pivot_header_cell_closed').first().click();
+
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first').click();
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '211',
+            'should have loaded the proper data');
         pivot.destroy();
     });
 
@@ -992,11 +1140,11 @@ QUnit.module('Views', {
 
         // Set a column groupby
         pivot.$('thead .o_pivot_header_cell_closed').click();
-        pivot.$('.o_field_selection li[data-field=customer] a').click();
+        pivot.$('.o_field_selection .dropdown-item[data-field=customer]:first').click();
 
         // Set a Row groupby
         pivot.$('tbody .o_pivot_header_cell_closed').click();
-        pivot.$('.o_pivot_field_menu li[data-field=product_id] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]:first').click();
 
         // Set a domain
         pivot.update({domain: [['product_id', '=', 41]]});
@@ -1051,4 +1199,321 @@ QUnit.module('Views', {
             "should have 6 rows");
         pivot.destroy();
     });
-});});
+
+    QUnit.test('pivot measures should be alphabetically sorted', function (assert) {
+        assert.expect(2);
+
+        var data = this.data;
+        // It's important to compare capitalized and lowercased words
+        // to be sure the sorting is effective with both of them
+        data.partner.fields.bouh = {string: "bouh", type: "integer"};
+        data.partner.fields.modd = {string: "modd", type: "integer"};
+        data.partner.fields.zip = {string: "Zip", type: "integer"};
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: data,
+            arch: '<pivot>' +
+                        '<field name="zip" type="measure"/>' +
+                        '<field name="foo" type="measure"/>' +
+                        '<field name="bouh" type="measure"/>' +
+                        '<field name="modd" type="measure"/>' +
+                  '</pivot>',
+        });
+        assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:first').data('field'), 'bouh',
+            "Bouh should be the first measure");
+        assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:last').data('field'), '__count',
+            "Count should be the last measure");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view should use default order for auto sorting', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot default_order="foo asc">' +
+                        '<field name="foo" type="measure"/>' +
+                  '</pivot>',
+        });
+
+        assert.ok(pivot.$('thead tr:last th:last').hasClass('o_pivot_measure_row_sorted_asc'),
+                        "Last thead should be sorted in ascending order");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('rendering of pivot view with comparison', function (assert) {
+        assert.expect(91);
+
+        this.data.partner.records[0].date = '2016-12-15';
+        this.data.partner.records[1].date = '2016-12-17';
+        this.data.partner.records[2].date = '2016-11-22';
+        this.data.partner.records[3].date = '2016-11-03';
+
+        this.data.partner.fields.company_type = {string: "Company Type", type: "selection", selection: [["company", "Company"], ["individual", "Individual"]], searchable: true, store: true, sortable: true};
+
+        this.data.partner.records[0].company_type = 'company';
+        this.data.partner.records[1].company_type = 'individual';
+        this.data.partner.records[2].company_type = 'company';
+        this.data.partner.records[3].company_type = 'individual';
+
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+        var results, i, length;
+
+
+        function checkCellValues (results) {
+            length = results.length;
+            for (i = 0; i < length; i++) {
+                assert.strictEqual($('.o_pivot .o_pivot_cell_value div').eq(i).text().trim(), results.shift());
+            }
+        }
+
+        // create an action manager to test the interactions with the search view
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                  '</pivot>',
+                'partner,false,search': '<search></search>',
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            flags: {
+                pivot: {
+                    additionalMeasures: ['product_id'],
+                }
+            }
+        });
+
+
+        // with no data
+
+        $('.o_time_range_menu_button').click();
+        $('.o_time_range_menu .o_comparison_checkbox').click();
+        $('.o_time_range_selector').val('today');
+        $('.o_time_range_menu .o_apply_range').click();
+
+        assert.strictEqual($('.o_pivot p.o_view_nocontent_empty_folder').length, 1);
+
+        // with data, no row groupby
+        $('.o_time_range_menu_button').click();
+        $('.o_time_range_selector').val('this_month');
+        $('.o_time_range_menu .o_apply_range').click();
+        results = [
+            "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%"
+        ];
+        checkCellValues(results);
+
+        // with data, with row groupby
+
+        $('.o_pivot .o_pivot_header_cell_closed').eq(2).click();
+        $('.o_pivot .o_field_selection a[data-field="product_id"]').click();
+        results = [
+            "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%" ,
+            "12", "0", "100%",                     "12", "0" , "100%"    ,
+            "1" , "0", "100%", "0", "19", "-100%", "1" , "19" , "-94.74%"
+        ];
+        checkCellValues(results);
+
+        $('.o_control_panel button.btn-primary').eq(0).click();
+        $('.o_control_panel div.o_pivot_measures_list a[data-field="foo"').click();
+        $('.o_control_panel div.o_pivot_measures_list a[data-field="product_id"').click();
+        results = [
+            "2", "0", "100%", "0", "1", "-100%", "2", "1", "100%" ,
+            "1", "0", "100%",                     "1", "0" , "100%"    ,
+            "1" , "0", "100%", "0", "1", "-100%", "1" , "1" , "100%"
+        ];
+        checkCellValues(results);
+
+        $('.o_control_panel button.btn-primary').eq(0).click();
+        $('.o_control_panel div.o_pivot_measures_list a[data-field="__count"').click();
+        $('.o_control_panel div.o_pivot_measures_list a[data-field="product_id"').click();
+        results = [
+            "2", "0", "100%", "0", "2", "-100%", "2", "2", "0%" ,
+            "1", "0", "100%",                     "1", "0" , "100%"    ,
+            "1" , "0", "100%", "0", "2", "-100%", "1" , "2" , "-50%"
+        ];
+        checkCellValues(results);
+
+        $('.o_pivot .o_pivot_header_cell_opened').eq(0).click();
+        results = [
+            "2", "2", "0%"     ,
+            "1", "0", "100%"   ,
+            "1", "2", "-50%"
+        ];
+        checkCellValues(results);
+
+        unpatchDate();
+        actionManager.destroy();
+    });
+
+   QUnit.test('export data in excel with comparison', function (assert) {
+        assert.expect(10);
+
+        this.data.partner.records[0].date = '2016-12-15';
+        this.data.partner.records[1].date = '2016-12-17';
+        this.data.partner.records[2].date = '2016-11-22';
+        this.data.partner.records[3].date = '2016-11-03';
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+        // create an action manager to test the interactions with the search view
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                  '</pivot>',
+                'partner,false,search': '<search></search>',
+            },
+            session: {
+                get_file: function (args) {
+                    var data = JSON.parse(args.data.data);
+                    _.each(data.headers, function (l) {
+                        assert.step(l.map(function (o) {return o.title;}));
+                    });
+                    assert.step(data.measure_row.map(function (o) {return o.measure;}));
+                    assert.step(data.nbr_measures);
+                    assert.step(data.rows.map(function (o) {return o.values.length;}));
+                    assert.strictEqual(args.url, '/web/pivot/export_xls',
+                        "should call get_file with correct parameters");
+                    args.complete();
+                },
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+        });
+
+        // open time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        // select 'Today' as range
+        $('.o_control_panel .o_time_range_selector').val('today');
+        // check checkbox 'Compare To'
+        $('.o_control_panel .o_time_range_menu .o_comparison_checkbox').click();
+        // Click on 'Apply' button
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+
+        // the time range menu configuration is by now: Date, Today, checkbox checked, Previous Period
+        // With the data above, the time ranges contain no record.
+        assert.strictEqual($('.o_pivot p.o_view_nocontent_empty_folder').length, 1, "there should be no data");
+        // export data should be impossible since the pivot buttons
+        // are deactivated (exception: the 'Measures' button).
+        assert.ok($('.o_control_panel button.o_pivot_download').prop('disabled'));
+
+        // open time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        // select 'This Month' as date range
+        $('.o_control_panel .o_time_range_selector').val('this_month');
+
+        // Click on 'Apply' button
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+        // the time range menu configuration is by now: Date, This Month, checkbox checked, Previous Period
+        // With the data above, the time ranges contain some records.
+        // export data. Should execute 'get_file'
+        $('.o_control_panel button.o_pivot_download').click();
+
+        assert.verifySteps([
+            // Headers
+            ["Total", ""],
+            ["December 2016" , "November 2016"],
+            ["Foo", "Foo", "Foo"],
+            [
+                "This Month", "Previous Period", "Variation",
+                "This Month", "Previous Period", "Variation",
+                "This Month", "Previous Period", "Variation"
+            ],
+            // number of 'measures'
+            3,
+            // rows values length
+            [9]
+        ]);
+
+        unpatchDate();
+        actionManager.destroy();
+    });
+
+    QUnit.test('rendering of pivot view with comparison and count measure', function (assert) {
+        assert.expect(10);
+
+        var mockMock = false;
+        var nbReadGroup = 0;
+
+        this.data.partner.records[0].date = '2016-12-15';
+        this.data.partner.records[1].date = '2016-12-17';
+        this.data.partner.records[2].date = '2016-12-22';
+        this.data.partner.records[3].date = '2016-12-03';
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+        // create an action manager to test the interactions with the search view
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': '<pivot>' +
+                        '<field name="customer" type="row"/>' +
+                  '</pivot>',
+                'partner,false,search': '<search></search>',
+            },
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'read_group' && mockMock) {
+                    nbReadGroup++;
+                    if (nbReadGroup === 4) {
+                        // this modification is necessary because mockReadGroup does not
+                        // properly reflect the server response when there is no record
+                        // and a groupby list of length at least one.
+                        return $.when([{}]);
+                    }
+                }
+                return result;
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+        });
+
+        mockMock = true;
+
+        // activate 'This Month' and 'Previous Period' in time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        $('.o_control_panel .o_time_range_selector').val('this_month');
+        $('.o_control_panel .o_time_range_menu .o_comparison_checkbox').click();
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+
+        var results = [
+            "4", "0", "100%",
+            "2", "0", "100%",
+            "2", "0", "100%"
+        ];
+
+        for (var i = 0; i < 9; i++) {
+            assert.strictEqual($('.o_pivot .o_pivot_cell_value div').eq(i).text().trim(), results.shift());
+        }
+        assert.strictEqual($('.o_pivot_header_cell_closed').length, 3, "there should be exactly three closed header ('Total','First', 'Second')");
+
+        unpatchDate();
+        actionManager.destroy();
+    });
+});
+});

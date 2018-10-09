@@ -15,13 +15,13 @@ var _lt = core._lt;
 // are only used if user entered them manually or if got from demo data
 var operator_mapping = {
     "=": "=",
-    "!=": _lt("not"),
+    "!=": _lt("is not ="),
     ">": ">",
     "<": "<",
     ">=": ">=",
     "<=": "<=",
     "ilike": _lt("contains"),
-    "not ilike": _lt("not contains"),
+    "not ilike": _lt("does not contain"),
     "in": _lt("in"),
     "not in": _lt("not in"),
 
@@ -59,6 +59,8 @@ var DomainNode = Widget.extend({
      * @param {Array|string} domain - the prefix representation of the domain
      * @param {Object} [options] - an object with possible values:
      * @param {boolean} [options.readonly=true] - true if is readonly
+     * @param {Array} [options.default] - default domain used when creating a
+     *   new node
      * @param {string[]} [options.operators=null]
      *        a list of available operators (null = all of supported ones)
      * @param {boolean} [options.debugMode=false] - true if should be in debug
@@ -161,7 +163,7 @@ var DomainNode = Widget.extend({
 var DomainTree = DomainNode.extend({
     template: "DomainTree",
     events: _.extend({}, DomainNode.prototype.events, {
-        "click .o_domain_tree_operator_selector > ul > li > a": "_onOperatorChange",
+        "click .o_domain_tree_operator_selector .dropdown-item": "_onOperatorChange",
     }),
     custom_events: {
         // If a domain child sends a request to add a child or remove one, call
@@ -420,7 +422,7 @@ var DomainTree = DomainNode.extend({
      * @param {OdooEvent} e
      */
     _onNodeAdditionAsk: function (e) {
-        var domain = [["id", "=", 1]];
+        var domain = this.options.default || [["id", "=", 1]];
         if (e.data.newBranch) {
             domain = [this.operator === "&" ? "|" : "&"].concat(domain).concat(domain);
         }
@@ -546,10 +548,10 @@ var DomainSelector = DomainTree.extend({
         var oldChildren = this.children.slice();
         this._initialize(domain || this.getDomain());
         return this._renderChildrenTo($("<div/>")).then((function () {
+            _.each(oldChildren, function (child) { child.destroy(); });
             this.renderElement();
             this._postRender();
             _.each(this.children, (function (child) { child.$el.appendTo(this.$childrenContainer); }).bind(this));
-            _.each(oldChildren, function (child) { child.destroy(); });
         }).bind(this));
     },
 
@@ -562,7 +564,7 @@ var DomainSelector = DomainTree.extend({
      * node
      */
     _onAddFirstButtonClick: function () {
-        this._addChild([["id", "=", 1]]);
+        this._addChild(this.options.default || [["id", "=", 1]]);
     },
     /**
      * Called when the debug input value is changed -> constructs the tree

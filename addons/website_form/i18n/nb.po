@@ -3,14 +3,15 @@
 # * website_form
 # 
 # Translators:
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Martin Trigaux, 2018
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,26 +21,26 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:226
+#: code:addons/website_form/static/src/js/website_form.js:230
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "'%s' er ikke en korrekt dato"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:221
+#: code:addons/website_form/static/src/js/website_form.js:225
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "'%s' har ikke korrekt datetime-format"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:226
+#: code:addons/website_form/controllers/main.py:229
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Vedlagte filer:</p>"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr "Lov å bruke i skjema"
 
@@ -51,14 +52,19 @@ msgid "An error has occured, the form has not been sent."
 msgstr "En feil oppsto, innholdet i skjemaet er ikke sendt."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
 msgstr "Svartelist dette feltet for webskjemaer"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
 msgstr "Svartelistet i webskjemaer"
+
+#. module: website_form
+#: model:ir.model,name:website_form.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:54
@@ -67,17 +73,20 @@ msgid "Custom infos"
 msgstr "Annen informasjon"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
 msgstr "Slå på skjemabyggerfunksjonen for denne modellen."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
-msgid "Enable writing metadata on form submit."
-msgstr "Skriv metadata når skjema sendes."
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:21
+#, python-format
+msgid "Error"
+msgstr "Feil"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
 msgstr "Felt for tilpassede skjemadata"
 
@@ -87,7 +96,7 @@ msgid "Fields"
 msgstr "Felter"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_label
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
@@ -96,7 +105,7 @@ msgstr ""
 "'Send epost' og project.issue kan være 'Opprett sak'."
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
 msgstr "Navn på skjemahandling"
 
@@ -109,7 +118,7 @@ msgstr "Metadata"
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
 msgid "Models"
-msgstr "odeller"
+msgstr "Modeller"
 
 #. module: website_form
 #. openerp-web
@@ -119,10 +128,23 @@ msgid "Please fill in the form correctly."
 msgstr "Vennligst fyll ut skjemaet korrekt."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
 msgstr "Spesifiser feltet som vil inneholde metadata og tilpassede feltdata."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:7
+#, python-format
+msgid "Success"
+msgstr "Suksess"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
+msgid "Technical data on contact form"
+msgstr ""
 
 #. module: website_form
 #. openerp-web
@@ -132,11 +154,17 @@ msgid "The form has been sent successfully."
 msgstr "Innholdet i skjemaet er sendt."
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
+msgstr ""
+
+#. module: website_form
 #: model:ir.model,name:website_form.model_website
 msgid "Website"
 msgstr "Nettsted"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
-msgid "Write metadata"
-msgstr "Skriv metadata"
+#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
+msgid "You can choose to log technical data like IP, User Agent ,..."
+msgstr ""

@@ -1,29 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
-# Martin Trigaux, 2017
-# aleksandar ivanov, 2018
-# Albena Mincheva <albena_vicheva@abv.bg>, 2018
-# Boris Stefanov <borkata@gmail.com>, 2018
-# Anton Vassilev, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Anton Vassilev, 2018\n"
-"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-16 08:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
+"bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:703
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копие)"
@@ -36,21 +32,17 @@ msgstr "Активен"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr "Почивни Дни"
+msgstr ""
 
 #. module: resource
-#: model:ir.model,name:resource.model_res_company
-msgid "Companies"
-msgstr "Компании"
+#: model:ir.model.fields,field_description:resource.field_resource_resource_code
+msgid "Code"
+msgstr "Код"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_hr_employee_company_id
-#: model:ir.model.fields,field_description:resource.field_mrp_workcenter_company_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_company_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_company_id
-#: model:ir.model.fields,field_description:resource.field_resource_mixin_company_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_company_id
-#: model:ir.model.fields,field_description:resource.field_resource_test_company_id
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
@@ -61,7 +53,6 @@ msgstr "Фирма"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_uid
-#: model:ir.model.fields,field_description:resource.field_resource_test_create_uid
 msgid "Created by"
 msgstr "Създадено от"
 
@@ -70,7 +61,6 @@ msgstr "Създадено от"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_create_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_date
-#: model:ir.model.fields,field_description:resource.field_resource_test_create_date
 msgid "Created on"
 msgstr "Създадено на"
 
@@ -80,18 +70,7 @@ msgid "Day of Week"
 msgstr "Ден от седмицата"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_id
-#: model:ir.model.fields,field_description:resource.field_res_users_resource_calendar_id
-msgid "Default Working Hours"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,help:resource.field_hr_employee_resource_calendar_id
-#: model:ir.model.fields,help:resource.field_mrp_workcenter_resource_calendar_id
-#: model:ir.model.fields,help:resource.field_res_users_resource_calendar_id
-#: model:ir.model.fields,help:resource.field_resource_mixin_resource_calendar_id
 #: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
-#: model:ir.model.fields,help:resource.field_resource_test_resource_calendar_id
 msgid "Define the schedule of resource"
 msgstr "Определяне на график за ползване на ресурса"
 
@@ -101,18 +80,19 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
-"Дефинирайте работно време и график, по който да разпределите членовете на "
-"проекта."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
-#: model:ir.model.fields,field_description:resource.field_resource_mixin_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
-#: model:ir.model.fields,field_description:resource.field_resource_test_display_name
 msgid "Display Name"
 msgstr "Име за показване"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+msgid "Duration"
+msgstr "Продължителност"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
@@ -126,8 +106,7 @@ msgid "End Date"
 msgstr "Крайна дата"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:734
-#, python-format
+#: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 "Грешка! Началната дата трябва да е по малка от крайната дата при периода на "
@@ -139,24 +118,6 @@ msgid "Friday"
 msgstr "Петък"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:74
-#, python-format
-msgid "Friday Evening"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:73
-#, python-format
-msgid "Friday Morning"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Global Leaves"
-msgstr ""
-
-#. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
@@ -165,20 +126,18 @@ msgstr "Групиране по"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 msgid "Hours"
-msgstr "Часове"
+msgstr "Часа"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr "Човек"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_id
-#: model:ir.model.fields,field_description:resource.field_resource_mixin_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_id
-#: model:ir.model.fields,field_description:resource.field_resource_test_id
 msgid "ID"
 msgstr "ID"
 
@@ -188,8 +147,6 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
-"Ако е празно, това е почивен ден за цялата фирма. Ако е избран ресурс. "
-"почивният ден/отпуската се отнасят само за нея"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
@@ -197,8 +154,6 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Ако полето Активен е НЕ, това е позволи да скриете ресурсният запис без да "
-"го изтривате."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -209,9 +164,7 @@ msgstr "Неактивен"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves___last_update
-#: model:ir.model.fields,field_description:resource.field_resource_mixin___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource___last_update
-#: model:ir.model.fields,field_description:resource.field_resource_test___last_update
 msgid "Last Modified on"
 msgstr "Последно променено на"
 
@@ -220,7 +173,6 @@ msgstr "Последно променено на"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
-#: model:ir.model.fields,field_description:resource.field_resource_test_write_uid
 msgid "Last Updated by"
 msgstr "Последно обновено от"
 
@@ -229,7 +181,6 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_date
-#: model:ir.model.fields,field_description:resource.field_resource_test_write_date
 msgid "Last Updated on"
 msgstr "Последно обновено на"
 
@@ -238,18 +189,17 @@ msgstr "Последно обновено на"
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr "Детайли на отпуск"
+msgstr "Подробности за отпуск"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr "Месец на Напускане"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Leaves"
-msgstr "Отпуски"
+msgstr "Напускащи"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -262,43 +212,27 @@ msgid "Monday"
 msgstr "Понеделник"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:66
-#, python-format
-msgid "Monday Evening"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:65
-#, python-format
-msgid "Monday Morning"
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_name
-#: model:ir.model.fields,field_description:resource.field_resource_test_name
 msgid "Name"
 msgstr "Име"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_name
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Reason"
 msgstr "Причина"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Свързан потребител, който управлява достъпът на този ресурс."
+msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_hr_employee_resource_id
-#: model:ir.model.fields,field_description:resource.field_mrp_workcenter_resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
-#: model:ir.model.fields,field_description:resource.field_resource_mixin_resource_id
-#: model:ir.model.fields,field_description:resource.field_resource_test_resource_id
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: model:ir.ui.view,arch_db:resource.resource_resource_form
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar
@@ -319,15 +253,9 @@ msgstr "Детайли за ресурса"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
-#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
 msgstr "Разходна норма"
-
-#. module: resource
-#: model:ir.model,name:resource.model_resource_mixin
-msgid "Resource Mixin"
-msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
@@ -341,8 +269,6 @@ msgstr "Календар на ресурса"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
-#: model:ir.actions.act_window,name:resource.resource_resource_action_from_calendar
-#: model:ir.model.fields,field_description:resource.field_res_users_resource_ids
 #: model:ir.ui.menu,name:resource.menu_resource_resource
 #: model:ir.ui.view,arch_db:resource.resource_resource_tree
 msgid "Resources"
@@ -355,15 +281,11 @@ msgstr "Разходни норми"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
-#: model:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
 msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Ресурсите Ви позволяват да създавате и управлявате ресурси, въвлечени в "
-"определена фаза на проект. Също така можете да зададете тяхната ефикасност и"
-" натоварване според седмичните им работни часове. "
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -386,13 +308,6 @@ msgid "Search Working Time"
 msgstr "Търсене в работните времена"
 
 #. module: resource
-#: code:addons/resource/models/res_company.py:18
-#: code:addons/resource/models/res_company.py:23
-#, python-format
-msgid "Standard 40 hours/week"
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
 msgid "Start Date"
 msgstr "Начална дата"
@@ -400,7 +315,7 @@ msgstr "Начална дата"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
 msgid "Start and End time of working."
-msgstr "Начално и Крайно време на работа"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
@@ -410,7 +325,7 @@ msgstr "Начална дата"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr "Начална Дата на Отпуск по Месец"
+msgstr ""
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -418,24 +333,12 @@ msgid "Sunday"
 msgstr "Неделя"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_test
-msgid "Test Resource Model"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:689
-#, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr "Факторът на ефикасност не може да бъде 0."
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
-"This field is used to calculate the the expected duration of a work order at"
-" this work center. For example, if a work order takes one hour and the "
-"efficiency factor is 100%, then the expected duration will be one hour. If "
-"the efficiency factor is 200%, however the expected duration will be 30 "
-"minutes."
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
 
 #. module: resource
@@ -444,55 +347,14 @@ msgid "Thursday"
 msgstr "Четвъртък"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:72
-#, python-format
-msgid "Thursday Evening"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:71
-#, python-format
-msgid "Thursday Morning"
-msgstr ""
-
-#. module: resource
-#: sql_constraint:resource.resource:0
-msgid "Time efficiency must be strictly positive"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_tz
-msgid "Timezone"
-msgstr "Часови пояс"
-
-#. module: resource
-#: model:ir.model.fields,help:resource.field_resource_calendar_leaves_tz
-msgid ""
-"Timezone used when encoding the leave. It is used to correctlylocalize leave"
-" hours when computing time intervals."
-msgstr ""
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Tuesday"
 msgstr "Вторник"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:68
-#, python-format
-msgid "Tuesday Evening"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:67
-#, python-format
-msgid "Tuesday Morning"
-msgstr ""
-
-#. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Type"
-msgstr "Тип"
+msgstr "Вид"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_user_id
@@ -501,65 +363,32 @@ msgid "User"
 msgstr "Потребител"
 
 #. module: resource
-#: model:ir.model,name:resource.model_res_users
-msgid "Users"
-msgstr "Потребители"
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr "Сряда"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:70
-#, python-format
-msgid "Wednesday Evening"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:69
-#, python-format
-msgid "Wednesday Morning"
-msgstr ""
-
-#. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr "Отчет"
-
-#. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Work Resources"
 msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
 msgid "Work from"
-msgstr "Работа от"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_to
 msgid "Work to"
-msgstr "Работа до"
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_hr_employee_resource_calendar_id
-#: model:ir.model.fields,field_description:resource.field_mrp_workcenter_resource_calendar_id
-#: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_ids
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_calendar_id
-#: model:ir.model.fields,field_description:resource.field_resource_mixin_resource_calendar_id
-#: model:ir.model.fields,field_description:resource.field_resource_test_resource_calendar_id
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Working Hours"
-msgstr "Работни часове"
-
-#. module: resource
-#: code:addons/resource/models/resource.py:60
-#, python-format
-msgid "Working Hours of %s"
 msgstr ""
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_manager
+msgid "Workgroup Manager"
+msgstr "Бригадир"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
 msgstr "Време за изработка"
@@ -567,6 +396,7 @@ msgstr "Време за изработка"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_ids
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_calendar_id
 #: model:ir.ui.menu,name:resource.menu_resource_calendar
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form

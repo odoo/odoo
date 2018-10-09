@@ -6,7 +6,7 @@
     'category': 'Point of Sale',
     'sequence': 6,
     'summary': 'Hardware Driver for Weighing Scales',
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'description': """
 Weighing Scale Hardware Driver
 ================================
@@ -17,4 +17,5 @@ such as the Mettler Toledo Ariva.
 """,
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['serial']},
+    'installable': False,
 }

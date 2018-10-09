@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 msgid ""
 msgstr ""
@@ -90,7 +90,7 @@ msgstr "配送"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr "販売オーダと関連請求書にインコタームズを表示"
+msgstr "受注と関連請求書にインコタームズを表示"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -100,7 +100,7 @@ msgstr "オーダと請求書にインコタームズを表示"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr "販売オーダ明細でルート選択可"
+msgstr "受注明細でルート選択可"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -172,7 +172,7 @@ msgstr "配送予定を早める日数"
 #: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
 msgid "Not enough inventory!"
-msgstr "在庫不足"
+msgstr "在庫が足りません。"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
@@ -242,7 +242,7 @@ msgstr "販売オーダ明細"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
 msgid "Sale Order"
-msgstr "販売オーダ"
+msgstr "受注"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -252,22 +252,22 @@ msgstr "販売"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sales Order"
-msgstr "販売オーダ"
+msgstr "受注"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "販売オーダ明細"
+msgstr "受注明細"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr "販売オーダ明細"
+msgstr "受注明細"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "販売オーダ統計"
+msgstr "受注統計"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
@@ -282,7 +282,7 @@ msgstr "遅配を避けるために早めに出荷を予定"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
 msgid "Security Lead Time"
-msgstr "安全リードタイム"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
@@ -292,7 +292,7 @@ msgstr "販売の安全リードタイム"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "販売オーダ明細で選択可"
+msgstr "受注明細で選択可"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -352,7 +352,7 @@ msgstr "この製品は%.2f %s. でパッケージ化されています。 %.2f 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "運送"
+msgstr "移動"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -389,7 +389,7 @@ msgstr "注文数量を減らしています！ 必要に応じて納品順序�
 #, python-format
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
-msgstr "%s %s 販売しようとしていますが、次の倉庫には %s %s しかありません: %s 倉庫"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

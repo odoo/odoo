@@ -3,16 +3,15 @@
 # * contacts
 # 
 # Translators:
-# fanha99 <fanha99@hotmail.com>, 2017
-# Duy BQ <duybq86@gmail.com>, 2017
-# Martin Trigaux, 2017
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,11 +31,6 @@ msgid "Banks"
 msgstr "Ngân hàng"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
-msgid "Click to add a contact in your contacts directory."
-msgstr "Bấm để thêm một liên hệ vào danh bạ của bạn."
-
-#. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_config
 msgid "Configuration"
 msgstr "Cấu hình"
@@ -44,7 +38,7 @@ msgstr "Cấu hình"
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
 msgid "Contact Tags"
-msgstr "Loại Đối tác"
+msgstr "Từ khóa liên hệ"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_title_contact
@@ -53,6 +47,7 @@ msgstr "Danh xưng"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
+#: model:ir.actions.act_window,name:contacts.action_contacts_summary
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
@@ -61,36 +56,41 @@ msgstr "Liên hệ"
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_partner
 msgid "Countries"
-msgstr "Quốc gia"
+msgstr "Các quốc gia"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_group
 msgid "Country Group"
-msgstr "Nhóm Quốc gia"
+msgstr "Nhóm quốc gia"
+
+#. module: contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
+msgid "Create a contact in your address book"
+msgstr ""
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
-msgstr "Bang/Tỉnh"
+msgstr "Tỉnh/TP/Bang"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_localisation
 msgid "Localization"
-msgstr "Bản địa hoá"
+msgstr "Địa phương"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
-msgid ""
-"Odoo helps you easily track all activities related to\n"
-"            a customer: discussions, history of business opportunities,\n"
-"            documents, etc."
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
+msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
-"Hệ thống sẽ giúp bạn dễ dàng theo dõi tất cả các hành động\n"
-"            liên quan đến một đối tác (khách hàng, nhà cung cấp,\n"
-"            v.v.) như: thảo luận, lịch sở cơ hội kinh doanh, tài\n"
-"            liệu, v.v."
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
 msgid "Sectors of Activity"
 msgstr "Phân khúc Ngành"
+
+#. module: contacts
+#: model:ir.model,name:contacts.model_res_users
+msgid "Users"
+msgstr "Người dùng"

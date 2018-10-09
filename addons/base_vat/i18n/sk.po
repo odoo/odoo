@@ -3,22 +3,20 @@
 # * base_vat
 # 
 # Translators:
-# Martin Trigaux, 2017
-# gebri <gebri@inmail.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -28,7 +26,7 @@ msgstr "Spoločnosti"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr "Kontakt"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -44,8 +42,6 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
-"DPH číslo [%s] pre partnera [%s] sa zdá byť neplatné.\n"
-"Poznámka: očakávaný formát je %s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:133
@@ -54,14 +50,12 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
-"DPH číslo [%s] pre partnera [%s] buďto neprešlo VIES DPH overovaciou "
-"kontrolou, alebo nebolo v očakávanom formáte %s."
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 #: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
-msgstr "DPH"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
@@ -77,4 +71,4 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr ""

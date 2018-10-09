@@ -3,8 +3,10 @@
 
 import unittest
 from odoo.addons.http_routing.models.ir_http import slugify, unslug
+from odoo.tests.common import tagged
 
 
+@tagged('standard', 'at_install')
 class TestUnslug(unittest.TestCase):
 
     def test_unslug(self):
@@ -27,6 +29,7 @@ class TestUnslug(unittest.TestCase):
             self.assertEqual(unslug(slug), expected)
 
 
+@tagged('standard', 'at_install')
 class TestTitleToSlug(unittest.TestCase):
     """
     Those tests should pass with or without python-slugify

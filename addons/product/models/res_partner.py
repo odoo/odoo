@@ -10,14 +10,15 @@ class Partner(models.Model):
 
     # NOT A REAL PROPERTY !!!!
     property_product_pricelist = fields.Many2one(
-        'product.pricelist', 'Sale Pricelist', compute='_compute_product_pricelist',
+        'product.pricelist', 'Pricelist', compute='_compute_product_pricelist',
         inverse="_inverse_product_pricelist", company_dependent=False,
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
     @api.multi
     @api.depends('country_id')
     def _compute_product_pricelist(self):
-        res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids)
+        company = self.env.context.get('force_company', False)
+        res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids, company_id=company)
         for p in self:
             p.property_product_pricelist = res.get(p.id)
 

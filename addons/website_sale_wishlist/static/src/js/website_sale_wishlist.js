@@ -1,163 +1,156 @@
 odoo.define('website_sale_wishlist.wishlist', function (require) {
 "use strict";
 
-require('web.dom_ready');
-var ajax = require('web.ajax');
-var Widget = require('web.Widget');
-var base = require('web_editor.base');
-var website_sale_utils = require('website_sale.utils');
+var sAnimations = require('website.content.snippets.animation');
+var wSaleUtils = require('website_sale.utils');
+var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 
-if(!$('.oe_website_sale').length) {
-    return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
-}
-
-var ProductWishlist = Widget.extend({
-    events: {
-        'click #my_wish': 'display_wishlist',
+// ProductConfiguratorMixin events are overridden on purpose here
+// to avoid registering them more than once since they are already registered
+// in website_sale.js
+sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfiguratorMixin, {
+    selector: '.oe_website_sale',
+    read_events: {
+        'click #my_wish': '_onClickMyWish',
+        'click .o_add_wishlist, .o_add_wishlist_dyn': '_onClickAddWish',
+        'change input.product_id': '_onChangeVariant',
+        'change input.js_product_change': '_onChangeProduct',
+        'click .wishlist-section .o_wish_rm': '_onClickWishRemove',
+        'click .wishlist-section .o_wish_add': '_onClickWishAdd',
     },
-    init: function(){
-        var self = this;
-        this.wishlist_product_ids = [];
-        var wish_loading = $.get('/shop/wishlist', {'count': 1}).then(function(res) {
-            self.wishlist_product_ids = JSON.parse(res);
-            self.update_wishlist_view();
-        });
-        $('.oe_website_sale .o_add_wishlist, .oe_website_sale .o_add_wishlist_dyn').click(function (e){
-            self.add_new_products($(this), e);
-        });
+    events: sAnimations.Class.events,
 
-        if ($('.wishlist-section').length) {
-            $('.wishlist-section a.o_wish_rm').on('click', function (e){ self.wishlist_rm(e, false); });
-            $('.wishlist-section a.o_wish_add').on('click', function (e){
-                $('.wishlist-section a.o_wish_add').addClass('disabled');
-                self.wishlist_add_or_mv(e).then(function(o) {
-                    $('.wishlist-section a.o_wish_add').removeClass('disabled');
-                });
-            });
+    start: function () {
+        var self = this;
+        var def = this._super.apply(this, arguments);
+        if (this.editableMode) {
+            return def;
         }
 
-        $('.oe_website_sale').on('change', 'input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]', function(ev) {
-            var $ul = $(ev.target).closest('.js_add_cart_variants');
-            var $parent = $ul.closest('.js_product');
-            var $product_id = $parent.find('.product_id').first();
-            var $el = $parent.find("[data-action='o_wishlist']");
-            if (!_.contains(self.wishlist_product_ids, parseInt($product_id.val(), 10))) {
-                $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
-            }
-            else {
-                $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
-            }
-            $el.data('product-product-id', parseInt($product_id.val(), 10));
+        this.wishlistProductIDs = [];
 
-        });
-
-        // manage "List View of variants"
-        $('.oe_website_sale').on('change', 'input.js_product_change', function(ev) {
-            var product_id = ev.currentTarget.value;
-            var $el = $(ev.target).closest('.js_add_cart_variants').find("[data-action='o_wishlist']");
-
-            if (!_.contains(self.wishlist_product_ids, parseInt(product_id, 10))) {
-                $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
-            }
-            else {
-                $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
-            }
-            $el.data('product-product-id', product_id);
-        });
-        wish_loading.then(function() {
+        var wishDef = $.get('/shop/wishlist', {
+            count: 1,
+        }).then(function (res) {
+            self.wishlistProductIDs = JSON.parse(res);
+            self._updateWishlistView();
             if ($('input.js_product_change').length) { // manage "List View of variants"
                 $('input.js_product_change:checked').first().trigger('change');
-            }
-            else {
+            } else {
                 $('input.js_variant_change').trigger('change');
             }
         });
 
+        return $.when(def, wishDef);
     },
-    add_new_products: function($el, e){
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _addNewProducts: function ($el) {
         var self = this;
-        var product_id = parseInt($el.data('product-product-id'), 10);
-        if (!product_id && e.currentTarget.classList.contains('o_add_wishlist_dyn')) {
-            product_id = parseInt($el.parent().find('.product_id').val());
+        var productID = $el.data('product-product-id');
+        if ($el.hasClass('o_add_wishlist_dyn')) {
+            productID = $el.parent().find('.product_id').val();
+            if (!productID) { // case List View Variants
+                productID = $el.parent().find('input:checked').first().val();
+            }
+            productID = parseInt(productID, 10);
         }
-        if (product_id && !_.contains(self.wishlist_product_ids, product_id)) {
-            return ajax.jsonRpc('/shop/wishlist/add', 'call', {
-                'product_id': product_id
-            }).then(function () {
-                self.wishlist_product_ids.push(product_id);
-                self.update_wishlist_view();
-                website_sale_utils.animate_clone($('#my_wish'), $el.closest('form'), 25, 40);
-                $el.prop("disabled", true).addClass('disabled');
-            });
-        }
+
+        var productReady = this.selectOrCreateProduct(
+            $el.closest('form'),
+            productID,
+            $el.closest('form').find('.product_template_id').val(),
+            false
+        );
+
+        productReady.done(function (productId) {
+            productId = parseInt(productId, 10);
+
+            if (productId && !_.contains(self.wishlistProductIDs, productId)) {
+                return self._rpc({
+                    route: '/shop/wishlist/add',
+                    params: {
+                        product_id: productId,
+                    },
+                }).then(function () {
+                    self.wishlistProductIDs.push(productId);
+                    self._updateWishlistView();
+                    wSaleUtils.animateClone($('#my_wish'), $el.closest('form'), 25, 40);
+                    $el.prop("disabled", true).addClass('disabled');
+                });
+            }
+        });
     },
-    display_wishlist: function() {
-        if (this.wishlist_product_ids.length === 0) {
-            this.update_wishlist_view();
-            this.redirect_no_wish();
-        }
-        else {
-            window.location = '/shop/wishlist';
-        }
-    },
-    update_wishlist_view: function() {
-        if (this.wishlist_product_ids.length > 0) {
+    /**
+     * @private
+     */
+    _updateWishlistView: function () {
+        if (this.wishlistProductIDs.length > 0) {
             $('#my_wish').show();
-            $('.my_wish_quantity').text(this.wishlist_product_ids.length);
-        }
-        else {
+            $('.my_wish_quantity').text(this.wishlistProductIDs.length);
+        } else {
             $('#my_wish').hide();
         }
     },
-    wishlist_rm: function(e, deferred_redirect){
+    /**
+     * @private
+     */
+    _removeWish: function (e, deferred_redirect){
         var tr = $(e.currentTarget).parents('tr');
         var wish = tr.data('wish-id');
         var product = tr.data('product-id');
         var self = this;
 
-        ajax.jsonRpc('/shop/wishlist/remove/' + wish).done(function () {
+        this._rpc({
+            route: '/shop/wishlist/remove/' + wish,
+        }).done(function () {
             $(tr).hide();
         });
 
-        this.wishlist_product_ids = _.without(this.wishlist_product_ids, product);
-        if (this.wishlist_product_ids.length === 0) {
+        this.wishlistProductIDs = _.without(this.wishlistProductIDs, product);
+        if (this.wishlistProductIDs.length === 0) {
             deferred_redirect = deferred_redirect ? deferred_redirect : $.Deferred();
-            deferred_redirect.then(function() {
-                self.redirect_no_wish();
+            deferred_redirect.then(function () {
+                self._redirectNoWish();
             });
         }
-        this.update_wishlist_view();
+        this._updateWishlistView();
     },
-    wishlist_add_or_mv: function(e){
-        return $('#b2b_wish').is(':checked') ? this.wishlist_add(e) : this.wishlist_mv(e);
-    },
-    wishlist_add: function(e){
+    /**
+     * @private
+     */
+    _addOrMoveWish: function (e) {
         var tr = $(e.currentTarget).parents('tr');
         var product = tr.data('product-id');
+        $('#my_cart').removeClass('d-none');
+        wSaleUtils.animateClone($('#my_cart'), tr, 25, 40);
 
-        // can be hidden if empty
-        $('#my_cart').removeClass('hidden');
-        website_sale_utils.animate_clone($('#my_cart'), tr, 25, 40);
-        return this.add_to_cart(product, tr.find('qty').val() || 1);
+        if ($('#b2b_wish').is(':checked')) {
+            return this._addToCart(product, tr.find('qty').val() || 1);
+        } else {
+            var adding_deffered = this._addToCart(product, tr.find('qty').val() || 1);
+            this._removeWish(e, adding_deffered);
+            return adding_deffered;
+        }
     },
-    wishlist_mv: function(e){
-        var tr = $(e.currentTarget).parents('tr');
-        var product = tr.data('product-id');
-
-        $('#my_cart').removeClass('hidden');
-        website_sale_utils.animate_clone($('#my_cart'), tr, 25, 40);
-        var adding_deffered = this.add_to_cart(product, tr.find('qty').val() || 1);
-        this.wishlist_rm(e, adding_deffered);
-        return adding_deffered;
-    },
-    add_to_cart: function(product_id, qty_id) {
-        var add_to_cart = ajax.jsonRpc("/shop/cart/update_json", 'call', {
-            'product_id': parseInt(product_id, 10),
-            'add_qty': parseInt(qty_id, 10),
-            'display': false,
-        });
-
-        add_to_cart.then(function(resp) {
+    /**
+     * @private
+     */
+    _addToCart: function (productID, qty_id) {
+        return this._rpc({
+            route: "/shop/cart/update_json",
+            params: {
+                product_id: parseInt(productID, 10),
+                add_qty: parseInt(qty_id, 10),
+                display: false,
+            },
+        }).then(function (resp) {
             if (resp.warning) {
                 if (! $('#data_warning').length) {
                     $('.wishlist-section').prepend('<div class="mt16 alert alert-danger alert-dismissable" role="alert" id="data_warning"></div>');
@@ -167,13 +160,84 @@ var ProductWishlist = Widget.extend({
             }
             $('.my_cart_quantity').html(resp.cart_quantity || '<i class="fa fa-warning" /> ');
         });
-        return add_to_cart;
     },
-    redirect_no_wish: function() {
-        window.location = '/shop/cart';
-    }
+    /**
+     * @private
+     */
+    _redirectNoWish: function () {
+        window.location.href = '/shop/cart';
+    },
+
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onClickMyWish: function () {
+        if (this.wishlistProductIDs.length === 0) {
+            this._updateWishlistView();
+            this._redirectNoWish();
+            return;
+        }
+        window.location = '/shop/wishlist';
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickAddWish: function (ev) {
+        this._addNewProducts($(ev.currentTarget));
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeVariant: function (ev) {
+        var $input = $(ev.target);
+        var $parent = $input.closest('.js_product');
+        var $el = $parent.find("[data-action='o_wishlist']");
+        if (!_.contains(this.wishlistProductIDs, parseInt($input.val(), 10))) {
+            $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
+        } else {
+            $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
+        }
+        $el.data('product-product-id', parseInt($input.val(), 10));
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeProduct: function (ev) {
+        var productID = ev.currentTarget.value;
+        var $el = $(ev.target).closest('.js_add_cart_variants').find("[data-action='o_wishlist']");
+
+        if (!_.contains(this.wishlistProductIDs, parseInt(productID, 10))) {
+            $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
+        } else {
+            $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
+        }
+        $el.data('product-product-id', productID);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickWishRemove: function (ev) {
+        this._removeWish(ev, false);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickWishAdd: function (ev) {
+        var self = this;
+        this.$('.wishlist-section .o_wish_add').addClass('disabled');
+        this._addOrMoveWish(ev).then(function () {
+            self.$('.wishlist-section .o_wish_add').removeClass('disabled');
+        });
+    },
 });
-
-new ProductWishlist();
-
 });

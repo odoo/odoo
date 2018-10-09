@@ -5,25 +5,20 @@
 # Translators:
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:61
@@ -66,13 +61,6 @@ msgid "<i class=\"fa fa-check-circle\"/> Pending"
 msgstr ""
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
-msgid ""
-"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
-"to be able to use them."
-msgstr ""
-
-#. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
@@ -87,22 +75,14 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
-"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> 完了</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid "<strong>Transactions</strong>"
-msgstr "<strong>支払トランザクション</strong>"
-
-#. module: account_payment
-#: code:addons/account_payment/models/payment.py:80
-#, python-format
-msgid "Amount Mismatch (%s)"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: code:addons/account_payment/controllers/payment.py:53
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -116,6 +96,11 @@ msgid "Invoice"
 msgstr "請求書"
 
 #. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "Invoice successfully paid."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
 msgid "Last Transaction"
 msgstr "最後のトランザクション"
@@ -126,13 +111,13 @@ msgid "Number of payment transactions"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:47
+#: code:addons/account_payment/controllers/payment.py:50
 #, python-format
 msgid "Pay & Confirm"
 msgstr "支払と確認"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:131
+#: code:addons/account_payment/models/payment.py:119
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
@@ -163,14 +148,6 @@ msgstr "入金トランザクション"
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
 msgstr "ステータス"
-
-#. module: account_payment
-#: code:addons/account_payment/models/payment.py:81
-#, python-format
-msgid ""
-"The invoice was not confirmed despite response from the acquirer (%s): "
-"invoice amount is %r but acquirer replied with %r."
-msgstr ""
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -221,8 +198,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
 msgstr "取引明細書"
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
-msgid "Your payment has been authorized."
-msgstr "お支払いが承認されました。"

@@ -52,20 +52,6 @@ var utils = {
         return Math.max(min, Math.min(max, val));
     },
     /**
-     * computes (Math.floor(a/b), a%b and passes that to the callback.
-     *
-     * returns the callback's result
-     */
-    divmod: function (a, b, fn) {
-        var mod = a%b;
-        // in python, sign(a % b) === sign(b). Not in JS. If wrong side, add a
-        // round of b
-        if (mod > 0 && b < 0 || mod < 0 && b > 0) {
-            mod += b;
-        }
-        return fn(Math.floor(a/b), mod);
-    },
-    /**
      * @param {number} value
      * @param {integer} decimals
      * @returns {boolean}
@@ -290,17 +276,6 @@ var utils = {
         return new Array(size - str.length + 1).join('0') + str;
     },
     /**
-     * Passes the fractional and integer parts of x to the callback, returns
-     * the callback's result
-     */
-    modf: function (x, fn) {
-        var mod = x%1;
-        if (mod < 0) {
-            mod += 1;
-        }
-        return fn(mod, Math.floor(x));
-    },
-    /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
      * See the corresponding float_round() in server/tools/float_utils.py for more info
      * @param {Number} value the value to be rounded
@@ -508,6 +483,20 @@ var utils = {
         }
     },
     /**
+     * Enhanced traverse function with 'path' building on traverse.
+     *
+     * @param {Object} tree an object describing a tree structure
+     * @param {function} f a callback
+     * @param {Object} path the path to the current 'tree' object
+     */
+    traversePath: function (tree, f, path) {
+        path = path || [];
+        f(tree, path);
+        _.each(tree.children, function (node) {
+            utils.traversePath(node, f, path.concat(tree));
+        });
+    },
+    /**
      * Visit a tree of objects and freeze all
      *
      * @param {Object} obj
@@ -520,6 +509,26 @@ var utils = {
           utils.deepFreeze(prop);
       });
       return Object.freeze(obj);
+    },
+
+    /**
+     * Find the closest value of the given one in the provided array
+     *
+     * @param {Number} num
+     * @param {Array} arr
+     * @returns {Number|undefined}
+     */
+    closestNumber: function (num, arr) {
+        var curr = arr[0];
+        var diff = Math.abs (num - curr);
+        for (var val = 0; val < arr.length; val++) {
+            var newdiff = Math.abs (num - arr[val]);
+            if (newdiff < diff) {
+                diff = newdiff;
+                curr = arr[val];
+            }
+        }
+        return curr;
     },
 
 };

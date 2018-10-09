@@ -22,8 +22,7 @@ class MailController(http.Controller):
 
     @classmethod
     def _redirect_to_messaging(cls):
-        messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
-        url = '/web#%s' % url_encode({'action': messaging_action})
+        url = '/web#%s' % url_encode({'action': 'mail.action_discuss'})
         return werkzeug.utils.redirect(url)
 
     @classmethod
@@ -31,7 +30,7 @@ class MailController(http.Controller):
         base_link = request.httprequest.path
         params = dict(request.params)
         params.pop('token', '')
-        valid_token = request.env['mail.thread']._generate_notification_token(base_link, params)
+        valid_token = request.env['mail.thread']._notify_encode_link(base_link, params)
         return consteq(valid_token, str(token))
 
     @classmethod
@@ -50,7 +49,9 @@ class MailController(http.Controller):
         return comparison, record, redirect
 
     @classmethod
-    def _redirect_to_record(cls, model, res_id, access_token=None):
+    def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):
+        # access_token and kwargs are used in the portal controller override for the Send by email or Share Link
+        # to give access to the record to a recipient that has normally no access.
         uid = request.session.uid
 
         # no model / res_id, meaning no possible record -> redirect to login
@@ -92,9 +93,12 @@ class MailController(http.Controller):
             'model': model,
             'id': res_id,
             'active_id': res_id,
-            'view_id': record_sudo.get_formview_id(),
             'action': record_action.get('id'),
         }
+        view_id = record_sudo.get_formview_id()
+        if view_id:
+            url_params['view_id'] = view_id
+
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 
@@ -162,7 +166,7 @@ class MailController(http.Controller):
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')
-    def mail_action_view(self, model=None, res_id=None, message_id=None, access_token=None, **kwargs):
+    def mail_action_view(self, model=None, res_id=None, access_token=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
             choose where to redirect the user is the following :
 
@@ -174,52 +178,23 @@ class MailController(http.Controller):
 
             models that have an access_token may apply variations on this.
         """
-        if message_id:
+        # ==============================================================================================
+        # This block of code disappeared on saas-11.3 to be reintroduced by TBE.
+        # This is needed because after a migration from an older version to saas-11.3, the link
+        # received by mail with a message_id no longer work.
+        # So this block of code is needed to guarantee the backward compatibility of those links.
+        if kwargs.get('message_id'):
             try:
-                message = request.env['mail.message'].sudo().browse(int(message_id)).exists()
+                message = request.env['mail.message'].sudo().browse(int(kwargs['message_id'])).exists()
             except:
                 message = request.env['mail.message']
             if message:
                 model, res_id = message.model, message.res_id
-            else:
-                # either a wrong message_id, either someone trying ids -> just go to messaging
-                return self._redirect_to_messaging()
-        elif res_id and isinstance(res_id, pycompat.string_types):
+        # ==============================================================================================
+
+        if res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
-
-        return self._redirect_to_record(model, res_id, access_token)
-
-    @http.route('/mail/follow', type='http', auth='user', methods=['GET'])
-    def mail_action_follow(self,  model, res_id, token=None):
-        comparison, record, redirect = self._check_token_and_record_or_redirect(model, int(res_id), token)
-        if comparison and record:
-            try:
-                record.sudo().message_subscribe_users(user_ids=[request.uid])
-            except Exception:
-                return self._redirect_to_messaging()
-        return redirect
-
-    @http.route('/mail/unfollow', type='http', auth='user', methods=['GET'])
-    def mail_action_unfollow(self, model, res_id, token=None):
-        comparison, record, redirect = self._check_token_and_record_or_redirect(model, int(res_id), token)
-        if comparison and record:
-            try:
-                # TDE CHECKME: is sudo really necessary ?
-                record.sudo().message_unsubscribe_users([request.uid])
-            except Exception:
-                return self._redirect_to_messaging()
-        return redirect
-
-    @http.route('/mail/new', type='http', auth='user')
-    def mail_action_new(self, model, res_id, action_id):
-        # TDE NOTE: this controller is deprecated and will disappear before v11.
-        if model not in request.env:
-            return self._redirect_to_messaging()
-        params = {'view_type': 'form', 'model': model}
-        if action_id:
-            # Probably something to do
-            params['action'] = action_id
-        return werkzeug.utils.redirect('/web?#%s' % url_encode(params))
+        return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
     def mail_action_assign(self, model, res_id, token=None):
@@ -259,15 +234,19 @@ class MailController(http.Controller):
     def needaction(self):
         return request.env['res.partner'].get_needaction_count()
 
-    @http.route('/mail/client_action', type='json', auth='user')
-    def mail_client_action(self):
+    @http.route('/mail/init_messaging', type='json', auth='user')
+    def mail_init_messaging(self):
         values = {
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
             'starred_counter': request.env['res.partner'].get_starred_count(),
             'channel_slots': request.env['mail.channel'].channel_fetch_slot(),
+            'mail_failures': request.env['mail.message'].message_fetch_failed(),
             'commands': request.env['mail.channel'].get_mention_commands(),
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
-            'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['shortcode_type', 'source', 'unicode_source', 'substitution', 'description']),
-            'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mail_channel_menu_root_chat'),
+            'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
+            'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.menu_root_discuss'),
+            'is_moderator': request.env.user.is_moderator,
+            'moderation_counter': request.env.user.moderation_counter,
+            'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
         }
         return values

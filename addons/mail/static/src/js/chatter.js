@@ -2,11 +2,11 @@ odoo.define('mail.Chatter', function (require) {
 "use strict";
 
 var Activity = require('mail.Activity');
-var chat_mixin = require('mail.chat_mixin');
-var ChatterComposer = require('mail.ChatterComposer');
+var AttachmentBox = require('mail.AttachmentBox');
+var ChatterComposer = require('mail.composer.Chatter');
 var Followers = require('mail.Followers');
 var ThreadField = require('mail.ThreadField');
-var utils = require('mail.utils');
+var mailUtils = require('mail.utils');
 
 var concurrency = require('web.concurrency');
 var config = require('web.config');
@@ -22,30 +22,40 @@ var QWeb = core.qweb;
 // with each other.
 // It synchronizes the rendering of those widgets (as they may be asynchronous), to limitate
 // the flickering when switching between records
-var Chatter = Widget.extend(chat_mixin, {
+var Chatter = Widget.extend({
     template: 'mail.Chatter',
     custom_events: {
+        discard_record_changes: '_onDiscardRecordChanges',
         reload_mail_fields: '_onReloadMailFields',
     },
     events: {
         'click .o_chatter_button_new_message': '_onOpenComposerMessage',
         'click .o_chatter_button_log_note': '_onOpenComposerNote',
+        'click .o_chatter_button_attachment': '_onOpenAttachments',
         'click .o_chatter_button_schedule_activity': '_onScheduleActivity',
     },
     supportedFieldTypes: ['one2many'],
 
-    // inherited
+    /**
+     * @override
+     * @param {widget} parent
+     * @param {Object} record
+     * @param {Object} mailFields
+     * @param {string} [mailFields.mail_activity]
+     * @param {string} [mailFields.mail_followers]
+     * @param {string} [mailFields.mail_thread]
+     */
     init: function (parent, record, mailFields, options) {
         this._super.apply(this, arguments);
         this._setState(record);
 
-        this.dp = new concurrency.DropPrevious();
+        this._dp = new concurrency.DropPrevious();
 
         // mention: get the prefetched partners and use them as mention suggestions
         // if there is a follower widget, the followers will be added to the
         // suggestions as well once fetched
-        this.mentionPartnerSuggestions = this._getMentionPartnerSuggestions();
-        this.mentionSuggestions = this.mentionPartnerSuggestions;
+        this._mentionPartnerSuggestions = this.call('mail_service', 'getMentionPartnerSuggestions');
+        this._mentionSuggestions = this._mentionPartnerSuggestions;
 
         this.fields = {};
         if (mailFields.mail_activity) {
@@ -56,37 +66,52 @@ var Chatter = Widget.extend(chat_mixin, {
         }
         if (mailFields.mail_thread) {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
-            var nodeOptions = this.record.fieldsInfo.form[mailFields.mail_thread].options;
-            this.hasLogButton = nodeOptions.display_log_button;
+            var fieldsInfo = this.record.fieldsInfo[record.viewType];
+            var nodeOptions = fieldsInfo[mailFields.mail_thread].options || {};
+            this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
         }
+        this.attachmentBoxOpened = false;
     },
+    /**
+     * @override
+     */
     start: function () {
-        this.$topbar = this.$('.o_chatter_topbar');
-
+        this._$topbar = this.$('.o_chatter_topbar');
+        this.$('.o_topbar_right_area').append(QWeb.render('mail.chatter.Attachment.Button', {
+            count: this.record.data.message_attachment_count || 0,
+        }));
         // render and append the buttons
-        this.$topbar.append(QWeb.render('mail.Chatter.Buttons', {
-            new_message_btn: !!this.fields.thread,
-            log_note_btn: this.hasLogButton,
-            schedule_activity_btn: !!this.fields.activity,
+        this._$topbar.prepend(QWeb.render('mail.chatter.Buttons', {
+            newMessageButton: !!this.fields.thread,
+            logNoteButton: this.hasLogButton,
+            scheduleActivityButton: !!this.fields.activity,
             isMobile: config.device.isMobile,
         }));
-
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
-        var def = this.dp.add($.when.apply($, fieldDefs));
+        var def = this._dp.add($.when.apply($, fieldDefs));
         this._render(def).then(this._updateMentionSuggestions.bind(this));
 
         return this._super.apply(this, arguments);
     },
 
-    // public
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @param {Object} record
+     * @param {integer} [record.res_id=undefined]
+     * @param {Object[]} [fieldNames=undefined]
+     */
     update: function (record, fieldNames) {
         var self = this;
 
         // close the composer if we switch to another record as it is record dependent
         if (this.record.res_id !== record.res_id) {
             this._closeComposer(true);
+            this._closeAttachments();
         }
 
         // update the state
@@ -113,65 +138,175 @@ var Chatter = Widget.extend(chat_mixin, {
             fieldsToReset = this.fields;
         }
         var fieldDefs = _.invoke(fieldsToReset, 'reset', record);
-        var def = this.dp.add($.when.apply($, fieldDefs));
+        var def = this._dp.add($.when.apply($, fieldDefs));
         this._render(def).then(function () {
             self.$el.height('auto');
             self._updateMentionSuggestions();
         });
+        this._updateAttachmentCounter();
     },
 
-    // private
-    _closeComposer: function (force) {
-        if (this.composer && (this.composer.is_empty() || force)) {
-            this.$el.removeClass('o_chatter_composer_active');
-            this.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
-            this.composer.do_hide();
-            this.composer.clear_composer();
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {boolean} force
+     */
+    _closeAttachments: function () {
+        if (this.fields.attachments) {
+            this.$('.o_chatter_button_attachment').removeClass('o_active_attach');
+            this.fields.attachments.destroy();
+            this.attachmentBoxOpened = false;
         }
     },
+    /**
+     * @private
+     * @param {boolean} force
+     */
+    _closeComposer: function (force) {
+        if (this._composer && (this._composer.isEmpty() || force)) {
+            this.$el.removeClass('o_chatter_composer_active');
+            this.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
+            this._composer.do_hide();
+            this._composer.clearComposer();
+        }
+    },
+    /**
+     * @private
+     */
+    _disableChatter: function () {
+        this.$('.btn').prop('disabled', true); // disable buttons
+    },
+    /**
+     * Discard changes on the record.
+     *
+     * @private
+     * @returns {$.Deferred} resolved if successfully discarding changes on
+     *   the record, rejected otherwise
+     */
+    _discardChanges: function () {
+        var def = $.Deferred();
+        this.trigger_up('discard_changes', {
+            recordID: this.record.id,
+            onSuccess: def.resolve.bind(def),
+            onFailure: def.reject.bind(def),
+        });
+        return def;
+    },
+    /**
+     * Discard changes on the record if the message will reload the record
+     * after posting it
+     *
+     * @private
+     * @param {Object} messageData
+     * @return {$.Deferred} resolved if no reload or proceed to discard the
+     *   changes on the record, rejected otherwise
+     */
+    _discardOnReload: function (messageData) {
+        if (this._reloadAfterPost(messageData)) {
+            return this._discardChanges();
+        }
+        return $.when();
+    },
+    /**
+     * @private
+     */
+    _enableChatter: function () {
+        this.$('.btn').prop('disabled', false); // enable buttons
+    },
+    /**
+     * @private
+     */
+    _openAttachments: function () {
+        var self = this;
+        this.fields.attachments = new AttachmentBox(this, this.record);
+
+        var $anchor = this.$('.o_chatter_topbar');
+        if (this._composer) {
+            $anchor = this.$('.o_thread_composer');
+        }
+        this.fields.attachments.insertAfter($anchor).then(function () {
+            self.$el.addClass('o_chatter_composer_active');
+            self.$('.o_chatter_button_attachment').addClass('o_active_attach');
+        });
+        this.attachmentBoxOpened = true;
+    },
+    /**
+     * @private
+     * @param {Object} options
+     * @param {Object[]} [options.suggested_partners=[]]
+     * @param {boolean} [options.isLog]
+     */
     _openComposer: function (options) {
         var self = this;
-        var old_composer = this.composer;
+        var oldComposer = this._composer;
         // create the new composer
-        this.composer = new ChatterComposer(this, this.record.model, options.suggested_partners || [], {
-            commands_enabled: false,
+        this._composer = new ChatterComposer(this, this.record.model, options.suggested_partners || [], {
+            commandsEnabled: false,
             context: this.context,
-            input_min_height: 50,
-            input_max_height: Number.MAX_VALUE, // no max_height limit for the chatter
-            input_baseline: 14,
-            is_log: options && options.is_log,
-            record_name: this.record_name,
-            default_body: old_composer && old_composer.$input && old_composer.$input.val(),
-            default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
+            inputMinHeight: 50,
+            isLog: options && options.isLog,
+            recordName: this.recordName,
+            defaultBody: oldComposer && oldComposer.$input && oldComposer.$input.val(),
+            defaultMentionSelections: oldComposer && oldComposer.getMentionListenerSelections(),
         });
-        this.composer.on('input_focused', this, function () {
-            this.composer.mention_set_prefetched_partners(this.mentionSuggestions || []);
+        this._composer.on('input_focused', this, function () {
+            this._composer.mentionSetPrefetchedPartners(this._mentionSuggestions || []);
         });
-        this.composer.insertAfter(this.$('.o_chatter_topbar')).then(function () {
+        this._composer.insertAfter(this.$('.o_chatter_topbar')).then(function () {
             // destroy existing composer
-            if (old_composer) {
-                old_composer.destroy();
+            if (oldComposer) {
+                oldComposer.destroy();
             }
-            if (!config.device.touch) {
-                self.composer.focus();
+            if (!config.device.isMobile) {
+                self._composer.focus();
             }
-            self.composer.on('post_message', self, function (message) {
-                self.fields.thread.postMessage(message).then(function () {
-                    self._closeComposer(true);
-                    if (self.postRefresh === 'always' || (self.postRefresh === 'recipients' && message.partner_ids.length)) {
-                        self.trigger_up('reload');
-                    }
+            self._composer.on('post_message', self, function (messageData) {
+                self._discardOnReload(messageData).then(function () {
+                    self.fields.thread.postMessage(messageData).then(function () {
+                        self._closeComposer(true);
+                        if (self._reloadAfterPost(messageData)) {
+                            self.trigger_up('reload');
+                        } else if (messageData.attachment_ids.length) {
+                            self.trigger_up('reload', {fieldNames: ['message_attachment_count']});
+                        }
+                    });
                 });
             });
-            self.composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
-            self.composer.on('close_composer', null, self._closeComposer.bind(self, true));
+            self._composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
+            self._composer.on('close_composer', null, self._closeComposer.bind(self, true));
 
             self.$el.addClass('o_chatter_composer_active');
             self.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
-            self.$('.o_chatter_button_new_message').toggleClass('o_active', !self.composer.options.is_log);
-            self.$('.o_chatter_button_log_note').toggleClass('o_active', self.composer.options.is_log);
+            self.$('.o_chatter_button_new_message').toggleClass('o_active', !self._composer.options.isLog);
+            self.$('.o_chatter_button_log_note').toggleClass('o_active', self._composer.options.isLog);
         });
     },
+    /**
+     * State if the record will be reloaded after posting a message.
+     * Useful to warn the user of unsaved changes if the record is dirty.
+     *
+     * @private
+     * @param {Object} messageData
+     * @param {Array} [messageData.partner_ids] list of recipients of a message
+     * @return {boolean} true if record will be reloaded after posting the
+     *   message, false otherwise
+     */
+    _reloadAfterPost: function (messageData) {
+        return this.postRefresh === 'always' ||
+                (
+                   this.postRefresh === 'recipients' &&
+                   messageData.partner_ids &&
+                   messageData.partner_ids.length
+                );
+    },
+    /**
+     * @private
+     * @param {Deferred} def
+     * @returns {Deferred}
+     */
     _render: function (def) {
         // the rendering of the chatter is aynchronous: relational data of its fields needs to be
         // fetched (in some case, it might be synchronous as they hold an internal cache).
@@ -191,14 +326,28 @@ var Chatter = Widget.extend(chat_mixin, {
                 self.fields.activity.$el.appendTo(self.$el);
             }
             if (self.fields.followers) {
-                self.fields.followers.$el.appendTo(self.$topbar);
+                self.fields.followers.$el.insertBefore(self.$('.o_chatter_button_attachment'));
             }
             if (self.fields.thread) {
                 self.fields.thread.$el.appendTo(self.$el);
             }
-        }).always($spinner.remove.bind($spinner));
+        }).always(function () {
+            // disable widgets in create mode, otherwise enable
+            self._isCreateMode ? self._disableChatter() : self._enableChatter();
+            $spinner.remove();
+        });
     },
+    /**
+     * @private
+     * @param {Object} record
+     * @param {integer} [record.res_id]
+     * @param {string} [record.model]
+     * @param {string} record.data.display_name
+     */
     _setState: function (record) {
+
+        this._isCreateMode = !record.res_id;
+
         if (!this.record || this.record.res_id !== record.res_id) {
             this.context = {
                 default_res_id: record.res_id || false,
@@ -209,41 +358,76 @@ var Chatter = Widget.extend(chat_mixin, {
             this.suggested_partners_def = undefined;
         }
         this.record = record;
-        this.record_name = record.data.display_name;
+        this.recordName = record.data.display_name;
     },
+    /**
+     * @private
+     */
+     _updateAttachmentCounter: function () {
+        var count = this.record.data.message_attachment_count || 0;
+        this.$('.o_chatter_attachment_button_count').html(' ('+ count +')');
+        this.$('.o_chatter_button_attachment').toggleClass('o_hidden', !count);
+     },
+    /**
+     * @private
+     */
     _updateMentionSuggestions: function () {
         if (!this.fields.followers) {
             return;
         }
         var self = this;
 
-        this.mentionSuggestions = [];
+        this._mentionSuggestions = [];
 
         // add the followers to the mention suggestions
-        var follower_suggestions = [];
+        var followerSuggestions = [];
         var followers = this.fields.followers.getFollowers();
         _.each(followers, function (follower) {
             if (follower.res_model === 'res.partner') {
-                follower_suggestions.push({
+                followerSuggestions.push({
                     id: follower.res_id,
                     name: follower.name,
                     email: follower.email,
                 });
             }
         });
-        if (follower_suggestions.length) {
-            this.mentionSuggestions.push(follower_suggestions);
+        if (followerSuggestions.length) {
+            this._mentionSuggestions.push(followerSuggestions);
         }
 
         // add the partners (followers filtered out) to the mention suggestions
-        _.each(this.mentionPartnerSuggestions, function (partners) {
-            self.mentionSuggestions.push(_.filter(partners, function (partner) {
-                return !_.findWhere(follower_suggestions, { id: partner.id });
+        _.each(this._mentionPartnerSuggestions, function (partners) {
+            self._mentionSuggestions.push(_.filter(partners, function (partner) {
+                return !_.findWhere(followerSuggestions, { id: partner.id });
             }));
         });
     },
 
-    // handlers
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onOpenAttachments: function () {
+        if (this.attachmentBoxOpened) {
+            this._closeAttachments();
+        } else {
+            this._openAttachments();
+        }
+    },
+    /**
+     * Discard changes on the record.
+     * This is notified by the composer, when opening the full-composer.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.proceed callback to tell to proceed
+     */
+    _onDiscardRecordChanges: function (ev) {
+        this._discardChanges().then(ev.data.proceed);
+    },
     _onOpenComposerMessage: function () {
         var self = this;
         if (!this.suggested_partners_def) {
@@ -258,7 +442,7 @@ var Chatter = Widget.extend(chat_mixin, {
                     var suggested_partners = [];
                     var thread_recipients = result[self.context.default_res_id];
                     _.each(thread_recipients, function (recipient) {
-                        var parsed_email = recipient[1] && utils.parse_email(recipient[1]);
+                        var parsed_email = recipient[1] && mailUtils.parseEmail(recipient[1]);
                         suggested_partners.push({
                             checked: true,
                             partner_id: recipient[0],
@@ -272,12 +456,24 @@ var Chatter = Widget.extend(chat_mixin, {
                 });
         }
         this.suggested_partners_def.then(function (suggested_partners) {
-            self._openComposer({ is_log: false, suggested_partners: suggested_partners });
+            self._openComposer({ isLog: false, suggested_partners: suggested_partners });
         });
     },
+    /**
+     * @private
+     */
     _onOpenComposerNote: function () {
-        this._openComposer({is_log: true});
+        this._openComposer({ isLog: true });
     },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     * @param {string} event.name
+     * @param {Object} event.data
+     * @param {boolean} [event.data.activity]
+     * @param {boolean} [event.data.followers]
+     * @param {boolean} [event.data.thread]
+     */
     _onReloadMailFields: function (event) {
         var fieldNames = [];
         if (this.fields.activity && event.data.activity) {
@@ -294,8 +490,11 @@ var Chatter = Widget.extend(chat_mixin, {
             keepChanges: true,
         });
     },
+    /**
+     * @private
+     */
     _onScheduleActivity: function () {
-        this.fields.activity.scheduleActivity(false);
+        this.fields.activity.scheduleActivity();
     },
 });
 

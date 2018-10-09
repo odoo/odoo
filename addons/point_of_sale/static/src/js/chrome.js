@@ -5,6 +5,7 @@ var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
@@ -436,9 +437,9 @@ var SaleDetailsButton = PosBaseWidget.extend({
     },
 });
 
-/* User interface for distant control over the Client display on the posbox */
-// The boolean posbox_supports_display (in devices.js) will allow interaction to the posbox on true, prevents it otherwise
-// We don't want the incompatible posbox to be flooded with 404 errors on arrival of our many requests as it triggers losses of connections altogether
+/* User interface for distant control over the Client display on the IoT Box */
+// The boolean posbox_supports_display (in devices.js) will allow interaction to the IoT Box on true, prevents it otherwise
+// We don't want the incompatible IoT Box to be flooded with 404 errors on arrival of our many requests as it triggers losses of connections altogether
 var ClientScreenWidget = PosBaseWidget.extend({
     template: 'ClientScreenWidget',
 
@@ -459,7 +460,7 @@ var ClientScreenWidget = PosBaseWidget.extend({
             this.$('.js_disconnected').removeClass('oe_hidden');
             msg = _t('Disconnected')
             if (status === 'not_found') {
-                msg = _t('Client Screen Unsupported. Please upgrade the PosBox')
+                msg = _t('Client Screen Unsupported. Please upgrade the IoT Box')
             }
         }
 
@@ -564,7 +565,7 @@ var ClientScreenWidget = PosBaseWidget.extend({
 // - .gui which controls the switching between 
 //   screens and the showing/closing of popups
 
-var Chrome = PosBaseWidget.extend({
+var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
     template: 'Chrome',
     init: function() { 
         var self = this;
@@ -607,14 +608,12 @@ var Chrome = PosBaseWidget.extend({
         $(window).off();
         $('html').off();
         $('body').off();
-        this.$el.parent().off();
         // The above lines removed the bindings, but we really need them for the barcode
         BarcodeEvents.start();
     },
 
     build_chrome: function() { 
         var self = this;
-        FastClick.attach(document.body);
 
         if ($.browser.chrome) {
             var chrome_version = $.browser.version.split('.')[0];
@@ -922,4 +921,3 @@ return {
     UsernameWidget: UsernameWidget,
 };
 });
-

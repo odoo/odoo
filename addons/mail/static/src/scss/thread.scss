@@ -1,0 +1,241 @@
+.o_mail_thread, .o_mail_activity {
+    .o_thread_show_more {
+        text-align: center;
+    }
+
+    .o_mail_thread_content {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+    }
+
+    .o_thread_bottom_free_space {
+        height: 15px;
+    }
+
+    .o_thread_typing_notification_free_space {
+        flex-grow: 1,
+    }
+
+    .o_thread_typing_notification_bar {
+        flex: 0, 0, 20px;
+        background-color: rgba($white, 0.75);
+        padding: 5px;
+        text-align: center;
+        color: gray('600');
+
+        &.o_thread_order_asc {
+            @include o-position-sticky($bottom: 0px);
+        }
+
+        &.o_thread_order_desc {
+            @include o-position-sticky($top: 0px);
+        }
+    }
+
+    .o_thread_tooltip_container {
+        display: inline;
+        position: relative;
+    }
+
+    .o_thread_date_separator {
+        margin-top: 15px;
+        margin-bottom: 30px;
+        @include media-breakpoint-down(sm) {
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+        border-bottom: 1px solid gray('400');
+        text-align: center;
+
+        .o_thread_date {
+            position: relative;
+            top: 10px;
+            margin: 0 auto;
+            padding: 0 10px;
+            font-weight: bold;
+            background: white;
+        }
+    }
+
+    .o_thread_new_messages_separator {
+        margin-bottom: 15px;
+        border-bottom: solid lighten($o-brand-odoo, 15%) 1px;
+        text-align: right;
+        .o_thread_separator_label {
+            position: relative;
+            top: 8px;
+            padding: 0 10px;
+            background: white;
+            color: lighten($o-brand-odoo, 15%);
+            font-size: smaller;
+        }
+    }
+
+    .o_thread_message {
+        display: flex;
+        padding: 4px $o-horizontal-padding;
+        margin-bottom: 0px;
+
+        &.o_mail_not_discussion {
+            background-color: rgba(gray('300'), 0.5);
+            border-bottom: 1px solid gray('400');
+        }
+
+        .o_thread_message_sidebar {
+            flex: 0 0 $o-mail-thread-avatar-size;
+            margin-right: 10px;
+            margin-top: 2px;
+            text-align: center;
+            font-size: smaller;
+
+            @include media-breakpoint-down(sm) {
+                margin-top: 4px;
+                font-size: x-small;
+            }
+
+            .o_thread_message_avatar {
+                max-width: $o-mail-thread-avatar-size;
+            }
+            .o_thread_message_side_date {
+                margin-left: -5px;
+            }
+            .o_thread_message_star {
+                margin-right: -5px;
+            }
+
+            .o_thread_message_side_date {
+                opacity: 0;
+            }
+        }
+        .o_thread_icon {
+            cursor: pointer;
+            opacity: 0;
+            &.fa-star {
+                opacity: $o-mail-thread-icon-opacity;
+                color: gold;
+            }
+        }
+
+        &:hover, &.o_thread_selected_message {
+            .o_thread_message_side_date {
+                opacity: $o-mail-thread-side-date-opacity;
+            }
+            .o_thread_icon {
+                opacity: $o-mail-thread-icon-opacity;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .o_mail_redirect {
+            cursor: pointer;
+        }
+
+        .o_thread_message_core {
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: 100%;
+            word-wrap: break-word;
+            > pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+                text-align: justify;
+            }
+
+
+
+            .o_mail_subject {
+                font-style: italic;
+            }
+
+            .o_mail_notification {
+                font-style: italic;
+                color: gray;
+            }
+
+            [summary~=o_mail_notification] { // name conflicts with channel notifications, but is odoo notification buttons to hide in chatter if present
+                display: none;
+            }
+
+            p {
+                margin: 0 0 9px; // Required by the old design to override a general rule on p's
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+            a {
+                display: inline-block;
+                word-break: break-all;
+            }
+            img {
+                max-width: 100%;
+            }
+
+            .o_mail_body_long {
+                display: none;
+            }
+
+            .o_mail_info {
+                margin-bottom: 2px;
+
+                strong {
+                    color: $headings-color;
+                }
+            }
+
+            .o_thread_message_star, .o_thread_message_needaction, .o_thread_message_reply, .o_thread_message_email {
+                padding: 4px;
+            }
+
+            i.o_thread_message_email {
+                &.o_thread_message_email_ready {
+                    color: grey;
+                }
+                &.o_thread_message_email_exception, &.o_thread_message_email_bounce {
+                    color: red;
+                    opacity: 1;
+                    cursor: pointer;
+                }
+            }
+
+            .o_attachments_list, .o_attachments_previews {
+                &:last-child {
+                    margin-bottom: $grid-gutter-width;
+                }
+            }
+
+            .o_thread_tooltip_container {
+                display: inline;
+                position: relative;
+            }
+        }
+    }
+    .o_thread_title {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 125%;
+    }
+
+    .o_mail_no_content {
+        @include o-position-absolute(30%, 0, 0, 0);
+        text-align: center;
+        font-size: 115%;
+    }
+
+    .o_thread_message .o_thread_message_core .o_mail_read_more {
+        display: block;
+    }
+}
+
+.o_web_client .popover .o_thread_tooltip_icon {
+    min-width: 1rem;
+}
+
+.o_web_client.o_touch_device {
+    .o_mail_thread .o_thread_icon {
+        opacity: $o-mail-thread-icon-opacity;
+    }
+}

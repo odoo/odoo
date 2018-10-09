@@ -19,7 +19,7 @@ class CrmTeam(models.Model):
         ('month', 'Month'),
         ('user', 'Salesperson'),
         ('pos', 'Point of Sale'),
-    ], string='Group by', default='day', help="How this channel's dashboard graph will group the results.")
+    ], string='POS Grouping', default='day', help="How this channel's dashboard graph will group the results.")
 
     @api.onchange('dashboard_graph_group_pos')
     def _onchange_dashboard_graph_group_pos(self):
@@ -91,7 +91,7 @@ class CrmTeam(models.Model):
                 )
                 if self.dashboard_graph_group_pos == 'day':
                     for data_point in order_data:
-                        result.append({'x_value': fields.Date.to_string((fields.datetime.strptime(data_point.get('date:day'), "%d %b %Y"))), 'y_value': data_point.get('price_total')})
+                        result.append({'x_value': fields.Date.to_date(datetime.strptime(data_point.get('date:day'), "%d %b %Y")), 'y_value': data_point.get('price_total')})
                 elif self.dashboard_graph_group_pos == 'week':
                     for data_point in order_data:
                         result.append({'x_value': int(data_point.get('date:week')[1:3]), 'y_value': data_point.get('price_total')})

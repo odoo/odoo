@@ -6,15 +6,13 @@
         <field name="arch" type="xml">
             <search>
                 <field name="workcenter_id"/>
-                <filter string="Today" name="today" domain="[('date_start','&gt;=',time.strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="This Month" name="thismonth" domain="[('date_start','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
-                <filter string="This Year" name="thisyear" domain="[('date_start','&gt;=',time.strftime('%%Y-01-01'))]"/>
-                <separator/>
                 <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
                 <filter string="Late" name="late" domain="[('date_planned_start','&lt;=',time.strftime('%%Y-%%m-%%d'))]"/>
+                <separator/>
+                <filter string="Start Date" name="date_start_filter" date="date_start"/>
                 <separator/>
             </search>
         </field>
@@ -29,8 +27,10 @@
         <field name="context">{'search_default_workcenter_id': active_id}</field>
         <field name="domain">[]</field>
         <field name="help" type="html">
-            <p>
-              No data to display. You will get here statistics about the
+            <p class="o_view_nocontent_empty_folder">
+              No data to display
+            </p><p>
+              You will get here statistics about the
               work orders duration related to this routing.
             </p>
         </field>
@@ -46,8 +46,10 @@
         <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
         <field name="domain">[('production_id.routing_id', '=', active_id), ('state', '=', 'done')]</field>
         <field name="help" type="html">
-            <p>
-              No data to display. You will get here statistics about the
+            <p class="o_view_nocontent_empty_folder">
+              No data to display
+            </p><p>
+              You will get here statistics about the
               work orders duration related to this routing.
             </p>
         </field>
@@ -61,7 +63,9 @@
         <field name="view_mode">tree,form,gantt,calendar,pivot,graph</field>
         <field name="domain">[('production_id', '=', active_id)]</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
+          <p class="o_view_nocontent_smiling_face">
+            Start a new work order
+          </p><p>
             Work Orders are operations to be processed at a Work Center to realize a
             Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
             they are based on the Routing defined on these ones
@@ -69,7 +73,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
+    <record model="ir.ui.view" id="mrp_production_workorder_tree_view_inherit">
         <field name="name">mrp.production.work.order.tree</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
@@ -86,7 +90,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherit">
+    <record model="ir.ui.view" id="mrp_production_workorder_form_view_inherit">
         <field name="name">mrp.production.work.order.form</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
@@ -128,10 +132,6 @@
                         </div>
                         <field name="is_produced" invisible="1"/>
                     </group>
-                    <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('production_messages', '=', False)]}">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
-                        <field name="production_messages"/>
-                    </div>
                 </group>
                 <notebook>
                 <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False)]}">
@@ -189,7 +189,7 @@
                             </div>
                             <label for="duration"/>
                             <div>
-                                <button style="pointer-events: none;" class="oe_inline label label-default">
+                                <button style="pointer-events: none;" class="oe_inline badge badge-secondary">
                                     <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
                                 </button>
                             </div>
@@ -203,7 +203,7 @@
                                 <field name="duration" widget="float_time" sum="Total duration"/>
                                 <field name="user_id"/>
                                 <field name="workcenter_id" invisible="1"/>
-                                <field name="loss_id" string="Efficiency"/>
+                                <field name="loss_id" string="Productivity"/>
                             </tree>
                             <form>
                                 <group>
@@ -241,7 +241,7 @@
         </field>
     </record>
 
-    <record id="view_mrp_production_workcenter_form_view_filter" model="ir.ui.view">
+    <record id="view_mrp_production_workorder_form_view_filter" model="ir.ui.view">
         <field name="name">mrp.production.work.order.select</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
@@ -263,7 +263,7 @@
                     <filter string="Work Center" name="work_center" domain="[]" context="{'group_by':'workcenter_id'}"/>
                     <filter string="Production" name="production" domain="[]" context="{'group_by':'production_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Scheduled Month" name="scheduled_month" domain="[]" context="{'group_by':'date_planned_start'}" help="Scheduled Date by Month"/>
+                    <filter string="Scheduled Date" name="scheduled_month" domain="[]" context="{'group_by':'date_planned_start'}"/>
                 </group>
              </search>
         </field>
@@ -330,6 +330,10 @@
                 <field name="name"/>
                 <field name="production_id"/>
                 <field name="state"/>
+                <field name="is_user_working"/>
+                <field name="working_user_ids"/>
+                <field name="last_working_user_id"/>
+                <field name="working_state"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
                 <field name="qty_production"/>
@@ -338,13 +342,22 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
-                                <strong><span><t t-esc="record.production_id.value"/></span> - <span><t t-esc="record.name.value"/></span></strong>
-                                <div class="row">
-                                    <div class="col-xs-7 o_kanban_primary_left">
-                                        <span><t t-esc="record.product_id.value"/></span>
+                                <div>
+                                    <strong class="o_kanban_record_title">
+                                        <span><t t-esc="record.production_id.value"/></span> - <span><t t-esc="record.name.value"/></span>
+                                    </strong>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span><t t-esc="record.product_id.value"/></span> <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
                                     </div>
-                                    <div class="col-xs-5 o_kanban_primary_right">
-                                        <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
+                                    <div class="oe_kanban_bottom_right" t-if="record.state.raw_value == 'progress'">
+                                        <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play" role="img" aria-label="Run" title="Run"/></span>
+                                        <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause" role="img" aria-label="Pause" title="Pause"/></span>
+                                        <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop" role="img" aria-label="Stop" title="Stop"/></span>
+                                        <t t-if="record.last_working_user_id.raw_value">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.last_working_user_id.raw_value)" width="24" height="24" class="oe_kanban_avatar" alt="Avatar"/>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
@@ -356,20 +369,22 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_mrp_workorder_workcenter">
-        <field name="name">Work Orders</field>
+        <field name="name">Work Orders Planning</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_type">form</field>
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
-        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="view_id" ref="mrp_workorder_view_gantt"/>
         <field name="context">{'search_default_work_center': True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-           Work Orders are operations to be processed at a Work Center to realize a
-           Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
-           they are based on the Routing defined on these ones.
-           </p>
+          <p class="o_view_nocontent_smiling_face">
+            Start a new work order
+          </p><p>
+            Work Orders are operations to be processed at a Work Center to realize a
+            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
+            they are based on the Routing defined on these ones
+            </p>
         </field>
     </record>
 
@@ -380,12 +395,12 @@
         <field name="view_type">form</field>
         <field name="domain">[('production_state','not in',('done','cancel'))]</field>
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
-        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="view_id" ref="workcenter_line_gantt_production"/>
         <field name="context">{'search_default_production': True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to start a new work order.
+          <p class="o_view_nocontent_smiling_face">
+            Start a new work order
           </p><p>
             To manufacture or assemble products, and use raw materials and
             finished products you must also handle manufacturing operations.
@@ -402,16 +417,16 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
-        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="context">{'search_default_ready': True, 'search_default_progress': True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to start a new work order.
+          <p class="o_view_nocontent_smiling_face">
+            Start a new work order
           </p><p>
             Work Orders are operations to be processed at a Work Center to realize a
             Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
-            they are based on the Routing defined on these ones.
-          </p>
+            they are based on the Routing defined on these ones
+            </p>
         </field>
     </record>
 

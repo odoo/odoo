@@ -16,8 +16,7 @@
                 <div class="oe_button_box" name="button_box">
                     <button string="Current Stock"
                             class="oe_stat_button"
-                            icon="fa-building-o" name="%(location_open_quants)d" type="action"
-                            context="{'search_default_internal_loc': 1}"/>
+                            icon="fa-building-o" name="%(location_open_quants)d" type="action"/>
                     <button string="Products"
                             class="oe_stat_button"
                             icon="fa-filter" name="%(act_product_location_open)d" type="action"
@@ -48,7 +47,7 @@
                     </group>
                     <group string="Logistics" groups="stock.group_adv_location">
                         <field name="removal_strategy_id" options="{'no_create': True}"/>
-                        <field name="putaway_strategy_id"/>
+                        <field name="putaway_strategy_id" context="{'location_id': active_id}"/>
                     </group>
                 </group>
                 <field name="comment" placeholder="External note..."/>
@@ -91,7 +90,7 @@
         <field name="arch" type="xml">
             <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" create="false">
                 <field name="active" invisible="1"/>
-                <field name="display_name"/>
+                <field name="display_name" string="Location"/>
                 <field name="usage"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
@@ -119,8 +118,8 @@
         <field name="search_view_id" ref="view_location_search"/>
         <field name="context">{'search_default_in_location':1}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a location.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new location
           </p><p>
             Define your locations to reflect your warehouse structure and
             organization. Odoo is able to manage physical locations
@@ -139,78 +138,6 @@
     </record>
     <menuitem action="action_location_form" id="menu_action_location_form"
         parent="menu_warehouse_config" sequence="2" groups="stock.group_stock_multi_locations"/>
-
-
-        <record id="stock_location_path_filter" model="ir.ui.view">
-            <field name="name">stock.location.path.select</field>
-            <field name="model">stock.location.path</field>
-            <field name="arch" type="xml">
-                <search string="Search Stock Location Paths">
-                    <filter string="Global" name="route_false" domain="[('route_id','=',False)]" help="If the route is global"/>
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                </search>
-            </field>
-        </record>
-
-        <record id="stock_location_path_tree" model="ir.ui.view">
-            <field name="name">stock.location.path.tree</field>
-            <field name="model">stock.location.path</field>
-            <field name="arch" type="xml">
-                <tree string="Location Paths">
-                    <field name="sequence" widget="handle"/>
-                    <field name="location_from_id" />
-                    <field name="location_dest_id" />
-                    <field name="name" />
-                    <field name="active" invisible="1"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="stock_location_path_form" model="ir.ui.view">
-            <field name="name">stock.location.path.form</field>
-            <field name="model">stock.location.path</field>
-            <field name="arch" type="xml">
-                <form string="Location Paths">
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="stock.group_adv_location">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="sequence" groups="base.group_no_one"/>
-                        </group>
-                    </group>
-                    <group>
-                        <group string="Locations">
-                            <field name="location_from_id"/>
-                            <field name="location_dest_id"/>
-                        </group>
-                        <group string="Details">
-                            <field name="auto"/>
-                            <field name="picking_type_id"/>
-                            <field name="company_id" groups="base.group_multi_company" />
-                            <label for="delay" string="Delay"/>
-                            <div>
-                                <field name="delay" class="oe_inline"/>days
-                            </div>
-                        </group>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="stolocpath">
-            <field name="context">{'search_default_route_false':1}</field>
-            <field name="name">Push Rules</field>
-            <field name="res_model">stock.location.path</field>
-        </record>
-
 
         <!--Routes-->
         <record id="stock_location_route_tree" model="ir.ui.view">
@@ -243,21 +170,19 @@
                         </div>
                     <group>
                         <group>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                        </group>
-                        <group>
                             <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>
                     <separator string="Applicable On"/>
                     <p class="oe_grey">Select the places where this route can be selected</p>
                     <group>
                         <group>
-                            <button name="view_categ_ids" for="product_categ_selectable" type="object" string="Product Categories" class="oe_link"/>
+                            <label for="product_categ_selectable" string="Product Categories"/>
                             <div>
                                 <field name="product_categ_selectable" class="oe_inline"/>
                             </div>
-                            <button name="view_product_ids" for="product_selectable" type="object" string="Products" class="oe_link"/>
+                            <label for="product_selectable" string="Products"/>
                             <div>
                                 <field name="product_selectable" class="oe_inline"/>
                             </div>
@@ -268,11 +193,15 @@
                                    attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
                         </group>
                     </group>
-                    <group string="Push Rules" colspan="4" >
-                        <field name="push_ids" colspan="4" nolabel="1"/>
-                    </group>
-                    <group string="Procurement Rules" colspan="4" >
-                        <field name="pull_ids" colspan="4" nolabel="1" context="{'default_company_id': company_id}"/>
+                    <group string="Rules" colspan="4" >
+                        <field name="rule_ids" colspan="4" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="action"/>
+                                <field name="location_src_id"/>
+                                <field name="location_id"/>
+                            </tree>
+                        </field>
                     </group>
                     </sheet>
                 </form>
@@ -298,13 +227,14 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="stock_location_route_tree" />
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to add a route.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new route
+              </p><p>
+                You can define here the main routes that run through
+                your warehouses and that define the flows of your products. These
+                routes can be assigned to a product, a product category or be fixed
+                on procurement or sales order.
               </p>
-                <p>You can define here the main routes that run through
-                    your warehouses and that define the flows of your products. These
-                    routes can be assigned to a product, a product category or be fixed
-                    on procurement or sales order. </p>
             </field>
         </record>
 

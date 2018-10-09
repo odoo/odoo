@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 
 class HrHolidaySummaryReport(models.AbstractModel):
     _name = 'report.hr_holidays.report_holidayssummary'
+    _description = 'Holidays Summary Report'
 
     def _get_header_info(self, start_date, holiday_type):
         st_date = fields.Date.from_string(start_date)
@@ -19,7 +20,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
             'end_date': fields.Date.to_string(st_date + relativedelta(days=59)),
             'holiday_type': 'Confirmed and Approved' if holiday_type == 'both' else holiday_type
         }
-    
+
     def _date_is_day_off(self, date):
         return date.weekday() in (calendar.SATURDAY, calendar.SUNDAY,)
 
@@ -58,9 +59,9 @@ class HrHolidaySummaryReport(models.AbstractModel):
                 res[index]['color'] = '#ababab'
         # count and get leave summary details.
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
-        holidays = self.env['hr.holidays'].search([
+        holidays = self.env['hr.leave'].search([
             ('employee_id', '=', empid), ('state', 'in', holiday_type),
-            ('type', '=', 'remove'), ('date_from', '<=', str(end_date)),
+            ('date_from', '<=', str(end_date)),
             ('date_to', '>=', str(start_date))
         ])
         for holiday in holidays:
@@ -74,7 +75,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
                 date_from += timedelta(1)
-            count += abs(holiday.number_of_days)
+            count += holiday.number_of_days
         self.sum = count
         return res
 
@@ -102,17 +103,17 @@ class HrHolidaySummaryReport(models.AbstractModel):
 
     def _get_holidays_status(self):
         res = []
-        for holiday in self.env['hr.holidays.status'].search([]):
+        for holiday in self.env['hr.leave.type'].search([]):
             res.append({'color': holiday.color_name, 'name': holiday.name})
         return res
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not data.get('form'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
         holidays_report = self.env['ir.actions.report']._get_report_from_name('hr_holidays.report_holidayssummary')
-        holidays = self.env['hr.holidays'].browse(self.ids)
+        holidays = self.env['hr.leave'].browse(self.ids)
         return {
             'doc_ids': self.ids,
             'doc_model': holidays_report.model,

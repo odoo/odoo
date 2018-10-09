@@ -5,6 +5,7 @@ from odoo import api, models
 
 class PayslipDetailsReport(models.AbstractModel):
     _name = 'report.hr_payroll.report_payslipdetails'
+    _description = 'Payslip Details Report'
 
     def get_details_by_rule_category(self, payslip_lines):
         PayslipLine = self.env['hr.payslip.line']
@@ -86,7 +87,7 @@ class PayslipDetailsReport(models.AbstractModel):
         return res
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         payslips = self.env['hr.payslip'].browse(docids)
         return {
             'doc_ids': docids,

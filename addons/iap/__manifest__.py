@@ -9,7 +9,7 @@
     'description': """
 This module provides standard tools (account model, context manager and helpers) to support In-App purchases inside Odoo.
 """,
-    'depends': ['web'],
+    'depends': ['web', 'web_settings_dashboard'],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
@@ -20,7 +20,4 @@ This module provides standard tools (account model, context manager and helpers)
         'static/src/xml/iap_templates.xml',
     ],
     'auto_install': True,
-    # needed because dependencies can't be changed in a stable version
-    # TODO in master: add web_settings_dashboard to depends and remove this
-    'post_init_hook': '_install_web_settings_dashboard',
 }

@@ -82,14 +82,12 @@ QUnit.module('project', {
                             '<div>' +
                                 '<field name="name"/>' +
                                 '<div class="o_dropdown_kanban dropdown">' +
-                                    '<a class="dropdown-toggle btn" data-toggle="dropdown" href="#">' +
+                                    '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
                                         '<span class="fa fa-bars fa-lg"/>' +
                                     '</a>' +
-                                    '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' +
-                                        '<li>' +
-                                            '<a type="set_cover">Set Cover Image</a>'+
-                                        '</li>' +
-                                    '</ul>' +
+                                    '<div class="dropdown-menu" role="menu">' +
+                                        '<a type="set_cover" class="dropdown-item">Set Cover Image</a>'+
+                                    '</div>' +
                                 '</div>' +
                                 '<div>'+
                                     '<field name="displayed_image_id" widget="attachment_image"/>'+
@@ -120,11 +118,11 @@ QUnit.module('project', {
         // single click on image
         $('.modal').find("img[data-id='1']").click();
         $('.modal-footer .btn-primary').click();
-        assert.strictEqual(kanban.$('img[src*="/web/image/1"]').length, 1, "Image inserted in record");
+        assert.strictEqual(kanban.$('img[data-src*="/web/image/1"]').length, 1, "Image inserted in record");
         $('.o_dropdown_kanban [data-type=set_cover]').eq(1).click();
         // double click on image
         $('.modal').find("img[data-id='2']").dblclick();
-        assert.strictEqual(kanban.$('img[src*="/web/image/2"]').length, 1, "Image inserted after double click");
+        assert.strictEqual(kanban.$('img[data-src*="/web/image/2"]').length, 1, "Image inserted after double click");
         // varify write on both kanban record
         assert.verifySteps([1,2]);
         kanban.destroy();

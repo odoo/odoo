@@ -31,10 +31,15 @@
                         <notebook colspan="4" groups="stock.group_adv_location">
                             <page string="Warehouse Configuration" colspan="4">
                                 <group colspan="4">
-                                    <field name="reception_steps" widget='radio'/>
-                                    <field name="delivery_steps" widget='radio'/>
-                                    <field name="default_resupply_wh_id" widget='selection'/>
-                                    <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                    <group string="Shipments">
+                                        <field name="reception_steps" widget='radio'/>
+                                        <field name="delivery_steps" widget='radio'/>
+                                    </group>
+                                    <field name="show_resupply" invisible="1"/>
+                                    <group name="group_resupply" string="Resupply" attrs="{'invisible': [('show_resupply', '!=', True)]}">
+                                        <field name="warehouse_count" invisible="1"/>
+                                        <field name="resupply_wh_ids" attrs="{'invisible': [('show_resupply', '!=', True)]}" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="Technical Information" groups='base.group_no_one'>
@@ -110,8 +115,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new warehouse.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new warehouse
               </p>
             </field>
         </record>
@@ -135,14 +140,14 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
                                     </div>
-                                    <span class="badge"><strong>Min qty :</strong><t t-esc="record.product_min_qty.value"/></span>
+                                    <span class="badge badge-pill"><strong>Min qty :</strong><t t-esc="record.product_min_qty.value"/></span>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <span><t t-esc="record.product_id.value"/></span>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span class="badge"><strong>Max qty :</strong><t t-esc="record.product_max_qty.value"/></span>
+                                        <span class="badge badge-pill"><strong>Max qty :</strong><t t-esc="record.product_max_qty.value"/></span>
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +167,7 @@
                     <field name="warehouse_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="product_id"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
                 </tree>
@@ -175,14 +180,14 @@
             <field name="arch" type="xml">
                 <search string="Reordering Rules Search">
                     <field name="name" string="Reordering Rules"/>
-                    <field name="warehouse_id"/>
+                    <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="product_id"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Warehouse" domain="[]"  context="{'group_by':'warehouse_id'}"/>
-                        <filter string="Location" domain="[]" context="{'group_by':'location_id'}"/>
+                        <filter string="Warehouse" name="warehouse" domain="[]"  context="{'group_by':'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
+                        <filter string="Location" name="location" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
                     </group>
                 </search>
             </field>
@@ -200,13 +205,18 @@
                             </button>
                         </div>
                         <group>
+                            <div class="alert alert-info" role="alert">
+                                <a style="cursor: pointer" class="alert-link o_form_uri" type="action" name="%(action_procurement_compute)d">Run the scheduler</a> manually to trigger the reordering rules right now.
+                            </div>
+                        </group>
+                        <group>
                             <group>
                                 <field name="name" />
                                 <field name="product_id"/>
                             </group>
                             <group>
                                 <field name="warehouse_id" widget="selection" groups="stock.group_stock_multi_locations"/>
-                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -240,9 +250,11 @@
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
             <field name="search_view_id" ref="warehouse_orderpoint_search" />
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a reordering rule.
-              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a reordering rule
+              </p><p>
+                Define a minimum stock rule so that Odoo creates automatically requests for quotations or draft manufacturing orders to resupply your stock.
+              </p>
             </field>
         </record>
         <menuitem

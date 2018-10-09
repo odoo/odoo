@@ -79,24 +79,15 @@
 
     </data>
     <data noupdate="1">
-
         <!--
-    Request link
-    -->
-        <record id="req_link_tracking" model="res.request.link">
-            <field name="name">Lot/Serial Number</field>
-            <field name="object">stock.production.lot</field>
-        </record>
-
-
-        <!--
-             Procurement rules
+             Stock rules
         -->
         
+        <!-- set a lower sequence on the mto route than on the resupply routes -->
         <record id="route_warehouse0_mto" model='stock.location.route'>
             <field name="name">Make To Order</field>
             <field name="company_id"></field>
-            <field name="sequence">10</field>
+            <field name="sequence">5</field>
         </record>
 
         <!--
@@ -152,5 +143,42 @@
             <field name="number_increment">1</field>
         </record>
 
+        <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'stock.stock_location_stock',
+                'record': obj().env.ref('stock.warehouse0').lot_stock_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.stock_location_company',
+                'record': obj().env.ref('stock.warehouse0').wh_input_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.stock_location_output',
+                'record': obj().env.ref('stock.warehouse0').wh_output_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.location_pack_zone',
+                'record': obj().env.ref('stock.warehouse0').wh_pack_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_internal',
+                'record': obj().env.ref('stock.warehouse0').int_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_in',
+                'record': obj().env.ref('stock.warehouse0').in_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_out',
+                'record': obj().env.ref('stock.warehouse0').out_type_id,
+                'noupdate': True,
+            }]"/>
+        </function>
+
+        <!-- create the transit location for each company existing -->
+        <function model="res.company" name="create_transit_location">
+            <value model="res.company" eval="obj().search([('internal_transit_location_id', '=', False)]).ids"/>
+        </function>
     </data>
 </odoo>

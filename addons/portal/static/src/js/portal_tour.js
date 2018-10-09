@@ -10,11 +10,11 @@ tour.register('portal_load_homepage', {
     [
         {
             content: "Check portal is loaded",
-            trigger: 'a[href*="/my/account"]:contains("Change"):first',
+            trigger: 'a[href*="/my/account"]:contains("Edit"):first',
         },
         {
             content: "Load my account details",
-            trigger: 'body:contains("Your Details")',
+            trigger: 'input[value="Joel Willis"]'
         }
     ]
 );

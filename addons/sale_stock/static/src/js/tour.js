@@ -13,7 +13,7 @@ odoo.define("sale_stock.tour", function (require) {
     };
 
     tour.tours.sale_tour.steps.splice(quotation_product_selected_step_index+1, 0, {
-        trigger: ".o_dialog_warning + .modal-footer .btn-primary",
+        trigger: ".modal-footer .btn-primary",
         auto: true,
     }, {
         trigger: "body:not(:has(.o_dialog_warning))",
@@ -21,7 +21,7 @@ odoo.define("sale_stock.tour", function (require) {
         in_modal: false,
         run: function (actions) {
             if ($('.modal-footer .btn-primary').length){
-                actions.auto(".modal-footer .btn-primary");
+                actions.auto('.modal-footer .btn-primary');
             }
         },
     });

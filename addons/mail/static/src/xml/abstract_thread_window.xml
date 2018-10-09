@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        @param {mail.AbstractThreadWindow} widget
+    -->
+    <t t-name="mail.AbstractThreadWindow">
+        <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget.getID()">
+            <div class="o_thread_window_header">
+                <t t-call="mail.AbstractThreadWindow.HeaderContent">
+                    <t t-set="status" t-value="widget.getThreadStatus()"/>
+                    <t t-set="title" t-value="widget.getTitle()"/>
+                    <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
+                </t>
+            </div>
+            <div class="o_thread_window_content">
+            </div>
+            <div t-if="widget.needsComposer()" class="o_thread_composer o_chat_mini_composer">
+                <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        @param {boolean} [open=false] tell whether the hidden thread window
+          dropdown menu is open or not.
+        @param {mail.ThreadWindow[]} threadWindows list of thread windows
+          that are hidden, i.e. put in the hidden window dropdown menu.
+        @param {integer} [unreadCounter] the total unread counter of all
+          threads which are linked to the thread windows that are put in the
+          hidden thread window dropdown menu.
+    -->
+    <t t-name="mail.HiddenThreadWindowsDropdown">
+        <div t-attf-class="o_thread_window o_in_home_menu o_thread_window_dropdown dropup #{open ? 'open' : ''}">
+            <span role="alert" class="o_thread_window_dropdown_toggler dropdown-toggle" data-toggle="dropdown" title="Unread messages">
+                <i class="fa fa-comments-o" role="img" aria-label="Messages"/> <t t-esc="threadWindows.length"/>
+                <span class="o_total_unread_counter">
+                    <t t-if="unreadCounter"><t t-esc="unreadCounter"/></t>
+                </span>
+            </span>
+            <ul class="dropdown-menu" role="menu">
+                <t t-foreach="threadWindows" t-as="threadWindow">
+                    <li role="menuitem" class="o_thread_window_header" t-att-data-thread-id="threadWindow.getID()">
+                        <t t-call="mail.AbstractThreadWindow.HeaderContent">
+                            <t t-set="status" t-value="threadWindow.getThreadStatus()"/>
+                            <t t-set="title" t-value="threadWindow.getTitle()"/>
+                            <t t-set="unreadCounter" t-value="threadWindow.getUnreadCounter()"/>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+    <!--
+        @param {string} [status] e.g. 'online', 'offline'.
+        @param {string} title the title of the thread window, e.g. the record
+          name of the document.
+        @param {integer} [unreadCounter] the number of unread messages on the
+          thread.
+        @param {Object} widget
+        @param {function} widget.isMobile function without any param that
+          states whether it should render for desktop or mobile screen.
+    -->
+    <t t-name="mail.AbstractThreadWindow.HeaderContent">
+        <span t-if="widget.isMobile()">
+            <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left mr4" aria-label="Close chat window" title="Close chat window"/>
+        </span>
+        <span class="o_thread_window_title">
+            <t t-if="status" t-call="mail.UserStatus"/>
+            <t t-esc="title"/>
+            <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
+        </span>
+        <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
+            <a href="#" class="o_thread_window_close fa fa-close"/>
+        </span>
+    </t>
+
+</templates>

@@ -6,10 +6,10 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -19,19 +19,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:70
+#: code:addons/payment_transfer/models/payment.py:83
 #, python-format
 msgid "; multiple order found"
 msgstr "; 找到多個訂單"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:68
+#: code:addons/payment_transfer/models/payment.py:81
 #, python-format
 msgid "; no order found"
 msgstr "; 沒有訂單"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:28
+#: code:addons/payment_transfer/models/payment.py:41
 #, python-format
 msgid ""
 "<div>\n"
@@ -51,21 +51,51 @@ msgstr ""
 "</div>"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Account"
 msgstr "銀行帳戶"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Accounts"
 msgstr "銀行帳戶"
 
 #. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "手工配置"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "付款方式"
+msgstr "收單"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
@@ -73,7 +103,32 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:66
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "服務商"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "條帶"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "電匯"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:79
 #, python-format
 msgid "received data for reference %s"
 msgstr "接收到的信息,供參考 %s"

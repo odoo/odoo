@@ -1,0 +1,167 @@
+// FIXME may be useless (check initial code here: https://github.com/odoo/odoo/blob/51be5bbfb38db784cb3406877cc0e8806b1bf55a/addons/website_slides/static/src/less/website_slides.less#L1)
+$nav-tabs-border-color: #dddddd !default;
+$info: #dddddd !default;
+$body-bg: #FFFFFF !default;
+$primary: #428bca !default;
+$link-color: theme-color('primary') !default;
+$panel-footer-bg: #f5f5f5 !default;
+$nav-link-hover-bg: #FFFFFF !default;
+$navbar-default-link-hover-color: #333 !default;
+$light: #f8f8f8 !default;
+$MAX-Z-INDEX : 2147483647 !default;
+
+@mixin top-covered-image {
+    object-fit: cover;
+    object-position: top;
+}
+
+.oe_slides_panel_footer .fa, .oe_slide_js_embed_option_link{
+    color : theme-color('primary');
+    cursor: pointer;
+}
+
+.oe_slide_embed_option {
+    position: absolute;
+    padding: 30px 30px 30px 30px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: $body-bg;
+    opacity: 1;
+    display:none;
+    overflow-y: auto !important;
+}
+
+.oe_slide_embed_wrapper {
+  position: relative;
+}
+
+section.oe_slides_promote_box {
+    background-color: $panel-footer-bg;
+    border-bottom: 1px solid $nav-tabs-border-color;
+    border-top: 1px solid $nav-tabs-border-color;
+}
+
+img.oe_slides_channel_thumbnail {
+    @include top-covered-image;
+    height: 250px;
+    width: 100%
+}
+
+img.oe_slides_opacity {
+    opacity: .5;
+}
+
+img.oe_slides_promote_image {
+    @include top-covered-image;
+    max-height: 300px;
+    width: 100%;
+    overflow: hidden;
+    display: block;
+}
+
+.oe_slides_box_shadow {
+    box-shadow: 0 0 5px #CCC;
+}
+
+.oe_slides_apart_small {
+    @include top-covered-image;
+    height: 60px;
+    width: 90px;
+}
+
+.oe_slides_statistics_title {
+    border-bottom: 1px solid $nav-tabs-border-color;
+    padding-bottom: 5px;
+}
+.oe_slides_transcript {
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.oe_slides_bottom_border {
+   border-bottom: 1px solid $nav-tabs-border-color;
+}
+
+.oe_slide_js_like, .oe_slide_js_unlike{
+    cursor: pointer;
+    color: $link-color;
+}
+
+textarea.o_slides_comment {
+    resize: vertical;
+}
+
+// Thumbnails
+.oe_slides_grid_thumbnail {
+    @include top-covered-image;
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+}
+.oe_slides_ellipsis {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.o_slide_preview {
+    max-height: 160px;
+    overflow: hidden;
+}
+
+// Suggested slides grid
+.oe_slides_suggestion_caption {
+    position:absolute;
+    top:0;
+    right:0;
+    background:rgba(10, 10, 10, 0.75);
+    width:100%;
+    height:100%;
+    display: none;
+    text-align:center;
+    color:#fff !important;
+    z-index:2;
+}
+
+.oe_slides_suggestion_media {
+    margin-top: 10px;
+    position: relative;
+}
+.oe_slides_suggestion_media img {
+    height: 33%;
+    width: 100%;
+    overflow: hidden;
+}
+
+// PDF Viewer Loader
+.oe_slides_loader{
+    position: relative;
+    width: 100%; /* for IE 6 */
+}
+.oe_slides_loader h4{
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 35%;
+
+    color: white;
+    background: rgb(0, 0, 0); /* fallback color */
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+}
+
+// PDF Viewer Share bar
+.oe_slides_share_bar{
+    padding: 10px 0;
+}
+
+.oe_slides_panel_footer #page_number {
+    width: 45px;
+}
+
+.oe_show_footer {
+    z-index: $MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
+}

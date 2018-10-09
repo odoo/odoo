@@ -13,7 +13,7 @@ from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
 from odoo.exceptions import ValidationError
-from odoo.addons.base.ir.ir_qweb.fields import nl2br
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 
 class WebsiteForm(http.Controller):
@@ -209,7 +209,7 @@ class WebsiteForm(http.Controller):
         for file in files:
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
-                'name': file.field_name if custom_field else file.filename,
+                'name': file.filename,
                 'datas': base64.encodestring(file.read()),
                 'datas_fname': file.filename,
                 'res_model': model_name,

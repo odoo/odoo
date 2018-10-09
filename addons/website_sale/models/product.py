@@ -10,6 +10,7 @@ from odoo.tools import float_is_zero
 
 class ProductStyle(models.Model):
     _name = "product.style"
+    _description = 'Product Style'
 
     name = fields.Char(string='Style Name', required=True)
     html_class = fields.Char(string='HTML Classes')
@@ -53,7 +54,7 @@ class ProductPricelist(models.Model):
 
 class ProductPublicCategory(models.Model):
     _name = "product.public.category"
-    _inherit = ["website.seo.metadata"]
+    _inherit = ["website.seo.metadata", "website.multi.mixin"]
     _description = "Website Product Category"
     _order = "sequence, name"
 
@@ -105,28 +106,25 @@ class ProductPublicCategory(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin', 'rating.mixin']
-    _order = 'website_published desc, website_sequence desc, name'
+    _inherit = ["product.template", "website.seo.metadata", 'website.published.multi.mixin', 'rating.mixin']
     _name = 'product.template'
     _mail_post_access = 'read'
 
     website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)
     alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
-                                               string='Alternative Products', help='Suggest more expensive alternatives to '
-                                               'your customers (upsell strategy). Those products show up on the product page.')
+                                               string='Alternative Products', help='Suggest alternatives to your customer'
+                                               '(upsell strategy).Those product show up on the product page.')
     accessory_product_ids = fields.Many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id',
-                                             string='Accessory Products', help='Accessories show up when the customer reviews the '
-                                             'cart before paying (cross-sell strategy, e.g. for computers: mouse, keyboard, etc.). '
-                                             'An algorithm figures out a list of accessories based on all the products added to cart.')
+                                             string='Accessory Products', help='Accessories show up when the customer'
+                                            'reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
                                       default=lambda self: self._default_website_sequence())
     public_categ_ids = fields.Many2many('product.public.category', string='Website Product Category',
-                                        help="Categories can be published on the Shop page (online catalog grid) to help "
-                                        "customers find all the items within a category. To publish them, go to the Shop page, "
-                                        "hit Customize and turn *Product Categories* on. A product can belong to several categories.")
+                                        help="The product will be available in each mentioned e-commerce category. Go to"
+                                        "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
     product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
 
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
@@ -170,6 +168,13 @@ class ProductTemplate(models.Model):
         else:
             return self.set_sequence_bottom()
 
+    def _default_website_meta(self):
+        res = super(ProductTemplate, self)._default_website_meta()
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description_sale
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image" % (self.id)
+        return res
+
     @api.multi
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()
@@ -179,6 +184,8 @@ class ProductTemplate(models.Model):
 
 class Product(models.Model):
     _inherit = "product.product"
+
+    website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
 
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
@@ -194,10 +201,10 @@ class Product(models.Model):
         context = dict(self._context, pricelist=pricelist.id, partner=partner)
         self2 = self.with_context(context) if self._context != context else self
 
-        ret = self.env.user.has_group('sale.group_show_price_subtotal') and 'total_excluded' or 'total_included'
+        ret = self.env.user.has_group('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
 
         for p, p2 in pycompat.izip(self, self2):
-            taxes = partner.property_account_position_id.map_tax(p.sudo().taxes_id.filtered(lambda x: x.company_id == company_id))
+            taxes = partner.property_account_position_id.map_tax(p.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), p, partner)
             p.website_price = taxes.compute_all(p2.price, pricelist.currency_id, quantity=qty, product=p2, partner=partner)[ret]
             price_without_pricelist = taxes.compute_all(p.list_price, pricelist.currency_id)[ret]
             p.website_price_difference = False if float_is_zero(price_without_pricelist - p.website_price, precision_rounding=pricelist.currency_id.rounding) else True
@@ -209,22 +216,9 @@ class Product(models.Model):
         return self.product_tmpl_id.website_publish_button()
 
 
-class ProductAttribute(models.Model):
-    _inherit = "product.attribute"
-
-    type = fields.Selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color')], default='radio')
-
-
-class ProductAttributeValue(models.Model):
-    _inherit = "product.attribute.value"
-
-    html_color = fields.Char(string='HTML Color Index', oldname='color', help="Here you can set a "
-                             "specific HTML color index (e.g. #ff0000) to display the color on the website if the "
-                             "attibute type is 'Color'.")
-
-
 class ProductImage(models.Model):
     _name = 'product.image'
+    _description = 'Product Image'
 
     name = fields.Char('Name')
     image = fields.Binary('Image', attachment=True)

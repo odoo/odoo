@@ -83,8 +83,8 @@ class TestBatchPicking(TransactionCase):
         quant_B = self.env['stock.quant']._gather(self.productB, self.stock_location)
 
         # ensure that quantity for picking has been moved
-        self.assertFalse(quant_A)
-        self.assertFalse(quant_B)
+        self.assertFalse(sum(quant_A.mapped('quantity')))
+        self.assertFalse(sum(quant_B.mapped('quantity')))
 
     def test_simple_batch_with_wizard(self):
         """ Test a simple batch picking with all quantity for picking available.
@@ -113,8 +113,8 @@ class TestBatchPicking(TransactionCase):
         quant_B = self.env['stock.quant']._gather(self.productB, self.stock_location)
 
         # ensure that quantity for picking has been moved
-        self.assertFalse(quant_A)
-        self.assertFalse(quant_B)
+        self.assertFalse(sum(quant_A.mapped('quantity')))
+        self.assertFalse(sum(quant_B.mapped('quantity')))
 
     def test_batch_with_backorder_wizard(self):
         """ Test a simple batch picking with only one quantity fully available.
@@ -148,8 +148,8 @@ class TestBatchPicking(TransactionCase):
         quant_B = self.env['stock.quant']._gather(self.productB, self.stock_location)
 
         # ensure that quantity for picking has been moved
-        self.assertFalse(quant_A)
-        self.assertFalse(quant_B)
+        self.assertFalse(sum(quant_A.mapped('quantity')))
+        self.assertFalse(sum(quant_B.mapped('quantity')))
 
     def test_batch_with_immediate_transfer_and_backorder_wizard(self):
         """ Test a simple batch picking with only one product fully available.
@@ -184,8 +184,8 @@ class TestBatchPicking(TransactionCase):
         quant_B = self.env['stock.quant']._gather(self.productB, self.stock_location)
 
         # ensure that quantity for picking has been moved
-        self.assertFalse(quant_A)
-        self.assertFalse(quant_B)
+        self.assertFalse(sum(quant_A.mapped('quantity')))
+        self.assertFalse(sum(quant_B.mapped('quantity')))
 
     def test_batch_with_immediate_transfer_and_backorder_wizard_with_manual_operations(self):
         """ Test a simple batch picking with only one quantity fully available.
@@ -221,5 +221,5 @@ class TestBatchPicking(TransactionCase):
         quant_B = self.env['stock.quant']._gather(self.productB, self.stock_location)
 
         # ensure that quantity for picking has been moved
-        self.assertFalse(quant_A)
-        self.assertFalse(quant_B)
+        self.assertFalse(sum(quant_A.mapped('quantity')))
+        self.assertFalse(sum(quant_B.mapped('quantity')))

@@ -8,25 +8,15 @@
         <field name="name">Cuentas No Clasificadas</field>
     </record>
 
-    <record id="117" model="account.account.template">
-        <field name="name">Cuenta de Transferencia</field>
-        <field name="code">117</field>
-        <field name="reconcile" eval="True"/>
-        <field ref="account.data_account_type_current_assets" name="user_type_id"/>
-    </record>
-
     <record id="cl_chart_template" model="account.chart.template">
       <field name="name">Chile - Plan de Cuentas</field>
       <field name="bank_account_code_prefix">114</field>
       <field name="cash_account_code_prefix">111</field>
+      <field name="transfer_account_code_prefix">117</field>
       <field name="code_digits">6</field>
       <field name="currency_id" ref="base.CLP"/>
-      <field name="transfer_account_id" ref="117"/>
     </record>
 
-    <record id="117" model="account.account.template">
-        <field name="chart_template_id" ref="cl_chart_template"/>
-    </record>
     <!-- Account Templates -->
 
     <record id="113_001" model="account.account.template">

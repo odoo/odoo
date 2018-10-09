@@ -55,10 +55,6 @@ var CrashManager = core.Class.extend({
             new (handler)(this, error).display();
             return;
         }
-        if (error.data.name === "odoo.http.SessionExpiredException" || error.data.name === "werkzeug.exceptions.Forbidden") {
-            this.show_warning({type: _t("Odoo Session Expired"), data: {message: _t("Your Odoo session expired. Please refresh the current web page.")}});
-            return;
-        }
         if (_.has(map_title, error.data.exception_type)) {
             if(error.data.exception_type === 'except_orm'){
                 if(error.data.arguments[1]) {
@@ -109,7 +105,7 @@ var CrashManager = core.Class.extend({
             title: _.str.capitalize(error.type || error.message) || _t("Odoo Warning"),
             subtitle: error.data.title,
             $content: $(QWeb.render('CrashManager.warning', {error: error}))
-        }).open();
+        }).open({shouldFocusButtons:true});
     },
     show_error: function(error) {
         if (!this.active) {
@@ -131,7 +127,7 @@ var CrashManager = core.Class.extend({
 
             $clipboardBtn = dialog.$(".o_clipboard_button");
             $clipboardBtn.tooltip({title: _t("Copied !"), trigger: "manual", placement: "left"});
-            clipboard = new window.Clipboard($clipboardBtn[0], {
+            clipboard = new window.ClipboardJS($clipboardBtn[0], {
                 text: function () {
                     return (_t("Error") + ":\n" + error.message + "\n\n" + error.data.debug).trim();
                 }
@@ -146,7 +142,7 @@ var CrashManager = core.Class.extend({
             });
         });
         dialog.on("closed", this, function () {
-            $clipboardBtn.tooltip("destroy");
+            $clipboardBtn.tooltip('dispose');
             clipboard.destroy();
         });
 
@@ -209,6 +205,26 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
 });
 
 core.crash_registry.add('odoo.exceptions.RedirectWarning', RedirectWarningHandler);
+
+function session_expired(cm) {
+    return {
+        display: function () {
+            cm.show_warning({type: _t("Odoo Session Expired"), data: {message: _t("Your Odoo session expired. Please refresh the current web page.")}});
+        }
+    }
+}
+core.crash_registry.add('odoo.http.SessionExpiredException', session_expired);
+core.crash_registry.add('werkzeug.exceptions.Forbidden', session_expired);
+
+core.crash_registry.add('504', function (cm) {
+    return {
+        display: function () {
+            cm.show_warning({
+                type: _t("Request timeout"),
+                data: {message: _t("The operation was interrupted. This usually means that the current operation is taking too much time.")}});
+        }
+    }
+});
 
 return CrashManager;
 });

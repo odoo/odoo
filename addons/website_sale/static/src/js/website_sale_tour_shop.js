@@ -24,7 +24,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Enter a name for your new product"),
         position: "right",
     }, {
-        trigger: ".modal-dialog button.btn-primary.btn-continue",
+        trigger: ".modal-footer button.btn-primary.btn-continue",
         content: _t("Click on <em>Continue</em> to create the product."),
         position: "right",
     }, {
@@ -35,14 +35,17 @@ odoo.define("website_sale.tour_shop", function (require) {
     }, {
         trigger: "#wrap img.product_detail_img",
         extra_trigger: ".product_price .o_is_inline_editable .oe_currency_value:not(:containsExact(1.00))",
-        content: _t("Click here to set an image describing your product."),
+        content: _t("Double click here to set an image describing your product."),
         position: "top",
+        run: function (actions) {
+            actions.dblclick();
+        },
     }, {
-        trigger: ".o_select_media_dialog .btn.filepicker",
+        trigger: ".o_select_media_dialog .o_upload_image_button",
         content: _t("Upload an image from your local library."),
         position: "bottom",
         run: function (actions) {
-            actions.auto(".modal-footer .btn-default");
+            actions.auto(".modal-footer .btn-secondary");
         },
     }, {
         trigger: "#snippet_structure .oe_snippet:eq(8) .oe_snippet_thumbnail",
@@ -60,7 +63,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Click on this button so your customers can see it."),
         position: "bottom",
     }, {
-        trigger: ".o_main_navbar .o_menu_toggle, #oe_applications .dropdown.full",
+        trigger: ".o_main_navbar .o_menu_toggle, #oe_applications .dropdown-toggle",
         content: _t("Let's now take a look at your administration dashboard to get your eCommerce website ready in no time."),
         position: "bottom",
     }, {

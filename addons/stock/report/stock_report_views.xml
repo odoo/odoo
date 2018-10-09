@@ -20,45 +20,63 @@
             print_report_name="'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
         />
         <report
-            string="Inventory" 
-            id="action_report_inventory" 
-            model="stock.inventory" 
+            string="Inventory"
+            id="action_report_inventory"
+            model="stock.inventory"
             report_type="qweb-pdf"
-            name="stock.report_inventory" 
+            name="stock.report_inventory"
             file="stock.report_inventory"
             print_report_name="'Inventory - %s' % (object.name)"
         />
         <report
-            string="Package BarCode with Contents"
+            string="Package Barcode with Content"
             id="action_report_quant_package_barcode"
             model="stock.quant.package"
             report_type="qweb-pdf"
             name="stock.report_package_barcode"
             file="stock.report_package_barcode"/>
         <report
-            string="Package BarCode"
+            string="Package Barcode (PDF)"
             id="action_report_quant_package_barcode_small"
             model="stock.quant.package"
             report_type="qweb-pdf"
             name="stock.report_package_barcode_small"
             file="stock.report_package_barcode"/>
         <report
-            string="Location BarCode"
+            string="Location Barcode"
             id="action_report_location_barcode"
             model="stock.location"
             report_type="qweb-pdf"
-            name="stock.report_location_barcode" 
+            name="stock.report_location_barcode"
             file="stock.report_location_barcode"
             print_report_name="'Location - %s' % object.name"
         />
         <report
-            string="Lot BarCode"
-            id="action_report_lot_barcode"
+            string="Lot/Serial Number (PDF)"
+            id="action_report_lot_label"
             model="stock.production.lot"
             report_type="qweb-pdf"
-            name="stock.report_lot_barcode"
-            file="stock.report_lot_barcode"
+            name="stock.report_lot_label"
+            file="stock.report_lot_label"
             print_report_name="'Lot-Serial - %s' % object.name"
+        />
+        <report
+            string="Operation type (PDF)"
+            id="action_report_picking_type_label"
+            model="stock.picking.type"
+            report_type="qweb-pdf"
+            name="stock.report_picking_type_label"
+            file="stock.report_picking_type_label"
+            print_report_name="'Operation-type - %s' % object.name"
+        />
+        <report
+            id="action_report_stock_rule"
+            model="product.template"
+            string="Product Routes Report"
+            report_type="qweb-html"
+            name="stock.report_stock_rule"
+            file="stock.report_stock_rule"
+            menu="False"
         />
     </data>
 </odoo>

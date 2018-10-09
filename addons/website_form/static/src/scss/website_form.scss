@@ -1,0 +1,54 @@
+// Radio buttons and checkboxes flex layout
+.o_website_form_flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.o_website_form_flex_item {
+    // col-lg-4
+    flex-basis: 33%;
+
+    // col-md-6
+    @include media-breakpoint-down(md) {
+        flex-basis: 50%;
+    }
+
+    // col-12
+    @include media-breakpoint-down(sm) {
+        flex-basis: 100%;
+    }
+}
+
+// Hidden field is only partially hidden in editor
+.o_website_form_field_hidden {
+    display: none;
+}
+
+.editor_enable .o_website_form_field_hidden {
+    display: block;
+    opacity: 0.5;
+}
+
+// Select inputs do not trigger the default browser behavior
+// Since we use a custom editable element
+.editor_enable .s_website_form .form-field select {
+    pointer-events: none;
+}
+
+// Required fields have a star which is not part of the field label
+.o_website_form_required, .o_website_form_required_custom {
+    .col-form-label:after {
+        content: ' *';
+    }
+}
+
+// Quickfix to display the editable select as a single big field
+#editable_select.form-control {
+    height: 100%;
+}
+
+// Fix for firefox browse button which is too big for Bootstrap form-field
+// http://stackoverflow.com/questions/22049739/fix-for-firefox-file-input-using-bootstrap-3-1
+.form-field input[type=file].form-control {
+    height: 100%;
+}

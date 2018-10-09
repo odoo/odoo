@@ -43,13 +43,18 @@
             </field>
         </record>
 
-       <record model="ir.actions.act_window" id="action_mrp_unbuild_moves">
+       <record model="ir.actions.act_window" id="action_mrp_unbuild_move_line">
             <field name="name">Product Moves</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                There's no product move yet
+              </p>
+            </field>
         </record>
 
         <record id="mrp_unbuild_kanban_view" model="ir.ui.view">
@@ -73,11 +78,11 @@
                                     <strong><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></strong>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-8 text-muted">
+                                    <div class="col-8 text-muted">
                                         <span><t t-esc="record.product_id.value"/></span>
                                     </div>
-                                    <div class="col-xs-4">
-                                        <span class="pull-right text-right">
+                                    <div class="col-4">
+                                        <span class="float-right text-right">
                                             <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
                                         </span>
                                     </div>
@@ -118,7 +123,7 @@
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
-                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                                 </div>
                             </group>
                             <group>
@@ -149,7 +154,7 @@
                     <field name="bom_id"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="product_qty"/>
-                    <field name="product_uom_id" groups="product.group_uom"/>
+                    <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="state"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 </tree>
@@ -163,10 +168,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click here to create a Unbuild Order. 
+          <p class="o_view_nocontent_smiling_face">
+            Create an unbuild order
           </p><p>
-            Unbuild Orders are used to break down a product you manufactured or purchased into its components, based on its Bill of Material.</p>
+            An unbuild order is used to break down a finished product into its components.
+          </p>
         </field>
     </record>
 

@@ -4,7 +4,7 @@ odoo.define('website_forum.editor', function (require) {
 var core = require('web.core');
 var Widget = require('web.Widget');
 var SummernoteManager = require('web_editor.rte.summernote');
-var WebsiteNewMenu = require("website.newMenu");
+var WebsiteNewMenu = require('website.newMenu');
 var wUtils = require('website.utils');
 var websiteRootData = require('website.WebsiteRoot');
 
@@ -15,37 +15,42 @@ WebsiteNewMenu.include({
         new_forum: '_createNewForum',
     }),
 
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Actions
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      * Asks the user information about a new forum to create, then creates it
      * and redirects the user to this new forum.
      *
      * @private
+     * @returns {Deferred} Unresolved if there is a redirection
      */
     _createNewForum: function () {
         var self = this;
-        wUtils.prompt({
+        return wUtils.prompt({
             id: "editor_new_forum",
             window_title: _t("New Forum"),
-            input: "Forum Name",init: function () {
+            input: _t("Forum Name"),
+            init: function () {
                 var $group = this.$dialog.find("div.form-group");
                 $group.removeClass("mb0");
 
                 var $add = $(
                     '<div class="form-group mb0">'+
-                        '<label class="col-sm-offset-3 col-sm-9 text-left">'+
+                        '<label class="offset-md-3 col-md-9 text-left">'+
                         '    <input type="checkbox" required="required"/> '+
                         '</label>'+
                     '</div>');
-                $add.find('label').append(_t("Add page in menu"));
+                $add.find('label').append(_t("Add to menu"));
                 $group.after($add);
             }
         }).then(function (forum_name, field, $dialog) {
+            if (!forum_name) {
+                return;
+            }
             var add_menu = ($dialog.find('input[type="checkbox"]').is(':checked'));
-            self._rpc({
+            return self._rpc({
                 route: '/forum/new',
                 params: {
                     forum_name: forum_name,
@@ -53,6 +58,7 @@ WebsiteNewMenu.include({
                 },
             }).then(function (url) {
                 window.location.href = url;
+                return $.Deferred();
             });
         });
     },

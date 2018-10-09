@@ -50,7 +50,7 @@ class StockPickingBatch(models.Model):
         pickings = self.mapped('picking_ids')
         if not pickings:
             raise UserError(_('Nothing to print.'))
-        return self.env.ref('stock.action_report_picking').with_context(active_ids=pickings.ids, active_model='stock.picking').report_action([])
+        return self.env.ref('stock_picking_batch.action_report_picking_batch').report_action(self)
 
     @api.multi
     def done(self):
@@ -74,7 +74,7 @@ class StockPickingBatch(models.Model):
                 if (picking_type.use_create_lots or picking_type.use_existing_lots):
                     for ml in picking.move_line_ids:
                         if ml.product_id.tracking != 'none':
-                            raise UserError(_('Some products require lots/serial numbers, so you need to specify those first!'))
+                            raise UserError(_('Some products require lots/serial numbers.'))
                 # Check if we need to set some qty done.
                 picking_without_qty_done |= picking
             elif picking._check_backorder():

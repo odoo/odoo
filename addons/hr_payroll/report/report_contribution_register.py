@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 
 class ContributionRegisterReport(models.AbstractModel):
     _name = 'report.hr_payroll.report_contributionregister'
+    _description = 'Payroll Contribution Register Report'
 
     def _get_payslip_lines(self, register_ids, date_from, date_to):
         result = {}
@@ -29,7 +30,7 @@ class ContributionRegisterReport(models.AbstractModel):
         return result
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not data.get('form'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 

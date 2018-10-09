@@ -1,0 +1,91 @@
+.o_web_client {
+    .o_mobile_search {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        padding: 0;
+        width: 100%;
+        background-color: white;
+        z-index: 1000;
+        overflow: auto;
+        .o_mobile_search_header {
+            height: 46px;
+            margin-bottom: 10px;
+            width: 100%;
+            background-color: $o-brand-odoo;
+            color: white;
+            span:active {
+                background-color: darken($o-brand-primary, 10%);
+            }
+        }
+        .o_searchview_input_container {
+            display: flex;
+            padding: 15px 20px 0 20px;
+            position: relative;
+            .o_searchview_input {
+                width: 100%;
+                margin-bottom: 15px;
+                border-bottom: 1px solid $o-brand-secondary;
+            }
+           .o_searchview_facet {
+                border-radius: 10px;
+                display: inline-flex;
+                order:1;
+                .o_searchview_facet_label {
+                    border-radius: 2em 0em 0em 2em;
+                }
+            }
+            .o_searchview_autocomplete {
+                top:100%;
+                > li {
+                    margin: 5px 0px;
+                }
+            }
+        }
+        .o_mobile_search_filter {
+            padding-bottom: 15%;
+            .o_dropdown {
+                width: 100%;
+                margin: 15px 5px 0px 5px;
+                border: solid 1px darken(gray('200'), 20%);
+
+            }
+            .o_dropdown_toggler_btn {
+                width: 100%;
+                text-align: left;
+            }
+
+            // We disable the backdrop in this case because it prevents any
+            // interaction outside of a dropdown while it is open.
+            .dropdown-backdrop {
+                z-index: -1;
+            }
+            .dropdown-menu {
+                // Here we use !important because of popper js adding custom style
+                // to element so to override it use !important
+                position: relative !important;
+                width: 100% !important;
+                transform: translate3d(0, 0, 0) !important;
+                box-shadow: none;
+                border: none;
+                color: gray('600');
+                .divider {
+                    margin: 0px;
+                }
+                > li > a  {
+                    padding: 10px 26px;
+                }
+            }
+        }
+        .o_mobile_search_show_result {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            font-size: 17px;
+            z-index: 1000;
+        }
+    }
+}

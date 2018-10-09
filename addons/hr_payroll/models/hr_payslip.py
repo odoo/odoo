@@ -1,12 +1,10 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-from datetime import datetime
-from datetime import time as datetime_time
-from dateutil import relativedelta
-
 import babel
+from datetime import date, datetime, time
+from dateutil.relativedelta import relativedelta
+from pytz import timezone
 
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
@@ -29,9 +27,9 @@ class HrPayslip(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, readonly=True,
         states={'draft': [('readonly', False)]})
     date_from = fields.Date(string='Date From', readonly=True, required=True,
-        default=time.strftime('%Y-%m-01'), states={'draft': [('readonly', False)]})
+        default=lambda self: fields.Date.to_string(date.today().replace(day=1)), states={'draft': [('readonly', False)]})
     date_to = fields.Date(string='Date To', readonly=True, required=True,
-        default=str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
+        default=lambda self: fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date()),
         states={'draft': [('readonly', False)]})
     # this is chaos: 4 states are defined, 3 are used ('verify' isn't) and 5 exist ('confirm' seems to have existed)
     state = fields.Selection([
@@ -81,7 +79,7 @@ class HrPayslip(models.Model):
     @api.constrains('date_from', 'date_to')
     def _check_dates(self):
         if any(self.filtered(lambda payslip: payslip.date_from > payslip.date_to)):
-            raise ValidationError(_("Payslip 'Date From' must be before 'Date To'."))
+            raise ValidationError(_("Payslip 'Date From' must be earlier 'Date To'."))
 
     @api.multi
     def action_payslip_draft(self):
@@ -170,28 +168,32 @@ class HrPayslip(models.Model):
         res = []
         # fill only if the contract as a working schedule linked
         for contract in contracts.filtered(lambda contract: contract.resource_calendar_id):
-            day_from = datetime.combine(fields.Date.from_string(date_from), datetime_time.min)
-            day_to = datetime.combine(fields.Date.from_string(date_to), datetime_time.max)
+            day_from = datetime.combine(fields.Date.from_string(date_from), time.min)
+            day_to = datetime.combine(fields.Date.from_string(date_to), time.max)
 
             # compute leave days
             leaves = {}
-            day_leave_intervals = contract.employee_id.iter_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
-            for day_intervals in day_leave_intervals:
-                for interval in day_intervals:
-                    holiday = interval[2]['leaves'].holiday_id
-                    current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
-                        'name': holiday.holiday_status_id.name,
-                        'sequence': 5,
-                        'code': holiday.holiday_status_id.name,
-                        'number_of_days': 0.0,
-                        'number_of_hours': 0.0,
-                        'contract_id': contract.id,
-                    })
-                    leave_time = (interval[1] - interval[0]).seconds / 3600
-                    current_leave_struct['number_of_hours'] += leave_time
-                    work_hours = contract.employee_id.get_day_work_hours_count(interval[0].date(), calendar=contract.resource_calendar_id)
-                    if work_hours:
-                        current_leave_struct['number_of_days'] += leave_time / work_hours
+            calendar = contract.resource_calendar_id
+            tz = timezone(calendar.tz)
+            day_leave_intervals = contract.employee_id.list_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
+            for day, hours, leave in day_leave_intervals:
+                holiday = leave.holiday_id
+                current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
+                    'name': holiday.holiday_status_id.name,
+                    'sequence': 5,
+                    'code': holiday.holiday_status_id.name,
+                    'number_of_days': 0.0,
+                    'number_of_hours': 0.0,
+                    'contract_id': contract.id,
+                })
+                current_leave_struct['number_of_hours'] += hours
+                work_hours = calendar.get_work_hours_count(
+                    tz.localize(datetime.combine(day, time.min)),
+                    tz.localize(datetime.combine(day, time.max)),
+                    compute_leaves=False,
+                )
+                if work_hours:
+                    current_leave_struct['number_of_days'] += hours / work_hours
 
             # compute worked days
             work_data = contract.employee_id.get_work_days_data(day_from, day_to, calendar=contract.resource_calendar_id)
@@ -394,7 +396,7 @@ class HrPayslip(models.Model):
         }
         if (not employee_id) or (not date_from) or (not date_to):
             return res
-        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
+        ttyme = datetime.combine(fields.Date.from_string(date_from), time.min)
         employee = self.env['hr.employee'].browse(employee_id)
         locale = self.env.context.get('lang') or 'en_US'
         res['value'].update({
@@ -446,7 +448,7 @@ class HrPayslip(models.Model):
         date_to = self.date_to
         contract_ids = []
 
-        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
+        ttyme = datetime.combine(fields.Date.from_string(date_from), time.min)
         locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
@@ -512,15 +514,16 @@ class HrPayslipLine(models.Model):
         for line in self:
             line.total = float(line.quantity) * line.amount * line.rate / 100
 
-    @api.model
-    def create(self, values):
-        if 'employee_id' not in values or 'contract_id' not in values:
-            payslip = self.env['hr.payslip'].browse(values.get('slip_id'))
-            values['employee_id'] = values.get('employee_id') or payslip.employee_id.id
-            values['contract_id'] = values.get('contract_id') or payslip.contract_id and payslip.contract_id.id
-            if not values['contract_id']:
-                raise UserError(_('You must set a contract to create a payslip line.'))
-        return super(HrPayslipLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'employee_id' not in values or 'contract_id' not in values:
+                payslip = self.env['hr.payslip'].browse(values.get('slip_id'))
+                values['employee_id'] = values.get('employee_id') or payslip.employee_id.id
+                values['contract_id'] = values.get('contract_id') or payslip.contract_id and payslip.contract_id.id
+                if not values['contract_id']:
+                    raise UserError(_('You must set a contract to create a payslip line.'))
+        return super(HrPayslipLine, self).create(vals_list)
 
 
 class HrPayslipWorkedDays(models.Model):
@@ -566,10 +569,10 @@ class HrPayslipRun(models.Model):
         ('close', 'Close'),
     ], string='Status', index=True, readonly=True, copy=False, default='draft')
     date_start = fields.Date(string='Date From', required=True, readonly=True,
-        states={'draft': [('readonly', False)]}, default=time.strftime('%Y-%m-01'))
+        states={'draft': [('readonly', False)]}, default=lambda self: fields.Date.to_string(date.today().replace(day=1)))
     date_end = fields.Date(string='Date To', required=True, readonly=True,
         states={'draft': [('readonly', False)]},
-        default=str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10])
+        default=lambda self: fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date()))
     credit_note = fields.Boolean(string='Credit Note', readonly=True,
         states={'draft': [('readonly', False)]},
         help="If its checked, indicates that all payslips generated from here are refund payslips.")

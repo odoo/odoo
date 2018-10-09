@@ -33,9 +33,10 @@ class HrPayrollStructure(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Error ! You cannot create a recursive Salary Structure.'))
+            raise ValidationError(_('You cannot create a recursive salary structure.'))
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, code=_("%s (copy)") % (self.code))
@@ -93,6 +94,8 @@ class HrSalaryRuleCategory(models.Model):
 
 class HrSalaryRule(models.Model):
     _name = 'hr.salary.rule'
+    _order = 'sequence, id'
+    _description = 'Salary Rule'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True,

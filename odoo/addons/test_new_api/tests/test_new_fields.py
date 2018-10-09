@@ -1,11 +1,13 @@
 #
 # test cases for new-style fields
 #
-from datetime import date, datetime
+from datetime import date, datetime, time
 
-from odoo.exceptions import AccessError, except_orm
+from odoo import fields
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr, pycompat
+from odoo.tools.date_utils import add, subtract, start_of, end_of
 
 
 class TestFields(common.TransactionCase):
@@ -143,6 +145,46 @@ class TestFields(common.TransactionCase):
         })
         check_stored(discussion3)
 
+    def test_11_stored_protected(self):
+        """ test protection against recomputation """
+        model = self.env['test_new_api.compute.protected']
+        field = model._fields['bar']
+
+        record = model.create({'foo': 'unprotected #1'})
+        self.assertEqual(record.bar, 'unprotected #1')
+
+        record.write({'foo': 'unprotected #2'})
+        self.assertEqual(record.bar, 'unprotected #2')
+
+        # by protecting 'bar', we prevent it from being recomputed
+        with self.env.protecting([field], record):
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #2')
+
+            # also works when nested
+            with self.env.protecting([field], record):
+                record.write({'foo': 'protected'})
+                self.assertEqual(record.bar, 'unprotected #2')
+
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #2')
+
+        record.write({'foo': 'unprotected #3'})
+        self.assertEqual(record.bar, 'unprotected #3')
+
+        # also works with duplicated fields
+        with self.env.protecting([field, field], record):
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #3')
+
+        record.write({'foo': 'unprotected #4'})
+        self.assertEqual(record.bar, 'unprotected #4')
+
+        # we protect 'bar' on a different record
+        with self.env.protecting([field], record):
+            record2 = model.create({'foo': 'unprotected'})
+            self.assertEqual(record2.bar, 'unprotected')
+
     def test_11_computed_access(self):
         """ test computed fields with access right errors """
         User = self.env['res.users']
@@ -227,6 +269,11 @@ class TestFields(common.TransactionCase):
         double_size = message.double_size
         self.assertEqual(double_size, message.size)
 
+        record = self.env['test_new_api.cascade'].create({'foo': "Hi"})
+        self.assertEqual(record.baz, "<[Hi]>")
+        record.foo = "Ho"
+        self.assertEqual(record.baz, "<[Ho]>")
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']
@@ -246,40 +293,81 @@ class TestFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
-        # write on non-stored inverse field on severals records
-        foo1 = Category.create({'name': 'Foo'})
-        foo2 = Category.create({'name': 'Foo'})
+        # check create/write with several records
+        vals = {'name': 'None', 'display_name': 'Foo'}
+        foo1, foo2 = Category.create([vals, vals])
+        self.assertEqual(foo1.name, 'Foo')
+        self.assertEqual(foo2.name, 'Foo')
+
         (foo1 + foo2).write({'display_name': 'Bar'})
         self.assertEqual(foo1.name, 'Bar')
         self.assertEqual(foo2.name, 'Bar')
 
-        record = self.env['test_new_api.compute.inverse']
 
         # create/write on 'foo' should only invoke the compute method
-        record.counts.update(compute=0, inverse=0)
-        record = record.create({'foo': 'Hi'})
+        log = []
+        model = self.env['test_new_api.compute.inverse'].with_context(log=log)
+        record = model.create({'foo': 'Hi'})
         self.assertEqual(record.foo, 'Hi')
         self.assertEqual(record.bar, 'Hi')
-        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+        self.assertCountEqual(log, ['compute'])
 
-        record.counts.update(compute=0, inverse=0)
+        log.clear()
         record.write({'foo': 'Ho'})
         self.assertEqual(record.foo, 'Ho')
         self.assertEqual(record.bar, 'Ho')
-        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+        self.assertCountEqual(log, ['compute'])
 
         # create/write on 'bar' should only invoke the inverse method
-        record.counts.update(compute=0, inverse=0)
-        record = record.create({'bar': 'Hi'})
+        log.clear()
+        record = model.create({'bar': 'Hi'})
         self.assertEqual(record.foo, 'Hi')
         self.assertEqual(record.bar, 'Hi')
-        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+        self.assertCountEqual(log, ['inverse'])
 
-        record.counts.update(compute=0, inverse=0)
+        log.clear()
         record.write({'bar': 'Ho'})
         self.assertEqual(record.foo, 'Ho')
         self.assertEqual(record.bar, 'Ho')
-        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+        self.assertCountEqual(log, ['inverse'])
+
+        # Test compatibility multiple compute/inverse fields
+        log = []
+        model = self.env['test_new_api.multi_compute_inverse'].with_context(log=log)
+        record = model.create({
+            'bar1': '1',
+            'bar2': '2',
+            'bar3': '3',
+        })
+        self.assertEqual(record.foo, '1/2/3')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '2')
+        self.assertEqual(record.bar3, '3')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+
+        log.clear()
+        record.write({'bar2': '4', 'bar3': '5'})
+        self.assertEqual(record.foo, '1/4/5')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '4')
+        self.assertEqual(record.bar3, '5')
+        self.assertCountEqual(log, ['inverse23'])
+
+        log.clear()
+        record.write({'bar1': '6', 'bar2': '7'})
+        self.assertEqual(record.foo, '6/7/5')
+        self.assertEqual(record.bar1, '6')
+        self.assertEqual(record.bar2, '7')
+        self.assertEqual(record.bar3, '5')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+
+        log.clear()
+        record.write({'foo': 'A/B/C'})
+        self.assertEqual(record.foo, 'A/B/C')
+        self.assertEqual(record.bar1, 'A')
+        self.assertEqual(record.bar2, 'B')
+        self.assertEqual(record.bar3, 'C')
+        self.assertCountEqual(log, ['compute'])
 
     def test_14_search(self):
         """ test search on computed fields """
@@ -398,19 +486,116 @@ class TestFields(common.TransactionCase):
         record.date = None
         self.assertFalse(record.date)
 
-        # one may assign date and datetime objects
+        # one may assign date but not datetime objects
         record.date = date(2012, 5, 1)
-        self.assertEqual(record.date, '2012-05-01')
+        self.assertEqual(record.date, date(2012, 5, 1))
 
-        record.date = datetime(2012, 5, 1, 10, 45, 00)
-        self.assertEqual(record.date, '2012-05-01')
+        with self.assertRaises(TypeError):
+            record.date = datetime(2012, 5, 1, 10, 45, 0)
 
-        # one may assign dates in the default format, and it must be checked
+        # one may assign dates and datetime in the default format, and it must be checked
         record.date = '2012-05-01'
-        self.assertEqual(record.date, '2012-05-01')
+        self.assertEqual(record.date, date(2012, 5, 1))
+
+        record.date = "2012-05-01 10:45:00"
+        self.assertEqual(record.date, date(2012, 5, 1))
 
         with self.assertRaises(ValueError):
             record.date = '12-5-1'
+
+        for i in range(0, 10):
+            self.assertEqual(fields.Datetime.now().microsecond, 0)
+
+    def test_21_date_datetime_helpers(self):
+        """ test date/datetime fields helpers """
+        _date = fields.Date.from_string("2077-10-23")
+        _datetime = fields.Datetime.from_string("2077-10-23 09:42:00")
+
+        # addition
+        self.assertEqual(add(_date, days=5), date(2077, 10, 28))
+        self.assertEqual(add(_datetime, seconds=10), datetime(2077, 10, 23, 9, 42, 10))
+
+        # subtraction
+        self.assertEqual(subtract(_date, months=1), date(2077, 9, 23))
+        self.assertEqual(subtract(_datetime, hours=2), datetime(2077, 10, 23, 7, 42, 0))
+
+        # start_of
+        # year
+        self.assertEqual(start_of(_date, 'year'), date(2077, 1, 1))
+        self.assertEqual(start_of(_datetime, 'year'), datetime(2077, 1, 1))
+
+        # quarter
+        q1 = date(2077, 1, 1)
+        q2 = date(2077, 4, 1)
+        q3 = date(2077, 7, 1)
+        q4 = date(2077, 10, 1)
+        self.assertEqual(start_of(_date.replace(month=3), 'quarter'), q1)
+        self.assertEqual(start_of(_date.replace(month=5), 'quarter'), q2)
+        self.assertEqual(start_of(_date.replace(month=7), 'quarter'), q3)
+        self.assertEqual(start_of(_date, 'quarter'), q4)
+        self.assertEqual(start_of(_datetime, 'quarter'), datetime.combine(q4, time.min))
+
+        # month
+        self.assertEqual(start_of(_date, 'month'), date(2077, 10, 1))
+        self.assertEqual(start_of(_datetime, 'month'), datetime(2077, 10, 1))
+
+        # week
+        self.assertEqual(start_of(_date, 'week'), date(2077, 10, 18))
+        self.assertEqual(start_of(_datetime, 'week'), datetime(2077, 10, 18))
+
+        # day
+        self.assertEqual(start_of(_date, 'day'), _date)
+        self.assertEqual(start_of(_datetime, 'day'), _datetime.replace(hour=0, minute=0, second=0))
+
+        # hour
+        with self.assertRaises(ValueError):
+            start_of(_date, 'hour')
+        self.assertEqual(start_of(_datetime, 'hour'), _datetime.replace(minute=0, second=0))
+
+        # invalid
+        with self.assertRaises(ValueError):
+            start_of(_datetime, 'poop')
+
+        # end_of
+        # year
+        self.assertEqual(end_of(_date, 'year'), _date.replace(month=12, day=31))
+        self.assertEqual(end_of(_datetime, 'year'),
+                         datetime.combine(_date.replace(month=12, day=31), time.max))
+
+        # quarter
+        q1 = date(2077, 3, 31)
+        q2 = date(2077, 6, 30)
+        q3 = date(2077, 9, 30)
+        q4 = date(2077, 12, 31)
+        self.assertEqual(end_of(_date.replace(month=2), 'quarter'), q1)
+        self.assertEqual(end_of(_date.replace(month=4), 'quarter'), q2)
+        self.assertEqual(end_of(_date.replace(month=9), 'quarter'), q3)
+        self.assertEqual(end_of(_date, 'quarter'), q4)
+        self.assertEqual(end_of(_datetime, 'quarter'), datetime.combine(q4, time.max))
+
+        # month
+        self.assertEqual(end_of(_date, 'month'), _date.replace(day=31))
+        self.assertEqual(end_of(_datetime, 'month'),
+                         datetime.combine(date(2077, 10, 31), time.max))
+
+        # week
+        self.assertEqual(end_of(_date, 'week'), date(2077, 10, 24))
+        self.assertEqual(end_of(_datetime, 'week'),
+                         datetime.combine(datetime(2077, 10, 24), time.max))
+
+        # day
+        self.assertEqual(end_of(_date, 'day'), _date)
+        self.assertEqual(end_of(_datetime, 'day'), datetime.combine(_datetime, time.max))
+
+        # hour
+        with self.assertRaises(ValueError):
+            end_of(_date, 'hour')
+        self.assertEqual(end_of(_datetime, 'hour'),
+                         datetime.combine(_datetime, time.max).replace(hour=_datetime.hour))
+
+        # invalid
+        with self.assertRaises(ValueError):
+            end_of(_datetime, 'crap')
 
     def test_22_selection(self):
         """ test selection fields """
@@ -681,7 +866,7 @@ class TestFields(common.TransactionCase):
         self.assertEqual(message.name, "[%s] %s" % (discussion.name, ''))
         self.assertEqual(message.size, len(BODY))
 
-    @mute_logger('odoo.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model')
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
         # make discussions unreadable for demo user
@@ -704,7 +889,7 @@ class TestFields(common.TransactionCase):
             with self.assertRaises(AccessError):
                 message.discussion.name
 
-    @mute_logger('odoo.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model')
     def test_42_new_related(self):
         """ test the behavior of related fields traversing new records. """
         # make discussions unreadable for demo user
@@ -737,7 +922,7 @@ class TestFields(common.TransactionCase):
     def test_50_search_many2one(self):
         """ test search through a path of computed fields"""
         messages = self.env['test_new_api.message'].search(
-            [('author_partner.name', '=', 'Demo User')])
+            [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
     def test_60_x2many_domain(self):
@@ -779,29 +964,95 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(discussion.important_messages), 2)
         self.assertEqual(len(discussion.very_important_messages), 2)
 
-    def test_70_x2many_write(self):
+    def test_80_copy(self):
+        Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')
-        Message = self.env['test_new_api.message']
-        # There must be 3 messages, 0 important
-        self.assertEqual(len(discussion.messages), 3)
-        self.assertEqual(len(discussion.important_messages), 0)
-        self.assertEqual(len(discussion.very_important_messages), 0)
-        discussion.important_messages = [(0, 0, {
-            'body': 'What is the answer?',
-            'important': True,
-        })]
-        # There must be 4 messages, 1 important
-        self.assertEqual(len(discussion.messages), 4)
-        self.assertEqual(len(discussion.important_messages), 1)
-        self.assertEqual(len(discussion.very_important_messages), 1)
-        discussion.very_important_messages |= Message.new({
-            'body': '42',
-            'important': True,
+        message = self.env.ref('test_new_api.message_0_0')
+        message1 = self.env.ref('test_new_api.message_0_1')
+
+        email = self.env.ref('test_new_api.emailmessage_0_0')
+        self.assertEqual(email.message, message)
+
+        french = self.env['res.lang']._lang_get('fr_FR')
+        french.active = True
+
+        def count(msg):
+            # return the number of translations of msg.label
+            return Translations.search_count([
+                ('name', '=', 'test_new_api.message,label'),
+                ('res_id', '=', msg.id),
+            ])
+
+        # set a translation for message.label
+        email.with_context(lang='fr_FR').label = "bonjour"
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting the parent record should not copy its translations
+        email.copy({'message': message1.id})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting a one2many should not copy translations on the lines
+        discussion.copy({'messages': [(6, 0, message1.ids)]})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+    def test_90_binary_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This should work without problems
+        self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': SVG,
         })
-        # There must be 5 messages, 2 important
-        self.assertEqual(len(discussion.messages), 5)
-        self.assertEqual(len(discussion.important_messages), 2)
-        self.assertEqual(len(discussion.very_important_messages), 2)
+        # And this gives error
+        with self.assertRaises(UserError):
+            self.env['test_new_api.binary_svg'].sudo(
+                self.env.ref('base.user_demo'),
+            ).create({
+                'name': 'Test without attachment',
+                'image_wo_attachment': SVG,
+            })
+
+    def test_91_binary_svg_attachment(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This doesn't neuter SVG with admin
+        record = self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
+        # ...but this should be neutered with demo user
+        record = self.env['test_new_api.binary_svg'].sudo(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
+    def test_92_binary_self_avatar_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        demo_user = self.env.ref('base.user_demo')
+        # User demo changes his own avatar
+        demo_user.sudo(demo_user).image = SVG
+        # The SVG file should have been neutered
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', demo_user.partner_id._name),
+            ('res_field', '=', 'image'),
+            ('res_id', '=', demo_user.partner_id.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
 
 
 class TestX2many(common.TransactionCase):
@@ -975,3 +1226,164 @@ class TestMagicFields(common.TransactionCase):
         record = self.env['test_new_api.discussion'].create({'name': 'Booba'})
         self.assertEqual(record.create_uid, self.env.user)
         self.assertEqual(record.write_uid, self.env.user)
+
+
+class TestParentStore(common.TransactionCase):
+
+    def setUp(self):
+        super(TestParentStore, self).setUp()
+        # make a tree of categories:
+        #   0
+        #  /|\
+        # 1 2 3
+        #    /|\
+        #   4 5 6
+        #      /|\
+        #     7 8 9
+        Cat = self.env['test_new_api.category']
+        cat0 = Cat.create({'name': '0'})
+        cat1 = Cat.create({'name': '1', 'parent': cat0.id})
+        cat2 = Cat.create({'name': '2', 'parent': cat0.id})
+        cat3 = Cat.create({'name': '3', 'parent': cat0.id})
+        cat4 = Cat.create({'name': '4', 'parent': cat3.id})
+        cat5 = Cat.create({'name': '5', 'parent': cat3.id})
+        cat6 = Cat.create({'name': '6', 'parent': cat3.id})
+        cat7 = Cat.create({'name': '7', 'parent': cat6.id})
+        cat8 = Cat.create({'name': '8', 'parent': cat6.id})
+        cat9 = Cat.create({'name': '9', 'parent': cat6.id})
+        self._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
+                                cat5, cat6, cat7, cat8, cat9)
+
+    def cats(self, *indexes):
+        """ Return the given categories. """
+        ids = self._cats.ids
+        return self._cats.browse([ids[index] for index in indexes])
+
+    def assertChildOf(self, category, children):
+        self.assertEqual(category.search([('id', 'child_of', category.ids)]), children)
+
+    def assertParentOf(self, category, parents):
+        self.assertEqual(category.search([('id', 'parent_of', category.ids)]), parents)
+
+    def test_base(self):
+        """ Check the initial tree structure. """
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(1), self.cats(1))
+        self.assertChildOf(self.cats(2), self.cats(2))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(4), self.cats(4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertChildOf(self.cats(7), self.cats(7))
+        self.assertChildOf(self.cats(8), self.cats(8))
+        self.assertChildOf(self.cats(9), self.cats(9))
+        self.assertParentOf(self.cats(0), self.cats(0))
+        self.assertParentOf(self.cats(1), self.cats(0, 1))
+        self.assertParentOf(self.cats(2), self.cats(0, 2))
+        self.assertParentOf(self.cats(3), self.cats(0, 3))
+        self.assertParentOf(self.cats(4), self.cats(0, 3, 4))
+        self.assertParentOf(self.cats(5), self.cats(0, 3, 5))
+        self.assertParentOf(self.cats(6), self.cats(0, 3, 6))
+        self.assertParentOf(self.cats(7), self.cats(0, 3, 6, 7))
+        self.assertParentOf(self.cats(8), self.cats(0, 3, 6, 8))
+        self.assertParentOf(self.cats(9), self.cats(0, 3, 6, 9))
+
+    def test_base_compute(self):
+        """ Check the tree structure after computation from scratch. """
+        self.cats()._parent_store_compute()
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(1), self.cats(1))
+        self.assertChildOf(self.cats(2), self.cats(2))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(4), self.cats(4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertChildOf(self.cats(7), self.cats(7))
+        self.assertChildOf(self.cats(8), self.cats(8))
+        self.assertChildOf(self.cats(9), self.cats(9))
+        self.assertParentOf(self.cats(0), self.cats(0))
+        self.assertParentOf(self.cats(1), self.cats(0, 1))
+        self.assertParentOf(self.cats(2), self.cats(0, 2))
+        self.assertParentOf(self.cats(3), self.cats(0, 3))
+        self.assertParentOf(self.cats(4), self.cats(0, 3, 4))
+        self.assertParentOf(self.cats(5), self.cats(0, 3, 5))
+        self.assertParentOf(self.cats(6), self.cats(0, 3, 6))
+        self.assertParentOf(self.cats(7), self.cats(0, 3, 6, 7))
+        self.assertParentOf(self.cats(8), self.cats(0, 3, 6, 8))
+        self.assertParentOf(self.cats(9), self.cats(0, 3, 6, 9))
+
+    def test_delete(self):
+        """ Delete a node. """
+        self.cats(6).unlink()
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertParentOf(self.cats(0), self.cats(0))
+        self.assertParentOf(self.cats(3), self.cats(0, 3))
+        self.assertParentOf(self.cats(5), self.cats(0, 3, 5))
+
+    def test_move_1_0(self):
+        """ Move a node to a root position. """
+        self.cats(6).write({'parent': False})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(9), self.cats(6, 9))
+
+    def test_move_1_1(self):
+        """ Move a node into an empty subtree. """
+        self.cats(6).write({'parent': self.cats(1).id})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(1), self.cats(1, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(9), self.cats(0, 1, 6, 9))
+
+    def test_move_1_N(self):
+        """ Move a node into a non-empty subtree. """
+        self.cats(6).write({'parent': self.cats(0).id})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(9), self.cats(0, 6, 9))
+
+    def test_move_N_0(self):
+        """ Move multiple nodes to root position. """
+        self.cats(5, 6).write({'parent': False})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4))
+        self.assertChildOf(self.cats(3), self.cats(3, 4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(5), self.cats(5))
+        self.assertParentOf(self.cats(9), self.cats(6, 9))
+
+    def test_move_N_1(self):
+        """ Move multiple nodes to an empty subtree. """
+        self.cats(5, 6).write({'parent': self.cats(1).id})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(1), self.cats(1, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(5), self.cats(0, 1, 5))
+        self.assertParentOf(self.cats(9), self.cats(0, 1, 6, 9))
+
+    def test_move_N_N(self):
+        """ Move multiple nodes to a non- empty subtree. """
+        self.cats(5, 6).write({'parent': self.cats(0).id})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(5), self.cats(0, 5))
+        self.assertParentOf(self.cats(9), self.cats(0, 6, 9))
+
+    def test_move_1_cycle(self):
+        """ Move a node to create a cycle. """
+        with self.assertRaises(UserError):
+            self.cats(3).write({'parent': self.cats(9).id})
+
+    def test_move_N_cycle(self):
+        """ Move multiple nodes to create a cycle. """
+        with self.assertRaises(UserError):
+            self.cats(1, 3).write({'parent': self.cats(9).id})

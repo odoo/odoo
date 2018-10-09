@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
 
@@ -65,13 +66,13 @@ class TestProcurement(TestMrpCommon):
         # produce product4
         # ---------------
 
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': produce_product_4.id,
             'active_ids': [produce_product_4.id],
-        }).create({
-            'product_qty': produce_product_4.product_qty,
-        })
-        produce_wizard.do_produce()
+        }))
+        produce_form.product_qty = produce_product_4.product_qty
+        product_produce = produce_form.save()
+        product_produce.do_produce()
         produce_product_4.post_inventory()
         # Check procurement and Production state for product 4.
         produce_product_4.button_mark_done()
@@ -91,14 +92,13 @@ class TestProcurement(TestMrpCommon):
         # ------------------------------------
 
         self.assertEqual(production_product_6.availability, 'assigned', "Consume material not available")
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': production_product_6.id,
             'active_ids': [production_product_6.id],
-        }).create({
-            'product_qty': production_product_6.product_qty,
-        })
-        produce_wizard.do_produce()
-
+        }))
+        produce_form.product_qty = production_product_6.product_qty
+        product_produce = produce_form.save()
+        product_produce.do_produce()
         production_product_6.post_inventory()
         # Check procurement and Production state for product 6.
         production_product_6.button_mark_done()

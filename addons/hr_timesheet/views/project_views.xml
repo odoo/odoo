@@ -6,13 +6,13 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="hr_timesheet_line_tree"/>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{"default_project_id": active_id, "search_default_project_id": [active_id]}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to record activities.
+              <p class="o_view_nocontent_smiling_face">
+                Record a new activity
               </p><p>
                 You can register and track your workings hours by project every
                 day. Every time spent on a project will become a cost and can be re-invoiced to
@@ -48,6 +48,9 @@
                         <label for="allow_timesheets"/>
                     </div>
                 </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="analytic_account_id"/>
+                </xpath>
             </field>
         </record>
 
@@ -58,32 +61,43 @@
             <field name="groups_id" eval="[(6,0, (ref('hr_timesheet.group_hr_timesheet_user'),))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
-                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
+                    <field name="analytic_account_active" invisible="1"/>
+                    <field name="allow_timesheets" invisible="1"/>
+                    <page string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <group>
                             <group>
                                 <field name="planned_hours" widget="float_time"/>
+                                    <label for="subtask_planned_hours" groups="project.group_subtask_project" attrs="{'invisible': [('subtask_count', '=', 0)]}"/>
+                                    <div class="o_row" groups="project.group_subtask_project" attrs="{'invisible': [('subtask_count', '=', 0)]}">
+                                        <field name="subtask_planned_hours" widget="float_time"/><span> planned hours</span>
+                                    </div>
                             </group>
                             <group>
                                 <field name="progress" widget="progressbar"/>
                             </group>
                         </group>
-                    <field name="timesheet_ids" context="{'default_project_id': project_id}">
+                        <group name="timesheet_error" attrs="{'invisible': [('analytic_account_active', '!=', False)]}">
+                            <div class="alert alert-warning" role="alert">
+                                You can not log timesheets on this project since is linked to an inactive analytic account. Please change it, or reactivate the current one to timesheet on the project.
+                            </div>
+                        </group>
+                    <field name="timesheet_ids" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" invisible="1"/>
                             <field name="employee_id" required="1"/>
                             <field name="name"/>
-                            <field name="unit_amount" string="Duration" widget="float_time"/>
+                            <field name="unit_amount" widget="timesheet_uom"/>
                             <field name="project_id" invisible="1"/>
                         </tree>
                     </field>
-                    <group>
-                     <group class="oe_subtotal_footer oe_right" name="project_hours">
-                        <field name="effective_hours" widget="float_time" />
-                        <field name="children_hours" widget="float_time" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
-                        <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
-                        <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" readonly="1"/>
-                     </group>
+                    <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
+                        <group class="oe_subtotal_footer oe_right" name="project_hours">
+                            <field name="effective_hours" widget="float_time" />
+                            <field name="subtask_effective_hours" widget="float_time" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
+                            <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
+                            <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
+                        </group>
                     </group>
                 </page>
                 </xpath>
@@ -99,7 +113,6 @@
                 <field name="user_id" position="after">
                     <field name="planned_hours" widget="float_time" sum="Initially Planned Hours" />
                     <field name="remaining_hours" widget="float_time" sum="Remaining Hours" readonly="1"/>
-                    <field name="total_hours" invisible="1"/>
                     <field name="effective_hours" widget="float_time" sum="Spent Hours" invisible="1"/>
                 </field>
                 <field name="stage_id" position="after">
@@ -117,13 +130,8 @@
                 <field name="partner_id" position="after">
                     <field name="allow_timesheets" invisible="1"/>
                 </field>
-                <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[last()]" position="after">
-                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
-                        <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
-                    </div>
-                </xpath>
                 <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="inside">
-                    <a t-if="record.allow_timesheets.raw_value" class="o_project_kanban_box" name="%(act_hr_timesheet_line_by_project)d" type="action" groups="hr_timesheet.group_hr_timesheet_user">
+                    <a t-if="record.allow_timesheets.raw_value" class="o_project_kanban_box o_project_timesheet_box" name="%(act_hr_timesheet_line_by_project)d" type="action" groups="hr_timesheet.group_hr_timesheet_user">
                         <div>
                             <span class="o_label">Timesheets</span>
                         </div>
@@ -143,9 +151,8 @@
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
                    <t t-if="record.progress.raw_value &gt; 80 and record.progress.raw_value &lt; 100">
-                       <div t-att-class="'oe_kanban_align label label-' + (record.progress.raw_value &gt;= 99 ? 'danger': 'warning')"
-                             groups="project.group_time_work_estimation_tasks" title="Remaining hours">
-                              <field name="remaining_hours" widget="float_time" />
+                       <div t-att-class="'oe_kanban_align badge badge-' + (record.progress.raw_value &gt;= 99 ? 'danger': 'warning')" title="Remaining hours">
+                            <field name="remaining_hours" widget="float_time" />
                        </div>
                    </t>
                 </div>

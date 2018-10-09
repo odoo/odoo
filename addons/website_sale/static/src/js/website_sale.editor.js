@@ -12,36 +12,37 @@ WebsiteNewMenu.include({
         new_product: '_createNewProduct',
     }),
 
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Actions
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      * Asks the user information about a new product to create, then creates it
-     * and redirects the user to this new page.
+     * and redirects the user to this new product.
      *
      * @private
-     * @returns {Deferred} Unresolved if the product is created as there will be
-     *                     a redirection
+     * @returns {Deferred} Unresolved if there is a redirection
      */
     _createNewProduct: function () {
         var self = this;
-        var def = $.Deferred();
-        wUtils.prompt({
+        return wUtils.prompt({
             id: "editor_new_product",
             window_title: _t("New Product"),
-            input: "Product Name",
+            input: _t("Name"),
         }).then(function (name) {
-            self._rpc({
+            if (!name) {
+                return;
+            }
+            return self._rpc({
                 route: '/shop/add_product',
                 params: {
                     name: name,
                 },
             }).then(function (url) {
                 window.location.href = url;
+                return $.Deferred();
             });
-        }, def.resolve.bind(def));
-        return def;
+        });
     },
 });
 });

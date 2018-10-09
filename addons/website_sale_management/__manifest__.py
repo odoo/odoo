@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 {
-    'name': 'Website Sale - Sale Management',
+    'name': 'Website - Sales Management',
     'version': '1.0',
-    'category': 'Website',
+    'category': 'Technical Settings',
     'description': """
 Display orders to invoice in website dashboard.
 """,

@@ -3,8 +3,10 @@
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSaleStock(TestSale):
     def test_00_sale_stock_invoice(self):
         """
@@ -23,14 +25,13 @@ class TestSaleStock(TestSale):
 
         # confirm our standard so, check the picking
         self.so.action_confirm()
-        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" stockable products')
+        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" storable products')
         # invoice on order
         self.so.action_invoice_create()
 
         # deliver partially, check the so's invoice_status and delivered quantities
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "nothing to invoice" after invoicing')
         pick = self.so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 1})
         wiz_act = pick.button_validate()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
@@ -39,7 +40,7 @@ class TestSaleStock(TestSale):
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
         del_qties_truth = [1.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
-        # invoice on delivery: only stockable products
+        # invoice on delivery: only storable products
         inv_id = self.so.action_invoice_create()
         inv_1 = inv_obj.browse(inv_id)
         self.assertTrue(all([il.product_id.invoice_policy == 'delivery' for il in inv_1.invoice_line_ids]),
@@ -50,7 +51,6 @@ class TestSaleStock(TestSale):
                          'Sale Stock: so invoice_status should be "nothing to invoice" after partial delivery and invoicing')
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale Stock: number of pickings should be 2')
         pick_2 = self.so.picking_ids[0]
-        pick_2.force_assign()
         pick_2.move_lines.write({'quantity_done': 1})
         self.assertIsNone(pick_2.button_validate(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')
@@ -85,7 +85,7 @@ class TestSaleStock(TestSale):
         self.so.action_confirm()
         self.so.order_line._compute_product_updatable()
         self.assertFalse(self.so.order_line[0].product_updatable)
-        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on order" stockable products')
+        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on order" storable products')
         # let's do an invoice for a deposit of 5%
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'percentage',
@@ -102,7 +102,6 @@ class TestSaleStock(TestSale):
 
         # deliver, check the delivered quantities
         pick = self.so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 2})
         self.assertIsNone(pick.button_validate(), 'Sale Stock: complete delivery should not need a backorder')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
@@ -136,14 +135,13 @@ class TestSaleStock(TestSale):
 
         # confirm our standard so, check the picking
         self.so.action_confirm()
-        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" stockable products')
+        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" storable products')
 
         # invoice in on delivery, nothing should be invoiced
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s".' % self.so.invoice_status)
 
         # deliver completely
         pick = self.so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 5})
         pick.button_validate()
 
@@ -170,7 +168,6 @@ class TestSaleStock(TestSale):
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Validate picking
-        return_pick.force_assign()
         return_pick.move_lines.write({'quantity_done': 2})
         return_pick.button_validate()
 
@@ -210,14 +207,13 @@ class TestSaleStock(TestSale):
 
         # confirm our standard so, check the picking
         self.so.action_confirm()
-        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" stockable products')
+        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" storable products')
 
         # invoice in on delivery, nothing should be invoiced
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "nothing to invoice"')
 
         # deliver partially
         pick = self.so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 4})
         res_dict = pick.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
@@ -245,7 +241,8 @@ class TestSaleStock(TestSale):
         """
         # sell two products
         item1 = self.products['prod_order']  # consumable
-        item2 = self.products['prod_del']    # stockable
+        item1.type = 'consu'
+        item2 = self.products['prod_del']    # storable
 
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -258,7 +255,7 @@ class TestSaleStock(TestSale):
 
         # deliver them
         # One of the move is for a consumable product, thus is assigned. The second one is for a
-        # stockable product, thus is unavailable. Hitting `button_validate` will first ask to
+        # storable product, thus is unavailable. Hitting `button_validate` will first ask to
         # process all the reserved quantities and, if the user chose to process, a second wizard
         # will ask to create a backorder for the unavailable product.
         self.assertEquals(len(self.so.picking_ids), 1)
@@ -304,7 +301,7 @@ class TestSaleStock(TestSale):
         """
         # sell two products
         item1 = self.products['prod_order']  # consumable
-        item2 = self.products['prod_del']    # stockable
+        item2 = self.products['prod_del']    # storable
 
         self.env['stock.quant']._update_available_quantity(item2, self.env.ref('stock.stock_location_stock'), 2)
         self.so = self.env['sale.order'].create({
@@ -318,7 +315,6 @@ class TestSaleStock(TestSale):
 
         # deliver them
         self.assertEquals(len(self.so.picking_ids), 1)
-        self.so.picking_ids[0].force_assign()
         res_dict = self.so.picking_ids[0].button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
@@ -372,8 +368,8 @@ class TestSaleStock(TestSale):
         lines to the moves and edit a last time the ordered quantities. Deliver, check the
         quantities.
         """
-        uom_unit = self.env.ref('product.product_uom_unit')
-        uom_dozen = self.env.ref('product.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
         item1 = self.products['prod_order']
 
         self.assertEqual(item1.uom_id.id, uom_unit.id)
@@ -426,8 +422,8 @@ class TestSaleStock(TestSale):
         the picking, create new move lines (through the detailed operations view). See that the move
         lines are correctly dispatched through the moves.
         """
-        uom_unit = self.env.ref('product.product_uom_unit')
-        uom_dozen = self.env.ref('product.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
         item1 = self.products['prod_order']
 
         self.assertEqual(item1.uom_id.id, uom_unit.id)
@@ -493,4 +489,3 @@ class TestSaleStock(TestSale):
         so1.picking_ids.button_validate()
         self.assertEqual(so1.picking_ids.state, 'done')
         self.assertEqual(so1.order_line.mapped('qty_delivered'), [1, 1, 1])
-

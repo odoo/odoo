@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ONBOARDING STEPS -->
+    <template id="onboarding_quotation_layout_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Quotation Layout</t>
+            <t t-set="description">Customize the look of your quotations.</t>
+            <t t-set="done_icon" t-value="'fa-star'" />
+            <t t-set="done_text">Looks great!</t>
+            <t t-set="btn_text">Customize</t>
+            <t t-set="method" t-value="'action_open_sale_onboarding_quotation_layout'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_onboarding_invoice_layout_state')" />
+        </t>
+    </template>
+    <template id="sale_onboarding_order_confirmation_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Confirmation &amp; Payment</t>
+            <t t-set="description">Choose how to confirm quotations and get paid.</t>
+            <t t-set="btn_text">Set payments</t>
+            <t t-set="method" t-value="'action_open_sale_onboarding_payment_acquirer'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('sale_onboarding_order_confirmation_state')" />
+        </t>
+    </template>
+        <template id="sale_onboarding_sample_quotation_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Sample Quotation</t>
+            <t t-set="description">Send a quotation to test the customer portal.</t>
+            <t t-set="btn_text">Send sample</t>
+            <t t-set="method" t-value="'action_open_sale_onboarding_sample_quotation'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('sale_onboarding_sample_quotation_state')" />
+        </t>
+    </template>
+
+    <!-- ONBOARDING PANEL-->
+    <template id="sale_quotation_onboarding_panel" name="sale.quotation.onboarding.panel">
+        <t t-call="base.onboarding_container">
+            <t t-set="classes" t-value="'o_onboarding_violet'" />
+            <t t-set="bg_image" t-value="'/sale/static/src/img/sale_quotation_onboarding_bg.jpg'"/>
+            <t t-set="close_method" t-value="'action_close_sale_quotation_onboarding'" />
+            <t t-set="close_model" t-value="'res.company'" />
+            <t t-call="base.onboarding_company_step" name="company_step" />
+            <t t-call="sale.onboarding_quotation_layout_step" name="quotation_layout_step" />
+            <t t-call="sale.sale_onboarding_order_confirmation_step" name="payment_acquirer_step" />
+            <t t-call="sale.sale_onboarding_sample_quotation_step" name="sample_quotation_step" />
+        </t>
+    </template>
+    <!-- ORDER CONFIRMATION -->
+    <record id="sale_onboarding_order_confirmation_form" model="ir.ui.view">
+        <field name="name">sale.order.confirmation.onboarding.form</field>
+        <field name="model">sale.payment.acquirer.onboarding.wizard</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_onboarding_wizard_form" />
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='left-column']" position="attributes">
+                <attribute name="class">col col-4</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_open_sale_onboarding_payment_acquirer_wizard" model="ir.actions.act_window">
+        <field name="name">How your customers can confirm an order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.payment.acquirer.onboarding.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale_onboarding_order_confirmation_form" />
+        <field name="target">new</field>
+    </record>
+    <!-- QUOTATION LAYOUT -->
+    <record id="sale_onboarding_quotation_layout_form" model="ir.ui.view">
+        <field name="name">sale.onboarding.quotation.layout.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_document_template_form" />
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@special='save']" position="replace">
+                <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_quotation_layout" />
+            </xpath>
+        </field>
+    </record>
+    <record id="action_open_sale_onboarding_quotation_layout" model="ir.actions.act_window">
+        <field name="name">Configure your document layout</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.company</field>
+        <field name="view_mode">form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="sale_onboarding_quotation_layout_form" />
+        <field name="target">new</field>
+    </record>
+    <!-- SAMPLE QUOTATION -->
+    <record model="ir.ui.view" id="sale_onboarding_sample_quotation_form">
+        <field name="name">mail.compose.message.sale.onboarding.sample.quotation.form</field>
+        <field name="model">mail.compose.message</field>
+        <field name="inherit_id" ref="mail.email_compose_message_wizard_form" />
+        <field name="priority">1000</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//span[@name='document_followers_text']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='save_as_template']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='template_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_open_sale_onboarding_sample_quotation" model="ir.actions.act_window">
+        <field name="name">Send a sample quotation.</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mail.compose.message</field>
+        <field name="view_mode">form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="sale_onboarding_sample_quotation_form" />
+        <field name="target">new</field>
+    </record>
+</odoo>

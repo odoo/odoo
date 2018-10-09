@@ -18,7 +18,7 @@ from odoo import http, models, fields, _
 from odoo.http import request
 from odoo.tools import pycompat, OrderedSet
 from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
-from odoo.addons.web.controllers.main import WebClient, Binary
+from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 
@@ -81,10 +81,15 @@ class Website(Home):
 
         raise request.not_found()
 
-    #------------------------------------------------------
+    @http.route('/website/force_website', type='json', auth="user")
+    def force_website(self, website_id):
+        request.env['website']._force_website(website_id)
+        return True
+
+    # ------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend
     # while portal users are redirected to the frontend by default
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @http.route(website=True, auth="public")
     def web_login(self, redirect=None, *args, **kw):
@@ -97,9 +102,9 @@ class Website(Home):
             return http.redirect_with_hash(redirect)
         return response
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Business
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
@@ -116,7 +121,7 @@ class Website(Home):
         return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
 
     @http.route(['/robots.txt'], type='http', auth="public")
-    def robots(self):
+    def robots(self, **kwargs):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False)
@@ -135,7 +140,7 @@ class Website(Home):
                 'name': url,
                 'url': url,
             })
-        dom = [('url', '=' , '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
+        dom = [('url', '=', '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
         sitemap = Attachment.search(dom, limit=1)
         if sitemap:
             # Check if stored version is still valid
@@ -188,7 +193,7 @@ class Website(Home):
         return request.make_response(content, [('Content-Type', mimetype)])
 
     @http.route('/website/info', type='http', auth="public", website=True)
-    def website_info(self):
+    def website_info(self, **kwargs):
         try:
             request.website.get_template('website.website_info').name
         except Exception as e:
@@ -203,12 +208,12 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Edit
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
-    def pages_management(self, page=1, sortby='name', search='', **kw):
+    def pages_management(self, page=1, sortby='url', search='', **kw):
         # only website_designer should access the page Management
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
@@ -219,22 +224,27 @@ class Website(Home):
             'name': {'label': _('Sort by Name'), 'order': 'name'},
         }
         # default sortby order
-        sort_order = searchbar_sortings.get(sortby, 'name')['order']
+        sort_order = searchbar_sortings.get(sortby, 'url')['order'] + ', website_id desc, id'
 
-        domain = ['|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+        domain = request.website.website_domain()
         if search:
             domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
 
-        pages_count = Page.search_count(domain)
+        pages = Page.search(domain, order=sort_order)
+        if sortby != 'url' or not request.env.user.has_group('website.group_multi_website'):
+            pages = pages.filtered(pages._is_most_specific_page)
+        pages_count = len(pages)
 
+        step = 50
         pager = portal_pager(
             url="/website/pages",
             url_args={'sortby': sortby},
             total=pages_count,
             page=page,
-            step=50
+            step=step
         )
-        pages = Page.search(domain, order=sort_order, limit=50, offset=pager['offset'])
+
+        pages = pages[(page - 1) * step:page * step]
 
         values = {
             'pager': pager,
@@ -243,13 +253,12 @@ class Website(Home):
             'sortby': sortby,
             'searchbar_sortings': searchbar_sortings,
         }
-        return request.render("website.edit_website_pages", values)
+        return request.render("website.list_website_pages", values)
 
     @http.route(['/website/add/', '/website/add/<path:path>'], type='http', auth="user", website=True)
-    def pagenew(self, path="", noredirect=False, add_menu=False, template=False):
+    def pagenew(self, path="", noredirect=False, add_menu=False, template=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
-        View = request.env['ir.ui.view']
         ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
 
         if not template and ext_special_case:
@@ -263,7 +272,7 @@ class Website(Home):
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
 
-        if ext_special_case: # redirect non html pages to backend to edit
+        if ext_special_case:  # redirect non html pages to backend to edit
             return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
         return werkzeug.utils.redirect(url + "?enable_editor=1")
 
@@ -277,7 +286,7 @@ class Website(Home):
         return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
-    def reset_template(self, templates, redirect='/'):
+    def reset_template(self, templates, redirect='/', **kwargs):
         templates = request.httprequest.form.getlist('templates')
         modules_to_update = []
         for temp_id in templates:
@@ -321,9 +330,9 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Themes
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     def get_view_ids(self, xml_ids):
         ids = []
@@ -334,7 +343,7 @@ class Website(Home):
                 record_id = View.search([
                     ("website_id", "=", request.website.id),
                     ("key", "=", xml_id),
-                ]).id or request.env.ref(xml_id).id
+                ], limit=1).id or request.env.ref(xml_id).id
             else:
                 record_id = int(xml_id)
             ids.append(record_id)
@@ -345,34 +354,38 @@ class Website(Home):
         enable = []
         disable = []
         ids = self.get_view_ids(xml_ids)
-        for view in request.env['ir.ui.view'].with_context(active_test=True).browse(ids):
+        for view in request.env['ir.ui.view'].browse(ids):
             if view.active:
-                enable.append(view.xml_id)
+                enable.append(view.key)
             else:
-                disable.append(view.xml_id)
+                disable.append(view.key)
         return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
     def theme_customize(self, enable, disable, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates """
-        def set_active(ids, active):
-            if ids:
-                real_ids = self.get_view_ids(ids)
-                request.env['ir.ui.view'].with_context(active_test=True).browse(real_ids).write({'active': active})
+        def set_active(xml_ids, active):
+            if xml_ids:
+                real_ids = self.get_view_ids(xml_ids)
+                request.env['ir.ui.view'].browse(real_ids).write({'active': active})
 
         set_active(disable, False)
         set_active(enable, True)
 
         if get_bundle:
-            context = dict(request.context, active_test=True)
-            return request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context)
+            context = dict(request.context)
+            return {
+                'web.assets_common': request.env["ir.qweb"]._get_asset('web.assets_common', options=context),
+                'web.assets_frontend': request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context),
+                'website.assets_editor': request.env["ir.qweb"]._get_asset('website.assets_editor', options=context),
+            }
 
         return True
 
     @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
-    def theme_customize_reload(self, href, enable, disable):
+    def theme_customize_reload(self, href, enable, disable, tab=0, **kwargs):
         self.theme_customize(enable and enable.split(",") or [], disable and disable.split(",") or [])
-        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true"))
+        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true") + ("&tab=" + tab))
 
     @http.route(['/website/multi_render'], type='json', auth="public", website=True)
     def multi_render(self, ids_or_xml_ids, values=None):
@@ -382,9 +395,9 @@ class Website(Home):
             res[id_or_xml_id] = View.render_template(id_or_xml_id, values)
         return res
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Server actions
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @http.route([
         '/website/action/<path_or_xml_id_or_id>',
@@ -418,9 +431,9 @@ class Website(Home):
         return request.redirect('/')
 
 
-#------------------------------------------------------
+# ------------------------------------------------------
 # Retrocompatibility routes
-#------------------------------------------------------
+# ------------------------------------------------------
 class WebsiteBinary(http.Controller):
 
     @http.route([

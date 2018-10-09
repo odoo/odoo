@@ -16,36 +16,15 @@
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
         <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="search_view_id" ref="product_template_search_view_website"/>
         <field name="context">{'search_default_published': 1, 'default_website_published': True}</field>
-    </record>
-
-    <record id="product_attribute_line_form" model="ir.ui.view">
-        <field name="name">product.attribute.line.form.inherit</field>
-        <field name="model">product.attribute.line</field>
-        <field name="inherit_id" ref="product.product_attribute_line_form"/>
-        <field name="priority" eval="8"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
-                <field name="html_color"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="product_attribute_view_form" model="ir.ui.view">
-        <field name="name">product.attribute.form.inherit</field>
-        <field name="model">product.attribute</field>
-        <field name="inherit_id" ref="product.product_attribute_view_form"/>
-        <field name="priority" eval="8"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='main_fields']" position="after">
-                <group>
-                    <field name="type"/>
-                </group>
-            </xpath>
-            <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
-                <field name="html_color"/>
-            </xpath>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                A product can be either a physical product or a service that you sell to your customers.
+            </p>
         </field>
     </record>
 
@@ -60,83 +39,90 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="product_product_website_tree_view">
+        <field name="name">product.product.website.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_website_tree_view">
+        <field name="name">product.template.website.tree</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="product_template_form_view">
         <field name="name">product.template.product.website.form</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <group name="email_template_and_project"  position="before">
-                <group name="website" string="Website" >
-                    <field name="website_url" invisible="1"/>
-                    <field name="public_categ_ids" widget="many2many_tags" string="eCommerce Categories"/>
-                    <field name="alternative_product_ids" widget="many2many_tags"/>
-                    <field name="accessory_product_ids" widget="many2many_tags"/>
-                    <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
-                </group>
-            </group>
-            <button name="toggle_active" position="before">
+            <xpath expr="//button[@name='toggle_active']" position="before">
                 <button class="oe_stat_button" name="website_publish_button"
                     type="object" icon="fa-globe" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="website_published" widget="website_button"/>
                 </button>
-            </button>
-            <xpath expr="//notebook[last()]" position="inside">
-                <page string="Images" groups="website_sale.group_website_multi_image">
-                    <field name="product_image_ids" mode="kanban" context="{'default_name': name, 'default_product_tmpl_id': active_id}">
-                        <kanban string="Product Images">
-                            <field name="name"/>
-                            <field name="image" />
-                            <templates>
-                                <t t-name="kanban-box">
-                                    <div class="oe_kanban_global_click">
-                                        <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
-                                        <div class="o_kanban_image">
-                                            <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+            </xpath>
+            <xpath expr="//page[@name='sales']" position="after">
+                <page name="shop" string="eCommerce" attrs="{'invisible': [('sale_ok','=',False)]}">
+                    <group name="shop">
+                        <group string="Shop">
+                            <field name="website_url" invisible="1"/>
+                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
+                            <field name="alternative_product_ids" widget="many2many_tags"/>
+                            <field name="accessory_product_ids" widget="many2many_tags"/>
+                            <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <group name="extra_images" string="Extra Images">
+                        <field name="product_image_ids" class="o_website_sale_image_list" context="{'default_name': name, 'default_product_tmpl_id': active_id}" nolabel="1">
+                            <kanban string="Product Images" class="o_attachments_previews">
+                                <field name="id"/>
+                                <field name="name"/>
+                                <field name="image"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="o_attachment oe_kanban_global_click o_website_sale_image_card">
+                                            <div class="o_attachment_wrap">
+                                                <div class="o_image_box">
+                                                    <div class="o_attachment_image" t-attf-style="background-image:url({{kanban_image('product.image', 'image', record.id.raw_value)}});"/>
+                                                    <div t-attf-class="o_image_overlay" t-att-title="record.name.value"/>
+                                                    <div class="o_website_sale_image_card_title" t-att-title="record.name.value">
+                                                        <field name="name"/>
+                                                    </div>
+                                                </div>
+
+                                                <t t-set="size" t-value="[record.image.value][0]"/>
+                                                <t t-set="size_status" t-value="'normal'" t-if="size.indexOf('Bytes') !== -1 or ( size.indexOf('Kb') !== -1 and size[2]=='.')"/>
+                                                <t t-set="size_status" t-value="'warning'" t-elif="( size.indexOf('Kb') !== -1 and size[3]=='.')"/>
+                                                <t t-set="size_status" t-value="'danger'"  t-else=""/>
+                                                <t t-set="message" t-value="'Acceptable file size'" t-if="size_status == 'normal'"></t>
+                                                <t t-set="message" t-value="'Huge file size. The image should be optimized/reduced.'" t-elif="size_status == 'warning'"></t>
+                                                <t t-set="message" t-value="'Optimization required! Reduce the image size or increase your compression settings.'" t-else=""></t>
+
+                                                <span t-attf-class="o_website_sale_image_card_size badge badge-#{size_status}" t-att-title="message">
+                                                    <t t-esc="record.image.value"/>
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div class="oe_kanban_details">
-                                            <field name="name"/>
-                                        </div>
-                                    </div>
-                                </t>
-                            </templates>
-                        </kanban>
-                    </field>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </group>
                 </page>
             </xpath>
-        </field>
-    </record>
-
-    <!-- Product attribute -->
-
-    <record id="product_attribute_value_view_tree_inherit_website_sale" model="ir.ui.view">
-        <field name="name">product.attribute.value.view.tree.inherit.website.sale</field>
-        <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.product_attribute_value_view_tree"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="html_color"/>
-            </field>
-        </field>
-    </record>
-    <record id="variants_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
-        <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.variants_tree_view"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="html_color"/>
-            </field>
-        </field>
-    </record>
-    <record id="attribute_tree_view" model="ir.ui.view">
-        <field name="name">product.attribute.tree.type</field>
-        <field name="model">product.attribute</field>
-        <field name="inherit_id" ref="product.attribute_tree_view"></field>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="type"/>
-            </field>
         </field>
     </record>
 
@@ -152,6 +138,7 @@
                         <group>
                             <field name="name"/>
                             <field name="parent_id"/>
+                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             <field name="sequence"/>
                         </group>
                     </div>
@@ -167,6 +154,7 @@
             <tree string="Product Public Categories">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
+                <field name="website_id" groups="website.group_multi_website"/>
             </tree>
         </field>
     </record>
@@ -178,8 +166,8 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" eval="False"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to define a new category.
+          <p class="o_view_nocontent_smiling_face">
+            Define a new category
           </p><p>
             Categories are used to browse your products through the
             touchscreen interface.
@@ -194,7 +182,7 @@
         <field name="arch" type="xml">
             <field name='currency_id' position='after'>
                 <field name="selectable"/>
-                <field name="website_id" string='Allow to use on ' placeholder="None website" />
+                <field name="website_id" options="{'no_create': True}" string="Allow to use on " placeholder="None website"/>
             </field>
         </field>
     </record>
@@ -206,6 +194,7 @@
         <field name="arch" type="xml">
             <field name="currency_id" position="after">
                 <field name="selectable" />
+                <field name="website_id" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>
@@ -215,14 +204,18 @@
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <form string="Product Images">
-                <sheet>
-                    <field name="image" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
-                    <div class="oe_title">
-                        <label class="oe_edit_only" for="name" string="Image Name"/>
-                        <h1><field name="name" placeholder="Image Name" required="True"/></h1>
-                        <field name="product_tmpl_id" invisible="1"/>
+                <div class="row o_website_sale_image_modal">
+                    <div class="col-md-6 col-xl-5">
+                        <div class="oe_title">
+                            <label class="small text-muted" for="name" string="Image Name"/>
+                            <h2><field name="name" placeholder="Image Name" required="True"/></h2>
+                            <field name="product_tmpl_id" invisible="1"/>
+                        </div>
                     </div>
-                </sheet>
+                    <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
+                        <field name="image" widget="image"/>
+                    </div>
+                </div>
             </form>
         </field>
     </record>

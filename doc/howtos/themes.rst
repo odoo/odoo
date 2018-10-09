@@ -577,7 +577,7 @@ Odoo includes Bootstrap by default. This means that you can take advantage of al
 Of course Bootstrap is not enough if you want to provide a unique design. The following steps will guide you through how to add custom styles to your theme.
 The final result won't be pretty, but will provide you with enough information to build upon on your own.
 
-Let’s start by creating an empty file called **style.less** and place it in a folder called **less** in your static folder.
+Let’s start by creating an empty file called **style.scss** and place it in a folder called **scss** in your static folder.
 The following rules will style our *Services* page. Copy and paste it, then save the file.
 
 .. as of Pygments 2.2, the Less lexer can't handle inline comments or nested
@@ -610,11 +610,11 @@ Let’s navigate to the view folder and create an XML file called *assets.xml*. 
 
    <template id="mystyle" name="My style" inherit_id="website.assets_frontend">
        <xpath expr="link[last()]" position="after">
-           <link href="/theme folder/static/less/style.less" rel="stylesheet" type="text/less"/>
+           <link rel="stylesheet" type="text/scss" href="/theme folder/static/scss/style.scss"/>
        </xpath>
    </template>
 
-We just created a template specifying our less file. As you can see,
+We just created a template specifying our scss file. As you can see,
 our template has a special attribute called ``inherit_id``.  This
 attribute tells Odoo that our template is referring to another one in
 order to operate.
@@ -622,7 +622,7 @@ order to operate.
 In this case, we are referring to ``assets_frontend`` template,
 located in the ``website`` module. ``assets_frontend`` specifies the
 list of assets loaded by the website builder and our goal is to add
-our less file to this list.
+our scss file to this list.
 
 This can be achieved using xpath with the attributes
 ``expr="link[last()]"`` and ``position="after"``, which means "*take my
@@ -639,7 +639,7 @@ Update your theme
 .. image:: theme_tutorial_assets/img/restart.png
 
 
-Our less file is now included in our theme, it will be automatically compiled, minified and combined with all Odoo’s assets.
+Our scss file is now included in our theme, it will be automatically compiled, minified and combined with all Odoo’s assets.
 
 .. image:: theme_tutorial_assets/img/services_page_styled.png
    :class: shadow-0
@@ -659,18 +659,18 @@ The template contains the HTML markup that will be displayed by the snippet.
      <section class="snippet_testimonial">
        <div class="container text-center">
          <div class="row">
-           <div class="col-md-4">
-             <img alt="client" class="img-circle" src="/theme_tutorial/static/src/img/client_1.jpg"/>
+           <div class="col-lg-4">
+             <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_1.jpg"/>
              <h3>Client Name</h3>
              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
            </div>
-           <div class="col-md-4">
-             <img alt="client" class="img-circle" src="/theme_tutorial/static/src/img/client_2.jpg"/>
+           <div class="col-lg-4">
+             <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_2.jpg"/>
              <h3>Client Name</h3>
              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
            </div>
-           <div class="col-md-4">
-             <img alt="client" class="img-circle" src="/theme_tutorial/static/src/img/client_3.jpg"/>
+           <div class="col-lg-4">
+             <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_3.jpg"/>
              <h3>Client Name</h3>
              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
            </div>
@@ -763,11 +763,11 @@ We start by adding a new file in our views folder - name it **options.xml** and 
       <div data-selector=".snippet_testimonial"> <!-- Options group -->
         <li class="dropdown-submenu">
           <a href="#">Your Option</a>
-          <ul class="dropdown-menu"> <!-- Options list -->
-            <li data-select-class="opt_shadow"><a>Shadow Images</a></li>
-            <li data-select-class="opt_grey_bg"><a>Grey Bg</a></li>
-            <li data-select-class=""><a>None</a></li>
-          </ul>
+          <div class="dropdown-menu"> <!-- Options list -->
+            <a href="#" class="dropdown-item" data-select-class="opt_shadow">Shadow Images</a>
+            <a href="#" class="dropdown-item" data-select-class="opt_grey_bg">Grey Bg</a>
+            <a href="#" class="dropdown-item" data-select-class="">None</a>
+          </div>
         </li>
       </div>
     </xpath>
@@ -797,7 +797,7 @@ Dropping our snippet onto the page, you will notice that our new options are aut
 
 .. image:: theme_tutorial_assets/img/snippet_options.png
 
-Let’s create some css rules in order to provide a visual feedback for our options. Open our **style.less** file and add the following
+Let’s create some css rules in order to provide a visual feedback for our options. Open our **style.scss** file and add the following
 
 .. code-block:: scss
 
@@ -931,8 +931,8 @@ Layout
 ``<section />``
   Any section element can be edited like a block of content. The publisher can move or duplicate it. It’s also possible to set a background image or color. Section is the standard main container of any snippet.
 
-``.row > .col-md-*``
-  Any medium  bootstrap columns  directly descending from a .row element, will be resizable by the publisher.
+``.row > .col-lg-*``
+  Any large bootstrap columns directly descending from a .row element, will be resizable by the publisher.
 
 ``contenteditable="False"``
   This attribute will prevent editing to the element and all its children.

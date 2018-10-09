@@ -7,10 +7,10 @@ var core = require('web.core');
 var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
+var weContext = require('web_editor.context');
 
 var qweb = core.qweb;
 var _t = core._t;
-var ZeroClipboard = window.ZeroClipboard;
 
 var exports = {};
 
@@ -52,6 +52,7 @@ if (!$('.o_website_links_create_tracked_url').length) {
             return rpc.query({
                     model: this.obj,
                     method: 'search_read',
+                    context: weContext.get(), // TODO use this._rpc
                 })
                 .then(function (result) {
                     return _.map(result, function (val) {
@@ -76,6 +77,7 @@ if (!$('.o_website_links_create_tracked_url').length) {
                     model: this.obj,
                     method: 'create',
                     args: [{name:name}],
+                    context: weContext.get(), // TODO use this._rpc
                 })
                 .then(function (record) {
                     self.element.attr('value', record);
@@ -108,7 +110,8 @@ if (!$('.o_website_links_create_tracked_url').length) {
             this.animating_copy = false;
         },
         start: function () {
-            new ZeroClipboard(this.$('.btn_shorten_url_clipboard'));
+            new ClipboardJS(this.$('.btn_shorten_url_clipboard').get(0));
+            return this._super.apply(this, arguments);
         },
         toggle_copy_button: function () {
             var self = this;
@@ -258,8 +261,6 @@ if (!$('.o_website_links_create_tracked_url').length) {
 
     base.ready().done(function () {
 
-        ZeroClipboard.config({swfPath: window.location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
-
         // UTMS selects widgets
         var campaign_select = new SelectBox('utm.campaign');
         campaign_select.start($("#campaign-select"), _t('e.g. Promotion of June, Winter Newsletter, ..'));
@@ -291,7 +292,7 @@ if (!$('.o_website_links_create_tracked_url').length) {
         });
 
         // Clipboard Library
-        new ZeroClipboard($("#btn_shorten_url"));
+        new ClipboardJS($("#btn_shorten_url").get(0));
 
         $("#generated_tracked_link a").click(function () {
             $("#generated_tracked_link a").text("Copied").removeClass("btn-primary").addClass("btn-success");

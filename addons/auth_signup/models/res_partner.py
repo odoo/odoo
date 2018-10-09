@@ -18,8 +18,7 @@ def random_token():
     return ''.join(random.SystemRandom().choice(chars) for _ in range(20))
 
 def now(**kwargs):
-    dt = datetime.now() + timedelta(**kwargs)
-    return fields.Datetime.to_string(dt)
+    return datetime.now() + timedelta(**kwargs)
 
 
 class ResPartner(models.Model):
@@ -105,7 +104,7 @@ class ResPartner(models.Model):
         """
         res = defaultdict(dict)
 
-        allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited', 'False').lower() == 'true'
+        allow_signup = self.env['res.users']._get_signup_invitation_scope() == 'b2c'
         for partner in self:
             if allow_signup and not partner.user_ids:
                 partner = partner.sudo()

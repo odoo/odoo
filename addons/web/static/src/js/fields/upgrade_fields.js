@@ -94,7 +94,7 @@ var AbstractFieldUpgrade = {
         this._super.apply(this, arguments);
         this._insertEnterpriseLabel($("<span>", {
             text: "Enterprise",
-            'class': "label label-primary oe_inline o_enterprise_label"
+            'class': "badge badge-primary oe_inline o_enterprise_label"
         }));
     },
     /**
@@ -146,6 +146,7 @@ var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
      * @private
      */
     _insertEnterpriseLabel: function ($enterpriseLabel) {
+        if(this.name==='module_partner_autocomplete') debugger;
         var $el = this.$label || this.$el;
         $el.append('&nbsp;').append($enterpriseLabel);
     },

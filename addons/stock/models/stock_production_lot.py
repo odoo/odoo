@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class ProductionLot(models.Model):
     _name = 'stock.production.lot'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Lot/Serial'
 
     name = fields.Char(
@@ -18,28 +18,27 @@ class ProductionLot(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], required=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
-        related='product_id.uom_id', store=True)
+        'uom.uom', 'Unit of Measure',
+        related='product_id.uom_id', store=True, readonly=False)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
-    create_date = fields.Datetime('Creation Date')
     product_qty = fields.Float('Quantity', compute='_product_qty')
 
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
     ]
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         active_picking_id = self.env.context.get('active_picking_id', False)
         if active_picking_id:
             picking_id = self.env['stock.picking'].browse(active_picking_id)
             if picking_id and not picking_id.picking_type_id.use_create_lots:
-                raise UserError(_("You are not allowed to create a lot for this picking type"))
-        return super(ProductionLot, self).create(vals)
+                raise UserError(_('You are not allowed to create a lot or serial number with this operation type. To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers".'))
+        return super(ProductionLot, self).create(vals_list)
 
     @api.multi
     def write(self, vals):
-        if 'product_id' in vals:
+        if 'product_id' in vals and any([vals['product_id'] != lot.product_id.id for lot in self]):
             move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids)])
             if move_lines:
                 raise UserError(_(

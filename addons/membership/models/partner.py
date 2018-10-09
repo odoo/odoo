@@ -10,7 +10,7 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     associate_member = fields.Many2one('res.partner', string='Associate Member',
-        help="A member with whom you want to associate your membership. "
+        help="A member with whom you want to associate your membership."
              "It will consider the membership state of the associated member.")
     member_lines = fields.One2many('membership.membership_line', 'partner', string='Membership')
     free_member = fields.Boolean(string='Free Member',
@@ -159,7 +159,7 @@ class Partner(models.Model):
         while self:
             self = self.associate_member
             if not level:
-                raise ValidationError(_('Error ! You cannot create recursive associated members.'))
+                raise ValidationError(_('You cannot create recursive associated members.'))
             level -= 1
 
     @api.model

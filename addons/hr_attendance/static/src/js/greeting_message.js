@@ -1,13 +1,13 @@
 odoo.define('hr_attendance.greeting_message', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var Widget = require('web.Widget');
 
 var _t = core._t;
 
 
-var GreetingMessage = Widget.extend({
+var GreetingMessage = AbstractAction.extend({
     template: 'HrAttendanceGreetingMessage',
 
     events: {
@@ -51,6 +51,22 @@ var GreetingMessage = Widget.extend({
         this.attendance.check_in_time = this.attendance.check_in && this.attendance.check_in.format(this.format_time);
         this.attendance.check_out_time = this.attendance.check_out && this.attendance.check_out.format(this.format_time);
         this.employee_name = action.employee_name;
+    },
+
+    willStart: function() {
+        var self = this;
+        var def;
+        if (this.attendance && this.attendance.employee_id) {
+            def = this._rpc({
+                model: 'hr.employee',
+                method: 'read',
+                args: [this.attendance.employee_id[0], ['barcode']],
+             })
+            .then(function (employee) {
+                self.attendanceBarcode = employee[0].barcode;
+            });
+        }
+        return $.when(this._super.apply(this, arguments), def);
     },
 
     start: function() {
@@ -106,7 +122,7 @@ var GreetingMessage = Widget.extend({
         if(this.previous_attendance_change_date){
             var last_check_in_date = this.previous_attendance_change_date.clone();
             if(now - last_check_in_date > 1000*60*60*12){
-                this.$('.o_hr_attendance_warning_message').append(_t("Warning! Last check in was over 12 hours ago.<br/>If this isn't right, please contact Human Resources."));
+                this.$('.o_hr_attendance_warning_message').show().append(_t("<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't right, please contact Human Resource staff"));
                 clearTimeout(this.return_to_main_menu);
                 this.activeBarcode = false;
             } else if(now - last_check_in_date > 1000*60*60*8){
@@ -136,21 +152,24 @@ var GreetingMessage = Widget.extend({
 
     _onBarcodeScanned: function(barcode) {
         var self = this;
-        if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
-            clearTimeout(this.return_to_main_menu);
+        if (this.attendanceBarcode !== barcode){
+            if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
+                clearTimeout(this.return_to_main_menu);
+            }
+            core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
+            this._rpc({
+                    model: 'hr.employee',
+                    method: 'attendance_scan',
+                    args: [barcode, ],
+                })
+                .then(function (result) {
+                    if (result.action) {
+                        self.do_action(result.action);
+                    } else if (result.warning) {
+                        self.do_warn(result.warning);
+                    }
+                });
         }
-        this._rpc({
-                model: 'hr.employee',
-                method: 'attendance_scan',
-                args: [barcode, ],
-            })
-            .then(function (result) {
-                if (result.action) {
-                    self.do_action(result.action);
-                } else if (result.warning) {
-                    self.do_warn(result.warning);
-                }
-            });
     },
 
     destroy: function () {

@@ -1,30 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <!--Declared here in two parts instead of account_account_template_common_data.xml
-        to allow creating the common CoA without causing a mistake due to a missing
-        value for field transfer_account_id.-->
-        <record id="account_common_572999" model="account.account.template">
-           <field name="name">Cuenta de transferencia inter-bancos</field>
-           <field name="code">572999</field>
-           <field name="user_type_id" ref="account.data_account_type_current_assets" />
-           <field name="reconcile" eval="True" />
-           <field name="group_id" ref="l10n_es.account_group_572" />
-       </record>
-
         <record id="account_chart_template_common" model="account.chart.template">
             <field name="name">PGCE común</field>
             <field name="visible" eval="0"/>
             <field name="currency_id" ref="base.EUR"/>
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
-            <field name="transfer_account_id" ref="account_common_572999"/>
+            <field name="transfer_account_code_prefix">572999</field>
         </record>
-
-        <record id="account_common_572999" model="account.account.template">
-           <field name="chart_template_id" ref="account_chart_template_common"/>
-       </record>
 
         <record id="account_chart_template_pymes" model="account.chart.template">
             <field name="name">PGCE PYMEs 2008</field>
@@ -32,7 +16,7 @@
             <field name="currency_id" ref="base.EUR"/>
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
-            <field name="transfer_account_id" ref="account_common_572999"/>
+            <field name="transfer_account_code_prefix">572999</field>
             <field name="parent_id" ref="account_chart_template_common"/>
         </record>
 
@@ -42,7 +26,7 @@
         <field name="currency_id" ref="base.EUR"/>
         <field name="cash_account_code_prefix">570</field>
         <field name="bank_account_code_prefix">572</field>
-        <field name="transfer_account_id" ref="account_common_572999"/>
+        <field name="transfer_account_code_prefix">572999</field>
         <field name="parent_id" ref="account_chart_template_common"/>
     </record>
 
@@ -52,7 +36,7 @@
         <field name="currency_id" ref="base.EUR"/>
         <field name="cash_account_code_prefix">570</field>
         <field name="bank_account_code_prefix">572</field>
-        <field name="transfer_account_id" ref="account_common_572999"/>
+        <field name="transfer_account_code_prefix">572999</field>
         <field name="parent_id" ref="account_chart_template_common"/>
     </record>
     </data>

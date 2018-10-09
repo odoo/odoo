@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
+from odoo.tests import Form
 from odoo.tests import common
 
 
@@ -20,6 +21,8 @@ class TestWorkOrderProcess(common.TransactionCase):
         product_table_leg = self.env.ref('mrp.product_product_computer_desk_leg')
         product_bolt = self.env.ref('mrp.product_product_computer_desk_bolt')
         product_screw = self.env.ref('mrp.product_product_computer_desk_screw')
+        self.env['stock.move'].search([('product_id', 'in', [product_bolt.id, product_screw.id])])._do_unreserve()
+        (product_bolt + product_screw).write({'type': 'product'})
 
         production_table = self.env['mrp.production'].create({
             'product_id': dining_table.id,
@@ -69,7 +72,7 @@ class TestWorkOrderProcess(common.TransactionCase):
                 'location_id': self.source_location_id
             })]
         })
-        inventory.action_done()
+        inventory.action_validate()
 
         # Create work order
         production_table.button_plan()
@@ -118,8 +121,10 @@ class TestWorkOrderProcess(common.TransactionCase):
         product_table_sheet = self.env.ref('mrp.product_product_computer_desk_head')
         product_table_leg = self.env.ref('mrp.product_product_computer_desk_leg')
         product_bolt = self.env.ref('mrp.product_product_computer_desk_bolt')
+        self.env['stock.move'].search([('product_id', '=', product_bolt.id)])._do_unreserve()
+        product_bolt.type = 'product'
 
-        bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk"))
+        bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk")).copy()
         bom.routing_id = self.ref('mrp.mrp_routing_1')
 
         bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_sheet).operation_id = bom.routing_id.operation_ids[0]
@@ -169,7 +174,7 @@ class TestWorkOrderProcess(common.TransactionCase):
                 'location_id': self.source_location_id
             })]
         })
-        inventory.action_done()
+        inventory.action_validate()
 
         # Create work order
         production_table.button_plan()
@@ -221,7 +226,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.assertEqual(move_table_bolt.quantity_done, 4)
 
         # Change the quantity of the production order to 1
-        wiz = self.env['change.production.qty'].create({'mo_id': production_table.id , 
+        wiz = self.env['change.production.qty'].create({'mo_id': production_table.id ,
                                                         'product_qty': 1.0})
         wiz.change_prod_qty()
         # ---------------------------------------------------------------
@@ -234,7 +239,7 @@ class TestWorkOrderProcess(common.TransactionCase):
 
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """
-        unit = self.ref("product.product_uom_unit")
+        unit = self.ref("uom.product_uom_unit")
         custom_laptop = self.env.ref("product.product_product_27")
         custom_laptop.tracking = 'lot'
 
@@ -312,7 +317,7 @@ class TestWorkOrderProcess(common.TransactionCase):
             })]
         })
         # inventory.action_start()
-        inventory.action_done()
+        inventory.action_validate()
 
         # Check consumed move status
         mo_custom_laptop.action_assign()
@@ -329,10 +334,12 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         # Produce 6 Unit of custom laptop will consume ( 12 Unit of keybord and 12 Unit of charger)
         context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
-        product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 6.00})
+        product_form = Form(self.env['mrp.product.produce'].with_context(context))
+        product_form.product_qty = 6.00
         laptop_lot_001 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        product_consume.lot_id = laptop_lot_001.id
-        product_consume.produce_line_ids.write({'qty_done': 12})
+        product_form.lot_id = laptop_lot_001
+        product_consume = product_form.save()
+        product_consume.produce_line_ids[0].qty_done = 12
         product_consume.do_produce()
 
         # Check consumed move after produce 6 quantity of customized laptop.
@@ -354,11 +361,13 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         # Produce 4 Unit of custom laptop will consume ( 8 Unit of keybord and 8 Unit of charger).
         context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
-        product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 4.00})
+        produce_form = Form(self.env['mrp.product.produce'].with_context(context))
+        produce_form.product_qty = 4.00
         laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        product_consume.lot_id = laptop_lot_002.id
+        produce_form.lot_id = laptop_lot_002
+        product_consume = produce_form.save()
         self.assertEquals(len(product_consume.produce_line_ids), 2)
-        product_consume.produce_line_ids.write({'qty_done': 8})
+        product_consume.produce_line_ids[0].qty_done = 8
         product_consume.do_produce()
         charger_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state != 'done')
         keybord_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_keybord.id and x.state !='done')
@@ -372,12 +381,12 @@ class TestWorkOrderProcess(common.TransactionCase):
 #         finsh_moves_state = any(move.state != 'done' for move in mo_custom_laptop.move_finished_ids)
 #         self.assertFalse(raw_moves_state, "Wrong state in consumed moves of production order.")
 #         self.assertFalse(finsh_moves_state, "Wrong state in consumed moves of production order.")
-# 
+#
 #         # Finished move quants of production order
-# 
+#
 #         finshed_quant_lot_001 = mo_custom_laptop.move_finished_ids.filtered(lambda x: x.product_id.id == custom_laptop.id and x.product_uom_qty==6).mapped('quant_ids')
 #         finshed_quant_lot_002 = mo_custom_laptop.move_finished_ids.filtered(lambda x: x.product_id.id == custom_laptop.id and x.product_uom_qty==4).mapped('quant_ids')
-# 
+#
 #         # Check total quantity consumed of charger, keybord
 #         # --------------------------------------------------
 #         charger_quants = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state == 'done').mapped('quant_ids')
@@ -389,10 +398,10 @@ class TestWorkOrderProcess(common.TransactionCase):
         """ Testing bill of material with different unit of measure."""
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
-        unit = self.ref("product.product_uom_unit")
-        dozen = self.ref("product.product_uom_dozen")
-        kg = self.ref("product.product_uom_kgm")
-        gm = self.ref("product.product_uom_gram")
+        unit = self.ref("uom.product_uom_unit")
+        dozen = self.ref("uom.product_uom_dozen")
+        kg = self.ref("uom.product_uom_kgm")
+        gm = self.ref("uom.product_uom_gram")
         # Create Product A, B, C
         product_A = self.env['product.product'].create({
             'name': 'Product A',
@@ -482,16 +491,18 @@ class TestWorkOrderProcess(common.TransactionCase):
             })]
         })
         # inventory.action_start()
-        inventory.action_done()
+        inventory.action_validate()
 
         # Start Production ...
         # --------------------
 
         mo_custom_product.action_assign()
         context = {"active_ids": [mo_custom_product.id], "active_id": mo_custom_product.id}
-        product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 10})
+        produce_form = Form(self.env['mrp.product.produce'].with_context(context))
+        produce_form.product_qty = 10.00
+        produce_form.lot_id = lot_a
+        product_consume = produce_form.save()
         # laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
-        product_consume.lot_id = lot_a.id
         self.assertEquals(len(product_consume.produce_line_ids), 2)
         product_consume.produce_line_ids.filtered(lambda x : x.product_id == product_C).write({'qty_done': 3000})
         product_consume.produce_line_ids.filtered(lambda x : x.product_id == product_B).write({'qty_done': 20})
@@ -511,7 +522,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         """ Test that the correct serial number is suggested on consecutive work orders. """
         laptop = self.env.ref("product.product_product_25")
         graphics_card = self.env.ref("product.product_product_24")
-        unit = self.env.ref("product.product_uom_unit")
+        unit = self.env.ref("uom.product_uom_unit")
         three_step_routing = self.env.ref("mrp.mrp_routing_1")
 
         laptop.tracking = 'serial'

@@ -5,16 +5,19 @@ from odoo import models, fields
 
 class Child0(models.Model):
     _name = 'delegation.child0'
+    _description = 'Delegation Child zero'
 
     field_0 = fields.Integer()
 
 class Child1(models.Model):
     _name = 'delegation.child1'
+    _description = 'Delegation Child one'
 
     field_1 = fields.Integer()
 
 class Delegating(models.Model):
     _name = 'delegation.parent'
+    _description = 'Delegation Parent'
 
     _inherits = {
         'delegation.child0': 'child0_id',

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="ir_filter_project_profitability_report_costs_and_revenues" model="ir.filters">
+        <field name="name">Costs and Revenues</field>
+        <field name="model_id">project.profitability.report</field>
+        <field name="user_id" eval="False"/>
+        <field name="is_default" eval="True"/>
+        <field name="context">{
+        	'group_by': ['project_id', 'sale_line_id'],
+        	'pivot_measures': ['amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_cost', 'timesheet_unit_amount'],
+        	'pivot_column_groupby': [], 'pivot_row_groupby': []
+        }</field>
+    </record>
+
+    <record id="ir_filter_project_profitability_report_manager_and_product" model="ir.filters">
+        <field name="name">Product by Customer</field>
+        <field name="model_id">project.profitability.report</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{
+        	'group_by': ['partner_id', 'product_id'],
+        	'graph_measure': 'amount_untaxed_to_invoice',
+        	'graph_mode': 'bar',
+        	'graph_groupbys': ['partner_id', 'product_id']
+        }</field>
+    </record>
+
+</odoo>

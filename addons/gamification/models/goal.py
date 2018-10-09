@@ -21,7 +21,7 @@ class GoalDefinition(models.Model):
     a new gamification_goal_definition
     """
     _name = 'gamification.goal.definition'
-    _description = 'Gamification goal definition'
+    _description = 'Gamification Goal Definition'
 
     name = fields.Char("Goal Definition", required=True, translate=True)
     description = fields.Text("Goal Description")
@@ -146,7 +146,7 @@ class Goal(models.Model):
     An individual goal for a user on a specified time period"""
 
     _name = 'gamification.goal'
-    _description = 'Gamification goal instance'
+    _description = 'Gamification Goal'
     _order = 'start_date desc, end_date desc, definition_id, id'
 
     definition_id = fields.Many2one('gamification.goal.definition', string="Goal Definition", required=True, ondelete="cascade")
@@ -172,7 +172,7 @@ class Goal(models.Model):
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal', help="These goals will not be recomputed.")
 
-    computation_mode = fields.Selection(related='definition_id.computation_mode')
+    computation_mode = fields.Selection(related='definition_id.computation_mode', readonly=False)
     remind_update_delay = fields.Integer(
         "Remind delay", help="The number of days after which the user "
                              "assigned to a manual goal will be reminded. "
@@ -221,11 +221,12 @@ class Goal(models.Model):
         template = self.env.ref('gamification.email_template_goal_reminder')\
                            .get_email_template(self.id)
         body_html = self.env['mail.template'].with_context(template._context)\
-            .render_template(template.body_html, 'gamification.goal', self.id)
+            ._render_template(template.body_html, 'gamification.goal', self.id)
         self.env['mail.thread'].message_post(
             body=body_html,
-            partner_ids=[ self.user_id.partner_id.id],
-            subtype='mail.mt_comment'
+            partner_ids=[self.user_id.partner_id.id],
+            subtype='mail.mt_comment',
+            notif_layout='mail.mail_notification_light',
         )
 
         return {'to_update': True}

@@ -3,23 +3,20 @@
 # * website_links
 # 
 # Translators:
-# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2017
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2017
-# Sergio Flores <vitavitae1@gmail.com>, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Gustavo Valverde, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# oihane <oihanecruce@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# oihane <oihanecruce@gmail.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2018
+# Gustavo Valverde, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,12 +89,10 @@ msgstr "Todo el tiempo"
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Campaign <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the context of your link. It might be an "
-"event you want to promote or a special promotion.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the context of your link. It might be an event you want to promote or a "
+"special promotion.\"/>"
 msgstr ""
-"Campaña <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Define el contexto de su enlace. Este puede ser un"
-" evento que quiera promocionar o una promoción especial.\"/>"
 
 #. module: website_links
 #. openerp-web
@@ -108,7 +103,15 @@ msgstr "Copiar"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:358
+#: code:addons/website_links/static/src/xml/recent_link.xml:26
+#: model:ir.ui.view,arch_db:website_links.graphs
+#, python-format
+msgid "Edit code"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:356
 #, python-format
 msgid "Generating link..."
 msgstr "Generando enlace..."
@@ -117,6 +120,13 @@ msgstr "Generando enlace..."
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Get tracked link"
 msgstr "Recibir enlace rastreado"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:13
+#, python-format
+msgid "Icon"
+msgstr "Icono"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -138,13 +148,10 @@ msgstr "Rastr. enlaces"
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the medium used to share your link. It "
-"might be an email, or a Facebook Ads for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the medium used to share your link. It might be an email, or a Facebook Ads "
+"for instance.\"/>"
 msgstr ""
-"Medio <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Define el medio usado para compartir su enlace. "
-"Este puede ser un correo electrónico o un anuncio en Facebook, por "
-"ejemplo.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -174,12 +181,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the source from which your traffic will "
-"come from, Facebook or Twitter for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the source from which your traffic will come from, Facebook or Twitter for "
+"instance.\"/>"
 msgstr ""
-"Fuente <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Define la fuente de la cual su trafico procederá, "
-"Facebook o Twitter por ejemplo.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -265,21 +270,21 @@ msgstr "copiar"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:268
+#: code:addons/website_links/static/src/js/website_links.js:266
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr "ejemplo. Noticias, Red social, ..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:265
+#: code:addons/website_links/static/src/js/website_links.js:263
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
 msgstr "ejemplo. Promoción de Junio, Noticias de Invierno, ..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:271
+#: code:addons/website_links/static/src/js/website_links.js:269
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
 msgstr "ejemplo. Motor de búsqueda, Página web, ..."

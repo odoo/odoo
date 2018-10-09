@@ -3,7 +3,7 @@
 
 {
     'name': 'Indian Payroll',
-    'category': 'Localization',
+    'category': 'Human  Resources',
     'depends': ['hr_payroll'],
     'description': """
 Indian Payroll Salary Rules.

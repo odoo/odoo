@@ -3,14 +3,15 @@
 # * website_links
 # 
 # Translators:
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Martin Trigaux, 2018
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,12 +84,10 @@ msgstr "Noensinne"
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Campaign <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the context of your link. It might be an "
-"event you want to promote or a special promotion.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the context of your link. It might be an event you want to promote or a "
+"special promotion.\"/>"
 msgstr ""
-"Kampanje <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the context of your link. It might be an "
-"event you want to promote or a special promotion.\"/>"
 
 #. module: website_links
 #. openerp-web
@@ -99,7 +98,15 @@ msgstr "Kopier"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:358
+#: code:addons/website_links/static/src/xml/recent_link.xml:26
+#: model:ir.ui.view,arch_db:website_links.graphs
+#, python-format
+msgid "Edit code"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:356
 #, python-format
 msgid "Generating link..."
 msgstr "Genererer link..."
@@ -108,6 +115,13 @@ msgstr "Genererer link..."
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Get tracked link"
 msgstr "Få sporet link"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:13
+#, python-format
+msgid "Icon"
+msgstr "Ikon"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -129,12 +143,10 @@ msgstr "Link-sporer"
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the medium used to share your link. It "
-"might be an email, or a Facebook Ads for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the medium used to share your link. It might be an email, or a Facebook Ads "
+"for instance.\"/>"
 msgstr ""
-"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the medium used to share your link. It "
-"might be an email, or a Facebook Ads for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -164,12 +176,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the source from which your traffic will "
-"come from, Facebook or Twitter for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the source from which your traffic will come from, Facebook or Twitter for "
+"instance.\"/>"
 msgstr ""
-"Kilde <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the source from which your traffic will "
-"come from, Facebook or Twitter for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -254,21 +264,21 @@ msgstr "kopi"
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:268
+#: code:addons/website_links/static/src/js/website_links.js:266
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr "for eksempel nyhetsbrev, sosialt nettverk ..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:265
+#: code:addons/website_links/static/src/js/website_links.js:263
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
 msgstr "for eksempel junitilbud, vinternyhetsbrev ..."
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:271
+#: code:addons/website_links/static/src/js/website_links.js:269
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
 msgstr "for eksempel søkemotor, side på nettsted ..."
@@ -292,4 +302,4 @@ msgstr "ok"
 #: model:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "or"
-msgstr "eller "
+msgstr "eller"

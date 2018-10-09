@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
 
@@ -23,12 +24,12 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
         mo.action_assign()
 
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }).create({
-            'product_qty': 5.0,
-        })
+        }))
+        produce_form.product_qty = 5.0
+        produce_wizard = produce_form.save()
         produce_wizard.do_produce()
 
         mo.button_mark_done()
@@ -95,13 +96,14 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
         mo.action_assign()
 
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }).create({
-            'product_qty': 5.0,
-            'lot_id': lot.id,
-        })
+        }))
+        produce_form.product_qty = 5.0
+        produce_form.lot_id = lot
+        produce_wizard = produce_form.save()
+
         produce_wizard.do_produce()
 
         mo.button_mark_done()
@@ -177,16 +179,15 @@ class TestUnbuild(TestMrpCommon):
         mo.action_assign()
         for ml in mo.move_raw_ids.mapped('move_line_ids'):
             if ml.product_id.tracking != 'none':
-                ml.qty_done = ml.product_qty
-            if ml.product_id.tracking != 'none':
                 self.assertEqual(ml.lot_id, lot, 'Wrong reserved lot.')
 
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }).create({
-            'product_qty': 5.0,
-        })
+        }))
+        produce_form.product_qty = 5.0
+        produce_wizard = produce_form.save()
+
         produce_wizard.do_produce()
 
         mo.button_mark_done()
@@ -270,15 +271,14 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5, lot_id=lot_2)
         mo.action_assign()
 
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }).create({
-            'product_qty': 5.0,
-            'lot_id': lot_final.id,
-        })
-        for pl in produce_wizard.produce_line_ids:
-            pl.qty_done = pl.qty_to_consume
+        }))
+        produce_form.product_qty = 5.0
+        produce_form.lot_id = lot_final
+        produce_wizard = produce_form.save()
+
         produce_wizard.do_produce()
 
         mo.button_mark_done()
@@ -367,15 +367,14 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 3, lot_id=lot_2)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 2, lot_id=lot_3)
         mo.action_assign()
-        for ml in mo.move_raw_ids.mapped('move_line_ids').filtered(lambda m: m.product_id.tracking != 'none'):
-            ml.qty_done = ml.product_qty
 
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }).create({
-            'product_qty': 5.0,
-        })
+        }))
+        produce_form.product_qty = 5.0
+        produce_wizard = produce_form.save()
+
         produce_wizard.do_produce()
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
@@ -416,15 +415,14 @@ class TestUnbuild(TestMrpCommon):
             'product_id': p_final.id,
         })
         
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }).create({
-            'product_qty': 3.0,
-            'lot_id': lot_finished_1.id,
-        })
-        
-        produce_wizard.produce_line_ids[0].lot_id = lot_1.id
+        }))
+        produce_form.product_qty = 3.0
+        produce_form.lot_id = lot_finished_1
+        produce_wizard = produce_form.save()
+        produce_wizard.produce_line_ids[0].lot_id = lot_1
         produce_wizard.do_produce()
         
         lot_2 = self.env['stock.production.lot'].create({
@@ -438,18 +436,141 @@ class TestUnbuild(TestMrpCommon):
             'product_id': p_final.id,
         })
         
-        produce_wizard = self.env['mrp.product.produce'].with_context({
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': mo.id,
             'active_ids': [mo.id],
-        }).create({
-            'product_qty': 2.0,
-            'lot_id': lot_finished_2.id,
-        })
-        
-        produce_wizard.produce_line_ids[0].lot_id = lot_2.id
+        }))
+        produce_form.product_qty = 2.0
+        produce_form.lot_id = lot_finished_2
+
+        produce_wizard = produce_form.save()
+        produce_wizard.produce_line_ids[0].lot_id = lot_2
         produce_wizard.do_produce()
         mo.button_mark_done()
         ml = mo.finished_move_line_ids[0].consume_line_ids.filtered(lambda m: m.product_id == p1 and m.lot_produced_id == lot_finished_1)
-        self.assertEqual(ml.qty_done, 12.0, 'Should have consumed 12 for the first lot')
+        self.assertEqual(ml[0].qty_done, 12.0, 'Should have consumed 12 for the first lot')
         ml = mo.finished_move_line_ids[1].consume_line_ids.filtered(lambda m: m.product_id == p1 and m.lot_produced_id == lot_finished_2)
-        self.assertEqual(ml.qty_done, 8.0, 'Should have consumed 8 for the second lot')
+        self.assertEqual(ml[0].qty_done, 8.0, 'Should have consumed 8 for the second lot')
+
+    def test_unbuild_with_routes(self):
+        """ This test creates a MO of a stockable product (Table). A new route for rule QC/Unbuild -> Stock 
+        is created with Warehouse -> True.
+        The unbuild order should revert the consumed components into QC/Unbuild location for quality check 
+        and then a picking should be generated for transferring components from QC/Unbuild location to stock.
+        """
+        StockQuant = self.env['stock.quant']
+        ProductObj = self.env['product.product']
+        # Create new QC/Unbuild location
+        warehouse = self.env.ref('stock.warehouse0')
+        unbuild_location = self.env['stock.location'].create({
+            'name': 'QC/Unbuild',
+            'usage': 'internal',
+            'location_id': warehouse.view_location_id.id
+        })
+
+        # Create a product route containing a stock rule that will move product from QC/Unbuild location to stock
+        product_route = self.env['stock.location.route'].create({
+            'name': 'QC/Unbuild -> Stock',
+            'warehouse_selectable': True,
+            'warehouse_ids': [(4, warehouse.id)],
+            'rule_ids': [(0, 0, {
+                'name': 'Send Matrial QC/Unbuild -> Stock',
+                'action': 'push',
+                'picking_type_id': self.ref('stock.picking_type_internal'),
+                'location_src_id': unbuild_location.id,
+                'location_id': self.stock_location.id,
+            })],
+        })
+
+        # Create a stockable product and its components
+        finshed_product = ProductObj.create({
+            'name': 'Table',
+            'type': 'product',
+        })
+        component1 = ProductObj.create({
+            'name': 'Table head',
+            'type': 'product',
+        })
+        component2 = ProductObj.create({
+            'name': 'Table stand',
+            'type': 'product',
+        })
+
+        # Create bom and add components
+        bom = self.env['mrp.bom'].create({
+            'product_id': finshed_product.id,
+            'product_tmpl_id': finshed_product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component1.id, 'product_qty': 1}),
+                (0, 0, {'product_id': component2.id, 'product_qty': 1})
+            ]})
+
+        # Set on hand quantity
+        StockQuant._update_available_quantity(component1, self.stock_location, 1)
+        StockQuant._update_available_quantity(component2, self.stock_location, 1)
+
+        # Create mo
+        mo = self.env['mrp.production'].create({
+            'name': 'MO 1',
+            'product_id': finshed_product.id,
+            'product_uom_id': finshed_product.uom_id.id,
+            'product_qty': 1.0,
+            'bom_id': bom.id,
+        })
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+        mo.action_assign()
+
+        # Produce the final product
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.product_qty = 1.0
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+
+        # Check quantity in stock before unbuild
+        self.assertEqual(StockQuant._get_available_quantity(finshed_product, self.stock_location), 1, 'Table should be available in stock')
+        self.assertEqual(StockQuant._get_available_quantity(component1, self.stock_location), 0, 'Table head should not be available in stock')
+        self.assertEqual(StockQuant._get_available_quantity(component2, self.stock_location), 0, 'Table stand should not be available in stock')
+
+        # ---------------------------------------------------
+        #       Unbuild
+        # ---------------------------------------------------
+
+        # Create an unbuild order of the finished product and set the destination loacation = QC/Unbuild
+        self.env['mrp.unbuild'].create({
+            'product_id': finshed_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+            'product_uom_id': self.uom_unit.id,
+            'mo_id': mo.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': unbuild_location.id
+        }).action_unbuild()
+
+        # Check the available quantity of components and final product in stock
+        self.assertEqual(StockQuant._get_available_quantity(finshed_product, self.stock_location), 0, 'Table should not be available in stock as it is unbuild')
+        self.assertEqual(StockQuant._get_available_quantity(component1, self.stock_location), 0, 'Table head should not be available in stock as it is in QC/Unbuild location')
+        self.assertEqual(StockQuant._get_available_quantity(component2, self.stock_location), 0, 'Table stand should not be available in stock as it is in QC/Unbuild location')
+
+        # Find new generated picking
+        picking = self.env['stock.picking'].search([('product_id', 'in', [component1.id, component2.id])])
+        self.assertEqual(picking.location_id.id, unbuild_location.id, 'Wrong source location in picking')
+        self.assertEqual(picking.location_dest_id.id, self.stock_location.id, 'Wrong destination location in picking')
+
+        # Transfer it
+        for ml in picking.move_ids_without_package:
+            ml.quantity_done = 1
+        picking.action_done()
+
+        # Check the available quantity of components and final product in stock
+        self.assertEqual(StockQuant._get_available_quantity(finshed_product, self.stock_location), 0, 'Table should not be available in stock')
+        self.assertEqual(StockQuant._get_available_quantity(component1, self.stock_location), 1, 'Table head should be available in stock as the picking is transferred')
+        self.assertEqual(StockQuant._get_available_quantity(component2, self.stock_location), 1, 'Table stand should be available in stock as the picking is transferred')

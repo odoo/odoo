@@ -4,14 +4,13 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
-# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Michael Yeung, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,20 +19,44 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_key
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "手工配置"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "Merchant Key"
 msgstr "商家密鑰"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_salt
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
 msgid "Merchant Salt"
-msgstr "商戶密碼"
+msgstr "商家鹽"
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:146
-#, python-format
-msgid "PayUmoney: feedback error"
-msgstr "PayUmoney：回饋出錯"
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:108
@@ -70,3 +93,28 @@ msgstr "收單"
 #: model:ir.model,name:payment_payumoney.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "付款交易"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "服務商"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "條帶"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "電匯"

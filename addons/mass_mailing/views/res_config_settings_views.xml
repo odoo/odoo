@@ -10,7 +10,7 @@
                     <div class="app_settings_block" data-string="Email Marketing" string="Email Marketing" data-key="mass_mailing" groups="mass_mailing.group_mass_mailing_user">
                       <h2>Email Marketing</h2>
                         <div class="row mt16 o_settings_container">
-                            <div class="col-md-6 o_setting_box col-xs-12" title="This tool is advised if your marketing campaign is composed of several emails.">
+                            <div class="col-lg-6 o_setting_box col-12" title="This tool is advised if your marketing campaign is composed of several emails.">
                                 <div class="o_setting_left_pane" title="This is useful if your marketing campaigns are composed of several emails.">
                                     <field name="group_mass_mailing_campaign"/>
                                 </div>
@@ -25,6 +25,35 @@
                                                 icon="fa-arrow-right" type="action" string="Campaign Stages"
                                                 class="btn-link"/>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 o_setting_box col-12">
+                                <div class="o_setting_left_pane" title="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.">
+                                    <field name="mass_mailing_outgoing_mail_server"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="mass_mailing_outgoing_mail_server"/>
+                                    <div class="text-muted">
+                                        Use a specific mail server for mailings
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
+                                        <div class="mt16">
+                                            <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 o_setting_box col-xs-12">
+                                <div class="o_setting_left_pane" title="Allow the recipient to manage himself his state in the blacklist via the unsubscription page.
+                                If the option is active, the 'Blacklist Me' button is hidden on the unsubscription page.  
+                                The 'come Back' button will always be visible in any case to allow leads and partners to re-subscribe.">
+                                    <field name="show_blacklist_buttons"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="show_blacklist_buttons"/>
+                                    <div class="text-muted">
+                                        Allow the recipient to manage himself his state in the blacklist via the unsubscription page.
                                     </div>
                                 </div>
                             </div>

@@ -1,45 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event_sale
-# 
+#
 # Translators:
-# Martin Trigaux, 2017
-# aleksandar ivanov, 2018
-# Albena Mincheva <albena_vicheva@abv.bg>, 2018
-# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
-"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2015-09-08 10:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
+"bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Free</span>"
-msgstr "<span>Безплатно</span>"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Unlimited</span>"
-msgstr "<span>Неограничен</span>"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>left</span>"
-msgstr "<span>ляв</span>"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
+msgid "Intrastat code"
+msgstr "Интрастат код"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
-msgstr "Само"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Order Now"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -47,48 +54,46 @@ msgid "Product"
 msgstr "Продукт"
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Quotation"
-msgstr "Оферта"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:56
-#, python-format
-msgid "Registration"
-msgstr "Регистрация"
-
-#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
-msgstr "Оставащи"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Нареждане за продажба"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
-msgstr "Разпродадено"
+msgstr ""
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:71
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr ""
-"Съжаляваме, %(ticket)s билетите за %(event)s събитието са разпродадени."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:77
 #, python-format
 msgid ""
-"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
-" ticket for the %(event)s event."
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
+"ticket for the %(event)s event."
 msgstr ""
-"Съжаляваме, само %(remaining_seats)d места са все още налични за %(ticket)s "
-"билета за %(event)s събитието."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:39
+#: code:addons/website_event_sale/controllers/main.py:65
+#, python-format
+msgid "Subscription"
+msgstr "Абонамент"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:36
 #, python-format
 msgid "The ticket doesn't match with this product."
-msgstr "Тикетът не съвпада с този продукт."
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website

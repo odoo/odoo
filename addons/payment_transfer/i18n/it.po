@@ -3,16 +3,19 @@
 # * payment_transfer
 # 
 # Translators:
-# Paolo Valier, 2018
-# David Minneci <david@numeko.it>, 2018
 # Marius Marolla <mariusmarolla@entersys.it>, 2018
+# Simone Bernini <simone@aperturelabs.it>, 2018
+# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
+# Paolo Valier, 2018
+# Alessandro Forte <a.forte1010@gmail.com>, 2018
+# David Minneci <david@numeko.it>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Marius Marolla <mariusmarolla@entersys.it>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: David Minneci <david@numeko.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,19 +24,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:70
+#: code:addons/payment_transfer/models/payment.py:83
 #, python-format
 msgid "; multiple order found"
 msgstr "; rilevato ordine multiplo"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:68
+#: code:addons/payment_transfer/models/payment.py:81
 #, python-format
 msgid "; no order found"
 msgstr "; nessun ordine trovato"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:28
+#: code:addons/payment_transfer/models/payment.py:41
 #, python-format
 msgid ""
 "<div>\n"
@@ -53,16 +56,46 @@ msgstr ""
 "</div>"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Account"
 msgstr "Conto Bancario"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Accounts"
 msgstr "Conto bancario"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Configurazione manuale"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
@@ -75,7 +108,32 @@ msgid "Payment Transaction"
 msgstr "Transazione Pagamento"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:66
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Provider"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Bonifico Bancario"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:79
 #, python-format
 msgid "received data for reference %s"
 msgstr "ricevuti i dati relativi a %s"

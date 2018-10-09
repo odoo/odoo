@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
             'view_type': 'form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
             'help': """
-                <p class="oe_view_nocontent_create">Click on create to add attachments for this digital product.</p>
+                <p class="o_view_nocontent_smiling_face">Add attachments for this digital product</p>
                 <p>The attached files are the ones that will be purchased and sent to the customer.</p>
                 """,
         }
@@ -61,7 +61,7 @@ class Product(models.Model):
             'view_type': 'form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
             'help': """
-                <p class="oe_view_nocontent_create">Click on create to add attachments for this digital product.</p>
+                <p class="o_view_nocontent_smiling_face">Add attachments for this digital product</p>
                 <p>The attached files are the ones that will be purchased and sent to the customer.</p>
                 """,
         }

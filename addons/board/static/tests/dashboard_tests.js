@@ -1,10 +1,13 @@
 odoo.define('board.dashboard_tests', function (require) {
 "use strict";
 
+var BoardView = require('board.BoardView');
+
+var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
-var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 
+var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
 QUnit.module('Dashboard', {
@@ -43,7 +46,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
     assert.expect(4);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -56,7 +59,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
     form.destroy();
 
     form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -68,7 +71,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
 
     assert.ok(form.renderer.$el.hasClass('o_dashboard'),
         "with a dashboard, the renderer should have the proper css class");
-    assert.strictEqual(form.$('.o_dashboard .oe_view_nocontent').length, 1,
+    assert.strictEqual(form.$('.o_dashboard .o_view_nocontent').length, 1,
         "should have a no content helper");
     assert.strictEqual(form.get('title'), "My Dashboard",
         "should have the correct title");
@@ -79,7 +82,7 @@ QUnit.test('display the no content helper', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -94,7 +97,7 @@ QUnit.test('display the no content helper', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_dashboard .oe_view_nocontent p:contains(click to add a partner)').length, 1,
+    assert.strictEqual(form.$('.o_dashboard .o_view_nocontent').length, 1,
         "should have a no content helper with action help");
     form.destroy();
 });
@@ -103,7 +106,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     assert.expect(25);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -194,7 +197,7 @@ QUnit.test('can sort a sub list', function (assert) {
     this.data.partner.fields.foo.sortable = true;
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -233,7 +236,7 @@ QUnit.test('can open a record', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -276,7 +279,7 @@ QUnit.test('can open record using action form view', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -321,7 +324,7 @@ QUnit.test('can drag and drop a view', function (assert) {
     assert.expect(4);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -367,7 +370,7 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
     assert.expect(2);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -415,7 +418,7 @@ QUnit.test('non-existing action in a dashboard', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -452,7 +455,7 @@ QUnit.test('clicking on a kanban\'s button should trigger the action', function 
     assert.expect(2);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -511,7 +514,7 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
     });
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -542,6 +545,150 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
     testUtils.unpatch(ListRenderer);
 
     form.destroy();
+});
+
+QUnit.test('dashboard intercepts custom events triggered by sub controllers', function (assert) {
+    assert.expect(4);
+
+    // we patch the ListController to force it to trigger the custom events that
+    // we want the dashboard to intercept (to stop them or to tweak their data)
+    testUtils.patch(ListController, {
+        start: function () {
+            this.trigger_up('update_filters');
+            this.trigger_up('env_updated');
+            this.do_action({}, {keepSearchView: true});
+        },
+    });
+
+    var board = createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route) {
+            if (route === '/web/action/load') {
+                return $.when({res_model: 'partner', views: [[false, 'list']]});
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,false,list': '<tree string="Partner"/>',
+        },
+        intercepts: {
+            do_action: function (ev) {
+                assert.strictEqual(ev.data.options.keepSearchView, false,
+                    "the 'keepSearchView' options should have been set to false");
+            },
+            env_updated: function (ev) {
+                assert.strictEqual(ev.target.modelName, 'board',
+                    "env_updated event should be triggered by the dashboard itself");
+                assert.step('env_updated');
+            },
+            update_filters: assert.step.bind(assert, 'update_filters'),
+        },
+    });
+
+    assert.verifySteps([
+        'env_updated', // triggered by the dashboard itself
+    ]);
+
+    testUtils.unpatch(ListController);
+    board.destroy();
+});
+
+QUnit.test('save actions to dashboard', function (assert) {
+    assert.expect(4);
+
+    var actionManager = createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.strictEqual(args.action_id, 1,
+                    "should save the correct action");
+                assert.strictEqual(args.view_mode, 'list',
+                    "should save the correct view type");
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+    });
+
+    assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+        "should display the list view");
+    assert.strictEqual($('.o_add_to_dashboard_link').length, 1,
+        "should allow the 'Add to dashboard' feature");
+
+    // add this action to dashboard
+    $('.o_add_to_dashboard_button').click();
+
+    actionManager.destroy();
+});
+
+QUnit.test('save to dashboard actions with flag keepSearchView', function (assert) {
+    assert.expect(4);
+
+    var actionManager = createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,graph': '<graph><field name="foo"/></graph>',
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.strictEqual(args.action_id, 2,
+                    "should save the correct action");
+                assert.strictEqual(args.view_mode, 'graph',
+                    "should save the correct view type");
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    // execute a first action
+    actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+    });
+
+    // execute another action with flag 'keepSearchView' and add it to dashboard
+    var options = {keepSearchView: true};
+    actionManager.doAction({
+        id: 2,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'graph']],
+    }, options);
+
+    assert.strictEqual(actionManager.$('.o_graph').length, 1,
+        "should display the graph view");
+    assert.strictEqual($('.o_add_to_dashboard_link').length, 1,
+        "should allow the 'Add to dashboard' feature (this is the same searchview)");
+
+    // add this action to dashboard
+    $('.o_add_to_dashboard_button').click();
+
+    actionManager.destroy();
 });
 
 });

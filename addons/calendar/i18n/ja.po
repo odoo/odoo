@@ -3,7 +3,7 @@
 # * calendar
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-06 08:01+0000\n"
-"PO-Revision-Date: 2018-06-06 08:01+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -284,6 +284,11 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_is_highlighted
+msgid "# Meetings Highlight"
+msgstr ""
+
+#. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
 msgstr "${object.event_id.name} - リマインダー"
@@ -395,7 +400,7 @@ msgstr "活動"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr "活動タイプ"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
@@ -814,11 +819,6 @@ msgid "Invite wizard"
 msgstr "招待ウィザード"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_is_highlighted
-msgid "Is the Event Highlighted"
-msgstr ""
-
-#. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Last"
 msgstr "最後"
@@ -882,13 +882,6 @@ msgstr "自分"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Meeting"
 msgstr "打ち合わせ"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:933
-#: code:addons/calendar/models/calendar.py:937
-#, python-format
-msgid "Meeting '%s' starts '%s' and ends '%s'"
-msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1086,7 +1079,7 @@ msgstr "定期ルール"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration
 msgid "Remind Before"
-msgstr "リマインダ"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_alarm_ids
@@ -1096,7 +1089,7 @@ msgstr "リマインド"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_count
 msgid "Repeat"
-msgstr "繰返し"
+msgstr "繰り返し"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_interval
@@ -1106,7 +1099,7 @@ msgstr "繰返し周期"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_final_date
 msgid "Repeat Until"
-msgstr "次まで繰返し"
+msgstr "繰り返し（まで）"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_interval
@@ -1116,7 +1109,7 @@ msgstr "反復間隔（日 / 週 / 月 / 年）"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_count
 msgid "Repeat x times"
-msgstr "x回繰返し"
+msgstr "x回繰り返し"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_id

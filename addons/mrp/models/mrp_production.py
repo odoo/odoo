@@ -2,17 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-import math
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
     _name = 'mrp.production'
-    _description = 'Manufacturing Order'
+    _description = 'Production Order'
     _date_name = 'date_planned_start'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_planned_start asc,id'
@@ -53,16 +52,17 @@ class MrpProduction(models.Model):
         domain=[('type', 'in', ['product', 'consu'])],
         readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
     product_qty = fields.Float(
         'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
         readonly=True, required=True, track_visibility='onchange',
         states={'confirmed': [('readonly', False)]})
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         oldname='product_uom', readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
+    product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         default=_get_default_picking_type, required=True)
@@ -84,7 +84,7 @@ class MrpProduction(models.Model):
         states={'confirmed': [('readonly', False)]}, oldname="date_planned")
     date_planned_finished = fields.Datetime(
         'Deadline End', copy=False, default=fields.Datetime.now,
-        index=True, 
+        index=True,
         states={'confirmed': [('readonly', False)]})
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
@@ -100,11 +100,11 @@ class MrpProduction(models.Model):
              "work centers based on production planning.")
     move_raw_ids = fields.One2many(
         'stock.move', 'raw_material_production_id', 'Raw Materials', oldname='move_lines',
-        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_finished_ids = fields.One2many(
         'stock.move', 'production_id', 'Finished Products',
-        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     finished_move_line_ids = fields.One2many(
         'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
@@ -147,7 +147,7 @@ class MrpProduction(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('mrp.production'),
         required=True)
 
-    check_to_done = fields.Boolean(compute="_get_produced_qty", string="Check Produced Qty", 
+    check_to_done = fields.Boolean(compute="_get_produced_qty", string="Check Produced Qty",
         help="Technical Field to see if we can show 'Mark as Done' button")
     qty_produced = fields.Float(compute="_get_produced_qty", string="Quantity Produced")
     procurement_group_id = fields.Many2one(
@@ -163,7 +163,40 @@ class MrpProduction(models.Model):
                                 readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
     is_locked = fields.Boolean('Is Locked', default=True, copy=False)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
-    production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production')
+    production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production', readonly=False)
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
+    delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+
+    @api.depends('procurement_group_id')
+    def _compute_picking_ids(self):
+        for order in self:
+            order.picking_ids = self.env['stock.picking'].search([
+                ('group_id', '=', order.procurement_group_id.id),
+            ])
+            order.delivery_count = len(order.picking_ids)
+
+    def action_view_mo_delivery(self):
+        """ This function returns an action that display picking related to
+        manufacturing order orders. It can either be a in a list or in a form
+        view, if there is only one picking to show.
+        """
+        self.ensure_one()
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        pickings = self.mapped('picking_ids')
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = pickings.id
+        return action
+
+    @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
+    def _compute_product_uom_qty(self):
+        for production in self:
+            if production.product_id.uom_id != production.product_uom_id:
+                production.product_uom_qty = production.product_uom_id._compute_quantity(production.product_qty, production.product_id.uom_id)
+            else:
+                production.product_uom_qty = production.product_qty
 
     @api.depends('product_id.tracking')
     def _compute_show_lots(self):
@@ -288,10 +321,17 @@ class MrpProduction(models.Model):
             bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id, company_id=self.company_id.id)
             if bom.type == 'normal':
                 self.bom_id = bom.id
+                self.product_qty = self.bom_id.product_qty
+                self.product_uom_id = self.bom_id.product_uom_id.id
             else:
                 self.bom_id = False
-            self.product_uom_id = self.product_id.uom_id.id
+                self.product_uom_id = self.product_id.uom_id.id
             return {'domain': {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
+
+    @api.onchange('bom_id')
+    def _onchange_bom_id(self):
+        self.product_qty = self.bom_id.product_qty
+        self.product_uom_id = self.bom_id.product_uom_id.id
 
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
@@ -300,7 +340,7 @@ class MrpProduction(models.Model):
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
     @api.multi
-    def write (self, vals):
+    def write(self, vals):
         res = super(MrpProduction, self).write(vals)
         if 'date_planned_start' in vals:
             moves = (self.mapped('move_raw_ids') + self.mapped('move_finished_ids')).filtered(
@@ -313,8 +353,10 @@ class MrpProduction(models.Model):
     @api.model
     def create(self, values):
         if not values.get('name', False) or values['name'] == _('New'):
-            if values.get('picking_type_id'):
-                values['name'] = self.env['stock.picking.type'].browse(values['picking_type_id']).sequence_id.next_by_id()
+            picking_type_id = values.get('picking_type_id') or self._get_default_picking_type()
+            picking_type_id = self.env['stock.picking.type'].browse(picking_type_id)
+            if picking_type_id:
+                values['name'] = picking_type_id.sequence_id.next_by_id()
             else:
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
@@ -351,6 +393,7 @@ class MrpProduction(models.Model):
             'name': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
+            'picking_type_id': self.picking_type_id.id,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.product_qty,
@@ -358,6 +401,7 @@ class MrpProduction(models.Model):
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
             'production_id': self.id,
+            'warehouse_id': self.location_dest_id.get_warehouse().id,
             'origin': self.name,
             'group_id': self.procurement_group_id.id,
             'propagate': self.propagate,
@@ -396,6 +440,7 @@ class MrpProduction(models.Model):
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
             'bom_line_id': bom_line.id,
+            'picking_type_id': self.picking_type_id.id,
             'product_id': bom_line.product_id.id,
             'product_uom_qty': quantity,
             'product_uom': bom_line.product_uom_id.id,
@@ -417,15 +462,15 @@ class MrpProduction(models.Model):
     @api.multi
     def _adjust_procure_method(self):
         try:
-            mto_route = self.env['stock.warehouse']._get_mto_route()
+            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', 'Make To Order')
         except:
             mto_route = False
         for move in self.move_raw_ids:
             product = move.product_id
-            routes = product.route_ids + product.route_from_categ_ids
+            routes = product.route_ids + product.route_from_categ_ids + move.warehouse_id.route_ids
             # TODO: optimize with read_group?
-            pull = self.env['procurement.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
-                                                        ('location_id', '=', move.location_dest_id.id)], limit=1)
+            pull = self.env['stock.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
+                                                        ('location_id', '=', move.location_dest_id.id), ('action', '!=', 'push')], limit=1)
             if pull and (pull.procure_method == 'make_to_order'):
                 move.procure_method = pull.procure_method
             elif not pull: # If there is no make_to_stock rule either
@@ -434,10 +479,12 @@ class MrpProduction(models.Model):
 
     @api.multi
     def _update_raw_move(self, bom_line, line_data):
+        """ :returns update_move, old_quantity, new_quantity """
         quantity = line_data['qty']
         self.ensure_one()
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
+            old_qty = move[0].product_uom_qty
             if quantity > 0:
                 move[0].write({'product_uom_qty': quantity})
             elif quantity < 0:  # Do not remove 0 lines
@@ -445,9 +492,10 @@ class MrpProduction(models.Model):
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
                 move[0]._action_cancel()
                 move[0].unlink()
-            return move
+            return move[0], old_qty, quantity
         else:
-            self._generate_raw_move(bom_line, line_data)
+            move = self._generate_raw_move(bom_line, line_data)
+            return move, 0, quantity
 
     @api.multi
     def action_assign(self):
@@ -503,7 +551,7 @@ class MrpProduction(models.Model):
 
         for operation in bom.routing_id.operation_ids:
             # create workorder
-            cycle_number = math.ceil(bom_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
+            cycle_number = float_round(bom_qty / operation.workcenter_id.capacity, precision_digits=0, rounding_method='UP')
             duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
@@ -532,21 +580,58 @@ class MrpProduction(models.Model):
             workorder._generate_lot_ids()
         return workorders
 
+    def _check_lots(self):
+        # Check that the raw materials were consumed for lots that we have produced.
+        if self.product_id.tracking != 'none':
+            finished_lots = set(self.finished_move_line_ids.mapped('lot_id'))
+            raw_finished_lots = set(self.move_raw_ids.mapped('move_line_ids.lot_produced_id'))
+            if not (raw_finished_lots <= finished_lots):
+                lots_short = raw_finished_lots - finished_lots
+                error_msg = _(
+                    'Some raw materials have been consumed for a lot/serial number that has not been produced. '
+                    'Unlock the MO and click on the components lines to correct it.\n'
+                    'List of the components:\n'
+                )
+                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda x: x.lot_produced_id in lots_short)
+                for ml in move_lines:
+                    error_msg += ml.product_id.display_name + ' (' + ml.lot_produced_id.name +')\n'
+                raise UserError(error_msg)
+
     @api.multi
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
         orders in exception """
         if any(workorder.state == 'progress' for workorder in self.mapped('workorder_ids')):
             raise UserError(_('You can not cancel production order, a work order is still in progress.'))
+        documents = {}
         for production in self:
+            for move_raw_id in production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
+                iterate_key = self._get_document_iterate_key(move_raw_id)
+                if iterate_key:
+                    document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
+                    for key, value in document.items():
+                        if documents.get(key):
+                            documents[key] += [value]
+                        else:
+                            documents[key] = [value]
             production.workorder_ids.filtered(lambda x: x.state != 'cancel').action_cancel()
-
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             (finish_moves | raw_moves)._action_cancel()
-
+            picking_ids = production.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            picking_ids.action_cancel()
         self.write({'state': 'cancel', 'is_locked': True})
+        if documents:
+            filtered_documents = {}
+            for (parent, responsible), rendering_context in documents.items():
+                if not parent or parent._name == 'stock.picking' and parent.state == 'cancel' or parent == self:
+                    continue
+                filtered_documents[(parent, responsible)] = rendering_context
+            self._log_manufacture_exception(filtered_documents, cancel=True)
         return True
+
+    def _get_document_iterate_key(self, move_raw_id):
+        return move_raw_id.move_orig_ids and 'move_orig_ids' or False
 
     def _cal_price(self, consumed_moves):
         self.ensure_one()
@@ -584,6 +669,7 @@ class MrpProduction(models.Model):
         for wo in self.workorder_ids:
             if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 raise UserError(_('Work order %s is still running') % wo.name)
+        self._check_lots()
         self.post_inventory()
         moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_cancel._action_cancel()
@@ -624,3 +710,68 @@ class MrpProduction(models.Model):
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         action['domain'] = [('production_id', '=', self.id)]
         return action
+
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("manufacturing order"),
+        )
+        return super(MrpProduction, self).get_empty_list_help(help)
+
+    def _log_downside_manufactured_quantity(self, moves_modification):
+
+        def _keys_in_sorted(move):
+            """ sort by picking and the responsible for the product the
+            move.
+            """
+            return (move.picking_id.id, move.product_id.responsible_id.id)
+
+        def _keys_in_groupby(move):
+            """ group by picking and the responsible for the product the
+            move.
+            """
+            return (move.picking_id, move.product_id.responsible_id)
+
+        def _render_note_exception_quantity_mo(rendering_context):
+            values = {
+                'production_order': self,
+                'order_exceptions': dict((key, d[key]) for d in rendering_context for key in d),
+                'impacted_pickings': False,
+                'cancel': False
+            }
+            return self.env.ref('mrp.exception_on_mo').render(values=values)
+
+        documents = {}
+        for move, (old_qty, new_qty) in moves_modification.items():
+            document = self.env['stock.picking']._log_activity_get_documents(
+                {move: (old_qty, new_qty)}, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+            for key, value in document.items():
+                if documents.get(key):
+                    documents[key] += [value]
+                else:
+                    documents[key] = [value]
+        self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
+
+    def _log_manufacture_exception(self, documents, cancel=False):
+
+        def _render_note_exception_quantity_mo(rendering_context):
+            visited_objects = []
+            order_exceptions = {}
+            for exception in rendering_context:
+                order_exception, visited = exception
+                order_exceptions.update(order_exception)
+                visited_objects += visited
+            visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
+            visited_objects |= visited_objects.mapped('move_orig_ids')
+            impacted_pickings = []
+            if visited_objects._name == 'stock.move':
+                impacted_pickings = visited_objects.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
+            values = {
+                'production_order': self,
+                'order_exceptions': order_exceptions,
+                'impacted_pickings': impacted_pickings,
+                'cancel': cancel
+            }
+            return self.env.ref('mrp.exception_on_mo').render(values=values)
+
+        self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)

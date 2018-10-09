@@ -3,5 +3,5 @@
 
 from . import event
 from . import event_mail
-from . import event_config_settings
+from . import res_config_settings
 from . import res_partner

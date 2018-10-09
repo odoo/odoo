@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import common
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
 
-class PaymentAcquirerCommon(common.TransactionCase):
+class PaymentAcquirerCommon(AccountingTestCase):
 
     def setUp(self):
         super(PaymentAcquirerCommon, self).setUp()

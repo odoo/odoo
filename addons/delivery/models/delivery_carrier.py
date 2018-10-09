@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
-    _description = "Carrier"
+    _description = "Delivery Methods"
     _order = 'sequence, id'
 
     ''' A Shipping Provider
@@ -26,6 +26,7 @@ class DeliveryCarrier(models.Model):
        <my_provider>_send_shipping
        <my_provider>_get_tracking_link
        <my_provider>_cancel_shipment
+       _<my_provider>_get_default_custom_package_code
        (they are documented hereunder)
     '''
 
@@ -33,7 +34,7 @@ class DeliveryCarrier(models.Model):
     # Internals for shipping providers #
     # -------------------------------- #
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char('Delivery Method', required=True, translate=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
@@ -41,7 +42,7 @@ class DeliveryCarrier(models.Model):
     integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
     debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
-    company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True)
+    company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, readonly=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
 
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
@@ -73,7 +74,7 @@ class DeliveryCarrier(models.Model):
             'res_model': 'ir.module.module',
             'domain': [['name', 'ilike', 'delivery_']],
             'type': 'ir.actions.act_window',
-            'help': _('''<p class="oe_view_nocontent">
+            'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
                 </p>'''),
         }
@@ -182,6 +183,16 @@ class DeliveryCarrier(models.Model):
                               'line': 1})
             except psycopg2.Error:
                 pass
+
+    def _get_default_custom_package_code(self):
+        """ Some delivery carriers require a prefix to be sent in order to use custom
+        packages (ie not official ones). This optional method will return it as a string.
+        """
+        self.ensure_one()
+        if hasattr(self, '_%s_get_default_custom_package_code' % self.delivery_type):
+            return getattr(self, '_%s_get_default_custom_package_code' % self.delivery_type)()
+        else:
+            return False
 
     # ------------------------------------------------ #
     # Fixed price shipping, aka a very simple provider #

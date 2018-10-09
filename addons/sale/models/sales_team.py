@@ -11,7 +11,7 @@ class CrmTeam(models.Model):
 
     use_quotations = fields.Boolean(string='Quotations', help="Check this box if you send quotations to your customers rather than confirming orders straight away. "
                                                               "This will add specific action buttons to your dashboard.")
-    use_invoices = fields.Boolean('Set Invoicing Target', help="Check this box to set an invoicing target for this sales channel.")
+    use_invoices = fields.Boolean('Set Invoicing Target', help="Check this box to set an invoicing target for this Sales Team.")
     invoiced = fields.Integer(
         compute='_compute_invoiced',
         string='Invoiced This Month', readonly=True,
@@ -59,7 +59,7 @@ class CrmTeam(models.Model):
     @api.multi
     def _compute_invoiced(self):
         invoice_data = self.env['account.invoice'].read_group([
-            ('state', 'in', ['open', 'paid']),
+            ('state', 'in', ['open', 'in_payment', 'paid']),
             ('team_id', 'in', self.ids),
             ('date', '<=', date.today()),
             ('date', '>=', date.today().replace(day=1)),
@@ -86,7 +86,7 @@ class CrmTeam(models.Model):
         if self.dashboard_graph_model == 'sale.report':
             return "AND state in ('sale', 'done')"
         elif self.dashboard_graph_model == 'account.invoice.report':
-            return "AND state in ('open', 'paid')"
+            return "AND state in ('open', 'in_payment', 'paid')"
         return super(CrmTeam, self)._extra_sql_conditions()
 
     def _graph_title_and_key(self):
@@ -118,7 +118,6 @@ class CrmTeam(models.Model):
         if self.team_type == 'sales':
             self.use_quotations = True
             self.use_invoices = True
-            # do not override dashboard_graph_model 'crm.opportunity.report' if crm is installed
             if not self.dashboard_graph_model:
                 self.dashboard_graph_model = 'sale.report'
         else:

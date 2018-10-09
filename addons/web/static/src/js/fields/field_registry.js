@@ -34,12 +34,15 @@ registry
     .add('email', basic_fields.FieldEmail)
     .add('phone', basic_fields.FieldPhone)
     .add('url', basic_fields.UrlWidget)
+    .add('CopyClipboardText', basic_fields.TextCopyClipboard)
+    .add('CopyClipboardChar', basic_fields.CharCopyClipboard)
     .add('image', basic_fields.FieldBinaryImage)
     .add('binary', basic_fields.FieldBinaryFile)
+    .add('pdf_viewer', basic_fields.FieldPdfViewer)
     .add('monetary', basic_fields.FieldMonetary)
+    .add('percentage', basic_fields.FieldPercentage)
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
-    .add('image_selection', basic_fields.ImageSelection)
     .add('label_selection', basic_fields.LabelSelection)
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget)
@@ -49,6 +52,8 @@ registry
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)
     .add('float_time', basic_fields.FieldFloatTime)
+    .add('float_factor', basic_fields.FieldFloatFactor)
+    .add('float_toggle', basic_fields.FieldFloatToggle)
     .add('progressbar', basic_fields.FieldProgressBar)
     .add('toggle_button', basic_fields.FieldToggleBoolean)
     .add('dashboard_graph', basic_fields.JournalDashboardGraph)
@@ -58,6 +63,7 @@ registry
 registry
     .add('selection', relational_fields.FieldSelection)
     .add('radio', relational_fields.FieldRadio)
+    .add('selection_badge', relational_fields.FieldSelectionBadge)
     .add('many2one', relational_fields.FieldMany2One)
     .add('list.many2one', relational_fields.ListFieldMany2One)
     .add('kanban.many2one', relational_fields.KanbanFieldMany2One)
@@ -74,5 +80,6 @@ registry
 
 // Special fields
 registry
-    .add('timezone_mismatch', special_fields.FieldTimezoneMismatch);
+    .add('timezone_mismatch', special_fields.FieldTimezoneMismatch)
+    .add('report_layout', special_fields.FieldReportLayout);
 });

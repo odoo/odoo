@@ -32,7 +32,7 @@ class MailTemplate(models.Model):
             if related_model._name == 'account.invoice' and related_model.l10n_ch_isr_valid:
                 #We add an attachment containing the ISR
                 template = res_ids_to_templates[res_id]
-                report_name = 'ISR-' + self.render_template(template.report_name, template.model, res_id) + '.pdf'
+                report_name = 'ISR-' + self._render_template(template.report_name, template.model, res_id) + '.pdf'
 
                 pdf = self.env.ref('l10n_ch.l10n_ch_isr_report').render_qweb_pdf([res_id])[0]
                 pdf = base64.b64encode(pdf)

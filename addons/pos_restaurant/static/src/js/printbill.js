@@ -55,5 +55,8 @@ screens.define_action_button({
         return this.pos.config.iface_printbill;
     },
 });
-
+return {
+    BillScreenWidget: BillScreenWidget,
+    PrintBillButton: PrintBillButton,
+}
 });

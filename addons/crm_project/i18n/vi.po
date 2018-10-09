@@ -3,18 +3,16 @@
 # * crm_project
 # 
 # Translators:
-# Phạm Lân <phamquanglan@gmail.com>, 2017
-# fanha99 <fanha99@hotmail.com>, 2017
-# Duy BQ <duybq86@gmail.com>, 2017
-# Martin Trigaux, 2017
-# son dang <son.dang@doda100.com>, 2017
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
+# fanha99 <fanha99@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: son dang <son.dang@doda100.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: fanha99 <fanha99@hotmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,75 +21,102 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: crm_project
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
 "                            <span class=\"o_stat_text\">Task</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Chuyển thành</span>\n"
+"                              <span class=\"o_stat_text\">Tác vụ</span>"
 
 #. module: crm_project
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Cancel"
 msgstr "Hủy"
 
 #. module: crm_project
 #: model:ir.actions.act_window,name:crm_project.crm_lead_convert2task_action
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid "Convert to Task"
-msgstr ""
+msgstr "Chuyển thành tác vụ"
 
 #. module: crm_project
-#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model_terms:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Create Task"
-msgstr ""
+msgstr "Tạo tác vụ"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_uid
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr "Tạo khách hàng mới"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_date
 msgid "Created on"
-msgstr "Được tạo vào"
+msgstr "Thời điểm tạo"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_display_name
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr "Khách hàng"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_id
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr "Không liên kết tới một khách hàng"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
 msgid "ID"
 msgstr "ID"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task___last_update
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task____last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối vào"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_uid
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_uid
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_lead_id
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__lead_id
 msgid "Lead"
-msgstr "Đầu mối"
+msgstr "Tiềm năng"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_project_id
+#: model:ir.model,name:crm_project.model_crm_lead_convert2task
+msgid "Lead convert to Task"
+msgstr ""
+
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr "Liên kết tới một khách hàng đã tồn tại"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
 msgid "Project"
 msgstr "Dự án"
 
 #. module: crm_project
-#: model:ir.model,name:crm_project.model_crm_lead_convert2task
-msgid "crm.lead.convert2task"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
+msgstr "Khách hàng liên quan"

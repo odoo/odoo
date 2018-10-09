@@ -13,6 +13,7 @@ var DocumentViewer = Widget.extend({
     template: "DocumentViewer",
     events: {
         'click .o_download_btn': '_onDownload',
+        'click .o_split_btn': '_onSplitPDF',
         'click .o_viewer_img': '_onImageClicked',
         'click .o_viewer_video': '_onVideoClicked',
         'click .move_next': '_onNext',
@@ -20,6 +21,7 @@ var DocumentViewer = Widget.extend({
         'click .o_rotate': '_onRotate',
         'click .o_zoom_in': '_onZoomIn',
         'click .o_zoom_out': '_onZoomOut',
+        'click .o_zoom_reset': '_onZoomReset',
         'click .o_close_btn, .o_viewer_img_wrapper': '_onClose',
         'click .o_print_btn': '_onPrint',
         'DOMMouseScroll .o_viewer_content': '_onScroll',    // Firefox
@@ -42,10 +44,25 @@ var DocumentViewer = Widget.extend({
     init: function (parent, attachments, activeAttachmentID) {
         this._super.apply(this, arguments);
         this.attachment = _.filter(attachments, function (attachment) {
-            var match = attachment.mimetype.match("(image|video|application/pdf)");
+        var match = attachment.type == 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
 
             if (match) {
                 attachment.type = match[1];
+                if (match[1].match("(.png|.jpg|.gif)")) {
+                    attachment.type = 'image';
+                }
+                if (match[1] === 'youtu') {
+                    var youtube_array = attachment.url.split('/');
+                    var youtube_token = youtube_array[youtube_array.length-1];
+                    if (youtube_token.indexOf('watch') !== -1) {
+                        youtube_token = youtube_token.split('v=')[1];
+                        var amp = youtube_token.indexOf('&')
+                        if (amp !== -1){
+                            youtube_token = youtube_token.substring(0, amp);
+                        }
+                    }
+                    attachment.youtube = youtube_token;
+                }
                 return true;
             }
         });
@@ -60,7 +77,20 @@ var DocumentViewer = Widget.extend({
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.isDestroyed()) {
+            return;
+        }
+        this.trigger_up('document_viewer_closed');
+        this.$el.modal('hide');
+        this.$el.remove();
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -103,6 +133,7 @@ var DocumentViewer = Widget.extend({
             widget: this
         }));
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         this._reset();
     },
     /**
@@ -113,7 +144,7 @@ var DocumentViewer = Widget.extend({
      * @param {float} angle
      */
     _getTransform: function(scale, angle) {
-        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)'
+        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)';
     },
     /**
      * Rotate image clockwise by provided angle
@@ -140,6 +171,7 @@ var DocumentViewer = Widget.extend({
             this.$('.o_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
             this.scale = scale;
         }
+        this.$('.o_zoom_reset').add('.o_zoom_out').toggleClass('disabled', scale === 1);
     },
 
     //--------------------------------------------------------------------------
@@ -152,19 +184,15 @@ var DocumentViewer = Widget.extend({
      */
     _onClose: function (e) {
         e.preventDefault();
-        this.$el.modal('hide');
-        this.trigger_up('document_viewer_closed');
+        this.destroy();
     },
     /**
      * When popup close complete destroyed modal even DOM footprint too
+     *
      * @private
      */
     _onDestroy: function () {
-        if (this.isDestroyed()) {
-            return;
-        }
-        this.$el.modal('hide');
-        this.$el.remove();
+        this.destroy();
     },
     /**
      * @private
@@ -186,6 +214,7 @@ var DocumentViewer = Widget.extend({
             var top = $image.prop('offsetHeight') * this.scale > $zoomer.height() ? e.clientY - this.dragStartY : 0;
             var left = $image.prop('offsetWidth') * this.scale > $zoomer.width() ? e.clientX - this.dragStartX : 0;
             $zoomer.css("transform", "translate3d("+ left +"px, " + top + "px, 0)");
+            $image.css('cursor', 'move');
         }
     },
     /**
@@ -198,6 +227,7 @@ var DocumentViewer = Widget.extend({
             this.enableDrag = false;
             this.dragstopX = e.clientX - this.dragStartX;
             this.dragstopY = e.clientY - this.dragStartY;
+            this.$('.o_viewer_img').css('cursor', '');
         }
     },
     /**
@@ -299,6 +329,24 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
+    _onSplitPDF: function (e) {
+        e.stopPropagation();
+        var self = this;
+        var indices = $("input[name=Indices]").val();
+        var remainder = $("input[type=checkbox][name=remainder]").is(":checked");
+        this._rpc({
+            model: 'ir.attachment',
+            method: 'split_pdf',
+            args: [this.activeAttachment.id, indices, remainder],
+        }).always(function () {
+            self.trigger_up('document_viewer_attachment_changed');
+            self.destroy();
+        });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
     _onStartDrag: function (e) {
         e.preventDefault();
         this.enableDrag = true;
@@ -346,6 +394,15 @@ var DocumentViewer = Widget.extend({
         e.preventDefault();
         var scale = this.scale - ZOOM_STEP;
         this._zoom(scale);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onZoomReset: function (e) {
+        e.preventDefault();
+        this.$('.o_viewer_zoomer').css("transform", "");
+        this._zoom(1);
     },
 });
 return DocumentViewer;

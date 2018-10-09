@@ -8,7 +8,7 @@ class ImLivechatReportOperator(models.Model):
     """ Livechat Support Report on the Operator """
 
     _name = "im_livechat.report.operator"
-    _description = "Livechat Support Report"
+    _description = "Livechat Support Operator Report"
     _order = 'livechat_channel_id, partner_id'
     _auto = False
 
@@ -38,8 +38,9 @@ class ImLivechatReportOperator(models.Model):
                 FROM im_livechat_channel_im_user O
                     JOIN res_users U ON (O.user_id = U.id)
                     JOIN res_partner P ON (U.partner_id = P.id)
-                    LEFT JOIN im_livechat_channel L ON (L.id = O.channel_id)
-                    LEFT JOIN mail_channel C ON (C.livechat_channel_id = L.id)
+                    JOIN im_livechat_channel L ON (L.id = O.channel_id)
+                    JOIN mail_channel C ON (C.livechat_channel_id = L.id)
+                    JOIN mail_channel_partner MCP ON (MCP.partner_id = P.id AND MCP.channel_id = C.id)
                 GROUP BY P.id, L.id, C.id, C.create_date
             )
         """)

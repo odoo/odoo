@@ -81,7 +81,10 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum'], type='http', auth="public", website=True)
     def forum(self, **kwargs):
-        forums = request.env['forum.forum'].search([])
+        domain = request.website.get_current_website().website_domain()
+        forums = request.env['forum.forum'].search(domain)
+        if len(forums) == 1:
+            return werkzeug.utils.redirect('/forum/%s' % slug(forums[0]), code=302)
         return request.render("website_forum.forum_all", {'forums': forums})
 
     @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
@@ -104,6 +107,7 @@ class WebsiteForum(http.Controller):
     def sitemap_forum(env, rule, qs):
         Forum = env['forum.forum']
         dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
+        dom += env['website'].get_current_website().website_domain()
         for f in Forum.search(dom):
             loc = '/forum/%s' % slug(f)
             if not qs or qs.lower() in loc:
@@ -115,6 +119,9 @@ class WebsiteForum(http.Controller):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True, sitemap=sitemap_forum)
     def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type=None, **post):
+        if not forum.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         Post = request.env['forum.post']
 
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')]
@@ -174,7 +181,7 @@ class WebsiteForum(http.Controller):
         })
         return request.render("website_forum.forum_index", values)
 
-    @http.route(['/forum/<model("forum.forum"):forum>/faq'], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/faq'''], type='http', auth="public", website=True)
     def forum_faq(self, forum, **post):
         values = self._prepare_forum_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
@@ -232,8 +239,11 @@ class WebsiteForum(http.Controller):
         except IOError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
+        if not forum.active:
+            return request.render("website_forum.header", {'forum': forum})
+
         # Hide posts from abusers (negative karma), except for moderators
         if not question.can_view:
             raise werkzeug.exceptions.NotFound()
@@ -253,7 +263,7 @@ class WebsiteForum(http.Controller):
         values.update({
             'main_object': question,
             'question': question,
-            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - datetime.strptime(question.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9),
+            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - question.write_date).days > 9),
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,
@@ -445,7 +455,7 @@ class WebsiteForum(http.Controller):
     # --------------------------------------------------
 
     @http.route('/forum/<model("forum.forum"):forum>/validation_queue', type='http', auth="user", website=True)
-    def validation_queue(self, forum):
+    def validation_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -463,7 +473,7 @@ class WebsiteForum(http.Controller):
         return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/flagged_queue', type='http', auth="user", website=True)
-    def flagged_queue(self, forum):
+    def flagged_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -481,7 +491,7 @@ class WebsiteForum(http.Controller):
         return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/offensive_posts', type='http', auth="user", website=True)
-    def offensive_posts(self, forum):
+    def offensive_posts(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -499,7 +509,7 @@ class WebsiteForum(http.Controller):
         return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
-    def post_accept(self, forum, post):
+    def post_accept(self, forum, post, **kwargs):
         url = "/forum/%s/validation_queue" % (slug(forum))
         if post.state == 'flagged':
             url = "/forum/%s/flagged_queue" % (slug(forum))
@@ -509,7 +519,7 @@ class WebsiteForum(http.Controller):
         return werkzeug.utils.redirect(url)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
-    def post_refuse(self, forum, post):
+    def post_refuse(self, forum, post, **kwargs):
         post.refuse()
         return self.question_ask_for_close(forum, post)
 
@@ -520,7 +530,7 @@ class WebsiteForum(http.Controller):
         return post.flag()[0]
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
-    def post_ask_for_mark_as_offensive(self, forum, post):
+    def post_ask_for_mark_as_offensive(self, forum, post, **kwargs):
         offensive_reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'offensive')])
 
         values = self._prepare_forum_values(forum=forum)
@@ -545,8 +555,8 @@ class WebsiteForum(http.Controller):
     # User
     # --------------------------------------------------
 
-    @http.route(['/forum/<model("forum.forum"):forum>/users',
-                 '/forum/<model("forum.forum"):forum>/users/page/<int:page>'],
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/users''',
+                 '''/forum/<model("forum.forum"):forum>/users/page/<int:page>'''],
                 type='http', auth="public", website=True)
     def users(self, forum, page=1, **searches):
         User = request.env['res.users']
@@ -730,7 +740,7 @@ class WebsiteForum(http.Controller):
     # Badges
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/badge', type='http', auth="public", website=True)
+    @http.route('''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/badge''', type='http', auth="public", website=True)
     def badges(self, forum, **searches):
         Badge = request.env['gamification.badge']
         badges = Badge.sudo().search([('challenge_ids.category', '=', 'forum')])

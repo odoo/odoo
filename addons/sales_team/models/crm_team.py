@@ -16,7 +16,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 class CrmTeam(models.Model):
     _name = "crm.team"
     _inherit = ['mail.thread']
-    _description = "Sales Channel"
+    _description = "Sales Team"
     _order = "name"
 
     @api.model
@@ -45,14 +45,14 @@ class CrmTeam(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    name = fields.Char('Sales Channel', required=True, translate=True)
-    active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the sales channel without removing it.")
+    name = fields.Char('Sales Team', required=True, translate=True)
+    active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get('crm.team'))
     currency_id = fields.Many2one(
         "res.currency", related='company_id.currency_id',
         string="Currency", readonly=True)
-    user_id = fields.Many2one('res.users', string='Channel Leader')
+    user_id = fields.Many2one('res.users', string='Team Leader')
     member_ids = fields.One2many('res.users', 'sale_team_id', string='Channel Members')
     favorite_user_ids = fields.Many2many(
         'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
@@ -63,9 +63,9 @@ class CrmTeam(models.Model):
         compute='_compute_is_favorite', inverse='_inverse_is_favorite',
         help="Favorite teams to display them in the dashboard and access them easily.")
     reply_to = fields.Char(string='Reply-To',
-                           help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales channel")
+                           help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this Sales Team")
     color = fields.Integer(string='Color Index', help="The color of the channel")
-    team_type = fields.Selection([('sales', 'Sales'), ('website', 'Website')], string='Channel Type', default='sales', required=True,
+    team_type = fields.Selection([('sales', 'Sales'), ('website', 'Website')], string='Team Type', default='sales', required=True,
                                  help="The type of this channel, it will define the resources this channel uses.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
     dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
@@ -148,7 +148,7 @@ class CrmTeam(models.Model):
             return 'DATE(%s)' % self._graph_date_column()
 
     def _graph_y_query(self):
-        raise UserError(_('Undefined graph model for Sales Channel: %s') % self.name)
+        raise UserError(_('Undefined graph model for Sales Team: %s') % self.name)
 
     def _extra_sql_conditions(self):
         return ''
@@ -175,7 +175,7 @@ class CrmTeam(models.Model):
 
         # apply rules
         if not self.dashboard_graph_model:
-            raise UserError(_('Undefined graph model for Sales Channel: %s') % self.name)
+            raise UserError(_('Undefined graph model for Sales Team: %s') % self.name)
         GraphModel = self.env[self.dashboard_graph_model]
         graph_table = GraphModel._table
         extra_conditions = self._extra_sql_conditions()
@@ -233,7 +233,7 @@ class CrmTeam(models.Model):
                 short_name = format_date(start_date + relativedelta(days=day), 'd MMM', locale=locale)
                 values.append({x_field: short_name, y_field: 0})
             for data_item in graph_data:
-                index = (datetime.strptime(data_item.get('x_value'), DF).date() - start_date).days
+                index = (data_item.get('x_value') - start_date).days
                 values[index][y_field] = data_item.get('y_value')
 
         elif self.dashboard_graph_group == 'week':
@@ -268,14 +268,14 @@ class CrmTeam(models.Model):
         return [{'values': values, 'area': True, 'title': graph_title, 'key': graph_key, 'color': color}]
 
     def _compute_dashboard_button_name(self):
-        """ Sets the adequate dashboard button name depending on the sales channel's options
+        """ Sets the adequate dashboard button name depending on the Sales Team's options
         """
         for team in self:
             team.dashboard_button_name = _("Big Pretty Button :)") # placeholder
 
     def action_primary_channel_button(self):
         """ skeleton function to be overloaded
-            It will return the adequate action depending on the sales channel's options
+            It will return the adequate action depending on the Sales Team's options
         """
         return False
 

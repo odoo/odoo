@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <template id="assets" name="point_of_sale assets">
-            <link rel="stylesheet" type="text/less" href="/web/static/src/less/fonts.less" />
-            <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css" />
+            <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
+            <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
             <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" id="pos-stylesheet"/>
-            <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css" />
+            <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css"/>
 
-            <script type="text/javascript" src="/point_of_sale/static/lib/fastclick.js"></script>
+            <t t-if="request and request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl'">
+                <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
+            </t>
+
             <script type="text/javascript" src="/point_of_sale/static/lib/waitfont.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/main.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/db.js"></script>
@@ -53,26 +56,26 @@
                         </div>
                         <div class="pos_orderlines_list">
                             <div class="pos_orderlines_item">
-                                <div><div style="background-image:url(/pos_data_drinks/static/img/th-water.jpg)"/></div>
-                                <div>Water</div>
+                                <div><div style="background-image:url(/point_of_sale/static/img/monitor_stand.png)"/></div>
+                                <div>Monitor Stand</div>
                                 <div>2</div>
                                 <div>$ 4.40</div>
                             </div>
                             <div class="pos_orderlines_item">
-                                <div><div style="background-image:url(/pos_data_drinks/static/img/th-fanta.jpg)"/></div>
-                                <div>Fanta</div>
+                                <div><div style="background-image:url(/point_of_sale/static/img/led_lamp.png)"/></div>
+                                <div>Led Lamp</div>
                                 <div>3</div>
                                 <div>$ 3.12</div>
                             </div>
                             <div class="pos_orderlines_item">
-                                <div><div style="background-image:url(/pos_data_drinks/static/img/th-gordon.jpg)"/></div>
-                                <div>Gordon</div>
+                                <div><div style="background-image:url(/point_of_sale/static/img/whiteboard_pen.png)"/></div>
+                                <div>Whiteboard Pen</div>
                                 <div>3</div>
                                 <div>$ 8.50</div>
                             </div>
                             <div class="pos_orderlines_item">
-                                <div><div style="background-image:url(/pos_data_drinks/static/img/th-malibu.jpg)"/></div>
-                                <div>Malibu Drink</div>
+                                <div><div style="background-image:url(/point_of_sale/static/img/desk_organizer.png)"/></div>
+                                <div>Desk Organizer</div>
                                 <div>1</div>
                                 <div>$ 4.50</div>
                             </div>

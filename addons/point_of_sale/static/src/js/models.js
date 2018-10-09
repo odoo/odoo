@@ -6,6 +6,7 @@ var BarcodeParser = require('barcodes.BarcodeParser');
 var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var core = require('web.core');
 var field_utils = require('web.field_utils');
 var rpc = require('web.rpc');
@@ -44,7 +45,7 @@ exports.PosModel = Backbone.Model.extend({
 
         this.proxy_queue = new devices.JobQueue();           // used to prevent parallels communications to the proxy
         this.db = new PosDB();                       // a local database used to search trough products and categories & store pending orders
-        this.debug = core.debug; //debug mode
+        this.debug = config.debug; //debug mode
 
         // Business data; loaded from the server at launch
         this.company_logo = null;
@@ -117,7 +118,7 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         var  done = new $.Deferred();
         this.barcode_reader.disconnect_from_proxy();
-        this.chrome.loading_message(_t('Connecting to the PosBox'),0);
+        this.chrome.loading_message(_t('Connecting to the IoT Box'),0);
         this.chrome.loading_skip(function(){
                 self.proxy.stop_searching();
             });
@@ -171,7 +172,7 @@ exports.PosModel = Backbone.Model.extend({
             }
         },
     },{
-        model:  'product.uom',
+        model:  'uom.uom',
         fields: [],
         domain: null,
         context: function(self){ return { active_test: false }; },
@@ -761,9 +762,9 @@ exports.PosModel = Backbone.Model.extend({
         var order = this.get_order();
         var rendered_html = this.config.customer_facing_display_html;
 
-        // If we're using an external device like the POSBox, we
+        // If we're using an external device like the IoT Box, we
         // cannot get /web/image?model=product.product because the
-        // POSBox is not logged in and thus doesn't have the access
+        // IoT Box is not logged in and thus doesn't have the access
         // rights to access product.product. So instead we'll base64
         // encode it and embed it in the HTML.
         var get_image_deferreds = [];
@@ -1538,6 +1539,8 @@ exports.Orderline = Backbone.Model.extend({
         return {
             qty: this.get_quantity(),
             price_unit: this.get_unit_price(),
+            price_subtotal: this.get_price_without_tax(),
+            price_subtotal_incl: this.get_price_with_tax(),
             discount: this.get_discount(),
             product_id: this.get_product().id,
             tax_ids: [[6, false, _.map(this.get_applicable_taxes(), function(tax){ return tax.id; })]],
@@ -2018,7 +2021,7 @@ exports.Order = Backbone.Model.extend({
         if (json.partner_id) {
             client = this.pos.db.get_partner_by_id(json.partner_id);
             if (!client) {
-                console.error('ERROR: trying to load a parner not available in the pos');
+                console.error('ERROR: trying to load a partner not available in the pos');
             }
         } else {
             client = null;
@@ -2057,7 +2060,7 @@ exports.Order = Backbone.Model.extend({
         }, this));
         return {
             name: this.get_name(),
-            amount_paid: this.get_total_paid(),
+            amount_paid: this.get_total_paid() - this.get_change(),
             amount_total: this.get_total_with_tax(),
             amount_tax: this.get_total_tax(),
             amount_return: this.get_change(),
@@ -2101,7 +2104,7 @@ exports.Order = Backbone.Model.extend({
             } else {
                 subreceipt = subreceipt.split('\n').slice(1).join('\n');
                 var qweb = new QWeb2.Engine();
-                    qweb.debug = core.debug;
+                    qweb.debug = config.debug;
                     qweb.default_dict = _.clone(QWeb.default_dict);
                     qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
 

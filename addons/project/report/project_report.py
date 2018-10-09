@@ -6,7 +6,7 @@ from odoo import fields, models, tools
 
 class ReportProjectTaskUser(models.Model):
     _name = "report.project.task.user"
-    _description = "Tasks by user and project"
+    _description = "Tasks Analysis"
     _order = 'name desc, project_id'
     _auto = False
 
@@ -36,7 +36,7 @@ class ReportProjectTaskUser(models.Model):
             ('done', 'Ready for next stage')
         ], string='Kanban State', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Contact', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
 
     def _select(self):

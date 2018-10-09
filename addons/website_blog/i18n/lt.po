@@ -3,14 +3,13 @@
 # * website_blog
 # 
 # Translators:
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Anatolij, 2017
+# Anatolij <an@cq.lt>, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 msgid ""
@@ -25,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_2
@@ -218,12 +217,12 @@ msgstr "Juoda"
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #: model:website.menu,name:website_blog.menu_news
 msgid "Blog"
-msgstr "Tinklaraštis"
+msgstr "Dienoraštis"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_name
 msgid "Blog Name"
-msgstr "Tinklaraščio pavadinimas"
+msgstr "Dienoraščio pavadinimas"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website.py:22
@@ -233,7 +232,7 @@ msgstr "Tinklaraščio pavadinimas"
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #, python-format
 msgid "Blog Post"
-msgstr "Tinklaraščio įrašas"
+msgstr "Dienoraščio pranešimas"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website.py:53
@@ -252,7 +251,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_post_complete_read_next
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Post Title"
-msgstr "Tinklaraščio įrašo pavadinimas"
+msgstr "Dienoraščio pranešimo antraštė"
 
 #. module: website_blog
 #: code:addons/website_blog/models/website.py:24
@@ -262,24 +261,24 @@ msgstr "Tinklaraščio įrašo pavadinimas"
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_list
 #, python-format
 msgid "Blog Posts"
-msgstr "Tinklaraščio įrašai"
+msgstr "Dienoraščio pranešimai"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_subtitle
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Subtitle"
-msgstr "Tinklaraščio paantraštė"
+msgstr "Dienoraščio paantraštė"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_tag
 msgid "Blog Tag"
-msgstr "Tinklaraščio žyma"
+msgstr "Dienoraščio žyma"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tags
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag
 msgid "Blog Tags"
-msgstr "Tinklaraščio žymos"
+msgstr "Dienoraščio žymės"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
@@ -287,7 +286,7 @@ msgstr "Tinklaraščio žymos"
 #: model:ir.ui.menu,name:website_blog.menu_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_blog_list
 msgid "Blogs"
-msgstr "Tinklaraščiai"
+msgstr "Dienoraščiai"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -337,7 +336,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.actions.act_window,help:website_blog.action_blog_post
 msgid "Click to create a new blog post."
-msgstr "Paspauskite norėdami sukurti naują tinklaraščio įrašą."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_content
@@ -452,7 +451,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Green"
-msgstr "Žalia"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -606,7 +605,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
 msgid "New Blog Post"
-msgstr "Naujas tinklaraščio įrašas"
+msgstr "Naujas dienoraščio pranešimas"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_2
@@ -626,7 +625,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "No blog post yet."
-msgstr "Tinklaraštyje dar nėra įrašų."
+msgstr "Dienoraštyje dar nėra pranešimų."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -666,12 +665,12 @@ msgstr ""
 #. module: website_blog
 #: model:blog.blog,name:website_blog.blog_blog_1
 msgid "Our Blog"
-msgstr "Mūsų tinklaraštis"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_blogs
 msgid "Our Blogs"
-msgstr "Mūsų tinklaraščiai"
+msgstr "Mūsų dienoraščiai"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
@@ -717,12 +716,12 @@ msgstr "Publikuotas pranešimas"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publishing Options"
-msgstr "Publikavimo nustatymai"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_post_date
 msgid "Publishing date"
-msgstr "Publikavimo data"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -763,7 +762,7 @@ msgstr "Raudona"
 #, python-format
 msgid "Select this menu item to create a new blog post."
 msgstr ""
-"Pasirinkite šį meniu elementą, kad sukurtumėte naują tinklaraščio įrašą."
+"Pasirinkite šį meniu elementą, kad sukurti naują dienoraščio pranešimą."
 
 #. module: website_blog
 #. openerp-web
@@ -944,7 +943,7 @@ msgstr "Tinklalapis"
 #. module: website_blog
 #: model:ir.actions.act_url,name:website_blog.action_open_website
 msgid "Website Blogs"
-msgstr "Svetainės tinklaraščiai"
+msgstr "Interneto svetainės dienoraščiai"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_website_message_ids

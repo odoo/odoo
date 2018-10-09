@@ -42,10 +42,10 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="row">
-                                <div class="col-xs-4">
-                                    <img height="100" width="100" t-att-src="kanban_image('pos.category', 'image_medium', record.id.raw_value)"/>
+                                <div class="col-4">
+                                    <img height="100" width="100" t-att-src="kanban_image('pos.category', 'image_medium', record.id.raw_value)" alt="Category"/>
                                 </div>
-                                <div class="col-xs-8">
+                                <div class="col-8">
                                     <strong class="o_kanban_record_title"><field name="name"/></strong>
                                 </div>
                             </div>
@@ -64,15 +64,11 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" eval="False"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to define a new category.
+            <p class="o_view_nocontent_smiling_face">
+                Define a new category
             </p><p>
                 Categories are used to browse your products through the
                 touchscreen interface.
-            </p><p>
-                If you put a photo on the category, the layout of the
-                touchscreen interface will automatically. We suggest not to put
-                a photo on categories for small (1024x768) screens.
             </p>
         </field>
     </record>

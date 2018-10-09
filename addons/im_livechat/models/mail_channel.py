@@ -30,9 +30,9 @@ class MailChannel(models.Model):
 
     _name = 'mail.channel'
     _inherit = ['mail.channel', 'rating.mixin']
+    _description = 'Discussion channel'
 
     anonymous_name = fields.Char('Anonymous Name')
-    create_date = fields.Datetime('Create Date', required=True)
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
 
@@ -101,12 +101,6 @@ class MailChannel(models.Model):
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
 
-    @api.model
-    def get_empty_list_help(self, help):
-        if help:
-            return '<p>%s</p>' % (help)
-        return super(MailChannel, self).get_empty_list_help(help)
-
     def _define_command_history(self):
         return {
             'channel_types': ['livechat'],
@@ -134,8 +128,5 @@ class MailChannel(models.Model):
 
     # Rating Mixin
 
-    def rating_get_parent_model_name(self, values):
-        return 'im_livechat.channel'
-
-    def rating_get_parent_id(self):
-        return self.livechat_channel_id.id
+    def rating_get_parent(self):
+        return 'livechat_channel_id'

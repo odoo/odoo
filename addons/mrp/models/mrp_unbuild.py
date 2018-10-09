@@ -23,10 +23,10 @@ class MrpUnbuild(models.Model):
         'product.product', 'Product',
         required=True, states={'done': [('readonly', True)]})
     product_qty = fields.Float(
-        'Quantity',
+        'Quantity', default=1.0,
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         required=True, states={'done': [('readonly', True)]})
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
@@ -83,10 +83,16 @@ class MrpUnbuild(models.Model):
         return super(MrpUnbuild, self).create(vals)
 
     @api.multi
+    def unlink(self):
+        if 'done' in self.mapped('state'):
+            raise UserError(_("You cannot delete an unbuild order if the state is 'Done'."))
+        return super(MrpUnbuild, self).unlink()
+
+    @api.multi
     def action_unbuild(self):
         self.ensure_one()
         if self.product_id.tracking != 'none' and not self.lot_id.id:
-            raise UserError(_('Should have a lot for the finished product'))
+            raise UserError(_('You should provide a lot number for the final product.'))
 
         if self.mo_id:
             if self.mo_id.state != 'done':
@@ -96,7 +102,7 @@ class MrpUnbuild(models.Model):
         produce_moves = self._generate_produce_moves()
 
         if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
-            raise UserError(_('You should specify a manufacturing order in order to find the correct tracked products.'))
+            raise UserError(_('Some of your components are tracked, you have to specify a manufacturing order in order to retrieve the correct components.'))
 
         if consume_move.has_tracking != 'none':
             self.env['stock.move.line'].create({
@@ -150,6 +156,7 @@ class MrpUnbuild(models.Model):
                 'product_uom_qty': unbuild.product_qty,
                 'location_id': unbuild.location_id.id,
                 'location_dest_id': unbuild.product_id.property_stock_production.id,
+                'warehouse_id': unbuild.location_id.get_warehouse().id,
                 'origin': unbuild.name,
                 'consume_unbuild_id': unbuild.id,
             })
@@ -182,6 +189,7 @@ class MrpUnbuild(models.Model):
             'procure_method': 'make_to_stock',
             'location_dest_id': self.location_dest_id.id,
             'location_id': raw_move.location_dest_id.id,
+            'warehouse_id': self.location_dest_id.get_warehouse().id,
             'unbuild_id': self.id,
         })
 
@@ -196,6 +204,7 @@ class MrpUnbuild(models.Model):
             'procure_method': 'make_to_stock',
             'location_dest_id': self.location_dest_id.id,
             'location_id': self.product_id.property_stock_production.id,
+            'warehouse_id': self.location_dest_id.get_warehouse().id,
             'unbuild_id': self.id,
         })
 

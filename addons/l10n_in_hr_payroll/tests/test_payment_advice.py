@@ -3,7 +3,7 @@
 
 import os
 
-from odoo.tools import config
+from odoo.tools import test_reports
 from odoo.addons.l10n_in_hr_payroll.tests.common import TestPaymentAdviceBase
 
 
@@ -37,6 +37,4 @@ class TestPaymentAdvice(TestPaymentAdviceBase):
         self.assertEqual(payment_advice.state, 'confirm')
 
         # In order to test the PDF report defined on a Payment Advice, we will print a Print Advice Report when NEFT is checked
-        data, data_format = self.env.ref('l10n_in_hr_payroll.payroll_advice').render(payment_advice.ids)
-        if config.get('test_report_directory'):
-            open(os.path.join(config['test_report_directory'], 'l10n_in_hr_payroll_summary_report' + data_format), 'wb+').write(data)
+        test_reports.try_report(self.cr, self.uid, 'l10n_in_hr_payroll.report_payrolladvice', payment_advice.ids)

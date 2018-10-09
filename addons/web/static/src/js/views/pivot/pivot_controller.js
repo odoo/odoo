@@ -102,7 +102,7 @@ var PivotController = AbstractController.extend({
      */
     renderButtons: function ($node) {
         if ($node) {
-            var context = {measures: _.pairs(_.omit(this.measures, '__count'))};
+            var context = {measures: _.sortBy(_.pairs(_.omit(this.measures, '__count')), function (x) { return x[1].string.toLowerCase(); })};
             this.$buttons = $(QWeb.render('PivotView.buttons', context));
             this.$buttons.click(this._onButtonClick.bind(this));
             this.$buttons.find('button').tooltip();
@@ -164,9 +164,12 @@ var PivotController = AbstractController.extend({
             fields: fields
         }));
 
-        this.$fieldSelection.find('ul').first()
-            .css({top: top, left: left})
-            .show();
+        var cssProps = {top: top};
+        cssProps[_t.database.parameters.direction === 'rtl' ? 'right' : 'left'] =
+            _t.database.parameters.direction === 'rtl' ? this.$el.width() - left : left;
+        this.$fieldSelection.find('.dropdown-menu').first()
+            .css(cssProps)
+            .addClass('show');
     },
     /**
      * @private
@@ -186,9 +189,13 @@ var PivotController = AbstractController.extend({
         var state = this.model.get({raw: true});
         _.each(this.measures, function (measure, name) {
             var isSelected = _.contains(state.measures, name);
-            self.$buttons.find('li[data-field="' + name + '"]')
+            self.$buttons.find('.dropdown-item[data-field="' + name + '"]')
                          .toggleClass('selected', isSelected);
         });
+        var noDataDisplayed = !state.has_data || !state.measures.length;
+        this.$buttons.find('.o_pivot_flip_button').prop('disabled', noDataDisplayed);
+        this.$buttons.find('.o_pivot_expand_button').prop('disabled', noDataDisplayed);
+        this.$buttons.find('.o_pivot_download').prop('disabled', noDataDisplayed);
     },
 
     //--------------------------------------------------------------------------
@@ -215,8 +222,7 @@ var PivotController = AbstractController.extend({
                     .then(this.update.bind(this, {}, {reload: false}));
         }
         if ($target.parents('.o_pivot_measures_list').length) {
-            var parent = $target.parent();
-            var field = parent.data('field');
+            var field = $target.data('field');
             event.preventDefault();
             event.stopPropagation();
             this.model
@@ -236,16 +242,23 @@ var PivotController = AbstractController.extend({
      * @param {MouseEvent} event
      */
     _onCellClick: function (event) {
-        var $target = $(event.target);
+        var $target = $(event.currentTarget);
         if ($target.hasClass('o_pivot_header_cell_closed') ||
             $target.hasClass('o_pivot_header_cell_opened') ||
             $target.hasClass('o_empty') ||
+            $target.data('type') === 'variation' ||
             !this.enableLinking) {
             return;
         }
         var state = this.model.get(this.handle);
-        var colDomain = this.model.getHeader($target.data('col_id')).domain;
-        var rowDomain = this.model.getHeader($target.data('id')).domain;
+        var colDomain, rowDomain;
+        if ($target.data('type') === 'comparisonData') {
+            colDomain = this.model.getHeader($target.data('col_id')).comparisonDomain || [];
+            rowDomain = this.model.getHeader($target.data('id')).comparisonDomain || [];
+        } else {
+            colDomain = this.model.getHeader($target.data('col_id')).domain || [];
+            rowDomain = this.model.getHeader($target.data('id')).domain || [];
+        }
         var context = _.omit(state.context, function (val, key) {
             return key === 'group_by' || _.str.startsWith(key, 'search_default_');
         });
@@ -298,11 +311,11 @@ var PivotController = AbstractController.extend({
     _onFieldMenuSelection: function (event) {
         event.preventDefault();
         var $target = $(event.target);
-        if ($target.parent().hasClass('disabled')) {
+        if ($target.hasClass('disabled')) {
             event.stopPropagation();
             return;
         }
-        var field = $target.parent().data('field');
+        var field = $target.data('field');
         var interval = $target.data('interval');
         var header = this.model.getHeader(this.lastHeaderSelected);
         if (interval) {

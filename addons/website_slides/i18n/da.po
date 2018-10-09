@@ -3,7 +3,7 @@
 # * website_slides
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
 # Morten Schou <ms@msteknik.dk>, 2017
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
@@ -11,15 +11,14 @@
 # Visti Kristensen <visti@vkdata.dk>, 2017
 # Jesper Carstensen <jc@danodoo.dk>, 2017
 # JonathanStein <jstein@image.dk>, 2017
-# lhmflexerp <lhm@flexerp.dk>, 2017
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2018
+# Laerke Mathiasen <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2018\n"
+"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,21 +45,6 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
-"\n"
-"<p>Hej,</p>\n"
-"<p>\n"
-"    ${user.name} delte ${object.slide_type} <strong>${object.name}</strong> med dig!\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
-"    </a>\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
-"        Vis <strong>${object.name}</strong>\n"
-"    </a>\n"
-"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -81,21 +65,6 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
-"\n"
-"<p>Hej,</p>\n"
-"<p>\n"
-"    En ny ${object.slide_type} <strong>${object.name}</strong> er blevet udgivet på ${object.channel_id.name} den ${format_tz(object.write_date, tz=user.tz)}\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
-"    </a>\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
-"        Vis <strong>${object.name}</strong>\n"
-"    </a>\n"
-"</p>\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -105,7 +74,7 @@ msgstr "# Visninger"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
 msgid "# of Embedded Views"
-msgstr "# af indlejrede visninger"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
@@ -115,7 +84,7 @@ msgstr "# Hjemmeside Visninger"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
-msgstr "${user.name} delte et ${object.slide_type} med dig!"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -123,13 +92,11 @@ msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
 msgstr ""
-"(U)arkivering af en kanal vil automatisk (u)arkivere dokumenter. Ønsker du "
-"at fortsætte?"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
 msgid ". Please try again with different keywords."
-msgstr ". Prøv igen med forskellige søgeord."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -146,8 +113,6 @@ msgid ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
 "id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Indlejre</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -155,13 +120,11 @@ msgid ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
 "id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Del</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "<b>Share:</b>"
-msgstr "<b>Del:</b>"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -171,23 +134,23 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "<i class=\"fa fa-arrow-right\"/> See all"
-msgstr "<i class=\"fa fa-arrow-right\"/> See alle"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
-msgstr "<i class=\"fa fa-bar-chart\"/> Statistikker"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-circle-o\"/> Website Views"
-msgstr "Webside visninger"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<i class=\"fa fa-cloud-upload\"/> Upload"
-msgstr "<i class=\"fa fa-cloud-upload\"/> Upload"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -213,17 +176,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-exclamation-triangle\"/> This"
-msgstr "<i class=\"fa fa-exclamation-triangle\"/> Denne"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-home\"/> About"
-msgstr "<i class=\"fa fa-home\"/> Om"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<i class=\"fa fa-home\"/> Home"
-msgstr "<i class=\"fa fa-home\"/> Hjem"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -235,17 +198,17 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-play\"/> Total Views"
-msgstr "<i class=\"fa fa-play\"/> Totale visninger"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr "<i class=\"fa fa-share-alt\"/> Del"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-spinner fa-spin\"/> Loading ..."
-msgstr "<i class=\"fa fa-spinner fa-spin\"/> Indlæser ..."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -263,8 +226,6 @@ msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 msgstr ""
-"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -272,8 +233,6 @@ msgid ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 msgstr ""
-"<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -281,8 +240,6 @@ msgid ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 msgstr ""
-"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -290,8 +247,6 @@ msgid ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
 "                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 msgstr ""
-"<span class=\"badge\" id=\"total-share\">0</span>\n"
-"                                                    <i class=\"fa fa-share-alt\"/> Sociale Delinger"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -299,13 +254,11 @@ msgid ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 msgstr ""
-"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"help-block\">Send presentation through email</span>"
-msgstr "<span class=\"help-block\">Send præsentation med email</span>"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
@@ -313,23 +266,21 @@ msgid ""
 "<span class=\"help-block\">Use permanent link to share in social "
 "media</span>"
 msgstr ""
-"<span class=\"help-block\">Anvend permanent link til deling på sociale "
-"medier</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<span class=\"text-muted small\">views</span>"
-msgstr "<span class=\"text-muted small\">visninger</span>"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<span class=\"text-muted\">Sort by:</span>"
-msgstr "<span class=\"text-muted\">Sortér efter:</span>"
+msgstr ""
 
 #. module: website_slides
 #: sql_constraint:slide.tag:0
 msgid "A tag must be unique!"
-msgstr "Et tag skal være unikt!"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -355,7 +306,7 @@ msgstr "Arkiveret"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
-msgid "Authenticated Users Only"
+msgid "Authentified Users Only"
 msgstr ""
 
 #. module: website_slides
@@ -366,17 +317,17 @@ msgstr ""
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag1
 msgid "CMS"
-msgstr "CMS"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
 msgid "Can See"
-msgstr "Kan se"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
 msgid "Can Upload"
-msgstr "Kan Uploade"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
@@ -410,12 +361,12 @@ msgstr "Kanal"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
 msgid "Channel Groups"
-msgstr "Kanal grupper"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "Channel Settings"
-msgstr "Kanal indstillinger"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -428,12 +379,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
 msgid "Channel for Slides"
-msgstr "Kanal for dokumenter"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channel visibility"
-msgstr "Kanal synlighed"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.actions.act_url,name:website_slides.action_open_channels
@@ -446,7 +397,7 @@ msgstr "Kanaler"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_10
 msgid "Company Culture"
-msgstr "Virksomhedskultur"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
@@ -458,7 +409,7 @@ msgstr "Indhold"
 #: code:addons/website_slides/static/src/xml/website_slides.xml:20
 #, python-format
 msgid "Content Preview"
-msgstr "Forhåndsvisning af Indhold"
+msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:255
@@ -467,8 +418,6 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
-"Kunne ikke hente data fra url. Dokument eller adgangsrettigheder ikke tilgængelige.\n"
-"Her er det modtagede svar: %s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:322
@@ -477,20 +426,18 @@ msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
-"Kunne ikke hente data fra url. Dokument eller adgangsrettigheder ikke tilgængelige:\n"
-"%s"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
-msgstr "Opret et Google projekt og få en nøgle"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:219
 #, python-format
 msgid "Create new tag '%s'"
-msgstr "Opret nyt tag '%s'"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
@@ -538,7 +485,7 @@ msgstr "Kassér"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_6
 msgid "Discover how easy marketing your business can be with Odoo"
-msgstr "Opdag hvor let du kan markedsføre din virksomhed med Odoo"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_0
@@ -597,7 +544,7 @@ msgstr "Dokument ID"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
 msgid "Document URL"
-msgstr "Dokument URL"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -621,7 +568,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
 msgid "Download Security"
-msgstr "Download Sikkerhed"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
@@ -631,7 +578,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
 msgid "Email template used when sharing a slide"
-msgstr "Email skabelon til anvendelse ved deling af slide"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
@@ -661,7 +608,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_private
 msgid "Employee Channel"
-msgstr "Medarbejderkanal"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
@@ -700,7 +647,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:89
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr "Filen er for stor. Max størrelse er 25MB"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -735,14 +682,14 @@ msgstr "Sortér efter"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
 msgid "Groups allowed to see presentations in this channel"
-msgstr "Grupper der kan se præsentationer i denne kanal"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
 msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
-msgstr "Grupper der kan uploade præsentationer i denne kanal"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_id
@@ -775,8 +722,6 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
-"Intern serverfejl, prøv venligst igen senere eller kontakt administrator.\n"
-"Her er fejlmeddelelsen: %s"
 
 #. module: website_slides
 #. openerp-web
@@ -815,7 +760,7 @@ msgstr "Sidst opdateret den"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Latest Published"
-msgstr "Senest publiseret"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_8
@@ -853,7 +798,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Viewed"
-msgstr "Mest vist"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -873,7 +818,7 @@ msgstr "Navn"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
-msgstr "Nyt ${object.slide_type} udgivet på ${object.channel_id.name}"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -888,22 +833,22 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "No One"
-msgstr "Ingen"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channel_not_found
 msgid "No channel created or published yet."
-msgstr "Ingen kanal oprettet eller udgivet endnu."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "No presentation available."
-msgstr "Ingen præsentation tilgængelig."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "No presentation published yet."
-msgstr "Ingen præsentation udgivet endnu."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
@@ -915,29 +860,29 @@ msgstr "Antal dokumenter"
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
 msgid "Number of Infographics"
-msgstr "Antal Infografikker"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
 msgid "Number of Presentations"
-msgstr "Antal Præsentationer"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
 msgid "Number of Videos"
-msgstr "Antal Videoer"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_2
 msgid "Odoo All-in-One Software Demonstration"
-msgstr "Odoo Alt-i-Én Software Demonstration"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_1
 msgid "Odoo CRM"
-msgstr "Odoo CRM"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
@@ -948,7 +893,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_7
 msgid "Odoo Inventory"
-msgstr "Odoo Lager"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
@@ -958,22 +903,22 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_6
 msgid "Odoo Marketing"
-msgstr "Odoo Markedsføring"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_8
 msgid "Odoo Sales"
-msgstr "Odoo Salg"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr "Odoo Sign Demonstration"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
 msgid "Open Days 2014 Infographic"
-msgstr "Open Days 2014 Infografik"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_11
@@ -985,12 +930,12 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
 msgid "PDF or Image File"
-msgstr "PDF eller Billedfil"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_partial
 msgid "Partner Channel"
-msgstr "Partner kanal"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1003,40 +948,38 @@ msgstr ""
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
-"Venligst <a href=\"/web?redirect=%s\">log ind</a> for at stemme på dette "
-"slide"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:325
 #: code:addons/website_slides/models/slides.py:545
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
-msgstr "Indtast venligst et gyldigt Youtube eller Google Doc URL"
+msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:247
 #, python-format
 msgid "Please enter valid youtube or google doc url"
-msgstr "Indtast venligst et gyldigt youtube eller google doc url"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
 #: selection:slide.slide,slide_type:0
 msgid "Presentation"
-msgstr "Præsentation"
+msgstr ""
 
 #. module: website_slides
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
 #: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
 msgid "Presentation Published"
-msgstr "Præsentation Udgivet"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_footer
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Presentations"
-msgstr "Præsentationer"
+msgstr ""
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1046,7 +989,7 @@ msgstr "Privat"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
 msgid "Private channel"
-msgstr "Privat kanal"
+msgstr ""
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1056,12 +999,12 @@ msgstr "Offentlig"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
 msgid "Public Channel"
-msgstr "Offentlig Kanal"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
 msgid "Publish Date"
-msgstr "Udgivelsesdato"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1076,12 +1019,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Related"
-msgstr "Relateret"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "Results for"
-msgstr "Resultater for"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1095,14 +1038,14 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides.xml:70
 #, python-format
 msgid "Save and Publish"
-msgstr "Gem og Udgiv"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:69
 #, python-format
 msgid "Save as Draft"
-msgstr "Gem som Kladde"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1117,7 +1060,7 @@ msgstr "Sikkerhed"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
 msgid "Select a Channel"
-msgstr "Vælg en Kanal"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -1133,7 +1076,7 @@ msgstr "Rækkefølge"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid "Share Link"
-msgstr "Del Link"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1148,17 +1091,17 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Share with a friend"
-msgstr "Del med en ven"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
 msgid "Shared Template"
-msgstr "Delt Skabelon"
+msgstr ""
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Show channel but restrict presentations"
-msgstr "Vis kanal men begræns præsentationer"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1190,12 +1133,12 @@ msgstr "Slides"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_category
 msgid "Slides Category"
-msgstr "Præsentationskategori"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
 msgid "Sorry, but nothing matches your search criteria"
-msgstr "Beklager, men intet matcher dine søgekriterier"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_3
@@ -1225,7 +1168,7 @@ msgstr "Tags"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Tags..."
-msgstr "Kategorier..."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1247,7 +1190,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
 msgid "Third Party Website URL"
-msgstr "Tredjepartshjemmeside URL"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.channel,access_error_msg:website_slides.channel_partial
@@ -1255,7 +1198,6 @@ msgstr "Tredjepartshjemmeside URL"
 #: model:slide.channel,access_error_msg:website_slides.channel_public
 msgid "This channel is private and its content is restricted to some users."
 msgstr ""
-"Denne kanals er privat og dens indhold er begrænset til nogle brugere."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:251
@@ -1264,8 +1206,6 @@ msgid ""
 "This video already exists in this channel <a target=\"_blank\" "
 "href=\"/slides/slide/%s\">click here to view it </a>"
 msgstr ""
-"Denne video eksisterer allerede i denne kanal <a target=\"_blank\" "
-"href=\"/slides/slide/%s\">klik her for at se den </a>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
@@ -1290,7 +1230,7 @@ msgstr "Total"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
 msgid "Total # Views"
-msgstr "Total antal visninger"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
@@ -1307,7 +1247,7 @@ msgstr "Type"
 #: code:addons/website_slides/controllers/main.py:151
 #, python-format
 msgid "Uncategorized"
-msgstr "Ikke kategoriseret"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1318,7 +1258,7 @@ msgstr ""
 #: code:addons/website_slides/models/slides.py:534
 #, python-format
 msgid "Unknown document"
-msgstr "Ukendt dokument"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
@@ -1343,14 +1283,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #, python-format
 msgid "Upload Presentation"
-msgstr "Upload præsentation"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:12
 #, python-format
 msgid "Uploading presentation..."
-msgstr "Uploader præsentation..."
+msgstr ""
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_private
@@ -1370,18 +1310,18 @@ msgstr "Video"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Videos"
-msgstr "Videoer"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Views"
-msgstr "Visninger"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.related_slides
 msgid "Views ."
-msgstr "Visninger ."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
@@ -1391,7 +1331,7 @@ msgstr "Synlighed"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr "Afventer validering"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_7
@@ -1411,79 +1351,79 @@ msgstr "Website"
 #: code:addons/website_slides/static/src/js/slides_upload.js:114
 #, python-format
 msgid "You can not upload password protected file."
-msgstr "Du kan ikke uploade en fil som er passwordbeskyttet"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
-msgstr "Du har allerede stemt på dette slide"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:36
 #, python-format
 msgid "Youtube Video URL"
-msgstr "Youtube video URL"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:34
 #, python-format
 msgid "Youtube or Google Doc URL"
-msgstr "Youtube eller Google Doc URL"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
 msgid "Youtube or Google Document ID"
-msgstr "Youtube eller Google Document ID"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_url
 msgid "Youtube or Google Document URL"
-msgstr "Youtube eller Google Document URL"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "by email!"
-msgstr "pr. email!"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "is empty."
-msgstr "er tom."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "is private"
-msgstr "er privat"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 #: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 msgid "is private."
-msgstr "er privat."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
-msgstr "login"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
 msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
 msgid "results found for the given criteria"
-msgstr "resultater fundet for de angivne kriterier"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "suggest_slide.name"
-msgstr "suggest_slide.name"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1493,4 +1433,4 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "your-friend@domain.com"
-msgstr "your-friend@domain.com"
+msgstr ""

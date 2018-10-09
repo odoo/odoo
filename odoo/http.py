@@ -25,6 +25,7 @@ from os.path import join as opj
 from zlib import adler32
 
 import babel.core
+from datetime import datetime, date
 import passlib.utils
 import psycopg2
 import json
@@ -44,10 +45,11 @@ except ImportError:
     psutil = None
 
 import odoo
+from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
-from .tools import ustr, consteq, frozendict, pycompat, unique
+from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 
 from .modules.module import module_manifest
 
@@ -617,6 +619,7 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
+
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
@@ -632,10 +635,10 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=ustr),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=date_utils.json_default))
         else:
             mime = 'application/json'
-            body = json.dumps(response, default=ustr)
+            body = json.dumps(response, default=date_utils.json_default)
 
         return Response(
             body, status=error and error.pop('http_status', 200) or 200,
@@ -879,7 +882,6 @@ more details.
 #----------------------------------------------------------
 # Controller and route registration
 #----------------------------------------------------------
-addons_module = {}
 addons_manifest = {}
 controllers_per_module = collections.defaultdict(list)
 
@@ -1033,9 +1035,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 HTTP_HOST=wsgienv['HTTP_HOST'],
                 REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
             )
-            uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
+            uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
         else:
             security.check(db, uid, password)
+        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
@@ -1057,12 +1060,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         # We create our own environment instead of the request's one.
         # to avoid creating it without the uid since request.uid isn't set yet
         env = odoo.api.Environment(request.cr, self.uid, self.context)
-        #  == BACKWARD COMPATIBILITY TO CONVERT OLD SESSION TYPE TO THE NEW ONES ! REMOVE ME AFTER 11.0 ==
-        if self.get('password'):
-            security.check(self.db, self.uid, self.password)
-            self.session_token = security.compute_session_token(self, env)
-            self.pop('password')
-        # =================================================================================================
         # here we check if the session is still valid
         if not security.check_session(self, env):
             raise SessionExpiredException("Session expired")
@@ -1239,6 +1236,7 @@ class Response(werkzeug.wrappers.Response):
     def set_default(self, template=None, qcontext=None, uid=None):
         self.template = template
         self.qcontext = qcontext or dict()
+        self.qcontext['response_template'] = self.template
         self.uid = uid
         # Support for Cross-Origin Resource Sharing
         if request.endpoint and 'cors' in request.endpoint.routing:
@@ -1302,7 +1300,8 @@ class Root(object):
         # Setup http sessions
         path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        return werkzeug.contrib.sessions.FilesystemSessionStore(
+            path, session_class=OpenERPSession, renew_missing=True)
 
     @lazy_property
     def nodb_routing_map(self):
@@ -1320,20 +1319,11 @@ class Root(object):
     def load_addons(self):
         """ Load all addons from addons path containing static files and
         controllers and configure them.  """
-        # The ODOO_PRELOAD_ADDONS environment variable is available for version 11.0 only.
-        # Due to two implementation changes in Python 3's GIL and import system, early
-        # requests have some chances to trigger an invalid RegistryManager if they are
-        # accepted just after the server listen on the socket. This bug is only reproducible
-        # in threaded mode and the odds to happen are pretty low except when using socket
-        # activation in such case ` ODOO_PRELOAD_ADDONS=no ` should be used.
-        # Note: Odoo versions > 11.0 does not preload addons anymore.
-        preload_addons = os.environ.get('ODOO_PRELOAD_ADDONS', 'yes') == 'yes'
-
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
         for addons_path in odoo.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
-                if module not in addons_module:
+                if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
@@ -1344,10 +1334,6 @@ class Root(object):
                             continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        m = None
-                        if 'odoo.addons' in sys.modules and preload_addons:
-                            m = __import__('odoo.addons.' + module)
-                        addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
@@ -1423,10 +1409,16 @@ class Root(object):
         else:
             response = result
 
+        save_session = (not request.endpoint) or request.endpoint.routing.get('save_session', True)
+        if not save_session:
+            return response
+
         if httprequest.session.should_save:
             if httprequest.session.rotate:
                 self.session_store.delete(httprequest.session)
                 httprequest.session.sid = self.session_store.generate_key()
+                if httprequest.session.uid:
+                    httprequest.session.session_token = security.compute_session_token(httprequest.session, request.env)
                 httprequest.session.modified = True
             self.session_store.save(httprequest.session)
         # We must not set the cookie if the session id was specified using a http header or a GET parameter.
@@ -1450,6 +1442,9 @@ class Root(object):
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
             threading.current_thread().url = httprequest.url
+            threading.current_thread().query_count = 0
+            threading.current_thread().query_time = 0
+            threading.current_thread().perf_t0 = time.time()
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)
@@ -1647,7 +1642,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
 def content_disposition(filename):
     filename = odoo.tools.ustr(filename)
-    escaped = urls.url_quote(filename)
+    escaped = urls.url_quote(filename, safe='')
 
     return "attachment; filename*=UTF-8''%s" % escaped
 
@@ -1655,11 +1650,6 @@ def content_disposition(filename):
 # RPC controller
 #----------------------------------------------------------
 class CommonController(Controller):
-
-    @route('/jsonrpc', type='json', auth="none")
-    def jsonrpc(self, service, method, args):
-        """ Method used by client APIs to contact OpenERP. """
-        return dispatch_rpc(service, method, args)
 
     @route('/gen_session_id', type='json', auth="none")
     def gen_session_id(self):

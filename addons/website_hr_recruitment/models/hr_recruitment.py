@@ -39,7 +39,7 @@ class Applicant(models.Model):
 class Job(models.Model):
 
     _name = 'hr.job'
-    _inherit = ['hr.job', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['hr.job', 'website.seo.metadata', 'website.published.multi.mixin']
 
     def _get_default_website_description(self):
         default_description = self.env["ir.model.data"].xmlid_to_object("website_hr_recruitment.default_website_description")

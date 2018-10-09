@@ -40,7 +40,7 @@ access_account_invoice_group_invoice,account.invoice group invoice,model_account
 access_res_currency_account_manager,res.currency account manager,base.model_res_currency,group_account_manager,1,1,1,1
 access_res_currency_rate_account_manager,res.currency.rate account manager,base.model_res_currency_rate,group_account_manager,1,1,1,1
 access_account_invoice_user,account.invoice user,model_account_invoice,base.group_user,1,0,0,0
-access_account_invoice_user,account.invoice.line user,model_account_invoice_line,base.group_user,1,0,0,0
+access_account_invoice_line_user,account.invoice.line user,model_account_invoice_line,base.group_user,1,0,0,0
 access_account_invoice_portal,account.invoice.portal,account.model_account_invoice,base.group_portal,1,0,0,0
 access_account_invoice_line_portal,account.invoice.line.portal,account.model_account_invoice_line,base.group_portal,1,0,0,0
 access_account_payment_term_partner_manager,account.payment.term partner manager,model_account_payment_term,base.group_user,1,0,0,0
@@ -67,9 +67,7 @@ access_account_invoice_line_accountant,account.invoice.line accountant,model_acc
 access_account_account_invoice,account.account invoice,model_account_account,account.group_account_invoice,1,0,0,0
 access_account_analytic_accountant,account.analytic.account accountant,analytic.model_account_analytic_account,account.group_account_user,1,1,1,1
 access_account_account_type_invoice,account.account.type invoice,model_account_account_type,account.group_account_invoice,1,0,0,0
-access_account_financial_report,account.financial.report,model_account_financial_report,account.group_account_user,1,1,1,1
-access_account_financial_report_invoice,account.financial.report invoice,model_account_financial_report,account.group_account_invoice,1,0,0,0
-access_account_account_tax,account.account.tag,model_account_account_tag,account.group_account_user,1,0,0,0
+access_account_account_tax,account.account.tag,model_account_account_tag,account.group_account_user,1,1,1,1
 access_account_account_tax_user,account.account.tag,model_account_account_tag,account.group_account_invoice,1,0,0,0
 access_account_reconcile_model,account.reconcile.model,model_account_reconcile_model,account.group_account_user,1,1,1,1
 access_account_reconcile_model_template,account.reconcile.model.template,model_account_reconcile_model_template,account.group_account_user,1,1,1,1
@@ -84,3 +82,7 @@ access_account_cashbox_line,account.bank.statement.cashbox.line,model_account_ca
 access_account_tax_group_internal_user,account.tax.group internal user,model_account_tax_group,base.group_user,1,0,0,0
 access_account_tax_group,account.tax.group,model_account_tax_group,account.group_account_invoice,1,0,0,0
 access_account_tax_group_manager,account.tax.group,model_account_tax_group,account.group_account_manager,1,1,1,1
+access_account_fiscal_year_user,account.fiscal.year.user,model_account_fiscal_year,account.group_account_user,1,0,0,0
+access_account_fiscal_year_manager,account.fiscal.year.manager,model_account_fiscal_year,account.group_account_manager,1,1,1,1
+access_account_incoterms_all,account.incoterms all,model_account_incoterms,,1,0,0,0
+access_account_incoterms_manager,account.incoterms manager,model_account_incoterms,account.group_account_manager,1,1,1,1

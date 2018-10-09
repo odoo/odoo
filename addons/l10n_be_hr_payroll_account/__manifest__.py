@@ -3,7 +3,7 @@
 
 {
     'name': 'Belgium - Payroll with Accounting',
-    'category': 'Localization',
+    'category': 'Human Resources',
     'depends': ['l10n_be_hr_payroll', 'hr_payroll_account', 'l10n_be'],
     'description': """
 Accounting Data for Belgian Payroll Rules.
@@ -11,7 +11,6 @@ Accounting Data for Belgian Payroll Rules.
     """,
 
     'auto_install': True,
-    'website': 'https://www.odoo.com/page/accounting',
     'data':[
         'data/l10n_be_hr_payroll_account_data.xml',
     ],
