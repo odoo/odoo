@@ -298,6 +298,12 @@ class ProcurementOrder(models.Model):
     requisition_id = fields.Many2one('purchase.requisition', string='Latest Requisition')
 
     @api.multi
+    def _check(self):
+        if self.rule_id.action == 'buy' and self.requisition_id:
+            return self.requisition_id.state in ('done', 'cancel')
+        return super(ProcurementOrder, self)._check()
+
+    @api.multi
     def make_po(self):
         Requisition = self.env['purchase.requisition']
         procurements = self.env['procurement.order']
