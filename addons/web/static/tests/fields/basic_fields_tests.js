@@ -2590,6 +2590,40 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field with warn_future option', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="date" options="{\'datepicker\': {\'warn_future\': true}}"/>' +
+                 '</form>',
+            res_id: 4,
+        });
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        // open datepicker and select another value
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year').eq(11).click();  // last year
+        $('.bootstrap-datetimepicker-widget .month').eq(11).click();  // December
+        $('.day:contains(31)').click(); // select the 31 December
+
+        var $warn = form.$('.o_datepicker_warning:visible');
+        assert.strictEqual($warn.length, 1, "should have a warning in the form view");
+
+        form.$('.o_field_widget[name=date] input').val('').trigger('change');  // remove the value
+
+        $warn = form.$('.o_datepicker_warning:visible');
+        assert.strictEqual($warn.length, 0, "the warning in the form view should be hidden");
+
+        form.destroy();
+    });
+
     QUnit.test('date field in editable list view', function (assert) {
         assert.expect(8);
 
