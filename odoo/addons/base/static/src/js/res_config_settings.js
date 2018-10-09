@@ -24,12 +24,13 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     start: function () {
-        this._super.apply(this, arguments);
+        var res = this._super.apply(this, arguments);
         if (config.device.isMobile) {
             core.bus.on("DOM_updated", this, function () {
                 this._moveToTab(this.currentIndex || this._currentAppIndex());
             });
         }
+        return res;
     },
 
     /**
@@ -266,14 +267,16 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     _render: function () {
+        var self = this;
         var res = this._super.apply(this, arguments);
-        this._initModules();
-        this._renderLeftPanel();
-        this._initSearch();
-        if (config.device.isMobile) {
-            this._enableSwipe();
-        }
-        return res;
+        return res.then(function () {
+            self._initModules();
+            self._renderLeftPanel();
+            self._initSearch();
+            if (config.device.isMobile) {
+                self._enableSwipe();
+            }
+        });
     },
 
     _renderLeftPanel: function () {
