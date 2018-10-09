@@ -12,9 +12,7 @@ class PortalAccount(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(PortalAccount, self)._prepare_portal_layout_values()
-        invoice_count = request.env['account.invoice'].search_count([
-            ('type', 'in', ['out_invoice', 'out_refund'])
-        ])
+        invoice_count = request.env['account.invoice'].search_count([])
         values['invoice_count'] = invoice_count
         return values
 
