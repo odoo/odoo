@@ -202,7 +202,7 @@ QUnit.test('can render an action without view_mode attribute', function (assert)
     assert.expect(2);
 
     var form = createView({
-        View: FormView, // replace by BoardView when forwarported to saas-11.3
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
