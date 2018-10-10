@@ -5,6 +5,9 @@
 }
 
 .oe_website_sale {
+    ul ul {
+        margin-left: 1.5rem;
+    }
     .o_payment_form .card {
         border-radius: 4px !important;
     }
@@ -25,9 +28,21 @@
         }
     }
 
-    h1[itemprop="name"],
-    .oe_product_cart form h5 {
+    h1[itemprop="name"], .oe_product_cart form h5 {
         word-wrap: break-word;
+    }
+
+    .td-qty {
+        width: 130px;
+        @include media-breakpoint-down(md) {
+            width: 60px
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        .td-img {
+            display: none;
+        }
     }
 }
 /* ---- Default Styles ---- */
