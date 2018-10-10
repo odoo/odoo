@@ -23,7 +23,8 @@ class PurchaseOrderLine(models.Model):
         # In the case of a kit, we need to check if all components are shipped. Since the BOM might
         # have changed, we don't compute the quantities but verify the move state.
         if bom:
-            bom_delivered = all([move.state == 'done' for move in self.move_ids])
+            moves = self.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
+            bom_delivered = all([move.state == 'done' for move in moves])
             if bom_delivered:
                 return self.product_qty
             else:
