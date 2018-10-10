@@ -42,12 +42,12 @@
                                     <dd class="mb8">
                                         <t t-esc="activity.create_date.format(datetimeFormat)"/>
                                         by
-                                        <img t-attf-src="/web/image#{activity.create_user_id[0] >= 0 ? ('/res.users/' + activity.create_user_id[0] + '/image_small') : ''}"
+                                        <img t-attf-src="/web/image#{activity.create_uid[0] >= 0 ? ('/res.users/' + activity.create_uid[0] + '/image_small') : ''}"
                                             height="18" width="18"
                                             class="rounded-circle mr4"
-                                            t-att-title="activity.create_user_id[1]"
-                                            t-att-alt="activity.create_user_id[1]"/>
-                                        <b><t t-esc="activity.create_user_id[1]"/></b>
+                                            t-att-title="activity.create_uid[1]"
+                                            t-att-alt="activity.create_uid[1]"/>
+                                        <b><t t-esc="activity.create_uid[1]"/></b>
                                     </dd>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">

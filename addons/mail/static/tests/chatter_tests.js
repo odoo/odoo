@@ -72,8 +72,7 @@ QUnit.module('Chatter', {
             'mail.activity': {
                 fields: {
                     activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
-                    create_uid: { string: "Assigned to", type: "many2one", relation: 'partner' },
-                    create_user_id: { string: "Creator", type: "many2one", relation: 'partner' },
+                    create_uid: { string: "Created By", type: "many2one", relation: 'partner' },
                     can_write: { string: "Can write", type: "boolean" },
                     display_name: { string: "Display name", type: "char" },
                     date_deadline: { string: "Due Date", type: "date" },
@@ -516,7 +515,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
         can_write: true,
         state: "today",
         user_id: 2,
-        create_user_id: 2,
+        create_uid: 2,
         activity_type_id: 1,
     }];
     var rpcCount = 0;
@@ -591,7 +590,7 @@ QUnit.test('kanban activity widget popover test', function (assert) {
         can_write: true,
         state: "today",
         user_id: 2,
-        create_user_id: 2,
+        create_uid: 2,
         activity_type_id: 1,
     }];
     var rpcCount = 0;
@@ -1483,7 +1482,7 @@ QUnit.test('form activity widget: read RPCs', function (assert) {
         can_write: true,
         state: "today",
         user_id: 2,
-        create_user_id: 2,
+        create_uid: 2,
         activity_type_id: 2,
     }];
 
@@ -1569,7 +1568,7 @@ QUnit.test('form activity widget with another x2many field in view', function (a
         can_write: true,
         state: "today",
         user_id: 2,
-        create_user_id: 2,
+        create_uid: 2,
         activity_type_id: 2,
     }];
 
@@ -1604,7 +1603,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         can_write: true,
         state: "today",
         user_id: 2,
-        create_user_id: 2,
+        create_uid: 2,
         activity_type_id: 2,
     }];
 
@@ -1661,7 +1660,7 @@ QUnit.test('form activity widget: edit next activity', function (assert) {
         can_write: true,
         state: "today",
         user_id: 2,
-        create_user_id: 2,
+        create_uid: 2,
         activity_type_id: 2,
     }];
 
@@ -1844,7 +1843,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         can_write: true,
         state: "today",
         user_id: 2,
-        create_user_id: 2,
+        create_uid: 2,
         activity_type_id: 1,
     }, {
         id: 2,
@@ -1853,7 +1852,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         can_write: true,
         state: "today",
         user_id: 2,
-        create_user_id: 2,
+        create_uid: 2,
         activity_type_id: 1,
     }];
 
