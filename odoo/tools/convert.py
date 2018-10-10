@@ -491,64 +491,6 @@ form: module.record_id""" % (xml_id,)
         }
         self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
 
-    def _assert_equals(self, f1, f2, prec=4):
-        return not round(f1 - f2, prec)
-
-    def _tag_assert(self, rec):
-        if self.noupdate and self.mode != 'init':
-            return
-
-        rec_model = rec.get("model")
-        rec_id = rec.get("id")
-        self._test_xml_id(rec_id)
-        rec_src = rec.get("search")
-        rec_src_count = rec.get("count")
-
-        rec_string = rec.get("string") or 'unknown'
-
-        records = None
-        env = self.get_env(rec)
-        if rec_id:
-            records = env[rec_model].browse(self.id_get(rec_id))
-        elif rec_src:
-            q = safe_eval(rec_src, {'ref': self.id_get})
-            records = env[rec_model].search(q)
-            if rec_src_count:
-                count = int(rec_src_count)
-                if len(records) != count:
-                    self.assertion_report.record_failure()
-                    msg = 'assertion "%s" failed!\n'    \
-                          ' Incorrect search count:\n'  \
-                          ' expected count: %d\n'       \
-                          ' obtained count: %d\n'       \
-                          % (rec_string, count, len(records))
-                    _logger.error(msg)
-                    return
-
-        assert records is not None,\
-            'You must give either an id or a search criteria'
-        ref = self.id_get
-        for record in records:
-            globals_dict = RecordDictWrapper(record)
-            globals_dict['floatEqual'] = self._assert_equals
-            globals_dict['ref'] = ref
-            globals_dict['_ref'] = ref
-            for test in rec.findall('./test'):
-                f_expr = test.get("expr",'')
-                expected_value = _eval_xml(self, test, env) or True
-                expression_value = safe_eval(f_expr, globals_dict)
-                if expression_value != expected_value: # assertion failed
-                    self.assertion_report.record_failure()
-                    msg = 'assertion "%s" failed!\n'    \
-                          ' xmltag: %s\n'               \
-                          ' expected value: %r\n'       \
-                          ' obtained value: %r\n'       \
-                          % (rec_string, etree.tostring(test, encoding='unicode'), expected_value, expression_value)
-                    _logger.error(msg)
-                    return
-        else: # all tests were successful for this assertion tag (no break)
-            self.assertion_report.record_success()
-
     def _tag_record(self, rec):
         rec_model = rec.get("model")
         env = self.get_env(rec)
@@ -755,7 +697,6 @@ form: module.record_id""" % (xml_id,)
             'template': self._tag_template,
             'report': self._tag_report,
             'act_window': self._tag_act_window,
-            'assert': self._tag_assert,
 
             **dict.fromkeys(self.DATA_ROOTS, self._tag_root)
         }
