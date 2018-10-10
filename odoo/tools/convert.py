@@ -210,21 +210,15 @@ def _eval_xml(self, node, env):
 def str2bool(value):
     return value.lower() not in ('0', 'false', 'off')
 
+def nodeattr2bool(node, attr, default=False):
+    if not node.get(attr):
+        return default
+    val = node.get(attr).strip()
+    if not val:
+        return default
+    return str2bool(val)
 
 class xml_import(object):
-
-    @staticmethod
-    def nodeattr2bool(node, attr, default=False):
-        if not node.get(attr):
-            return default
-        val = node.get(attr).strip()
-        if not val:
-            return default
-        return str2bool(val)
-
-    def isnoupdate(self, data_node=None):
-        return self.noupdate or (len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False))
-
     def get_env(self, node, eval_context=None):
         uid = node.get('uid')
         context = node.get('context')
@@ -279,7 +273,7 @@ form: module.record_id""" % (xml_id,)
         if records:
             records.unlink()
 
-    def _tag_report(self, rec, data_node):
+    def _tag_report(self, rec):
         res = {}
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f)
@@ -321,7 +315,7 @@ form: module.record_id""" % (xml_id,)
             res['paperformat_id'] = pf_id
 
         xid = self.make_xml_id(xml_id)
-        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         report = self.env['ir.actions.report']._load_records([data], self.mode == 'update')
         self.idref[xml_id] = report.id
 
@@ -332,13 +326,13 @@ form: module.record_id""" % (xml_id,)
             report.unlink_action()
         return report.id
 
-    def _tag_function(self, rec, data_node):
-        if self.isnoupdate(data_node) and self.mode != 'init':
+    def _tag_function(self, rec):
+        if self.noupdate and self.mode != 'init':
             return
         env = self.get_env(rec)
         _eval_xml(self, rec, env)
 
-    def _tag_act_window(self, rec, data_node):
+    def _tag_act_window(self, rec):
         name = rec.get('name')
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
@@ -436,10 +430,10 @@ form: module.record_id""" % (xml_id,)
                     res['binding_type'] = 'action_form_only'
 
         xid = self.make_xml_id(xml_id)
-        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
-    def _tag_menuitem(self, rec, data_node):
+    def _tag_menuitem(self, rec):
         rec_id = rec.attrib["id"]
         self._test_xml_id(rec_id)
 
@@ -447,7 +441,7 @@ form: module.record_id""" % (xml_id,)
         # explicitly make a top-level menu
         values = {
             'parent_id': False,
-            'active': self.nodeattr2bool(rec, 'active', default=True),
+            'active': nodeattr2bool(rec, 'active', default=True),
         }
 
         if rec.get('sequence'):
@@ -493,15 +487,15 @@ form: module.record_id""" % (xml_id,)
         data = {
             'xml_id': self.make_xml_id(rec_id),
             'values': values,
-            'noupdate': self.isnoupdate(data_node),
+            'noupdate': self.noupdate,
         }
         self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
 
     def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)
 
-    def _tag_assert(self, rec, data_node):
-        if self.isnoupdate(data_node) and self.mode != 'init':
+    def _tag_assert(self, rec):
+        if self.noupdate and self.mode != 'init':
             return
 
         rec_model = rec.get("model")
@@ -555,7 +549,7 @@ form: module.record_id""" % (xml_id,)
         else: # all tests were successful for this assertion tag (no break)
             self.assertion_report.record_success()
 
-    def _tag_record(self, rec, data_node):
+    def _tag_record(self, rec):
         rec_model = rec.get("model")
         env = self.get_env(rec)
         rec_id = rec.get("id", '')
@@ -574,7 +568,7 @@ form: module.record_id""" % (xml_id,)
         # in update mode, the record won't be updated if the data node explicitly
         # opt-out using @noupdate="1". A second check will be performed in
         # model._load_records() using the record's ir.model.data `noupdate` field.
-        if self.isnoupdate(data_node) and self.mode != 'init':
+        if self.noupdate and self.mode != 'init':
             # check if the xml record has no id, skip
             if not rec_id:
                 return None
@@ -585,7 +579,7 @@ form: module.record_id""" % (xml_id,)
                 # its database id (can be useful)
                 self.idref[rec_id] = record.id
                 return None
-            elif not self.nodeattr2bool(rec, 'forcecreate', True):
+            elif not nodeattr2bool(rec, 'forcecreate', True):
                 # if it doesn't exist and we shouldn't create it, skip it
                 return None
             # else create it normally
@@ -634,7 +628,7 @@ form: module.record_id""" % (xml_id,)
                         f_val = str2bool(f_val)
             res[f_name] = f_val
 
-        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         record = model._load_records([data], self.mode == 'update')
         if rec_id:
             self.idref[rec_id] = record.id
@@ -642,7 +636,7 @@ form: module.record_id""" % (xml_id,)
             env.cr.commit()
         return rec_model, record.id
 
-    def _tag_template(self, el, data_node):
+    def _tag_template(self, el):
         # This helper transforms a <template> element into a <record> and forwards it
         tpl_id = el.get('id', el.get('t-name'))
         full_tpl_id = tpl_id
@@ -708,7 +702,7 @@ form: module.record_id""" % (xml_id,)
         # the ``arch`` field
         record.append(Field(el, name="arch", type="xml"))
 
-        return self._tag_record(record, data_node)
+        return self._tag_record(record)
 
     def id_get(self, id_str, raise_if_not_found=True):
         if id_str in self.idref:
@@ -721,21 +715,27 @@ form: module.record_id""" % (xml_id,)
             id_str = '%s.%s' % (self.module, id_str)
         return self.env['ir.model.data'].xmlid_to_res_model_res_id(id_str, raise_if_not_found=raise_if_not_found)
 
-    def _tag_root(self, el, _data_node):
+    def _tag_root(self, el):
         for rec in el:
             f = self._tags.get(rec.tag)
             if f is None:
                 continue
 
             self.envs.append(self.get_env(el))
+            self._noupdate.append(nodeattr2bool(el, 'noupdate', self.noupdate))
             try:
-                f(rec, el)
+                f(rec)
             finally:
+                self._noupdate.pop()
                 self.envs.pop()
 
     @property
     def env(self):
         return self.envs[-1]
+
+    @property
+    def noupdate(self):
+        return self._noupdate[-1]
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
         self.mode = mode
@@ -745,7 +745,7 @@ form: module.record_id""" % (xml_id,)
         if report is None:
             report = assertion_report.assertion_report()
         self.assertion_report = report
-        self.noupdate = noupdate
+        self._noupdate = [noupdate]
         self.xml_filename = xml_filename
         self._tags = {
             'record': self._tag_record,
@@ -763,7 +763,7 @@ form: module.record_id""" % (xml_id,)
     def parse(self, de):
         assert de.tag in self.DATA_ROOTS, "Root xml tag must be <openerp>, <odoo> or <data>."
         try:
-            self._tag_root(de, de)
+            self._tag_root(de)
         except Exception as e:
             exc_info = sys.exc_info()
             pycompat.reraise(
