@@ -602,6 +602,15 @@ form: module.record_id""" % (xml_id,)
                 return None
             # else create it normally
 
+        if xid and xid.partition('.')[0] != self.module:
+            # updating a record created by another module
+            record = self.env['ir.model.data']._load_xmlid(xid)
+            if not record:
+                if self.isnoupdate(data_node) and not self.nodeattr2bool(rec, 'forcecreate', True):
+                    # if it doesn't exist and we shouldn't create it, skip it
+                    return None
+                raise Exception("Cannot update missing record %r" % xid)
+
         res = {}
         for field in rec.findall('./field'):
             #TODO: most of this code is duplicated above (in _eval_xml)...
