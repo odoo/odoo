@@ -1727,8 +1727,12 @@ Possible children elements of the search view are:
 
         The groupby defined above allows to group data by category.
 
-        When the field is of type ``date`` or ``datetime``, the records are grouped by month by default.
-        This can be modified by using one of the following options: day, week, quarter, year.
+        When the field is of type ``date`` or ``datetime``, the filter generates a submenu of the Group By
+        menu in which the following interval options are available: day, week, month, quarter, year.
+
+        In case the filter is in the default set of filters activated at the view initialization,
+        the records are grouped by month by default. This can be changed by using the syntax
+        'date_field:interval' as in the following example.
 
         Example:
 
