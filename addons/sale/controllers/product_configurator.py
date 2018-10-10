@@ -69,6 +69,7 @@ class ProductConfiguratorController(http.Controller):
             'product': product,
             # reference_product deprecated, use parent_combination instead
             'reference_product': product,
+            'parent_name': product.name,
             'parent_combination': parent_combination,
             'pricelist': pricelist,
             # to_currency deprecated, get from pricelist or product
@@ -106,6 +107,7 @@ class ProductConfiguratorController(http.Controller):
             'add_qty': add_qty,
             # reference_product deprecated, use combination instead
             'reference_product': product,
+            'parent_name': product.name,
             'variant_values': variant_values,
             'pricelist': pricelist,
             # compute_currency deprecated, get from pricelist or product
@@ -126,7 +128,7 @@ class ProductConfiguratorController(http.Controller):
                 # Add "no_variant" attribute values' exclusions
                 # They are kept in the context since they are not linked to this product variant
                 parent_combination |= reference_product.env.context.get('no_variant_attribute_values')
-        return product._get_attribute_exclusions(parent_combination)
+        return product._get_attribute_exclusions(parent_combination, reference_product.name if reference_product else None)
 
     def _get_product_context(self, pricelist=None, **kw):
         """deprecated, can be removed in master"""
