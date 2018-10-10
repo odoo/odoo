@@ -156,16 +156,7 @@ class CustomerPortal(CustomerPortal):
 
         # search
         if search and search_in:
-            search_domain = []
-            if search_in in ('content', 'all'):
-                search_domain = OR([search_domain, ['|', ('name', 'ilike', search), ('description', 'ilike', search)]])
-            if search_in in ('customer', 'all'):
-                search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
-            if search_in in ('message', 'all'):
-                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
-            if search_in in ('stage', 'all'):
-                search_domain = OR([search_domain, [('stage_id', 'ilike', search)]])
-            domain += search_domain
+            domain += request.env.ref('project.action_project_tasks_search_portal_domain').with_context(search=search, search_in=search_in).run()
 
         # task count
         task_count = request.env['project.task'].search_count(domain)

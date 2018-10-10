@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
+from odoo.osv.expression import OR
 
 
 class ProjectTaskType(models.Model):
@@ -958,6 +959,9 @@ class Task(models.Model):
 
     def rating_get_parent(self):
         return 'project_id'
+
+    def _OR(self, domain):
+        return OR(domain)
 
 
 class ProjectTags(models.Model):

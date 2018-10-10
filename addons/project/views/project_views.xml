@@ -843,6 +843,25 @@
             </field>
         </record>
 
+        <record id="action_project_tasks_search_portal_domain" model="ir.actions.server">
+            <field name="name">Project Tasks Search Domain</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="project.model_project_task" />
+            <field name="state">code</field>
+            <field name="code">
+search_domain = []
+if env.context.get('search_in') in ('content', 'all'):
+    search_domain = model._OR([search_domain, ['|', ('name', 'ilike', env.context.get('search')), ('description', 'ilike', env.context.get('search'))]])
+if env.context.get('search_in') in ('customer', 'all'):
+    search_domain = model._OR([search_domain, [('partner_id', 'ilike', env.context.get('search'))]])
+if env.context.get('search_in') in ('message', 'all'):
+    search_domain = model._OR([search_domain, [('message_ids.body', 'ilike', env.context.get('search'))]])
+if env.context.get('search_in') in ('stage', 'all'):
+    search_domain = model._OR([search_domain, [('stage_id', 'ilike', env.context.get('search'))]])
+action = search_domain
+            </field>
+        </record>
+
         <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>
 
         <menuitem action="open_task_type_form" id="menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="base.group_no_one"/>
