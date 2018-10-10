@@ -377,22 +377,12 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
     /**
      * Get the domain to fetch all the messages in the current channel
      *
-     * Note that with moderation, even though some messages are not really
-     * linked to a channel ('channel_ids'), we should nonetheless display them.
-     * These messages are fetched from their associated document
-     * ('mail.channel' with provided channel ID), and messages that are pending
-     * moderation.
-     *
      * @override
      * @private
      * @returns {Array}
      */
     _getThreadDomain: function () {
-        return ['|', '&', '&',
-                ['model', '=', 'mail.channel'],
-                ['res_id', 'in', [this._id]],
-                ['need_moderation', '=', true],
-                ['channel_ids', 'in', [this._id]]];
+        return [['channel_ids', 'in', [this._id]]];
     },
     /**
      * @override {mail.model.ThreadTypingMixin}
