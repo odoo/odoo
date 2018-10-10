@@ -26,31 +26,10 @@ Index: addons/openacademy/views/session_board.xml
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
 +++ addons/openacademy/views/session_board.xml	2014-08-26 17:26:21.531783052 +0200
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,53 @@
 +<?xml version="1.0"?>
 +<odoo>
 +
-+        <record model="ir.actions.act_window" id="act_session_graph">
-+            <field name="name">Attendees by course</field>
-+            <field name="res_model">openacademy.session</field>
-+            <field name="view_type">form</field>
-+            <field name="view_mode">graph</field>
-+            <field name="view_id"
-+                   ref="openacademy.openacademy_session_graph_view"/>
-+        </record>
-+        <record model="ir.actions.act_window" id="act_session_calendar">
-+            <field name="name">Sessions</field>
-+            <field name="res_model">openacademy.session</field>
-+            <field name="view_type">form</field>
-+            <field name="view_mode">calendar</field>
-+            <field name="view_id" ref="openacademy.session_calendar_view"/>
-+        </record>
-+        <record model="ir.actions.act_window" id="act_course_list">
-+            <field name="name">Courses</field>
-+            <field name="res_model">openacademy.course</field>
-+            <field name="view_type">form</field>
-+            <field name="view_mode">tree,form</field>
-+        </record>
 +        <record model="ir.ui.view" id="board_session_form">
 +            <field name="name">Session Dashboard Form</field>
 +            <field name="model">board.board</field>
@@ -60,18 +39,26 @@ Index: addons/openacademy/views/session_board.xml
 +                    <board style="2-1">
 +                        <column>
 +                            <action
++                                context="{'group_by': [], 'params': {'action': %(openacademy.session_list_action)d}}"
 +                                string="Attendees by course"
-+                                name="%(act_session_graph)d"
++                                name="%(openacademy.session_list_action)d"
++                                view_mode="graph"
 +                                height="150"
 +                                width="510"/>
 +                            <action
 +                                string="Sessions"
-+                                name="%(act_session_calendar)d"/>
++                                context="{'group_by': [], 'params': {'action': %(openacademy.session_list_action)d}}"
++                                view_mode="calendar"
++                                domain=""
++                                name="%(openacademy.session_list_action)d"/>
 +                        </column>
 +                        <column>
 +                            <action
 +                                string="Courses"
-+                                name="%(act_course_list)d"/>
++                                context="{'group_by': [], 'params': {'action': %(openacademy.courses_list_action)d}}"
++                                view_mode="list"
++                                domain=""
++                                name="%(openacademy.courses_list_action)d"/>
 +                        </column>
 +                    </board>
 +                </form>
