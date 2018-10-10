@@ -252,7 +252,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
     def get_image_info(self, image_id=None, xml_id=None):
         if xml_id:
-            record = request.env.ref(xml_id)
+            record = request.env['ir.attachment'].get_attachment_by_key(xml_id)
         elif image_id:
             record = request.env['ir.attachment'].browse(image_id)
         result = {
