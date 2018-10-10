@@ -330,14 +330,20 @@ return AbstractRenderer.extend({
      */
     _renderLineChart: function () {
         var self = this;
+        var graphData = this.state.data;
+        var i;
 
-        // Remove Undefined of first GroupBy
-        var graphData = _.filter(this.state.data, function (elem) {
-            return elem.labels[0] !== undefined && elem.labels[0] !== _t("Undefined");
+        // Remove datapoints for which the label of the first GroupBy is undefined
+        // (if at least one datapoint has not undefined as label for the first groupby)
+        var partition = _.partition(graphData, function(elem){
+                return elem.labels[0] !== undefined;
         });
+        if (partition[0].length > 0) {
+            graphData = partition[0];
+        }
 
         // undefined label value becomes a string 'Undefined' translated
-        this.state.data.forEach(self._sanitizeLabel);
+        graphData.forEach(self._sanitizeLabel);
 
         var data = [];
         var ticksLabels = [];
@@ -349,10 +355,12 @@ return AbstractRenderer.extend({
                 return {x: index, y: datapt.value};
             });
             data.push({
-                    area: true,
                     values: values,
                     key: measure,
+                    area: true,
                 });
+            ticksLabels = graphData.map(function (dataPt) {return dataPt.labels;});
+
             if (this.state.comparisonData && this.state.comparisonData.length > 0) {
                 values = this.state.comparisonData.map(function (datapt, index) {
                     return {x: index, y: datapt.value};
@@ -362,23 +370,24 @@ return AbstractRenderer.extend({
                     key: measure + ' (compare)',
                     color: '#ff7f0e',
                 });
-            }
-
-            for (i = 0; i < graphData.length; i++) {
-                ticksLabels.push(graphData[i].labels);
-            }
-            if (this.state.comparisonData && this.state.comparisonData.length > this.state.data.length) {
-                var diff = this.state.comparisonData.length - this.state.data.length;
-                var length = self.state.data.length
-                var diffTime = 0;
-                if (length < self.state.data.length) {
-                    var date1 = moment(self.state.data[length - 1].labels[0]);
-                    var date2 = moment(self.state.data[length - 2].labels[0]);
-                    diffTime = date1 - date2;
-                    for (i = 0; i < diff; i++) {
-                        var value = moment(date1).add(diffTime + i * diffTime).format('DD MMM YYYY');
-                        ticksLabels.push([value]);
-                    }
+                if (this.state.comparisonData.length > graphData.length) {
+                    var length = graphData.length;
+                    var diff = this.state.comparisonData.length - length;
+                    var diffTime = 0;
+                    // suppose there is two data points in graphData... the two lines below might be wrong.
+                    // var date1 = moment(self.graphData[length - 1].labels[0]);
+                    // var date2 = moment(self.graphData[length - 2].labels[0]);
+                    // But graphData has always a data point so we know that comparisonData has at least two.
+                    // I propose to use
+                    var lastDateGraphData = moment(graphData[length - 1].labels[0]);
+                    var firstDateComparisonData = moment(self.state.comparisonData[0].labels[0]);
+                    var secondDateComparisonData = moment(self.state.comparisonData[1].labels[0]);
+                    diffTime = secondDateComparisonData - firstDateComparisonData;
+                    ticksLabels = ticksLabels.concat(
+                        _.range(0, diff).map(function (i) {
+                            return moment(lastDateGraphData).add((i + 1) * diffTime).format('DD MMM YYYY');
+                        })
+                    );
                 }
             }
         } else if (this.state.groupedBy.length > 1) {
@@ -386,7 +395,8 @@ return AbstractRenderer.extend({
             var tick = 0;
             var serie, tickLabel;
             var identity = function (p) {return p;};
-            for (var i = 0; i < graphData.length; i++) {
+
+            for (i = 0; i < graphData.length; i++) {
                 if (graphData[i].labels[0] !== tickLabel) {
                     tickLabel = graphData[i].labels[0];
                     ticksLabels.push(tickLabel);
