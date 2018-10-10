@@ -185,6 +185,8 @@ class StockMoveLine(models.Model):
 
         ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
+            if 'qty_done' in vals:
+                ml.move_id.product_uom_qty = ml.move_id.quantity_done
             if ml.product_id.type == 'product':
                 Quant = self.env['stock.quant']
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')

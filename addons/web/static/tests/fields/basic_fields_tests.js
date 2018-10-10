@@ -2693,6 +2693,33 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('datepicker option: daysOfWeekDisabled', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.datetime.default = "2017-08-02 12:00:05";
+        this.data.partner.fields.datetime.required = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="datetime" ' +
+                            'options=\'{"datepicker": {"daysOfWeekDisabled": [0, 6]}}\'/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_create').click();
+        form.$('.o_datepicker_input.o_input').click();
+        assert.ok($('.day:last-child(),.day:nth-child(2)').hasClass('disabled'),
+            'first and last days must be disabled');
+        assert.notOk($('.day:not(:last-child()):not(:nth-child(2))').hasClass('disabled'),
+            'other days must stay clickable');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMonetary');
 
     QUnit.test('monetary field in form view', function (assert) {
