@@ -177,7 +177,10 @@
       <t t-set="attribute_exclusions" t-value="get_attribute_exclusions(product, reference_product)"/>
       <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)">
         <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
-          <li t-att-data-attribute_id="variant_id.attribute_id.id" t-att-data-attribute_name="variant_id.attribute_id.name" class="variant_attribute">
+          <!-- Attributes selection is hidden if there is only one value available and it's not a custom value -->
+          <li t-att-data-attribute_id="variant_id.attribute_id.id"
+                t-att-data-attribute_name="variant_id.attribute_id.name"
+                t-attf-class="variant_attribute #{'d-none' if len(variant_id.product_template_value_ids) == 1 and not variant_id.product_template_value_ids[0].is_custom else ''}">
 
             <strong t-field="variant_id.attribute_id.name" class="attribute_name" />
 
