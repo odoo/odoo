@@ -365,7 +365,11 @@ var ProductConfiguratorMixin = {
             .find('ul[data-attribute_exclusions]')
             .data('attribute_exclusions');
 
-        $parent.find('option, input, label').removeClass('css_not_available');
+        $parent
+            .find('option, input, label')
+            .removeClass('css_not_available')
+            .attr('title', '')
+            .data('excluded-by', '');
 
         var disable = false;
 
@@ -393,20 +397,35 @@ var ProductConfiguratorMixin = {
 
                         // disable the excluded input (even when not already selected)
                         // to give a visual feedback before click
-                        self._disableInput($parent, excluded_ptav);
+                        self._disableInput(
+                            $parent,
+                            excluded_ptav,
+                            current_ptav,
+                            combinationData.mapped_attribute_names
+                        );
                     });
                 }
             });
         }
 
         // parent exclusions (tell which attributes are excluded from parent)
-        _.each(combinationData.parent_exclusions, function (ptav) {
-            if (isPtavInCombination(ptav, combination)) {
-                disable = true;
-            }
-            // disable the excluded input (even when not already selected)
-            // to give a visual feedback before click
-            self._disableInput($parent, ptav);
+        _.each(combinationData.parent_exclusions, function (exclusions, excluded_by){
+            // check that the selected combination is in the parent exclusions
+            _.each(exclusions, function (ptav) {
+                if (isPtavInCombination(ptav, combination)) {
+                    disable = true;
+                }
+
+                // disable the excluded input (even when not already selected)
+                // to give a visual feedback before click
+                self._disableInput(
+                    $parent,
+                    ptav,
+                    excluded_by,
+                    combinationData.mapped_attribute_names,
+                    combinationData.parent_product_name
+                );
+            });
         });
 
         // archived variants
@@ -428,7 +447,7 @@ var ProductConfiguratorMixin = {
         $parent.find("#add_to_cart").toggleClass('disabled', disable);
         $parent
             .parents('.modal')
-            .find('.o_sale_product_configurator_add')
+            .find('.o_sale_product_configurator_add, .o_sale_product_configurator_edit')
             .toggleClass('disabled', disable);
     },
 
@@ -445,15 +464,42 @@ var ProductConfiguratorMixin = {
      * Will disable the input/option that refers to the passed attributeValueId.
      * This is used for showing the user that some combinations are not available.
      *
+     * It will also display a message explaining why the input is not selectable.
+     * Based on the "excludedBy" and the "productName" params.
+     * e.g: Not available with Color: Black
+     *
      * @private
      * @param {$.Element} $parent
      * @param {integer} attributeValueId
+     * @param {integer} excludedBy The attribute value that excludes this input
+     * @param {Object} attributeNames A dict containing all the names of the attribute values
+     *   to show a human readable message explaining why the input is disabled.
+     * @param {string} [productName] The parent product. If provided, it will be appended before
+     *   the name of the attribute value that excludes this input
+     *   e.g: Not available with Customizable Desk (Color: Black)
      */
-    _disableInput: function ($parent, attributeValueId) {
+    _disableInput: function ($parent, attributeValueId, excludedBy, attributeNames, productName) {
         var $input = $parent
             .find('option[value=' + attributeValueId + '], input[value=' + attributeValueId + ']');
         $input.addClass('css_not_available');
         $input.closest('label').addClass('css_not_available');
+
+        if (excludedBy && attributeNames) {
+            var $target = $input.is('option') ? $input : $input.closest('label').add($input);
+            var excludedByData = [];
+            if ($target.data('excluded-by')) {
+                excludedByData = JSON.parse($target.data('excluded-by'));
+            }
+
+            var excludedByName = attributeNames[excludedBy];
+            if (productName) {
+                excludedByName = productName + ' (' + excludedByName + ')';
+            }
+            excludedByData.push(excludedByName);
+
+            $target.attr('title', _.str.sprintf(_t('Not available with %s'), excludedByData.join(', ')));
+            $target.data('excluded-by', JSON.stringify(excludedByData));
+        }
     },
 
     /**

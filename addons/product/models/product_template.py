@@ -693,13 +693,15 @@ class ProductTemplate(models.Model):
         return self._get_possible_variants(parent_combination)
 
     @api.multi
-    def _get_attribute_exclusions(self, parent_combination=None):
+    def _get_attribute_exclusions(self, parent_combination=None, parent_name=None):
         """Return the list of attribute exclusions of a product.
 
         :param parent_combination: the combination from which
             `self` is an optional or accessory product. Indeed exclusions
             rules on one product can concern another product.
         :type parent_combination: recordset `product.template.attribute.value`
+        :param parent_name: the name of the parent product combination.
+        :type parent_name: str
 
         :return: dict of exclusions
             - exclusions: from this product itself
@@ -711,23 +713,47 @@ class ProductTemplate(models.Model):
             - has_dynamic_attributes: whether there is a dynamic attribute
             - no_variant_product_template_attribute_value_ids: values that are
                 no_variant
+           - parent_product_name: the name of the parent product if any, used in the interface
+               to explain why some combinations are not available.
+               (e.g: Not available with Customizable Desk (Legs: Steel))
+           - mapped_attribute_names: the name of every attribute values based on their id,
+               used to explain in the interface why that combination is not available
+               (e.g: Not available with Color: Black)
         """
         self.ensure_one()
         return {
-            'exclusions': self._get_own_attribute_exclusions(),
+            'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
             'archived_combinations': self._get_archived_combinations(),
             'has_dynamic_attributes': self.has_dynamic_attributes(),
             'existing_combinations': self._get_existing_combinations(),
             'no_variant_product_template_attribute_value_ids': self._get_no_variant_product_template_attribute_values(),
+            'parent_product_name': parent_name,
+            'mapped_attribute_names': self._get_mapped_attribute_names(parent_combination),
         }
+
+    @api.model
+    def _complete_inverse_exclusions(self, exclusions):
+        """Will complete the dictionnary of exclusions with their respective inverse
+        e.g: Black excludes XL and L
+        -> XL excludes Black
+        -> L excludes Black"""
+        result = dict(exclusions)
+        for key, value in exclusions.items():
+            for exclusion in value:
+                if exclusion in result and key not in result[exclusion]:
+                    result[exclusion].append(key)
+                else:
+                    result[exclusion] = [key]
+
+        return result
 
     @api.multi
     def _get_own_attribute_exclusions(self):
         """Get exclusions coming from the current template.
 
-        Dictionnary, each ptav is a key, and for each of them the value is
-        an array with the other ptav that they exclude (empty if no exclusion).
+        Dictionnary, each product template attribute value is a key, and for each of them
+        the value is an array with the other ptav that they exclude (empty if no exclusion).
         """
         self.ensure_one()
         product_template_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
@@ -745,44 +771,40 @@ class ProductTemplate(models.Model):
     def _get_parent_attribute_exclusions(self, parent_combination):
         """Get exclusions coming from the parent combination.
 
-        Array, each element is a ptav that is excluded because of the parent.
+        Dictionnary, each parent's ptav is a key, and for each of them the value is
+        an array with the other ptav that are excluded because of the parent.
         """
         self.ensure_one()
         if not parent_combination:
-            return []
+            return {}
 
-        # Search for exclusions without attribute value. This means that the template is not
-        # compatible with the parent combination. If such an exclusion is found, it means that all
-        # attribute values are excluded.
-        if parent_combination:
-            exclusions = self.env['product.template.attribute.exclusion'].search([
-                ('product_tmpl_id', '=', self.id),
-                ('value_ids', '=', False),
-                ('product_template_attribute_value_id', 'in', parent_combination.ids),
-            ], limit=1)
-            if exclusions:
-                return self.mapped('attribute_line_ids.product_template_value_ids').ids
-
-        return [
-            value_id
-            for filter_line in parent_combination.mapped('exclude_for').filtered(
+        result = {}
+        for product_attribute_value in parent_combination:
+            for filter_line in product_attribute_value.exclude_for.filtered(
                 lambda filter_line: filter_line.product_tmpl_id == self
-            ) for value_id in filter_line.value_ids.ids
-        ]
+            ):
+                # Some exclusions don't have attribute value. This means that the template is not
+                # compatible with the parent combination. If such an exclusion is found, it means that all
+                # attribute values are excluded.
+                if filter_line.value_ids:
+                    result[product_attribute_value.id] = filter_line.value_ids.ids
+                else:
+                    result[product_attribute_value.id] = filter_line.product_tmpl_id.mapped('attribute_line_ids.product_template_value_ids').ids
+
+        return result
 
     @api.multi
     def _get_archived_combinations(self):
-        self.ensure_one()
         """Get archived combinations.
 
         Array, each element is an array with ids of an archived combination.
         """
+        self.ensure_one()
         return [archived_variant.product_template_attribute_value_ids.ids
             for archived_variant in self.valid_archived_variant_ids]
 
     @api.multi
     def _get_existing_combinations(self):
-        self.ensure_one()
         """Get existing combinations.
 
         Needed because when not using dynamic attributes, the combination is
@@ -790,6 +812,7 @@ class ProductTemplate(models.Model):
 
         Array, each element is an array with ids of an existing combination.
         """
+        self.ensure_one()
         return [variant.product_template_attribute_value_ids.ids
             for variant in self.valid_existing_variant_ids]
 
@@ -800,6 +823,25 @@ class ProductTemplate(models.Model):
         return product_template_attribute_values.filtered(
             lambda v: v.attribute_id.create_variant == 'no_variant'
         ).ids
+
+    @api.multi
+    def _get_mapped_attribute_names(self, parent_combination=None):
+        """ The name of every attribute values based on their id,
+        used to explain in the interface why that combination is not available
+        (e.g: Not available with Color: Black).
+
+        It contains both attribute value names from this product and from
+        the parent combination if provided.
+        """
+        self.ensure_one()
+        all_product_attribute_values = self._get_valid_product_template_attribute_lines().mapped('product_template_value_ids')
+        if parent_combination:
+            all_product_attribute_values |= parent_combination
+
+        return {
+            attribute_value.id: attribute_value.display_name
+            for attribute_value in all_product_attribute_values
+        }
 
     @api.multi
     def _is_combination_possible(self, combination, parent_combination=None):
@@ -855,9 +897,12 @@ class ProductTemplate(models.Model):
 
         parent_exclusions = self._get_parent_attribute_exclusions(parent_combination)
         if parent_exclusions:
-            for exclusion in parent_exclusions:
-                if exclusion in combination.ids:
-                    return False
+            # parent_exclusion are mapped by ptav but here we don't need to know
+            # where the exclusion comes from so we loop directly on the dict values
+            for exclusions_values in parent_exclusions.values():
+                for exclusion in exclusions_values:
+                    if exclusion in combination.ids:
+                        return False
 
         filtered_combination = combination._without_no_variant_attributes()
         archived_combinations = self._get_archived_combinations()
