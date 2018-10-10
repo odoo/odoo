@@ -69,7 +69,7 @@ class Job(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'open':
-            return 'hr_recruitment.mt_job_new'
+            return self.env.ref('hr_recruitment.mt_job_new')
         return super(Job, self)._track_subtype(init_values)
 
     @api.multi

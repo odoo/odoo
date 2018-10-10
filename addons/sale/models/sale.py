@@ -272,9 +272,9 @@ class SaleOrder(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'sale':
-            return 'sale.mt_order_confirmed'
+            return self.env.ref('sale.mt_order_confirmed')
         elif 'state' in init_values and self.state == 'sent':
-            return 'sale.mt_order_sent'
+            return self.env.ref('sale.mt_order_sent')
         return super(SaleOrder, self)._track_subtype(init_values)
 
     @api.multi

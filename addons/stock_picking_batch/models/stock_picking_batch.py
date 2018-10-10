@@ -106,7 +106,7 @@ class StockPickingBatch(models.Model):
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:
-            return 'stock_picking_batch.mt_batch_state'
+            return self.env.ref('stock_picking_batch.mt_batch_state')
         return super(StockPickingBatch, self)._track_subtype(init_values)
 
 

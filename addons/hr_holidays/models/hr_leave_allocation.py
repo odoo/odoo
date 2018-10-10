@@ -544,9 +544,9 @@ class HolidaysAllocation(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
-            return 'hr_holidays.mt_leave_allocation_approved'
+            return self.env.ref('hr_holidays.mt_leave_allocation_approved')
         elif 'state' in init_values and self.state == 'refuse':
-            return 'hr_holidays.mt_leave_allocation_refused'
+            return self.env.ref('hr_holidays.mt_leave_allocation_refused')
         return super(HolidaysAllocation, self)._track_subtype(init_values)
 
     @api.multi
