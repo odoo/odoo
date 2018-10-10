@@ -56,6 +56,16 @@
                             <field name="validity_start"/>
                             <field name="validity_stop"/>
                         </group>
+                        <group name="notification" string="Notification" colspan="2">
+                            <group>
+                                <field name="leave_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave'}"/>
+                                <field name="allocation_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave.allocation')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave.allocation'}"/>
+                            </group>
+                         </group>
                         <group name="calendar" string="Calendar" groups="base.group_no_one">
                             <field name="categ_id"/>
                             <field name="color_name"/>
