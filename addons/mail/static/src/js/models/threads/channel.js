@@ -358,6 +358,23 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         });
     },
     /**
+     * Override so that it tells whether the channel is moderated or not. This
+     * is useful in order to display pending moderation messages when the
+     * current user is either moderator of the channel or has posted some
+     * messages that are pending moderation.
+     *
+     * @override
+     * @private
+     * @returns {Object}
+     */
+    _getFetchMessagesKwargs: function () {
+        var kwargs = this._super.apply(this, arguments);
+        if (this.isModerated()) {
+            kwargs.moderated_channel_ids = [this.getID()];
+        }
+        return kwargs;
+    },
+    /**
      * Get the domain to fetch all the messages in the current channel
      *
      * Note that with moderation, even though some messages are not really
