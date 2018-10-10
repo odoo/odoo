@@ -4,7 +4,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
+var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 var weWidgets = require('web_editor.widget');
 
 var qweb = core.qweb;
@@ -631,7 +631,7 @@ registry.colorpicker = SnippetOption.extend({
             var $clpicker = $(qweb.render('web_editor.colorpicker'));
 
             _.each($clpicker.find('.o_colorpicker_section'), function (elem) {
-                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>")
+                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>");
             });
 
             // Retrieve excluded palettes list
@@ -651,19 +651,16 @@ registry.colorpicker = SnippetOption.extend({
 
             // Add common colors to palettes if not excluded
             if (!('common' in excluded)) {
-                var colors = [
-                    '#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF',
-                    '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF',
-                    '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE',
-                    '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD',
-                    '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5',
-                    '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B',
-                    '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842',
-                    '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031'
-                ];
                 var $commonColorSection = $clpicker.find('[data-name="common"]');
-                _.each(colors, function (color) {
-                    $commonColorSection.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
+                _.each(summernoteCustomColors, function (colorRow, i) {
+                    var $div = $('<div/>', {class: 'clearfix'}).appendTo($commonColorSection);
+                    if (i === 0) {
+                        // Ignore the summernote gray palette and use ours
+                        return;
+                    }
+                    _.each(colorRow, function (color) {
+                        $div.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
+                    });
                 });
             }
 
