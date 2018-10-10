@@ -20,7 +20,7 @@ import unittest
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
 
-if os.name == 'posix':
+if os.name == 'posix' and sys.platform != 'cygwin':
     # Unix only for workers
     import fcntl
     import resource
