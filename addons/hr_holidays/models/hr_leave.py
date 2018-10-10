@@ -760,9 +760,8 @@ class HolidaysRequest(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
-            return self.env.ref('hr_holidays.mt_leave_approved')
-        elif 'state' in init_values and self.state == 'refuse':
-            return self.env.ref('hr_holidays.mt_leave_refused')
+            leave_notif_subtype = self.holiday_status_id.leave_notif_subtype_id
+            return leave_notif_subtype or self.env.ref('hr_holidays.mt_leave')
         return super(HolidaysRequest, self)._track_subtype(init_values)
 
     @api.multi

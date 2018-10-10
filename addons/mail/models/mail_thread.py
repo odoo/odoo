@@ -639,7 +639,6 @@ class MailThread(models.AbstractModel):
             # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
             if not self._context.get('mail_track_log_only'):
                 subtype = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
-
             if subtype:
                 if not subtype.exists():
                     _logger.debug('subtype "%s" not found' % subtype.name)
