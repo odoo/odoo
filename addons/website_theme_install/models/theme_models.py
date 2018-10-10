@@ -28,6 +28,36 @@ class ThemeView(models.Model):
     inherit_id = fields.Reference(selection=[('ir.ui.view', 'ir.ui.view'), ('theme.ir.ui.view', 'theme.ir.ui.view')])
     copy_ids = fields.One2many('ir.ui.view', 'theme_template_id', 'Views using a copy of me', copy=False, readonly=True)
 
+    # TODO master add missing field: customize_show
+
+    @api.multi
+    def _convert_to_base_model(self, website, **kwargs):
+        self.ensure_one()
+        inherit = self.inherit_id
+        if self.inherit_id and self.inherit_id._name == 'theme.ir.ui.view':
+            inherit = self.inherit_id.with_context(active_test=False).copy_ids.filtered(lambda x: x.website_id == website)
+            if not inherit:
+                # inherit_id not yet created, add to the queue
+                return False
+
+        new_view = {
+            'type': self.type or 'qweb',
+            'name': self.name,
+            'arch': self.arch,
+            'key': self.key,
+            'inherit_id': inherit and inherit.id,
+            'arch_fs': self.arch_fs,
+            'priority': self.priority,
+            'active': self.active,
+            'theme_template_id': self.id,
+            'website_id': website.id,
+        }
+
+        if self.mode:  # if not provided, it will be computed automatically (if inherit_id or not)
+            new_view['mode'] = self.mode
+
+        return new_view
+
 
 class ThemeAttachment(models.Model):
     _name = 'theme.ir.attachment'
@@ -37,6 +67,23 @@ class ThemeAttachment(models.Model):
     key = fields.Char(required=True)
     url = fields.Char()
     copy_ids = fields.One2many('ir.attachment', 'theme_template_id', 'Attachment using a copy of me', copy=False, readonly=True)
+
+    # TODO in master: add missing field: datas_fname
+
+    @api.multi
+    def _convert_to_base_model(self, website, **kwargs):
+        self.ensure_one()
+        new_attach = {
+            'key': self.key,
+            'public': True,
+            'res_model': 'ir.ui.view',
+            'type': 'url',
+            'name': self.name,
+            'url': self.url,
+            'website_id': website.id,
+            'theme_template_id': self.id,
+        }
+        return new_attach
 
 
 class ThemeMenu(models.Model):
@@ -51,6 +98,22 @@ class ThemeMenu(models.Model):
     parent_id = fields.Many2one('theme.website.menu', index=True, ondelete="cascade")
     copy_ids = fields.One2many('website.menu', 'theme_template_id', 'Menu using a copy of me', copy=False, readonly=True)
 
+    @api.multi
+    def _convert_to_base_model(self, website, **kwargs):
+        self.ensure_one()
+        page_id = self.page_id.copy_ids.filtered(lambda x: x.website_id == website)
+        parent_id = self.copy_ids.filtered(lambda x: x.website_id == website)
+        new_menu = {
+            'name': self.name,
+            'url': self.url,
+            'page_id': page_id,
+            'new_window': self.new_window,
+            'sequence': self.sequence,
+            'parent_id': parent_id,
+            'theme_template_id': self.id,
+        }
+        return new_menu
+
 
 class ThemePage(models.Model):
     _name = 'theme.website.page'
@@ -59,7 +122,23 @@ class ThemePage(models.Model):
     url = fields.Char()
     view_id = fields.Many2one('theme.ir.ui.view', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
-    copy_ids = fields.One2many('website.page', 'theme_template_id', 'Theme using a copy of me', copy=False, readonly=True)
+    copy_ids = fields.One2many('website.page', 'theme_template_id', 'Page using a copy of me', copy=False, readonly=True)
+
+    @api.multi
+    def _convert_to_base_model(self, website, **kwargs):
+        self.ensure_one()
+        view_id = self.view_id.copy_ids.filtered(lambda x: x.website_id == website)
+        if not view_id:
+            # inherit_id not yet created, add to the queue
+            return False
+
+        new_page = {
+            'url': self.url,
+            'view_id': view_id.id,
+            'website_indexed': self.website_indexed,
+            'theme_template_id': self.id,
+        }
+        return new_page
 
 
 class Theme(models.AbstractModel):
@@ -67,13 +146,17 @@ class Theme(models.AbstractModel):
     _description = 'Theme Utils'
     _auto = False
 
-    def _post_copy(self, mod):
-        website = self.env['website'].get_current_website()
+    def _post_copy(self, mod, website=False):
+        # deprecated: to remove in master
+        if not website:  # remove optional website in master
+            website = self.env['website'].get_current_website()
+
         theme_post_copy = '_%s_post_copy' % mod.name
         if hasattr(self, theme_post_copy):
             _logger.info('Executing method %s' % theme_post_copy)
             method = getattr(self.with_context(website_id=website.id), theme_post_copy)
             return method(mod)
+        return False
 
     @api.model
     def _toggle_view(self, xml_id, active):
@@ -91,6 +174,7 @@ class Theme(models.AbstractModel):
     @api.model
     def disable_view(self, xml_id):
         self._toggle_view(xml_id, False)
+
 
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
