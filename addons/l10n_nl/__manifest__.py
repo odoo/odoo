@@ -27,6 +27,7 @@
         'data/account_fiscal_position_account_template.xml',
         'data/account_chart_template_data.xml',
         'data/menuitem.xml',
+        'views/partner_address_view.xml',
     ],
     'demo': [],
     'auto_install': False,
