@@ -11,6 +11,7 @@
 
         <!--  MAILING CONTACT -->
         <record model="ir.ui.view" id="mail_mass_mailing_list_contact_rel_view_form">
+            <!--TODO DBE : To remove - Deprecated -->
             <field name="name">mail.mass_mailing.list_contact_rel.view.form</field>
             <field name="model">mail.mass_mailing.list_contact_rel</field>
             <field name="priority">10</field>
@@ -36,6 +37,7 @@
         </record>
 
         <record model="ir.ui.view" id="mail_mass_mailing_list_contact_rel_list_contact_view_tree">
+            <!--TODO DBE : To remove - Deprecated -->
             <field name="name">mail.mass_mailing.list_contact_rel.list_contact.view.tree</field>
             <field name="model">mail.mass_mailing.list_contact_rel</field>
             <field name="arch" type="xml">
@@ -51,6 +53,7 @@
         </record>
 
         <record model="ir.ui.view" id="mail_mass_mailing_list_contact_view_search">
+            <!--TODO DBE : To remove - Deprecated -->
             <field name="name">mail.mass_mailing.list_contact_rel.view.search</field>
             <field name="model">mail.mass_mailing.list_contact_rel</field>
             <field name="arch" type="xml">
@@ -85,8 +88,14 @@
                         string="Name / Email"/>
                     <field name="tag_ids"/>
                     <field name="list_ids"/>
+                   <separator/>
+                    <filter string="Valid Recipients" name="valid_recipients" domain="[('opt_out', '=', False), ('is_blacklisted', '=', False), ('is_email_valid', '=', True)]"
+                    invisible="'default_list_ids' not in context"/>
                     <separator/>
                     <filter string="Exclude Blacklisted" name="not_blacklisted" domain="[('is_blacklisted', '=', False)]"/>
+                   <separator/>
+                    <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"
+                    invisible="'default_list_ids' not in context"/>
                     <separator/>
                     <separator/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
@@ -109,6 +118,7 @@
                     <field name="company_name"/>
                     <field name="email"/>
                     <field name="message_bounce"/>
+                    <field name="opt_out" invisible="'default_list_ids' not in context"/>
                     <field name="is_blacklisted"/>
                 </tree>
             </field>
@@ -238,7 +248,7 @@
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
-            <field name="context">{'search_default_not_blacklisted': 1}</field>
+            <field name="context">{'search_default_valid_recipient': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a contact in your address book
@@ -250,11 +260,11 @@
 
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
             <field name="name">Recipients</field>
-            <field name="res_model">mail.mass_mailing.list_contact_rel</field>
+            <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="domain">[('list_id', 'in', [active_id])]</field>
-            <field name="context">{'search_default_valid_recipients': 1, 'default_list_id': active_id}</field>
+            <field name="domain">[('list_ids', 'in', [active_id])]</field>
+            <field name="context">{'search_default_valid_recipients': 1, 'default_list_ids': [active_id]}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new recipient
