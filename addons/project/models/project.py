@@ -185,9 +185,8 @@ class Project(models.Model):
         default=_get_default_favorite_user_ids,
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', string='Show Project on dashboard',
-        help="Whether this project should be displayed on the dashboard or not")
-    label_tasks = fields.Char(string='Use Tasks as', default=lambda s: _('Tasks'), translate=True,
-        help="Gives label to tasks on project's kanban view.")
+        help="Whether this project should be displayed on your dashboard.")
+    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
@@ -209,27 +208,26 @@ class Project(models.Model):
         ],
         string='Privacy', required=True,
         default='portal',
-        help="Holds visibility of the tasks or issues that belong to the current project:\n"
-                "- On invitation only: Employees may only see the followed project, tasks or issues\n"
-                "- Visible by all employees: Employees may see all project, tasks or issues\n"
-                "- Visible by following customers: employees see everything;\n"
-                "   if website is activated, portal users may see project, tasks or issues followed by\n"
-                "   them or by someone of their company\n")
+        help="Defines the visibility of the tasks of the project:\n"
+                "- On invitation only: employees may only see the followed project and tasks.\n"
+                "- Visible by all employees: employees may see all project and tasks.\n"
+                "- Visible by following customers: employees may see everything."
+                "   if website is activated, portal users may see project and tasks followed by.\n"
+                "   them or by someone of their company.")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, track_visibility='onchange')
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
-        help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)")
+        help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
 
     # rating fields
     percentage_satisfaction_task = fields.Integer(
-        compute='_compute_percentage_satisfaction_task', string="Happy % on Task", store=True, default=-1)
-    percentage_satisfaction_project = fields.Integer(
-        compute="_compute_percentage_satisfaction_project", string="Happy % on Project", store=True, default=-1)
+        compute='_compute_percentage_satisfaction_task', string="Happy % on Task", help="Satisfaction rate on task.", store=True, default=-1)
+    percentage_satisfaction_project = fields.Integer(compute="_compute_percentage_satisfaction_project", string="Happy % on Project", help="Satisfaction rate on project.", store=True, default=-1)
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer(s) Ratings', help="How to get the customer's feedbacks?\n"
-                    "- Rating when changing stage: Email will be sent when a task/issue is pulled in another stage\n"
-                    "- Periodical Rating: Email will be sent periodically\n\n"
+    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer(s) Ratings', help="How to get customer feedback?\n"
+                    "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+                    "- Periodical Rating: email will be sent periodically.\n\n"
                     "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.", default="no", required=True)
     rating_status_period = fields.Selection([
         ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
