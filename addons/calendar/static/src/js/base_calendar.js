@@ -57,10 +57,8 @@ WebClient.include({
         // Clear previously set timeouts and destroy currently displayed calendar notifications
         clearTimeout(this.get_next_calendar_notif_timeout);
         _.each(this.calendar_notif_timeouts, clearTimeout);
-        _.each(this.calendar_notif, function(notif) {
-            if (!notif.isDestroyed()) {
-                notif.destroy();
-            }
+        _.each(this.calendar_notif, function (notificationID) {
+            self.call('notification', 'close', notificationID, true);
         });
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
@@ -68,13 +66,13 @@ WebClient.include({
         // For each notification, set a timeout to display it
         _.each(notifications, function(notif) {
             self.calendar_notif_timeouts[notif.event_id] = setTimeout(function() {
-                var notification = new CalendarNotification(self.notification_manager, {
+                var notificationID = self.call('notification', 'notify', {
+                    Notification: CalendarNotification,
                     title: notif.title,
                     text: notif.message,
                     eventID: notif.event_id,
                 });
-                self.notification_manager.display(notification);
-                self.calendar_notif[notif.event_id] = notification;
+                self.calendar_notif[notif.event_id] = notificationID;
             }, notif.timer * 1000);
             last_notif_timer = Math.max(last_notif_timer, notif.timer);
         });
