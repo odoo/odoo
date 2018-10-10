@@ -138,7 +138,7 @@ class TestActivityFlow(TestActivityCommon):
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_admin.id)
-        self.assertEqual(activity.create_user_id, self.user_employee)
+        self.assertEqual(activity.create_uid, self.user_employee)
         self.assertEqual(activity.user_id, self.user_admin)
 
     def test_activity_notify_same_user(self):
@@ -148,7 +148,7 @@ class TestActivityFlow(TestActivityCommon):
             activity = rec.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_employee.id)
-        self.assertEqual(activity.create_user_id, self.user_employee)
+        self.assertEqual(activity.create_uid, self.user_employee)
         self.assertEqual(activity.user_id, self.user_employee)
 
 
