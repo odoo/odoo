@@ -1095,13 +1095,13 @@ class Lead(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values and self.probability == 100 and self.stage_id and self.stage_id.on_change:
-            return 'crm.mt_lead_won'
+            return self.env.ref('crm.mt_lead_won')
         elif 'active' in init_values and self.probability == 0 and not self.active:
-            return 'crm.mt_lead_lost'
+            return self.env.ref('crm.mt_lead_lost')
         elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:
-            return 'crm.mt_lead_create'
+            return self.env.ref('crm.mt_lead_create')
         elif 'stage_id' in init_values:
-            return 'crm.mt_lead_stage'
+            return self.env.ref('crm.mt_lead_stage')
         return super(Lead, self)._track_subtype(init_values)
 
     @api.multi

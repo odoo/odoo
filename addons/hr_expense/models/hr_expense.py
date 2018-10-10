@@ -595,11 +595,11 @@ class HrExpenseSheet(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
-            return 'hr_expense.mt_expense_approved'
+            return self.env.ref('hr_expense.mt_expense_approved')
         elif 'state' in init_values and self.state == 'cancel':
-            return 'hr_expense.mt_expense_refused'
+            return self.env.ref('hr_expense.mt_expense_refused')
         elif 'state' in init_values and self.state == 'done':
-            return 'hr_expense.mt_expense_paid'
+            return self.env.ref('hr_expense.mt_expense_paid')
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
     def _message_auto_subscribe_followers(self, updated_values, subtype_ids):

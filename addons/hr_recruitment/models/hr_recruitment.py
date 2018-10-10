@@ -346,11 +346,11 @@ class Applicant(models.Model):
     def _track_subtype(self, init_values):
         record = self[0]
         if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
-            return 'hr_recruitment.mt_applicant_hired'
+            return self.env.ref('hr_recruitment.mt_applicant_hired')
         elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
-            return 'hr_recruitment.mt_applicant_new'
+            return self.env.ref('hr_recruitment.mt_applicant_new')
         elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence > 1:
-            return 'hr_recruitment.mt_applicant_stage_changed'
+            return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
         return super(Applicant, self)._track_subtype(init_values)
 
     @api.multi
