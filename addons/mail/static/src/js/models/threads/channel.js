@@ -30,6 +30,8 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      *   moderator of this channel.
      * @param {string} [params.data.last_message_date] date in server-format
      * @param {integer} [params.data.message_unread_counter]
+     * @param {boolean} [params.data.moderation=false] whether the channel is
+     *   moderated or not
      * @param {string} params.data.state
      * @param {string} [params.data.uuid]
      * @param {Object} params.options
@@ -56,7 +58,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._folded = data.state === 'folded';
         // if set: hide 'Leave channel' button
         this._groupBasedSubscription = data.group_based_subscription;
-        this._isModerated = data.is_moderation;
+        this._isModerated = data.moderation;
         this._isMyselfModerator = data.is_moderator;
         this._lastMessageDate = undefined;
         this._members = [];
