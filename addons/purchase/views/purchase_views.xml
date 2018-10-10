@@ -495,4 +495,14 @@
                 </search>
             </field>
         </record>
+
+        <record id="action_portal_purchase_date_domain" model="ir.actions.server">
+            <field name="name">Purchase Portal Date Domain</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">
+action = [('create_date', '&gt;', env.context.get('date_begin')), ('create_date', '&lt;=', env.context.get('date_end'))]
+            </field>
+        </record>
 </odoo>

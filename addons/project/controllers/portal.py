@@ -48,7 +48,8 @@ class CustomerPortal(CustomerPortal):
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('project.project', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            server_action = request.env.ref('project.action_portal_project_date_domain')
+            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
         # projects count
         project_count = Project.search_count(domain)
         # pager
@@ -152,7 +153,8 @@ class CustomerPortal(CustomerPortal):
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('project.task', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            server_action = request.env.ref('project.action_portal_project_date_domain')
+            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
 
         # search
         if search and search_in:

@@ -1253,8 +1253,18 @@
             <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
         </record>
 
+        <record id="action_portal_sale_date_domain" model="ir.actions.server">
+            <field name="name">Sale Portal Date Domain</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+action = [('create_date', '&gt;', env.context.get('date_begin')), ('create_date', '&lt;=', env.context.get('date_end'))]
+            </field>
+        </record>
+
         <record id="action_sale_portal_domain" model="ir.actions.server">
-            <field name="name">Sale portal Domain</field>
+            <field name="name">Sale Portal Domain</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="state">code</field>

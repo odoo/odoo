@@ -34,7 +34,8 @@ class CustomerPortal(CustomerPortal):
 
         archive_groups = self._get_archive_groups('purchase.order', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            server_action = request.env.ref('purchase.action_portal_purchase_date_domain')
+            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc, id desc'},

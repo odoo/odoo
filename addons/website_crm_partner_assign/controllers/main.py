@@ -53,7 +53,9 @@ class WebsiteAccount(CustomerPortal):
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('crm.lead', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            server_action = request.env.ref('website_crm_partner_assign.action_portal_crm_date_domain')
+            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
+
         # pager
         lead_count = CrmLead.search_count(domain)
         pager = request.website.pager(
@@ -119,7 +121,9 @@ class WebsiteAccount(CustomerPortal):
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('crm.lead', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            server_action = request.env.ref('website_crm_partner_assign.action_portal_crm_date_domain')
+            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
+
         # pager
         opp_count = CrmLead.search_count(domain)
         pager = request.website.pager(

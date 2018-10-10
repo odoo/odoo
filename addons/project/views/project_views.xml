@@ -909,6 +909,17 @@ action = search_domain
               </p>
             </field>
         </record>
+
+        <record id="action_portal_project_date_domain" model="ir.actions.server">
+            <field name="name">Portal Project Date Domain</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="state">code</field>
+            <field name="code">
+action = [('create_date', '&gt;', env.context.get('date_begin')), ('create_date', '&lt;=', env.context.get('date_end'))]
+            </field>
+        </record>
+
         <menuitem action="project_tags_action" id="menu_project_tags_act" parent="menu_project_config"/>
 
         <!-- Reporting menus -->

@@ -47,7 +47,8 @@ class PortalAccount(CustomerPortal):
 
         archive_groups = self._get_archive_groups('account.invoice', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            server_action = request.env.ref('account.action_portal_invoice_date_domain')
+            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
 
         # count for pager
         invoice_count = AccountInvoice.search_count(domain)

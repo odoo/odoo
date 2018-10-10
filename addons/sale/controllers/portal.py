@@ -55,7 +55,8 @@ class CustomerPortal(CustomerPortal):
 
         archive_groups = self._get_archive_groups('sale.order', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            server_action = request.env.ref('sale.action_portal_sale_date_domain')
+            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
 
         # count for pager
         quotation_count = SaleOrder.search_count(domain)
@@ -101,7 +102,8 @@ class CustomerPortal(CustomerPortal):
 
         archive_groups = self._get_archive_groups('sale.order', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+            server_action = request.env.ref('sale.action_portal_sale_date_domain')
+            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
 
         # count for pager
         order_count = SaleOrder.search_count(domain)
