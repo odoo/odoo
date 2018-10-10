@@ -79,9 +79,14 @@ class IrModuleModule(models.Model):
         return new_view
 
     def _convert_page(self, page, website, **kw):
+        view_id = page.view_id.copy_ids.filtered(lambda x: x.website_id == website)
+        if not view_id:
+            # inherit_id not yet created, add to the queue
+            return False
+
         new_page = {
             'url': page.url,
-            'view_id': page.view_id.copy_ids.filtered(lambda x: x.website_id == website),
+            'view_id': view_id.id,
             'website_indexed': page.website_indexed,
             'theme_template_id': page.id,
         }
@@ -131,7 +136,7 @@ class IrModuleModule(models.Model):
             for rec in remaining:
                 rec_data = self._convert(model)(rec, website)
                 if not rec_data:
-                    _logger.info('Record queued: %s' % rec.name)
+                    _logger.info('Record queued: %s' % rec.display_name)
                     continue
 
                 find = rec.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
@@ -154,6 +159,8 @@ class IrModuleModule(models.Model):
                 else:
                     created += self.env[model].create(rec_data)
                 remaining -= rec
+        if len(remaining):
+            _logger.info('Error - Remaining: %s' % remaining.mapped('display_name'))
 
         deleted = old - updated
         deleted.unlink()
@@ -174,10 +181,10 @@ class IrModuleModule(models.Model):
         new_attachs = self._get_module_data('theme.ir.attachment')
         new_views = self._get_module_data('theme.ir.ui.view')
 
-        self._update_records(old_menus, new_menus)
-        self._update_records(old_pages, new_pages)
-        self._update_records(old_attachs, new_attachs)
         self._update_records(old_views, new_views)
+        self._update_records(old_pages, new_pages)
+        self._update_records(old_menus, new_menus)
+        self._update_records(old_attachs, new_attachs)
 
     @api.multi
     def _unload_one_theme_module(self, website):
