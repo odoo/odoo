@@ -565,6 +565,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 
             this.$el.find('.note-color-reset').on('click', function () {
                 self.$target.removeClass(self.classes);
+                self.$target.trigger('content_changed');
                 $colors.removeClass("selected");
             });
         }
