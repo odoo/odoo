@@ -105,7 +105,8 @@ var KanbanModel = BasicModel.extend({
         var group = this.localData[groupID];
         var context = this._getContext(group);
         var parent = this.localData[group.parentID];
-        context['default_' + parent.groupedBy[0]] = group.res_id;
+        var groupedByM2O = parent.fields[parent.groupedBy].type === 'many2one';
+        context['default_' + parent.groupedBy[0]] = groupedByM2O ? group.res_id : group.value;
         var def;
         if (Object.keys(values).length === 1 && 'display_name' in values) {
             // only 'display_name is given, perform a 'name_create'
