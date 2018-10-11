@@ -4,6 +4,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.addons.test_mail.tests import common
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tools.misc import mute_logger
 
 
@@ -53,12 +54,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(follower.subtype_ids, self.default_group_subtypes)
 
     def test_followers_subtypes_default_internal(self):
-        user_portal = self.env['res.users'].with_context(self._quick_create_user_ctx).create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])]
-        })
+        user_portal = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         test_record = self.test_record.sudo(self.user_employee)
         test_record.message_subscribe(partner_ids=[user_portal.partner_id.id])
@@ -125,12 +121,7 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
     def setUpClass(cls):
         super(AdvancedFollowersTest, cls).setUpClass()
 
-        cls.user_portal = cls.env['res.users'].with_context(cls._quick_create_user_ctx).create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])],
-        })
+        cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         cls.test_track = cls.env['mail.test.track'].sudo(cls.user_employee).create({
             'name': 'Test',
@@ -192,7 +183,7 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
          * subscribing to a sub-record as creator applies default subtype values
          * portal user should not have access to internal subtypes
         """
-        umbrella = self.env['mail.test'].with_context(self._quick_create_ctx).create({
+        umbrella = self.env['mail.test'].with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Project-Like',
         })
 

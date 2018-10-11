@@ -9,7 +9,7 @@ class TestInvite(common.BaseFunctionalTest, common.MockEmails):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_invite_email(self):
-        test_partner = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+        test_partner = self.env['res.partner'].with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com'})
 
