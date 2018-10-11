@@ -1870,6 +1870,9 @@ exports.Paymentline = Backbone.Model.extend({
             return;
         }
         this.cashregister = options.cashregister;
+        if (this.cashregister === undefined) {
+            throw new Error(_t('Please configure a payment method in your POS.'));
+        }
         this.name = this.cashregister.journal_id[1];
     },
     init_from_JSON: function(json){
