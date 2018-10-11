@@ -2339,6 +2339,8 @@ class MailThread(models.AbstractModel):
         """
         if not self or self.env.context.get('mail_auto_subscribe_no_notify'):
             return
+        if not self.env.registry.ready:  # Don't send notification during install
+            return
 
         view = self.env['ir.ui.view'].browse(self.env['ir.model.data'].xmlid_to_res_id(template))
 
