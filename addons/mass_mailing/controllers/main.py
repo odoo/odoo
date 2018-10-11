@@ -62,6 +62,10 @@ class MassMailController(http.Controller):
                     'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param('mass_mailing.show_blacklist_buttons'),
                 })
             else:
+                opt_in_lists = request.env['mail.mass_mailing.list_contact_rel'].sudo().search([
+                    ('contact_id.email', '=', email),
+                    ('opt_out', '=', False)
+                ]).mapped('list_id')
                 blacklist_rec = request.env['mail.blacklist'].sudo()._add(email)
                 self._log_blacklist_action(
                     blacklist_rec, mailing_id,
@@ -70,6 +74,7 @@ class MassMailController(http.Controller):
                     'email': email,
                     'mailing_id': mailing_id,
                     'res_id': res_id,
+                    'list_ids': opt_in_lists,
                     'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param(
                         'mass_mailing.show_blacklist_buttons'),
                 })
