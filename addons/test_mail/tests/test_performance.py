@@ -361,6 +361,7 @@ class TestHeavyMailPerformance(TransactionCase):
             self.env.ref('mail.mt_comment').id,
             self.env.ref('test_mail.st_mail_test_child_full').id]
         )
+        self.patch(self.env.registry, 'ready', True)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -595,7 +596,7 @@ class TestHeavyMailPerformance(TransactionCase):
     def test_complex_tracking_template(self):
         """ Write performance test involving assignation, tracking with template """
         customer_id = self.customer.id
-
+        self.assertTrue(self.env.registry.ready, "We need to simulate that registery is ready")
         rec = self.env['mail.test.full'].create({
             'name': 'Test',
             'umbrella_id': self.umbrella.id,

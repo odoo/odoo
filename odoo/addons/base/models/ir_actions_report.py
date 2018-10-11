@@ -305,7 +305,7 @@ class IrActionsReport(models.Model):
         bodies = []
         res_ids = []
 
-        body_parent = root.xpath('//main')
+        body_parent = root.xpath('//main')[0]
         # Retrieve headers
         for node in root.xpath(match_klass.format('header')):
             body_parent = node.getparent()
