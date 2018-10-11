@@ -1439,6 +1439,81 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record in grouped on date(time) field', function (assert) {
+        assert.expect(6);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['date'],
+            intercepts: {
+                switch_view: function (ev) {
+                    assert.deepEqual(_.pick(ev.data, 'res_id', 'view_type'), {
+                        res_id: undefined,
+                        view_type: 'form',
+                    }, "should trigger an event to open the form view (twice)");
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 0,
+            "quick create should be disabled when grouped on a date field");
+
+        // clicking on CREATE in control panel should not open a quick create
+        kanban.$buttons.find('.o-kanban-button-new').click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
+            "should not have opened the quick create widget");
+
+        kanban.reload({groupBy: ['datetime']});
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 0,
+            "quick create should be disabled when grouped on a datetime field");
+
+        // clicking on CREATE in control panel should not open a quick create
+        kanban.$buttons.find('.o-kanban-button-new').click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
+            "should not have opened the quick create widget");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record feature is properly enabled/disabled at reload', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['foo'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 3,
+            "quick create should be enabled when grouped on a char field");
+
+        kanban.reload({groupBy: ['date']});
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 0,
+            "quick create should now be disabled (grouped on date field)");
+
+        kanban.reload({groupBy: ['bar']});
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 2,
+            "quick create should be enabled again (grouped on boolean field)");
+
+        kanban.destroy();
+    });
+
     QUnit.test('many2many_tags in kanban views', function (assert) {
         assert.expect(12);
 
@@ -3789,7 +3864,7 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates>' +
                 '</kanban>',
-            groupBy: ['int_field'],
+            groupBy: ['foo'],
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
                     return $.when(true);

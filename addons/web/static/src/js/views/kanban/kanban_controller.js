@@ -40,6 +40,7 @@ var KanbanController = BasicController.extend({
 
         this.on_create = params.on_create;
         this.hasButtons = params.hasButtons;
+        this._isQuickCreateEnabled = params.isQuickCreateEnabled;
     },
 
     //--------------------------------------------------------------------------
@@ -260,7 +261,8 @@ var KanbanController = BasicController.extend({
     _onButtonNew: function () {
         var state = this.model.get(this.handle, {raw: true});
         var hasColumns = state.groupedBy.length > 0 && state.data.length > 0;
-        if (hasColumns && this.on_create === 'quick_create') {
+        var quickCreateEnabled = hasColumns && this._isQuickCreateEnabled(state.groupedBy[0]);
+        if (quickCreateEnabled && this.on_create === 'quick_create') {
             // Activate the quick create in the first column
             this.renderer.addQuickCreate();
         } else if (this.on_create && this.on_create !== 'quick_create') {

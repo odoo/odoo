@@ -58,11 +58,12 @@ var KanbanView = BasicView.extend({
             group_delete: this.arch.attrs.group_delete ? JSON.parse(this.arch.attrs.group_delete) : true,
         });
 
+        var isQuickCreateEnabled = this._isQuickCreateEnabled.bind(this);
         this.rendererParams.column_options = {
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
             group_creatable: activeActions.group_create && !config.device.isMobile,
-            quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(),
+            isQuickCreateEnabled: isQuickCreateEnabled,
             quickCreateView: this.arch.attrs.quick_create_view || null,
             hasProgressBar: !!progressBar,
         };
@@ -79,6 +80,7 @@ var KanbanView = BasicView.extend({
         this.controllerParams.on_create = this.arch.attrs.on_create;
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
+        this.controllerParams.isQuickCreateEnabled = isQuickCreateEnabled;
 
         if (config.device.isMobile) {
             this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
@@ -90,13 +92,22 @@ var KanbanView = BasicView.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Function used by the controller and the columns to determine whether
+     * or not the quick create feature is enabled (depending on static params
+     * as well as the current groupby field).
+     *
      * @private
-     * @param {Object} viewInfo
+     * @param {string} groupByField current groupby (for data fields, may be
+     *   fieldName:period, e.g. create_date:month)
+     * @returns {boolean} true iff the quick create feature is available, i.e.
+     *   - if it is not explicitely disabled (with create="False" or
+     *     quick_create="False" in the arch), and
+     *   - if it is available for the type of current groupby field
      */
-    _isQuickCreateEnabled: function () {
-        var groupBy = this.loadParams.groupBy[0];
-        groupBy = groupBy !== undefined ? groupBy.split(':')[0] : undefined;
-        if (groupBy !== undefined && !_.contains(['char', 'boolean', 'many2one'], this.fields[groupBy].type)) {
+    _isQuickCreateEnabled: function (groupByField) {
+        groupByField = groupByField && groupByField.split(':')[0];
+        var availableTypes = ['char', 'boolean', 'many2one'];
+        if (groupByField && !_.contains(availableTypes, this.fields[groupByField].type)) {
             return false;
         }
         if (!this.controllerParams.activeActions.create) {
