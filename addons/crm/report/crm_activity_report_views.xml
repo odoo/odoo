@@ -23,41 +23,69 @@
             </field>
         </record>
 
+        <record id="crm_activity_report_view_tree" model="ir.ui.view">
+            <field name="name">crm.activity.report.tree</field>
+            <field name="model">crm.activity.report</field>
+            <field name="arch" type="xml">
+                <tree default_order="date desc">
+                    <field name="date"/>
+                    <field name="author_id"/>
+                    <field name="mail_activity_type_id"/>
+                    <field name="body" string="Activity Description"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="crm_activity_report_view_search" model="ir.ui.view">
             <field name="name">crm.activity.report.search</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
                 <search string="Activities Analysis">
+                    <field name="mail_activity_type_id" string="Activity Type"/>
+                    <field name="lead_id" string="Opportunity"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <field name="team_id" context="{'invisible_team': False}"/>
+                    <field name="author_id" string="Assigned To"/>
                     <filter string="My Activities" name="activities_my" domain="[('user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter name="lead" string="Leads" domain="[('lead_type','=', 'lead')]" help="Show only lead"/>
-                    <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity"/>
+                    <separator groups="crm.group_use_lead"/>
+                    <filter name="lead" string="Leads" domain="[('lead_type','=', 'lead')]" help="Show only lead" groups="crm.group_use_lead"/>
+                    <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity" groups="crm.group_use_lead"/>
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
                     <separator/>
-                    <filter string="Date" name="filter_date" date="date"/>
-                    <field name="team_id" context="{'invisible_team': False}"/>
-                    <field name="author_id" string="Created By"/>
+                    <filter string="Completion Date" name="completion_date" date="date" default_period="last_365_days"/>
                     <group expand="1" string="Group By">
-                        <filter string="Created By" name="group_by_salesperson" context="{'group_by':'author_id'}"/>
+                        <filter string="Subtype" name="group_by_subtype" context="{'group_by':'subtype_id'}"/>
+                        <filter string="Activity Type" name="group_by_activity_type" context="{'group_by':'mail_activity_type_id'}"/>
+                        <filter string="Assigned To" name="group_by_author_id" context="{'group_by':'author_id'}"/>
+                        <filter string="Completion Date" name="group_by_completion_date" context="{'group_by':'date:month'}"/>
+                        <separator/>
+                        <filter string="Salesperson" name="group_by_user_id" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
-                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
-                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Date" context="{'group_by':'date:month'}" name="month"/>
-                        <filter string="Leads" name="group_by_opportunity" context="{'group_by':'lead_id'}" />
+                        <filter string="Creation Date" name="group_by_lead_date_creation" context="{'group_by':'lead_create_date'}"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Expected Closing" name="group_by_date_deadline" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Closed Date" name="group_by_date_closed" context="{'group_by':'date_closed'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
        <record id="crm_activity_report_action" model="ir.actions.act_window">
-           <field name="name">Activities Analysis</field>
+           <field name="name">Pipeline Activities</field>
            <field name="res_model">crm.activity.report</field>
            <field name="view_type">form</field>
-           <field name="view_mode">graph,pivot</field>
-           <field name="context">{'search_default_activities_my': True}</field>
+           <field name="view_mode">graph,pivot,tree</field>
+           <field name="context">{
+                'search_default_activities_my': 1,
+                'search_default_completion_date': 1,
+                'pivot_column_groupby': ['subtype_id', 'mail_activity_type_id'],
+                'pivot_row_groupby': ['date:month'],
+                'graph_mode': 'bar',
+                'graph_groupbys': ['date:month', 'subtype_id'],
+            }</field>
            <field name="domain">[]</field>
        </record>
 
@@ -70,10 +98,10 @@
             sequence="3"/>
 
        <record id="crm_activity_report_action_team" model="ir.actions.act_window">
-           <field name="name">Activities Analysis</field>
+           <field name="name">Pipeline Activities</field>
            <field name="res_model">crm.activity.report</field>
            <field name="view_type">form</field>
-           <field name="view_mode">graph,pivot</field>
+           <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{'search_default_team_id': active_id}</field>
            <field name="domain">[]</field>
        </record>
