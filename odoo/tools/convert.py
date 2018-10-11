@@ -832,6 +832,8 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     context = {
         'mode': mode,
         'module': module,
+        'install_module': module,
+        'install_filename': fname,
         'noupdate': noupdate,
     }
     env = odoo.api.Environment(cr, SUPERUSER_ID, context)
