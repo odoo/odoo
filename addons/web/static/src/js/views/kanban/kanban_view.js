@@ -63,7 +63,6 @@ var KanbanView = BasicView.extend({
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
             group_creatable: activeActions.group_create && !config.device.isMobile,
-            quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(viewInfo),
             hasProgressBar: !!progressBar,
         };
         this.rendererParams.record_options = {
@@ -71,11 +70,12 @@ var KanbanView = BasicView.extend({
             deletable: activeActions.delete,
             read_only_mode: params.readOnlyMode,
         };
+        this.rendererParams.quickCreateEnabled = this._isQuickCreateEnabled(viewInfo);
 
         this.controllerParams.on_create = arch.attrs.on_create;
-
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
+        this.controllerParams.quickCreateEnabled = this.rendererParams.quickCreateEnabled;
 
         if (config.device.isMobile) {
             this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
@@ -89,13 +89,10 @@ var KanbanView = BasicView.extend({
     /**
      * @private
      * @param {Object} viewInfo
+     * @returns {boolean} true iff the quick create feature is not explicitely
+     *   disabled (with create="False" or quick_create="False" in the arch)
      */
     _isQuickCreateEnabled: function (viewInfo) {
-        var groupBy = this.loadParams.groupBy[0];
-        groupBy = groupBy !== undefined ? groupBy.split(':')[0] : undefined;
-        if (groupBy !== undefined && !_.contains(['char', 'boolean', 'many2one'], viewInfo.fields[groupBy].type)) {
-            return false;
-        }
         if (!this.controllerParams.activeActions.create) {
             return false;
         }
