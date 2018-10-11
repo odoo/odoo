@@ -17,7 +17,7 @@ class MassMailingCase(common.MockEmails, common.BaseFunctionalTest):
             'login': 'emp',
         })
 
-        cls.user_marketing = cls.env['res.users'].with_context(cls._quick_create_user_ctx).create({
+        cls.user_marketing = cls.env['res.users'].with_context(cls._create_context('res.users')).create({
             'name': 'Ernest Employee',
             'login': 'marketing',
             'email': 'e.e@example.com',
