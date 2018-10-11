@@ -22,8 +22,6 @@ var DateWidget = Widget.extend({
     init: function(parent, options) {
         this._super.apply(this, arguments);
 
-        var l10n = _t.database.parameters;
-
         this.name = parent.name;
         this.options = _.defaults(options || {}, {
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
@@ -51,12 +49,8 @@ var DateWidget = Widget.extend({
      */
     start: function() {
         this.$input = this.$('input.o_datepicker_input');
-        this.$input.focus(function(e) {
-            e.stopImmediatePropagation();
-        });
         this.$input.datetimepicker(this.options);
         this.picker = this.$input.data('DateTimePicker');
-        this.$input.click(this.picker.toggle.bind(this.picker));
         this._setReadonly(false);
     },
     /**
