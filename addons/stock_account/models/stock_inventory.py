@@ -8,7 +8,7 @@ from odoo.tools.float_utils import float_compare
 class InventoryLine(models.Model):
     _inherit = "stock.inventory.line"
 
-    cost_method = fields.Char(compute="_compute_cost_method")
+    cost_method = fields.Char(related="product_id.product_tmpl_id.cost_method")
     unit_cost = fields.Float('Unit Cost', help="Unit cost of the product, used for inventory valuation.")
     theoretical_qty_bigger = fields.Boolean(compute="_compute_theoretical_qty_bigger")
 
@@ -28,8 +28,3 @@ class InventoryLine(models.Model):
     def _compute_theoretical_qty_bigger(self):
         for line in self:
             line.theoretical_qty_bigger = float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == -1
-
-    @api.depends('product_id.product_tmpl_id.cost_method')
-    def _compute_cost_method(self):
-        for l in self:
-            l.cost_method = l.product_id.product_tmpl_id.cost_method
