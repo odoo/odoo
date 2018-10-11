@@ -18,13 +18,24 @@
                                 <span class="fa fa-square fa-stack-2x"></span>
                                 <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
                             </a>
-                        </t>
+                        </t>§
                     </div>
                 </main>
             </div>
         </div>
     </t>
-
+    <t t-name="website_forum.spam_search_name">
+        <div class='post_spam d-inline'>
+            <t t-foreach="posts" t-as="post">
+                <div class="col-12 px-0 custom-control custom-checkbox o_over_checkbox pl-3 border bg-white rounded px-5 py-2 mb-1">
+                    <input type="checkbox" class="custom-control-input" t-attf-id="massive_spam(#{post.id})" t-att-value='post.id' checked='checked'/>
+                    <label class="custom-control-label text-secondary font-weight-bold" t-attf-for="massive_spam(#{post.id})">
+                        <t t-esc="post.name" />
+                    </label>
+                </div>
+            </t>
+        </div>
+    </t>
     <t t-name="website_forum.social_message_question">
         <p>On average, <b>45% of questions shared</b> on social networks get an answer within
         5 hours. Questions shared on two social networks have <b>65% more chance to get an

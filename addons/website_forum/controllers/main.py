@@ -480,12 +480,15 @@ class WebsiteForum(http.Controller):
 
         Post = request.env['forum.post']
         domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
+        if kwargs.get('spam_post'):
+            domain += [('name', 'like', kwargs.get('spam_post'))]
         flagged_posts_ids = Post.search(domain, order='write_date DESC')
 
         values = self._prepare_forum_values(forum=forum)
         values.update({
             'posts_ids': flagged_posts_ids,
             'queue_type': 'flagged',
+            'flagged_queue_active': 1,
         })
 
         return request.render("website_forum.moderation_queue", values)
@@ -563,13 +566,18 @@ class WebsiteForum(http.Controller):
         step = 30
         tag_count = User.sudo().search_count([('karma', '>', 1), ('website_published', '=', True)])
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
-        user_obj = User.sudo().search([('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC')
+
+
+        dom = [('karma', '>', 1), ('website_published', '=', True)] 
+        if searches.get('user'):
+            dom += [('name', 'ilike', searches.get('user'))]
+            print('search = ', dom)
+        user_obj = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
         users = [[] for i in range(len(user_obj) // 3 + 1)]
         for index, user in enumerate(user_obj):
             users[index // 3].append(user)
         searches['users'] = 'True'
-
         values = self._prepare_forum_values(forum=forum, searches=searches)
         values .update({
             'users': users,
@@ -590,7 +598,7 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True, sitemap=False)
     def user_avatar(self, user_id=0, **post):
-        status, headers, content = binary_content(model='res.users', id=user_id, field='image_medium', default_mimetype='image/png', env=request.env(user=SUPERUSER_ID))
+        status, headers, content = binary_content(model='res.users', id=user_id, field='image', default_mimetype='image/png', env=request.env(user=SUPERUSER_ID))
 
         if not content:
             img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')

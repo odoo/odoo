@@ -6,7 +6,8 @@ odoo.define('website_forum.website_forum', function (require) {
     var core = require('web.core');
 
     var _t = core._t;
-
+    var QWeb = core.qweb;
+    
     var lastsearch;
 
     if (!$('.website_forum').length) {
@@ -25,8 +26,8 @@ odoo.define('website_forum.website_forum', function (require) {
             if ($('a[href*="/login"]').length) {
                 msg = _t('Sorry you must be logged in to perform this action');
             }
-            var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert mt8" id="karma_alert">'+
-                '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+            var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">'+
+                '<button type="button" class="close notification_close d-block" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                 msg + '</div>');
             var $voteAlert = $('#karma_alert');
             if ($voteAlert.length) {
@@ -421,5 +422,47 @@ odoo.define('website_forum.website_forum', function (require) {
             $textarea.html($form.find('.note-editable').code());
         });
     });
+    // Select all spam visible character
+    var $selectSpam = $('.all_select_spam');
+
+    $selectSpam.click(function(selectInput){
+        var $selectInput = $(selectInput);
+        var $inputSpam = $(this).parents('.tab-pane').find('input:visible');
+
+        if($inputSpam.prop('checked') == false) {
+            $inputSpam.prop('checked', true);
+            $(this).html(_t('Unselect all'));
+        } else {
+            $inputSpam.prop('checked', false);
+            $(this).html(_t('Select all'));
+        }
+    });
+    // Unselect all when you click on the menu (to don't have conflict)
+    var $spamLink = $('.spam_menu');
+
+    $spamLink.click(function(spamMenu){
+        var $spamMenu = $(spamMenu);
+        var $spamAllInput = $(this).parents('.modal-body').find('input');
+        $spamAllInput.prop('checked', false);
+        $(this).parents('.modal-body').find('.all_select_spam').html(_t('Select all'));
+    });
+
+    ajax.loadXML("/website_forum/static/src/xml/website_forum_share_templates.xml", core.qweb);
+
+    var $spam = $('#spamSearch');
+    $spam.on('keyup', function(ev) {
+        var to_search = $(ev.currentTarget).val();
+        var spam_ids = $(ev.currentTarget).data('spam-ids')
+        return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+            model: 'forum.post',
+            method: 'search_read',
+            args: [[['id', 'in', spam_ids], ['name', 'ilike', to_search]], ['name']],
+            kwargs: {}
+        }).then(function(o) {
+            $('div.post_spam').html(QWeb.render('website_forum.spam_search_name', {
+                posts: o,
+            }));
+        });
+     })
 
 });
