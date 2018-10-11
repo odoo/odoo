@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import functools
 import io
 import logging
 import os.path
@@ -86,30 +87,73 @@ def _fix_multiple_roots(node):
             data_node.append(child)
         node.append(data_node)
 
-def _eval_xml(self, node, env):
-    if node.tag in ('field','value'):
-        t = node.get('type','char')
+# ideally would have used decorator.decorator, but the type inference doesn't
+# work
+def with_data(callback):
+    @functools.wraps(callback)
+    def _data(self, node, _env):
+        data = node.text # FIXME: don't we need to encode this?
+        if node.get('file'):
+            with file_open(node.get('file'), 'rb') as f:
+                data = f.read()
+        return callback(self, data or b'')
+    return _data
+
+def with_text(callback):
+    @functools.wraps(callback)
+    def _text(self, node, _env):
+        text = node.text
+        if node.get('file'):
+            with file_open(node.get('file'), 'rb') as f:
+                text = pycompat.to_text(f.read())
+        return callback(self, text or '')
+    return _text
+
+def _eval_xml(converter, node, env):
+    return Evaluator(converter).evaluate(node, env)
+
+class Evaluator:
+    def __init__(self, converter):
+        self.converter = converter
+
+    @property
+    def idref(self):
+        return self.converter.idref
+    @property
+    def id_get(self):
+        return self.converter.id_get
+    @property
+    def module(self):
+        return self.converter.module
+
+    def evaluate(self, node, env):
+        # <function>
+        #   <function/>
+        # </function>
+        if node.tag == 'function':
+            return self.converter._tag_function(node)
+
+        from odoo import models # circular dependencies ho!
+        assert node.tag in ('field','value')
+
         f_model = node.get('model')
-        if node.get('search'):
-            f_search = node.get("search")
-            f_use = node.get("use",'id')
-            f_name = node.get("name")
-            idref2 = {}
-            if f_search:
-                idref2 = _get_idref(self, env, f_model, self.idref)
+
+        f_search = node.get("search")
+        if f_search:
+            idref2 = _get_idref(self, env, f_model, self.idref)
             q = safe_eval(f_search, idref2)
-            ids = env[f_model].search(q).ids
-            if f_use != 'id':
-                ids = [x[f_use] for x in env[f_model].browse(ids).read([f_use])]
-            _fields = env[f_model]._fields
-            if (f_name in _fields) and _fields[f_name].type == 'many2many':
-                return ids
-            f_val = False
-            if len(ids):
-                f_val = ids[0]
-                if isinstance(f_val, tuple):
-                    f_val = f_val[0]
-            return f_val
+
+            # can't limit=1 here or use on a relational field might get 0
+            # records
+            results = env[f_model].search(q)
+            f_use = node.get('use')
+            if f_use is not None:
+                results = results.mapped(f_use)
+            first_result = results[:1]
+            if isinstance(results, models.Model):
+                return first_result.ids or False
+            return first_result or False
+
         a_eval = node.get('eval')
         if a_eval:
             idref2 = _get_idref(self, env, f_model, self.idref)
@@ -119,89 +163,79 @@ def _eval_xml(self, node, env):
                 logging.getLogger('odoo.tools.convert.init').error(
                     'Could not eval(%s) for %s in %s', a_eval, node.get('name'), env.context)
                 raise
-        def _process(s):
-            matches = re.finditer(br'[^%]%\((.*?)\)[ds]'.decode('utf-8'), s)
-            done = set()
-            for m in matches:
-                found = m.group()[1:]
-                if found in done:
-                    continue
-                done.add(found)
-                id = m.groups()[0]
-                if not id in self.idref:
-                    self.idref[id] = self.id_get(id)
-                # So funny story: in Python 3, bytes(n: int) returns a
-                # bytestring of n nuls. In Python 2 it obviously returns the
-                # stringified number, which is what we're expecting here
-                s = s.replace(found, str(self.idref[id]))
-            s = s.replace('%%', '%') # Quite weird but it's for (somewhat) backward compatibility sake
-            return s
 
-        if t == 'xml':
-            _fix_multiple_roots(node)
-            return '<?xml version="1.0"?>\n'\
-                +_process("".join(etree.tostring(n, encoding='unicode') for n in node))
-        if t == 'html':
-            return _process("".join(etree.tostring(n, encoding='unicode') for n in node))
+        t = node.get('type','char')
+        return getattr(self, 'eval_' + t, self.eval_unknown)(node, env)
 
-        data = node.text
-        if node.get('file'):
-            with file_open(node.get('file'), 'rb') as f:
-                data = f.read()
+    def eval_unknown(self, _node, _env):
+        return None
 
-        if t == 'base64':
-            return base64.b64encode(data)
+    @with_data
+    def eval_base64(self, data):
+        return base64.b64encode(data)
 
-        # after that, only text content makes sense
-        data = pycompat.to_text(data)
-        if t == 'file':
-            from ..modules import module
-            path = data.strip()
-            if not module.get_module_resource(self.module, path):
-                raise IOError("No such file or directory: '%s' in %s" % (
-                    path, self.module))
-            return '%s,%s' % (self.module, path)
+    @with_text
+    def eval_char(self, text):
+        return text
 
-        if t == 'char':
-            return data
+    @with_text
+    def eval_file(self, text):
+        from ..modules import module
+        path = text.strip()
+        if not module.get_module_resource(self.module, path):
+            raise IOError("No such file or directory: '%s' in %s" % (
+                path, self.module))
+        return '%s,%s' % (self.module, path)
 
-        if t == 'int':
-            d = data.strip()
-            if d == 'None':
-                return None
-            return int(d)
+    @with_text
+    def eval_int(self, text):
+        d = text.strip()
+        if d == 'None':
+            return None
+        return int(d)
 
-        if t == 'float':
-            return float(data.strip())
+    @with_text
+    def eval_float(self, text):
+        return float(text.strip())
 
-        if t in ('list','tuple'):
-            res=[]
-            for n in node.iterchildren(tag='value'):
-                res.append(_eval_xml(self, n, env))
-            if t=='tuple':
-                return tuple(res)
-            return res
-    elif node.tag == "function":
-        model = env[node.get('model')]
-        method_name = node.get('name')
-        # determine arguments
-        args = []
-        kwargs = {}
-        a_eval = node.get('eval')
-        if a_eval:
-            self.idref['ref'] = self.id_get
-            args = list(safe_eval(a_eval, self.idref))
-        for child in node:
-            if child.tag == 'value' and child.get('name'):
-                kwargs[child.get('name')] = _eval_xml(self, child, env)
-            else:
-                args.append(_eval_xml(self, child, env))
-        # merge current context with context in kwargs
-        kwargs['context'] = {**env.context, **kwargs.get('context', {})}
-        # invoke method
-        return odoo.api.call_kw(model, method_name, args, kwargs)
-    elif node.tag == "test":
-        return node.text
+    def eval_list(self, node, env):
+        return [
+            self.evaluate(n, env)
+            for n in node.iterchildren(tag='value')
+        ]
+
+    def eval_tuple(self, node, env):
+        return tuple(self.eval_list(node, env))
+
+    def eval_xml(self, node, _env):
+        _fix_multiple_roots(node)
+        return '<?xml version="1.0"?>\n' \
+               + self._substitute_xids("".join(etree.tostring(n, encoding='unicode') for n in node))
+
+    def eval_html(self, node, _env):
+        return self._substitute_xids("".join(etree.tostring(n, encoding='unicode') for n in node))
+
+    def _substitute_xids(self, s):
+        """ Looks for all matches for %(xxx)s in the text (an HTML or XML
+        view), and replaces each unique match *in the entire document* at once
+        hence the odd `done` set.
+
+        TODO: bench compared to using a straight re.sub with a replacer, as the idrefs are memoized separately...
+
+        e.g. %(?:%|\(([^)]+)\)[ds]) and if group(0) == %% then % else id_get(group(1))
+        """
+        matches = re.finditer(r'[^%]%\((.*?)\)[ds]', s)
+        done = set()
+        for m in matches:
+            found = m.group()[1:]
+            if found in done:
+                continue
+            done.add(found)
+            xid = m.groups()[0]
+            r = self.idref[xid] = self.id_get(xid)
+            s = s.replace(found, str(r))
+        s = s.replace('%%', '%') # Quite weird but it's for (somewhat) backward compatibility sake
+        return s
 
 
 def str2bool(value):
@@ -323,11 +357,34 @@ form: module.record_id""" % (xml_id,)
             report.unlink_action()
         return report.id
 
-    def _tag_function(self, rec):
+    def _tag_function(self, node):
         if self.noupdate and self.mode != 'init':
             return
-        env = self.get_env(rec)
-        _eval_xml(self, rec, env)
+        env = self.get_env(node)
+
+        model = env[node.get('model')]
+        method_name = node.get('name')
+
+        a_eval = node.get('eval')
+        if a_eval:
+            self.idref['ref'] = self.id_get
+            args = list(safe_eval(a_eval, self.idref))
+        else:
+            args = [
+                r for r in (_eval_xml(self, n, env) for n in node)
+                if r is not None
+            ]
+
+        kwargs = {}
+        for child in node:
+            if child.tag == 'value' and child.get('name'):
+                kwargs[child.get('name')] = _eval_xml(self, child, env)
+            else:
+                args.append(_eval_xml(self, child, env))
+        # merge current context with context in kwargs
+        kwargs['context'] = {**env.context, **kwargs.get('context', {})}
+        # invoke method
+        return odoo.api.call_kw(model, method_name, args, kwargs)
 
     def _tag_act_window(self, rec):
         name = rec.get('name')
