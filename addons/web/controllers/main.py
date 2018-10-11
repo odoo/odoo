@@ -1073,7 +1073,12 @@ class Binary(http.Controller):
         if content:
             image_base64 = base64.b64decode(content)
         else:
-            image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
+            suffix = field.split('_')[-1]
+            if suffix in ('small', 'medium', 'big'):
+                encoded_placeholder = base64.b64encode(self.placeholder(image='placeholder.png'))
+                image_base64 = base64.b64decode(getattr(odoo.tools, 'image_resize_image_%s' % suffix)(encoded_placeholder))
+            else:
+                image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
             headers = self.force_contenttype(headers, contenttype='image/png')
 
         headers.append(('Content-Length', len(image_base64)))
