@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <rng:define name="env">
+        <rng:optional><rng:attribute name="uid" /></rng:optional>
+        <rng:optional><rng:attribute name="context" /></rng:optional>
+    </rng:define>
+
     <rng:define name="any">
         <rng:element>
             <rng:anyName/>
@@ -37,9 +42,7 @@
         <rng:element name="function">
             <rng:attribute name="model" />
             <rng:attribute name="name" />
-            <!-- doesn't look like it has any use? -->
-            <rng:optional><rng:attribute name="id" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:ref name="env"/>
             <rng:optional>
                 <rng:choice>
                     <rng:attribute name="eval" />
@@ -163,7 +166,7 @@
                 </rng:optional>
             </rng:optional>
             <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:ref name="env"/>
             <rng:zeroOrMore>
                 <rng:ref name="field" />
             </rng:zeroOrMore>
@@ -232,47 +235,6 @@
         </rng:element>
     </rng:define>
 
-    <!-- TODO: remove these, useless -->
-
-    <rng:define name="assert">
-        <rng:element name="assert">
-            <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="search" /></rng:optional>
-            <rng:optional><rng:attribute name="count" /></rng:optional>
-            <rng:optional><rng:attribute name="string" /></rng:optional>
-            <rng:optional><rng:attribute name="id" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
-            <rng:optional><rng:attribute name="severity" /></rng:optional>
-            <rng:zeroOrMore>
-                <rng:element name="test">
-                    <rng:attribute name="expr"/>
-                    <rng:choice>
-                        <rng:text />
-                        <rng:empty />
-                    </rng:choice>
-                </rng:element>
-            </rng:zeroOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="ir_set">
-        <rng:element name="ir_set">
-            <rng:oneOrMore>
-                <rng:ref name="field" />
-            </rng:oneOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="url">
-        <rng:element name="url">
-            <rng:attribute name="id" />
-            <rng:attribute name="name" />
-            <rng:attribute name="url" />
-            <rng:optional><rng:attribute name="target" /></rng:optional>
-            <rng:empty />
-        </rng:element>
-    </rng:define>
-
     <rng:define name="act_window">
         <rng:element name="act_window">
             <rng:attribute name="id" />
@@ -303,7 +265,7 @@
                 <rng:name>data</rng:name>
             </rng:choice>
             <rng:optional><rng:attribute name="noupdate" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:ref name="env"/>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>
@@ -313,11 +275,8 @@
                     <rng:ref name="template" />
                     <rng:ref name="delete" />
                     <rng:ref name="act_window" />
-                    <rng:ref name="url" />
-                    <rng:ref name="assert" />
                     <rng:ref name="report" />
                     <rng:ref name="function" />
-                    <rng:ref name="ir_set" />
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
