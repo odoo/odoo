@@ -16,10 +16,7 @@ class IrModuleModule(models.Model):
     _name = "ir.module.module"
     _description = 'Module'
     _inherit = _name
-    # _theme_model_names: models to convert from theme template to real model
-    #   The order is important because of dependencies:
-    #       - page need view
-    #       - menu need page
+
     _theme_model_names = OrderedDict([
         ('ir.ui.view', 'theme.ir.ui.view'),
         ('website.page', 'theme.website.page'),
@@ -81,8 +78,9 @@ class IrModuleModule(models.Model):
                     websites_to_update = module._theme_get_stream_website_ids()
 
                     if module.state == 'to upgrade' and request:
-                        current_website = self.env['website'].get_current_website()
-                        websites_to_update = current_website if current_website in websites_to_update else self.env['website']
+                        Website = self.env['website']
+                        current_website = Website.get_current_website()
+                        websites_to_update = current_website in websites_to_update and current_website or Website
 
                     for website in websites_to_update:
                         module._theme_load(website)
@@ -155,9 +153,7 @@ class IrModuleModule(models.Model):
                 remaining -= rec
 
         if len(remaining):
-            error = 'Error - Remaining: %s' % remaining.mapped('display_name')
-            _logger.error(error)
-            raise MissingError(error)
+            raise MissingError('Error - Remaining: %s' % remaining.mapped('display_name'))
 
         self._theme_cleanup(model_name, website)
 
@@ -195,21 +191,12 @@ class IrModuleModule(models.Model):
                 self._theme_cleanup(model_name, website)
 
     @api.multi
-    def _theme_find_orphans(self, model_name, website):
+    def _theme_cleanup(self, model_name, website):
         """
-            Find orphan models of type ``model_name`` for the website ``website``.
-
-            We need to compute it this way because if the upgrade (or deletion) of a theme module
-            removes a model template, then in the model itself the variable
-            ``theme_template_id`` will be set to NULL and the reference to the theme being removed
-            will be lost. However we do want the ophan to be deleted from the website when
-            we upgrade or delete the theme from the website.
-
-            ``website.page`` and ``website.menu`` don't have ``key`` field so we don't clean them.
-            TODO in master: add a field ``theme_id`` on the models to more cleanly compute orphans.
-        """
+            Remove orphan models of type ``model_name`` from the current theme and
+            for the website ``website``.
+            """
         self.ensure_one()
-
         model = self.env[model_name]
 
         if model_name in ('website.page', 'website.menu'):
@@ -220,15 +207,6 @@ class IrModuleModule(models.Model):
             ('website_id', '=', website.id),
             ('theme_template_id', '=', False),
         ])
-
-    @api.multi
-    def _theme_cleanup(self, model_name, website):
-        """
-            Remove orphan models of type ``model_name`` from the current theme and
-            for the website ``website``.
-            """
-        self.ensure_one()
-        self._theme_find_orphans(model_name, website).unlink()
 
     @api.multi
     def _theme_get_upstream(self):
@@ -287,22 +265,17 @@ class IrModuleModule(models.Model):
                 upper_theme.button_immediate_upgrade()
 
     @api.model
-    def _theme_remove(self, website, keep_themes=[]):
+    def _theme_remove(self, website):
         """
             Remove from ``website`` its current theme, including all the themes in the stream.
 
             The order of removal will be reverse of installation to handle dependencies correctly.
-
-            Themes in ``keep_themes`` will not be removed from website. This should ONLY be used
-            if those themes are going to be installed again just after, otherwise it will
-            lead to an inconsitent state. This is useful to not delete inherited models of the
-            previous theme when installing a new theme that has common dependencies.
         """
         if not website.theme_id:
             return
+
         for theme in reversed(website.theme_id._theme_get_stream_themes()):
-            if theme not in keep_themes:
-                theme._theme_unload(website)
+            theme._theme_unload(website)
         website.theme_id = False
 
     @api.multi
@@ -322,7 +295,7 @@ class IrModuleModule(models.Model):
         self.ensure_one()
         website = self.env['website'].get_current_website()
 
-        self._theme_remove(website, keep_themes=self._theme_get_stream_themes())
+        self._theme_remove(website)
 
         # website.theme_id must be set before upgrade/install to trigger the load in ``write``
         website.theme_id = self
