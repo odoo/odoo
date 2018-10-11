@@ -138,7 +138,6 @@ class TestAccessRights(TransactionCase):
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id]
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -149,7 +148,7 @@ class TestAccessRights(TransactionCase):
             'mailing_list_ids': [(4, l.id) for l in self.mass_mailing.contact_list_ids],
         }
         composer = self.env['mail.compose.message'].with_context(
-            active_ids=res_ids,
+            active_ids=[mailing_contact_1.id, mailing_contact_2.id],
             mass_mailing_seen_list=self.mass_mailing._get_seen_list(),
             mass_mailing_opt_out_list=self.mass_mailing._get_opt_out_list()).create(composer_values)
         composer.send_mail()
@@ -194,7 +193,6 @@ class TestAccessRights(TransactionCase):
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id, mailing_list_2.id]
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -205,7 +203,7 @@ class TestAccessRights(TransactionCase):
             'mailing_list_ids': [(4, l.id) for l in self.mass_mailing.contact_list_ids],
         }
         composer = self.env['mail.compose.message'].with_context(
-            active_ids=res_ids,
+            active_ids=[mailing_contact_1.id, mailing_contact_2.id],
             mass_mailing_seen_list=self.mass_mailing._get_seen_list(),
             mass_mailing_opt_out_list=self.mass_mailing._get_opt_out_list()).create(composer_values)
         composer.send_mail()
@@ -244,7 +242,6 @@ class TestAccessRights(TransactionCase):
             'body_html': 'This is mass mail marketing demo'})
         self.mass_mailing.contact_list_ids = [mailing_list_1.id]
         self.mass_mailing.put_in_queue()
-        res_ids = self.mass_mailing.get_remaining_recipients()
         composer_values = {
             'body': self.mass_mailing.convert_links()[self.mass_mailing.id],
             'subject': self.mass_mailing.name,
@@ -255,7 +252,7 @@ class TestAccessRights(TransactionCase):
             'mailing_list_ids': [(4, l.id) for l in self.mass_mailing.contact_list_ids],
         }
         composer = self.env['mail.compose.message'].with_context(
-            active_ids=res_ids,
+            active_ids=[mailing_contact_1.id, mailing_contact_2.id],
             mass_mailing_seen_list=self.mass_mailing._get_seen_list(),
             mass_mailing_opt_out_list=self.mass_mailing._get_opt_out_list()).create(composer_values)
         composer.send_mail()
