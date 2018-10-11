@@ -123,6 +123,7 @@ class SnailmailLetter(models.Model):
             options: {
                 color: boolean (true if color, false if black-white),
                 duplex: boolean (true if duplex, false otherwise),
+                currency_name: char
             }
         }
         """
@@ -191,6 +192,7 @@ class SnailmailLetter(models.Model):
             'options': {
                 'color': self and self[0].color,
                 'duplex': self and self[0].duplex,
+                'currency_name': self and self[0].company_id.currency_id.name,
             },
             # this will not raise the InsufficientCreditError which is the behaviour we want for now
             'batch': True,
@@ -310,11 +312,8 @@ class SnailmailLetter(models.Model):
         endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
         params = self._snailmail_create('estimate')
         req = jsonrpc(endpoint + '/iap/snailmail/1/estimate', params=params)
-        # The cost is sent in hunderth of eurocents, we change it to euros and then convert it to the company currency
-        cost = int(req['total_cost'])/10000.0
-        currency_eur = self.env.ref('base.EUR')
 
-        return currency_eur._convert(cost, self[0].company_id.currency_id, self[0].company_id, fields.Datetime.now())
+        return req['total_cost']
 
     @api.model
     def _snailmail_cron(self):
