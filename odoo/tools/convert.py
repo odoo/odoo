@@ -138,6 +138,8 @@ class Evaluator:
 
         f_model = node.get('model')
 
+        # this is only for <value search=""> as <field> is handled separately
+        # in <record>'s callback
         f_search = node.get("search")
         if f_search:
             idref2 = _get_idref(self, env, f_model, self.idref)
@@ -587,46 +589,47 @@ form: module.record_id""" % (xml_id,)
         res = {}
         for field in rec.findall('./field'):
             #TODO: most of this code is duplicated above (in _eval_xml)...
-            f_name = field.get("name")
+            field_name = field.get("name")
+            target = model.get(field_name)
+            target_type = target and target.type
+
             f_ref = field.get("ref")
             f_search = field.get("search")
-            f_model = field.get("model")
-            if not f_model and f_name in model._fields:
-                f_model = model._fields[f_name].comodel_name
-            f_use = field.get("use",'') or 'id'
             f_val = False
 
             if f_search:
-                idref2 = _get_idref(self, env, f_model, self.idref)
+                # FIXME: @model is required in _eval_xml
+                comodel = field.get('model') or target and target.comodel_name
+                assert comodel, 'Define an attribute model="..." in your .XML file !'
+                f_use = field.get("use") or 'id'
+
+                idref2 = _get_idref(self, env, comodel, self.idref)
                 q = safe_eval(f_search, idref2)
-                assert f_model, 'Define an attribute model="..." in your .XML file !'
                 # browse the objects searched
-                s = env[f_model].search(q)
-                # column definitions of the "local" object
-                _fields = env[rec_model]._fields
-                # if the current field is many2many
-                if (f_name in _fields) and _fields[f_name].type == 'many2many':
+                s = env[comodel].search(q)
+                # if we're assigning to an m2m, assume f_use = id and use all (???)
+                # FIXME: _eval_xml has no concept of target coercion
+                if target_type == 'many2many':
                     f_val = [(6, 0, [x[f_use] for x in s])]
-                elif len(s):
-                    # otherwise (we are probably in a many2one field),
-                    # take the first element of the search
+                elif s:
+                    # otherwise take value of first record
                     f_val = s[0][f_use]
-            elif f_ref:
-                if f_name in model._fields and model._fields[f_name].type == 'reference':
+            elif f_ref: # FIXME: no ref in _eval_xml, also target coercion
+                if target_type == 'reference':
                     val = self.model_id_get(f_ref)
                     f_val = val[0] + ',' + str(val[1])
                 else:
                     f_val = self.id_get(f_ref)
             else:
                 f_val = _eval_xml(self, field, env)
-                if f_name in model._fields:
-                    if model._fields[f_name].type == 'integer':
-                        f_val = int(f_val)
-                    elif model._fields[f_name].type in ['float', 'monetary']:
-                        f_val = float(f_val)
-                    elif model._fields[f_name].type == 'boolean' and isinstance(f_val, str):
-                        f_val = str2bool(f_val)
-            res[f_name] = f_val
+                # FIXME: no target coercion in _eval_xml
+                if target_type == 'integer':
+                    f_val = int(f_val)
+                elif target_type in ['float', 'monetary']:
+                    f_val = float(f_val)
+                elif target_type == 'boolean' and isinstance(f_val, str):
+                    f_val = str2bool(f_val)
+            res[field_name] = f_val
 
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         record = model._load_records([data], self.mode == 'update')

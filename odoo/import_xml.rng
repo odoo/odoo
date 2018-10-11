@@ -30,10 +30,15 @@
     <rng:define name="value">
         <rng:element name="value">
             <rng:optional><rng:attribute name="name" /></rng:optional>
-            <rng:optional><rng:attribute name="model" /></rng:optional>
             <rng:choice>
-                <rng:attribute name="search" />
-                <rng:attribute name="eval" />
+                <rng:group>
+                    <rng:attribute name="search" />
+                    <rng:attribute name="model" />
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="eval" />
+                    <rng:optional><rng:attribute name="model" /></rng:optional>
+                </rng:group>
                 <rng:group>
                     <rng:optional><rng:attribute name="type" /></rng:optional>
                     <rng:choice>
