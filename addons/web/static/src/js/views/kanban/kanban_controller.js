@@ -384,10 +384,12 @@ var KanbanController = BasicController.extend({
                 var columnState = self.model.get(column.db_id, {raw: true});
                 var context = columnState.getContext();
                 var state = self.model.get(self.handle, {raw: true});
-                context['default_' + state.groupedBy[0]] = columnState.res_id;
+                var groupedBy = state.groupedBy[0];
+                var groupedByM2O = state.fields[groupedBy].type === 'many2one';
+                context['default_' + groupedBy] = groupedByM2O ? columnState.res_id : columnState.value;
                 new view_dialogs.FormViewDialog(self, {
                     res_model: state.model,
-                    context: _.extend({default_name: name}, context),
+                    context: _.extend({default_name: values.name || values.display_name}, context),
                     title: _t("Create"),
                     disable_multiple_selection: true,
                     on_saved: function (record) {
