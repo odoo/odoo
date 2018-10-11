@@ -239,17 +239,34 @@ class SnailmailLetter(models.Model):
                     record._message_log(body=message)
                     letter.write({'info_msg': message, 'state': 'sent'})
             else:
+                # look for existing activities related to snailmail to update or create a new one.
+                # TODO: in following versions, Add a link to a specifc activity on the letter
                 note = _('An error occured when sending the document by post.<br>Error: %s' % \
                     self._get_error_message(doc['error'] if response['request_code'] == 200 else response['reason']))
+
+                domain = [
+                    ('summary', 'ilike', '[SNAILMAIL]'),
+                    ('res_id', '=', letter.res_id),
+                    ('res_model_id', '=', self.env['ir.model']._get(letter.model).id),
+                    ('activity_type_id', '=', self.env.ref('mail.mail_activity_data_warning').id),
+                ]
+                MailActivity = self.env['mail.activity']
+                activity = MailActivity.search(domain, limit=1)
+
                 activity_data = {
                     'res_id': letter.res_id,
                     'res_model_id': self.env['ir.model']._get(letter.model).id,
                     'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
-                    'summary': _('Post letter: an error occured.'),
+                    'summary': '[SNAILMAIL] ' + _('Post letter: an error occured.'),
                     'note': note,
                     'user_id': letter.user_id.id,
+                    'date_deadline': fields.Date.today()
                 }
-                self.env['mail.activity'].create(activity_data)
+                if activity:
+                    activity.update(activity_data)
+                else:
+                    MailActivity.create(activity_data)
+
                 letter.write({'info_msg': note})
 
         self.env.cr.commit()
