@@ -1009,6 +1009,25 @@
         </div>
     </t>
 
+    <t t-name="ErrorPaymentBarcodePopupWidget">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-barcode">
+                <header class="title">Unknown Barcode
+                    <br />
+                    <span class='barcode'><t t-esc="widget.options.barcode" /></span>
+                </header>
+                <main class="body">
+                    Only client and employee barcodes are allowed on the payment screen.
+                </main>
+                <footer class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ConfirmPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-confirm">

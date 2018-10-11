@@ -124,7 +124,12 @@ var ScreenWidget = PosBaseWidget.extend({
         } else {
             show_code = code.code;
         }
-        this.gui.show_popup('error-barcode',show_code);
+
+        if (!this.$el.first().hasClass("payment-screen")){
+            this.gui.show_popup('error-barcode',show_code);
+        } else {
+            this.gui.show_popup('error-payment-barcode',show_code);
+        }
     },
 
     // this method shows the screen and sets up all the widget related to this screen. Extend this method
@@ -137,15 +142,29 @@ var ScreenWidget = PosBaseWidget.extend({
             this.$el.removeClass('oe_hidden');
         }
 
-        this.pos.barcode_reader.set_action_callback({
-            'cashier': _.bind(self.barcode_cashier_action, self),
-            'product': _.bind(self.barcode_product_action, self),
-            'weight': _.bind(self.barcode_product_action, self),
-            'price': _.bind(self.barcode_product_action, self),
-            'client' : _.bind(self.barcode_client_action, self),
-            'discount': _.bind(self.barcode_discount_action, self),
-            'error'   : _.bind(self.barcode_error_action, self),
-        });
+        if (this.$el.first().hasClass("receipt-screen")){
+            this.pos.barcode_reader.reset_action_callbacks();
+        } else if (this.$el.first().hasClass("payment-screen")){
+            this.pos.barcode_reader.set_action_callback({
+                'cashier': _.bind(self.barcode_cashier_action, self),
+                'product': _.bind(self.barcode_error_action, self),
+                'weight': _.bind(self.barcode_error_action, self),
+                'price': _.bind(self.barcode_error_action, self),
+                'client' : _.bind(self.barcode_client_action, self),
+                'discount': _.bind(self.barcode_error_action, self),
+                'error'   : _.bind(self.barcode_error_action, self),
+            });
+       } else {
+            this.pos.barcode_reader.set_action_callback({
+                'cashier': _.bind(self.barcode_cashier_action, self),
+                'product': _.bind(self.barcode_product_action, self),
+                'weight': _.bind(self.barcode_product_action, self),
+                'price': _.bind(self.barcode_product_action, self),
+                'client' : _.bind(self.barcode_client_action, self),
+                'discount': _.bind(self.barcode_discount_action, self),
+                'error'   : _.bind(self.barcode_error_action, self),
+            });
+        }
     },
 
     // this method is called when the screen is closed to make place for a new screen. this is a good place

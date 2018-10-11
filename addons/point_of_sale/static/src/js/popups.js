@@ -128,6 +128,14 @@ var ErrorBarcodePopupWidget = ErrorPopupWidget.extend({
 });
 gui.define_popup({name:'error-barcode', widget: ErrorBarcodePopupWidget});
 
+var ErrorPaymentBarcodePopupWidget = ErrorPopupWidget.extend({
+    template:'ErrorPaymentBarcodePopupWidget',
+    show: function(barcode){
+        this._super({barcode: barcode});
+    },
+});
+gui.define_popup({name:'error-payment-barcode', widget: ErrorPaymentBarcodePopupWidget});
+
 
 var ConfirmPopupWidget = PopupWidget.extend({
     template: 'ConfirmPopupWidget',
