@@ -53,7 +53,7 @@ class StockHistory(models.Model):
             stock_histories_by_group = {}
             for line in self._cr.dictfetchall():
                 stock_history_data[line['id']] = line
-                key = tuple(line[g] if g in line else False for g in groupby_list)
+                key = tuple(line.get(g) or False for g in groupby_list)
                 stock_histories_by_group.setdefault(key, [])
                 stock_histories_by_group[key] += [line['id']]
 
