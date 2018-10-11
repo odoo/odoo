@@ -47,7 +47,6 @@ class Location(models.Model):
         'stock.location', 'Parent Location', index=True, ondelete='cascade',
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
-    partner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the location if not internal")
     comment = fields.Text('Additional Information')
     posx = fields.Integer('Corridor (X)', default=0, help="Optional localization details, for information purpose only")
     posy = fields.Integer('Shelves (Y)', default=0, help="Optional localization details, for information purpose only")
