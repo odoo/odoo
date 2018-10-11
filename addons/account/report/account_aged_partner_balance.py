@@ -17,16 +17,27 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         # Do an invoice and a payment and unreconcile. The amount will be nullified
         # By default, the partner wouldn't appear in this report.
         # The context key allow it to appear
+        # In case of a period_length of 30 days as of 2019-02-08, we want the following periods:
+        # Name       Stop         Start
+        # 1 - 30   : 2019-02-07 - 2019-01-09
+        # 31 - 60  : 2019-01-08 - 2018-12-10
+        # 61 - 90  : 2018-12-09 - 2018-11-10
+        # 91 - 120 : 2018-11-09 - 2018-10-11
+        # +120     : 2018-10-10
         periods = {}
         start = datetime.strptime(date_from, "%Y-%m-%d")
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
+            period_name = str((5-(i+1)) * period_length + 1) + '-' + str((5-i) * period_length)
+            period_stop = (start - relativedelta(days=1)).strftime('%Y-%m-%d')
+            if i == 0:
+                period_name = '+' + str(4 * period_length)
             periods[str(i)] = {
-                'name': (i!=0 and (str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length)) or ('+'+str(4 * period_length))),
-                'stop': start.strftime('%Y-%m-%d'),
+                'name': period_name,
+                'stop': period_stop,
                 'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
             }
-            start = stop - relativedelta(days=1)
+            start = stop
 
         res = []
         total = []
@@ -77,7 +88,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 WHERE (l.account_id = account_account.id) AND (l.move_id = am.id)
                     AND (am.state IN %s)
                     AND (account_account.internal_type IN %s)
-                    AND (COALESCE(l.date_maturity,l.date) > %s)\
+                    AND (COALESCE(l.date_maturity,l.date) >= %s)\
                     AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
                 AND (l.date <= %s)
                 AND l.company_id IN %s'''
