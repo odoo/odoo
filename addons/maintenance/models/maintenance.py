@@ -347,8 +347,8 @@ class MaintenanceRequest(models.Model):
         if vals.get('owner_user_id'):
             self.message_subscribe_users(user_ids=[vals['owner_user_id']])
         res = super(MaintenanceRequest, self).write(vals)
-        if self.stage_id.done and 'stage_id' in vals:
-            self.write({'close_date': fields.Date.today()})
+        if 'stage_id' in vals:
+            self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
         return res
 
     @api.model
