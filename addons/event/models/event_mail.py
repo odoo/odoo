@@ -167,6 +167,14 @@ class EventMailScheduler(models.Model):
                     self.env.cr.commit()
         return True
 
+    def _write(self, vals):
+        # prevent serialization failure when lot of registration may happen at the same time
+        if len(vals) == 1 and 'done' in vals:
+            orig_done = {rec.get('done') for rec in self.read(['done'])}
+            if orig_done == {vals['done']}:
+                return True
+        return super(EventMailScheduler, self)._write(vals)
+
 
 class EventMailRegistration(models.Model):
     _name = 'event.mail.registration'
