@@ -3791,6 +3791,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 else:
                     imd.browse(d_id).unlink()
 
+        # check for records to create with an XMLID from another module
+        module = self.env.context.get('install_module')
+        if module:
+            prefix = module + "."
+            for data in to_create:
+                if data.get('xml_id') and not data['xml_id'].startswith(prefix):
+                    _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
+
         # create records
         records = self.create([data['values'] for data in to_create])
         for data, record in pycompat.izip(to_create, records):
