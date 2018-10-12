@@ -62,6 +62,7 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
             productID = parseInt(productID, 10);
         }
 
+        $el.prop("disabled", true).addClass('disabled');
         var productReady = this.selectOrCreateProduct(
             $el.closest('form'),
             productID,
@@ -82,9 +83,12 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
                     self.wishlistProductIDs.push(productId);
                     self._updateWishlistView();
                     wSaleUtils.animateClone($('#my_wish'), $el.closest('form'), 25, 40);
-                    $el.prop("disabled", true).addClass('disabled');
+                }).fail(function () {
+                    $el.prop("disabled", false).removeClass('disabled');
                 });
             }
+        }).fail(function () {
+            $el.prop("disabled", false).removeClass('disabled');
         });
     },
     /**
