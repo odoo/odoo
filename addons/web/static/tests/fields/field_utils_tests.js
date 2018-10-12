@@ -252,7 +252,7 @@ QUnit.test('parse monetary', function(assert) {
     assert.strictEqual(fieldUtils.parse.monetary("-100.00"), -100);
     assert.strictEqual(fieldUtils.parse.monetary("1,000.00"), 1000);
     assert.strictEqual(fieldUtils.parse.monetary("1,000,000.00"), 1000000);
-    assert.strictEqual(fieldUtils.parse.monetary("$&nbsp;125.00", {}, {currency_id: 3}), 125);
+    assert.strictEqual(fieldUtils.parse.monetary("$125.00", {}, {currency_id: 3}), 125);
     assert.strictEqual(fieldUtils.parse.monetary("1,000.00&nbsp;€", {}, {currency_id: 1}), 1000);
     assert.throws(function() {fieldUtils.parse.monetary("$ 12.00", {}, {currency_id: 3})}, /is not a correct/);
     assert.throws(function() {fieldUtils.parse.monetary("$&nbsp;12.00", {}, {currency_id: 1})}, /is not a correct/);

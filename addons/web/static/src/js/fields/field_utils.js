@@ -344,7 +344,7 @@ function formatMonetary(value, field, options) {
     if (currency.position === "after") {
         return formatted_value += '&nbsp;' + currency.symbol;
     } else {
-        return currency.symbol + '&nbsp;' + formatted_value;
+        return currency.symbol + formatted_value;
     }
 }
 /**
@@ -541,12 +541,6 @@ function parseFloat(value) {
  */
 function parseMonetary(value, field, options) {
     var values = value.split('&nbsp;');
-    if (values.length === 1) {
-        return parseFloat(value);
-    }
-    else if (values.length !== 2) {
-        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
-    }
     options = options || {};
     var currency = options.currency;
     if (!currency) {
@@ -557,7 +551,21 @@ function parseMonetary(value, field, options) {
         }
         currency = session.get_currency(currency_id);
     }
-    return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
+    if (values.length === 1) {
+        // case value[0] === currency.symbol corresponds to a currency symbol before float
+        if (!currency) {
+            return parseFloat(value);
+        } else {
+            if (value.split(' ').length > 1) {
+                throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
+            }
+            return parseFloat(value[0] === currency.symbol ? value.slice(1) : value);
+        }
+    }
+    else if (values.length !== 2) {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
+    }
+    return parseFloat(values[0]);
 }
 
 /**
