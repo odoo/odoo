@@ -3,3 +3,4 @@
 
 from . import mass_mailing
 from . import crm_lead
+from . import mail_thread

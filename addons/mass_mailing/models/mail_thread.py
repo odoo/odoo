@@ -65,12 +65,20 @@ class MailThread(models.AbstractModel):
         then the email is considered as invalid and is blacklisted."""
         super(MailThread, self).message_receive_bounce(email, partner, mail_id=None)
 
-        three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
-        stats = self.env['mail.mail.statistics'] \
-            .search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', email)]) \
-            .mapped('bounced')
-        if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT:
-            if max(stats) > min(stats) + datetime.timedelta(weeks=1):
-                blacklist_rec = self.env['mail.blacklist'].sudo()._add(email)
-                blacklist_rec._message_log(
-                    'This email has been automatically blacklisted because of too much bounced.')
+        if self.message_bounce >= 5:
+            three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
+            stats = self.env['mail.mail.statistics'] \
+                .search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', email)]) \
+                .mapped('bounced')
+            if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT:
+                if max(stats) > min(stats) + datetime.timedelta(weeks=1):
+                    blacklist_rec = self.env['mail.blacklist'].sudo()._add(email)
+                    blacklist_rec._message_log(
+                        'This email has been automatically blacklisted because of too much bounced.')
+
+    def _message_reset_bounce(self, email_from):
+        """Includes mass_mailing.contacts in reset bounce process."""
+        super(MailThread, self)._message_reset_bounce(email_from)
+        if email_from:
+            for contact in self.env['mail.mass_mailing.contact']._get_records_from_email(email_from):
+                contact.message_bounce = 0

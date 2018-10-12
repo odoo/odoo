@@ -1203,6 +1203,9 @@ class MailThread(models.AbstractModel):
                          message_id, email_from, email_to)
             return []
 
+        # If this is not a bounce, it's a real new mail, so can reset bounce counter
+        self._message_reset_bounce(email_from)
+
         # 1. Check if message is a reply on a thread
         msg_references = [ref for ref in tools.mail_header_msgid_re.findall(thread_references) if 'reply_to' not in ref]
         mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
@@ -1477,6 +1480,31 @@ class MailThread(models.AbstractModel):
         if 'message_bounce' in self._fields:
             for record in self:
                 record.message_bounce = record.message_bounce + 1
+
+    def _message_reset_bounce(self, email_from):
+        """Called by ``message_process`` when a new mail is received from an email address.
+        If the email is related to a partner, we consider that the number of message_bounce
+        is not relevant anymore as the email is valid - as we received an email from this
+        address. The model is here hardcoded because we cannot know with which model the
+        incomming mail match. We consider that if a mail arrives, we have to clear bounce for
+        each model having bounce count.
+
+        :param email_from: email address that sent the incoming email."""
+        if email_from:
+            for partner in self.env['res.partner']._get_records_from_email(email_from):
+                partner.message_bounce = 0
+
+    def _get_records_from_email(self, email):
+        self._assert_primary_email()
+        normalized_email = tools.email_normalize(email)
+        if normalized_email:
+            query = """SELECT model.id
+                        FROM %s as model
+                        WHERE model.email_normalized = %%s""" % self._table
+            self._cr.execute(query, [normalized_email])
+            results = self._cr.fetchall()
+            return self.browse([result[0] for result in results])
+        return []
 
     def _message_extract_payload_postprocess(self, message, body, attachments):
         """ Perform some cleaning / postprocess in the body and attachments
