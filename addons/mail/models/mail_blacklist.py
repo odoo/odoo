@@ -156,3 +156,9 @@ class MailBlackListMixin(models.AbstractModel):
         super(MailBlackListMixin, self)._message_receive_bounce(email, partner)
         for record in self:
             record.message_bounce = record.message_bounce + 1
+
+    def _message_reset_bounce(self, email):
+        """ Override of mail.thread generic method. Purpose is to reset the
+        bounce counter of the record. """
+        super(MailBlackListMixin, self)._message_reset_bounce(email)
+        self.write({'message_bounce': 0})
