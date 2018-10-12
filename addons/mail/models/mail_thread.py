@@ -1480,6 +1480,33 @@ class MailThread(models.AbstractModel):
             for record in self:
                 record.message_bounce = record.message_bounce + 1
 
+    def _reset_message_bounce(self, email_from):
+        """Called by ``message_process`` when a new mail is received from an email address.
+        If the email is related to a partner, we consider that the number of message_bounce
+        is not relevant anymore as the email is valid - as we received an email from this
+        address
+
+        :param email_from: email address that sent the incoming email."""
+        if email_from:
+            partners = self._get_records_from_email('res.partner', email_from)
+            for partner in partners:
+                partner.message_bounce = 0
+
+    def _get_records_from_email(self, model_name, email):
+        model = self.env[model_name]
+        model._assert_primary_email()
+        [email_field] = model._primary_email
+        sanitized_email = tools.email_split(email)
+        if sanitized_email and len(sanitized_email) == 1:
+            query = """SELECT model.id
+                        FROM %s as model
+                        WHERE LOWER(substring(model.%s, '([^ ,;<@]+@[^> ,;]+)')) = %%s""" % (model._table, email_field)
+            self._cr.execute(query, [sanitized_email[0].lower()])
+            results = self._cr.fetchall()
+            return model.browse([result[0] for result in results])
+        return False
+
+
     def _message_extract_payload_postprocess(self, message, body, attachments):
         """ Perform some cleaning / postprocess in the body and attachments
         extracted from the email. Note that this processing is specific to the
@@ -1678,6 +1705,7 @@ class MailThread(models.AbstractModel):
                 msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
+        self._reset_message_bounce(msg_dict['from'])
         return msg_dict
 
     # ------------------------------------------------------
