@@ -16,7 +16,8 @@ class SaleOrderLine(models.Model):
         # have changed, we don't compute the quantities but verify the move state.
         bom = self.env['mrp.bom']._bom_find(product=self.product_id)
         if bom and bom.type == 'phantom':
-            bom_delivered = all([move.state == 'done' for move in self.move_ids])
+            moves = self.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
+            bom_delivered = all([move.state == 'done' for move in moves])
             if bom_delivered:
                 return self.product_uom_qty
             else:
@@ -25,7 +26,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_bom_component_qty(self, bom):
-        bom_quantity = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id)
+        bom_quantity = self.product_uom._compute_quantity(1, bom.product_uom_id)
         boms, lines = bom.explode(self.product_id, bom_quantity)
         components = {}
         for line, line_data in lines:
@@ -46,6 +47,17 @@ class SaleOrderLine(models.Model):
                     qty = from_uom._compute_quantity(qty, to_uom)
                 components[product] = {'qty': qty, 'uom': to_uom.id}
         return components
+
+    def _get_qty_procurement(self):
+        self.ensure_one()
+        # Specific case when we change the qty on a SO for a kit product.
+        # We don't try to be too smart and keep a simple approach: we compare the quantity before
+        # and after update, and return the difference. We don't take into account what was already
+        # sent, or any other exceptional case.
+        bom = self.env['mrp.bom']._bom_find(product=self.product_id)
+        if bom and bom.type == 'phantom' and 'previous_product_uom_qty' in self.env.context:
+            return self.env.context['previous_product_uom_qty'].get(self.id, 0.0)
+        return super(SaleOrderLine, self)._get_qty_procurement()
 
 
 class AccountInvoiceLine(models.Model):

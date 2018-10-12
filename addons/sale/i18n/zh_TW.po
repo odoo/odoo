@@ -124,7 +124,7 @@ msgstr "# 銷售"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_count
 msgid "# of Invoices"
-msgstr "# 發票"
+msgstr "# 應收憑單"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
@@ -400,7 +400,7 @@ msgid ""
 "class=\"hidden-xs\"> Invoiced</span></span>"
 msgstr ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
-"class=\"hidden-xs\">發票</span></span>"
+"class=\"hidden-xs\">應收憑單</span></span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -461,7 +461,7 @@ msgstr "<strong>財政狀況備註：</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Invoices</strong>"
-msgstr "<strong>發票</strong>"
+msgstr "<strong>應收憑單</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -627,12 +627,12 @@ msgstr "發票金額"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
 msgid "Amount To Invoice"
-msgstr "待開立發票金額"
+msgstr "待開立應收憑單金額"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "待開立發票的報價金額"
+msgstr "待開立應收憑單的報價金額"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_analytic_account_id
@@ -743,7 +743,7 @@ msgstr "如果您把報價單寄給客戶，而不是直接確認訂單，請選
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
 msgid "Check this box to set an invoicing target for this sales channel."
-msgstr "選中這個框，設定一個目標這一銷售團隊進銷存。"
+msgstr "點選後，設定該銷售團隊的銷售目標。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -828,7 +828,7 @@ msgstr "優惠券和促銷"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Invoices"
-msgstr "創建發票"
+msgstr "創建應收憑單"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -842,7 +842,7 @@ msgstr "創建一個報價，新的銷售的第一步。"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr "創建並查看發票"
+msgstr "創建並查看應收憑單"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
@@ -1084,7 +1084,7 @@ msgstr "%s%%預付定金"
 msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
-msgstr "從銷售訂單創建發票時，將進行預付款。 複製銷售訂單時不會複製它們。"
+msgstr "從銷售訂單創建應收憑單時，將進行預付款。 複製銷售訂單時不會複製它們。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1128,7 +1128,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "從這個報表中，您可以得到一個總的客戶的發票總額。搜尋功能也能用來個性化您的發票報表等，例如根據您的需要匹配分析"
+msgstr "從這個報表中，您可以得到一個總的客戶的已開立應收憑單總額。搜尋功能也能用來個性化您的應收憑單報表等，例如根據您的需要匹配分析"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1180,7 +1180,7 @@ msgstr "ID"
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
-msgstr "如果銷售被鎖定，您不能再修改它。 但是，您仍然可以開發票或交付。"
+msgstr "如果銷售被鎖定，您不能再修改它。 但是，您仍然可以開立應收憑單或交貨。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_product_image
@@ -1245,12 +1245,12 @@ msgstr "發票行"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr "開立發票訂單"
+msgstr "開立應收憑單訂單"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr "銷售訂單開立發票"
+msgstr "銷售訂單開立應收憑單"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_status
@@ -1261,7 +1261,7 @@ msgstr "發票狀態"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_invoice_id
 msgid "Invoice address for current sales order."
-msgstr "目前銷售訂單的發票地址。"
+msgstr "目前銷售訂單的應收憑單地址。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
@@ -1269,7 +1269,7 @@ msgid ""
 "Invoice revenue for the current month. This is the amount the sales channel "
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
-msgstr "當月的發票收入。 這是銷售團隊本月開具的發票金額。 它用於計算目前和目標收入在看板視圖上的進展比率。"
+msgstr "這是銷售團隊本月開具的應收憑單金額。 它用於計算目前和目標收入在看板視圖上的進展比率。"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1279,17 +1279,17 @@ msgstr "已發貨發票"
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is ordered"
-msgstr "訂單發票"
+msgstr "應收憑單管理"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr "可開立發票的明細行"
+msgstr "可開立應收憑單的項目"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "可開具發票明細 (扣除預付定金)"
+msgstr "可開立應收憑單項目 (扣除預付定金)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -1314,30 +1314,30 @@ msgstr "本月已開發票"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
-msgstr "發票"
+msgstr "應收憑單"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr "發票分析"
+msgstr "應收憑單分析"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "發票統計"
+msgstr "應收憑單統計"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
-msgstr "將創建草稿發票，以便於在驗證前檢查。"
+msgstr "將創建草稿應收憑單，以便於在驗證前檢查。"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr "發票：免稅的總額"
+msgstr "應收憑單：總額"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1346,19 +1346,19 @@ msgstr "發票：免稅的總額"
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
-msgstr "開立發票"
+msgstr "開立應收憑單"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "開立發票策略"
+msgstr "開立應收憑單策略"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
 msgid "Invoicing Target"
-msgstr "發票目標"
+msgstr "銷售目標"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1476,8 +1476,8 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"手動設定訂單數量：根據手動輸入數量的發票，不創建分析帳戶。\n"
-"時間表：在合同的基礎上對相關發票追蹤小時時間表。\n"
+"手動設定訂單數量：根據手動輸入數量的應收憑單，不創建分析帳戶。\n"
+"時間表：在合同的基礎上對相關應收憑單追蹤小時時間表。\n"
 "創建任務和追蹤時間：在銷售訂單驗證上創建任務並追蹤工作時間。"
 
 #. module: sale
@@ -1529,12 +1529,12 @@ msgstr "我的活動"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
-msgstr "我的訂餐單"
+msgstr "我的銷售訂單"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr "我的銷售訂單明細行"
+msgstr "我的銷售訂單明細"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_name
@@ -1592,7 +1592,7 @@ msgstr "請注意，一旦報價成為銷售訂單，它將從報價單轉到銷
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr "沒有要開立發票的"
+msgstr "沒有應收憑單需要開立"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1604,12 +1604,12 @@ msgstr "訂單被確認和產品交付給客戶之間的天數"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
 msgid "Number of quotations to invoice"
-msgstr "待開立發票報價單數量"
+msgstr "待開立應收憑單報價單數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr "待開立發票銷售訂單數量"
+msgstr "待開立應收憑單銷售訂單數量"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1620,8 +1620,8 @@ msgid ""
 "                    orders or services."
 msgstr ""
 "一旦報價單被確認，它將成為一個銷售訂單。\n"
-"您可以為此開具發票並匯總付款信息。\n"
-"從<i>銷售訂單</i>選單中，您可以追蹤推送的訂單或服務"
+"您可以為此開具應收憑單並匯總收款資訊。\n"
+"從<i>銷售訂單</i>選單中，您可以追蹤完成的訂單或服務"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_payment
@@ -1720,7 +1720,7 @@ msgstr "訂單由%s簽名"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr "已開立發票"
+msgstr "已開立應收憑單"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1758,14 +1758,14 @@ msgstr "訂購數量"
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: model:ir.ui.menu,name:sale.sale_order_menu
 msgid "Orders"
-msgstr "訂單"
+msgstr "銷售訂單"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr "訂單發票"
+msgstr "應收憑單管理"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1779,7 +1779,7 @@ msgid ""
 "Orders to upsell are orders having products with an invoicing\n"
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
-msgstr "追加銷售的訂單，是指在已開收據的訂單基礎上，又增加了銷售並發貨的訂單，其數量超出<i>已預定數量</i>。"
+msgstr "追加銷售的訂單，是指在開立應收憑單政策依為銷售訂單數量之設定基礎上，又增加了銷售並發貨的訂單，其交貨數量超出<i>已預定數量</i>。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1821,7 +1821,7 @@ msgstr "付款條件"
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
 msgid "Personalize sales order and invoice report"
-msgstr "個性化銷售訂單和發票報告"
+msgstr "個性化銷售訂單和應收憑單分析報告"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:353
@@ -1982,7 +1982,7 @@ msgstr "已送貨數量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_invoiced
 msgid "Qty Invoiced"
-msgstr "已開立發票數量"
+msgstr "已開立收款憑證數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
@@ -1992,12 +1992,12 @@ msgstr "訂購數量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "待開立發票數量"
+msgstr "待開立應收憑單數量"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr "從銷售訂單到發票的數量"
+msgstr "從銷售訂單到應收憑單的數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
@@ -2104,7 +2104,7 @@ msgstr "報價單及銷售"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr "重新開立發票費用"
+msgstr "重新開立收款憑證費用"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:87
@@ -2237,7 +2237,7 @@ msgstr "銷售訂單明細"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "已開立發票銷售訂單行"
+msgstr "已開立應收憑單銷售訂單明細"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2383,14 +2383,14 @@ msgstr "服務"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
 msgid "Set Invoicing Target"
-msgstr "設定發票目標"
+msgstr "設定銷售目標"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/sale.js:25
 #, python-format
 msgid "Set an invoicing target: "
-msgstr "設定開立發票目標："
+msgstr "設定銷售目標："
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2441,12 +2441,12 @@ msgstr "顯示在今天之前的下一個行動日期的所有記錄"
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr "明細行匯總不含稅(B2C)."
+msgstr "明細匯總含稅(B2C)."
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_subtotal
 msgid "Show line subtotals without taxes (B2B)"
-msgstr "明細行匯總含稅(B2B)."
+msgstr "明細匯總不含稅(B2B)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2524,7 +2524,7 @@ msgstr "小計"
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales channel estimates to be able to invoice this month."
-msgstr "本月發票收入目標。 這是銷售團隊估計能夠在這個月發票的金額。"
+msgstr "本月收入目標。 這是銷售團隊估計能夠在這個月開立應收憑單的金額。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_show_tax
@@ -2592,7 +2592,7 @@ msgstr "銷售訂單%s關聯的分析帳戶之前必須驗證註冊費用。"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr "預付款發票金額，不含稅。"
+msgstr "預付款應收憑單金額，不含稅。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_analytic_account_id
@@ -2612,7 +2612,7 @@ msgstr "利潤率計算為產品銷售價格減去其詳細表格中的成本集
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr "此產品用於開具預付定金髮票，應該為「服務」類型。請使用其它產品或更新本產品。"
+msgstr "此產品用於開具預付定金應收憑單，應該為「服務」類型。請使用其它產品或更新本產品。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:147
@@ -2621,7 +2621,7 @@ msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
-msgstr "此產品用於訂金開票，開立發票策略應該設為「訂購數量」。請更新你的訂金產品，以建立訂金發票。"
+msgstr "此產品用於訂金應收憑單，開立應收憑單策略應該設為「訂購數量」。請更新你的訂金產品，以建立訂金應收憑單。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
@@ -2659,7 +2659,7 @@ msgstr "本產品：「%s」 未定義應收科目。您可能需要從會計應
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
 msgid "There is no invoiceable line."
-msgstr "不存在可開立發票的明細。"
+msgstr "不存在可開立應收憑單的項目。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
@@ -2687,8 +2687,8 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"這個報表會對您的報價單和銷售訂單進行分析。分析檢查您的銷售收入，並且按照不同的標準分組（業務員，合作夥伴，產品等）。用這個報表對還沒有開立發票的銷售訂單進行分析。"
-" 如果您想分析您的營業額，您應該用會計模組裡的發票分析報表。"
+"這個報表會對您的報價單和銷售訂單進行分析。分析檢查您的銷售收入，並且按照不同的標準分組（業務員，合作夥伴，產品等）。用這個報表對還沒有開立應收憑單的銷售訂單進行分析。"
+" 如果您想分析您的營業額，您應該用會計模組裡的應收憑單分析報表。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -2699,8 +2699,8 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"這個報表會對您的報價單和銷售訂單進行分析。檢查您的銷售收入，並且按照不同的標準排序（業務員，業務夥伴，產品等）。用這個報表對還沒有開立發票的銷售訂單進行分析。"
-" 如果您想分析您的營業額，您應該用會計模組裡的發票分析報表功能。"
+"這個報表會對您的報價單和銷售訂單進行分析。檢查您的銷售收入，並且按照不同的標準排序（業務員，業務夥伴，產品等）。用這個報表對還沒有開立應收憑單的銷售訂單進行分析。"
+" 如果您想分析您的營業額，您應該用會計模組裡的應收憑單分析報表功能。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2711,8 +2711,8 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"這個報表會對您的銷售訂單進行分析。分析檢查您的銷售收入，並且按照不同的標準分組（業務員，業務夥伴，產品等）進行排序。用這個報表對還沒有開立發票的銷售訂單進行分析。"
-" 如果您想分析您的營業額，您應該用會計模組裡的發票分析報表。"
+"這個報表會對您的銷售訂單進行分析。分析檢查您的銷售收入，並且按照不同的標準分組（業務員，業務夥伴，產品等）進行排序。用這個報表對還沒有開立應收憑單的銷售訂單進行分析。"
+" 如果您想分析您的營業額，您應該用會計模組裡的應收憑單分析報表。"
 
 #. module: sale
 #: selection:product.template,service_type:0
@@ -2726,7 +2726,7 @@ msgstr "時間表專案（一個票價每/專案）"
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "To Invoice"
-msgstr "待開立發票"
+msgstr "待開立應收憑單"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2883,7 +2883,7 @@ msgstr "警告"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
 msgid "What do you want to invoice?"
-msgstr "您要開什麼發票？"
+msgstr "應收憑單要開立的項目內容是？"
 
 #. module: sale
 #. openerp-web
@@ -2916,13 +2916,13 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
-"您可以選擇所有的訂單並進行合併開立發票，或者檢查\n"
-"每一個訂單並挨個進行開立發票。"
+"您可以選擇所有的訂單並進行合併開立應收憑單，或者逐筆點選\n"
+"訂單進行開立應收憑單。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "您能在這裡找到所有等待開立發票的訂單。"
+msgstr "您能在這裡找到所有等待開立應收憑單的訂單。"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:229
@@ -2938,7 +2938,7 @@ msgid ""
 "                to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 "您的下一步行動應該有效：確認報價\n"
-"一個銷售訂單，然後創建發票和付款方式。"
+"一個銷售訂單，然後創建應收憑單和收款方式。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2946,7 +2946,7 @@ msgstr ""
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sales "
 "Order, then create the Invoice and collect the Payment."
-msgstr "您的下一個行動應該有效地流動：確認報價到銷售訂單，然後創建發票並收集付款。"
+msgstr "您的下一個行動應該有效地流動：確認報價到銷售訂單，然後創建應收憑單並登記收款。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_bpost

@@ -2045,7 +2045,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('date field value should not set on first click', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var form = createView({
             View: FormView,
@@ -2055,10 +2055,10 @@ QUnit.module('basic_fields', {
             res_id: 4,
         });
         form.$buttons.find('.o_form_button_edit').click();
-        form.$('.o_datepicker_input').click();
+        assert.strictEqual($('.bootstrap-datetimepicker-widget').length, 1, "there should be a datepicker (autofocus)");
         assert.strictEqual(form.$('.o_datepicker_input').val(), '', "date field's input should be empty on first click");
         $('.day:contains(22)').click();
-        form.$('.o_datepicker_input').click(); // Open Datepicker second time
+        form.$('.o_datepicker_input').focus(); // Open Datepicker second time
         assert.strictEqual($('.day.active').text(), '22', 'datepicker should be highlight with 22nd day of month');
         form.destroy();
     });
@@ -2096,8 +2096,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_datepicker_input').val(), '02/03/2017',
             'the date should be correct in edit mode');
 
-        // click on the input and select another value
-        form.$('.o_datepicker_input').click();
+        // select another value
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         assert.strictEqual($('.day.active').data('day'), '02/03/2017', 'datepicker should be highlight February 3');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
@@ -2180,8 +2179,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('input.o_datepicker_input').val(), '02/03/2017',
             'the date should be correct in edit mode');
 
-        // click on the input and select another value
-        list.$('input.o_datepicker_input').click();
+        // select another value
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
@@ -2298,8 +2296,7 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('.o_datepicker_input').val(), expectedDateString,
             'the datetime should be correct in edit mode');
-        // click on the input and select 22 February at 8:23:33
-        form.$('.o_datepicker_input').click();
+        // select 22 February at 8:23:33
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
@@ -2397,8 +2394,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('input.o_datepicker_input').val(), expectedDateString,
             'the date should be correct in edit mode');
 
-        // click on the input and select 22 February at 8:23:33
-        list.$('input.o_datepicker_input').click();
+        // select 22 February at 8:23:33
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
@@ -2552,6 +2548,32 @@ QUnit.module('basic_fields', {
         form.$('.o_field_widget[name=p] .o_data_row').click();
         assert.strictEqual($('.modal .o_field_date[name=datetime]').text(), '02/08/2017',
             'the datetime (date widget) should be correctly displayed in form view');
+
+        form.destroy();
+    });
+
+    QUnit.test('datepicker option: daysOfWeekDisabled', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.datetime.default = "2017-08-02 12:00:05";
+        this.data.partner.fields.datetime.required = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="datetime" ' +
+                            'options=\'{"datepicker": {"daysOfWeekDisabled": [0, 6]}}\'/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_create').click();
+        assert.ok($('.day:last-child(),.day:nth-child(2)').hasClass('disabled'),
+            'first and last days must be disabled');
+        assert.notOk($('.day:not(:last-child()):not(:nth-child(2))').hasClass('disabled'),
+            'other days must stay clickable');
 
         form.destroy();
     });

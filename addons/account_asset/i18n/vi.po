@@ -49,7 +49,7 @@ msgstr "Số dòng khấu hao"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr ""
+msgstr "# SL Trả trước"
 
 #. module: account_asset
 #: model:ir.actions.server,name:account_asset.account_asset_cron_ir_actions_server
@@ -327,6 +327,9 @@ msgid ""
 "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
+"Chọn phương pháp để sử dụng để tính ngày và số lượng mục nhập.\n"
+"   * Số lượng mục nhập: Sửa số lượng mục nhập và thời gian giữa 2 lần khấu hao.\n"
+"   * Ngày kết thúc: Chọn thời gian giữa 2 lần khấu hao và ngày khấu hao sẽ không vượt quá."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -1096,7 +1099,7 @@ msgstr "Bạn không thể xoá các dòng khấu hao đã vào sổ."
 #: code:addons/account_asset/models/account_asset.py:610
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr ""
+msgstr "Bạn không thể xóa dòng trả trước đã đăng"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard

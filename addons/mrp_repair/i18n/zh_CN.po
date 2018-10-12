@@ -6,9 +6,9 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# 珠海-杜哥 <liangjia@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
-# Talway <9010446@qq.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
 # Martin Trigaux, 2017
 # fausthuang, 2017
 # 菜小蛇 <lttlsnk@gmail.com>, 2017
@@ -89,6 +89,20 @@ msgid ""
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>尊敬的 ${object.partner_id.name}</p>\n"
+"                <p>\n"
+"                这是你的维修单 ${doc_name} <strong>${object.name}</strong>\n"
+"                % if object.origin:\n"
+"                (参考： ${object.origin} )\n"
+"                % endif\n"
+"                % if object.invoice_method != 'none':\n"
+"                总额 <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
+"                % endif\n"
+"                </p>\n"
+"                <p>如有任何疑问您可直接回复本邮件。</p>\n"
+"                <p>谢谢,</p>\n"
+"            </data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder

@@ -10,6 +10,7 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Edgaras Kriukonis <edgaras@focusate.eu>, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Aleksandr Jadov <a.jadov@tata.lt>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
@@ -30,7 +31,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
-msgstr ""
+msgstr "3D Saugus HTML"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -45,18 +46,18 @@ msgstr "<i class=\"fa fa-lock\"> Mokėti</i>"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\"> Pridėti naują kortelę</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/> Ištrinti"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:112
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr "<i>Atšaukti,</i> Jūsų mokėjimas buvo atšauktas."
+msgstr "<i>Atšaukti,</i> jūsų mokėjimas buvo atšauktas."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:108
@@ -65,8 +66,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
-"<i>Atlikta,</i> Jūsų internetinis mokėjimas buvo sėkmingai užregistruotas. "
-"Dėkojame už Jūsų užsakymą."
+"<i>Atlikta,</i> jūsų internetinis mokėjimas buvo sėkmingai apdorotas. "
+"Dėkojame už jūsų užsakymą."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -76,6 +77,9 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Klaida,</i> Turėkite omenyje, kad klaida įvyko operacijos metu. Užsakymas"
+" buvo patvirtintas, bet nebus apmokėtas. Nedvejokite ir susisiekite su "
+"mumis, jei turite klausimų dėl savo užsakymo būsenos."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:104
@@ -90,7 +94,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:349
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
+msgstr "<p>Ši kortelė šiuo metu yra susieta su šiais įrašais:<p/>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -139,6 +143,8 @@ msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
 msgstr ""
+"<span><i>Atlikta,</i> Jūsų mokėjimas buvo sėkmingai apdorotas. Ačiū už "
+"užsakymą.</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -357,7 +363,7 @@ msgstr ""
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Communication"
-msgstr "Aprašymas"
+msgstr "Komunikacija"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
@@ -474,7 +480,7 @@ msgstr "Vaizduojamas pavadinimas"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Done"
-msgstr "Atlikti"
+msgstr "Atlikta"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
@@ -685,7 +691,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr "Valdyti mokėjimo metodus"
+msgstr "Tvarkyti mokėjimo būdus"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -695,7 +701,7 @@ msgstr "Konfigūracija rankiniu būdu"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
 msgid "Medium-sized image"
-msgstr "Vidutinio dydžio paveiksliukas"
+msgstr "Vidutinio dydžio paveikslėlis"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
@@ -808,7 +814,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:376
 #, python-format
 msgid "Ok"
-msgstr "Gerai"
+msgstr "Ok"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:759
@@ -888,7 +894,7 @@ msgstr "Mokėjimo žurnalas"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Payment Methods"
-msgstr "Apmokėjimo būdai"
+msgstr "Mokėjimo būdai"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
@@ -908,7 +914,7 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_transaction_id
 msgid "Payment Transaction"
-msgstr "Mokėjimo transakcija"
+msgstr "Mokėjimo operacija"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -918,7 +924,7 @@ msgstr "Mokėjimo transakcija"
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
-msgstr "Mokėjimo transakcijos"
+msgstr "Mokėjimo operacijos"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -966,7 +972,7 @@ msgstr "Paypal"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr "Laukianti"
+msgstr "Laukia"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
@@ -1062,12 +1068,12 @@ msgstr "S2S Iš šablono"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Išsaugoti korteles"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Save my payment data"
-msgstr "Saugoti mano mokėjimo duomenis"
+msgstr "Išaugoti mano mokėjimo duomenis"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_token_action
@@ -1129,7 +1135,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
-msgstr "Mažo dydžio paveiksliukas"
+msgstr "Mažo dydžio paveikslėlis"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
@@ -1220,6 +1226,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Šis pasirinkimas leidžia klientams išsaugoti savo kreditinę kortelę kaip "
+"mokėjimo raktą ir naudoti jį tolimesniems pirkimams. Jei valdote "
+"prenumeratas (pasikartojančias sąskaitas), jums reikia, kad ji automatiškai "
+"nuskaičiuotų pinigus iš kliento, kai išrašote sąskaitą."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids

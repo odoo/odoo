@@ -4,19 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Arminas Grigonis <arminas@versada.lt>, 2017
 # Rolandas <info@paninfo.lt>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
 "PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2017\n"
+"Last-Translator: Rolandas <info@paninfo.lt>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +31,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * \"Šablono\" būsena naudojama tada, kai vartotojas kuria naują ir nepatvirtintą kuponą.\n"
+" * \"Išankstinės sąskaitos\" būsena naudojama tada, kai kuponas neturi kupono numerio.\n"
+" * \"Paskelbta\" būsena naudojama tada, kai vartotojas sukuria kuponą, kupono numeris yra sugeneruojamas ir kupono įrašai yra sukuriami sąskaitoje.\n"
+" * \"Atšaukta\" būsena naudojama tada, kai vartotojas atšaukia kuponą."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -52,7 +55,7 @@ msgstr "Apskaitos data "
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "Apskaitos kvitai"
+msgstr "Apskaitos kuponas"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -75,12 +78,12 @@ msgstr "Ar tikrai norite atšaukti šį kvitą?"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
-msgstr "Kvito data"
+msgstr "Sąskaitos data"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Bill Information"
-msgstr "Kvito duomenys"
+msgstr "Sąskaitos duomenys"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
@@ -106,7 +109,8 @@ msgstr "Atšauktas"
 #: code:addons/account_voucher/models/account_voucher.py:185
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr "Negalite ištrinti kvito(-ų), kuris yra atidarytas arba apmokėtas."
+msgstr ""
+"Negalite ištrinti kupono(-ų), kuris jau yra atidarytas arba apmokėtas."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -128,7 +132,7 @@ msgstr "Įmonė"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr "Įmonė susieta su šiuo žurnalu"
+msgstr "Įmonė, susieta su šiuo žurnalu"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -184,7 +188,7 @@ msgstr "Juodraštis"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr "Dokumento juodraštis"
+msgstr "Juodraštiniai kuponai"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
@@ -200,6 +204,8 @@ msgstr "DK įrašų įsigaliojimo data"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
 msgstr ""
+"Šiai eilutei priskiriamas sekos numeris, pagal kurį ji bus atvaizduojama "
+"kupone."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -219,6 +225,8 @@ msgstr "ID"
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
+"Jei susiduriate su apvalinimo problema mokesčiuose, naudokite šį lauką, kad "
+"ją ištaisytumėte"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -276,7 +284,7 @@ msgstr "Skaičius"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
 msgid "Only for tax excluded from price"
-msgstr "Tik tie mokesčiai, kurie neįtraukti į kainą"
+msgstr "Tik mokesčiams, neįtrauktiems į kainą"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
@@ -292,7 +300,7 @@ msgstr "Partneris"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Directly"
-msgstr "Mokėti iškart"
+msgstr "Mokėti tiesiogiai"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -339,7 +347,7 @@ msgstr "Paskelbtas"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr "Užregistruotas dokumentas"
+msgstr "Paskelbti kuponai"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -354,12 +362,12 @@ msgstr "Produktas"
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Purchase"
-msgstr "Pirkimai"
+msgstr "Pirkimas"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr "Pirkimo kvitai"
+msgstr "Pirkimo kvitas"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
@@ -370,7 +378,7 @@ msgstr "Pirkimo kvitai"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr "Pirkimo kvitas"
+msgstr "Pirkimo kuponas"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
@@ -403,7 +411,7 @@ msgstr "Pardavimo kvitai"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Search Vouchers"
-msgstr "Ieškoti kvito"
+msgstr "Ieškoti kuponų"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
@@ -427,7 +435,7 @@ msgstr "Būsena"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr "Būsenos keitimas"
+msgstr "Būsenos pakeitimas"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
@@ -437,7 +445,7 @@ msgstr "Būsena pakeista"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
 msgid "Tax"
-msgstr "Mokestis"
+msgstr "Mokesčiai"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
@@ -447,17 +455,17 @@ msgstr "Mokesčių suma"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax Correction"
-msgstr ""
+msgstr "Mokesčių korekcija"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
 msgid "The Voucher has been totally paid."
-msgstr "Kvitas buvo visiškai apmokėtas."
+msgstr "Kuponas buvo pilnai apmokėtas."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
 msgid "The income or expense account related to the selected product."
-msgstr "Pajamų ar sąnaudų sąskaitos susijusios su pasirinktu produktu."
+msgstr "Pajamų ar išlaidų sąskaita, susijusi su pasirinktu produktu."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
@@ -488,7 +496,7 @@ msgstr "Tipas"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
 msgid "Unit Price"
-msgstr "Kaina"
+msgstr "Vieneto kaina"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -501,12 +509,12 @@ msgstr "Patikrinti"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Vendor"
-msgstr "Pardavėjas"
+msgstr "Tiekėjas"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr "Tiekėjo kvitas"
+msgstr "Tiekėjo kuponas"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:100
@@ -516,14 +524,14 @@ msgstr "Tiekėjo kvitas"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #, python-format
 msgid "Voucher"
-msgstr "Kvitas"
+msgstr "Kuponas"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Voucher Entries"
-msgstr "Kvito eilutės"
+msgstr "Kupono įrašai"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
@@ -533,17 +541,17 @@ msgstr "Kvito eilutės"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
 msgid "Voucher Lines"
-msgstr "Kvito eilutės"
+msgstr "Kupono įrašai"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr "Kvito statistika"
+msgstr "Kupono statistika"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "Kvitų įrašai"
+msgstr "Kuponų įrašai"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -567,4 +575,4 @@ msgstr ""
 #: code:addons/account_voucher/models/account_voucher.py:438
 #, python-format
 msgid "You must first select a partner!"
-msgstr "Jūs turite pasirinkti partnerį!"
+msgstr "Pirmiausia turite pasirinkti partnerį!"

@@ -725,6 +725,8 @@ msgid ""
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
 msgstr ""
+"\n"
+"Gerar Fatura Eletrônica com o Número do Cliente"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -846,6 +848,37 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"        with pain.008.001.02 specification) to send to your bank in order to\n"
+"        collect a set of payments.\n"
+"\n"
+"        To be elligible for this payment method, a customer must have first\n"
+"        returned a mandate to the company, giving his consent to use direct debit.\n"
+"        This consent must have been encoded as a 'customer mandate' into Odoo.\n"
+"\n"
+"        You also need to meet the following requirements in order to properly\n"
+"        generate a SDD file:\n"
+"        - Your company account must be set to a valid IBAN number\n"
+"        - Your company account must be associated to a bank having a valid BIC\n"
+"        - Your company must have been given a creditor identifier (this can be done in the 'settings' menu of the accounting module)\n"
+"        - Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"        - Every customer for which you generate a payment must have a valid IBAN account number in a bank associated with a correct BIC.\n"
+"\n"
+"        Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"        Any invoice that gets validated for a customer with a mandate will be\n"
+"        automatically set in 'paid' state, and a payment will be generated. An\n"
+"        option in the dashboard will then allow you to view all the payments generated\n"
+"        via SDD and to generate a XML collection file for them, grouping them as\n"
+"        you see fit.\n"
+"\n"
+"        A dedicated 'SEPA Direct Debit' payment method is also available for\n"
+"        open invoices, when selecting a bank account in the 'register payment' wizard.\n"
+"        Use it to generate a SDD payment for the invoices if you added a mandate\n"
+"        for its owner after its validation. You will see an error message if you\n"
+"        try to use this method on an invoice for whose payment no mandate can be used.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -930,6 +963,10 @@ msgid ""
 "        linked to an SO, or only the validated timesheets\n"
 "    "
 msgstr ""
+"\n"
+"        Quando faturando planilhas de tempo, permitir fatura de todas as planilhas de tempos \n"
+"        ligadas a uma OS, ou somente as planilhas de tempo validadas\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -955,6 +992,8 @@ msgid ""
 "\n"
 "    Adds workcenters to Quality Control\n"
 msgstr ""
+"\n"
+"    Adiciona centros de trabalho para Controle de Qualidade\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -1019,6 +1058,11 @@ msgid ""
 "    PayUmoney payment gateway supports only INR currency.\n"
 "    "
 msgstr ""
+"\n"
+"    PayuMoney Payment Acquirer for India.\n"
+"\n"
+"    PayUmoney payment gateway supports only INR currency.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -1056,6 +1100,10 @@ msgid ""
 "* Activate grid view for timesheets\n"
 "    "
 msgstr ""
+"\n"
+"* Sumissão e validação de planilha de trabalho\n"
+"* Ativar vistas de grade para planilhas de trabalho\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -1445,6 +1493,10 @@ msgid ""
 "-------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"Permitir clientes a agendar Encontros através do Website\n"
+"-------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -1934,6 +1986,13 @@ msgid ""
 "on leaves. Project and task can be configured company-wide.\n"
 "    "
 msgstr ""
+"\n"
+"Módulo ponte para integrar ausências em planilhas de tempo\n"
+"================================================\n"
+"\n"
+"Esse módulo permite automaticamente registrar em planilhas de tempo quando os funcionários\n"
+" estão de folga. Projeto e tarefas podem ser configuradas em tamanho de companhia. \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
@@ -5948,7 +6007,7 @@ msgstr "-Este módulo não depende de nenhum outro módulo"
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not exclude any other module."
-msgstr ""
+msgstr "-Este módulo não exclui nenhum outro módulo."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -6037,6 +6096,10 @@ msgid ""
 "env['res.partner'].create({'name': partner_name})\n"
 "</code>"
 msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env['res.partner'].create({'name': partner_name})\n"
+"</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -9266,7 +9329,7 @@ msgstr "Criar um Menu"
 #. module: base
 #: selection:ir.actions.server,state:0
 msgid "Create a new Record"
-msgstr ""
+msgstr "Criar um novo Registro"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_company_form
@@ -9294,7 +9357,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 msgid "Create company"
-msgstr ""
+msgstr "Criar companhia"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
@@ -9571,7 +9634,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_currency_unit_label
 msgid "Currency Unit"
-msgstr ""
+msgstr "Unidade Monetária"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_currency_unit_label
@@ -10332,6 +10395,8 @@ msgstr "Envio Direto"
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
 msgstr ""
+"Duplicar uma companhia não é permitido. Por favor crie uma nova companhia ao"
+" invés disso."
 
 #. module: base
 #: code:addons/base/ir/ir_qweb/fields.py:394
@@ -11904,7 +11969,7 @@ msgstr "Grade"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_grid
 msgid "Grid View"
-msgstr ""
+msgstr "Vista em Grid"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_group_id
@@ -12348,7 +12413,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resource
 msgid "Human Resource"
-msgstr ""
+msgstr "Recurso Humano"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_survey
@@ -12873,7 +12938,7 @@ msgstr "Indonésia"
 #: model:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr ""
+msgstr "Industria"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_info
@@ -13365,6 +13430,8 @@ msgstr "Cazaquistão"
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
 msgstr ""
+"Mantenha vazio se você não quer que o usuário seja capaz de conectar ao "
+"sistema."
 
 #. module: base
 #: model:res.country,name:base.ke
@@ -13406,7 +13473,7 @@ msgstr "Kuwait"
 #. module: base
 #: model:res.country,name:base.kg
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "Kirgistão"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_L
@@ -13459,7 +13526,7 @@ msgstr "Pacote de Idiomas"
 #: code:addons/base/res/res_lang.py:218
 #, python-format
 msgid "Language code cannot be modified."
-msgstr ""
+msgstr "Código de linguagem não pode ser modificado."
 
 #. module: base
 #: sql_constraint:ir.translation:0
@@ -13759,7 +13826,7 @@ msgstr "Launchpad"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_format
 msgid "Layout in Reports"
-msgstr ""
+msgstr "Leiaute em Relatórios"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_lead_automation
@@ -13850,6 +13917,8 @@ msgstr "Lesoto"
 #: model:ir.module.module,description:base.module_website_sale_wishlist
 msgid "Let returning shoppers save products in a wishlist"
 msgstr ""
+"Permita que compradores frequentes possam salvar produtos em uma lista de "
+"desejos"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -17649,7 +17718,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
 msgid "Project, Tasks, Timesheet"
-msgstr ""
+msgstr "Projeto, Tarefas, Planilhas de Tempo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -18762,7 +18831,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_calendar_sms
 #: model:ir.module.module,summary:base.module_calendar_sms
 msgid "Send text messages as event reminders"
-msgstr ""
+msgstr "Enviar mensagens de texto como notificação de eventos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
@@ -18958,7 +19027,7 @@ msgstr "Endereço para envio:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_show_all
 msgid "Show All"
-msgstr ""
+msgstr "Mostrar Tudo"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
@@ -19164,7 +19233,7 @@ msgstr "África do Sul"
 #. module: base
 #: model:res.country.group,name:base.south_america
 msgid "South America"
-msgstr ""
+msgstr "América do Sul"
 
 #. module: base
 #: model:res.country,name:base.gs
@@ -19274,7 +19343,7 @@ msgstr "Nome do Estado"
 #. module: base
 #: model:res.country,name:base.ps
 msgid "State of Palestine"
-msgstr ""
+msgstr "Estado da Palestina"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_ids
@@ -19527,7 +19596,7 @@ msgstr "Atualização do Sistema"
 #. module: base
 #: model:res.country,name:base.st
 msgid "São Tomé and Príncipe"
-msgstr ""
+msgstr "São Tomé e Príncipe"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_T
@@ -19920,7 +19989,7 @@ msgstr "Os seguinte aplicativos serão desinstalados"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "The following documents will be permanently lost"
-msgstr ""
+msgstr "Os seguintes documentos serão permanentemente perdidos"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:69
@@ -20093,6 +20162,8 @@ msgid ""
 "The requested operation cannot be completed due to record rules: Document "
 "type: %s, Operation: %s, Records: %s, User: %s"
 msgstr ""
+"A operação requerida não pode ser completada devido às seguintes regras: "
+"Tipo de documento:%s, Operação: %s, Registro: %s, Usuário: %s"
 
 #. module: base
 #: code:addons/models.py:2551 code:addons/models.py:2760
@@ -20364,7 +20435,7 @@ msgstr "Deslocamento de Fuso Horário"
 #. module: base
 #: model:res.country,name:base.tl
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Timor-Leste"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_title
@@ -20966,6 +21037,8 @@ msgid ""
 "Update your company details and upload your logo to get a beautiful "
 "document."
 msgstr ""
+"Update your company details and upload your logo to get a beautiful "
+"document."
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_updates_act_cl
@@ -21892,6 +21965,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Você pode enviar um arquivo diretamente de seu computador ou dispositivo ou "
+"pode copiar e colar o link para seu arquivo na internet"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:513
@@ -22121,22 +22196,22 @@ msgstr "base.update.translations"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "binary"
-msgstr ""
+msgstr "binary"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "boolean"
-msgstr ""
+msgstr "boolean"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
 msgid "bpost Shipping"
-msgstr ""
+msgstr "Envio bpost"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "char"
-msgstr ""
+msgstr "char"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -22146,7 +22221,7 @@ msgstr "escolha"
 #. module: base
 #: model:ir.module.category,name:base.module_category_crm
 msgid "crm"
-msgstr ""
+msgstr "date"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:314
@@ -22157,12 +22232,12 @@ msgstr "id do banco de dados"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "date"
-msgstr ""
+msgstr "datetime"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "datetime"
-msgstr ""
+msgstr "datetime"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -22211,7 +22286,7 @@ msgstr "por exemplo, Atualizar quantidade do pedido"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "e.g. Your Bank Accounts, one per line"
-msgstr ""
+msgstr "Exemplo. Suas contas de banco, uma por linha"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_import_language
@@ -22228,7 +22303,7 @@ msgstr "e.g. www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "eBay Connector"
-msgstr ""
+msgstr "Conector Ebay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
@@ -22265,7 +22340,7 @@ msgstr "falso"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "float"
-msgstr ""
+msgstr "float"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -22287,7 +22362,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
 msgid "format.address.mixin"
-msgstr ""
+msgstr "format.address.mixin"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -22297,7 +22372,7 @@ msgstr "obter"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "html"
-msgstr ""
+msgstr "html"
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -22308,7 +22383,7 @@ msgstr "init"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "integer"
-msgstr ""
+msgstr "integer"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -22352,7 +22427,7 @@ msgstr "ir.actions.client"
 #: model:ir.model,name:base.model_ir_actions_report
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.report"
-msgstr ""
+msgstr "ir.actions.report"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
@@ -22378,7 +22453,7 @@ msgstr "ir.config_parameter"
 #. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "ir.default"
-msgstr ""
+msgstr "ir.default"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
@@ -22473,7 +22548,7 @@ msgstr "ir.qweb.field.float"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float_time
 msgid "ir.qweb.field.float_time"
-msgstr ""
+msgstr "ir.qweb.field.float_time"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
@@ -22558,17 +22633,17 @@ msgstr "ir.ui.view.custom"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2many"
-msgstr ""
+msgstr "many2many"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2one"
-msgstr ""
+msgstr "many2one"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "monetary"
-msgstr ""
+msgstr "monetary"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:494
@@ -22596,7 +22671,7 @@ msgstr "em"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "one2many"
-msgstr ""
+msgstr "one2many"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
@@ -22606,7 +22681,7 @@ msgstr "pos_cache"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale
 msgid "pos_sale"
-msgstr ""
+msgstr "pos_sale"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
@@ -22671,12 +22746,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
 msgid "test-assetsbundle"
-msgstr ""
+msgstr "test-assetsbundle"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_pylint
 msgid "test-eval"
-msgstr ""
+msgstr "test-eval"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_exceptions
@@ -22721,7 +22796,7 @@ msgstr "test_convert"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "text"
-msgstr ""
+msgstr "text"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer

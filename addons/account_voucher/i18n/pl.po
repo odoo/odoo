@@ -12,13 +12,14 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2017
 # Paweł Michoń <michon.pawel@wp.pl>, 2017
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
+# Maksym <ms@myodoo.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
 "PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017\n"
+"Last-Translator: Maksym <ms@myodoo.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * Status \"Wersja robocza\" jest używany, gdy użytkownik koduje nowy i niepotwierdzony kupon.\n"
+" * Status \"Pro-forma\" jest używany, gdy kupon nie ma numeru kuponu.\n"
+" * Status \"Opublikowany\" jest używany, gdy użytkownik tworzy kupon, wygenerowany jest numer kuponu, a na koncie tworzone są pozycje kuponów.\n"
+" * Status \"Anulowano\" jest używany, gdy użytkownik anuluje kupon."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -201,7 +206,7 @@ msgstr "Efektywna data zapisów"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
-msgstr ""
+msgstr "Daje sekwencję tej pozycji podczas wyświetlania kuponu."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -221,6 +226,7 @@ msgstr "ID"
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
+"Jeśli mamy problem z zaokrągleniem podatku, użyj tego pola, aby je poprawić"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -449,7 +455,7 @@ msgstr "Kwota Podatku"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax Correction"
-msgstr ""
+msgstr "Korekta podatkowa"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -464,7 +470,7 @@ msgstr "Konto przychodów i wydatków związane z wybranym produktem."
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "Odnośnik partnera dla tego dokumentu."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -553,6 +559,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
+"Gdy pokwitowanie zakupu zostanie potwierdzone, możesz zarejestrować\n"
+"                płatność dostawcy związaną z tym pokwitowaniem."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -560,6 +568,8 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
+"Po potwierdzeniu dowodu zakupu możesz zarejestrować płatność\n"
+"                klienta związaną z tym paragonem."
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:438
