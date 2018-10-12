@@ -1114,6 +1114,13 @@ class Menu(models.Model):
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
 
+    @api.multi
+    def unlink(self):
+        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
+            self.env['website.menu'].search([('url', '=', menu.url), ('id', '!=', menu.id)]).unlink()
+        return super(Menu, self).unlink()
+
     @api.one
     def _compute_visible(self):
         visible = True
