@@ -931,7 +931,7 @@
                                        attrs="{'invisible': [('match_partner', '=', False)]}"/>
                             </group>
                         </group>
-                        <group string="Write-off Values"
+                        <group string="Counterpart Values"
                                attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
                             <group>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"
