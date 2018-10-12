@@ -242,6 +242,13 @@
         <field name="user_type_id" ref="account.data_unaffected_earnings"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_801_01')])]"/>
     </record>
+    <record id='cuenta801_01_99' model='account.account.template'>
+        <field name='name'>Base Imponible de Impuestos en Base a Flujo de Efectivo</field>
+        <field name='code'>899.01.99</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_801_01')])]"/>
+    </record>
     <!--
         CoA setting accounts
     -->
