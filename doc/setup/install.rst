@@ -158,7 +158,7 @@ You can then use ``gdebi``:
 
     # gdebi <path_to_installation_package>
 
-Or ``dpkg`` (handles less dependencies automatically):
+Or ``dpkg``:
 
 .. code-block:: console
 
@@ -367,6 +367,34 @@ Source installation requires manually installing dependencies:
 
         C:\> cd \YourOdooPath
         C:\YourOdooPath> C:\Python35\Scripts\pip.exe install -r requirements.txt
+
+* *RTLCSS* via nodejs
+
+  For languages with right-to-left interface (such as Arabic or Hebrew), the
+  package ``rtlcss`` is needed.
+
+  - on Linux, use your distribution's package manager to install nodejs and
+    npm.
+    Once npm is installed, use it to install rtlcss:
+
+    .. code-block:: console
+
+        $ sudo npm install -g rtlcss
+
+  - on OS X, install nodejs via your preferred package manager (homebrew_,
+    macports_) then install less:
+
+    .. code-block:: console
+
+        $ sudo npm install -g rtlcss
+
+  - on Windows, `install nodejs <https://nodejs.org/en/download/>`_, reboot (to
+    update the :envvar:`PATH`) and install rtlcss:
+
+    .. code-block:: doscon
+
+        C:\> npm install -g rtlcss
+
 
 Fetch the sources
 -----------------
