@@ -3,7 +3,8 @@
 
 from odoo import http, fields
 from odoo.http import request
-
+import json
+from odoo.osv import expression
 
 class ProductConfiguratorController(http.Controller):
     @http.route(['/product_configurator/configure'], type='json', auth="user", methods=['POST'])
@@ -33,6 +34,65 @@ class ProductConfiguratorController(http.Controller):
     @http.route(['/product_configurator/get_combination_info'], type='json', auth="user", methods=['POST'])
     def get_combination_info(self, product_template_id, product_id, combination, add_qty, pricelist_id, **kw):
         return self._get_combination_info(product_template_id, product_id, combination, add_qty, self._get_pricelist(pricelist_id))
+
+    # awa: Known "exploit" issues with this method:
+    #
+    # - This method could be used by an unauthenticated user to generate a lot of useless variants.
+    #   Unfortunately, after discussing the matter with odo, there's no easy and user-friendly way to block
+    #   that behavior.
+    #   We would have to use captcha/server actions to clean/... that are all not user-friendly/overkill mechanisms.
+    #
+    # - This method could be used to try to guess what product variants are created in the system
+    #   and what product templates are configured as "dynamic"
+    #   But that does not seem like a big deal
+    #
+    # The error messages are identical on purpose to avoid giving too much information to a potential attacker
+    @http.route(['/product_configurator/create_product_variant'], type='json', auth="public", methods=['POST'])
+    def create_product_variant(self, product_template_id, product_template_attribute_value_ids):
+        """This method will create the appropriate product.product based on the provided combination of product.template.attribute.values.
+        It is typically used to create variants of a dynamic product template (see product.attribute 'create_variant' == 'dynamic')"""
+        error_message = 'Wrong arguments'
+        product_template = request.env['product.template'].sudo().browse(int(product_template_id))
+
+        if not product_template.has_dynamic_attributes():
+            # trying to create a product.product on a product.template that is not dynamic
+            raise ValueError(error_message)
+
+        product_template_attribute_value_ids = json.loads(product_template_attribute_value_ids)
+        if len(product_template_attribute_value_ids) != len(product_template.attribute_line_ids):
+            # number of attribute values passed is different from the configuration of attributes on the template
+            raise ValueError(error_message)
+
+        attribute_value_ids = \
+            request.env['product.template.attribute.value'] \
+                   .sudo() \
+                   .browse(product_template_attribute_value_ids) \
+                   .mapped('product_attribute_value_id') \
+                   .filtered(lambda attribute_value_id: attribute_value_id.attribute_id.create_variant != 'no_variant')
+
+        if not all(attribute_value_id.attribute_id in product_template.attribute_line_ids.mapped('attribute_id')
+                   for attribute_value_id in attribute_value_ids):
+            # trying to create a variant that has different attributes than the ones configured on the template
+            raise ValueError(error_message)
+
+        existing_products_domain = [('product_tmpl_id', '=', int(product_template_id))]
+        for attribute_value_id in attribute_value_ids.ids:
+            existing_products_domain = expression.AND([existing_products_domain, [('attribute_value_ids', 'in', attribute_value_id)]])
+        existing_products = request.env['product.product'].sudo().search(existing_products_domain)
+
+        if existing_products and any(
+            [len(existing_product.product_template_attribute_value_ids) == len(attribute_value_ids)
+            for existing_product in existing_products]
+        ):
+            # there is already an existing product with those attributes
+            raise ValueError(error_message)
+
+        product_variant = request.env['product.product'].sudo().create({
+            'product_tmpl_id': product_template_id,
+            'attribute_value_ids': [(6, 0, attribute_value_ids.ids)]
+        })
+
+        return product_variant.id
 
     def _optional_product_items(self, product_id, pricelist, **kw):
         product = request.env['product.product'].with_context(self._get_product_context(pricelist, **kw)).browse(int(product_id))

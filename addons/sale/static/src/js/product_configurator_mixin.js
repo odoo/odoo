@@ -296,18 +296,23 @@ var ProductConfiguratorMixin = {
             productReady.resolve(productId);
         } else {
             var params = {
-                model: 'product.template',
-                method: 'create_product_variant',
-                args: [
-                    productTemplateId,
+                product_template_id: productTemplateId,
+                product_template_attribute_value_ids:
                     JSON.stringify(self.getSelectedVariantValues($container))
-                ]
             };
 
+            var route = '/product_configurator/create_product_variant';
             if (useAjax) {
-                productReady = ajax.jsonRpc('/web/dataset/call', 'call', params);
+                productReady = ajax.jsonRpc(
+                    route,
+                    'call',
+                    params
+                );
             } else {
-                productReady = this._rpc(params);
+                productReady = this._rpc({
+                    route: route,
+                    params: params
+                });
             }
         }
 
