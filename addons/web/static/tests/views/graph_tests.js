@@ -168,24 +168,6 @@ QUnit.module('Views', {
         });
     });
 
-    QUnit.skip('displaying line chart data with multiple data point', function (assert) {
-        assert.expect(1);
-
-        var graph = createView({
-            View: GraphView,
-            model: "foo",
-            data: this.data,
-            arch: '<graph type="line">' +
-                        '<field name="date"/>' +
-                '</graph>',
-        });
-
-        assert.strictEqual(graph.$('.nv-x text').text(), "March 2016May 2016",
-            "should contain intermediate x labels only");
-
-        graph.destroy();
-    });
-
     QUnit.test('displaying line chart data with multiple groupbys', function (assert) {
         // this test makes sure the line chart shows all data labels (X axis) when
         // it is grouped by several fields
