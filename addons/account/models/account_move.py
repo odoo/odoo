@@ -1306,7 +1306,7 @@ class AccountMoveLine(models.Model):
                         'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
                         'analytic_account_id': vals.get('analytic_account_id') if tax.analytic else False,
                     }
-                    bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
+                    bank = self.env["account.bank.statement.line"].browse(vals.get('statement_line_id')).statement_id
                     if bank.currency_id != bank.company_id.currency_id:
                         ctx = {}
                         if 'date' in vals:
