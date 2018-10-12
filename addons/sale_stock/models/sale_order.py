@@ -181,7 +181,8 @@ class SaleOrderLine(models.Model):
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
             if move.location_dest_id.usage == "customer":
-                if not move.origin_returned_move_id:
+                # FORWARD-PORT NOTICE: "to_refund_so" to rename to "to_refund" in v11
+                if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund_so):
                     qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
             elif move.location_dest_id.usage != "customer" and move.to_refund_so:
                 qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
