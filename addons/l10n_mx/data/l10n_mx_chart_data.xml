@@ -237,6 +237,20 @@
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_601_84')])]"/>
     </record>
+    <record id='cuenta612_01_01' model='account.account.template'>
+        <field name='name'>IVA No Acreditable - Pendiente de Pago</field>
+        <field name='code'>612.01.01</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_612_01')])]"/>
+    </record>
+    <record id='cuenta612_01_02' model='account.account.template'>
+        <field name='name'>IVA No Acreditable - Pagado</field>
+        <field name='code'>612.01.02</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_612_01')])]"/>
+    </record>
     <record id='cuenta701_01' model='account.account.template'>
         <field name='name'>Pérdida cambiaria</field>
         <field name='code'>701.01.01</field>

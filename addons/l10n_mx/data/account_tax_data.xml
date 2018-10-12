@@ -190,5 +190,21 @@
         <field name="cash_basis_account_id" ref="cuenta118_01"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_diot_16')])]"/>
     </record>
+
+    <record id="tax15" model="account.tax.template">
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="name">IVA(16%) NO ACREDITABLE</field>
+        <field name="description">IVA(16%) NO ACREDITABLE</field>
+        <field name="amount">16</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="cuenta612_01_01"/>
+        <field name="refund_account_id" ref="cuenta612_01_01"/>
+        <field name="tax_group_id" ref="tax_group_iva_16"/>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_base_account_id" ref="cuenta801_01_99"/>
+        <field name="cash_basis_account_id" ref="cuenta612_01_02"/>
+        <field name="tag_ids" eval="[(6,0,[ref('l10n_mx.tag_diot_16_non_cre')])]"/>
+    </record>
   </data>
 </odoo>
