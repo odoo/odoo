@@ -9665,6 +9665,37 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('click on URL should not open the record', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [1];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="display_name" widget="email"/>' +
+                            '<field name="turtle_foo" widget="url"/>' +
+                        '</tree>' +
+                        '<form></form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$('.o_email_cell a').click();
+        assert.strictEqual($('.modal .o_form_view').length, 0,
+            'click should not open the modal');
+
+        form.$('.o_url_cell a').click();
+        assert.strictEqual($('.modal .o_form_view').length, 0,
+            'click should not open the modal');
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
