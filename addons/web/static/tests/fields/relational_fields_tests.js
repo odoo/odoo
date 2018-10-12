@@ -9793,7 +9793,75 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many with sequence field, fetch name_get from empty list', function (assert) {
+    QUnit.test('one2many with sequence field, override default_get, not last page', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].turtles = [3, 2, 1];
+
+        this.data.turtle.fields.turtle_int.default = 10;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree limit="2">' +
+                            '<field name="turtle_int" widget="handle"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="turtle_int"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // click add a new line
+        // check turtle_int for new is the current max of the page
+        $('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .o_input[name="turtle_int"]').val(), '10');
+        form.destroy();
+    });
+
+    QUnit.test('one2many with sequence field, override default_get, last page', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].turtles = [3, 2, 1];
+
+        this.data.turtle.fields.turtle_int.default = 10;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree limit="4">' +
+                            '<field name="turtle_int" widget="handle"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="turtle_int"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // click add a new line
+        // check turtle_int for new is the current max of the page +1
+        $('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .o_input[name="turtle_int"]').val(), '22');
+        form.destroy();
+    });
+
+    QUnit.test('one2many with sequence field, fetch name_get from empty list, field text', function (assert) {
         // There was a bug where a RPC would fail because no route was set.
         // The scenario is:
         // - create a new parent model, which has a one2many
