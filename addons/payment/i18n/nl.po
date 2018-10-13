@@ -7,14 +7,15 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
-# Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018
+# dpms <pieter.van.de.wygaert@telenet.be>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +108,7 @@ msgid ""
 "your order is not validated yet."
 msgstr ""
 "<i>In afwachting,</i> Uw online betaling is succesvol verwerkt. Maar uw "
-"bestelling is nog niet gevalideerd."
+"bestelling is nog niet bevestigd."
 
 #. module: payment
 #. openerp-web
@@ -120,12 +121,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Create a PayPal account</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Maak een PayPal account</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Haal mijn Stripe keys op</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -218,7 +219,7 @@ msgid ""
 "But your order is not validated yet.</span>"
 msgstr ""
 "<span><i>Wachtende,</i> Uw online betaling is succesvol verwerkt. Uw order "
-"is nog niet gevalideerd.</span>"
+"is nog niet bevestigd.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -226,13 +227,13 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
-"<span><i>In afwachting</i>... De order wordt gevalideerd na betaling.</span>"
+"<span><i>In afwachting</i>... De order wordt bevestigd na betaling.</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:72
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "Een dagboek moet worden ingesteld voor de verwerver %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:65
@@ -256,7 +257,7 @@ msgstr "Een token is vereist om een betaaltransactie uit te voeren."
 #: code:addons/payment/models/payment_acquirer.py:657
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
-msgstr ""
+msgstr "Een transactie %s met%s gestart door%s credit card."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:663
@@ -370,7 +371,7 @@ msgstr "Bedrag"
 #: code:addons/payment/static/src/xml/payment_processing.xml:17
 #, python-format
 msgid "An error occured during the processing of this payment."
-msgstr ""
+msgstr "Er is een fout opgetreden tijdens het verwerken van een betaling"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -474,7 +475,7 @@ msgstr "Geannuleerd"
 #: code:addons/payment/static/src/xml/payment_processing.xml:109
 #, python-format
 msgid "Cancelled payments"
-msgstr ""
+msgstr "Geannuleerde betalingen"
 
 #. module: payment
 #. openerp-web
@@ -655,7 +656,7 @@ msgstr "Aangepast"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Aangepaste betaalinstructies"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -807,7 +808,7 @@ msgstr "Groepeer op"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr ""
+msgstr "Is de betaling achteraf verwerkt."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -875,7 +876,7 @@ msgstr "Interne referentie van de TX"
 #: code:addons/payment/static/src/xml/payment_processing.xml:145
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "Internal server error"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:55
@@ -1102,7 +1103,7 @@ msgstr "Geen betalingsverwerker gevonden."
 #: code:addons/payment/static/src/xml/payment_processing.xml:118
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Geen betaling is verwerkt."
 
 #. module: payment
 #. openerp-web
@@ -1365,14 +1366,14 @@ msgstr "Betalingen"
 #: code:addons/payment/static/src/xml/payment_processing.xml:9
 #, python-format
 msgid "Payments failed"
-msgstr ""
+msgstr "Betalingen mislukt"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:26
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "Betalingen ontvangen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1466,7 +1467,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:139
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Even geduld ..."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1528,7 +1529,7 @@ msgstr "Verplichte velden niet ingevuld"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "URL voor na betaling"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
@@ -1601,7 +1602,7 @@ msgstr "Server fout"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Server fout:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1697,7 +1698,7 @@ msgstr "De %s betaalverwervers zijn niet toegestaan bij handmatige mode!"
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "De SEPA QR code informatie is niet correct ingevuld."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:660
@@ -1794,7 +1795,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "De transactie is geannuleerd"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
@@ -1818,12 +1819,12 @@ msgstr "Soort"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Niet mogelijk om met de Odoo server contact op te nemen."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "Gebruik SEPA QR code"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
@@ -1866,7 +1867,7 @@ msgstr "Ongeldige transactie"
 #: code:addons/payment/static/src/xml/payment_processing.xml:87
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "Wacht op betaling"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:666
@@ -1908,7 +1909,7 @@ msgstr "We konden uw betaalmethode niet verwijderen op dit moment."
 #: code:addons/payment/static/src/xml/payment_processing.xml:130
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "We konden uw betaling niet vinden, maar maak uw geen zorgen."
 
 #. module: payment
 #. openerp-web
@@ -1977,7 +1978,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "U ontvangt een bericht wanneer de betaling volledig bevestigd is"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
@@ -2049,14 +2050,14 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:39
 #, python-format
 msgid "Your order has been processed."
-msgstr ""
+msgstr "Uw order is verwerkt"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:36
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr ""
+msgstr "U order wordt verwerkt, even geduld ..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -2075,7 +2076,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:57
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "Uw betaling is in afwachting"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
