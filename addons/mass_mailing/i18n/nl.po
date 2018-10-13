@@ -8,13 +8,14 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +72,9 @@ msgid ""
 "                                        <span class=\"fa fa-compass fa-2x text-delta\" role=\"img\" aria-label=\"Choose\" title=\"Choose\"/>\n"
 "                                        &amp;nbsp;"
 msgstr ""
+"&amp;nbsp;\n"
+"                                        <span class=\"fa fa-compass fa-2x text-delta\" role=\"img\" aria-label=\"Choose\" title=\"Choose\"/>\n"
+"                                        &amp;nbsp;"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -79,6 +83,9 @@ msgid ""
 "                                        <span class=\"fa fa-credit-card fa-2x text-delta\" role=\"img\" aria-label=\"Order\" title=\"Order\"/>\n"
 "                                        &amp;nbsp;"
 msgstr ""
+"&amp;nbsp;\n"
+"                                        <span class=\"fa fa-credit-card fa-2x text-delta\" role=\"img\" aria-label=\"Order\" title=\"Order\"/>\n"
+"                                        &amp;nbsp;"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -87,6 +94,9 @@ msgid ""
 "                                        <span class=\"fa fa-smile-o fa-2x text-delta\" role=\"img\" aria-label=\"Enjoy\" title=\"Enjoy\"/>\n"
 "                                        &amp;nbsp;"
 msgstr ""
+"&amp;nbsp;\n"
+"                                        <span class=\"fa fa-smile-o fa-2x text-delta\" role=\"img\" aria-label=\"Enjoy\" title=\"Enjoy\"/>\n"
+"                                        &amp;nbsp;"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -100,6 +110,7 @@ msgstr "21 Jul"
 
 #. module: mass_mailing
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid ""
 "<font>7</font>\n"
 "    <strong>Business Hacks</strong>\n"
@@ -183,6 +194,8 @@ msgid ""
 "<span style=\"line-height: 30px;\"><small>CODE: </small></span><strong "
 "class=\"o_code h3\">45A9E77DGW8455</strong>"
 msgstr ""
+"<span style=\"line-height: 30px;\"><small>CODE: </small></span><strong "
+"class=\"o_code h3\">45A9E77DGW8455</strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
@@ -361,7 +374,7 @@ msgstr "Basis beheer"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__is_blacklisted
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklist"
-msgstr ""
+msgstr "Blacklist"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -856,7 +869,7 @@ msgstr "Fout"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Blacklisted"
-msgstr ""
+msgstr "Sluit blacklisted uit"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
@@ -867,7 +880,7 @@ msgstr "Ge-bounced uitsluiten"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
 msgid "Exclude Invalid Emails"
-msgstr ""
+msgstr "Sluit incorrecte e-mailadressen uit"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
@@ -901,6 +914,12 @@ msgstr "Mislukt"
 #, python-format
 msgid "Feedback from %s: %s"
 msgstr "Feedback van %s: %s"
+
+#. module: mass_mailing
+#: model:mail.mass_mailing,name:mass_mailing.mass_mail_1
+#: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
+msgid "First Newsletter"
+msgstr "Eerste nieuwsbrief"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_follower_ids
@@ -1008,6 +1027,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Als het e-mail adres op de blacklist staat, zal het contact gen "
+"bulkmailingen ontvangen, van geen enkele lijst."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__ignored
@@ -1040,6 +1061,7 @@ msgstr "Is publiek"
 
 #. module: mass_mailing
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid ""
 "Join our Marketing newsletter and get <strong>this white paper "
 "instantly</strong>"
@@ -1121,7 +1143,7 @@ msgstr "Opvolging links"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker_click
 msgid "Link Tracker Click"
-msgstr ""
+msgstr "Opvolging links klik"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__links_click_ids
@@ -1284,6 +1306,11 @@ msgid "Manage campaigns of mass emails with process stages"
 msgstr "Beheer bulk mailing campagnes met proces fases"
 
 #. module: mass_mailing
+#: model:mail.mass_mailing.tag,name:mass_mailing.mass_mail_tag_1
+msgid "Marketing"
+msgstr "Marketing"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__name
 msgid "Mass Mail"
 msgstr "Bulkmail"
@@ -1347,7 +1374,7 @@ msgstr "Mass mailing naam"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mass_mailing_schedule_date
 msgid "Mass Mailing Scheduling"
-msgstr ""
+msgstr "Bulk-mailing schema"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_statistics_report
@@ -1373,7 +1400,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list_contact_rel
 msgid "Mass Mailing Subscription Information"
-msgstr ""
+msgstr "Bulk-mailing abonnement informatie"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_tag
@@ -1488,6 +1515,12 @@ msgid "New Mailing List Name"
 msgstr "Nieuwe mailinglijst naam"
 
 #. module: mass_mailing
+#: model:mail.mass_mailing.campaign,name:mass_mailing.mass_mail_campaign_1
+#: model:utm.campaign,name:mass_mailing.mass_mail_campaign_1_utm_campaign
+msgid "Newsletter"
+msgstr "Nieuwsbrief"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "No customization"
 msgstr "Geen personalisering"
@@ -1578,6 +1611,7 @@ msgstr "Odoo"
 
 #. module: mass_mailing
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid "Odoo Presents"
 msgstr "Odoo presenteert"
 
@@ -2293,7 +2327,7 @@ msgstr "Gebruiker"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
 msgid "Valid Recipients"
-msgstr "Gevalideerde Ontvangers"
+msgstr "Bevestigde ontvangers"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -2388,14 +2422,14 @@ msgstr "U bent niet ingeschreven voor een van onze nieusbrieven."
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:49
 #, python-format
 msgid "You have been <strong>successfully unsubscribed from </strong>."
-msgstr ""
+msgstr "U bent <strong> succesvol uitgeschreven uit</strong>."
 
 #. module: mass_mailing
 #. openerp-web
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:52
 #, python-format
 msgid "You have been <strong>successfully unsubscribed</strong>."
-msgstr ""
+msgstr "U bent <strong> succesvol uitgeschreven</strong>."
 
 #. module: mass_mailing
 #. openerp-web

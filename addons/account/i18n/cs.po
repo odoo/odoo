@@ -17,10 +17,10 @@
 # Chris <krystof.reklamy13@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
 "Last-Translator: Chris <krystof.reklamy13@gmail.com>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -127,6 +127,11 @@ msgstr "2 měsíce"
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
 msgstr "30 kalendářních dnů"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% záloha do konce následujícího měsíce"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -1120,7 +1125,7 @@ msgstr "Účty"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Accounts Allowed"
-msgstr ""
+msgstr "Povolené účty"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -1340,7 +1345,7 @@ msgstr "Zástupce"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_name
 msgid "Alias Name for Vendor Bills"
-msgstr ""
+msgstr "Název aliasu pro prodejní účty"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain
@@ -3863,7 +3868,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "Definuje, jak budou bankovní výpisy zaregistrovány"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__cash_rounding_id
@@ -4256,6 +4261,11 @@ msgid "End Date"
 msgstr "Datum ukončení"
 
 #. module: account
+#: model:account.payment.term,name:account.account_payment_term
+msgid "End of Following Month"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end_real
 msgid "Ending Balance"
 msgstr "Konečný zůstatek"
@@ -4506,7 +4516,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.actions_account_fiscal_year
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_fiscal_year
 msgid "Fiscal Years"
-msgstr ""
+msgstr "Fiskální roky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -4579,7 +4589,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_ids
 msgid "For Incoming Payments"
-msgstr ""
+msgstr "Pro příchozí platby"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_ids
@@ -6971,7 +6981,7 @@ msgstr "Počet dní"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Počet chyb"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_needaction_counter
@@ -7598,8 +7608,18 @@ msgid "Payment terms: 30 Net Days"
 msgstr ""
 
 #. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr ""
+
+#. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
+msgstr ""
+
+#. module: account
+#: model:account.payment.term,note:account.account_payment_term
+msgid "Payment terms: End of Following Month"
 msgstr ""
 
 #. module: account
@@ -9253,7 +9273,7 @@ msgstr "Poddruh"
 #: code:addons/account/models/account_reconcile_model.py:20
 #: code:addons/account/models/chart_template.py:933
 #, python-format
-msgid "Suggest a write-off."
+msgid "Suggest counterpart values."
 msgstr ""
 
 #. module: account
@@ -11311,7 +11331,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-msgid "Write-off Values"
+msgid "Counterpart Values"
 msgstr ""
 
 #. module: account

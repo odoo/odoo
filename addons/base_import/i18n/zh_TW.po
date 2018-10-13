@@ -87,7 +87,7 @@ msgstr "列 %s 包含非法數據(值: %s)"
 #: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "列 %s 包含非法數據. 錯誤在行%d: %s"
+msgstr "列 %s 包含非法數據. 錯誤在%d: %s行"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -115,7 +115,7 @@ msgstr "無法檢索網址：%(url)s[%(field_name)s:L%(line_number)d]:%(error)s"
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "如果不存在則新建"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -167,7 +167,7 @@ msgid ""
 "Creates new records if they can't be found (instead of failing to import). "
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
-msgstr ""
+msgstr "如果找不到新記錄則創建新紀錄（代替失敗的導入）。注意，列中的值將作為新記錄的 '名稱' ，並假定這足以創建記錄。"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -208,7 +208,7 @@ msgstr "十進制分隔符："
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "推遲父/子計算"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -255,7 +255,7 @@ msgstr "下載"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -288,7 +288,7 @@ msgstr "看上去一切正常。"
 #: code:addons/base_import/static/src/xml/base_import.xml:82
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
+msgstr "Excel文件推薦格式化自動字段。"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
@@ -322,7 +322,7 @@ msgstr "文件類型"
 #: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "文件大小超出設定的最大值 (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -334,7 +334,7 @@ msgstr "文件的審核或導入， 原始二進制編碼（不是base64編碼�
 #: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "對於 CSV 格式的文件, 您可能需要選擇正確的分隔符."
 
 #. module: base_import
 #. openerp-web
@@ -418,7 +418,7 @@ msgid ""
 "If the model uses parent/child relations, computing the                     "
 "parent / child relation occurs on every line, and lead to a slower import."
 "                     Defering it can speed up import."
-msgstr ""
+msgstr "如果該模型使用父/子關係，每行都會計算父/子關係，並導致導入變慢。推遲它能提升導入速度。"
 
 #. module: base_import
 #. openerp-web
@@ -464,7 +464,7 @@ msgid ""
 "Import timed out. Please retry. If you still encounter this issue, the file "
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
-msgstr ""
+msgstr "導入超時。請重試。如果仍然遇到此問題，則該文件針對系統配置來說可能太大，請嘗試對其進行分割（每個文件導入更少的記錄）。"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -572,7 +572,7 @@ msgstr "需要幫助嗎？"
 #: code:addons/base_import/static/src/js/import_action.js:231
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "沒有分隔符"
 
 #. module: base_import
 #. openerp-web
@@ -667,77 +667,77 @@ msgstr "測試導入"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "測試:基本導入模型預覽"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "測試:基本導入模型，字元"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "測試:基本導入模型，字元無只讀"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "測試:基本導入模型，字元只讀"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "測試:基本導入模型，字元必選"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "測試:基本導入模型，字元狀態"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "測試:基本導入模型，字元還是只讀"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "測試:基本導入模型，多對一"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "測試:基本導入模型，多對一關係"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "測試:基本導入模型，多對一必選"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "測試:基本導入模型，多對一必選相關"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "測試:基本導入模型，一對多"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "測試:基本導入模型，一對多"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "測試:基本導入模型複雜"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "測試:基本導入模型浮動"
 
 #. module: base_import
 #. openerp-web
@@ -807,7 +807,7 @@ msgstr "價值"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "值2"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:760
@@ -815,7 +815,7 @@ msgstr ""
 msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
-msgstr ""
+msgstr "不能通過URL導入圖像，請與管理員進行聯繫。"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:631

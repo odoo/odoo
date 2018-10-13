@@ -28,10 +28,10 @@
 # Mirto Bonan <mbo@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
 "Last-Translator: Mirto Bonan <mbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -399,6 +399,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Un prodotto stoccabile è un prodotto per il quale gestisci lo stock. L'applicazione Inventorio deve essere installata\n"
+"Un prodotto di consumo è un prodotto per il quale lo stock non è gestito.\n"
+"Un servizio è un prodotto non materiale che fornisci."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -815,6 +818,12 @@ msgid ""
 msgstr ""
 "Deselezionando il campo attivo, è possibile nascondere una posizione senza "
 "eliminarla."
+
+#. module: stock
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1454,6 +1463,27 @@ msgid "Day(s) to purchase"
 msgstr "Giorno(i) all'acquisto"
 
 #. module: stock
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Caro Signore / Signora,\n"
+"\n"
+"I nostri dati indicano che alcuni pagamenti non sono stai da voi effettuati. Troverà i dettagli di seguito.\n"
+"Se l’importo è già stato pagato, si prega di ignorare questo avviso. In caso contrario, la preghiamo di saldare l’importo totale indicato di seguito.\n"
+"Se hai domande sulla tua situazione contabile, ti preghiamo di contattarci.\n"
+"\n"
+"Grazie in anticipo per la vostra collaborazione.\n"
+"I migliori saluti,"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
 msgid "Default Destination Location"
 msgstr "Location predefinita di Destinazione"
@@ -1483,7 +1513,7 @@ msgstr "Percorso di uscita predefinito da seguire"
 #: model:ir.model.fields,help:stock.field_stock_quant__product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Unità di misura predefinita per ogni operazione di stoccaggio"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -1596,6 +1626,7 @@ msgstr "Consegne"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:734
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -4630,6 +4661,7 @@ msgstr "Percorso di Ricezione"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:726
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -7243,6 +7275,14 @@ msgstr "in"
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "is not available in sufficient quantity"
 msgstr "non è disponibile in quantità sufficiente"
+
+#. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.product,weight_uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+#: model:product.template,weight_uom_name:stock.product_cable_management_box_product_template
+msgid "kg"
+msgstr "kg"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form

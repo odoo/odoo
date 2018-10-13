@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -22,12 +23,12 @@ msgstr ""
 #. module: repair
 #: model:mail.template,report_name:repair.mail_template_repair_quotation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr "${(object.name or 『』).replace(『/『,』_』)}"
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: repair
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
-msgstr "${object.partner_id.name} 維修單 (Ref ${object.name or 』n/a』 })"
+msgstr "${object.partner_id.name} 維修單 (Ref ${object.name or 'n/a' })"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -52,7 +53,7 @@ msgstr ""
 "*「草稿」狀態用於使用者正在編碼新的和未經確認的維修訂單。\n"
 "*當使用者確認維修訂單時使用「確認」狀態。\n"
 "*「準備維修」狀態用於開始維修，使用者只有在維修訂單確認後才能開始維修。\n"
-"*「待開立發票」狀態用於在維修完成之前或之後生成發票。\n"
+"*「待開立應收憑單」狀態用於在維修完成之前或之後生成應收憑單。\n"
 "*維修完成後，「完成」狀態將被設定。\n"
 "*使用者取消維修訂單時使用「取消」狀態。"
 
@@ -78,6 +79,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        尊敬的 ${object.partner_id.name},<br/>\n"
+"        Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        You can reply to this email if you have any questions.\n"
+"        <br/><br/>\n"
+"        謝謝,\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -89,7 +108,7 @@ msgstr "<i>(添加)</i>"
 msgid ""
 "<span class=\"o_form_label\">This operation will cancel the Repair process, "
 "but will not cancel it's Invoice. Do you want to continue?</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">此操作將取消維修流程，但不會取消其應收憑單。您要繼續嗎？</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -215,7 +234,7 @@ msgstr "不能取消已完成的維修。"
 msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
-msgstr ""
+msgstr "選擇將為其開具應收憑單和交付訂單的合作夥伴。您可以通過名稱，統一編號，電子信件或內部參考找到合作夥伴。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
@@ -250,22 +269,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
-msgstr "創建發票"
+msgstr "創建應收憑單"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
+msgstr "創建批量應收憑單 (修理)"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "Create a new reparation order"
-msgstr ""
+msgstr "創建一張新的維修單"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
-msgstr "創建發票"
+msgstr "創建應收憑單"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel__create_uid
@@ -327,7 +346,7 @@ msgstr "顯示名稱"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "您真的要創建發票嗎 ？"
+msgstr "您真的要創建應收憑單嗎 ？"
 
 #. module: repair
 #: selection:repair.line,state:0
@@ -347,7 +366,7 @@ msgstr "結束維修"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr ""
+msgstr "確保可以追溯您倉庫中的產品。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -387,7 +406,7 @@ msgstr "分組"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
-msgstr "按業務夥伴發票地址分組"
+msgstr "按業務夥伴應收憑單地址分組"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -417,7 +436,7 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -450,23 +469,23 @@ msgstr "庫存移動"
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoice"
-msgstr "發票"
+msgstr "應收憑單"
 
 #. module: repair
 #: selection:repair.order,state:0
 msgid "Invoice Exception"
-msgstr "發票例外"
+msgstr "應收憑單例外"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoice_line_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__invoice_line_id
 msgid "Invoice Line"
-msgstr "發票行"
+msgstr "應收憑單行"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
 msgid "Invoice Method"
-msgstr "開立發票方式"
+msgstr "開立應收憑單方式"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -490,7 +509,7 @@ msgstr "已創建的帳單"
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoiced
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Invoiced"
-msgstr "已開立發票"
+msgstr "已開立應收憑單"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
@@ -557,7 +576,7 @@ msgstr "主要附件"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
 msgid "Message Delivery error"
-msgstr "郵件傳遞錯誤"
+msgstr "信件傳遞錯誤"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
@@ -597,7 +616,7 @@ msgstr "下一活動類型"
 #. module: repair
 #: selection:repair.order,invoice_method:0
 msgid "No Invoice"
-msgstr "不開立發票"
+msgstr "不開立應收憑單"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:308
@@ -617,20 +636,20 @@ msgstr "產品 \"%s\" 沒有指定科目。"
 #: code:addons/repair/models/repair.py:658
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "沒有找到價格表."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:355
 #, python-format
 msgid "No product defined on fees."
-msgstr ""
+msgstr "沒有定義費用產品."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:605
 #: code:addons/repair/models/repair.py:665
 #, python-format
 msgid "No valid pricelist line found."
-msgstr ""
+msgstr "沒有找到有效的價格表。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -655,7 +674,7 @@ msgstr "需要行動消息的數量"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "發送錯誤的郵件數"
+msgstr "發送錯誤的信件數"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
@@ -666,7 +685,7 @@ msgstr "未讀消息的數量"
 #: code:addons/repair/models/repair.py:232
 #, python-format
 msgid "Only draft repairs can be confirmed."
-msgstr ""
+msgstr "只能確認修理草案。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
@@ -802,7 +821,7 @@ msgstr "維修"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "修理費"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -812,7 +831,7 @@ msgstr "維修明細"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
 msgid "Repair Line (parts)"
-msgstr ""
+msgstr "修理明細行(零件)"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -875,7 +894,7 @@ msgstr "維修必須在維修內以便結束維修。"
 #: code:addons/repair/wizard/repair_cancel.py:20
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr "未開發票的維修單。"
+msgstr "未開應收憑單的維修單。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -897,7 +916,7 @@ msgstr "維修單"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
 msgid "Responsible User"
-msgstr "責任用戶"
+msgstr "責任使用者"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -910,7 +929,7 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr "選擇「維修前」或「維修後」選項來允許您在完成維修前或後生產發票。「無發票」則代表此維修單無需生成發票。"
+msgstr "選擇「維修前」或「維修後」選項來允許您在完成維修前或後生產應收憑單。「無應收憑單」則代表此維修單無需生成應收憑單。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -998,13 +1017,13 @@ msgstr "維修單的名必須唯一！"
 msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
-msgstr ""
+msgstr "您選擇的產品計量單位跟產品的計量單位類別不同。"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:246
 #, python-format
 msgid "The repair order is already invoiced."
-msgstr ""
+msgstr "修理單早已開立應收憑單。"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -1012,7 +1031,7 @@ msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
-msgstr "維修單使用序列號上的質保日期，以得悉是否應為客戶開具發票。"
+msgstr "維修單使用序列號上的質保日期，以得悉是否應為客戶開具應收憑單。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
@@ -1024,12 +1043,12 @@ msgstr "修復線的狀態自動設定為鏈接修復順序之一。"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "這是待維修的產品存放的位置或庫位"
 
 #. module: repair
 #: selection:repair.order,state:0
 msgid "To be Invoiced"
-msgstr "要開發票的"
+msgstr "要開應收憑單的"
 
 #. module: repair
 #: selection:repair.order,activity_state:0
@@ -1106,7 +1125,7 @@ msgstr "不含稅金額"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "警告維修數量不足"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:172
@@ -1150,4 +1169,4 @@ msgstr ""
 #: code:addons/repair/models/repair.py:296
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr ""
+msgstr "您必須在維修單上選擇發票地址。"
