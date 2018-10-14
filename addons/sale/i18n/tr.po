@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-27 14:48+0000\n"
-"PO-Revision-Date: 2018-04-27 14:48+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -466,7 +466,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Satış Siparişinde  Adresler"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:156
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:159
 #, python-format
 msgid "Advance: %s"
 msgstr "Avans: %s"
@@ -504,6 +504,7 @@ msgid "Allows you to send pro-forma invoice."
 msgstr "Proforma fatura göndermenize olanak sağlar."
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Amount"
 msgstr "Tutar"
@@ -834,7 +835,7 @@ msgid "Delivered"
 msgstr "Teslim Edilen"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:824
+#: code:addons/sale/models/sale.py:844
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
@@ -937,7 +938,7 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
 #, python-format
 msgid "Down Payment"
 msgstr "Peşinat"
@@ -968,7 +969,7 @@ msgid "Down payment (percentage)"
 msgstr "Peşinat (yüzde)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "%s%% Peşinatı"
@@ -1006,10 +1007,15 @@ msgid "Extended Filters"
 msgstr "Genişletilmiş Filtreler"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:807
+#: code:addons/sale/models/sale.py:827
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_ir_model_fields
+msgid "Fields"
+msgstr "Alanlar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -1114,7 +1120,7 @@ msgid "Invoice"
 msgstr "Fatura"
 
 #. module: sale
-#: code:addons/sale/models/account_invoice.py:52
+#: code:addons/sale/models/account_invoice.py:55
 #, python-format
 msgid "Invoice %s paid"
 msgstr "Fatura %s ödendi"
@@ -1199,7 +1205,7 @@ msgid "Invoiced"
 msgstr "Faturalanan"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:825
+#: code:addons/sale/models/sale.py:845
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1285,11 +1291,17 @@ msgid "Is expired"
 msgstr "Süresi dolmuş"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:861
+#: code:addons/sale/models/sale.py:864
 #, python-format
 msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:551
+#, python-format
+msgid "It is not allowed to confirm an order in the following states: %s"
 msgstr ""
 
 #. module: sale
@@ -1476,26 +1488,6 @@ msgstr ""
 "Siparişler onaylandıktan sonra üzerinde değişiklik yapılmasına izin vermeyin"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-#: model:ir.actions.act_window,help:sale.action_quotations_salesteams
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"                from the Quotations list to the Sales Order list."
-msgstr ""
-"Bir teklif, satış siparişi haline geldiğinde, teklifler listesinden satış "
-"siparişi listesine taşınacağını unutmayın."
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders_salesteams
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved from the "
-"Quotations list to the Sales Order list."
-msgstr ""
-"Bir teklif, satış siparişi haline geldiğinde, teklifler listesinden satış "
-"siparişi listesine taşınacağını unutmayın."
-
-#. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
@@ -1635,7 +1627,7 @@ msgid "Ordered Qty"
 msgstr "Sipariş Miktarı"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:821
+#: code:addons/sale/models/sale.py:841
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
@@ -1739,7 +1731,7 @@ msgid "Please define an accounting sales journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:916
+#: code:addons/sale/models/sale.py:949
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1747,11 +1739,6 @@ msgid ""
 msgstr ""
 "Lütfen bu ürün\"%s\" (id:%d) - veya kategori: \"%s\" için bir gelir hesabı "
 "tanımlayın."
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-msgid "Price"
-msgstr "Fiyat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
@@ -2251,14 +2238,6 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Farklı ölçü birimleri ile ürünleri satın alın veya satın"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
-msgid ""
-"Sell digital products - provide downloadable content on your customer portal"
-msgstr ""
-"Dijital ürün satışlarında - müşteri portalından indirilebilir içerek "
-"özeliğini sağlama"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Ürünleri ambalajlayarak paket bazıda farklı ölçü birimleri ile satın"
@@ -2507,8 +2486,8 @@ msgid "Terms and conditions"
 msgstr "Şartlar ve Koşullar"
 
 #. module: sale
-#: code:addons/sale/models/analytic.py:128
-#: code:addons/sale/models/analytic.py:140
+#: code:addons/sale/models/analytic.py:129
+#: code:addons/sale/models/analytic.py:143
 #, python-format
 msgid ""
 "The Sales Order %s linked to the Analytic Account must be validated before "
@@ -2535,7 +2514,7 @@ msgstr ""
 "(Siparişteki Ürün Satış Fiyatı - Ürün Kartındaki Standart Maliyet) formülü ile hesaplanır."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:151
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2545,7 +2524,7 @@ msgstr ""
 "ürünün yerine başkasını kullanınız."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2594,7 +2573,7 @@ msgstr ""
 "uygulamasının, ayarlar bölümünden bir hesap planı oluşturun."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
+#: code:addons/sale/models/sale.py:438 code:addons/sale/models/sale.py:442
 #, python-format
 msgid "There is no invoiceable line."
 msgstr "Burada faturalanabilir satır yok."
@@ -2717,17 +2696,7 @@ msgid "Track Service"
 msgstr "Servis Rotası  "
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_ups
-msgid "UPS"
-msgstr "UPS"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_usps
-msgid "USPS"
-msgstr "USPS"
-
-#. module: sale
-#: code:addons/sale/models/sale.py:570
+#: code:addons/sale/models/sale.py:578
 #, python-format
 msgid "Uncategorized"
 msgstr "Kategorisiz"
@@ -2811,7 +2780,7 @@ msgid "Warning"
 msgstr "Uyarı"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1006
+#: code:addons/sale/models/sale.py:1037
 #, python-format
 msgid "Warning for %s"
 msgstr "%s için uyarı"
@@ -2855,7 +2824,7 @@ msgstr ""
 "önce ilgili kayıdı iptal etmelisiniz."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1069
+#: code:addons/sale/models/sale.py:1098
 #, python-format
 msgid ""
 "You can not remove a sales order line.\n"
@@ -2884,7 +2853,6 @@ msgid "Your Order has been confirmed."
 msgstr "Siparişiniz onaylandı."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
@@ -2893,6 +2861,15 @@ msgstr ""
 "Bir sonraki işlemleriniz verimli bir şekilde gerçekleşmelidir: Teklifinizi "
 "onaylayıp satış siparişine dönüşmesini sağlayın, ardından faturayı oluşturun"
 " ve ödemenizi alın."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sales Order, then create the Invoice and collect the Payment."
+msgstr ""
+"Sonraki eylemleriniz etkili bir şekilde akmalıdır: \n"
+"Bir Satış Siparişi için Teklifi onaylayın , ardından Faturayı oluşturun ve Ödeme'yi toplayın."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2904,11 +2881,6 @@ msgstr ""
 "Bir sonraki işlemleriniz verimli bir şekilde gerçekleşmelidir: Teklifinizi "
 "onaylayıp satış siparişine dönüşmesini sağlayın, ardından faturayı oluşturun"
 " ve ödemenizi alın."
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_bpost
-msgid "bpost"
-msgstr "bpost"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error

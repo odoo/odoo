@@ -3,7 +3,7 @@
 # * resource
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Boško Stojaković <bluesoft83@gmail.com>, 2017
 # Bole <bole@dajmi5.com>, 2017
 msgid ""
@@ -396,8 +396,10 @@ msgstr "Datum početka"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
-msgid "Start and End time of working."
-msgstr "Početno i krajnje vrijeme rada."
+msgid ""
+"Start and End time of working.\n"
+"A specific value of 24:00 is interpreted as 23:59:59.999999."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
@@ -469,11 +471,9 @@ msgstr "Vremenska zona"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves_tz
 msgid ""
-"Timezone used when encoding the leave. It is used to correctlylocalize leave"
-" hours when computing time intervals."
+"Timezone used when encoding the leave. It is used to correctly localize "
+"leave hours when computing time intervals."
 msgstr ""
-"Vremenska zona prilikom enkodiranja odsutnosti. Koristi se za pravilno "
-"lokalizovanje sati odsutnosti kada se računaju vremenski intervali."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
