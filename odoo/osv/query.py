@@ -178,29 +178,34 @@ class Query(object):
 
         return "".join(from_clause), " AND ".join(self.where_clause), from_params + self.where_clause_params
 
-    def __str__(self):
-        return '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>' % self.get_sql()
+    def combine(self, query):
+        """ Combine self with another query """
+        # Tables is a list of tables. Prevent duplicates
+        tables = list(set(self.tables + query.tables))
 
-    def __iadd__(self, query):
-        """ Include another query into self """
-        self.where_clause += query.where_clause
-        self.where_clause_params += query.where_clause_params
-        for table in query.tables:
-            if table not in self.tables:
-                self.tables.append(table)
+        # concatenate where_clause and where_clause_params lists
+        where_clause = self.where_clause + query.where_clause
+        where_clause_params = self.where_clause_params + query.where_clause_params
+
+        # Joins is a mapping of table to list. Append if key already exists.
+        joins = deepcopy(self.joins)
         for join_table in query.joins:
             self.joins.setdefault(join_table, [])
             for join in query.joins[join_table]:
-                if join not in self.joins[join_table]:
-                    self.joins[join_table].append(join)
-        return self
+                if join not in joins[join_table]:
+                    joins[join_table].append(join)
 
-    def __add__(self, query):
-        """ Return a new copy of `self` that includes `query` """
-        result = Query(
-            list(self.tables or []),
-            list(self.where_clause or []),
-            list(self.where_clause_params or []),
-            deepcopy(self.joins or {}))
-        result += query
-        return result
+        # Extras is a mapping of tuple to tuple. Overwrite if key already exists
+        extras = dict(self.extras)
+        for key, value in query.extras.items():
+            extras[key] = value
+
+        return Query(tables=tables, where_clause=where_clause,
+                     where_clause_params=where_clause_params, joins=joins, extras=extras)
+
+    def __and__(self, query):
+        """ Dunder wrapper around self.combine """
+        return self.combine(query)
+
+    def __str__(self):
+        return '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>' % self.get_sql()

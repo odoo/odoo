@@ -3824,19 +3824,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if not any(item[0] == 'active' for item in domain):
                 domain = [('active', '=', 1)] + domain
 
-        joins = {}
         if domain:
-            e = expression.expression(domain, self)
-            tables = e.get_tables()
-            where_clause, where_params = e.to_sql()
-            where_clause = [where_clause] if where_clause else []
-            joins = e.joins
-        else:
-            where_clause, where_params, tables = [], [], ['"%s"' % self._table]
-
-        query = Query(tables, where_clause, where_params)
-        query.joins = joins
-        return query
+            return expression.expression(domain, self).to_query()
+        return Query(['"%s"' % self._table])
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
@@ -3878,7 +3868,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     ]
                     if parent_table_unescaped in query.joins:
                         rule_query.joins[parent_alias_unescaped] = rule_query.joins.pop(parent_table_unescaped)
-                query += rule_query
+                query = query & rule_query
 
         if self._transient:
             # One single implicit access rule for transient models: owner only!

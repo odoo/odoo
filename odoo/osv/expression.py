@@ -122,6 +122,7 @@ from zlib import crc32
 
 from datetime import date, datetime, time
 import odoo.modules
+from odoo.osv.query import Query
 from odoo.tools import pycompat
 from ..models import MAGIC_COLUMNS, BaseModel
 import odoo.tools as tools
@@ -1299,7 +1300,7 @@ class expression(object):
 
         return query, params
 
-    def to_sql(self):
+    def to_query(self):
         stack = []                      # stack of query strings
         params = []                     # query parameters, in reverse order
 
@@ -1321,4 +1322,4 @@ class expression(object):
         query = stack[0]
 
         params.reverse()
-        return query, params
+        return Query(self.get_tables(), [query], params, self.joins)
