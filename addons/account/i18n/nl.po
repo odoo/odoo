@@ -18,14 +18,14 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2018
 # Jordy Blankestijn <jblankestijn@erpopen.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
-# Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018
+# dpms <pieter.van.de.wygaert@telenet.be>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:12+0000\n"
 "PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018\n"
+"Last-Translator: dpms <pieter.van.de.wygaert@telenet.be>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5034,6 +5034,8 @@ msgid ""
 "If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
 "This is useful if the accounting period in which the entries should normally be booked is already closed."
 msgstr ""
+"Indien actief, de verrichtingen die gecreerd werden gedurende het de "
+"bankverrichtingen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -5092,6 +5094,8 @@ msgstr "Als u deze optie aanvinkt kan u uw betaling registreren met SEPA."
 msgid ""
 "If you have not installed a chart of account, please install one first.<br>"
 msgstr ""
+"Indien u de rekeningstelsels niet installeerde, aub installeer ze nu "
+"eerst.<br>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_general_ledger__initial_balance
@@ -8153,7 +8157,7 @@ msgstr "Transacties registreren in vreemde valuta"
 #: code:addons/account/models/account.py:885
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr ""
+msgstr "Recursie gevonden voor belasting '%s'."
 
 #. module: account
 #. openerp-web
@@ -9301,6 +9305,9 @@ msgid ""
 "                                                                                                                                                                       This does not especially correspond to the invoices reconciled with the payment,\n"
 "                                                                                                                                                                       as it can have been generated first, and reconciled later"
 msgstr ""
+"Technisch veld bevat de facturen voor welke reeds betalingen werden gegenereerd.\n"
+"Dit komt niet noodzakelijk overeen met de facturen reconsilieerd met de betalingen,\n"
+"als deze eerst werden gegenereerd en pas later gereconsilieerd."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__balance
@@ -9434,6 +9441,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__tax_type_domain
 msgid "Technical field used to have a dynamic taxes domain on the form view."
 msgstr ""
+"Technisch veld gebruikt om een dynamisch belasting domein weer te geven in "
+"het formulier overzicht. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment__hide_payment_method
@@ -9463,6 +9472,8 @@ msgid ""
 "Technical field used to know if the tax_ids field has been modified in the "
 "UI."
 msgstr ""
+"Technisch veld gebruikt om aan te geven of het tax_ids veld gewijzigd werd "
+"in de GI."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_exigible
@@ -9483,6 +9494,8 @@ msgid ""
 "Technical field used to store the bank account number before its creation, "
 "upon the line's processing"
 msgstr ""
+"Technische veld gebruikt om het bankrekening nummer te bewaren voordat de "
+"creatie geschied, bij de lijn verwerking"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_grouping_key
@@ -9491,6 +9504,10 @@ msgid ""
 "lines (in account.move form view) between the moment the user changed it and"
 " the moment the ORM reflects that change in its one2many"
 msgstr ""
+"Technische veld gebruikt om de oude veld waarde te bewaren is gebruikt om de"
+" belasting regels te berekenen (in account.move from view) op het ogenblik "
+"dat de gebruiker het wijzigde en het ogenblik dat de ORM deze wijziging "
+"aangeeft in zijn one2many "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template_id
@@ -9605,7 +9622,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:319
 #, python-format
 msgid "The amount of a cash transaction cannot be 0."
-msgstr ""
+msgstr "Het bedrag van deze contante verrichting kan niet 0 zijn."
 
 #. module: account
 #: code:addons/account/models/account.py:887
@@ -9614,6 +9631,8 @@ msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or left empty."
 msgstr ""
+"Het toepassingsgebied voor belastingen in een groep moet gelijk zijn aan "
+"dezelfde groep of leeg gelaten worden."
 
 #. module: account
 #: code:addons/account/models/account.py:514
@@ -9674,6 +9693,7 @@ msgid ""
 "The currency of the journal should be the same than the default credit "
 "account."
 msgstr ""
+"De valuta van de joernalen zal gelijk zijn aan de algemene credit rekening."
 
 #. module: account
 #: code:addons/account/models/account.py:507
@@ -9682,6 +9702,8 @@ msgid ""
 "The currency of the journal should be the same than the default debit "
 "account."
 msgstr ""
+"De valuta van de joernalen kan niet gelijk zijn aan de algemene debit "
+"rekening"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -9708,7 +9730,7 @@ msgstr ""
 #: code:addons/account/models/account_fiscal_year.py:43
 #, python-format
 msgid "The ending date must not be prior to the starting date."
-msgstr ""
+msgstr "De eind datum mag niet voor de start datum liggen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -9746,6 +9768,8 @@ msgid ""
 "The field Vendor is required, please complete it to validate the Vendor "
 "Bill."
 msgstr ""
+"Het veld leverancier is verplicht, aub vervolledig het om de leveranciers "
+"rekeningen te vallideren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -9800,6 +9824,7 @@ msgstr ""
 #, python-format
 msgid "The last line of a Payment Term should have the Balance type."
 msgstr ""
+"De laatste regel van een betalingsconditie zal van het type Balans zijn."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_form
@@ -9947,6 +9972,8 @@ msgid ""
 "The selected unit of measure has to be in the same category as the product "
 "unit of measure."
 msgstr ""
+"De geselecteerde meetkundige eenheid moet in dezelfde categorie als het "
+"product meetkundige eenheid. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -11101,6 +11128,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "Will be used to name the Journal related to this bank account"
 msgstr ""
+"Zullen gebruikt worden als joernaal benaming gerelateerd aan deze "
+"bankrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__amount_currency
@@ -11196,6 +11225,8 @@ msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
+"U kunt geen betalingstermijnen verwijderen gerelateerd aan gegevens. "
+"Daarentegen, kan u ze wel archiveren. "
 
 #. module: account
 #: code:addons/account/models/account_fiscal_year.py:56
@@ -11204,6 +11235,8 @@ msgid ""
 "You can not have an overlap between two fiscal years, please correct the "
 "start and/or end dates of your fiscal years."
 msgstr ""
+"U kunt geen overlapping hebben tussen twee belastbare jaren, wijzig aub de "
+"start en/of eind datum van uw belastbare jaren."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1762
@@ -11275,6 +11308,8 @@ msgid ""
 "You cannot create journal items with a secondary currency without filling "
 "both 'currency' and 'amount currency' fields."
 msgstr ""
+"U kunt geen joernaalposten aanmaken met een tweede valuta zonder invulling "
+"van beide 'valuta' en 'bedrag valuta' velden."
 
 #. module: account
 #: code:addons/account/models/company.py:123
@@ -11291,7 +11326,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:493
 #, python-format
 msgid "You cannot delete a payment that is already posted."
-msgstr ""
+msgstr "U kunt geen betaling verwijderen die reeds is toegekend."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:729
