@@ -11,7 +11,7 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Joray <13637815@qq.com>, 2017
-# 珠海-杜哥 <liangjia@qq.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 # e2f_cn r14 <e2f_cn_r14@outlook.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # niulin lnc. <admin@niulin.net>, 2017
@@ -34,13 +34,14 @@
 # fausthuang, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Emily JIA <eji@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Emily JIA <eji@odoo.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,7 +227,7 @@ msgstr ""
 "</div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:674
+#: code:addons/mail/models/mail_channel.py:682
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr "这个频道是私有的. 只有被邀请的人才可以参与."
@@ -258,7 +259,7 @@ msgstr "%d 消息"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:32
+#: code:addons/mail/static/src/js/activity.js:89
 #, python-format
 msgid "%d days overdue"
 msgstr "超期%d 天"
@@ -270,13 +271,13 @@ msgid "%s (copy)"
 msgstr "%s (副本)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:236
+#: code:addons/mail/models/mail_thread.py:241
 #, python-format
 msgid "%s created"
 msgstr "%s 创建"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:77
+#: code:addons/mail/models/res_users.py:83
 #, python-format
 msgid "%s has joined the %s network."
 msgstr "%s已经加入 %s 网络."
@@ -290,7 +291,7 @@ msgstr "&nbsp;("
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:179
+#: code:addons/mail/static/src/xml/thread.xml:184
 #, python-format
 msgid "(from"
 msgstr "(从"
@@ -311,7 +312,7 @@ msgstr "，截至"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:331
+#: code:addons/mail/static/src/xml/thread.xml:336
 #, python-format
 msgid "-------- Show older messages --------"
 msgstr "-------- 显示更旧的消息 --------"
@@ -338,7 +339,7 @@ msgid "0 Today"
 msgstr "0 今天"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:678
+#: code:addons/mail/models/mail_channel.py:686
 #, python-format
 msgid ""
 "<br><br>\n"
@@ -354,7 +355,19 @@ msgstr ""
 " 您可以通过键入 <b>:快捷方式</b>在您的消息中插入预设回复。<br>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:584
+#: code:addons/mail/models/mail_channel.py:509
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
+msgstr ""
+"<div class=\"o_mail_notification\">%(author)s 邀请 %(new_partner)s 至 <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:592
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
@@ -364,8 +377,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:508
-#: code:addons/mail/models/mail_channel.py:561
+#: code:addons/mail/models/mail_channel.py:516
+#: code:addons/mail/models/mail_channel.py:569
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
@@ -835,7 +848,8 @@ msgstr "总是"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:198
+#: code:addons/mail/models/mail_channel.py:685
+#: code:addons/mail/static/src/js/chat_manager.js:207
 #, python-format
 msgid "Anonymous"
 msgstr "匿名"
@@ -1142,13 +1156,13 @@ msgid "Choose an example"
 msgstr "选择一个示例"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:342
+#: code:addons/mail/models/mail_thread.py:347
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr "点击此处添加新的%(document)s或者发送邮件至件：%(email_link)s  "
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:358
+#: code:addons/mail/models/mail_thread.py:363
 #, python-format
 msgid "Click here to add new %s"
 msgstr "点击这儿添加新%s"
@@ -1218,14 +1232,14 @@ msgstr "配置你的活动类型"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:109
+#: code:addons/mail/static/src/xml/thread.xml:114
 #, python-format
 msgid "Congratulations, your inbox is empty"
 msgstr "恭喜，你的收件箱是空的"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:647
+#: code:addons/mail/static/src/js/client_action.js:650
 #, python-format
 msgid "Congratulations, your inbox is empty!"
 msgstr "恭喜，你的收件箱是空的！"
@@ -1485,7 +1499,7 @@ msgstr "删除已发送邮件(仅限群发邮件)"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:320
+#: code:addons/mail/static/src/xml/thread.xml:325
 #, python-format
 msgid "Delete this attachment"
 msgstr "删除此附件"
@@ -1616,16 +1630,16 @@ msgstr "完成并安排下一个活动"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:296
+#: code:addons/mail/static/src/xml/thread.xml:301
 #, python-format
 msgid "Download this PDF"
 msgstr "下载此PDF"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:272
-#: code:addons/mail/static/src/xml/thread.xml:285
-#: code:addons/mail/static/src/xml/thread.xml:308
+#: code:addons/mail/static/src/xml/thread.xml:277
+#: code:addons/mail/static/src/xml/thread.xml:290
+#: code:addons/mail/static/src/xml/thread.xml:313
 #, python-format
 msgid "Download this attachment"
 msgstr "下载此附件"
@@ -1637,7 +1651,7 @@ msgstr "截止日期"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:38
+#: code:addons/mail/static/src/js/activity.js:95
 #, python-format
 msgid "Due in %d days"
 msgstr "截至 %d 天"
@@ -1780,7 +1794,7 @@ msgid "Error during communication with the publisher warranty server."
 msgstr "与服务商的保障服务器通信时发生错误。"
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:302
+#: code:addons/mail/models/mail_mail.py:305
 #, python-format
 msgid ""
 "Error without exception. Probably due do sending an email without computed "
@@ -1857,7 +1871,7 @@ msgstr "收藏夹"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:209
+#: code:addons/mail/static/src/js/activity.js:235
 #: model:ir.model.fields,field_description:mail.field_mail_activity_feedback
 #, python-format
 msgid "Feedback"
@@ -1870,7 +1884,7 @@ msgid "Field"
 msgstr "字段"
 
 #. module: mail
-#: code:addons/mail/models/ir_model.py:24
+#: code:addons/mail/models/ir_model.py:30
 #, python-format
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
 msgstr "字段“电子邮件线程”不能更改为“假”。"
@@ -1914,7 +1928,7 @@ msgstr "收拢的"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:696
+#: code:addons/mail/models/mail_thread.py:701
 #: code:addons/mail/static/src/xml/followers.xml:20
 #, python-format
 msgid "Follow"
@@ -2174,7 +2188,7 @@ msgid "Gateway"
 msgstr "网关"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:54
+#: code:addons/mail/models/res_users.py:55
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "前往配置面板"
@@ -2470,7 +2484,7 @@ msgstr "无效的别名"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:655
+#: code:addons/mail/static/src/js/chat_manager.js:664
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/client_action.xml:154
 #: code:addons/mail/static/src/xml/client_action.xml:164
@@ -2506,7 +2520,7 @@ msgid ""
 msgstr "错误的表达式，必须是符合文法的python字典定义，例如： \"{'field': 'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1792
+#: code:addons/mail/models/mail_thread.py:1807
 #, python-format
 msgid ""
 "Invalid record set: should be called as model (without records) or on "
@@ -2521,7 +2535,7 @@ msgstr "路由%s 含非法的令牌"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:579
+#: code:addons/mail/static/src/js/chat_manager.js:588
 #, python-format
 msgid "Invitation"
 msgstr "邀请"
@@ -2557,7 +2571,7 @@ msgstr "邀请人员"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:867
+#: code:addons/mail/static/src/js/client_action.js:870
 #, python-format
 msgid "Invite people to #%s"
 msgstr "邀请人员到 #%s"
@@ -2835,7 +2849,7 @@ msgstr "退出"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_channel.py:687
+#: code:addons/mail/models/mail_channel.py:695
 #: code:addons/mail/static/src/xml/client_action.xml:112
 #, python-format
 msgid "Leave this channel"
@@ -2854,7 +2868,7 @@ msgid ""
 msgstr "列表中的业务伙伴将添加至当前单据的关注者。"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:698
+#: code:addons/mail/models/mail_channel.py:706
 #, python-format
 msgid "List users in the current channel"
 msgstr "在当前频道列出用户"
@@ -2938,7 +2952,7 @@ msgid "Mail Channel Form"
 msgstr "邮件频道表单"
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:369
+#: code:addons/mail/models/mail_mail.py:372
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "邮件投递失败"
@@ -2967,7 +2981,7 @@ msgid "Mail: Email Queue Manager"
 msgstr "邮件：电邮队列管理器"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:832
+#: code:addons/mail/models/mail_thread.py:837
 #, python-format
 msgid "Mailbox unavailable - %s"
 msgstr "信箱不可用- %s"
@@ -3005,15 +3019,15 @@ msgstr "标记为完成"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:206
+#: code:addons/mail/static/src/xml/thread.xml:211
 #, python-format
 msgid "Mark as Read"
 msgstr "标记为已读"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:153
-#: code:addons/mail/static/src/xml/thread.xml:200
+#: code:addons/mail/static/src/xml/thread.xml:158
+#: code:addons/mail/static/src/xml/thread.xml:205
 #, python-format
 msgid "Mark as Todo"
 msgstr "标记为待办"
@@ -3383,14 +3397,14 @@ msgstr "新建消息"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:233
+#: code:addons/mail/static/src/xml/thread.xml:238
 #, python-format
 msgid "New messages"
 msgstr "新消息"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:110
+#: code:addons/mail/static/src/xml/thread.xml:115
 #, python-format
 msgid "New messages appear here."
 msgstr "新消息出现在这里。"
@@ -3522,7 +3536,7 @@ msgstr "找不到与你查找相匹配的消息。试着更改你的搜索筛选
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:113
+#: code:addons/mail/static/src/xml/thread.xml:118
 #, python-format
 msgid "No starred message"
 msgstr "没有标星的消息"
@@ -3543,7 +3557,7 @@ msgstr "备注"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:157
+#: code:addons/mail/static/src/xml/thread.xml:162
 #, python-format
 msgid "Note by"
 msgstr "备注由"
@@ -3784,7 +3798,7 @@ msgstr "Odoo"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:895
+#: code:addons/mail/static/src/js/client_action.js:898
 #, python-format
 msgid ""
 "Odoo has now the permission to send you native notifications on this device."
@@ -3799,7 +3813,7 @@ msgstr "Odoo需要你的许可进行"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:892
+#: code:addons/mail/static/src/js/client_action.js:895
 #, python-format
 msgid ""
 "Odoo will not have the permission to send native notifications on this "
@@ -3873,7 +3887,7 @@ msgid "Online"
 msgstr "在线"
 
 #. module: mail
-#: code:addons/mail/models/ir_model.py:22
+#: code:addons/mail/models/ir_model.py:28
 #, python-format
 msgid "Only custom models can be modified."
 msgstr "仅有自定义模型能被修改。"
@@ -4108,14 +4122,14 @@ msgstr "发送后永久删除这个邮件，以节省空间"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:891
+#: code:addons/mail/static/src/js/client_action.js:894
 #, python-format
 msgid "Permission denied"
 msgstr "许可拒绝"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:894
+#: code:addons/mail/static/src/js/client_action.js:897
 #, python-format
 msgid "Permission granted"
 msgstr "许可授予"
@@ -4161,7 +4175,7 @@ msgstr "计划的活动"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:282
+#: code:addons/mail/static/src/xml/thread.xml:287
 #, python-format
 msgid "Play this video"
 msgstr "播放此视频"
@@ -4175,14 +4189,14 @@ msgstr "请填写客户的信息"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/many2many_tags_email.js:84
+#: code:addons/mail/static/src/js/many2many_tags_email.js:96
 #, python-format
 msgid "Please complete customer's informations and email"
 msgstr "请填写客户的信息和电子邮件"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:651
+#: code:addons/mail/static/src/js/composer.js:667
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "当文件上传时，请等待。"
@@ -4267,7 +4281,7 @@ msgstr "私人频道"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:848
+#: code:addons/mail/static/src/js/client_action.js:851
 #, python-format
 msgid "Public Channels"
 msgstr "公共频道"
@@ -4391,7 +4405,7 @@ msgstr "移除此关注者"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:203
+#: code:addons/mail/static/src/xml/thread.xml:208
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Reply"
@@ -4485,7 +4499,7 @@ msgstr "保存为新模板"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_window.js:40
+#: code:addons/mail/static/src/js/chat_window.js:41
 #, python-format
 msgid "Say something"
 msgstr "说些什么..."
@@ -4548,7 +4562,7 @@ msgstr "选择的用户组"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:374
+#: code:addons/mail/static/src/js/composer.js:382
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Send"
@@ -4659,7 +4673,7 @@ msgid "Show all records which has next action date is before today"
 msgstr "显示在今天之前的下一个行动日期的所有记录"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:667
+#: code:addons/mail/models/mail_channel.py:675
 #, python-format
 msgid "Show an helper message"
 msgstr "显示帮助者信息"
@@ -4716,7 +4730,7 @@ msgstr "如果活动应特定于某个模型并且在管理其他模型的活动
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:661
+#: code:addons/mail/static/src/js/chat_manager.js:670
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: code:addons/mail/static/src/xml/client_action.xml:156
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
@@ -4830,7 +4844,7 @@ msgstr "主题..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:216
+#: code:addons/mail/static/src/xml/thread.xml:221
 #, python-format
 msgid "Subject:"
 msgstr "主题:"
@@ -4938,9 +4952,9 @@ msgstr ""
 "在收到此别名的电子邮件时创建记录的所有者。如果此字段未设置，系统将尝试根据发件人(发件人)地址查找正确的所有者，或者如果没有找到该地址的系统用户将使用管理员帐户。"
 
 #. module: mail
-#: code:addons/mail/models/mail_activity.py:165
-#: code:addons/mail/models/mail_message.py:579
-#: code:addons/mail/models/mail_message.py:674
+#: code:addons/mail/models/mail_activity.py:175
+#: code:addons/mail/models/mail_message.py:598
+#: code:addons/mail/models/mail_message.py:698
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -5020,8 +5034,8 @@ msgstr "至:"
 #. module: mail
 #. openerp-web
 #: selection:account.invoice,activity_state:0
-#: code:addons/mail/static/src/js/activity.js:26
-#: code:addons/mail/static/src/js/thread.js:240
+#: code:addons/mail/static/src/js/activity.js:83
+#: code:addons/mail/static/src/js/thread.js:246
 #: code:addons/mail/static/src/xml/systray.xml:75
 #: selection:crm.lead,activity_state:0 selection:event.track,activity_state:0
 #: selection:hr.applicant,activity_state:0 selection:mail.activity,state:0
@@ -5056,7 +5070,7 @@ msgstr "待办"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:36
+#: code:addons/mail/static/src/js/activity.js:93
 #, python-format
 msgid "Tomorrow"
 msgstr "明天"
@@ -5116,20 +5130,20 @@ msgid "UUID"
 msgstr "UUID"
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:235
+#: code:addons/mail/models/mail_mail.py:238
 #, python-format
 msgid "Unable to connect to SMTP Server"
 msgstr "无法连接到 SMTP 服务器"
 
 #. module: mail
-#: code:addons/mail/models/mail_message.py:31
+#: code:addons/mail/models/mail_message.py:32
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
 msgstr "无法发送电子邮件，请配置发件人的电子邮件地址。"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:700
+#: code:addons/mail/models/mail_thread.py:705
 #: code:addons/mail/static/src/xml/followers.xml:22
 #, python-format
 msgid "Unfollow"
@@ -5308,6 +5322,13 @@ msgid "Unsubscribe from channel"
 msgstr "从频道退订"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/chat_manager.js:486
+#, python-format
+msgid "Unsubscribed"
+msgstr "退订的"
+
+#. module: mail
 #: code:addons/mail/models/mail_template.py:510
 #, python-format
 msgid "Unsupported report type %s found."
@@ -5315,14 +5336,14 @@ msgstr "发现不支持的报告类型 %s。"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:322
+#: code:addons/mail/static/src/xml/thread.xml:327
 #, python-format
 msgid "Uploading"
 msgstr "上传中"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:651
+#: code:addons/mail/static/src/js/composer.js:667
 #, python-format
 msgid "Uploading error"
 msgstr "上传错误"
@@ -5370,7 +5391,7 @@ msgid "Users"
 msgstr "用户"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:711
+#: code:addons/mail/models/mail_channel.py:719
 #, python-format
 msgid "Users in this channel: %s %s and you."
 msgstr "在此频道的用户 : %s %s 以及你。"
@@ -5386,14 +5407,14 @@ msgstr ""
 "(@mycompany.odoo.com)。"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:670
+#: code:addons/mail/models/mail_thread.py:675
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
 msgstr "视图"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:668
+#: code:addons/mail/models/mail_thread.py:673
 #, python-format
 msgid "View %s"
 msgstr "视图 %s"
@@ -5465,8 +5486,8 @@ msgstr "写些什么..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:30
-#: code:addons/mail/static/src/js/thread.js:242
+#: code:addons/mail/static/src/js/activity.js:87
+#: code:addons/mail/static/src/js/thread.js:248
 #, python-format
 msgid "Yesterday"
 msgstr "昨天"
@@ -5479,33 +5500,33 @@ msgid "You added <b>%s</b> to the conversation."
 msgstr "你添加了 <b>%s</b> 到对话。"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:708
+#: code:addons/mail/models/mail_channel.py:716
 #, python-format
 msgid "You are alone in this channel."
 msgstr "你是此频道的唯一人员。"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:677
+#: code:addons/mail/models/mail_channel.py:685
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
 msgstr "你在与<b>@%s</b> 的私有对话中。"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:672
+#: code:addons/mail/models/mail_channel.py:680
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "你在频道 <b>#%s</b>。"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:114
+#: code:addons/mail/static/src/xml/thread.xml:119
 #, python-format
 msgid ""
 "You can mark any message as 'starred', and it shows up in this channel."
 msgstr "你可以给任何的消息加星号，然后它就会显示在这个渠道。"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:53
+#: code:addons/mail/models/res_users.py:54
 #, python-format
 msgid ""
 "You cannot create a new user from here.\n"
@@ -5523,7 +5544,7 @@ msgid ""
 msgstr "你不能删除这些群，因为整个公司群被其它模块引用。"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:349
+#: code:addons/mail/models/mail_thread.py:354
 #, python-format
 msgid ""
 "You could also add a new %(document)s by sending an email to: "
@@ -5537,7 +5558,7 @@ msgstr "你被指派到"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:579
+#: code:addons/mail/static/src/js/chat_manager.js:588
 #, python-format
 msgid "You have been invited to: "
 msgstr "你已被邀请："
@@ -5552,14 +5573,14 @@ msgstr "你可以对这个模板附加文件，可以附加到所有基于此模
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:473
+#: code:addons/mail/static/src/js/chat_manager.js:482
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr "你已取消置顶你与<b>%s</b>的对话。"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:471
+#: code:addons/mail/static/src/js/chat_manager.js:480
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "你从<b>%s</b>取消订阅。"
@@ -5585,7 +5606,7 @@ msgid "Your template should define email_from"
 msgstr "你的模板需要定义email_from"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:966
+#: code:addons/mail/models/mail_thread.py:971
 #, python-format
 msgid "alias %s: %s"
 msgstr "别名 %s: %s"
@@ -5606,7 +5627,7 @@ msgid "created"
 msgstr "创建"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:315
+#: code:addons/mail/models/mail_thread.py:320
 #, python-format
 msgid "document"
 msgstr "单据"
@@ -5689,19 +5710,19 @@ msgid "mail.alias.mixin"
 msgstr "mail.alias.mixin"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:943
+#: code:addons/mail/models/mail_thread.py:948
 #, python-format
 msgid "model %s does not accept document creation"
 msgstr "模型 %s 不接受文档创建"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:938
+#: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document update"
 msgstr "模型 %s 不接受文档更新"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:931
+#: code:addons/mail/models/mail_thread.py:936
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
@@ -5719,21 +5740,21 @@ msgstr "mycompany.odoo.com"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:21
+#: code:addons/mail/static/src/js/thread.js:22
 #, python-format
 msgid "now"
 msgstr "现在"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:177
+#: code:addons/mail/static/src/xml/thread.xml:181
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
 msgstr "在"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:913
+#: code:addons/mail/models/mail_thread.py:918
 #, python-format
 msgid ""
 "posting a message without model should be with a null res_id (private "
@@ -5741,7 +5762,7 @@ msgid ""
 msgstr "发布无模型消息应使用无效 res_id（私人信息），收到 %s"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:917
+#: code:addons/mail/models/mail_thread.py:922
 #, python-format
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
@@ -5759,14 +5780,14 @@ msgstr "rd"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:17
+#: code:addons/mail/static/src/js/thread.js:18
 #, python-format
 msgid "read less"
 msgstr "阅读更少"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:16
+#: code:addons/mail/static/src/js/thread.js:17
 #, python-format
 msgid "read more"
 msgstr "阅读全文"
@@ -5777,13 +5798,13 @@ msgid "record:"
 msgstr "记录："
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:935
+#: code:addons/mail/models/mail_thread.py:940
 #, python-format
 msgid "reply to missing document (%s,%s)"
 msgstr "回复缺失文档 (%s,%s)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:928
+#: code:addons/mail/models/mail_thread.py:933
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr "回复缺失文档 (%s,%s)，回退到新的文档创建"
@@ -5794,7 +5815,7 @@ msgid "res.config.settings"
 msgstr "res.config.settings"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:913
+#: code:addons/mail/models/mail_thread.py:918
 #, python-format
 msgid "resetting thread_id"
 msgstr "正在重置 thread_id"
@@ -5823,11 +5844,11 @@ msgid "sales"
 msgstr "销售"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:917
-#: code:addons/mail/models/mail_thread.py:935
-#: code:addons/mail/models/mail_thread.py:938
+#: code:addons/mail/models/mail_thread.py:922
+#: code:addons/mail/models/mail_thread.py:940
 #: code:addons/mail/models/mail_thread.py:943
-#: code:addons/mail/models/mail_thread.py:966
+#: code:addons/mail/models/mail_thread.py:948
+#: code:addons/mail/models/mail_thread.py:971
 #, python-format
 msgid "skipping"
 msgstr "跳过"
@@ -5840,13 +5861,13 @@ msgid "this document"
 msgstr "此单据"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:966
+#: code:addons/mail/models/mail_thread.py:971
 #, python-format
 msgid "unknown error"
 msgstr "未知错误"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:906
+#: code:addons/mail/models/mail_thread.py:911
 #, python-format
 msgid "unknown target model %s"
 msgstr "未知目标模型 %s"

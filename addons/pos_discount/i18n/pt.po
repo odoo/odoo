@@ -3,7 +3,7 @@
 # * pos_discount
 # 
 # Translators:
-# Manuela Silva <manuela.silva@sky.com>, 2018
+# MS, 2018
 # Martin Trigaux, 2018
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2018
 msgid ""
@@ -38,7 +38,10 @@ msgid "Discount %"
 msgstr "Desconto %"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:14
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#, python-format
 msgid "Discount Percentage"
 msgstr "Percentagem de Desconto"
 
@@ -49,6 +52,13 @@ msgid "Discount Product"
 msgstr "Desconto em Produto"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:28
+#, python-format
+msgid "No discount product found"
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
 msgid "Order Discounts"
 msgstr "Descontos da Encomenda"
@@ -56,6 +66,15 @@ msgstr "Descontos da Encomenda"
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
 msgid "The default discount percentage"
+msgstr ""
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:29
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
 msgstr ""
 
 #. module: pos_discount
