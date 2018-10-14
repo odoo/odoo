@@ -636,7 +636,7 @@ class AccountReconciliation(models.AbstractModel):
         Account_move_line = self.env['account.move.line']
 
         ir_rules_query = Account_move_line._where_calc([])
-        Account_move_line._apply_ir_rules(ir_rules_query, 'read')
+        ir_rules_query = Account_move_line._apply_ir_rules(ir_rules_query, 'read')
         from_clause, where_clause, where_clause_params = ir_rules_query.get_sql()
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
 

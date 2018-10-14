@@ -2092,7 +2092,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
-        self._apply_ir_rules(query, 'read')
+        query = self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
             assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
             gb_field = self._fields[gb].base_field
@@ -2843,7 +2843,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # make a query object for selecting ids, and apply security rules to it
         param_ids = object()
         query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [param_ids])
-        self._apply_ir_rules(query, 'read')
+        query = self._apply_ir_rules(query, 'read')
 
         # determine the fields that are stored as columns in tables; ignore 'id'
         fields_pre = [
@@ -3835,13 +3835,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _apply_ir_rules(self, query, mode='read'):
-        """Add what's missing in ``query`` to implement all appropriate ir.rules
-          (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
+        """Return a new Query object including what's missing in ``query`` to implement all
+           appropriate ir.rules (using the ``model_name``'s rules or the current model's rules
+           if ``model_name`` is None)
 
            :param query: the current query object
+           :rtype: new Query object
         """
         if self._uid == SUPERUSER_ID:
-            return
+            return query
 
         def apply_rule(query, rule_query, parent_model=None):
             """ :param parent_model: name of the parent model, if the added
@@ -3868,7 +3870,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     ]
                     if parent_table_unescaped in query.joins:
                         rule_query.joins[parent_alias_unescaped] = rule_query.joins.pop(parent_table_unescaped)
-                query = query & rule_query
+                return query & rule_query
+
+            return query
 
         if self._transient:
             # One single implicit access rule for transient models: owner only!
@@ -3876,18 +3880,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # log_access enabled, so that 'create_uid' is always there.
             domain = [('create_uid', '=', self._uid)]
             tquery = self._where_calc(domain, active_test=False)
-            apply_rule(query, tquery)
-            return
+            return apply_rule(query, tquery)
 
         # apply main rules on the object
         Rule = self.env['ir.rule']
         rule_query = Rule.domain_get(self._name, mode)
-        apply_rule(query, rule_query)
+        query = apply_rule(query, rule_query)
 
         # apply ir.rules from the parents (through _inherits)
         for parent_model in self._inherits:
             rule_query = Rule.domain_get(parent_model, mode)
-            apply_rule(query, rule_query, parent_model)
+            query = apply_rule(query, rule_query, parent_model)
+        return query
 
     @api.model
     def _generate_translated_field(self, table_alias, field, query):
@@ -4030,7 +4034,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             return 0 if count else []
 
         query = self._where_calc(args)
-        self._apply_ir_rules(query, 'read')
+        query = self._apply_ir_rules(query, 'read')
         order_by = self._generate_order_by(order, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
 

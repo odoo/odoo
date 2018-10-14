@@ -281,7 +281,7 @@ class ResPartner(models.Model):
             ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']),
             ('type', 'in', ('out_invoice', 'out_refund'))
         ])
-        account_invoice_report._apply_ir_rules(where_query, 'read')
+        where_query = account_invoice_report._apply_ir_rules(where_query, 'read')
         from_clause, where_clause, where_clause_params = where_query.get_sql()
 
         # price_total is in the company currency

@@ -131,7 +131,7 @@ class StockQuant(models.Model):
         # Copy code of _search for special NULLS FIRST/LAST order
         self.sudo(self._uid).check_access_rights('read')
         query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
+        query = self._apply_ir_rules(query, 'read')
         from_clause, where_clause, where_clause_params = query.get_sql()
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
         query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + " ORDER BY "+ removal_strategy_order
