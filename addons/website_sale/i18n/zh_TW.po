@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -1868,7 +1868,7 @@ msgid "Installs *e-Commerce Inventory*"
 msgstr "安裝「電子商務管理庫存」"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:502
+#: code:addons/website_sale/controllers/main.py:518
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "無效電郵！ 請輸入有效的電子信件地址。"
@@ -1895,7 +1895,7 @@ msgid "Issue invoices to customers"
 msgstr "向客戶開發票"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:146
+#: code:addons/website_sale/models/sale_order.py:157
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status"
 msgstr "禁止修改未處於草稿狀態的銷售訂單"
@@ -2043,11 +2043,6 @@ msgid "Manage promotion &amp; coupon programs"
 msgstr "管理促銷及優惠券計劃"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.sale_order_view_form
-msgid "Mark as Paid"
-msgstr "標記為已付款"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
 msgid "Medium-sized image"
 msgstr "中等尺寸圖像"
@@ -2122,7 +2117,7 @@ msgstr "網路"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:968
+#: code:addons/website_sale/controllers/main.py:988
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2271,7 +2266,7 @@ msgid "Parent Category"
 msgstr "上級類別"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:756
+#: code:addons/website_sale/controllers/main.py:774
 #: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
@@ -3015,7 +3010,7 @@ msgid ""
 msgstr "通過自己的付款處理者，可將一些收單方（如 Authorize.net 和 Ingenico）作為支付網關使用。"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:520
+#: code:addons/website_sale/controllers/main.py:536
 #, python-format
 msgid "Some required fields are empty."
 msgstr "一些必須的字段是空的。"
@@ -3215,6 +3210,17 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_res_config_settings_automatic_invoice
+msgid ""
+"The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
+"The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
+"This mode is advised if you issue the final invoice at the order and not after the delivery."
+msgstr ""
+"當付款收單方確認交易時，應收憑單自動生成並在客戶網站入口中可用。\n"
+"應收憑單標記為已付款，付款已在付款獲取方配置中定義的付款日記帳中註冊。\n"
+"如果您在訂單處而不是在交貨後發出最終應收憑單，則建議使用此模式。"
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
@@ -3222,7 +3228,7 @@ msgid ""
 msgstr "此處選擇的模式適用於任何新創建的產品的發票政策，但不適用於已有產品的發票政策。"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:247
+#: code:addons/website_sale/models/sale_order.py:258
 #, python-format
 msgid ""
 "The quote should be sent and the payment acquirer type should be manual or "

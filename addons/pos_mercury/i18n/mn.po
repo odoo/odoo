@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 07:43+0000\n"
-"PO-Revision-Date: 2018-02-23 07:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -104,7 +104,7 @@ msgstr "Карт уншигч тохируулах бол дарна уу."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:351
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:360
 #, python-format
 msgid "Could not read card"
 msgstr "Картыг уншиж чадсангүй"
@@ -122,10 +122,20 @@ msgid "Created on"
 msgstr "Үүсгэсэн"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:15
+#: code:addons/pos_mercury/models/pos_mercury.py:16
 #, python-format
 msgid "Credit Card"
 msgstr "Зээлийн карт"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:346
+#, python-format
+msgid ""
+"Credit card refunds are not supported. Instead select your credit card "
+"payment method, click 'Validate' and refund the original charge manually "
+"through the Vantiv backend."
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_display_name
@@ -142,7 +152,7 @@ msgstr "Цахим Төлбөр"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:641
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:651
 #, python-format
 msgid "Error"
 msgstr "Алдаа"
@@ -167,7 +177,7 @@ msgstr "Карт ашиглахын тулд төлбөрийн дэлгэц р�
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:387
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:396
 #, python-format
 msgid "Handling transaction..."
 msgstr "Гүйлгээ хийж байна..."
@@ -296,22 +306,22 @@ msgstr "Серверээс хариу алга (сүлжээнд холбогд�
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:414
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:567
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:423
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "Гүйлгээг боловсруулах үед Odoo алдаа гарлаа."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:642
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "Аль хэдийн нэг кредит карт уншуулалт хүлээгдэж байна."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:460
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
 #, python-format
 msgid "Partially approved"
 msgstr "Хэсэгчлэн батлагдсан"
@@ -336,7 +346,7 @@ msgstr "Mercury Pay төлбөрийн лавлах дугаар"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:407
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:416
 #, python-format
 msgid "Please setup your Mercury merchant account."
 msgstr "Та өөрийн Mercury худалдагчийн бүртгэлийг тохируулна уу."
@@ -348,21 +358,28 @@ msgstr "Борлуулалтын Цэгийн Захиалгууд"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:539
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
+#, python-format
+msgid "Refunds not supported"
+msgstr ""
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr "Буцаалт амжилтгүй болсон, Хоосон Борлуулалтыг илгээж байна..."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:581
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:591
 #, python-format
 msgid "Reversal succeeded"
 msgstr "Буцаалт амжилттай"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:542
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:552
 #, python-format
 msgid "Sending reversal..."
 msgstr "Буцаалтыг илгээж байна..."
@@ -401,7 +418,7 @@ msgstr "Карт эзэмшигчийн нэр"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:352
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:361
 #, python-format
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
@@ -437,7 +454,7 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:589
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
 #, python-format
 msgid "VoidSale succeeded"
 msgstr "Хоосон Борлуулалт амжилттай"

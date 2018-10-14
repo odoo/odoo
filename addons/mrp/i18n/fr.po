@@ -11,7 +11,7 @@
 # Xavier Symons <xsy@openerp.com>, 2017
 # Florian Hatat, 2017
 # Nancy Bolognesi <nb@microcom.ca>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Xavier Belmere <Info@cartmeleon.com>, 2017
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Simon CARRIER <carrier.sim@gmail.com>, 2017
@@ -20,7 +20,7 @@
 # Melanie Bernard <mbe@odoo.com>, 2017
 # Hubert TETARD <htetard@apik-conseils.com>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# lap.odoo <lap@odoo.com>, 2017
+# Laura Piraux <lap@odoo.com>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Clo <clo@odoo.com>, 2017
 # Bertrand LATOUR <divoir@gmail.com>, 2017
@@ -34,7 +34,7 @@
 # fr rev <e2ffr02@hotmail.com>, 2017
 # fr rev <e2ffr04@hotmail.com>, 2017
 # Kévin R., 2017
-# nthnnl <nathan070@me.com>, 2017
+# Nathan Noël <nathan070@me.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # fr trans <e2ffr05@hotmail.com>, 2018
@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: fr trans <e2ffr05@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -110,7 +110,7 @@ msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:293
+#: code:addons/mrp/models/mrp_bom.py:300
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -292,7 +292,7 @@ msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>Poste de travail</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:472
+#: code:addons/mrp/models/mrp_workorder.py:509
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
 msgstr "Un Ordre de Fabrication est est déjà terminé ou annulé !"
@@ -404,7 +404,7 @@ msgid "Attachment URL"
 msgstr "Lien de la pièce jointe"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:285
+#: code:addons/mrp/models/mrp_bom.py:292
 #, python-format
 msgid "Attachments"
 msgstr "Pièces jointes"
@@ -635,7 +635,7 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:316
+#: code:addons/mrp/models/mrp_production.py:329
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
 msgstr ""
@@ -732,6 +732,7 @@ msgstr "Cliquez pour commencer un nouvel ordre de fabrication."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
+#: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "Click to start a new work order."
 msgstr "Cliquez pour démarrer un nouvel ordre de travail"
 
@@ -1347,7 +1348,7 @@ msgid "Informative, not used in matching"
 msgstr "Informatif, non utilisé pour la correspondance"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:187
+#: code:addons/mrp/models/mrp_unbuild.py:210
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "Quantité insuffisante"
@@ -1519,7 +1520,7 @@ msgid "Late Activities"
 msgstr "Activités en retard"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:432
+#: code:addons/mrp/models/mrp_production.py:445
 #, python-format
 msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
@@ -1549,7 +1550,7 @@ msgid "Lock"
 msgstr "Bloquer"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8239
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8257
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr "Raison de la perte"
@@ -1837,8 +1838,8 @@ msgstr "Nom"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:46
-#: code:addons/mrp/models/mrp_production.py:302
-#: code:addons/mrp/models/mrp_production.py:306
+#: code:addons/mrp/models/mrp_production.py:315
+#: code:addons/mrp/models/mrp_production.py:319
 #: code:addons/mrp/models/mrp_routing.py:18
 #: code:addons/mrp/models/mrp_routing.py:34
 #: code:addons/mrp/models/mrp_routing.py:35
@@ -2137,13 +2138,13 @@ msgid "Planning"
 msgstr "Planning"
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:147
+#: code:addons/mrp/wizard/mrp_product_produce.py:150
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
 msgstr "Saisissez un lot ou un numéro de série pour %s."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:288
+#: code:addons/mrp/models/mrp_workorder.py:304
 #, python-format
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
@@ -2483,7 +2484,7 @@ msgid "Record Production Line"
 msgstr "Enregistrer la chaîne de production"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:159
+#: code:addons/mrp/models/mrp_bom.py:166
 #, python-format
 msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
@@ -2668,8 +2669,8 @@ msgid "Scheduled Month"
 msgstr "Mois planifié"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:590
-#: code:addons/mrp/models/mrp_workorder.py:481
+#: code:addons/mrp/models/mrp_production.py:609
+#: code:addons/mrp/models/mrp_workorder.py:518
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_scrap_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2990,7 +2991,7 @@ msgstr ""
 "travail"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:254
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:261
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -3071,7 +3072,7 @@ msgstr ""
 "travail, sinon tout est traité au sein de l'ordre de production."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:94
+#: code:addons/mrp/wizard/mrp_product_produce.py:95
 #, python-format
 msgid "The production order for '%s' has no quantity specified"
 msgstr "L'ordre de production pour « %s » n'a pas de quantité spécifiée"
@@ -3165,7 +3166,7 @@ msgid "Time Tracking"
 msgstr "Suivi des heures"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:402
+#: code:addons/mrp/models/mrp_workorder.py:439
 #, python-format
 msgid "Time Tracking: "
 msgstr "Suivi des heures"
@@ -3198,6 +3199,13 @@ msgid ""
 msgstr ""
 "Temps en minutes. C'est le temps utilisé en mode manuel, ou le premier temps"
 " supposé en mode \"temps réel\" lorsqu'il n'y a pas encore d'ordre de "
+"travail."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Time the currently logged user spent on this workorder."
+msgstr ""
+"Temps que l'utilisateur actuellement connecté a passé sur cet ordre de "
 "travail."
 
 #. module: mrp
@@ -3510,8 +3518,8 @@ msgid "Warehouse"
 msgstr "Entrepôt"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:254
-#: code:addons/mrp/wizard/mrp_product_produce.py:203
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:261
+#: code:addons/mrp/wizard/mrp_product_produce.py:204
 #, python-format
 msgid "Warning"
 msgstr "Avertissement"
@@ -3727,7 +3735,7 @@ msgid "Work Sheet"
 msgstr "Feuille de travail"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:567
+#: code:addons/mrp/models/mrp_production.py:586
 #, python-format
 msgid "Work order %s is still running"
 msgstr "L'ordre de travail %s est encore en cours"
@@ -3793,7 +3801,7 @@ msgstr ""
 "adresse internet qui y renvoie"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:521
+#: code:addons/mrp/models/mrp_production.py:540
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
@@ -3802,13 +3810,13 @@ msgstr ""
 "encore en cours."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:240
+#: code:addons/mrp/models/mrp_workorder.py:244
 #, python-format
 msgid "You can not change the finished work order."
 msgstr "Vous ne pouvez pas changer un ordre de travail terminé."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:553
+#: code:addons/mrp/models/mrp_production.py:572
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
@@ -3816,7 +3824,7 @@ msgstr ""
 " les avez utilisés"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:91
+#: code:addons/mrp/models/mrp_bom.py:98
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -3827,7 +3835,7 @@ msgstr ""
 " concernés d'abord."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:202
+#: code:addons/mrp/wizard/mrp_product_produce.py:203
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
@@ -3835,7 +3843,7 @@ msgstr ""
 "série unique."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:136
+#: code:addons/mrp/models/stock_move.py:143
 #, python-format
 msgid ""
 "You cannot cancel a manufacturing order if you have already consumed "
@@ -3847,7 +3855,7 @@ msgstr ""
 "les quantités utilisées par 0."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:202
+#: code:addons/mrp/models/stock_move.py:209
 #, python-format
 msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
@@ -3857,7 +3865,7 @@ msgstr ""
 "numéros de série encodés."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:129
+#: code:addons/mrp/wizard/mrp_product_produce.py:130
 #, python-format
 msgid "You cannot produce the same serial number twice."
 msgstr "Vous ne pouvez pas produire le même numéro de série deux fois."
@@ -3869,11 +3877,11 @@ msgid "You cannot unbuild a undone manufacturing order."
 msgstr "Vous ne pouvez pas désassembler un ordre de fabrication non terminé."
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:46
+#: code:addons/mrp/wizard/change_production_qty.py:47
 #, python-format
-msgid "You have already processed %d. Please input a quantity higher than %d "
+msgid "You have already processed %s. Please input a quantity higher than %s "
 msgstr ""
-"Vous avez déjà traité %d. Merci de renseigner une quantité supérieure à %d"
+"Vous avez déjà traité %s. Veuillez encoder une quantité plus grande que %s "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3885,7 +3893,7 @@ msgstr ""
 "cet ordre de fabrication ?"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:392
+#: code:addons/mrp/models/mrp_workorder.py:429
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3897,7 +3905,7 @@ msgstr ""
 "Configuration / Pertes de Productivité."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:388
+#: code:addons/mrp/models/mrp_workorder.py:425
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3909,7 +3917,7 @@ msgstr ""
 "Configuration / Pertes de Productivité."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:446
+#: code:addons/mrp/models/mrp_workorder.py:483
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3921,25 +3929,25 @@ msgstr ""
 "menu: Configuration / Pertes de Productivité."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:125
+#: code:addons/mrp/wizard/mrp_product_produce.py:126
 #, python-format
 msgid "You need to provide a lot for the finished product"
 msgstr "Vous devez saisir un numéro de lot pour le produit fini"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:314
+#: code:addons/mrp/models/mrp_workorder.py:330
 #, python-format
 msgid "You should provide a lot/serial number for a component"
 msgstr "Vous devez indiquer un lot/numéro de série pour un composant"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:291
+#: code:addons/mrp/models/mrp_workorder.py:307
 #, python-format
 msgid "You should provide a lot/serial number for the final product"
 msgstr "Vous devez indiquer un lot/numéro de série pour le produit fini"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:95
+#: code:addons/mrp/models/mrp_unbuild.py:99
 #, python-format
 msgid ""
 "You should specify a manufacturing order in order to find the correct "
