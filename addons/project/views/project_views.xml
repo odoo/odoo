@@ -444,7 +444,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" domain="[('active', '=', True)]"/>
+                            <field name="project_id" domain="[('active', '=', True)]" options="{'no_create': True}"/>
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>
