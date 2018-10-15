@@ -247,6 +247,10 @@ options.registry.carousel = options.Class.extend({
                 }
             });
             _.defer(function () {
+                self.trigger_up('animation_start_demand', {
+                    editableMode: true,
+                    $target: self.$target,
+                });
                 self.$target.carousel(index > 0 ? --index : cycle);
             });
         }
