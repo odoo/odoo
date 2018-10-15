@@ -151,9 +151,7 @@ return AbstractWebClient.extend({
                             var action = self.action_manager.getCurrentAction();
                             if (action) {
                                 var menu_id = self.menu.action_id_to_primary_menu_id(action.id);
-                                if (menu_id) {
-                                    core.bus.trigger('change_menu_section', menu_id);
-                                }
+                                core.bus.trigger('change_menu_section', menu_id);
                             }
                         }
                     });
