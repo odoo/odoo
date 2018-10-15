@@ -9,6 +9,8 @@ var Domain = require('web.Domain');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
+var pyUtils = require('web.pyeval'); // do not forwardport this to 12.0
+var session  = require('web.session');
 var viewRegistry = require('web.view_registry');
 
 var _t = core._t;
@@ -253,10 +255,14 @@ FormRenderer.include({
                     // the action does not exist anymore
                     return $.when();
                 }
+                // tz and lang are saved in the custom view
+                // override the language to take the current one
+                var rawContext = new Context(params.context, action.context, {lang: session.user_context.lang});
+                var context = pyUtils.eval('context', rawContext);
                 var view = _.find(action.views, function (descr) {
                     return descr[1] === params.viewType;
                 }) || [false, params.viewType];
-                return self.loadViews(action.res_model, context, [view])
+                return self.loadViews(action.res_model, rawContext, [view])
                            .then(function (viewsInfo) {
                     var viewInfo = viewsInfo[params.viewType];
                     var View = viewRegistry.get(params.viewType);
