@@ -173,6 +173,7 @@ var KanbanColumn = Widget.extend({
      * into a fragment, the focus has to be set manually once in the DOM.
      */
     on_attach_callback: function () {
+        _.invoke(this.records, 'on_attach_callback');
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
