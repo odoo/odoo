@@ -58,7 +58,10 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "deselect the line",
-            trigger: '.o_reconciliation_line:nth-child(2) .accounting_view tbody .cell_label:first'
+            trigger: '.o_reconciliation_line:nth-child(2) .accounting_view tbody .cell_label:first',
+            run: function() {
+                    $('.o_reconciliation_line:nth-child(2) .accounting_view tbody .cell_label:first').trigger('click');
+            }
         },
         {
             content: "create a write-off",
