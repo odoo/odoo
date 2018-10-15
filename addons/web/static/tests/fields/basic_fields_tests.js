@@ -2324,9 +2324,9 @@ QUnit.module('basic_fields', {
             concurrency.delay(0).then(function () {
                 return concurrency.delay(0);
             }).then(function () {
-                assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart').length, 1,
+                assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart svg').length, 1,
                     "graph of first record should be a barchart");
-                assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart').length, 1,
+                assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart svg').length, 1,
                     "graph of second record should be a linechart");
 
                 var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
@@ -2357,14 +2357,15 @@ QUnit.module('basic_fields', {
         // when being destroyed before nv has been loaded
         assert.expect(2);
 
-        var destroy = basicFields.JournalDashboardGraph.prototype.destroy;
-        basicFields.JournalDashboardGraph.prototype.destroy = function () {
-            assert.step('destroy');
-            var nv = window.nv;
-            delete window.nv;
-            destroy.apply(this, arguments);
-            window.nv = nv;
-        };
+        testUtils.patch(basicFields.JournalDashboardGraph, {
+            destroy: function () {
+                assert.step('destroy');
+                var nv = window.nv;
+                delete window.nv;
+                this._super.apply(this, arguments);
+                window.nv = nv;
+            }
+        });
 
         var kanban = createView({
             View: KanbanView,
@@ -2382,9 +2383,12 @@ QUnit.module('basic_fields', {
         });
 
         kanban.destroy();
-        basicFields.JournalDashboardGraph.prototype.destroy = destroy;
+        testUtils.unpatch(basicFields.JournalDashboardGraph);
 
         assert.verifySteps(['destroy']);
+
+        // Wait nvd3 to fully render the graph. If ommited, may slow down following tests.
+        return concurrency.delay(0);
     });
 
     QUnit.test('graph dashboard widget can be destroyed when nv is partially loaded', function (assert) {
@@ -2424,6 +2428,79 @@ QUnit.module('basic_fields', {
         testUtils.unpatch(basicFields.JournalDashboardGraph);
 
         assert.verifySteps(['destroy']);
+
+        // Wait nvd3 to fully render the graph. If ommited, may slow down following tests.
+        return concurrency.delay(0);
+    });
+
+    QUnit.test('rendering of a field with dashboard_graph widget in an updated kanban view (ungrouped)', function (assert) {
+
+        var done = assert.async();
+        assert.expect(2);
+
+        createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="graph_type"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1, 2]]],
+        }).then(function (kanban) {
+            concurrency.delay(0).then(function () {
+                return concurrency.delay(0);
+            }).then(function () {
+                assert.strictEqual(kanban.$('.o_dashboard_graph svg').length, 2, "there should be two graph rendered");
+                return kanban.update({});
+            }).then(function () {
+                return concurrency.delay(0); // one graph is re-rendered
+            }).then(function () {
+                return concurrency.delay(0); // one graph is re-rendered
+            }).then(function () {
+                assert.strictEqual(kanban.$('.o_dashboard_graph svg').length, 2, "there should be one graph rendered");
+                kanban.destroy();
+                done();
+            });
+        });
+    });
+
+    QUnit.test('rendering of a field with dashboard_graph widget in an updated kanban view (grouped)', function (assert) {
+
+        var done = assert.async();
+        assert.expect(2);
+
+        createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="graph_type"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1, 2]]],
+        }).then(function (kanban) {
+            concurrency.delay(0).then(function () {
+                return concurrency.delay(0);
+            }).then(function () {
+                assert.strictEqual(kanban.$('.o_dashboard_graph svg').length, 2, "there should be two graph rendered");
+                return kanban.update({groupBy: ['selection'], domain: [['int_field', '=', 10]]});
+            }).then(function () {
+                return concurrency.delay(0);
+            }).then(function () {
+                assert.strictEqual(kanban.$('.o_dashboard_graph svg').length, 1, "there should be one graph rendered");
+                kanban.destroy();
+                done();
+            });
+        });
     });
 
     QUnit.module('AceEditor');

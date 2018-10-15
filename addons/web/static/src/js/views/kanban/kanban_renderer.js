@@ -127,6 +127,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
+        this._isInDom = true;
         _.invoke(this.widgets, 'on_attach_callback');
         if (this.quickCreate) {
             this.quickCreate.on_attach_callback();
@@ -136,6 +137,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * Called each time the renderer is detached from the DOM.
      */
     on_detach_callback: function () {
+        this._isInDom = false;
         _.invoke(this.widgets, 'on_detach_callback');
     },
 
@@ -377,6 +379,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * @private
      */
     _renderView: function () {
+        var self = this;
         var oldWidgets = this.widgets;
         this.widgets = [];
         this.$el.empty();
@@ -397,6 +400,9 @@ var KanbanRenderer = BasicRenderer.extend({
         var defs = this.defs;
         return this._super.apply(this, arguments).then(function () {
             _.invoke(oldWidgets, 'destroy');
+            if (self._isInDom) {
+                _.invoke(self.widgets, 'on_attach_callback');
+            }
             return $.when.apply(null, defs);
         });
     },
