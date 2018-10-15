@@ -987,7 +987,10 @@ class AccountInvoice(models.Model):
         return vals
 
     @api.multi
-    def get_taxes_values(self):
+    def get_taxes_values(self, tax_group_fields=False):
+        default_tax_group_fields = set(['amount', 'base'])
+        if tax_group_fields:
+            default_tax_group_fields |= set(tax_group_fields)
         tax_grouped = {}
         for line in self.invoice_line_ids:
             if not line.account_id:
@@ -1001,8 +1004,8 @@ class AccountInvoice(models.Model):
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
-                    tax_grouped[key]['amount'] += val['amount']
-                    tax_grouped[key]['base'] += val['base']
+                    for field in default_tax_group_fields:
+                        tax_grouped[key][field] += val.get(field) or 0
         return tax_grouped
 
     @api.multi
