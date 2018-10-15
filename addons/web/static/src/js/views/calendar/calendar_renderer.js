@@ -102,18 +102,20 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         var self = this;
         event.stopPropagation();
         var value = event.data.changes[this.write_field].id;
-        this._rpc({
-                model: this.write_model,
-                method: 'create',
-                args: [{'user_id': session.uid,'partner_id': value,}],
-            })
-            .then(function () {
-                self.trigger_up('changeFilter', {
-                    'fieldName': self.fieldName,
-                    'value': value,
-                    'active': true,
+        if (value) {
+            this._rpc({
+                    model: this.write_model,
+                    method: 'create',
+                    args: [{'user_id': session.uid,'partner_id': value,}],
+                })
+                .then(function () {
+                    self.trigger_up('changeFilter', {
+                        'fieldName': self.fieldName,
+                        'value': value,
+                        'active': true,
+                    });
                 });
-            });
+        }
     },
     _onFilterActive: function (e) {
         var $input = $(e.currentTarget);
