@@ -303,8 +303,8 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkEnter: function (ev) {
-        var $opt = $(ev.target);
-        if (!$opt.hasClass('dropdown-item')) {
+        var $opt = $(ev.target).closest('.dropdown-item');
+        if (!$opt.length) {
             return;
         }
 
@@ -331,8 +331,8 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkClick: function (ev) {
-        var $opt = $(ev.target);
-        if (!$opt.hasClass('dropdown-item') || !$opt.is(':hasData')) {
+        var $opt = $(ev.target).closest('.dropdown-item');
+        if (!$opt.length || !$opt.is(':hasData')) {
             return;
         }
 
