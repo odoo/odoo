@@ -81,6 +81,7 @@ var Menu = Widget.extend({
     },
     change_menu_section: function (primary_menu_id) {
         if (!this.$menu_sections[primary_menu_id]) {
+            this._updateMenuBrand();
             return; // unknown menu_id
         }
 
@@ -95,7 +96,7 @@ var Menu = Widget.extend({
         // Get back the application name
         for (var i = 0; i < this.menu_data.children.length; i++) {
             if (this.menu_data.children[i].id === primary_menu_id) {
-                this.$menu_brand_placeholder.text(this.menu_data.children[i].name);
+                this._updateMenuBrand(this.menu_data.children[i].name);
                 break;
             }
         }
@@ -111,6 +112,22 @@ var Menu = Widget.extend({
             action_id: action_id,
             previous_menu_id: this.current_secondary_menu || this.current_primary_menu,
         });
+    },
+    /**
+     * Updates the name of the app in the menu to the value of brandName.
+     * If brandName is falsy, hides the menu and its sections.
+     *
+     * @private
+     * @param {brandName} string
+     */
+    _updateMenuBrand: function (brandName) {
+        if (brandName) {
+            this.$menu_brand_placeholder.text(brandName).show();
+            this.$section_placeholder.show();
+        } else {
+            this.$menu_brand_placeholder.hide()
+            this.$section_placeholder.hide();
+        }
     },
     _on_secondary_menu_click: function (menu_id, action_id) {
         var self = this;
