@@ -20,8 +20,6 @@ if(!the_form.length) {
     return $.Deferred().reject("DOM doesn't contain '.js_surveyform'");
 }
 
-    console.debug("[survey] Custom JS for survey is loading...");
-
     var prefill_controller = the_form.attr("data-prefill");
     var submit_controller = the_form.attr("data-submit");
     var scores_controller = the_form.attr("data-scores");
@@ -167,12 +165,6 @@ if(!the_form.length) {
         }
     });
 
-    // // Handles the event when a question is focused out
-    // $('.js_question-wrapper').focusout(
-    //     function(){
-    //         console.debug("[survey] Focus lost on question " + $(this).attr("id"));
-    // });
-
     function load_locale(){
         var url = "/web/webclient/locale/" + context.get().lang || 'en_US';
         return ajax.loadJS(url);
@@ -207,7 +199,5 @@ if(!the_form.length) {
     if(quiz_correction_mode === true){
         display_scores();
     }
-
-    console.debug("[survey] Custom JS for survey loaded!");
 
 });
