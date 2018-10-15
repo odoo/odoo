@@ -6,7 +6,7 @@ import itertools
 from odoo.addons.mail.tests.common import TestMail
 from odoo.exceptions import AccessError, except_orm
 from odoo.tools import mute_logger
-
+from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
 
 class TestMailMessage(TestMail):
 
@@ -364,3 +364,13 @@ class TestMailMessageAccess(TestMail):
         portal_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
         na_count = portal_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_message_values_unicode(self):
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_to': 'test.😊@example.com',
+            'partner_ids': [(4, self.user_employee.partner_id.id)]
+        })
+
+        self.assertRaises(MailDeliveryException, mail.send)
