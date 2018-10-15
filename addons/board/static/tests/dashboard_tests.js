@@ -4,6 +4,7 @@ odoo.define('board.dashboard_tests', function (require) {
 var testUtils = require('web.test_utils');
 var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
+var pyeval = require('web.pyeval');
 
 var createView = testUtils.createView;
 
@@ -540,6 +541,46 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
 
     // restore on_attach_callback of ListRenderer
     testUtils.unpatch(ListRenderer);
+
+    form.destroy();
+});
+
+QUnit.test("Views should be loaded in the user's language", function (assert) {
+    assert.expect(2);
+     var form = createView({
+        View: FormView,
+        model: 'board',
+        data: this.data,
+        session: {user_context: {lang: 'fr_FR'}},
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{\'lang\': \'en_US\'}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'load_views') {
+                assert.deepEqual(pyeval.eval('context', args.kwargs.context), {lang: 'fr_FR'},
+                    'The views should be loaded with the correct context');
+            }
+            if (route === "/web/dataset/search_read") {
+                assert.deepEqual(args.context, {lang: 'fr_FR'},
+                    'The data should be loaded with the correct context');
+            }
+             if (route === '/web/action/load') {
+                return $.when({
+                    res_model: 'partner',
+                    views: [[4, 'list']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,list':
+                '<list string="Partner"><field name="foo"/></list>',
+        },
+    });
 
     form.destroy();
 });
