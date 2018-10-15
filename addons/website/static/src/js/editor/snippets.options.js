@@ -299,13 +299,7 @@ options.registry.navTabs = options.Class.extend({
      * @override
      */
     start: function () {
-        this.$navLinks = this.$target.find('.nav-link');
-        var $el = this.$target;
-        do {
-            $el = $el.parent();
-            this.$tabPanes = $el.find('.tab-pane');
-        } while (this.$tabPanes.length === 0 && !$el.is('body'));
-
+        this._findLinksAndPanes();
         return this._super.apply(this, arguments);
     },
     /**
@@ -322,9 +316,64 @@ options.registry.navTabs = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates a new tab and tab-pane.
+     *
+     * @see this.selectClass for parameters
+     */
+    addTab: function (previewMode, value, $opt) {
+        var $activeItem = this.$navLinks.filter('.active').parent();
+        var $activePane = this.$tabPanes.filter('.active');
+
+        var $navItem = $activeItem.clone();
+        var $navLink = $navItem.find('.nav-link').removeClass('active show');
+        var $tabPane = $activePane.clone().removeClass('active show');
+        $navItem.insertAfter($activeItem);
+        $tabPane.insertAfter($activePane);
+        this._findLinksAndPanes();
+        this._generateUniqueIDs();
+
+        $navLink.tab('show');
+    },
+    /**
+     * Removes the current active tab and its content.
+     *
+     * @see this.selectClass for parameters
+     */
+    removeTab: function (previewMode, value, $opt) {
+        var self = this;
+
+        var $activeLink = this.$navLinks.filter('.active');
+        var $activePane = this.$tabPanes.filter('.active');
+
+        var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
+        $next.one('shown.bs.tab', function () {
+            $activeLink.parent().remove();
+            $activePane.remove();
+            self._findLinksAndPanes();
+            self._setActive(); // TODO forced to do this because we do not return deferred for options
+        });
+        $next.tab('show');
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _findLinksAndPanes: function () {
+        this.$navLinks = this.$target.find('.nav-link');
+        var $el = this.$target;
+        do {
+            $el = $el.parent();
+            this.$tabPanes = $el.find('.tab-pane');
+        } while (this.$tabPanes.length === 0 && !$el.is('body'));
+    },
     /**
      * @private
      */
@@ -343,6 +392,14 @@ options.registry.navTabs = options.Class.extend({
                 'aria-labelledby': idLink,
             });
         }
+    },
+    /**
+     * @private
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
     },
 });
 
