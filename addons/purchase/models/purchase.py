@@ -360,12 +360,12 @@ class PurchaseOrder(models.Model):
                 except AccessError:  # no write access rights -> just ignore
                     break
 
-    @api.multi
     def action_view_invoice(self):
         '''
         This function returns an action that display existing vendor bills of given purchase order ids.
         When only one found, show the vendor bill immediately.
         '''
+        self.ensure_one()
         action = self.env.ref('account.action_vendor_bill_template')
         result = action.read()[0]
         create_bill = self.env.context.get('create_bill', False)

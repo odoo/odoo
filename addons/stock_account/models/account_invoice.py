@@ -11,10 +11,12 @@ _logger = logging.getLogger(__name__)
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
-    @api.model
+    anglo_saxon_interim_stock_entries = fields.Boolean(string="Use interim accounts", readonly=True, states={'draft': [('readonly', False)]}, default=False, help="Check this box to allow this document impacting your interim accounts.")
+
     def invoice_line_move_line_get(self):
+        self.ensure_one()
         res = super(AccountInvoice, self).invoice_line_move_line_get()
-        if self.company_id.anglo_saxon_accounting and self.type in ('out_invoice', 'out_refund'):
+        if self.anglo_saxon_interim_stock_entries and self.type in ('out_invoice', 'out_refund'):
             for i_line in self.invoice_line_ids:
                 res.extend(self._anglo_saxon_sale_move_lines(i_line))
         return res
@@ -57,7 +59,7 @@ class AccountInvoice(models.Model):
 
     def invoice_validate(self):
         res = super(AccountInvoice, self).invoice_validate()
-        self.filtered(lambda i: i.company_id.anglo_saxon_accounting)._anglo_saxon_reconcile_valuation()
+        self.filtered(lambda i: i.anglo_saxon_interim_stock_entries)._anglo_saxon_reconcile_valuation()
         return res
 
     def _anglo_saxon_reconcile_valuation(self, product=False):
@@ -65,7 +67,7 @@ class AccountInvoice(models.Model):
         reconciling stock valuation move lines with the invoice's.
         """
         for invoice in self:
-            if invoice.company_id.anglo_saxon_accounting:
+            if invoice.anglo_saxon_interim_stock_entries:
                 stock_moves = invoice._get_last_step_stock_moves()
                 product_set = product or invoice._get_products_set()
                 for prod in product_set:
@@ -110,7 +112,8 @@ class AccountInvoiceLine(models.Model):
         return self.invoice_id.currency_id.round(price)
 
     def get_invoice_line_account(self, type, product, fpos, company):
-        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
+        use_anglo_saxon = self.invoice_id and self.invoice_id.anglo_saxon_interim_stock_entries or self.env.context.get('default_anglo_saxon_interim_stock_entries')
+        if use_anglo_saxon and product and product.type == 'product':
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             if accounts['stock_input']:
                 return accounts['stock_input']

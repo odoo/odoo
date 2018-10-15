@@ -26,6 +26,7 @@ Dashboard / Reports for Warehouse Management includes:
         'security/stock_account_security.xml',
         'security/ir.model.access.csv',
         'wizard/stock_change_standard_price_views.xml',
+        'wizard/account_invoice_refund_view.xml',
         'data/stock_account_data.xml',
         'views/stock_account_views.xml',
         'views/res_config_settings_views.xml',

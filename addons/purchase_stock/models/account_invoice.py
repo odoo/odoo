@@ -8,11 +8,11 @@ from odoo.tools.float_utils import float_compare
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.model
     def invoice_line_move_line_get(self):
+        self.ensure_one()
         res = super(AccountInvoice, self).invoice_line_move_line_get()
 
-        if self.env.user.company_id.anglo_saxon_accounting:
+        if self.anglo_saxon_interim_stock_entries:
             if self.type in ['in_invoice', 'in_refund']:
                 for i_line in self.invoice_line_ids:
                     res.extend(self._anglo_saxon_purchase_move_lines(i_line, res))

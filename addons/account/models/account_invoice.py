@@ -1065,8 +1065,8 @@ class AccountInvoice(models.Model):
                 total_currency -= line['amount_currency'] or line['price']
         return total, total_currency, invoice_move_lines
 
-    @api.model
     def invoice_line_move_line_get(self):
+        self.ensure_one()
         res = []
         for line in self.invoice_line_ids:
             if not line.account_id:

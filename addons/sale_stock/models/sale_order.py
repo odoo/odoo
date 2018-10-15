@@ -154,6 +154,22 @@ class SaleOrder(models.Model):
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
 
+    def action_invoice_create(self, grouped=False):
+        """ Overridden to activate the use of interim accounts for sale invoices
+        in case the company uses anglo saxon accounting.
+        """
+        orders_by_company = {}
+        for order in self:
+            if order.company_id in orders_by_company:
+                orders_by_company[order.company_id] += order
+            else:
+                orders_by_company[order.company_id] = order
+
+        rslt_list = []
+        for company,orders in orders_by_company.items():
+            rslt_list += super(SaleOrder, self.with_context(default_anglo_saxon_interim_stock_entries=company.anglo_saxon_accounting)).action_invoice_create(grouped)
+
+        return rslt_list
 
 
 class SaleOrderLine(models.Model):

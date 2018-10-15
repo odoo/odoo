@@ -129,6 +129,15 @@ class PurchaseOrder(models.Model):
             result['res_id'] = pick_ids.id
         return result
 
+    def action_view_invoice(self):
+        """ Overridden to activate the use of interim accounts for purchase invoices
+        in case the company uses anglo saxon accounting.
+        """
+        self.ensure_one()
+        rslt = super(PurchaseOrder, self).action_view_invoice()
+        rslt['context']['default_anglo_saxon_interim_stock_entries'] = self.company_id.anglo_saxon_accounting
+        return rslt
+
     # --------------------------------------------------
     # Business methods
     # --------------------------------------------------
