@@ -330,6 +330,9 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_draft(self):
+        for order in self:
+            procurements = order.order_line.mapped('procurement_ids')
+            procurements.filtered(lambda r: r.state == 'cancel' and r.rule_id.propagate).write({'state': 'confirmed'})
         self.write({'state': 'draft'})
         return {}
 
