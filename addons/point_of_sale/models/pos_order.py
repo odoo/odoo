@@ -158,10 +158,15 @@ class PosOrder(models.Model):
         '''This method is designed to be inherited in a custom module'''
         return False
 
-    def _create_account_move(self, dt, ref, journal_id, company_id):
-        date_tz_user = fields.Datetime.context_timestamp(self, fields.Datetime.from_string(dt))
+    def _create_account_move(self):
+        self.ensure_one()
+        date_tz_user = fields.Datetime.context_timestamp(self, fields.Datetime.from_string(self.session_id.start_at))
         date_tz_user = fields.Date.to_string(date_tz_user)
-        return self.env['account.move'].sudo().create({'ref': ref, 'journal_id': journal_id, 'date': date_tz_user})
+        return self.env['account.move'].sudo().create({
+            'ref': self.name,
+            'journal_id': self.sale_journal.id,
+            'date': date_tz_user
+        })
 
     def _prepare_invoice(self):
         """
@@ -306,10 +311,7 @@ class PosOrder(models.Model):
             partner_id = ResPartner._find_accounting_partner(order.partner_id).id or False
             if move is None:
                 # Create an entry for the sale
-                journal_id = self.env['ir.config_parameter'].sudo().get_param(
-                    'pos.closing.journal_id_%s' % current_company.id, default=order.sale_journal.id)
-                move = self._create_account_move(
-                    order.session_id.start_at, order.name, int(journal_id), order.company_id.id)
+                move = order._create_account_move()
 
             def insert_data(data_type, values):
                 # if have_to_group_by:
