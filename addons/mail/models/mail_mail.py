@@ -346,6 +346,11 @@ class MailMail(models.Model):
                 if mail_sent:
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
                 mail._postprocess_sent_message(mail_sent=mail_sent)
+
+            except UnicodeEncodeError as exc:
+                _logger.exception('UnicodeEncodeError on text "%s" while processing mail ID %r.', exc.object, mail.id)
+                raise MailDeliveryException(_("Mail Delivery Failed"), "Invalid text: %s" % exc.object)
+
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
