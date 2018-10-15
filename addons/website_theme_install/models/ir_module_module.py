@@ -17,6 +17,7 @@ class IrModuleModule(models.Model):
     _description = 'Module'
     _inherit = _name
 
+    # The order is important because of dependencies (page need view, menu need page)
     _theme_model_names = OrderedDict([
         ('ir.ui.view', 'theme.ir.ui.view'),
         ('website.page', 'theme.website.page'),
@@ -89,7 +90,13 @@ class IrModuleModule(models.Model):
 
     @api.multi
     def _get_module_data(self, model_name):
-        """Return every theme template model of type ``model_name`` for every theme in ``self``."""
+        """
+            Return every theme template model of type ``model_name`` for every theme in ``self``.
+
+            :param model_name: string with the technical name of the model for which to get data.
+                (the name must be one of the keys present in ``_theme_model_names``)
+            :return: recordset of theme template models (of type defined by ``model_name``)
+        """
         theme_model_name = self._theme_model_names[model_name]
         IrModelData = self.env['ir.model.data']
         records = self.env[theme_model_name]
@@ -118,6 +125,13 @@ class IrModuleModule(models.Model):
             There is a special 'while' loop around the 'for' to be able queue back models at the end
             of the iteration when they have unmet dependencies. Hopefully the dependency will be
             found after all models have been processed, but if it's not the case an error message will be shown.
+
+
+            :param model_name: string with the technical name of the model to handle
+                (the name must be one of the keys present in ``_theme_model_names``)
+            :param website: ``website`` model for which the records have to be updated
+
+            :raise MissingError: if there is a missing dependency.
         """
         self.ensure_one()
 
@@ -162,6 +176,8 @@ class IrModuleModule(models.Model):
         """
             For every type of model in ``self._theme_model_names``, and for every theme in ``self``:
             create/update real models for the website ``website`` based on the theme template models.
+
+            :param website: ``website`` model on which to load the themes
         """
         for module in self:
             _logger.info('Load theme %s for website %s from template.' % (module.mapped('name'), website.id))
@@ -180,6 +196,8 @@ class IrModuleModule(models.Model):
             For every type of model in ``self._theme_model_names``, and for every theme in ``self``:
             remove real models that were generated based on the theme template models
             for the website ``website``.
+
+            :param website: ``website`` model on which to unload the themes
         """
         for module in self:
             _logger.info('Unload theme %s for website %s from template.' % (self.mapped('name'), website.id))
@@ -195,22 +213,41 @@ class IrModuleModule(models.Model):
         """
             Remove orphan models of type ``model_name`` from the current theme and
             for the website ``website``.
-            """
+
+            We need to compute it this way because if the upgrade (or deletion) of a theme module
+            removes a model template, then in the model itself the variable
+            ``theme_template_id`` will be set to NULL and the reference to the theme being removed
+            will be lost. However we do want the ophan to be deleted from the website when
+            we upgrade or delete the theme from the website.
+
+            ``website.page`` and ``website.menu`` don't have ``key`` field so we don't clean them.
+            TODO in master: add a field ``theme_id`` on the models to more cleanly compute orphans.
+
+            :param model_name: string with the technical name of the model to cleanup
+                (the name must be one of the keys present in ``_theme_model_names``)
+            :param website: ``website`` model for which the models have to be cleaned
+
+        """
         self.ensure_one()
         model = self.env[model_name]
 
         if model_name in ('website.page', 'website.menu'):
             return model
 
-        return model.with_context(active_test=False).search([
+        orphans = model.with_context(active_test=False).search([
             ('key', '=like', self.name + '.%'),
             ('website_id', '=', website.id),
             ('theme_template_id', '=', False),
         ])
+        orphans.unlink()
 
     @api.multi
     def _theme_get_upstream(self):
-        """Return installed upstream themes."""
+        """
+            Return installed upstream themes.
+
+            :return: recordset of themes ``ir.module.module``
+        """
         self.ensure_one()
         return self.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
 
@@ -221,6 +258,8 @@ class IrModuleModule(models.Model):
 
             eg. For theme_A, this will return theme_A_sale, but not theme_B even if theme B
                 depends on theme_A.
+
+            :return: recordset of themes ``ir.module.module``
         """
         self.ensure_one()
         return self.downstream_dependencies().filtered(lambda x: x.name.startswith(self.name))
@@ -232,6 +271,8 @@ class IrModuleModule(models.Model):
 
             First find all its downstream themes, and all of the upstream themes of both
             sorted by their level in hierarchy, up first.
+
+            :return: recordset of themes ``ir.module.module``
         """
         self.ensure_one()
         all_mods = self + self._theme_get_downstream()
@@ -242,7 +283,11 @@ class IrModuleModule(models.Model):
 
     @api.multi
     def _theme_get_stream_website_ids(self):
-        """Websites for which this theme (self) is in the stream (up or down) of their theme."""
+        """
+            Websites for which this theme (self) is in the stream (up or down) of their theme.
+
+            :return: recordset of websites ``website``
+        """
         self.ensure_one()
         websites = self.env['website']
         for website in websites.search([('theme_id', '!=', False)]):
@@ -258,6 +303,8 @@ class IrModuleModule(models.Model):
 
             This upper dependency will usually be theme_common but it can also be different
             for example for theme_default and theme_bootswatch which are standalone themes.
+
+            :return: recordset of websites ``website``
         """
         for theme in self:
             upper_theme = (theme + theme._theme_get_upstream())[-1]
@@ -270,6 +317,8 @@ class IrModuleModule(models.Model):
             Remove from ``website`` its current theme, including all the themes in the stream.
 
             The order of removal will be reverse of installation to handle dependencies correctly.
+
+            :param website: ``website`` model for which the themes have to be removed
         """
         if not website.theme_id:
             return
@@ -291,6 +340,8 @@ class IrModuleModule(models.Model):
 
             When installating a new theme, upgrade the upstream chain first to make sure
             we have the latest version of the dependencies to prevent inconsistencies.
+
+            :return: dict with the next action to execute
         """
         self.ensure_one()
         website = self.env['website'].get_current_website()
