@@ -6,6 +6,8 @@ helpers and classes to write tests.
 """
 import base64
 import collections
+import hashlib
+import hmac
 import inspect
 import importlib
 import itertools
@@ -780,11 +782,22 @@ class HttpCase(TransactionCase):
         # setup an url opener helper
         self.opener = requests.Session()
         self.opener.cookies['session_id'] = self.session_id
-
-    def url_open(self, url, data=None, timeout=10):
+    
+    def csrf_token(self, time_limit=3600):
+        token = self.session.sid
+        max_ts = '' if not time_limit else int(time.time() + time_limit)
+        msg = '%s%s' % (token, max_ts)
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        assert secret, "CSRF protection requires a configured database secret"
+        hm = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
+        return '%so%s' % (hm, max_ts)
+    
+    def url_open(self, url, data=None, timeout=10, csrf=False):
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
         if data:
+            if csrf:
+                data.update({'csrf_token': self.csrf_token()})
             return self.opener.post(url, data=data, timeout=timeout)
         return self.opener.get(url, timeout=timeout)
 
