@@ -38,7 +38,7 @@ var Menu = Widget.extend({
         });
 
         // Bus event
-        core.bus.on('change_menu_section', this, this._onChangeMenuSection);
+        core.bus.on('change_menu_section', this, this.change_menu_section);
     },
     start: function () {
         var self = this;
@@ -195,36 +195,6 @@ var Menu = Widget.extend({
     _onAppNameClicked: function (ev) {
         var actionID = parseInt(this.menu_id_to_action_id(this.current_primary_menu));
         this._trigger_menu_clicked(this.current_primary_menu, actionID);
-    },
-    /**
-     * @private
-     * @param {integer} primaryMenuID
-     */
-    _onChangeMenuSection: function (primaryMenuID) {
-        if (!this.$menu_sections[primaryMenuID]) {
-            return; // unknown menu_id
-        }
-
-        if (this.current_primary_menu === primaryMenuID) {
-            return; // already in that menu
-        }
-
-        if (this.current_primary_menu) {
-            this.$menu_sections[this.current_primary_menu].detach();
-        }
-
-        // Get back the application name
-        for (var i = 0; i < this.menu_data.children.length; i++) {
-            if (this.menu_data.children[i].id === primaryMenuID) {
-                this.$menu_brand_placeholder.text(this.menu_data.children[i].name);
-                break;
-            }
-        }
-
-        this.$menu_sections[primaryMenuID].appendTo(this.$section_placeholder);
-        this.current_primary_menu = primaryMenuID;
-
-        core.bus.trigger('resize');
     },
     /**
      * @private
