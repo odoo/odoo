@@ -107,7 +107,7 @@ class ProductProduct(models.Model):
                 select
                     sum(l.price_unit * l.quantity)/nullif(sum(l.quantity),0) as avg_unit_price,
                     sum(l.quantity) as num_qty,
-                    sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
+                    sum(l.quantity * (l.price_subtotal_signed/(nullif(l.quantity,0)))) as total,
                     sum(l.quantity * pt.list_price) as sale_expected
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
