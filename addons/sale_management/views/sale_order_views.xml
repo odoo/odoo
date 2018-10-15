@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page/field[@name='order_line']/.." position="after">
-                <page string="Optional Products">
+                <page string="Optional Products" name="optional_products">
                     <field name="sale_order_option_ids">
                         <tree string="Sales Quotation Template Lines" editable="bottom">
                             <control>
