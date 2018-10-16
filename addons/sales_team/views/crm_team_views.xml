@@ -8,8 +8,6 @@
             <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
-                   <filter name="my_favorites" string="My Favorites" domain="[('favorite_user_ids', 'in', uid)]"/>
-                    <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="name"/>
                     <field name="user_id"/>
@@ -22,11 +20,27 @@
 
         <!-- Case Teams Action -->
         <record id="crm_team_salesteams_act" model="ir.actions.act_window">
+            <field name="name">Sales Teams</field>
+            <field name="res_model">crm.team</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="crm_team_salesteams_search"/>
+            <field name="context">{'in_sales_app': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Define a new Sales Team
+                </p><p>
+                    Use Sales Teams to organize your sales departments.
+                    Each channel will work with a separate pipeline.
+                </p>
+            </field>
+        </record>
+
+          <record id="crm_team_salesteams_pipelines_act" model="ir.actions.act_window">
             <field name="name">Team Pipelines</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
-            <field name="context">{'search_default_my_favorites': 1}</field>
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -56,11 +70,10 @@
                             <h1>
                                 <field name="name" placeholder="Salesteam name..."/>
                             </h1>
-                            <div name="options_active" attrs="{'invisible': ['&amp;', ('team_type', '!=', 'sales'), ('team_type', '!=', 'website')]}"/>
+                            <div name="options_active" />
                         </div>
                         <group>
                             <group name="left">
-                                <field name="team_type" groups="base.group_no_one"/>
                                 <field name="user_id" domain="[('share', '=', False)]"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
@@ -68,7 +81,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page name="members" string="Team Members" attrs="{'invisible': [('team_type', 'in', ['pos', 'ebay'])]}">
+                            <page name="members" string="Team Members" >
                                 <field name="member_ids" widget="many2many" options="{'not_delete': True}">
                                     <kanban quick_create="false" create="true" delete="true">
                                         <field name="id"/>
@@ -87,13 +100,6 @@
                                         </templates>
                                     </kanban>
                                 </field>
-                            </page>
-                            <page string="Dashboard" name="dashboard">
-                                <group string="Graph" name="graph">
-                                    <field name="dashboard_graph_model" attrs="{'readonly': [('team_type', 'in', ['pos', 'ebay'])]}"/>
-                                    <field name="dashboard_graph_period"/>
-                                    <field name="dashboard_graph_group"/>
-                                </group>
                             </page>
                         </notebook>
                     </sheet>

@@ -105,8 +105,6 @@ class TestPartnerLeadPortal(TestCrmCases):
         # Sales Team of crm_salesman
         self.team = self.env['crm.team'].with_context(mail_notrack=True).create({
             'name': 'Test Team FOR THE WIN',
-            'use_leads': True,
-            'use_opportunities': True,
             'member_ids': [(6, 0, [self.crm_salesman.id])],
         })
 

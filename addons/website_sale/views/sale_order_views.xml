@@ -8,12 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
                 <filter string="Confirmed Orders" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
-                <filter string="Unpaid Orders" name="order_unpaid" domain="[('state', '=', 'sent'), ('team_id.team_type', '=', 'website')]"/>
+                <filter string="Unpaid Orders" name="order_unpaid" domain="[('state', '=', 'sent'), ('website_id', '!=', False)]"/>
                 <filter string="Abandoned Carts" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>
                 <separator/>
-                <filter string="From Website" name="from_website" domain="[('team_id.team_type', '=', 'website')]"/>
+                <filter string="From Website" name="from_website" domain="[('website_id', '!=', False)]"/>
                 <separator/>
             </xpath>
         </field>
@@ -72,7 +72,7 @@
         <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form,kanban,activity</field>
-        <field name="domain">[('state', '=', 'sent'), ('team_id.team_type', '=', 'website')]</field>
+        <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">
@@ -119,7 +119,7 @@
         <field name="name">Orders To Invoice</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form,kanban</field>
-        <field name="domain">[('state', 'in', ('sale', 'done')), ('invoice_status', '=', 'to invoice'), ('team_id.team_type', '=', 'website')]</field>
+        <field name="domain">[('state', 'in', ('sale', 'done')), ('invoice_status', '=', 'to invoice'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">
@@ -147,7 +147,7 @@
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,kanban,form,activity</field>
         <field name="view_type">form</field>
-        <field name="domain">[('state', '=', 'sent'), ('team_id.team_type', '=', 'website')]</field>
+        <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
         <field name="context" eval="{'show_sale': True, 'create': False}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce_unpaid"/>
@@ -165,7 +165,7 @@
         <field name="res_model">sale.order</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,activity</field>
-        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('partner_id', '!=', context.get('public_partner_id')), ('team_id.team_type', '=', 'website'), ('date_order', '&lt;=', (datetime.datetime.utcnow() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))]</field>
+        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('partner_id', '!=', context.get('public_partner_id')), ('website_id', '!=', False), ('date_order', '&lt;=', (datetime.datetime.utcnow() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce_abondand"/>

@@ -17,10 +17,7 @@
         </record>
 
         <record model="crm.team" id="sales_team.crm_team_1">
-            <field name="use_quotations" eval="True"/>
-            <field name="use_invoices" eval="True"/>
             <field name="invoiced_target">40000</field>
-            <field name="dashboard_graph_model">sale.report</field>
         </record>
 
         <record id="sale_order_1" model="sale.order">
@@ -732,11 +729,6 @@ Thanks!</field>
         <record id="portal_sale_order_2" model="sale.order">
             <field name="confirmation_date" eval="datetime.now() - relativedelta(months=1)"/>
         </record>
-
-        <function model="crm.team" name="message_unsubscribe"
-            eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
-        <function model="crm.team" name="message_subscribe"
-            eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
 
         <record id="product_product_1_product_template" model="product.template">
             <field name="name">Chair floor protection</field>

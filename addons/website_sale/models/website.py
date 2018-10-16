@@ -16,7 +16,17 @@ class Website(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
     currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency', readonly=False)
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
-    salesteam_id = fields.Many2one('crm.team', string='Sales Team')
+
+    def _get_default_website_team(self):
+        try:
+            team = self.env.ref('sales_team.salesteam_website_sales')
+            return team if team.active else None
+        except ValueError:
+            return None
+
+    salesteam_id = fields.Many2one('crm.team', 
+        string='Sales Team', 
+        default=_get_default_website_team)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
 

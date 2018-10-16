@@ -16,7 +16,7 @@ class WebsiteSaleLinkTrackerBackend(WebsiteSaleBackend):
 
     def fetch_utm_data(self, date_from, date_to):
         sale_utm_domain = [
-            ('team_id.team_type', '=', 'website'),
+            ('website_id', '!=', False),
             ('state', 'in', ['sale', 'done']),
             ('confirmation_date', '>=', date_from),
             ('confirmation_date', '<=', date_to)
