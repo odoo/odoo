@@ -82,8 +82,8 @@ class StockMove(models.Model):
         super(StockMove, self)._clean_merged()
         self.write({'created_purchase_line_id': False})
 
-    def _action_done(self):
-        res = super(StockMove, self)._action_done()
+    def _action_done(self, cancel_backorder=False):
+        res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
         self.mapped('purchase_line_id').sudo()._update_received_qty()
         return res
 
