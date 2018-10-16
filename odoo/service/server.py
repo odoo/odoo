@@ -17,6 +17,7 @@ import threading
 import time
 import unittest
 
+import psutil
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
 
@@ -24,7 +25,6 @@ if os.name == 'posix':
     # Unix only for workers
     import fcntl
     import resource
-    import psutil
 else:
     # Windows shim
     signal.SIGHUP = -1
@@ -55,10 +55,22 @@ except ImportError:
 SLEEP_INTERVAL = 60     # 1 min
 
 def memory_info(process):
-    """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
-    get_memory_info """
+    """
+    :return: the relevant memory usage according to the OS in bytes.
+    """
+    # psutil < 2.0 does not have memory_info, >= 3.0 does not have get_memory_info
     pmem = (getattr(process, 'memory_info', None) or process.get_memory_info)()
-    return (pmem.rss, pmem.vms)
+    # MacOSX allocates very large vms to all processes so we only monitor the rss usage.
+    if platform.system() == 'Darwin':
+        return pmem.rss
+    return pmem.vms
+
+
+def set_limit_memory_hard():
+    if os.name == 'posix':
+        rlimit = resource.RLIMIT_RSS if platform.system() == 'Darwin' else resource.RLIMIT_AS
+        soft, hard = resource.getrlimit(rlimit)
+        resource.setrlimit(rlimit, (config['limit_memory_hard'], hard))
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -252,9 +264,9 @@ class ThreadedServer(CommonServer):
             raise KeyboardInterrupt()
 
     def process_limit(self):
-        rss, vms = memory_info(psutil.Process(os.getpid()))
-        if vms > config['limit_memory_soft']:
-            _logger.info('Server virtual memory limit (%s) reached.', vms)
+        memory = memory_info(psutil.Process(os.getpid()))
+        if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
+            _logger.info('Server memory limit (%s) reached.', memory)
             self.limits_reached_threads.add(threading.currentThread())
 
         for thread in threading.enumerate():
@@ -265,9 +277,9 @@ class ThreadedServer(CommonServer):
                     thread_execution_time = time.time() - thread.start_time
                     thread_limit_time_real = config['limit_time_real']
                     if (getattr(thread, 'type', None) == 'cron' and
-                            config['limit_time_real_cron'] > 0):
+                            config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0):
                         thread_limit_time_real = config['limit_time_real_cron']
-                    if thread_execution_time > thread_limit_time_real:
+                    if thread_limit_time_real and thread_execution_time > thread_limit_time_real:
                         _logger.info(
                             'Thread %s virtual real time limit (%d/%ds) reached.',
                             thread, thread_execution_time, thread_limit_time_real)
@@ -333,6 +345,7 @@ class ThreadedServer(CommonServer):
 
     def start(self, stop=False):
         _logger.debug("Setting signal handlers")
+        set_limit_memory_hard()
         if os.name == 'posix':
             signal.signal(signal.SIGINT, self.signal_handler)
             signal.signal(signal.SIGTERM, self.signal_handler)
@@ -344,9 +357,6 @@ class ThreadedServer(CommonServer):
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
-
-        soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-        resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
 
         test_mode = config['test_enable'] or config['test_file']
         if test_mode or (config['http_enable'] and not stop):
@@ -449,9 +459,9 @@ class GeventServer(CommonServer):
         if self.ppid != os.getppid():
             _logger.warning("LongPolling Parent changed", self.pid)
             restart = True
-        rss, vms = memory_info(psutil.Process(self.pid))
-        if vms > config['limit_memory_soft']:
-            _logger.warning('LongPolling virtual memory limit reached: %s', vms)
+        memory = memory_info(psutil.Process(self.pid))
+        if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
+            _logger.warning('LongPolling virtual memory limit reached: %s', memory)
             restart = True
         if restart:
             # suicide !!
@@ -471,11 +481,9 @@ class GeventServer(CommonServer):
         except ImportError:
             from gevent.wsgi import WSGIServer
 
-
+        set_limit_memory_hard()
         if os.name == 'posix':
             # Set process memory limit as an extra safeguard
-            _, hard = resource.getrlimit(resource.RLIMIT_AS)
-            resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
@@ -795,14 +803,12 @@ class Worker(object):
             _logger.info("Worker (%d) max request (%s) reached.", self.pid, self.request_count)
             self.alive = False
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-        rss, vms = memory_info(psutil.Process(os.getpid()))
-        if vms > config['limit_memory_soft']:
-            _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
+        memory = memory_info(psutil.Process(os.getpid()))
+        if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
+            _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, memory)
             self.alive = False      # Commit suicide after the request.
 
-        # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
-        soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-        resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
+        set_limit_memory_hard()
 
         # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
         r = resource.getrusage(resource.RUSAGE_SELF)
@@ -930,7 +936,7 @@ class WorkerCron(Worker):
             self.setproctitle(db_name)
             if rpc_request_flag:
                 start_time = time.time()
-                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
+                start_memory = memory_info(psutil.Process(os.getpid()))
 
             from odoo.addons import base
             base.models.ir_cron.ir_cron._acquire_job(db_name)
@@ -940,10 +946,10 @@ class WorkerCron(Worker):
                 odoo.sql_db.close_db(db_name)
             if rpc_request_flag:
                 run_time = time.time() - start_time
-                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
-                vms_diff = (end_vms - start_vms) / 1024
+                end_memory = memory_info(psutil.Process(os.getpid()))
+                vms_diff = (end_memory - start_memory) / 1024
                 logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % \
-                    (db_name, run_time, start_vms / 1024, end_vms / 1024, vms_diff)
+                    (db_name, run_time, start_memory / 1024, end_memory / 1024, vms_diff)
                 _logger.debug("WorkerCron (%s) %s", self.pid, logline)
 
             self.request_count += 1

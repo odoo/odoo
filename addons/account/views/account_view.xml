@@ -375,6 +375,7 @@
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="mode">primary</field>
+            <field name="priority">20</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
