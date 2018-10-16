@@ -1791,3 +1791,55 @@ class TestStockFlow(TestStockCommon):
         self.assertEquals(move_mto_alone.state, "draft")
         self.assertEquals(move_with_ancestors.state, "waiting")
         self.assertEquals(other_move.state, "confirmed")
+
+    def test_80_partial_picking_without_backorder(self):
+        """ This test will create a picking with an initial demand for a product
+        then process a lesser quantity than the expected quantity to be processed.
+        When the wizard ask for a backorder, the 'NO BACKORDER' option will be selected
+        and no backorder should be created afterwards
+        """
+
+        picking = self.PickingObj.create({
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+        move_a = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location})
+
+        picking.action_confirm()
+
+        # Only 4 items are processed
+        move_a.move_line_ids.qty_done = 4
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, picking.id)]})
+        backorder_wizard.process_cancel_backorder()
+
+        # Checking that no backorders were attached to the picking
+        self.assertFalse(picking.backorder_id)
+
+        # Checking that the original move is still in the same picking
+        self.assertEquals(move_a.picking_id.id, picking.id)
+
+        move_lines = picking.move_lines
+        move_done = move_lines.browse(move_a.id)
+        move_canceled = move_lines - move_done
+
+        # Checking that the original move was set to done
+        self.assertEquals(move_done.product_uom_qty, 4)
+        self.assertEquals(move_done.state, 'done')
+
+        # Checking that the new move created was canceled
+        self.assertEquals(move_canceled.product_uom_qty, 6)
+        self.assertEquals(move_canceled.state, 'cancel')
+
+        # Checking that the canceled move is in the original picking
+        self.assertIn(move_canceled.id, picking.move_lines.mapped('id'))
+
+
+
