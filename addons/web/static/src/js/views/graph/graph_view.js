@@ -20,6 +20,7 @@ var GROUPABLE_TYPES =
     ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
 
 var GraphView = AbstractView.extend({
+    accesskey: "g",
     display_name: _lt('Graph'),
     icon: 'fa-bar-chart',
     cssLibs: [

@@ -20,6 +20,7 @@ var GROUPABLE_TYPES =
     ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
 
 var PivotView = AbstractView.extend({
+    accesskey: "p",
     display_name: _lt('Pivot'),
     icon: 'fa-table',
     config: {

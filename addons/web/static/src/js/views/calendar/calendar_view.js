@@ -19,6 +19,7 @@ var fieldsToGather = [
 ];
 
 var CalendarView = AbstractView.extend({
+    accesskey: "c",
     display_name: _lt('Calendar'),
     icon: 'fa-calendar',
     jsLibs: ['/web/static/lib/fullcalendar/js/fullcalendar.js'],
