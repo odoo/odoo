@@ -12,6 +12,7 @@ from werkzeug import urls
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
 
@@ -89,10 +90,11 @@ class Survey(models.Model):
     @api.multi
     def _compute_survey_statistic(self):
         UserInput = self.env['survey.user_input']
+        base_domain = [('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        sent_survey = UserInput.search([('survey_id', 'in', self.ids), ('input_type', '=', 'link')])
-        start_survey = UserInput.search(['&', ('survey_id', 'in', self.ids), '|', ('state', '=', 'skip'), ('state', '=', 'done')])
-        complete_survey = UserInput.search([('survey_id', 'in', self.ids), ('state', '=', 'done')])
+        sent_survey = UserInput.search(expression.AND([base_domain, [('survey_id', 'in', self.ids), ('input_type', '=', 'link')]]))
+        start_survey = UserInput.search(expression.AND([base_domain, ['&', ('survey_id', 'in', self.ids), '|', ('state', '=', 'skip'), ('state', '=', 'done')]]))
+        complete_survey = UserInput.search(expression.AND([base_domain, [('survey_id', 'in', self.ids), ('state', '=', 'done')]]))
 
         for survey in self:
             survey.tot_sent_survey = len(sent_survey.filtered(lambda user_input: user_input.survey_id == survey))
@@ -230,6 +232,8 @@ class Survey(models.Model):
             comments = []
             answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id}) for label in question.labels_ids)
             for input_line in question.user_input_line_ids:
+                if input_line.user_input_id.test_entry:
+                    continue
                 if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     answers[input_line.value_suggested.id]['count'] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
@@ -247,6 +251,8 @@ class Survey(models.Model):
             for cell in product(rows, answers):
                 res[cell] = 0
             for input_line in question.user_input_line_ids:
+                if input_line.user_input_id.test_entry:
+                    continue
                 if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.value_suggested_row:
                     res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
@@ -257,6 +263,8 @@ class Survey(models.Model):
         if question.question_type in ['free_text', 'textbox', 'date']:
             result_summary = []
             for input_line in question.user_input_line_ids:
+                if input_line.user_input_id.test_entry:
+                    continue
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
                     result_summary.append(input_line)
 
@@ -265,6 +273,8 @@ class Survey(models.Model):
             result_summary = {'input_lines': []}
             all_inputs = []
             for input_line in question.user_input_line_ids:
+                if input_line.user_input_id.test_entry:
+                    continue
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
                     all_inputs.append(input_line.value_number)
                     result_summary['input_lines'].append(input_line)
@@ -280,9 +290,13 @@ class Survey(models.Model):
     def get_input_summary(self, question, current_filters=None):
         """ Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter """
         current_filters = current_filters if current_filters else []
+
+        test_survey = [input_id.id for input_id in question.survey_id.user_input_ids if input_id.test_entry]
+        current_filters = [x for x in current_filters if x not in test_survey]
+
         result = {}
         if question.survey_id.user_input_ids:
-            total_input_ids = current_filters or [input_id.id for input_id in question.survey_id.user_input_ids if input_id.state != 'new']
+            total_input_ids = current_filters or [input_id.id for input_id in question.survey_id.user_input_ids if (input_id.state != 'new' and not input_id.test_entry)]
             result['total_inputs'] = len(total_input_ids)
             question_input_ids = []
             for user_input in question.user_input_line_ids:

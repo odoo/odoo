@@ -62,7 +62,7 @@ class Survey(http.Controller):
         if token and token == "phantom":
             _logger.info("[survey] Phantom mode")
             user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
+            data = {'survey': survey, 'page': None, 'token': user_input.token, 'test_entry': user_input.test_entry}
             return request.render('survey.survey_init', data)
         # END Test mode
 
@@ -122,14 +122,15 @@ class Survey(http.Controller):
         # Select the right page
         if user_input.state == 'new':  # First page
             page, page_nr, last = Survey.next_page(user_input, 0, go_back=False)
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token, 'test_entry': user_input.test_entry}
             if last:
                 data.update({'last': True})
             return request.render('survey.survey', data)
         elif user_input.state == 'done':  # Display success message
             return request.render('survey.sfinished', {'survey': survey,
                                                                'token': token,
-                                                               'user_input': user_input})
+                                                               'user_input': user_input,
+                                                               'test_entry': user_input.test_entry})
         elif user_input.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
             page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=flag)
@@ -138,7 +139,7 @@ class Survey(http.Controller):
             if not page:
                 page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=True)
 
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token, 'test_entry': user_input.test_entry}
             if last:
                 data.update({'last': True})
             return request.render('survey.survey', data)
@@ -251,11 +252,14 @@ class Survey(http.Controller):
     def print_survey(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
+        user_input = request.env['survey.user_input'].sudo().search([('token', '=', token)], limit=1)
+        test_entry = user_input.test_entry
         return request.render('survey.survey_print',
                                       {'survey': survey,
                                        'token': token,
                                        'page_nr': 0,
-                                       'quizz_correction': True if survey.quizz_mode and token else False})
+                                       'quizz_correction': True if survey.quizz_mode and token else False,
+                                       'test_entry': test_entry})
 
     @http.route(['/survey/results/<model("survey.survey"):survey>'],
                 type='http', auth='user', website=True)
