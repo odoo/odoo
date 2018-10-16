@@ -707,7 +707,7 @@
 </t>
 <t t-name="FieldMany2One">
     <t t-if="widget.get('effective_readonly')">
-        <a t-if="!widget.options.no_open" class="o_form_uri" href="#"/>
+        <a t-if="!widget.options.no_open" t-att-tabindex="widget.node.attrs.tabindex" class="o_form_uri" href="#"/>
         <span t-if="widget.options.no_open"/>
     </t>
     <div t-if="!widget.get('effective_readonly')" t-att-class="'o_form_field_many2one' + ((widget.options.no_open)? '' : ' o_with_button')">
