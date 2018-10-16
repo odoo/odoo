@@ -787,7 +787,7 @@ QUnit.test("Views should be loaded in the user's language", function (assert) {
     assert.expect(2);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         session: {user_context: {lang: 'fr_FR'}},
