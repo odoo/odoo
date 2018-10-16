@@ -14,20 +14,21 @@ var FieldOrgChart = AbstractField.extend({
     events: {
         "click .o_employee_redirect": "_onEmployeeRedirect",
         "click .o_employee_sub_redirect": "_onEmployeeSubRedirect",
+        "click .o_employee_more_managers": "_onEmployeeMoreManager"
     },
     /**
      * @constructor
      * @override
      */
-    init: function () {
+    init: function (parent, options) {
         this._super.apply(this, arguments);
         this.dm = new concurrency.DropMisordered();
+        this.employee;
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
     /**
      * Get the chart data through a rpc call.
      *
@@ -40,11 +41,27 @@ var FieldOrgChart = AbstractField.extend({
         return this.dm.add(this._rpc({
             route: '/hr/get_org_chart',
             params: {
-                employee_id: employee_id,
+                employee_id: employee_id
             },
         })).then(function (data) {
             self.orgData = data;
         });
+    },
+    /**
+     * Get subordonates of an employee through a rpc call.
+     *
+     * @private
+     * @param {integer} employee_id
+     * @returns {Deferred}
+     */
+    _getSubordinatesData: function (employee_id, type) {
+        return this.dm.add(this._rpc({
+            route: '/hr/get_subordinates',
+            params: {
+                employee_id: employee_id, 
+                subordinates_type: type
+            },
+        }))
     },
     /**
      * @override
@@ -57,9 +74,14 @@ var FieldOrgChart = AbstractField.extend({
                 children: [],
             }));
         }
+        else if (!this.employee) {
+            this.employee = this.recordData.id
+        }
 
         var self = this;
-        return this._getOrgData(this.recordData.id).then(function () {
+        return this._getOrgData(this.employee).then(function () {
+
+            self.orgData['view_employee_id'] = self.recordData.id;
             self.$el.html(QWeb.render("hr_org_chart", self.orgData));
             self.$('[data-toggle="popover"]').each(function () {
                 $(this).popover({
@@ -101,6 +123,11 @@ var FieldOrgChart = AbstractField.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    _onEmployeeMoreManager: function(event) {
+        event.preventDefault();
+        this.employee = parseInt($(event.currentTarget).data('employee-id'));
+        this._render()
+    },
     /**
      * Redirect to the employee form view.
      *
@@ -133,29 +160,22 @@ var FieldOrgChart = AbstractField.extend({
         var employee_id = parseInt($(event.currentTarget).data('employee-id'));
         var employee_name = $(event.currentTarget).data('employee-name');
         var type = $(event.currentTarget).data('type') || 'direct';
-        var domain = [['parent_id', '=', employee_id]];
-        var name = _.str.sprintf(_t("Direct Subordinates of %s"), employee_name);
-        if (type === 'total') {
-            domain = ['&', ['parent_id', 'child_of', employee_id], ['id', '!=', employee_id]];
-            name = _.str.sprintf(_t("Subordinates of %s"), employee_name);
-        } else if (type === 'indirect') {
-            domain = ['&', '&',
-                ['parent_id', 'child_of', employee_id],
-                ['parent_id', '!=', employee_id],
-                ['id', '!=', employee_id]
-            ];
-            name = _.str.sprintf(_t("Indirect Subordinates of %s"), employee_name);
-        }
+        var self = this
         if (employee_id) {
-            return this.do_action({
-                name: name,
-                type: 'ir.actions.act_window',
-                view_mode: 'kanban,list,form',
-                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                target: 'current',
-                res_model: 'hr.employee',
-                domain: domain,
-            });
+            this._getSubordinatesData(employee_id, type).then(function(data) {
+                var domain = [['id', 'in', data]];
+
+                return self.do_action({
+                    name: employee_name,
+                    type: 'ir.actions.act_window',
+                    view_mode: 'kanban,list,form',
+                    views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+                    target: 'current',
+                    res_model: 'hr.employee',
+                    domain: domain,
+                });
+            })
+
         }
     },
 });
