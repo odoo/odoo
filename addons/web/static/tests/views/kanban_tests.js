@@ -1288,6 +1288,72 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('Do not open record when clicking on `a` with `href`', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records = [
+            { id: 1, foo: 'yop' },
+        ];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<templates>' +
+                            '<t t-name="kanban-box">' +
+                                '<div class="oe_kanban_global_click">' +
+                                    '<field name="foo"/>' +
+                                    '<div>' +
+                                        '<a class="o_test_link" href="#">test link</a>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</t>' +
+                        '</templates>' +
+                    '</kanban>',
+            intercepts: {
+                // when clicking on a record in kanban view,
+                // it switches to form view.
+                switch_view: function () {
+                    throw new Error("should not switch view");
+                },
+            },
+        });
+
+        var $record = kanban.$('.o_kanban_record:not(.o_kanban_ghost)');
+        assert.strictEqual($record.length, 1,
+            "should display a kanban record");
+
+        var $testLink = $record.find('a');
+        assert.strictEqual($testLink.length, 1,
+            "should contain a link in the kanban record");
+        assert.ok(!!$testLink[0].href,
+            "link inside kanban record should have non-empty href");
+
+        // Mocked views prevent accessing a link with href. This is intented
+        // most of the time, but not in this test which specifically needs to
+        // let the browser access a link with href.
+        kanban.$el.off('click', 'a');
+        // Prevent the browser default behaviour when clicking on anything.
+        // This includes clicking on a `<a>` with `href`, so that it does not
+        // change the URL in the address bar.
+        // Note that we should not specify a click listener on 'a', otherwise
+        // it may influence the kanban record global click handler to not open
+        // the record.
+        $(document.body).on('click.o_test', function (ev) {
+            assert.notOk(ev.isDefaultPrevented(),
+                "should not prevented browser default behaviour beforehand");
+            assert.strictEqual(ev.target, $testLink[0],
+                "should have clicked on the test link in the kanban record");
+            ev.preventDefault();
+        });
+
+        $testLink.click();
+
+        $(document.body).off('click.o_test');
+        kanban.destroy();
+    });
+
     QUnit.test('can drag and drop a record from one column to the next', function (assert) {
         assert.expect(9);
 
@@ -1684,7 +1750,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(29);
+        assert.expect(32);
 
         testUtils.patch(KanbanRenderer, {
             _renderGrouped: function () {
@@ -2646,6 +2712,7 @@ QUnit.module('Views', {
 
     QUnit.test('resequence columns in grouped by m2o', function (assert) {
         assert.expect(7);
+        this.data.product.fields.sequence = {string: "Sequence", type: "integer"};
 
         var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         var kanban = createView({
@@ -2659,12 +2726,6 @@ QUnit.module('Views', {
                         '</t></templates>' +
                     '</kanban>',
             groupBy: ['product_id'],
-            mockRPC: function (route) {
-                if (route === '/web/dataset/resequence') {
-                    return $.when();
-                }
-                return this._super.apply(this, arguments);
-            },
             intercepts: {
                 env_updated: function (event) {
                     assert.deepEqual(event.data.env.ids, envIDs,
@@ -2688,7 +2749,7 @@ QUnit.module('Views', {
         kanban.update({}, {reload: false}); // re-render without reloading
 
         assert.strictEqual(kanban.$('.o_kanban_group:first').data('id'), 5,
-            "first column should be id 5 before resequencing");
+            "first column should be id 5 after resequencing");
 
         kanban.destroy();
     });

@@ -247,6 +247,8 @@ var BoardRenderer = FormRenderer.extend({
                     // the action does not exist anymore
                     return $.when();
                 }
+                // tz and lang are saved in the custom view
+                // override the language to take the current one
                 var rawContext = new Context(params.context, action.context, {lang: session.user_context.lang});
                 var context = pyUtils.eval('context', rawContext);
                 var domain = params.domain || pyUtils.eval('domain', action.domain || '[]', action.context);
