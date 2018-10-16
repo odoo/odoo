@@ -552,12 +552,12 @@ class PurchaseOrderLine(models.Model):
             taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
 
-    @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity')
+    @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity', 'invoice_lines.uom_id')
     def _compute_qty_invoiced(self):
         for line in self:
             qty = 0.0
             for inv_line in line.invoice_lines:
-                if inv_line.invoice_id.state not in ['cancel']:
+                if inv_line.invoice_id.state != 'cancel':
                     if inv_line.invoice_id.type == 'in_invoice':
                         qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
                     elif inv_line.invoice_id.type == 'in_refund':
