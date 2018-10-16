@@ -41,12 +41,12 @@ class SaleOrder(models.Model):
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
 
     @api.multi
-    @api.depends('team_id.team_type', 'date_order', 'order_line', 'state', 'partner_id')
+    @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
         abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
         abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
-            domain = order.date_order and order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
+            domain = order.date_order and order.date_order <= abandoned_datetime and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
             order.is_abandoned_cart = bool(domain)
 
     def _search_abandoned_cart(self, operator, value):
@@ -54,7 +54,7 @@ class SaleOrder(models.Model):
         abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
         abandoned_domain = expression.normalize_domain([
             ('date_order', '<=', abandoned_datetime),
-            ('team_id.team_type', '=', 'website'),
+            ('website_id', '!=', False),
             ('state', '=', 'draft'),
             ('partner_id', '!=', self.env.ref('base.public_partner').id),
             ('order_line', '!=', False)

@@ -100,7 +100,6 @@ class SaleReport(models.Model):
             u.factor,
             config.crm_team_id
         '''
-
         current = '(SELECT %s FROM %s GROUP BY %s)' % (select_, from_, groupby_)
 
         return '%s UNION ALL %s' % (res, current)
