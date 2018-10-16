@@ -189,7 +189,7 @@ class Employee(models.Model):
     job_id = fields.Many2one('hr.job', 'Job Position')
     department_id = fields.Many2one('hr.department', 'Department')
     parent_id = fields.Many2one('hr.employee', 'Manager')
-    child_ids = fields.One2many('hr.employee', 'parent_id', string='Subordinates')
+    child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     coach_id = fields.Many2one('hr.employee', 'Coach')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
@@ -198,12 +198,6 @@ class Employee(models.Model):
     # misc
     notes = fields.Text('Notes')
     color = fields.Integer('Color Index', default=0)
-
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        for employee in self:
-            if not employee._check_recursion():
-                raise ValidationError(_('You cannot create a recursive hierarchy.'))
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
