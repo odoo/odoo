@@ -43,7 +43,7 @@
                                     <field name="is_ssl"/>
                                 </group>
                                 <group attrs="{'invisible' : [('server_type', '=', 'local')]}" string="Login Information">
-                                    <field name="user" attrs="{'required' : [('server_type', '!=', 'local')]}"/>
+                                    <field name="username" attrs="{'required' : [('server_type', '!=', 'local')]}"/>
                                     <field name="password" password="True" attrs="{'required' : [('server_type', '!=', 'local')]}"/>
                                 </group>
                                 <group string="Actions to Perform on Incoming Mails">
