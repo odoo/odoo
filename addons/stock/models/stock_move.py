@@ -884,7 +884,7 @@ class StockMove(models.Model):
                 if self.product_id.tracking == 'serial':
                     for i in range(0, int(quantity)):
                         self.env['stock.move.line'].create(self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant))
-                else:
+                elif quantity:
                     self.env['stock.move.line'].create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
         return taken_quantity
 
