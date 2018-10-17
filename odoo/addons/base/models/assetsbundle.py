@@ -27,8 +27,6 @@ from odoo.tools import func, misc
 import logging
 _logger = logging.getLogger(__name__)
 
-MAX_CSS_RULES = 4095
-
 
 class CompileError(RuntimeError): pass
 def rjsmin(script):
@@ -92,7 +90,6 @@ class AssetsBundle(object):
     def __init__(self, name, files, remains=None, env=None):
         self.name = name
         self.env = request.env if env is None else env
-        self.max_css_rules = self.env.context.get('max_css_rules', MAX_CSS_RULES)
         self.javascripts = []
         self.stylesheets = []
         self.css_errors = []
@@ -199,30 +196,26 @@ class AssetsBundle(object):
         return hashlib.sha1(check.encode('utf-8')).hexdigest()
 
     def _get_asset_template_url(self):
-        return "/web/content/{id}-{unique}/{extra}{name}{page}{type}"  # name contains inc
+        return "/web/content/{id}-{unique}/{extra}{name}{sep}{type}"
 
-    def _get_asset_url_values(self, id, unique, extra, name, page, type):  # extra can contain direction or/and website
+    def _get_asset_url_values(self, id, unique, extra, name, sep, type):  # extra can contain direction or/and website
         return {
             'id': id,
             'unique': unique,
             'extra': extra,
             'name': name,
-            'page': page,
+            'sep': sep,
             'type': type,
         }
 
-    def get_asset_url(self, id='%', unique='%', extra='', name='%', page='%', type='%'):
+    def get_asset_url(self, id='%', unique='%', extra='', name='%', sep="%", type='%'):
         return self._get_asset_template_url().format(
-            **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, page=page, type=type)
+            **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, type=type)
         )
 
     def clean_attachments(self, type):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
-
-        When `type` is css we need to check that we are deleting a different version (and not *any*
-        version) because css may be paginated and, therefore, may produce multiple attachments for
-        the same bundle's version.
 
         When `type` is js we need to check that we are deleting a different version (and not *any*
         version) because, as one of the creates in `save_attachment` can trigger a rollback, the
@@ -259,7 +252,7 @@ class AssetsBundle(object):
             unique=unique,
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
-            page='.%' if type == 'css' else '',
+            sep='',
             type='.%s' % type
         )
         self.env.cr.execute("""
@@ -273,7 +266,7 @@ class AssetsBundle(object):
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
-    def save_attachment(self, type, content, inc=None):
+    def save_attachment(self, type, content):
         assert type in ('js', 'css')
         ira = self.env['ir.attachment']
 
@@ -281,11 +274,7 @@ class AssetsBundle(object):
         # 1 for ltr and 1 for rtl, this will help during cleaning of assets bundle
         # and allow to only clear the current direction bundle
         # (this applies to css bundles only)
-        fname = '%s%s.%s' % (
-            self.name,
-            ('' if inc is None else '.%s' % inc),
-            type
-        )
+        fname = '%s.%s' % (self.name, type)
         mimetype = 'application/javascript' if type == 'js' else 'text/css'
         values = {
             'name': "/web/content/%s" % type,
@@ -304,8 +293,8 @@ class AssetsBundle(object):
             unique=self.version,
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=fname,
-            page='',  # included in fname
-            type=''  # included in fname
+            sep='',  # included in fname
+            type=''
         )
         values = {
             'name': url,
@@ -341,23 +330,7 @@ class AssetsBundle(object):
             matches.append(css)
             css = u'\n'.join(matches)
 
-            # split for browser max file size and browser max expression
-            re_rules = '([^{]+\{(?:[^{}]|\{[^{}]*\})*\})'
-            re_selectors = '()(?:\s*@media\s*[^{]*\{)?(?:\s*(?:[^,{]*(?:,|\{(?:[^}]*\}))))'
-            page = []
-            pages = [page]
-            page_selectors = 0
-            for rule in re.findall(re_rules, css):
-                selectors = len(re.findall(re_selectors, rule))
-                if page_selectors + selectors <= self.max_css_rules:
-                    page_selectors += selectors
-                    page.append(rule)
-                else:
-                    pages.append([rule])
-                    page = pages[-1]
-                    page_selectors = selectors
-            for idx, page in enumerate(pages):
-                self.save_attachment("css", ' '.join(page), inc=idx)
+            self.save_attachment("css", css)
             attachments = self.get_attachments('css')
         return attachments
 

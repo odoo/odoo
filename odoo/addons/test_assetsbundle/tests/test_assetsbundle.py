@@ -46,9 +46,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """
         user_direction = self.env['res.lang'].search([('code', '=', (lang or self.env.user.lang))]).direction
         bundle = self.jsbundle_xmlid if type == 'js' else self.cssbundle_xmlid
-        return self.env['ir.attachment'].search([
-            ('url', '=like', '/web/content/%-%/{0}{1}%.{2}'.format(('rtl/' if type == 'css' and user_direction == 'rtl' else ''), bundle, type))
-        ])
+        url = '/web/content/%-%/{0}{1}.{2}'.format(('rtl/' if type == 'css' and user_direction == 'rtl' else ''), bundle, type)
+        domain = [('url', '=like', url)]
+        return self.env['ir.attachment'].search(domain)
 
     def test_01_generation(self):
         """ Checks that a bundle creates an ir.attachment record when its `js` method is called
@@ -161,94 +161,48 @@ class TestJavascriptAssetsBundle(TransactionCase):
         # there shouldn't be any assets created in debug mode
         self.assertEquals(len(self._any_ira_for_bundle('js')), 0)
 
-    def test_06_paginated_css_generation1(self):
-        """ Checks that a bundle creates enough ir.attachment records when its `css` method is called
-        for the first time while the number of css rules exceed the limit.
-        """
-        # note: changing the max_css_rules of a bundle does not invalidate its attachments
+    def test_08_css_generation3(self):
         # self.cssbundle_xlmid contains 3 rules
-        self.bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
-        self.bundle.css()
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
-        self.assertEquals(len(self.bundle.get_attachments('css')), 3)
-
-    def test_07_paginated_css_generation2(self):
-        # self.cssbundle_xlmid contains 3 rules
-        self.bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 2}))
-        self.bundle.css()
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 2)
-        self.assertEquals(len(self.bundle.get_attachments('css')), 2)
-
-    def test_08_paginated_css_generation3(self):
-        # self.cssbundle_xlmid contains 3 rules
-        self.bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 3}))
+        self.bundle = self._get_asset(self.cssbundle_xmlid)
         self.bundle.css()
         self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
         self.assertEquals(len(self.bundle.get_attachments('css')), 1)
 
-    def test_09_paginated_css_access(self):
+    def test_09_css_access(self):
         """ Checks that the bundle's cache is working, i.e. that a bundle creates only enough
         ir.attachment records when rendered multiple times.
         """
-        bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        bundle0 = self._get_asset(self.cssbundle_xmlid)
         bundle0.css()
 
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
+        self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
 
         version0 = bundle0.version
-        ira0, ira1, ira2 = self._any_ira_for_bundle('css')
+        ira0 = self._any_ira_for_bundle('css')
         date0 = ira0.create_date
-        date1 = ira1.create_date
-        date2 = ira2.create_date
 
-        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        bundle1 = self._get_asset(self.cssbundle_xmlid)
         bundle1.css()
 
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
+        self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
 
         version1 = bundle1.version
-        ira3, ira4, ira5 = self._any_ira_for_bundle('css')
-        date3 = ira1.create_date
-        date4 = ira1.create_date
-        date5 = ira1.create_date
+        ira1 = self._any_ira_for_bundle('css')
+        date1 = ira1.create_date
 
         self.assertEquals(version0, version1)
-        self.assertEquals(date0, date3)
-        self.assertEquals(date1, date4)
-        self.assertEquals(date2, date5)
+        self.assertEquals(date0, date1)
 
-    def test_10_paginated_css_date_invalidation(self):
-        """ Checks that a bundle is invalidated when one of its assets' modification date is changed.
-        """
-        bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
-        bundle0.css()
-        last_modified0 = bundle0.last_modified
-        version0 = bundle0.version
-
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
-        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
-        _touch(path, bundle1)
-
-        bundle1.css()
-        last_modified1 = bundle1.last_modified
-        version1 = bundle1.version
-
-        self.assertNotEquals(last_modified0, last_modified1)
-        self.assertNotEquals(version0, version1)
-
-        # check if the previous attachment is correctly cleaned
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
-
-    def test_11_paginated_css_content_invalidation(self):
+    def test_11_css_content_invalidation(self):
         """ Checks that a bundle is invalidated when its content is modified by adding a file to
         source.
         """
-        bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        bundle0 = self._get_asset(self.cssbundle_xmlid)
         bundle0.css()
         files0 = bundle0.files
         version0 = bundle0.version
 
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
+        self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
 
         view_arch = """
         <data>
@@ -265,7 +219,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
             'inherit_id': bundle.id,
         })
 
-        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'check_view_ids': view.ids, 'max_css_rules': 1}))
+        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'check_view_ids': view.ids}))
         bundle1.css()
         files1 = bundle1.files
         version1 = bundle1.version
@@ -274,27 +228,18 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 4)
+        self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
 
-    def test_12_paginated_css_debug(self):
+    def test_12_css_debug(self):
         """ Check that a bundle in debug mode outputs non-minified assets.
         """
-        debug_bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        debug_bundle = self._get_asset(self.cssbundle_xmlid)
         content = debug_bundle.to_html(debug='assets')
         # find back one of the original asset file
         self.assertIn('/test_assetsbundle/static/src/css/test_cssfile1.css', content)
 
         # there shouldn't be any assets created in debug mode
         self.assertEquals(len(self._any_ira_for_bundle('css')), 0)
-
-    def test_13_paginated_css_order(self):
-        # self.cssbundle_xlmid contains 3 rules
-        self.bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
-        stylesheets = self.bundle.css()
-
-        self.assertTrue(stylesheets[0].url.endswith('.0.css'))
-        self.assertTrue(stylesheets[1].url.endswith('.1.css'))
-        self.assertTrue(stylesheets[2].url.endswith('.2.css'))
 
     def test_14_duplicated_css_assets(self):
         """ Checks that if the bundle's ir.attachment record is duplicated, the bundle is only sourced once. This could
@@ -312,7 +257,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
 
         # the ir.attachment records should be deduplicated in the bundle's content
         content = bundle0.to_html()
-        self.assertEqual(content.count('test_assetsbundle.bundle2.0.css'), 1)
+        self.assertEqual(content.count('test_assetsbundle.bundle2.css'), 1)
 
     # Language direction specific tests
 
