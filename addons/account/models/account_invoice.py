@@ -654,6 +654,12 @@ class AccountInvoice(models.Model):
                 else:
                     tax_grouped[key]['amount'] += val['amount']
                     tax_grouped[key]['base'] += val['base']
+        if self.company_id.tax_calculation_rounding_method == 'round_per_line':
+            return tax_grouped
+        # Round total values to currency decimal precision if 'round_globally'
+        for tax_group in tax_grouped.values():
+            tax_group['amount'] = self.currency_id.round(tax_group['amount'])
+            tax_group['base'] = self.currency_id.round(tax_group['base'])
         return tax_grouped
 
     @api.multi
