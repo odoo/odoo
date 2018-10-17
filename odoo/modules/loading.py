@@ -369,8 +369,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         while previously_processed < len(processed_modules):
             previously_processed = len(processed_modules)
             processed_modules += load_marked_modules(cr, graph,
-                ['installed', 'to upgrade', 'to remove'],
+                ['installed', 'to remove'],
                 force, status, report, loaded_modules, update_module, models_to_check)
+            processed_modules += load_marked_modules(
+                cr, graph, ['to upgrade'], force, status,
+                report, loaded_modules, update_module, models_to_check)
             if update_module:
                 processed_modules += load_marked_modules(cr, graph,
                     ['to install'], force, status, report,
