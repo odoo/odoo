@@ -1130,6 +1130,38 @@ class TestSinglePicking(TestStockCommon):
         back_order = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)])
         self.assertFalse(back_order, 'There should be no back order')
 
+    def test_extra_move_6(self):
+        """ Ensure that extra move on MTO product do not trigger pull rules. """
+        self.productA.write({'route_ids': [(4, self.env.ref('stock.route_warehouse0_mto').id)]})
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        move = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 5)
+        delivery.action_confirm()
+        delivery.action_assign()
+        move.write({'procure_method': 'make_to_order'})
+        # It should crash if pull rule are launched since procurement rules are
+        # not complete.If the test pass this method then it means that pull
+        # rules are not used.
+        delivery.action_done()
+
+        back_order = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)])
+        self.assertFalse(back_order, 'There should be no back order')
+
     def test_recheck_availability_1(self):
         """ Check the good behavior of check availability. I create a DO for 2 unit with
         only one in stock. After the first check availability, I should have 1 reserved

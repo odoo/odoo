@@ -598,7 +598,7 @@ class StockMove(models.Model):
             moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
-        return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
+        return (self | (merge_into or self.env['stock.move']) | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
 
     def _get_relevant_state_among_moves(self):
         # We sort our moves by importance of state:
@@ -1031,6 +1031,7 @@ class StockMove(models.Model):
 
     def _prepare_extra_move_vals(self, qty):
         vals = {
+            'procure_method': 'make_to_stock',
             'origin_returned_move_id': self.origin_returned_move_id.id,
             'product_uom_qty': qty,
             'picking_id': self.picking_id.id,
