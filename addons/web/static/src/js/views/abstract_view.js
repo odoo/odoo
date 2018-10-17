@@ -273,3 +273,37 @@ var AbstractView = Class.extend({
 return AbstractView;
 
 });
+
+odoo.define('web.viewUtils', function () {
+"use strict";
+
+/**
+ * FIXME: this module should be moved to its own file in master
+ */
+
+var utils = {
+    /**
+     * Returns the value of a group dataPoint, i.e. the value of the groupBy
+     * field for the records in that group.
+     *
+     * @param {string} groupByField the name of the groupBy field
+     * @param {Object} group dataPoint of type list, corresponding to a group
+     * @returns {string || integer || false}
+     */
+    getGroupValue: function (groupByField, group) {
+        var groupedByField = group.fields[groupByField];
+        switch (groupedByField.type) {
+            case 'many2one':
+                return group.res_id || false;
+            case 'selection':
+                var descriptor = _.findWhere(groupedByField.selection, group.value);
+                return descriptor && descriptor[0];
+            default:
+                return group.value;
+        }
+    },
+};
+
+return utils;
+
+});

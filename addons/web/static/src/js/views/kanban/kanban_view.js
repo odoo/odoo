@@ -106,7 +106,7 @@ var KanbanView = BasicView.extend({
      */
     _isQuickCreateEnabled: function (groupByField) {
         groupByField = groupByField && groupByField.split(':')[0];
-        var availableTypes = ['char', 'boolean', 'many2one'];
+        var availableTypes = ['char', 'boolean', 'many2one', 'selection'];
         if (groupByField && !_.contains(availableTypes, this.fields[groupByField].type)) {
             return false;
         }

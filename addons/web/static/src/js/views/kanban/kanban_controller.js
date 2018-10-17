@@ -12,6 +12,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var view_dialogs = require('web.view_dialogs');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -387,8 +388,7 @@ var KanbanController = BasicController.extend({
                 var context = columnState.getContext();
                 var state = self.model.get(self.handle, {raw: true});
                 var groupedBy = state.groupedBy[0];
-                var groupedByM2O = state.fields[groupedBy].type === 'many2one';
-                context['default_' + groupedBy] = groupedByM2O ? columnState.res_id : columnState.value;
+                context['default_' + groupedBy] = viewUtils.getGroupValue(groupedBy, columnState);
                 new view_dialogs.FormViewDialog(self, {
                     res_model: state.model,
                     context: _.extend({default_name: values.name || values.display_name}, context),
