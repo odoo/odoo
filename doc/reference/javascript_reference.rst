@@ -129,9 +129,8 @@ Here is what happens when a template is rendered by the server with these direct
       be replaced by a list of script tags pointing to the js files
 
 - if we are not in *debug=assets* mode,
-    - the css files will be concatenated and minified, then splits into files
-      with no more than 4096 rules (to get around an old limitation of IE9). Then,
-      we generate as many stylesheet tags as necessary
+    - the css files will be concatenated and minified, then a stylesheet tag is
+      generated
     - the js files are concatenated and minified, then a script tag is generated
 
 Note that the assets files are cached, so in theory, a browser should only load
