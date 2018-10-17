@@ -13,6 +13,10 @@ class IrModel(models.Model):
         string="Mail Thread", oldname='mail_thread', default=False,
         help="Whether this model supports messages and notifications.",
     )
+    is_mail_activity = fields.Boolean(
+        string="Mail Activity", default=False,
+        help="Whether this model supports activities.",
+    )
 
     def unlink(self):
         # Delete followers for models that will be unlinked.
@@ -22,11 +26,13 @@ class IrModel(models.Model):
 
     @api.multi
     def write(self, vals):
-        if self and 'is_mail_thread' in vals:
+        if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals):
             if not all(rec.state == 'manual' for rec in self):
                 raise UserError(_('Only custom models can be modified.'))
-            if not all(rec.is_mail_thread <= vals['is_mail_thread'] for rec in self):
+            if 'is_mail_thread' in vals and not all(rec.is_mail_thread <= vals['is_mail_thread'] for rec in self):
                 raise UserError(_('Field "Mail Thread" cannot be changed to "False".'))
+            if 'is_mail_activity' in vals and not all(rec.is_mail_activity <= vals['is_mail_activity'] for rec in self):
+                raise UserError(_('Field "Mail Activity" cannot be changed to "False".'))
             res = super(IrModel, self).write(vals)
             # setup models; this reloads custom models in registry
             self.pool.setup_models(self._cr)
@@ -40,6 +46,7 @@ class IrModel(models.Model):
     def _reflect_model_params(self, model):
         vals = super(IrModel, self)._reflect_model_params(model)
         vals['is_mail_thread'] = issubclass(type(model), self.pool['mail.thread'])
+        vals['is_mail_activity'] = issubclass(type(model), self.pool['mail.activity.mixin'])
         return vals
 
     @api.model
@@ -49,6 +56,10 @@ class IrModel(models.Model):
             parents = model_class._inherit or []
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.thread']
+        if model_data.get('is_mail_activity') and model_class._name != 'mail.activity.mixin':
+            parents = model_class._inherit or []
+            parents = [parents] if isinstance(parents, str) else parents
+            model_class._inherit = parents + ['mail.activity.mixin']
         return model_class
 
 
