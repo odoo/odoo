@@ -180,7 +180,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -222,7 +222,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_boxed" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article o_report_layout_boxed" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -263,7 +263,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_clean"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article o_report_layout_clean"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -311,7 +311,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_standard"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article o_report_layout_standard"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -392,14 +392,14 @@
                 </div>
             </div>
         </div>
-        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
           <t t-raw="0"/>
         </div>
     </template>
 
     <template id="basic_layout">
         <t t-call="web.html_container">
-            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
                 <t t-raw="0"/>
             </div>
         </t>
