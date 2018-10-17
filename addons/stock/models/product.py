@@ -515,7 +515,7 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
-        if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
+        if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self) and not self._context.get('install_mode'):
             existing_move_lines = self.env['stock.move.line'].search([
                 ('product_id', 'in', self.mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
