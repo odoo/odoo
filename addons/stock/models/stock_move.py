@@ -1006,8 +1006,8 @@ class StockMove(models.Model):
                             assigned_moves |= move
                             break
                         partially_available_moves |= move
-        partially_available_moves.write({'state': 'partially_available'})
-        assigned_moves.write({'state': 'assigned'})
+        partially_available_moves.filtered(lambda move: move.move_line_ids).write({'state': 'partially_available'})
+        assigned_moves.filtered(lambda move: move.move_line_ids).write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()
 
     def _action_cancel(self):
