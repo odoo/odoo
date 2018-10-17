@@ -389,8 +389,7 @@ var KanbanController = BasicController.extend({
                 var context = columnState.getContext();
                 var state = self.model.get(self.handle, {raw: true});
                 var groupedBy = state.groupedBy[0];
-                var groupedByM2O = state.fields[groupedBy].type === 'many2one';
-                context['default_' + groupedBy] = groupedByM2O ? columnState.res_id : columnState.value;
+                context['default_' + groupedBy] = viewUtils.getGroupValue(columnState, groupedBy);
                 new view_dialogs.FormViewDialog(self, {
                     res_model: state.model,
                     context: _.extend({default_name: values.name || values.display_name}, context),
