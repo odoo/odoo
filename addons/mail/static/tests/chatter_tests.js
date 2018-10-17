@@ -1,7 +1,6 @@
 odoo.define('mail.chatter_tests', function (require) {
 "use strict";
 
-var AttachmentBox = require('mail.AttachmentBox');
 var mailTestUtils = require('mail.testUtils');
 
 var concurrency = require('web.concurrency');
@@ -1122,6 +1121,50 @@ QUnit.test('chatter: discard changes on opening full-composer', function (assert
     assert.strictEqual($modal.find('.modal-body').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
+
+    form.destroy();
+});
+
+QUnit.test('chatter in x2many form view', function (assert) {
+    // the purpose of this test is to ensure that it doesn't crash when a x2many
+    // record is opened in form view (thus in a dialog), and when there is a
+    // chatter in the arch (typically, this may occur when the view used for the
+    // x2many is a default one, which is also used in another context, as the
+    // chatter is hidden in the dialog anyway)
+    assert.expect(2);
+
+    this.data.partner.fields.o2m = {
+        string: "one2many field", type: "one2many", relation: 'partner',
+    };
+    this.data.partner.records[0].o2m = [2];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form><field name="o2m"/></form>',
+        archs: {
+            'partner,false,form': '<form>' +
+                '<field name="foo"/>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+            'partner,false,list': '<tree><field name="display_name"/></tree>',
+        },
+        res_id: 2,
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    form.$('.o_data_row:first').click();
+
+    assert.strictEqual($('.modal .o_form_view').length, 1,
+        "should have open a form view in a modal");
+    assert.strictEqual($('.modal .o_chatter:visible').length, 0,
+        "chatter should be hidden (as in a dialog)");
 
     form.destroy();
 });
