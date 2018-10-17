@@ -132,7 +132,7 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
             self._setOne2ManyField('bank_ids', data.company.bank_ids);
             delete data.company.bank_ids;
 
-            self.trigger_up('field_changed', {
+            self.trigger('field_changed', {
                 dataPointID: self.dataPointID,
                 changes: data.company,
             });
@@ -157,7 +157,7 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
                     data: item,
                 };
 
-                self.trigger_up('field_changed', {
+                self.trigger('field_changed', {
                     dataPointID: self.dataPointID,
                     changes: changes,
                 });

@@ -110,7 +110,7 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                     }, {
                         on_close: function (products) {
                             if (products && products !== 'special'){
-                                self.trigger_up('add_record', {
+                                self.trigger('add_record', {
                                     context: self._productsToRecords(products),
                                     forceEditable: "bottom" ,
                                     allowWarning: true,
@@ -123,7 +123,7 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                     });
                 });
             } else {
-                self.trigger_up('add_record', {context: context && [context]}); // TODO write a test, the deferred was not considered
+                self.trigger('add_record', {context: context && [context]}); // TODO write a test, the deferred was not considered
             }
         });
     },

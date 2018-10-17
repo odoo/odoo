@@ -103,7 +103,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         this.$el.children().hide();
         // display rainbowman after full reconciliation
         if (session.show_effect) {
-            this.trigger_up('show_effect', {
+            this.trigger('show_effect', {
                 type: 'rainbow_man',
                 fadeout: 'no',
                 message: $done,

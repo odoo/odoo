@@ -389,7 +389,7 @@ var BasicActivity = AbstractField.extend({
             },
         };
         return this.do_action(action, { on_close: function () {
-            self.trigger_up('reload');
+            self.trigger('reload');
         } });
     },
     /**

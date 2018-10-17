@@ -127,7 +127,7 @@ odoo.define('sale.product.configurator.tests', function (require) {
 
             var list = form.renderer.allFieldWidgets[form.handle][1];
 
-            list.trigger_up('add_record', {
+            list.trigger('add_record', {
                 context: [{default_product_id: 1, default_product_uom_qty: 2}, {default_product_id: 2, default_product_uom_qty: 3}],
                 forceEditable: "bottom" ,
                 allowWarning: true

@@ -850,7 +850,7 @@ registry.gallery = Animation.extend({
         $modal.appendTo(document.body);
 
         $modal.one('shown.bs.modal', function () {
-            self.trigger_up('animation_start_demand', {
+            self.trigger('animation_start_demand', {
                 editableMode: false,
                 $target: $modal.find('.modal-body.o_slideshow'),
             });
