@@ -207,7 +207,7 @@
                     border-left: 1px solid gray('300');
                 }
 
-                &:before, &:not(:first-child):after {
+                &:not(:first-child):before, &:not(:first-child):after {
                     content: " ";
                     display: block;
                     @include o-position-absolute(0, -$o-statusbar-arrow-width + 1);
@@ -231,7 +231,7 @@
                     }
                 }
 
-                &:before {
+                &:not(:first-child):before {
                     right: -$o-statusbar-arrow-width;
                     border-left-color: gray('300');
                 }
