@@ -17,9 +17,4 @@ class Users(models.Model):
             if activity['model'] != 'res.partner':
                 continue
             activity['icon'] = modules.module.get_module_icon('contacts')
-            activity['actions'] = [{
-                'icon': 'fa-th',
-                'name': 'Summary',
-                'action_xmlid': 'contacts.action_contacts_summary'
-            }]
         return activities

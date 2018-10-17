@@ -20,6 +20,11 @@ QUnit.module('ActivityMenu', {
                     today_count: { type: "integer"},
                     overdue_count: { type: "integer"},
                     total_count: { type: "integer"},
+                    actions: [{
+                        icon: { type: "char" },
+                        name: { type: "char" },
+                        action_xmlid: { type: "char" },
+                    }],
                 },
                 records: [{
                         name: "Contact",
@@ -47,6 +52,24 @@ QUnit.module('ActivityMenu', {
                         today_count: 1,
                         overdue_count: 1,
                         total_count: 3,
+                        actions : [{
+                            icon: "fa-clock-o",
+                            name: "summary",
+                        }],
+                    },
+                    {
+                        name: "Note",
+                        type: "activity",
+                        model: "partner",
+                        planned_count: 1,
+                        today_count: 1,
+                        overdue_count: 1,
+                        total_count: 3,
+                        actions: [{
+                            icon: "fa-clock-o",
+                            name: "summary",
+                            action_xmlid: "mail.mail_activity_type_view_tree",
+                        }],
                     }],
                 },
             };
@@ -88,7 +111,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     assert.ok(activityMenu.$el.hasClass('o_mail_systray_item'), 'should be the instance of widget');
     assert.ok(activityMenu.$('.o_mail_preview').hasClass('o_mail_preview'), "should instance of widget");
     assert.ok(activityMenu.$('.o_notification_counter').hasClass('o_notification_counter'), "widget should have notification counter");
-    assert.strictEqual(parseInt(activityMenu.el.innerText), 5, "widget should have 5 notification counter");
+    assert.strictEqual(parseInt(activityMenu.el.innerText), 8, "widget should have 8 notification counter");
 
     var context = {};
     testUtils.intercept(activityMenu, 'do_action', function (event) {
@@ -122,6 +145,54 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     };
     activityMenu.$('.dropdown-toggle').click();
     activityMenu.$(".o_mail_systray_dropdown_items > div[data-model_name='Issue']").click();
+
+    activityMenu.destroy();
+});
+
+QUnit.test('activity menu widget: activity view icon', function (assert) {
+    assert.expect(8);
+    var self = this;
+    var activityMenu = new ActivityMenu();
+    testUtils.addMockEnvironment(activityMenu, {
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'systray_get_activities') {
+                return $.when(self.data['mail.activity.menu'].records);
+            }
+            return this._super(route, args);
+        },
+    });
+    activityMenu.appendTo($('#qunit-fixture'));
+    assert.strictEqual(activityMenu.$('.o_mail_activity_action').length, 2,
+                       "widget should have 2 activity view icons");
+
+    var $first = activityMenu.$('.o_mail_activity_action').eq(0);
+    var $second = activityMenu.$('.o_mail_activity_action').eq(1);
+    assert.strictEqual($first.data('model_name'), "Issue",
+                       "first activity action should link to 'Issue'");
+    assert.ok($first.hasClass('fa-clock-o'), "should display the activity action icon");
+
+    assert.strictEqual($second.data('model_name'), "Note",
+                       "Second activity action should link to 'Note'");
+    assert.ok($second.hasClass('fa-clock-o'), "should display the activity action icon");
+
+    testUtils.intercept(activityMenu, 'do_action', function (event) {
+        assert.step('do_action:' +
+                    (event.data.action.name ? event.data.action.name : event.data.action));
+    }, true);
+
+    // click on the "Issue" activity icon
+    activityMenu.$('.dropdown-toggle').click();
+    activityMenu.$(".o_mail_activity_action[data-model_name='Issue']").click();
+
+    // click on the "Note" activity icon
+    activityMenu.$('.dropdown-toggle').click();
+    activityMenu.$(".o_mail_activity_action[data-model_name='Note']").click();
+
+    assert.verifySteps([
+        'do_action:Issue',
+        'do_action:mail.mail_activity_type_view_tree'
+    ]);
 
     activityMenu.destroy();
 });

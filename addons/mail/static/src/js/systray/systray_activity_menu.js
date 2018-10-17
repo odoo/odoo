@@ -100,14 +100,27 @@ var ActivityMenu = Widget.extend({
     //------------------------------------------------------------
 
     /**
-     * Redirect to specific action given its xml id
+     * Redirect to specific action given its xml id or to the activity
+     * view of the current model if no xml id is provided
+     *
      * @private
      * @param {MouseEvent} ev
      */
     _onActivityActionClick: function (ev) {
         ev.stopPropagation();
-        var actionXmlid = $(ev.currentTarget).data('action_xmlid');
-        this.do_action(actionXmlid);
+        var targetAction = $(ev.currentTarget);
+        var actionXmlid = targetAction.data('action_xmlid');
+        if (actionXmlid) {
+            this.do_action(actionXmlid);
+        } else {
+            this.do_action({
+                type: 'ir.actions.act_window',
+                name: targetAction.data('model_name'),
+                views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
+                view_mode: 'activity',
+                res_model: targetAction.data('res_model')
+            });
+        }
     },
 
     /**
