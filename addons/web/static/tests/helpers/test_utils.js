@@ -98,7 +98,7 @@ var createActionManager = function (params) {
             return this._super.apply(this, arguments);
         },
     });
-    addMockEnvironment(widget, _.defaults(params, {debounce: false}));
+    addMockEnvironment(widget, _.defaults(params, { debounce: false }));
     widget.prependTo($target);
     widget.$el.addClass('o_web_client');
     if (config.device.isMobile) {
@@ -276,7 +276,7 @@ function createAsyncView(params) {
         var fragment = document.createDocumentFragment();
         return view.appendTo(fragment).then(function () {
             dom.append($content, fragment, {
-                callbacks: [{widget: view}],
+                callbacks: [{ widget: view }],
                 in_DOM: true,
             });
             view.$el.on('click', 'a', function (ev) {
@@ -317,24 +317,52 @@ function patchDate(year, month, day, hours, minutes, seconds) {
     var fakeDate = new RealDate(year, month, day, hours, minutes, seconds);
     var timeInterval = actualDate.getTime() - (fakeDate.getTime());
 
-    window.Date = function Date() {
-        if (arguments.length > 0) {
-            return RealDate.apply(this, arguments);
-        } else {
-            var date = new RealDate();
-            var time = date.getTime();
-            time -= timeInterval;
-            date.setTime(time);
-            return date;
+    Date = (function (NativeDate) {
+        function Date(Y, M, D, h, m, s, ms) {
+            var length = arguments.length;
+            if (arguments.length > 0) {
+                var date = length == 1 && String(Y) === Y ? // isString(Y)
+                    // We explicitly pass it through parse:
+                    new NativeDate(Date.parse(Y)) :
+                    // We have to manually make calls depending on argument
+                    // length here
+                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
+                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
+                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
+                    length >= 4 ? new NativeDate(Y, M, D, h) :
+                    length >= 3 ? new NativeDate(Y, M, D) :
+                    length >= 2 ? new NativeDate(Y, M) :
+                    length >= 1 ? new NativeDate(Y) :
+                                  new NativeDate();
+                // Prevent mixups with unfixed Date object
+                date.constructor = Date;
+                return date;
+            } else {
+                var date = new NativeDate();
+                var time = date.getTime();
+                time -= timeInterval;
+                date.setTime(time);
+                return date;
+            }
         }
-    };
 
-    _.mapObject(RealDate, function (val, key) {
-        window.Date[key] = val;
-    });
-    window.Date.prototype = RealDate.prototype;
+        // Copy any custom methods a 3rd party library may have added
+        for (var key in NativeDate) {
+            Date[key] = NativeDate[key];
+        }
 
-    return function () {window.Date = RealDate;};
+        // Copy "native" methods explicitly; they may be non-enumerable
+        Date.now = NativeDate.now;
+        Date.UTC = NativeDate.UTC;
+        Date.prototype = NativeDate.prototype;
+        Date.prototype.constructor = Date;
+
+        // Upgrade Date.parse to handle simplified ISO 8601 strings
+        Date.parse = NativeDate.parse;
+        return Date;
+    })(Date);
+
+    return function () { window.Date = RealDate; };
 }
 
 /**
@@ -394,7 +422,7 @@ function addMockEnvironment(widget, params) {
     var Server = MockServer;
     params.services = params.services || {};
     if (params.mockRPC) {
-        Server = MockServer.extend({_performRpc: params.mockRPC});
+        Server = MockServer.extend({ _performRpc: params.mockRPC });
     }
     if (params.debug) {
         observe(widget);
@@ -661,17 +689,17 @@ function dragAndDrop($el, $to, options) {
         toOffset.top += position.top;
         toOffset.left += position.left;
     } else {
-        toOffset.top += $to.outerHeight()/2;
-        toOffset.left += $to.outerWidth()/2;
+        toOffset.top += $to.outerHeight() / 2;
+        toOffset.left += $to.outerWidth() / 2;
         var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
         if (position === 'top') {
-            toOffset.top -= $to.outerHeight()/2 + vertical_offset;
+            toOffset.top -= $to.outerHeight() / 2 + vertical_offset;
         } else if (position === 'bottom') {
-            toOffset.top += $to.outerHeight()/2 - vertical_offset;
+            toOffset.top += $to.outerHeight() / 2 - vertical_offset;
         } else if (position === 'left') {
-            toOffset.left -= $to.outerWidth()/2;
+            toOffset.left -= $to.outerWidth() / 2;
         } else if (position === 'right') {
-            toOffset.left += $to.outerWidth()/2;
+            toOffset.left += $to.outerWidth() / 2;
         }
     }
 
@@ -683,8 +711,8 @@ function dragAndDrop($el, $to, options) {
     }
     $el.trigger($.Event("mouseenter"));
     if (!(options && options.continueMove)) {
-        elementCenter.left += $el.outerWidth()/2;
-        elementCenter.top += $el.outerHeight()/2;
+        elementCenter.left += $el.outerWidth() / 2;
+        elementCenter.top += $el.outerHeight() / 2;
 
         $el.trigger($.Event("mousedown", {
             which: 1,
@@ -728,7 +756,7 @@ function triggerMouseEvent($el, type) {
     var pos = $el.offset();
     var e = new $.Event(type);
     e.pageX = e.layerX = e.screenX = pos.left;
-    e.pageY = e.layerY = e.screenY =pos.top;
+    e.pageY = e.layerY = e.screenY = pos.top;
     e.which = 1;
     $el.trigger(e);
 }
@@ -742,9 +770,9 @@ function triggerMouseEvent($el, type) {
  * @param {integer} y
  * @param {string} type a mouse event type, such as 'mousedown' or 'mousemove'
  */
-function triggerPositionalMouseEvent(x, y, type){
+function triggerPositionalMouseEvent(x, y, type) {
     var ev = document.createEvent("MouseEvent");
-    var el = document.elementFromPoint(x,y);
+    var el = document.elementFromPoint(x, y);
     ev.initMouseEvent(
         type,
         true /* bubble */,
@@ -769,7 +797,7 @@ function triggerKeypressEvent(char) {
     } else {
         keycode = char.charCodeAt(0);
     }
-    return $('body').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
+    return $('body').trigger($.Event('keypress', { which: keycode, keyCode: keycode }));
 }
 
 /**
@@ -800,7 +828,7 @@ function removeSrcAttribute(el, widget) {
                 node.setAttribute('src', 'about:blank');
             }
             if (widget) {
-                widget._rpc({route: src});
+                widget._rpc({ route: src });
             }
         }
     }
