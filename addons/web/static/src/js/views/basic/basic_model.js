@@ -4161,9 +4161,7 @@ var BasicModel = AbstractModel.extend({
             var fieldNames = list.getFieldNames();
             for (var i = list.offset; i < upperBound; i++) {
                 var resId = currentResIDs[i];
-                if (_.isNumber(resId)) {
-                    resIDs.push(resId);
-                }
+                resIDs.push(resId);
             }
             return self._readMissingFields(list, resIDs, fieldNames).then(function () {
                 if (list.res_ids.length <= list.limit) {
