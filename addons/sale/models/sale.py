@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT, sql
 from odoo.tools.misc import formatLang
 
 import odoo.addons.decimal_precision as dp
@@ -751,7 +751,7 @@ class SaleOrderLine(models.Model):
 
     order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
     name = fields.Text(string='Description', required=True)
-    sequence = fields.Integer(string='Sequence', default=10)
+    sequence = fields.Integer(string='Sequence', default=sql.default_sequence(field='sequence'))
 
     invoice_lines = fields.Many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_line_id', string='Invoice Lines', copy=False)
     invoice_status = fields.Selection([

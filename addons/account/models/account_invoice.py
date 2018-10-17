@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.tools import float_is_zero, float_compare
+from odoo.tools import float_is_zero, float_compare, sql
 from odoo.tools.misc import formatLang
 
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
@@ -1197,7 +1197,7 @@ class AccountInvoiceLine(models.Model):
     name = fields.Text(string='Description', required=True)
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.")
-    sequence = fields.Integer(default=10,
+    sequence = fields.Integer(default=sql.default_sequence(field='sequence'),
         help="Gives the sequence of this line when displaying the invoice.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)

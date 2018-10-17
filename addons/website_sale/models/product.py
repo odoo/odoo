@@ -3,7 +3,7 @@
 from odoo import api, fields, models, tools, _
 import odoo.addons.decimal_precision as dp
 from odoo.tools.translate import html_translate
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, sql
 
 
 class ProductStyle(models.Model):
@@ -58,7 +58,7 @@ class ProductPublicCategory(models.Model):
     name = fields.Char(required=True, translate=True)
     parent_id = fields.Many2one('product.public.category', string='Parent Category', index=True)
     child_id = fields.One2many('product.public.category', 'parent_id', string='Children Categories')
-    sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
+    sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.", default=sql.default_sequence)
     # NOTE: there is no 'default image', because by default we don't show
     # thumbnails for categories. However if we have a thumbnail for at least one
     # category, then we display a default image on the other, so that the
