@@ -129,11 +129,13 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         user_activities = {}
         for activity in activity_data:
             if not user_activities.get(activity['model']):
+                module = self.env[activity['model']]._original_module
+                icon = module and modules.module.get_module_icon(module)
                 user_activities[activity['model']] = {
                     'name': model_names[activity['id']],
                     'model': activity['model'],
                     'type': 'activity',
-                    'icon': modules.module.get_module_icon(self.env[activity['model']]._original_module),
+                    'icon': icon,
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                 }
             user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
