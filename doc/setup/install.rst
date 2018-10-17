@@ -395,6 +395,13 @@ Source installation requires manually installing dependencies:
 
         C:\> npm install -g rtlcss
 
+    It is then necessary to edit the System Environment's variable
+    :envvar:`PATH` and add the folder where `rtlcss.cmd` is located. Typically:
+
+    .. code-block:: console
+
+        C:\Users\<user>\AppData\Roaming\npm\
+
 
 Fetch the sources
 -----------------
