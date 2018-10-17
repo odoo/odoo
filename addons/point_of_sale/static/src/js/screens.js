@@ -1224,6 +1224,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         fields.id           = partner.id || false;
         fields.country_id   = fields.country_id || false;
 
+        var contents = this.$(".client-details-contents");
+        contents.off("click", ".button.save");
+
         new Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
             self.saved_client_details(partner_id);
         },function(err,event){
@@ -1237,6 +1240,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 'title': _t('Error: Could not Save Changes'),
                 'body': error_body,
             });
+            contents.on('click','.button.save',function(){ self.save_client_details(partner); });
         });
     },
     
@@ -1254,6 +1258,8 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 // has created, and reload_partner() must have loaded the newly created partner. 
                 self.display_client_details('hide');
             }
+        }).always(function(){
+            $(".client-details-contents").on('click','.button.save',function(){ self.save_client_details(partner); });
         });
     },
 
