@@ -490,11 +490,12 @@ class PosOrder(models.Model):
         default=lambda self: self.env.uid,
         states={'done': [('readonly', True)], 'invoiced': [('readonly', True)]},
     )
-    amount_tax = fields.Float(string='Taxes', digits=0, readonly=True, required=True)
-    amount_total = fields.Float(string='Total', digits=0, readonly=True, required=True)
-    amount_paid = fields.Float(string='Paid', states={'draft': [('readonly', False)]},
+    currency_id = fields.Many2one('res.currency', 'Currency', related='pricelist_id.currency_id')
+    amount_tax = fields.Monetary(string='Taxes', digits=0, readonly=True, required=True)
+    amount_total = fields.Monetary(string='Total', digits=0, readonly=True, required=True)
+    amount_paid = fields.Monetary(string='Paid', states={'draft': [('readonly', False)]},
         readonly=True, digits=0, required=True)
-    amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
+    amount_return = fields.Monetary(string='Returned', digits=0, required=True, readonly=True)
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)]}, readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
@@ -966,11 +967,12 @@ class PosOrderLine(models.Model):
     name = fields.Char(string='Line No', required=True, copy=False)
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
-    price_unit = fields.Float(string='Unit Price', digits=0)
+    currency_id = fields.Many2one('res.currency', 'Currency', related='order_id.currency_id')
+    price_unit = fields.Monetary(string='Unit Price', digits=0)
     qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), default=1)
-    price_subtotal = fields.Float(string='Subtotal w/o Tax', digits=0,
+    price_subtotal = fields.Monetary(string='Subtotal w/o Tax', digits=0,
         readonly=True, required=True)
-    price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
+    price_subtotal_incl = fields.Monetary(string='Subtotal', digits=0,
         readonly=True, required=True)
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
