@@ -163,10 +163,7 @@ var SearchableThread = Thread.extend({
      */
     _fetchMessages: function (pDomain, loadMore) {
         var self = this;
-
         var domain = this._getThreadDomain();
-        var moderatedChannelIds = typeof(this._id) === 'number' ? [this._id] : false;
-
         var cache = this._getCache(pDomain);
         if (pDomain) {
             domain = domain.concat(pDomain || []);
@@ -179,11 +176,7 @@ var SearchableThread = Thread.extend({
             model: 'mail.message',
             method: 'message_fetch',
             args: [domain],
-            kwargs: {
-                moderated_channel_ids: moderatedChannelIds,
-                limit: this._FETCH_LIMIT,
-                context: session.user_context
-            },
+            kwargs: this._getFetchMessagesKwargs(),
         }).then(function (messages) {
             if (!cache.allHistoryLoaded) {
                 cache.allHistoryLoaded = messages.length < self._FETCH_LIMIT;
@@ -217,6 +210,19 @@ var SearchableThread = Thread.extend({
             };
         }
         return this._cache[stringifiedDomain];
+    },
+    /**
+     * Get the kwargs that are passed to the server with the 'message_fetch'
+     * RPC.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getFetchMessagesKwargs: function () {
+        return {
+            limit: this._FETCH_LIMIT,
+            context: session.user_context
+        };
     },
     /**
      * Get the domain to fetch all the messages in the current thread
