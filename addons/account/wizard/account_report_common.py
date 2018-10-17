@@ -41,8 +41,7 @@ class AccountCommonReport(models.TransientModel):
         self.ensure_one()
         data = {}
         model = self.env.context.get('active_model', 'ir.ui.menu')
-        active_ids = self.env[model].get_active_records().ids
-        data['ids'] = active_ids
+        data['ids'] = self.env[model].get_active_records().ids
         data['model'] = model
         data['form'] = self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'company_id'])[0]
         used_context = self._build_contexts(data)
