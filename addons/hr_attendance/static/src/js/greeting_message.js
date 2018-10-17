@@ -138,7 +138,7 @@ var GreetingMessage = AbstractAction.extend({
 
     _onBarcodeScanned: function(ev) {
         var self = this;
-        if (this.attendanceBarcode !== barcode){
+        if (this.attendanceBarcode !== ev.data.barcode){
             if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
                 clearTimeout(this.return_to_main_menu);
             }
@@ -146,7 +146,7 @@ var GreetingMessage = AbstractAction.extend({
             this._rpc({
                     model: 'hr.employee',
                     method: 'attendance_scan',
-                    args: [barcode, ],
+                    args: [ev.data.barcode, ],
                 })
                 .then(function (result) {
                     if (result.action) {

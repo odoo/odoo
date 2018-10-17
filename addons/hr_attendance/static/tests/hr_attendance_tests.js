@@ -95,11 +95,11 @@ QUnit.module('HR Attendance', {
             },
         });
         clientAction.appendTo($target);
-        core.bus.trigger('barcode_scanned', 1);
-        core.bus.trigger('barcode_scanned', 1);
+        core.bus.trigger('barcode_scanned', {barcode: 1});
+        core.bus.trigger('barcode_scanned', {barcode: 1});
         assert.strictEqual(rpcCount, 1, 'RPC call should have been done only once.');
 
-        core.bus.trigger('barcode_scanned', 2);
+        core.bus.trigger('barcode_scanned', {barcode: 2});
         assert.strictEqual(rpcCount, 1, 'RPC call should have been done only once.');
 
         clientAction.destroy();
@@ -152,7 +152,7 @@ QUnit.module('HR Attendance', {
         createGreetingMessage ($target, 1);
         assert.strictEqual(clientActions.length, 1, 'Number of clientAction must = 1.');
 
-        core.bus.trigger('barcode_scanned', 1);
+        core.bus.trigger('barcode_scanned', {barcode: 1});
         /*
             As action is given when instantiate GreetingMessage, we simulate that we come from the KioskMode
             So rescanning the same barcode won't lead to another RPC.
@@ -160,16 +160,16 @@ QUnit.module('HR Attendance', {
         assert.strictEqual(clientActions.length, 1, 'Number of clientActions must = 1.');
         assert.strictEqual(rpcCount, 0, 'RPC call should not have been done.');
 
-        core.bus.trigger('barcode_scanned', 2);
+        core.bus.trigger('barcode_scanned', {barcode: 2});
         assert.strictEqual(clientActions.length, 2, 'Number of clientActions must = 2.');
         assert.strictEqual(rpcCount, 1, 'RPC call should have been done only once.');
-        core.bus.trigger('barcode_scanned', 2);
+        core.bus.trigger('barcode_scanned', {barcode: 2});
         assert.strictEqual(clientActions.length, 2, 'Number of clientActions must = 2.');
         assert.strictEqual(rpcCount, 1, 'RPC call should have been done only once.');
 
-        core.bus.trigger('barcode_scanned', 1);
+        core.bus.trigger('barcode_scanned', {barcode: 1});
         assert.strictEqual(clientActions.length, 3, 'Number of clientActions must = 3.');
-        core.bus.trigger('barcode_scanned', 1);
+        core.bus.trigger('barcode_scanned', {barcode: 1});
         assert.strictEqual(clientActions.length, 3, 'Number of clientActions must = 3.');
         assert.strictEqual(rpcCount, 2, 'RPC call should have been done only twice.');
 
