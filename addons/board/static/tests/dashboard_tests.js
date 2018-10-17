@@ -6,6 +6,7 @@ var BoardView = require('board.BoardView');
 var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
 var ListRenderer = require('web.ListRenderer');
+var pyeval = require('web.pyeval');
 
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
@@ -188,6 +189,57 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     assert.strictEqual(form.$('.oe_action').length, 0, "should have no displayed action");
 
     assert.verifySteps(['load action', 'edit custom', 'edit custom', 'edit custom', 'edit custom']);
+    form.destroy();
+});
+
+QUnit.test('can render an action without view_mode attribute', function (assert) {
+    // The view_mode attribute is automatically set to the 'action' nodes when
+    // the action is added to the dashboard using the 'Add to dashboard' button
+    // in the searchview. However, other dashboard views can be written by hand
+    // (see openacademy tutorial), and in this case, we don't want hardcode
+    // action's params (like context or domain), as the dashboard can directly
+    // retrieve them from the action. Same applies for the view_type, as the
+    // first view of the action can be used, by default.
+    assert.expect(2);
+
+    var form = createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action string="ABC" name="51" context="{\'a\': 1}"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        archs: {
+            'partner,4,list':
+                '<tree string="Partner"><field name="foo"/></tree>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/static/src/img/layout_1-1-1.png') {
+                return $.when();
+            }
+            if (route === '/web/action/load') {
+                return $.when({
+                    context: '{"b": 2}',
+                    domain: '[["foo", "=", "yop"]]',
+                    res_model: 'partner',
+                    views: [[4, 'list'], [false, 'form']],
+                });
+            }
+            if (route === '/web/dataset/search_read') {
+                assert.deepEqual(args.domain, [['foo', '=', 'yop']],
+                    "should use the domain of the action");
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual(form.$('.oe_action:contains(ABC) .o_list_view').length, 1,
+        "the list view (first view of action) should have been rendered correctly");
+
     form.destroy();
 });
 
@@ -689,6 +741,46 @@ QUnit.test('save to dashboard actions with flag keepSearchView', function (asser
     $('.o_add_to_dashboard_button').click();
 
     actionManager.destroy();
+});
+
+QUnit.test("Views should be loaded in the user's language", function (assert) {
+    assert.expect(2);
+    var form = createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        session: {user_context: {lang: 'fr_FR'}},
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{\'lang\': \'en_US\'}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'load_views') {
+                assert.deepEqual(pyeval.eval('context', args.kwargs.context), {lang: 'fr_FR'},
+                    'The views should be loaded with the correct context');
+            }
+            if (route === "/web/dataset/search_read") {
+                assert.deepEqual(args.context, {lang: 'fr_FR'},
+                    'The data should be loaded with the correct context');
+            }
+            if (route === '/web/action/load') {
+                return $.when({
+                    res_model: 'partner',
+                    views: [[4, 'list']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,list':
+                '<list string="Partner"><field name="foo"/></list>',
+        },
+    });
+
+    form.destroy();
 });
 
 });

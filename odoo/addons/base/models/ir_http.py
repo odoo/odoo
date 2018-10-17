@@ -288,7 +288,7 @@ class IrHttp(models.AbstractModel):
         # access token grant access
         if model == 'ir.attachment' and access_token:
             obj = obj.sudo()
-            if not consteq(obj.access_token or '', access_token):
+            if not consteq(obj.access_token or u'', access_token):
                 return (403, [], None)
 
         # check read access
