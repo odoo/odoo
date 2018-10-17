@@ -89,4 +89,4 @@ class SetupBarBankConfigWizard(models.TransientModel):
         """ Called by the validation button of this wizard. Serves as an
         extension hook in account_bank_statement_import.
         """
-        pass
+        self.env.user.company_id.set_onboarding_step_done('account_setup_bank_data_state')
