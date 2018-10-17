@@ -74,3 +74,16 @@ class MailThread(models.AbstractModel):
                 blacklist_rec = self.env['mail.blacklist'].sudo()._add(email)
                 blacklist_rec._message_log(
                     'This email has been automatically blacklisted because of too much bounced.')
+
+    def _reset_message_bounce(self, email_from):
+        """Called by ``message_process`` when a new mail is received from an email address.
+        If the email is related to a contact, we consider that the number of message_bounce
+        is not relevant anymore as the email is valid - as we received an email from this
+        address
+
+        :param email_from: email address that sent the incoming email."""
+        super(MailThread, self)._reset_message_bounce(email_from)
+        if email_from:
+            partners = self._get_records_from_email('mail.mass_mailing.contact', email_from)
+            for partner in partners:
+                partner.message_bounce = 0

@@ -8,10 +8,12 @@
             <field name="model">crm.lead.tag</field>
             <field name="arch" type="xml">
                 <form string="Lead Tags">
-                    <group>
-                        <field name="name"/>
-                        <field name="color" groups="base.group_no_one"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" groups="base.group_no_one"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -761,10 +763,12 @@
             <field name="model">crm.lost.reason</field>
             <field name="arch" type="xml">
                 <form string="Channel">
-                    <group>
-                        <field name="name"/>
-                        <field name="active"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

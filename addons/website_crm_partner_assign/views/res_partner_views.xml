@@ -10,10 +10,12 @@
             <field name="model">res.partner.activation</field>
             <field name="arch" type="xml">
                 <form string="Activation">
-                    <group col="4">
-                        <field name="name" />
-                        <field name="sequence" />
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name" />
+                            <field name="sequence" />
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

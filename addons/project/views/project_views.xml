@@ -18,7 +18,7 @@
                <search string="Tasks">
                     <field name="name" string="Tasks"/>
                     <field name="tag_ids"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" operator="child_of"/>
                     <field name="project_id"/>
                     <field name="user_id"/>
                     <field name="stage_id"/>
@@ -865,17 +865,21 @@
                 </search>
             </field>
         </record>
+
         <record model="ir.ui.view" id="project_tags_form_view">
             <field name="name">Tags</field>
             <field name="model">project.tags</field>
             <field name="arch" type="xml">
                 <form string="Tags">
-                    <group>
-                        <field name="name"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
+
         <record id="project_tags_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
             <field name="res_model">project.tags</field>
