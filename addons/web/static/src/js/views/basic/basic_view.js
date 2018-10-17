@@ -378,6 +378,10 @@ var BasicView = AbstractView.extend({
                     if (!(dependency_name in fields)) {
                         fields[dependency_name] = dependency_dict;
                     }
+
+                    if (fv.fields && !(dependency_name in fv.fields)) {
+                        fv.fields[dependency_name] = dependency_dict;
+                    }
                 }
             }
             return false;

@@ -4,6 +4,7 @@
 import datetime
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import clean_context
 
 
 class ProductReplenish(models.TransientModel):
@@ -51,7 +52,7 @@ class ProductReplenish(models.TransientModel):
         uom_reference = self.product_id.uom_id
         self.quantity = self.product_uom_id._compute_quantity(self.quantity, uom_reference)
         try:
-            self.env['procurement.group'].run(
+            self.env['procurement.group'].with_context(clean_context(self.env.context)).run(
                 self.product_id,
                 self.quantity,
                 uom_reference,

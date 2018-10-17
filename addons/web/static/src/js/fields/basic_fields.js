@@ -434,6 +434,10 @@ var FieldDate = InputField.extend({
         this._super.apply(this, arguments);
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
+        this.datepickerOptions = _.defaults(
+            this.nodeOptions.datepicker || {},
+            {defaultDate: this.value}
+        );
     },
     /**
      * In edit mode, instantiates a DateWidget datepicker and listen to changes.
@@ -498,13 +502,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(
-            this,
-            _.defaults(
-                this.nodeOptions.datepicker || {},
-                {defaultDate: this.value}
-            )
-        );
+        return new datepicker.DateWidget(this, this.datepickerOptions);
     },
 
     /**
@@ -522,6 +520,17 @@ var FieldDate = InputField.extend({
 var FieldDateTime = FieldDate.extend({
     supportedFieldTypes: ['datetime'],
 
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        if (this.value) {
+            var offset = this.getSession().getTZOffset(this.value);
+            var displayedValue = this.value.clone().add(offset, 'minutes');
+            this.datepickerOptions.defaultDate = displayedValue;
+        }
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -552,10 +561,8 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _makeDatePicker: function () {
-        var value = this.value && this.value.clone().add(this.getSession().getTZOffset(this.value), 'minutes');
-        return new datepicker.DateTimeWidget(this, {defaultDate: value});
+        return new datepicker.DateTimeWidget(this, this.datepickerOptions);
     },
-
     /**
      * Set the datepicker to the right value rather than the default one.
      *
@@ -952,6 +959,9 @@ var HandleWidget = AbstractField.extend({
 
 var FieldEmail = InputField.extend({
     className: 'o_field_email',
+    events: _.extend({}, InputField.prototype.events, {
+        'click': '_onClick',
+    }),
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
 
@@ -992,7 +1002,21 @@ var FieldEmail = InputField.extend({
         this.$el.text(this.value)
             .addClass('o_form_uri o_text_overflow')
             .attr('href', this.prefix + ':' + this.value);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prevent the URL click from opening the record (when used on a list).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick: function (ev) {
+        ev.stopPropagation();
+    },
 });
 
 var FieldPhone = FieldEmail.extend({
@@ -1019,6 +1043,9 @@ var FieldPhone = FieldEmail.extend({
 
 var UrlWidget = InputField.extend({
     className: 'o_field_url',
+    events: _.extend({}, InputField.prototype.events, {
+        'click': '_onClick',
+    }),
     supportedFieldTypes: ['char'],
 
     /**
@@ -1060,7 +1087,21 @@ var UrlWidget = InputField.extend({
             .addClass('o_form_uri o_text_overflow')
             .attr('target', '_blank')
             .attr('href', this.value);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prevent the URL click from opening the record (when used on a list).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick: function (ev) {
+        ev.stopPropagation();
+    },
 });
 
 var AbstractFieldBinary = AbstractField.extend({
@@ -1322,19 +1363,23 @@ var FieldPdfViewer = FieldBinaryFile.extend({
     },
     /**
      * @private
+     * @param {string} [fileURI] file URI if specified
      * @returns {string} the pdf viewer URI
      */
-    _getURI: function () {
-        var queryObj = {
-            model: this.model,
-            field: this.name,
-            id: this.res_id,
-        };
+    _getURI: function (fileURI) {
         var page = this.recordData[this.name + '_page'] || 1;
-        var queryString = $.param(queryObj);
-        var url = encodeURIComponent('/web/image?' + queryString);
+        if (!fileURI) {
+            var queryObj = {
+                model: this.model,
+                field: this.name,
+                id: this.res_id,
+            };
+            var queryString = $.param(queryObj);
+            fileURI = '/web/image?' + queryString
+        }
+        fileURI = encodeURIComponent(fileURI);
         var viewerURL = '/web/static/lib/pdfjs/web/viewer.html?file=';
-        return viewerURL + url + '#page=' + page;
+        return viewerURL + fileURI + '#page=' + page;
     },
     /**
      * @private
@@ -1378,14 +1423,16 @@ var FieldPdfViewer = FieldBinaryFile.extend({
      */
     on_file_change: function (ev) {
         this._super.apply(this, arguments);
+        var files = ev.target.files;
+        if (!files || files.length === 0) {
+            return;
+        }
+        // TOCheck: is there requirement to fallback on FileReader if browser don't support URL
+        var fileURI = URL.createObjectURL(files[0]);
         if (this.PDFViewerApplication) {
-            var files = ev.target.files;
-            if (!files || files.length === 0) {
-              return;
-            }
-            var file = files[0];
-            // TOCheck: is there requirement to fallback on FileReader if browser don't support URL
-            this.PDFViewerApplication.open(URL.createObjectURL(file), 0);
+            this.PDFViewerApplication.open(fileURI, 0);
+        } else {
+            this.$('.o_pdfview_iframe').attr('src', this._getURI(fileURI));
         }
     },
     /**

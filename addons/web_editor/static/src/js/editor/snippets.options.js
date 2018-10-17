@@ -754,6 +754,7 @@ registry.colorpicker = SnippetOption.extend({
      */
     _onColorResetButtonClick: function () {
         this.$target.removeClass(this.classes);
+        self.$target.trigger('content_changed');
         this.$el.find('.colorpicker button.selected').removeClass('selected');
     },
 });
@@ -898,7 +899,7 @@ registry.background = SnippetOption.extend({
      * @param {string} value
      */
     _setCustomBackground: function (value) {
-        this.__customImageSrc = this._getSrcFromCssValue(value);
+        this.__customImageSrc = value;
         this.background(false, this.__customImageSrc);
         this.$target.addClass('oe_custom_bg');
         this._setActive();
