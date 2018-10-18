@@ -933,7 +933,9 @@ registry.background = SnippetOption.extend({
      */
     setTarget: function () {
         this._super.apply(this, arguments);
+        // TODO should be automatic for all options as equal to the start method
         this.bindBackgroundEvents();
+        this.__customImageSrc = this._getSrcFromCssValue();
     },
 
     //--------------------------------------------------------------------------
