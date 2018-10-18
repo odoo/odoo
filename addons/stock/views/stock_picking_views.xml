@@ -323,14 +323,12 @@
                         </page>
                         <page string="Additional Info" name="extra">
                             <group>
-                                <group>
+                                <group string="Other Information" name="other_infos">
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                                </group>
-                                <group>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="priority"/>
                                     <field name="group_id" groups="base.group_no_one"/>
-                                    <field name="priority" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                                 <field name="note" string="Note" placeholder="Add an internal note that will be printed on the Picking Operations sheet"/>
                             </group>
