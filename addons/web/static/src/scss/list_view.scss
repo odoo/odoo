@@ -23,6 +23,9 @@
         border-bottom: 1px solid #cacaca;
         > tr > th {
             border-left: 1px solid #dfdfdf;
+            @include media-breakpoint-down(sm) {
+                white-space: nowrap;
+            }
             &:not(.o_column_sortable):hover {
                 cursor: default;
             }
