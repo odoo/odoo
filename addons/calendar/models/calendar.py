@@ -890,18 +890,18 @@ class Meeting(models.Model):
     def _inverse_dates(self):
         for meeting in self:
             if meeting.allday:
-                tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
 
+                # Convention break:
+                # stop and start are NOT in UTC in allday event
+                # in this case, they actually represent a date
+                # i.e. Christmas is on 25/12 for everyone
+                # even if people don't celebrate it simultaneously
                 enddate = fields.Datetime.from_string(meeting.stop_date)
-                enddate = tz.localize(enddate)
                 enddate = enddate.replace(hour=18)
-                enddate = enddate.astimezone(pytz.utc)
                 meeting.stop = fields.Datetime.to_string(enddate)
 
                 startdate = fields.Datetime.from_string(meeting.start_date)
-                startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
-                startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
-                startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
+                startdate = startdate.replace(hour=8)  # Set 8 AM
                 meeting.start = fields.Datetime.to_string(startdate)
             else:
                 meeting.write({'start': meeting.start_datetime,

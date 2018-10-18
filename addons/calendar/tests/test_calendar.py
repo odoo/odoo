@@ -275,3 +275,20 @@ class TestCalendar(TransactionCase):
         self.assertEqual(test_event.res_model, test_record._name)
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
+
+    def test_event_allday(self):
+        self.env.user.tz = 'Pacific/Honolulu'
+
+        event = self.CalendarEvent.create({
+            'name': 'All Day',
+            'start': "2018-10-16 00:00:00",
+            'start_date': "2018-10-16",
+            'start_datetime': False,
+            'stop': "2018-10-18 00:00:00",
+            'stop_date': "2018-10-18",
+            'stop_datetime': False,
+            'allday': True,
+        })
+
+        self.assertEqual(event.start, '2018-10-16 08:00:00')
+        self.assertEqual(event.stop, '2018-10-18 18:00:00')
