@@ -2105,6 +2105,160 @@ QUnit.test('chatter: new messages on document without any "display_name"', funct
     form.destroy();
 });
 
+QUnit.test('chatter: suggested partner auto-follow on message post', function (assert) {
+    // need post_refresh 'recipient' to auto-follow suggested recipients
+    // whose checkbox is checked.
+    assert.expect(20);
+
+    var self = this;
+    this.data.partner.records[0].message_follower_ids = [1];
+    this.data.partner.records[0].message_ids = [1];
+    this.data['mail.message'].records = [{
+        author_id: ["1", "John Doe"],
+        body: "A message",
+        date: "2016-12-20 09:35:40",
+        id: 1,
+        is_note: false,
+        is_discussion: true,
+        is_notification: false,
+        is_starred: false,
+        model: 'partner',
+        res_id: 2,
+    }];
+
+    var followers = [];
+    followers.push({
+        id: 1,
+        is_uid: true,
+        name: "Admin",
+        email: "admin@example.com",
+        res_id: 5,
+        res_model: 'partner',
+    });
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                    '<field name="message_ids" widget="mail_thread" options="{\'post_refresh\': \'recipients\'}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'message_get_suggested_recipients') {
+                return $.when({2: [
+                        [
+                            8,
+                            'DemoUser <demo-user@example.com>',
+                            'Customer Email',
+                        ],
+                    ]
+                });
+            }
+            if (args.method === 'message_post') {
+                assert.ok(args.kwargs.context.mail_post_autofollow,
+                    "should autofollow checked suggested partners when posting message");
+                assert.deepEqual(args.kwargs.partner_ids, [8],
+                    "should have provided Demo User to auto-follow chatter on message_post");
+
+                // add demo user in followers
+                self.data.partner.records[0].message_follower_ids.push(2);
+                followers.push({
+                    id: 2,
+                    is_uid: true,
+                    name: "Demo User",
+                    email: "demo-user@example.com",
+                    res_id: 8,
+                    res_model: 'partner',
+                });
+
+                // post a legit message so that it does not crashes
+                var lastMessageData = _.max(this.data['mail.message'].records, function (messageData) {
+                    return messageData.id;
+                });
+                var messageID = lastMessageData.id + 1;
+                this.data['mail.message'].records.push({
+                    author_id: ["42", "Me"],
+                    body: args.kwargs.body,
+                    date: "2016-12-20 10:35:40",
+                    id: messageID,
+                    is_note: args.kwargs.subtype === 'mail.mt_note',
+                    is_discussion: args.kwargs.subtype === 'mail.mt_comment',
+                    is_notification: false,
+                    is_starred: false,
+                    model: 'partner',
+                    res_id: 2,
+                });
+                return $.when(messageID);
+            }
+            if (route === '/mail/read_followers') {
+                return $.when({
+                    followers: followers,
+                });
+            }
+            return this._super(route, args);
+        },
+        session: {},
+    });
+
+    assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain one message");
+    assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the message should be a discussion");
+    assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('A message') >= 0,
+        "the message's body should be correct");
+    assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('John Doe') >= 0,
+        "the message's author should be correct");
+    assert.strictEqual(form.$('.o_followers').length, 1,
+        "should display follower widget");
+    assert.strictEqual(form.$('.o_followers_count').text(), "1",
+        "should have a single follower (widget counter)");
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner').length, 1,
+        "should have a single follower (listed partners)");
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text(), "Admin",
+        "should have 'Admin' as follower");
+
+    // open composer
+    form.$('.o_chatter_button_new_message').click();
+    assert.ok(!$('.oe_chatter .o_thread_composer').hasClass('o_hidden'), "chatter should be opened");
+    assert.strictEqual($('.o_composer_suggested_partners').length, 1,
+        "should display suggested partners");
+    assert.strictEqual($('.o_composer_suggested_partners > div').length, 1,
+        "should display 1 suggested partner");
+    assert.ok($('.o_composer_suggested_partners input').is(':checked'),
+        "should have checkbox that is checked by default");
+    assert.strictEqual($('.o_composer_suggested_partners input').data('fullname'),
+        "DemoUser <demo-user@example.com>",
+        "should have partner suggestion with correct fullname (data)");
+    assert.strictEqual($('.o_composer_suggested_partners label').text().replace(/\s+/g, ''),
+        "DemoUser(demo-user@example.com)",
+        "should have partner suggestion with correct fullname (rendering)");
+
+    // send message
+    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_button_send').click();
+
+    assert.strictEqual(form.$('.o_followers_count').text(), "2",
+        "should have a two followers (widget counter)");
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner').length, 2,
+        "should have two followers (listed partners)");
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text(),
+        "Admin",
+        "should have 'Admin' as follower");
+    assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="8"]').text(),
+        "Demo User",
+        "should have 'Demo User' as follower");
+
+    //cleanup
+    form.destroy();
+});
+
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach: function () {
         this.data = {

@@ -185,7 +185,7 @@ class link_tracker(models.Model):
         link = super(link_tracker, self).create(create_vals)
 
         code = self.env['link.tracker.code'].get_random_code_string()
-        self.env['link.tracker.code'].create({'code': code, 'link_id': link.id})
+        self.env['link.tracker.code'].sudo().create({'code': code, 'link_id': link.id})
 
         return link
 
