@@ -178,6 +178,7 @@ CREATE TABLE res_company (
     name varchar NOT NULL,
     partner_id integer,
     currency_id integer,
+    sequence integer,
     primary key(id)
 );
 
