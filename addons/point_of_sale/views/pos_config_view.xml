@@ -42,6 +42,14 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <div class="row mt16 o_settings_container">
+                        <div id="company" class="col-12 col-lg-6 o_setting_box" groups="base.group_multi_company">
+                            <div class="o_setting_right_pane">
+                                <label for="company_id"/>
+                                <div><field name="company_id"/></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt16 o_settings_container">
                       <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
                           <field name="module_pos_restaurant"/>
@@ -51,10 +59,19 @@
                           <button string="Save" type="object" name="execute" class="oe_highlight" id="btn_use_pos_restaurant" attrs="{'invisible': [('module_pos_restaurant','=',False)]}" />
                         </div>
                       </div>
-                    </div>
-                    <div class="row mt16" id="company" groups="base.group_multi_company">
-                        <label for="company_id" class="col-lg-2"/>
-                        <field name="company_id"/>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                             title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_hr"/>
+                            </div>
+                            <div class="o_setting_right_pane" id="login_with_employees">
+                                <span class="o_form_label">Log in with Employees</span>
+                                <div class="text-muted">
+                                    Use employee credentials to log in to the PoS session and switch cashier
+                                </div>
+                                <button string="Save" type="object" name="execute" class="oe_highlight" id="btn_use_employees" attrs="{'invisible': [('module_pos_hr','=',False)]}" />
+                            </div>
+                        </div>
                     </div>
                     <h2 name="order">Order Interface</h2>
                     <div class="row mt16 o_settings_container">
@@ -224,7 +241,7 @@
                         </div>
                     </div>
                     <h2>Pricing</h2>
-                    <div class="row mt16 o_settings_container">
+                    <div class="row mt16 o_settings_container" id="pricing">
                         <div class="col-xs-12 col-lg-6 o_setting_box" id="product_prices"> 
                             <div class="o_setting_right_pane"> 
                                 <label for="iface_tax_included" string="Product Prices"/>  
@@ -292,17 +309,6 @@
                                     <div class="mt16" id="btn_use_pos_loyalty">
                                         <button string="Save" type="object" name="execute" class="oe_highlight"/>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box" title="Only users with Manager access rights for PoS app can modify the product prices on orders.">
-                            <div class="o_setting_left_pane">
-                                <field name="restrict_price_control"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="restrict_price_control" string="Price Control"/>
-                                <div class="text-muted">
-                                    Restrict price modification to managers
                                 </div>
                             </div>
                         </div>

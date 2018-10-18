@@ -139,6 +139,11 @@
                                         <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="user_id" string="Related User"/>
                                     </group>
+                                    <group string="Login Information" name="identification_group">
+                                        <field name="pin"/>
+                                        <field name="barcode"/>
+                                        <button string="Generate Badge ID" class="btn btn-primary" type="object" name="generate_random_barcode" attrs="{'invisible': [('barcode', '!=', False)]}"/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>

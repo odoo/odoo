@@ -55,6 +55,8 @@ exports.PosModel = Backbone.Model.extend({
         this.company = null;
         this.user = null;
         this.users = [];
+        this.employee = {name: null, id: null, barcode: null, user_id:null, pin:null};
+        this.employees = [];
         this.partners = [];
         this.cashregisters = [];
         this.taxes = [];
@@ -89,7 +91,7 @@ exports.PosModel = Backbone.Model.extend({
 
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched.
-        // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
+        // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used.
         this.ready = this.load_server_data().then(function(){
             return self.after_load_server_data();
         });
@@ -162,9 +164,16 @@ exports.PosModel = Backbone.Model.extend({
 
     },{
         model:  'res.users',
-        fields: ['name','company_id'],
+        fields: ['name','company_id', 'id'],
         ids:    function(self){ return [session.uid]; },
-        loaded: function(self,users){ self.user = users[0]; },
+        loaded: function(self,users){
+            self.user = users[0];
+            self.user.role = 'manager';
+            self.employee.name = self.user.name;
+            self.employee.user_id = [self.user.id, self.user.name];
+            self.employees = [self.employee];
+            self.set_cashier(self.employee);
+        },
     },{
         model:  'res.company',
         fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'tax_calculation_rounding_method'],
@@ -262,39 +271,6 @@ exports.PosModel = Backbone.Model.extend({
                 self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
             }
        },
-    },{
-        model:  'res.users',
-        fields: ['name','pos_security_pin','groups_id','barcode'],
-        domain: function(self){ return [['company_id','=',self.user.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
-        loaded: function(self,users){
-            // we attribute a role to the user, 'cashier' or 'manager', depending
-            // on the group the user belongs.
-            var pos_users = [];
-            var current_cashier = self.get_cashier();
-            for (var i = 0; i < users.length; i++) {
-                var user = users[i];
-                for (var j = 0; j < user.groups_id.length; j++) {
-                    var group_id = user.groups_id[j];
-                    if (group_id === self.config.group_pos_manager_id[0]) {
-                        user.role = 'manager';
-                        break;
-                    } else if (group_id === self.config.group_pos_user_id[0]) {
-                        user.role = 'cashier';
-                    }
-                }
-                if (user.role) {
-                    pos_users.push(user);
-                }
-                // replace the current user with its updated version
-                if (user.id === self.user.id) {
-                    self.user = user;
-                }
-                if (user.id === current_cashier.id) {
-                    self.set_cashier(user);
-                }
-            }
-            self.users = pos_users;
-        },
     },{
         model: 'stock.location',
         fields: [],
@@ -653,13 +629,13 @@ exports.PosModel = Backbone.Model.extend({
     get_cashier: function(){
         // reset the cashier to the current user if session is new
         if (this.db.load('pos_session_id') !== this.pos_session.id) {
-            this.set_cashier(this.user);
+            this.set_cashier(this.employee);
         }
-        return this.db.get_cashier() || this.get('cashier') || this.user;
+        return this.db.get_cashier() || this.get('cashier') || this.employee;
     },
     // changes the current cashier
-    set_cashier: function(user){
-        this.set('cashier', user);
+    set_cashier: function(employee){
+        this.set('cashier', employee);
         this.db.set_cashier(this.get('cashier'));
     },
     //creates a new empty order and sets it as the current order
@@ -2007,6 +1983,7 @@ exports.Order = Backbone.Model.extend({
         this.orderlines     = new OrderlineCollection();
         this.paymentlines   = new PaymentlineCollection();
         this.pos_session_id = this.pos.pos_session.id;
+        this.employee       = this.pos.employee;
         this.finalized      = false; // if true, cannot be modified.
         this.set_pricelist(this.pos.default_pricelist);
 
@@ -2131,7 +2108,8 @@ exports.Order = Backbone.Model.extend({
             pos_session_id: this.pos_session_id,
             pricelist_id: this.pricelist ? this.pricelist.id : false,
             partner_id: this.get_client() ? this.get_client().id : false,
-            user_id: this.pos.get_cashier().id,
+            user_id: this.pos.user.id,
+            employee_id: this.pos.get_cashier().id,
             uid: this.uid,
             sequence_number: this.sequence_number,
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
