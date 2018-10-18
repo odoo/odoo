@@ -159,7 +159,6 @@ options.registry.carousel = options.Class.extend({
     onBuilt: function () {
         this.id = 'myCarousel' + new Date().getTime();
         this.$target.attr('id', this.id);
-        this.$target.find('[data-slide]').attr('data-cke-saved-href', '#' + this.id);
         this.$target.find('[data-target]').attr('data-target', '#' + this.id);
         this._rebindEvents();
     },
