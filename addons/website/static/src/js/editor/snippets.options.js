@@ -209,7 +209,7 @@ options.registry.carousel = options.Class.extend({
         var index = $active.index();
         this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-        var $clone = this.$('.carousel-item:first').clone(true);
+        var $clone = $active.clone(true);
         $clone.removeClass('active').insertAfter($active);
         _.defer(function () {
             self.$target.carousel().carousel(++index);
