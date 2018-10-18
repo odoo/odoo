@@ -627,7 +627,7 @@ class ProductPackaging(models.Model):
     name = fields.Char('Package Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product')
-    qty = fields.Float('Contained Quantity', help="The total number of products you can have per pallet or box.")
+    qty = fields.Float('Contained Quantity', help="Quantity of products contained in the packaging.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification.")
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
 
