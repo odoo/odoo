@@ -27,6 +27,7 @@
                     <field name="name"/>
                     <field name="date_order"/>
                     <field name="session_id" />
+                    <field string="User" name="user_id"/>
                     <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     <field name="fiscal_position_id" options="{'no_create': True}"/>
                     <field name="invoice_group" invisible="1"/>
@@ -88,7 +89,6 @@
                         <group string="General Information">
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="location_id" widget="selection" groups="stock.group_stock_multi_locations"/>
-                            <field name="user_id"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="picking_id" readonly="1"/>
                             <field name="pos_reference"/>
@@ -127,7 +127,11 @@
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_record_top">
                                 <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title"><span><t t-esc="record.user_id.value"/></span></strong>
+                                    <strong class="o_kanban_record_title">
+                                        <span>
+                                            <t t-esc="record.user_id"/>
+                                        </span>
+                                    </strong>
                                 </div>
                                 <strong><span class="badge badge-pill"><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount_total"/></span></strong>
                             </div>
@@ -306,7 +310,7 @@
                 <field name="config_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <filter string="Salesperson" name="salesman" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="User" name="user_id" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Session" name="session" domain="[]" context="{'group_by':'session_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Order Date" name="order_month" domain="[]" context="{'group_by':'date_order'}"/>

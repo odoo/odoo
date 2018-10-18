@@ -30,17 +30,15 @@
             <field name="arch" type="xml">
                 <search string="Point of Sale Analysis">
                     <field name="date"/>
-                    <filter string="My Sales" name="my_sales" help="My Sales" domain="[('user_id','=',uid)]"/>
                     <separator/>
                     <filter string="Invoiced" name="invoiced" domain="[('state','=',('invoiced'))]"/>
                     <filter string="Not Invoiced" name="not_invoiced" domain="[('state','=',('paid'))]"/>
                     <field name="config_id"/>
                     <field name="partner_id"/>
-                    <field name="user_id"/>
                     <field name="product_id"/>
                     <field name="product_categ_id"/>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="User" name="User" context="{'group_by':'user_id'}"/>
                         <filter string="Point of Sale" name="pos" context="{'group_by':'config_id'}"/>
                         <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
                         <filter string="Product Category" name="product_category" context="{'group_by':'product_categ_id'}"/>

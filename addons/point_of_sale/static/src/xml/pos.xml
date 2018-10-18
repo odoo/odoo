@@ -6,11 +6,13 @@
             <div class="pos-topheader">
                 <div class="pos-branding">
                     <img class="pos-logo" src="/point_of_sale/static/src/img/logo.png" alt="Logo"/>
-                    <span class="placeholder-UsernameWidget"></span>
                 </div>
                 <div class="pos-rightheader">
                     <span class="placeholder-OrderSelectorWidget"></span>
                     <!-- here goes header buttons -->
+                    <div class="oe_status">
+                        <span class="placeholder-UsernameWidget"></span>
+                    </div>
                 </div>
             </div>
 
@@ -109,7 +111,12 @@
 
     <t t-name="HeaderButtonWidget">
         <div class="header-button">
-            <t t-esc="widget.label" />
+            <t t-if="!widget.icon">
+                <t t-esc="widget.label" />
+            </t>
+            <t t-else="">
+                <i class='fa fa-fw' role="img"/>
+            </t>
         </div>
     </t>
 

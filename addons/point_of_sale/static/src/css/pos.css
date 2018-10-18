@@ -2149,41 +2149,12 @@ td {
     font-family: 'Lato';
     font-family: Lato;
 }
-
-.pos .modal-dialog .popup-textinput{
-    display: flex;
-    flex-direction: column;
-}
-
-.pos .modal-dialog .popup-textinput .title,
-.pos .modal-dialog .popup-textinput .footer{
-    flex: none;
-}
-
-.pos .modal-dialog .popup-textinput textarea{
-    resize: none;
-    flex: auto;
-    margin: 0 20px 80px;
-}
 .pos .modal-dialog .popup-confirm{
     height: 250px;
 }
 .pos .popup-confirm .body {
     overflow: auto;
     height: 120px;
-}
-.pos .modal-dialog .popup-textinput{
-    display: flex;
-    flex-direction: column;
-}
-.pos .modal-dialog .popup-textinput .title,
-.pos .modal-dialog .popup-textinput .footer{
-    flex: none;
-}
-.pos .modal-dialog .popup-textinput textarea{
-    resize: none;
-    flex: auto;
-    margin: 0 20px 80px;
 }
 .pos .popup .title {
     background: rgba(255,255,255,0.5);
@@ -2470,4 +2441,83 @@ td {
 }
 .pos .not-supported-browser img{
     border-collapse: separate;
+}
+
+/*  ********* Login Screen ********* */
+
+.pos .login-overlay{
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height:100%;
+    z-index:1000;
+    background: linear-gradient(to right bottom, #77717e, #c9a8a9);
+}
+.pos .login-overlay:before {
+    content: '';
+    background-image: url(../../img/login-bg-overlay.svg);
+    background-color: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height:100%;
+}
+.pos .screen-login{
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    margin: auto;
+    width:550px;
+    height:300px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    background-color: #F0EEEE;
+    border-radius: 3px;
+    z-index:1200;
+    font-family: 'Lato';
+}
+.pos .login-title{
+    height: 55%;
+    vertical-align: middle;
+    line-height: 5;
+    font-size: larger;
+}
+.pos .login-body{
+    height:33%;
+}
+.pos .login-element{
+    float: left;
+    width: 45%;
+    height: 60%;
+}
+.pos .login-barcode-img{
+    width: 80px;
+    height: 55px;
+    background: white;
+    border: 0px;
+}
+.pos .login-barcode-text{
+    color: #999999;
+    font-size: 13px;
+    padding-top: 0.2em;
+}
+.pos .login-or{
+    font-size: 15px;
+    font-style: italic;
+    float: left;
+    width: 10%;
+    height: 100%;
+    line-height: 5;
+}
+.pos .login-button{
+    font-size: initial;
+    height: 100%;
+    color: #555555;
+    border-radius: 5px;
 }

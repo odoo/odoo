@@ -524,7 +524,7 @@ class PosOrder(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.user.company_id)
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
-        comodel_name='res.users', string='Salesperson',
+        comodel_name='res.users', string='User',
         help="Person who uses the cash register. It can be a reliever, a student or an interim employee.",
         default=lambda self: self.env.uid,
         states={'done': [('readonly', True)], 'invoiced': [('readonly', True)]},
