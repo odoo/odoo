@@ -1369,8 +1369,8 @@ class Meeting(models.Model):
             )
 
             # do not copy the id
-            if data.get('id'):
-                del data['id']
+            if data.get('__id'):
+                del data['__id']
             return meeting_origin.copy(default=data)
 
     @api.multi

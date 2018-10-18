@@ -1872,7 +1872,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         data['__domain'] = expression.AND(sections)
         if len(groupby) - len(annotated_groupbys) >= 1:
             data['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
-        del data['id']
+        del data['__id']
         return data
 
     @api.model
@@ -1977,7 +1977,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
 
         query = """
-            SELECT min("%(table)s".id) AS id, count("%(table)s".id) AS "%(count_field)s" %(extra_fields)s
+            SELECT min("%(table)s".id) AS __id, count("%(table)s".id) AS "%(count_field)s" %(extra_fields)s
             FROM %(from)s
             %(where)s
             %(groupby)s
