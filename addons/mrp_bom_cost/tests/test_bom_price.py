@@ -3,7 +3,7 @@
 
 from odoo.exceptions import UserError
 from odoo.tests import common, Form
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_compare
 
 
 class TestBom(common.TransactionCase):
@@ -166,11 +166,11 @@ class TestBom(common.TransactionCase):
         # Table Head Operation Cost (1 Dozen)
         # --------------------------------------------------------------------------
         # Operation cost calculate for 1 dozens
-        # Cutting        (20 * 12 / 60) * 100 =  400
-        # Drilling       (25 * 12 / 60) * 100 =  500
-        # Fitting        (30 * 12 / 60) * 100 =  600
+        # Cutting        (20 * 1 / 60) * 100 =  33,33
+        # Drilling       (25 * 1 / 60) * 100 =  41,67
+        # Fitting        (30 * 1 / 60) * 100 =  50
         # ----------------------------------------
-        # Operation Cost  1 dozen (1500 per dozen) and 125 for 1 Unit
+        # Operation Cost 1 dozen (125 per dozen) and 10.42 for 1 Unit
         # --------------------------------------------------------------------------
 
         self.bom_2.routing_id = routing_1.id
@@ -180,8 +180,8 @@ class TestBom(common.TransactionCase):
         # Total cost of Dining Table = (550) + Total cost of operations (125) = 675.0
         self.assertEquals(float_round(self.dining_table.standard_price, precision_digits=2), 675.0, "After computing price from BoM price should be 612.5")
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
-        # Total cost of Dining Table = (718.75) + Total cost of all operations (125 + 125) = 968.75
-        self.assertEquals(float_round(self.dining_table.standard_price, precision_digits=2), 968.75, "After computing price from BoM price should be 786.46")
+        # Total cost of Dining Table = (718.75) + Total cost of all operations (125 + 10.42) = 854.17
+        self.assertEquals(float_compare(self.dining_table.standard_price, 854.17, precision_digits=2), 0, "After computing price from BoM price should be 786.46")
 
     def test_01_compute_price_inventory_valuation(self):
         """Test update cost from bom in list view when inventory valuation is real time."""
