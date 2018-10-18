@@ -242,6 +242,7 @@ QWeb2.Engine = (function() {
          */
         add_template : function(template, callback) {
             var self = this;
+            this.has_extended= {};
             this.templates_resources.push(template);
             if (template.constructor === String) {
                 return this.load_xml(template, function (err, xDoc) {
@@ -268,6 +269,9 @@ QWeb2.Engine = (function() {
                             return this.tools.exception("Can't clone undefined template " + extend);
                         }
                         this.templates[name] = this.templates[extend].cloneNode(true);
+                        this.has_extended[extend] = this.has_extended[extend] || [];
+                        this.has_extended[extend].push(name);
+                        if (this.extend_templates[extend]) this.extend_templates[name] = _.clone(this.extend_templates[extend]);
                         extend = name;
                         name = undefined;
                     }
@@ -281,6 +285,10 @@ QWeb2.Engine = (function() {
                         } else {
                             this.extend_templates[extend] = [node];
                         }
+                        _.each(this.has_extended[extend], function(templateName) {
+                            this.extend_templates[templateName] = this.extend_templates[templateName] || [];
+                            this.extend_templates[templateName].push(node);
+                        }.bind(this));
                     }
                 }
             }
