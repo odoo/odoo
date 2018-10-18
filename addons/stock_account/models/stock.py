@@ -3,8 +3,9 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.addons import decimal_precision as dp
 from odoo.tools import float_compare, float_round, float_is_zero, pycompat
 
 import logging
@@ -151,7 +152,14 @@ class StockMove(models.Model):
 
     def _get_price_unit(self):
         """ Returns the unit price to store on the quant """
-        return not self.company_id.currency_id.is_zero(self.price_unit) and self.price_unit or self.product_id.standard_price
+        digits = dp.get_precision('Product Price')(self._cr)
+        price_unit = self.price_unit
+        if digits:
+            price_unit = tools.float_round(self.price_unit, precision_digits=digits[1])
+        if price_unit:
+            return price_unit
+        else:
+            return self.product_id.standard_price
 
     @api.model
     def _get_in_base_domain(self, company_id=False):
