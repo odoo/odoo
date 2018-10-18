@@ -10,8 +10,8 @@ import pytz
 
 from odoo import exceptions, tests
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
-from odoo.tools import mute_logger
 
 
 class TestActivityCommon(BaseFunctionalTest):
@@ -19,7 +19,7 @@ class TestActivityCommon(BaseFunctionalTest):
     @classmethod
     def setUpClass(cls):
         super(TestActivityCommon, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.activity'].with_context(cls._quick_create_ctx).create({'name': 'Test'})
+        cls.test_record = cls.env['mail.test.activity'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test'})
         # reset ctx
         cls.test_record = cls.test_record.with_context(
             mail_create_nolog=False,
@@ -92,12 +92,7 @@ class TestActivityFlow(TestActivityCommon):
             self.assertEqual(test_record.message_ids[0].subtype_id, self.env.ref('mail.mt_activities'))
 
     def test_activity_flow_portal(self):
-        portal_user = self.env['res.users'].with_context(self._quick_create_user_ctx).create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
-        })
+        portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         with self.sudoAs('chell'):
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)
