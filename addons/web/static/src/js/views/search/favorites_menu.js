@@ -19,6 +19,7 @@ return Widget.extend({
         },
         'click .o_save_search': function (ev) {
             ev.preventDefault();
+            ev.stopPropagation();
             this.toggle_save_menu();
         },
         'click .o_save_name button': 'save_favorite',
