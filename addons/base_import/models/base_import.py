@@ -670,7 +670,7 @@ class Import(models.TransientModel):
             data, import_fields = self._convert_import_data(fields, options)
             # Parse date and float field
             data = self._parse_import_data(data, import_fields, options)
-        except ValueError as error:
+        except (ValueError, psycopg2.IntegrityError) as error:
             return [{
                 'type': 'error',
                 'message': pycompat.text_type(error),
