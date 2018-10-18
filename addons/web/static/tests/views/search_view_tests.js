@@ -1,9 +1,11 @@
 odoo.define('web.search_view_tests', function (require) {
 "use strict";
 
+var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 var createActionManager = testUtils.createActionManager;
 var patchDate = testUtils.patchDate;
+var createView = testUtils.createView;
 
 QUnit.module('Search View', {
     beforeEach: function () {
@@ -819,6 +821,69 @@ QUnit.module('Search View', {
         });
 
         actionManager.destroy();
+    });
+
+    QUnit.test('save search filter in modal', function (assert) {
+        assert.expect(5);
+        this.data.partner.records.push({
+            id: 7,
+            display_name: "Partner 6",
+        }, {
+            id: 8,
+            display_name: "Partner 7",
+        }, {
+            id: 9,
+            display_name: "Partner 8",
+        }, {
+            id: 10,
+            display_name: "Partner 9",
+        });
+        this.data.partner.fields.date_field.searchable = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<sheet>' +
+                '<group>' +
+                '<field name="bar"/>' +
+                '</group>' +
+                '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+                'partner,false,search': '<search><field name="date_field"/></search>',
+            },
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();  // Open Search More
+
+        assert.strictEqual($('tr.o_data_row').length, 9, "should display 9 records");
+
+        $('button:contains(Filters)').click();
+        $('.o_add_custom_filter:visible').click();  // Add a custom filter, datetime field is selected
+        assert.strictEqual($('.o_filter_condition select.o_searchview_extended_prop_field').val(), 'date_field',
+            "date field should be selected");
+        $('.o_apply_filter').click();
+
+        assert.strictEqual($('tr.o_data_row').length, 0, "should display 0 records");
+
+        // Save this search
+        testUtils.intercept(form, 'create_filter', function (event) {
+            assert.strictEqual(event.data.filter.name, "Awesome Test Customer Filter", "filter name should be correct");
+        });
+        $('button:contains(Favorites)').click();
+        $('.o_save_search').click();
+        var filterNameInput = $('.o_save_name .o_input[type="text"]:visible');
+        assert.strictEqual(filterNameInput.length, 1, "should display an input field for the filter name");
+        filterNameInput.val('Awesome Test Customer Filter').trigger('input');
+        $('.o_save_name button').click();
+
+        form.destroy();
     });
 
 });
