@@ -525,6 +525,8 @@ class AssetsBundle(object):
 
     def run_rtlcss(self, source):
         rtlcss = 'rtlcss'
+        if os.name == 'nt':
+            rtlcss = misc.find_in_path('rtlcss.cmd')
         cmd = [rtlcss, '-']
 
 
