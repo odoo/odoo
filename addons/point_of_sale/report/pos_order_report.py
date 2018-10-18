@@ -19,7 +19,7 @@ class PosOrderReport(models.Model):
         [('draft', 'New'), ('paid', 'Paid'), ('done', 'Posted'),
          ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
         string='Status')
-    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
+    user_id = fields.Many2one('res.users', string='User', readonly=True)
     price_total = fields.Float(string='Total Price', readonly=True)
     price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
     total_discount = fields.Float(string='Total Discount', readonly=True)

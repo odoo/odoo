@@ -359,7 +359,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         trigger: ".header-button",
     }, {
         content: "confirm closing the frontend",
-        trigger: ".header-button.confirm",
+        trigger: ".header-button",
         run: function() {}, //it's a check,
     }]);
 
