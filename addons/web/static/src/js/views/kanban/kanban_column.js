@@ -60,6 +60,7 @@ var KanbanColumn = Widget.extend({
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
         this.relation = options.relation;
+        this.allGroups = options.all_groups;
         this.offset = 0;
         this.remaining = data.count - this.data_records.length;
 
@@ -300,21 +301,29 @@ var KanbanColumn = Widget.extend({
      */
     _onDeleteColumn: function (event) {
         event.preventDefault();
-        var buttons = [
-            {
-                text: _t("Ok"),
-                classes: 'btn-primary',
-                close: true,
-                click: this.trigger_up.bind(this, 'kanban_column_delete'),
-            },
-            {text: _t("Cancel"), close: true}
-        ];
+        var self = this;
+        var isEmpty = this.data.count === 0;
+        var groups = _.filter(this.allGroups, function (group) {return group[0] != self.data.res_id; });
         new Dialog(this, {
             size: 'medium',
-            buttons: buttons,
-            $content: $('<div>', {
-                text: _t("Are you sure that you want to remove this column ?")
-            }),
+            buttons: [
+                {
+                    text: isEmpty ? _t("Ok") : _t("Move and delete"),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: function (ev) {
+                        if (isEmpty) {
+                            self.trigger_up('kanban_column_delete');
+                        } else {
+                            self.trigger_up('kanban_column_move_delete', {
+                                move_to: parseInt(this.$('select').val())
+                            });
+                        }
+                    },
+                },
+                {text: _t("Cancel"), close: true}
+            ],
+            $content: QWeb.render('KanbanView.MoveRecords', { groups: groups, isEmpty: isEmpty }),
         }).open();
     },
     /**

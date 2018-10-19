@@ -27,6 +27,7 @@ var KanbanController = BasicController.extend({
         kanban_record_delete: '_onRecordDelete',
         kanban_record_update: '_onUpdateRecord',
         kanban_column_delete: '_onDeleteColumn',
+        kanban_column_move_delete: '_onMoveDeleteColumn',
         kanban_column_add_record: '_onAddRecordToColumn',
         kanban_column_resequence: '_onColumnResequence',
         kanban_load_more: '_onLoadMore',
@@ -414,6 +415,28 @@ var KanbanController = BasicController.extend({
             .deleteRecords([column.db_id], relatedModelName)
             .then(function () {
                 self.update({}, {reload: !column.isEmpty()});
+            });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onMoveDeleteColumn: function (event) {
+        var self = this;
+        var column = event.target;
+        var state = this.model.get(this.handle, { raw: true });
+        var relatedModelName = state.fields[state.groupedBy[0]].relation;
+        var groupedField = column.groupedBy;
+        var vals = {}
+        vals[groupedField] = event.data.move_to;
+        this.model
+            .onWriteByDomain(column.data.domain, vals, column.db_id)
+            .done(function () {
+                self.model
+                    .deleteRecords([column.db_id], relatedModelName)
+                        .done(function () {
+                            self.reload();
+                        });
             });
     },
     /**

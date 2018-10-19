@@ -475,6 +475,7 @@ var KanbanRenderer = BasicRenderer.extend({
         this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
         var relation = this.groupedByM2O && groupByFieldAttrs.relation;
         var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
+        var allGroups = this.groupedByM2O && _.map(this.state.data, function (group) { return [group.res_id, group.value]; });
         this.columnOptions = _.extend(this.columnOptions, {
             draggable: draggable,
             group_by_tooltip: groupByTooltip,
@@ -482,6 +483,7 @@ var KanbanRenderer = BasicRenderer.extend({
             grouped_by_m2o: this.groupedByM2O,
             relation: relation,
             quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state),
+            all_groups: allGroups,
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
     },

@@ -315,6 +315,32 @@
         </div>
     </li>
 </t>
+<t t-name="KanbanView.MoveRecords">
+    <t t-if="isEmpty">
+        <div class="row">
+            <div class="col">
+                Are you sure that you want to remove this column ?
+            </div>
+        </div>
+    </t>
+    <t t-else="">
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <div class="alert alert-warning">
+                    You need to move records to another column to delete this column.
+                </div>
+            </div>
+            <label class="col-sm-3 col-form-label"> <strong>Move records to </strong> </label>
+            <div class="col-sm-9">
+                <select class="o_input o_column">
+                    <t t-foreach="groups" t-as="group">
+                        <option t-att-value="group[0]"> <t t-esc="group[1]"/> </option>
+                    </t>
+                </select>
+            </div>
+        </div>
+    </t>
+</t>
 
 <!-- Mobile templates -->
 <t t-name="KanbanView.MobileTabs">
