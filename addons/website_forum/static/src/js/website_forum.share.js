@@ -1,36 +1,48 @@
 odoo.define('website_forum.share', function (require) {
 'use strict';
 
-require('web.dom_ready');
+var sAnimations = require('website.content.snippets.animation');
 var core = require('web.core');
-var base = require('web_editor.base');
-var sAnimation = require('website.content.snippets.animation');
-
 var qweb = core.qweb;
 
-if (!$('.website_forum').length) {
-    return $.Deferred().reject("DOM doesn't contain '.website_forum'");
-}
-
-// FIXME There is no reason to inherit from socialShare here
-var ForumShare = sAnimation.registry.socialShare.extend({
-    xmlDependencies: sAnimation.registry.socialShare.prototype.xmlDependencies
+var ForumShare = sAnimations.registry.socialShare.extend({
+    xmlDependencies: sAnimations.registry.socialShare.prototype.xmlDependencies
         .concat(['/website_forum/static/src/xml/website_forum_share_templates.xml']),
-    read_events: {},
 
+    /**
+     * @override
+     * @param {Object} parent
+     * @param {Boolean} editableMode
+     * @param {String} targetType
+     */
     init: function (parent, editableMode, targetType) {
         this._super.apply(this, arguments);
         this.targetType = targetType;
     },
-    start: function () {
+    /**
+     * @override
+     * @param {Object} parent
+     */
+    start: function (parent) {
         var def = this._super.apply(this, arguments);
         this._onMouseEnter();
         return def;
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
     _bindSocialEvent: function () {
         this._super.apply(this, arguments);
         $('.oe_share_bump').click($.proxy(this._postBump, this));
     },
+    /**
+     * @private
+     */
     _render: function () {
         if (!this.targetType) {
             this._super.apply(this, arguments);
@@ -41,6 +53,9 @@ var ForumShare = sAnimation.registry.socialShare.extend({
             $('#oe_social_share_modal').modal('show');
         }
     },
+    /**
+     * @private
+     */
     _postBump: function () {
         this._rpc({ // FIXME
             route: '/forum/post/bump',
@@ -49,27 +64,48 @@ var ForumShare = sAnimation.registry.socialShare.extend({
             },
         });
     },
+
 });
 
-base.ready().then(function () {
-    // Store social share data to display modal on next page
-    $(document.body).on('click', ':not(.karma_required).oe_social_share_call', function () {
+sAnimations.registry.websiteForumShare = sAnimations.Class.extend({
+    selector: '.website_forum',
+    read_events: {
+        'click :not(.karma_required).oe_social_share_call': '_onBody'
+    },
+
+    /**
+     * @override
+     * @param {Object} parent
+     */
+    start: function (parent) {
+        // Retrieve stored social data
+        if (sessionStorage.getItem('social_share')) {
+            var socialData = JSON.parse(sessionStorage.getItem('social_share'));
+            (new ForumShare(null, false, socialData.targetType)).attachTo($(document.body));
+            sessionStorage.removeItem('social_share');
+        }
+        // Display an alert if post has no reply and is older than 10 days
+        var $questionContainer = $('.oe_js_bump');
+        if ($questionContainer.length) {
+            new ForumShare(null, false, 'social-alert').attachTo($questionContainer);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Store social share data to display modal on next page
+     *
+     * @override
+     */
+    _onBody: function () {
         sessionStorage.setItem('social_share', JSON.stringify({
             targetType: $(this).data('social-target-type'),
         }));
-    });
+    },
 
-    // Retrieve stored social data
-    if (sessionStorage.getItem('social_share')) {
-        var socialData = JSON.parse(sessionStorage.getItem('social_share'));
-        (new ForumShare(null, false, socialData.targetType)).attachTo($(document.body));
-        sessionStorage.removeItem('social_share');
-    }
-
-    // Display an alert if post has no reply and is older than 10 days
-    var $questionContainer = $('.oe_js_bump');
-    if ($questionContainer.length) {
-        new ForumShare(null, false, 'social-alert').attachTo($questionContainer);
-    }
 });
+
 });
