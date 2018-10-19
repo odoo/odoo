@@ -1202,7 +1202,7 @@
         <div t-foreach="posts_ids" t-as="question" class="mb16 row post_to_validate" style="padding-bottom:16px;border-bottom:1px solid #e7e7e7;">
             <div class="col-md-2 o_js_validation_queue">
                 <div class="card text-center" style="background-color:#eee;margin:0;padding:5px 12px 5px 12px;">
-                    <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" style="padding-right:8px;" title="Validate" aria-label="Validate"><i class="fa fa-check fa-2x"/></a>
+                    <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" class="validate_post" style="padding-right:8px;" title="Validate" aria-label="Validate"><i class="fa fa-check fa-2x"/></a>
                     <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" title="Refuse" aria-label="Refuse"><i class="fa fa-times fa-2x"/></a>
                     <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive"><i class="fa fa-times fa-2x"/></a>
                     <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive"><i class="fa fa-times fa-2x" style="color:rgb(179, 179, 179);"/></a>
