@@ -1466,7 +1466,7 @@ var LinkDialog = Dialog.extend({
                 var $btn = $(btn);
                 var color = $btn.css('background-color');
                 if (_.contains(colors, color)) {
-                    $btn.remove();
+                    $btn.hide(); // Not remove to be able to edit buttons with those styles
                 } else {
                     colors.push(color);
                 }
