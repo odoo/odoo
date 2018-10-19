@@ -5,15 +5,14 @@ import base64
 import datetime
 import random
 import re
+import requests
 import string
 
-import requests
 from lxml import html
 from werkzeug import urls, utils
 
-
 from odoo import models, fields, api, _
-from odoo.tools import ustr
+
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
 
@@ -170,7 +169,7 @@ class LinkTracker(models.Model):
 
     @api.multi
     def action_view_statistics(self):
-        action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'action_view_click_statistics')
+        action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'link_tracker_click_action_statistics')
         action['domain'] = [('link_id', '=', self.id)]
         return action
 
