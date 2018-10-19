@@ -24,8 +24,7 @@
                 <separator/>
                 <filter string="My Allocations" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
-                <field name="employee_id"/>
-                <field name="department_id"/>
+                <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>
                 <separator/>
                 <filter string="Late Activities" name="activities_overdue"

@@ -25,7 +25,7 @@
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
                 <field name="employee_id"/>
-                <field name="department_id"/>
+                <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>
                 <group expand="0" string="Group By">
                     <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
