@@ -28,6 +28,8 @@
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority','in',[1, 2])]"/>
                     <separator/>
+                    <filter string="Opened" name="opened" domain="[('stage_id.fold','=',False)]"/>
+                    <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>

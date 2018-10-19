@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-        <!-- Marketing / Mailing -->
-        <menuitem name="Email Marketing" id="mass_mailing_menu_root" sequence="60" web_icon="mass_mailing,static/description/icon.png"/>
-        <menuitem name="Mailing Lists" id="mass_mailing_mailing_list_menu"
-            parent="mass_mailing_menu_root" sequence="2" groups="mass_mailing.group_mass_mailing_user"/>
-        <!-- Marketing / Configuration -->
-        <menuitem name="Configuration" id="mass_mailing_configuration"
-            parent="mass_mailing_menu_root" sequence="100"/>
-
         <!--  MAILING CONTACT -->
         <record model="ir.ui.view" id="mail_mass_mailing_list_contact_rel_view_form">
             <field name="name">mail.mass_mailing.list_contact_rel.view.form</field>
@@ -712,7 +703,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-8">
-                                                    <a name="%(action_view_mass_mailing_links_statistics)d"
+                                                    <a name="%(link_tracker_action_mass_mailing)d"
                                                        type="action">Clicks</a>
                                                 </div>
                                                 <div class="col-4 text-right">
@@ -866,11 +857,8 @@
             </field>
         </record>
 
-        <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
-            sequence="100" groups="mass_mailing.group_mass_mailing_user"/>
-
         <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
-            parent="menu_mass_mailing_configuration" sequence="1"
+            parent="mass_mailing_configuration" sequence="1"
             groups="mass_mailing.group_mass_mailing_campaign"
             action="action_view_mass_mailing_stages"/>
 
@@ -897,7 +885,7 @@
             </field>
         </record>
 
-        <menuitem id="mass_mailing_tag_menu" parent="menu_mass_mailing_configuration" action="mass_mailing_tag_action" sequence="2" groups="base.group_no_one"/>
+        <menuitem id="mass_mailing_tag_menu" parent="mass_mailing_configuration" action="mass_mailing_tag_action" sequence="2" groups="base.group_no_one"/>
 
 
         <!--  MAILING CAMPAIGNS !-->
@@ -968,7 +956,7 @@
                                 type="action" class="oe_stat_button">
                                 <field name="replied_ratio" widget="percentpie" string="Replied"/>
                             </button>
-                            <button name="%(dropdb snipp)d"
+                            <button name="%(link_tracker_action_mass_mailing_campaign)d"
                                 type="action" class="oe_stat_button">
                                 <field name="clicks_ratio" widget="percentpie" string="Clicks"/>
                             </button>
