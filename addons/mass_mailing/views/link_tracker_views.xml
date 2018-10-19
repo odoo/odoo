@@ -1,28 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<!-- LINK TRACKER VIEWS -->
-    <record model="ir.ui.view" id="view_mail_mass_mailing_links_tree">
-        <field name="name">link.tracker.tree</field>
+	<!-- LINK.TRACKER VIEWS -->
+    <record id="link_tracker_view_search" model="ir.ui.view">
+        <field name="name">link.tracker.view.search.inherit.mass.mail</field>
         <field name="model">link.tracker</field>
-        <field name="priority">10</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_view_search"/>
         <field name="arch" type="xml">
-            <tree string="Mailing Statistics of Clicks">
-                <field name="title"/>
-                <field name="url"/>
-                <field name="count"/>
-            </tree>
-        </field>
-    </record>
-    
-    <record model="ir.ui.view" id="view_mail_mass_mailing_links_search">
-        <field name="name">link.tracker.search</field>
-        <field name="model">link.tracker</field>
-        <field name="inherit_id" ref="link_tracker.view_link_tracker_filter"/>
-        <field name="arch" type="xml">
-           <search>
+            <xpath expr="//field[@name='title']" position="after">
                 <field name="mass_mailing_id"/>
                 <field name="mass_mailing_campaign_id"/>
-            </search>
+            </xpath>
         </field>
     </record>
 
