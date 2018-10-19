@@ -1157,7 +1157,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('quick create record fail in grouped', function (assert) {
+    QUnit.test('quick create record fail in grouped by many2one', function (assert) {
         assert.expect(7);
 
         var kanban = createView({
@@ -1223,6 +1223,120 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record fails in grouped by char', function (assert) {
+        assert.expect(7);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            archs: {
+                'partner,false,form': '<form>' +
+                        '<field name="foo"/>' +
+                    '</form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    return $.Deferred().reject({
+                        code: 200,
+                        data: {},
+                        message: "Odoo server error",
+                    }, $.Event());
+                }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {foo: 'yop'},
+                        "should write the correct value for foo");
+                    assert.deepEqual(args.kwargs.context, {default_foo: 'yop', default_name: 'test'},
+                        "should send the correct default value for foo");
+                }
+                return this._super.apply(this, arguments);
+            },
+            groupBy: ['foo'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
+            "there should be 1 record in first column");
+
+        kanban.$('.o_kanban_header:first .o_kanban_quick_add i').click();
+        kanban.$('.o_kanban_quick_create input').val('test').trigger('input');
+        kanban.$('.o_kanban_add').click();
+
+        assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
+            "a form view dialog should have been opened (in edit)");
+        assert.strictEqual($('.modal .o_field_widget[name=foo]').val(), 'yop',
+            "the correct default value for foo should already be set");
+
+        $('.modal-footer .btn-primary').click();
+
+        assert.strictEqual($('.modal').length, 0, "the modal should be closed");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "there should be 2 records in first column");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record fails in grouped by selection', function (assert) {
+        assert.expect(7);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="state"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            archs: {
+                'partner,false,form': '<form>' +
+                        '<field name="state"/>' +
+                    '</form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    return $.Deferred().reject({
+                        code: 200,
+                        data: {},
+                        message: "Odoo server error",
+                    }, $.Event());
+                }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {state: 'abc'},
+                        "should write the correct value for state");
+                    assert.deepEqual(args.kwargs.context, {default_state: 'abc', default_name: 'test'},
+                        "should send the correct default value for state");
+                }
+                return this._super.apply(this, arguments);
+            },
+            groupBy: ['state'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
+            "there should be 1 record in first column");
+
+        kanban.$('.o_kanban_header:first .o_kanban_quick_add i').click();
+        kanban.$('.o_kanban_quick_create input').val('test').trigger('input');
+        kanban.$('.o_kanban_add').click();
+
+        assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
+            "a form view dialog should have been opened (in edit)");
+        assert.strictEqual($('.modal .o_field_widget[name=state]').val(), '"abc"',
+            "the correct default value for state should already be set");
+
+        $('.modal-footer .btn-primary').click();
+
+        assert.strictEqual($('.modal').length, 0, "the modal should be closed");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "there should be 2 records in first column");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record in empty grouped kanban', function (assert) {
         assert.expect(3);
 
@@ -1261,6 +1375,327 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_quick_create').length, 1,
             "should have opened the quick create in the first column");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record in grouped on date(time) field', function (assert) {
+        assert.expect(6);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['date'],
+            intercepts: {
+                switch_view: function (ev) {
+                    assert.deepEqual(_.pick(ev.data, 'res_id', 'view_type'), {
+                        res_id: undefined,
+                        view_type: 'form',
+                    }, "should trigger an event to open the form view (twice)");
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 0,
+            "quick create should be disabled when grouped on a date field");
+
+        // clicking on CREATE in control panel should not open a quick create
+        kanban.$buttons.find('.o-kanban-button-new').click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
+            "should not have opened the quick create widget");
+
+        kanban.reload({groupBy: ['datetime']});
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 0,
+            "quick create should be disabled when grouped on a datetime field");
+
+        // clicking on CREATE in control panel should not open a quick create
+        kanban.$buttons.find('.o-kanban-button-new').click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
+            "should not have opened the quick create widget");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record feature is properly enabled/disabled at reload', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['foo'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 3,
+            "quick create should be enabled when grouped on a char field");
+
+        kanban.reload({groupBy: ['date']});
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 0,
+            "quick create should now be disabled (grouped on date field)");
+
+        kanban.reload({groupBy: ['bar']});
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 2,
+            "quick create should be enabled again (grouped on boolean field)");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record in grouped by char field', function (assert) {
+        assert.expect(4);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['foo'],
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    assert.deepEqual(args.kwargs.context, {default_foo: 'yop'},
+                        "should send the correct default value for foo");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 3,
+            "quick create should be enabled when grouped on a char field");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
+            "first column should contain 1 record");
+
+        kanban.$('.o_kanban_header:first .o_kanban_quick_add i').click();
+        kanban.$('.o_kanban_quick_create input').val('new record').trigger('input');
+        kanban.$('.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "first column should now contain 2 records");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record in grouped by boolean field', function (assert) {
+        assert.expect(4);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    assert.deepEqual(args.kwargs.context, {default_bar: true},
+                        "should send the correct default value for bar");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 2,
+            "quick create should be enabled when grouped on a boolean field");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth(1) .o_kanban_record').length, 3,
+            "second column (true) should contain 3 records");
+
+        kanban.$('.o_kanban_header:nth(1) .o_kanban_quick_add i').click();
+        kanban.$('.o_kanban_quick_create input').val('new record').trigger('input');
+        kanban.$('.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:nth(1) .o_kanban_record').length, 4,
+            "second column (true) should now contain 4 records");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record in grouped on selection field', function (assert) {
+        assert.expect(4);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    assert.deepEqual(args.kwargs.context, {default_state: 'abc'},
+                        "should send the correct default value for bar");
+                }
+                return this._super.apply(this, arguments);
+            },
+            groupBy: ['state'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 3,
+            "quick create should be enabled when grouped on a selection field");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
+            "first column (abc) should contain 1 record");
+
+        kanban.$('.o_kanban_header:first .o_kanban_quick_add i').click();
+        kanban.$('.o_kanban_quick_create input').val('new record').trigger('input');
+        kanban.$('.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "first column (abc) should contain 2 records");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record in grouped by char field (within quick_create_view)', function (assert) {
+        assert.expect(6);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            archs: {
+                'partner,some_view_ref,form': '<form>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            },
+            groupBy: ['foo'],
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {foo: 'yop'},
+                        "should write the correct value for foo");
+                    assert.deepEqual(args.kwargs.context, {default_foo: 'yop'},
+                        "should send the correct default value for foo");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 3,
+            "quick create should be enabled when grouped on a char field");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
+            "first column should contain 1 record");
+
+        kanban.$('.o_kanban_header:first .o_kanban_quick_add i').click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create input').val(), 'yop',
+            "should have set the correct foo value by default");
+        kanban.$('.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "first column should now contain 2 records");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record in grouped by boolean field (within quick_create_view)', function (assert) {
+        assert.expect(6);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="bar"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            archs: {
+                'partner,some_view_ref,form': '<form>' +
+                    '<field name="bar"/>' +
+                '</form>',
+            },
+            groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {bar: true},
+                        "should write the correct value for bar");
+                    assert.deepEqual(args.kwargs.context, {default_bar: true},
+                        "should send the correct default value for bar");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 2,
+            "quick create should be enabled when grouped on a boolean field");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth(1) .o_kanban_record').length, 3,
+            "second column (true) should contain 3 records");
+
+        kanban.$('.o_kanban_header:nth(1) .o_kanban_quick_add i').click();
+        assert.ok(kanban.$('.o_kanban_quick_create .o_field_boolean input').is(':checked'),
+            "should have set the correct bar value by default");
+        kanban.$('.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:nth(1) .o_kanban_record').length, 4,
+            "second column (true) should now contain 4 records");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record in grouped by selection field (within quick_create_view)', function (assert) {
+        assert.expect(6);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="state"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            archs: {
+                'partner,some_view_ref,form': '<form>' +
+                    '<field name="state"/>' +
+                '</form>',
+            },
+            groupBy: ['state'],
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {state: 'abc'},
+                        "should write the correct value for state");
+                    assert.deepEqual(args.kwargs.context, {default_state: 'abc'},
+                        "should send the correct default value for state");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_header .o_kanban_quick_add i').length, 3,
+            "quick create should be enabled when grouped on a selection field");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
+            "first column (abc) should contain 1 record");
+
+        kanban.$('.o_kanban_header:first .o_kanban_quick_add i').click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create select').val(), '"abc"',
+            "should have set the correct state value by default");
+        kanban.$('.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "first column (abc) should now contain 2 records");
 
         kanban.destroy();
     });
@@ -3619,7 +4054,7 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates>' +
                 '</kanban>',
-            groupBy: ['int_field'],
+            groupBy: ['foo'],
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
                     return $.when(true);

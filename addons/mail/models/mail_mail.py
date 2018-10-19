@@ -116,6 +116,8 @@ class MailMail(models.Model):
             ids = filtered_ids
         else:
             ids = list(set(filtered_ids) & set(ids))
+        ids.sort()
+
         res = None
         try:
             # auto-commit except in testing mode
