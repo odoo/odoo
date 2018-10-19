@@ -1,81 +1,311 @@
 odoo.define('website_slides.upload', function (require) {
 "use strict";
 
+var sAnimations = require('website.content.snippets.animation');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-require('web.dom_ready');
-var weContext = require("web_editor.context");
 var slides = require('website_slides.slides');
 
-var qweb = core.qweb;
 var _t = core._t;
-
-if (!$('.oe_slide_js_upload').length) {
-    return $.Deferred().reject("DOM doesn't contain '.oe_slide_js_upload'");
-}
-
-ajax.loadXML('/website_slides/static/src/xml/website_slides.xml', qweb);
 
 var SlideDialog = Widget.extend({
     template: 'website.slide.upload',
     events: {
         'hidden.bs.modal': 'destroy',
-        'click button.save': 'save',
-        'click button[data-dismiss="modal"]': 'cancel',
-        'change input#upload': 'slide_upload',
-        'change input#url': 'slide_url',
+        'click button.save': '_save',
+        'click button[data-dismiss="modal"]': '_cancel',
+        'change input#upload': '_slideUpload',
+        'change input#url': '_slideUrl',
         'click .list-group-item': function (ev) {
             this.$('.list-group-item').removeClass('active');
             $(ev.target).closest('li').addClass('active');
         }
     },
+
+    /**
+     * @override
+     * @param {Object} el
+     * @param {number} channel_id
+     */
     init: function (el, channel_id) {
         this._super(el, channel_id);
         this.channel_id = parseInt(channel_id, 10);
         this.file = {};
         this.index_content = "";
     },
-    start: function () {
+    /**
+     * @override
+     * @param {Object} parent
+     */
+    start: function (parent) {
         this.$el.modal({
             backdrop: 'static'
         });
-        this.set_category_id();
-        this.set_tag_ids();
+        this._setCategoryId();
+        this._setTagIds();
     },
-    slide_url: function (ev) {
-        var self = this,
-            value = {
-                'url': $(ev.target).val(),
-                'channel_id': self.channel_id
-            };
-        this.$('.alert-warning').remove();
-        this.is_valid_url = false;
-        this.$('.save').button('loading');
-        ajax.jsonRpc('/slides/dialog_preview/', 'call', value).then(function (data) {
-            self.$('.save').button('reset');
-            if (data.error) {
-                self.display_alert(data.error);
-            } else {
-                self.$("#slide-image").attr("src", data.url_src);
-                self.$('#name').val(data.title);
-                self.$('#description').val(data.description);
-                self.is_valid_url = true;
-            }
-        });
-    },
-    check_unique_slide: function (file_name) {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} file_name
+     */
+    _checkUniqueSlide: function (file_name) {
         var self = this;
-        return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        return this._rpc({
             model: 'slide.slide',
             method: 'search_count',
             args: [[['channel_id', '=', self.channel_id], ['name', '=', file_name]]],
-            kwargs: {
-                context: weContext.get(), // TODO use this._rpc
-            }
         });
     },
-    slide_upload: function (ev) {
+    /**
+     * @private
+     */
+    _resetFile: function () {
+        var control = this.$('#upload');
+        control.replaceWith(control = control.clone(true));
+        this.file.name = false;
+    },
+    /**
+     * @private
+     * @param {string} message
+     */
+    _displayAlert: function (message) {
+        this.$('.alert-warning').remove();
+        $('<div class="alert alert-warning" role="alert">' + message + '</div>').insertBefore(this.$('form'));
+    },
+
+    /**
+     * Wrapper for select2 load data from server at once and store it.
+     *
+     * @private
+     * @param {String} Placeholder for element.
+     * @param {bool}  true for multiple selection box, false for single selection
+     * @param {Function} Function to fetch data from remote location should return $.deferred object
+     * resolved data should be array of object with id and name. eg. [{'id': id, 'name': 'text'}, ...]
+     * @returns {Object} select2 wrapper object
+    */
+    _select2Wrapper: function (tag, multi, fetch_fnc) {
+        return {
+            width: '100%',
+            placeholder: tag,
+            allowClear: true,
+            formatNoMatches: false,
+            multiple: multi,
+            selection_data: false,
+            fetch_rpc_fnc : fetch_fnc,
+            formatSelection: function (data) {
+                if (data.tag) {
+                    data.text = data.tag;
+                }
+                return data.text;
+            },
+            createSearchChoice: function (term, data) {
+                var added_tags = $(this.opts.element).select2('data');
+                if (_.filter(_.union(added_tags, data), function (tag) {
+                    return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
+                }).length === 0) {
+                    return {
+                        id: _.uniqueId('tag_'),
+                        create: true,
+                        tag: term,
+                        text: _.str.sprintf(_t("Create new tag '%s'"), term),
+                    };
+                }
+            },
+            fill_data: function (query, data) {
+                var that = this,
+                    tags = {results: []};
+                _.each(data, function (obj) {
+                    if (that.matcher(query.term, obj.name)) {
+                        tags.results.push({id: obj.id, text: obj.name });
+                    }
+                });
+                query.callback(tags);
+            },
+            query: function (query) {
+                var that = this;
+                // fetch data only once and store it
+                if (!this.selection_data) {
+                    this.fetch_rpc_fnc().then(function (data) {
+                        that.fill_data(query, data);
+                        that.selection_data = data;
+                    });
+                } else {
+                    this.fill_data(query, this.selection_data);
+                }
+            }
+        };
+    },
+    /**
+     * Category management from select2
+     *
+     * @private
+     */
+    _setCategoryId: function () {
+        var self =  this;
+        $('#category_id').select2(this._select2Wrapper(_t('Category'), false,
+            function () {
+                return this._rpc({
+                    model: 'slide.category',
+                    method: 'search_read',
+                    args: [],
+                    kwargs: {
+                        fields: ['name'],
+                        domain: [['channel_id', '=', self.channel_id]],
+                    }
+                });
+            }));
+    },
+    /**
+     * @private
+     */
+    _getCategoryId: function () {
+        var value = $('#category_id').select2('data');
+        if (value && value.create) {
+            return [0, {'name': value.text}];
+        }
+        return [value ? value.id : null];
+    },
+    /**
+     * Tags management from select2
+     *
+     * @private
+     */
+    _setTagIds: function () {
+        $('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
+            return this._rpc({
+                model: 'slide.tag',
+                method: 'search_read',
+                args: [],
+                kwargs: {
+                    fields: ['name'],
+                }
+            });
+        }));
+    },
+    /**
+     * @private
+     */
+    _getTagIds: function () {
+        var res = [];
+        _.each($('#tag_ids').select2('data'),
+            function (val) {
+                if (val.create) {
+                    res.push([0, 0, {'name': val.text}]);
+                } else {
+                    res.push([4, val.id]);
+                }
+            });
+        return res;
+    },
+    /**
+     * @private
+     */
+    // TODO: Remove this part, as now SVG support in image resize tools is included
+    //Python PIL does not support SVG, so converting SVG to PNG
+    _svgToPng: function () {
+        var img = this.$el.find("img#slide-image")[0];
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext("2d").drawImage(img, 0, 0);
+        return canvas.toDataURL("image/png").split(',')[1];
+    },
+    /**
+     * Values and save
+     *
+     * @private
+     */
+    _getValue: function () {
+        var canvas = this.$('#data_canvas')[0],
+            values = {
+                'channel_id': this.channel_id || '',
+                'name': this.$('#name').val(),
+                'url': this.$('#url').val(),
+                'description': this.$('#description').val(),
+                'tag_ids': this._getTagIds(),
+                'category_id': this._getCategoryId()
+            };
+        if (this.file.type === 'application/pdf') {
+            _.extend(values, {
+                'image': canvas.toDataURL().split(',')[1],
+                'index_content': this.index_content,
+                'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
+                'mime_type': this.file.type,
+                'datas': this.file.data
+            });
+        }
+        if (/^image\/.*/.test(this.file.type)) {
+            _.extend(values, {
+                'slide_type': 'infographic',
+                'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
+                'datas': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data
+            });
+        }
+        return values;
+    },
+    /**
+     * @private
+     */
+    _validate: function () {
+        this.$('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        if (!this.$('#name').val()) {
+            this.$('#name').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            return false;
+        }
+        var url = this.$('#url').val() ? this.is_valid_url : false;
+        if (!(this.file.name || url)) {
+            this.$('#url').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            return false;
+        }
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @param {Object} ev
+     */
+    _save: function (ev) {
+        var self = this;
+        if (this._validate()) {
+            var values = this._getValue();
+            if ($(ev.target).data('published')) {
+                values.website_published = true;
+            }
+            this.$('.oe_slides_upload_loading').show();
+            this.$('.modal-footer, .modal-body').hide();
+            ajax.jsonRpc("/slides/add_slide", 'call', values).then(function (data) {
+                if (data.error) {
+                    self._displayAlert(data.error);
+                    self.$('.oe_slides_upload_loading').hide();
+                    self.$('.modal-footer, .modal-body').show();
+
+                } else {
+                    window.location = data.url;
+                }
+            });
+        }
+    },
+    /**
+     * @override
+     */
+    _cancel: function () {
+        this.trigger("cancel");
+    },
+    /**
+     * @override
+     * @param {Object} ev
+     */
+    _slideUpload: function (ev) {
         var self = this,
             file = ev.target.files[0],
             is_image = /^image\/.*/.test(file.type),
@@ -83,13 +313,13 @@ var SlideDialog = Widget.extend({
         this.file.name = file.name;
         this.file.type = file.type;
         if (!(is_image || this.file.type === 'application/pdf')) {
-            this.display_alert(_t("Invalid file type. Please select pdf or image file"));
-            this.reset_file();
+            this._displayAlert(_t("Invalid file type. Please select pdf or image file"));
+            this._resetFile();
             return;
         }
         if (file.size / 1024 / 1024 > 25) {
-            this.display_alert(_t("File is too big. File size cannot exceed 25MB"));
-            this.reset_file();
+            this._displayAlert(_t("File is too big. File size cannot exceed 25MB"));
+            this._resetFile();
             return;
         }
         this.$('.alert-warning').remove();
@@ -113,8 +343,8 @@ var SlideDialog = Widget.extend({
             ArrayReader.onload = function (evt) {
                 var buffer = evt.target.result;
                 var passwordNeeded = function () {
-                    self.display_alert(_t("You can not upload password protected file."));
-                    self.reset_file();
+                    self._displayAlert(_t("You can not upload password protected file."));
+                    self._resetFile();
                     self.$('.save').button('reset');
                 };
                 PDFJS.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
@@ -169,222 +399,72 @@ var SlideDialog = Widget.extend({
 
         var input = file.name;
         var input_val = input.substr(0, input.lastIndexOf('.')) || input;
-        this.check_unique_slide(input_val).then(function (exist) {
+        this._checkUniqueSlide(input_val).then(function (exist) {
             if (exist) {
                 var message = _t("Channel contains the given title, please change before Save or Publish.");
-                self.display_alert(message);
+                self._displayAlert(message);
             }
             self.$('#name').val(input_val);
         });
     },
-    reset_file: function () {
-        var control = this.$('#upload');
-        control.replaceWith(control = control.clone(true));
-        this.file.name = false;
-    },
-    display_alert: function (message) {
+    /**
+     * @override
+     * @param {Object} ev
+     */
+    _slideUrl: function (ev) {
+        var self = this,
+            value = {
+                'url': $(ev.target).val(),
+                'channel_id': self.channel_id
+            };
         this.$('.alert-warning').remove();
-        $('<div class="alert alert-warning" role="alert">' + message + '</div>').insertBefore(this.$('form'));
+        this.is_valid_url = false;
+        this.$('.save').button('loading');
+        ajax.jsonRpc('/slides/dialog_preview/', 'call', value).then(function (data) {
+            self.$('.save').button('reset');
+            if (data.error) {
+                self._displayAlert(data.error);
+            } else {
+                self.$("#slide-image").attr("src", data.url_src);
+                self.$('#name').val(data.title);
+                self.$('#description').val(data.description);
+                self.is_valid_url = true;
+            }
+        });
+    },
+
+});
+
+sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
+    selector: '.oe_slide_js_upload',
+    xmlDependencies: ['/website_slides/static/src/xml/website_slides.xml'],
+    read_events: {
+        'click .oe_slide_js_upload': '_bindEventButton',
     },
 
     /**
-        Wrapper for select2 load data from server at once and store it.
+     * @override
+     * @param {Object} parent
+     */
+    start: function (parent) {
+        // Automatically open the upload dialog if requested from query string
+        if ($.deparam.querystring().enable_slide_upload !== undefined) {
+            $('.oe_slide_js_upload').click();
+        }
+    },
 
-        @param {String} Placeholder for element.
-        @param {bool}  true for multiple selection box, false for single selection
-        @param {Function} Function to fetch data from remote location should return $.deferred object
-        resolved data should be array of object with id and name. eg. [{'id': id, 'name': 'text'}, ...]
-        @returns {Object} select2 wrapper object
-    */
-    select2_wrapper: function (tag, multi, fetch_fnc) {
-        return {
-            width: '100%',
-            placeholder: tag,
-            allowClear: true,
-            formatNoMatches: false,
-            multiple: multi,
-            selection_data: false,
-            fetch_rpc_fnc : fetch_fnc,
-            formatSelection: function (data) {
-                if (data.tag) {
-                    data.text = data.tag;
-                }
-                return data.text;
-            },
-            createSearchChoice: function (term, data) {
-                var added_tags = $(this.opts.element).select2('data');
-                if (_.filter(_.union(added_tags, data), function (tag) {
-                    return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
-                }).length === 0) {
-                    return {
-                        id: _.uniqueId('tag_'),
-                        create: true,
-                        tag: term,
-                        text: _.str.sprintf(_t("Create new tag '%s'"), term),
-                    };
-                }
-            },
-            fill_data: function (query, data) {
-                var that = this,
-                    tags = {results: []};
-                _.each(data, function (obj) {
-                    if (that.matcher(query.term, obj.name)) {
-                        tags.results.push({id: obj.id, text: obj.name });
-                    }
-                });
-                query.callback(tags);
-            },
-            query: function (query) {
-                var that = this;
-                // fetch data only once and store it
-                if (!this.selection_data) {
-                    this.fetch_rpc_fnc().then(function (data) {
-                        that.fill_data(query, data);
-                        that.selection_data = data;
-                    });
-                } else {
-                    this.fill_data(query, this.selection_data);
-                }
-            }
-        };
-    },
-    // Category management from select2
-    set_category_id: function () {
-        var self =  this;
-        $('#category_id').select2(this.select2_wrapper(_t('Category'), false,
-            function () {
-                return ajax.jsonRpc("/web/dataset/call_kw", 'call', {
-                    model: 'slide.category',
-                    method: 'search_read',
-                    args: [],
-                    kwargs: {
-                        fields: ['name'],
-                        domain: [['channel_id', '=', self.channel_id]],
-                        context: weContext.get(), // TODO use this._rpc
-                    }
-                });
-            }));
-    },
-    get_category_id: function () {
-        var value = $('#category_id').select2('data');
-        if (value && value.create) {
-            return [0, {'name': value.text}];
-        }
-        return [value ? value.id : null];
-    },
-    // Tags management from select2
-    set_tag_ids: function () {
-        $('#tag_ids').select2(this.select2_wrapper(_t('Tags'), true, function () {
-            return ajax.jsonRpc("/web/dataset/call_kw", 'call', {
-                model: 'slide.tag',
-                method: 'search_read',
-                args: [],
-                kwargs: {
-                    fields: ['name'],
-                    context: weContext.get(), // TODO use this._rpc
-                }
-            });
-        }));
-    },
-    get_tag_ids: function () {
-        var res = [];
-        _.each($('#tag_ids').select2('data'),
-            function (val) {
-                if (val.create) {
-                    res.push([0, 0, {'name': val.text}]);
-                } else {
-                    res.push([4, val.id]);
-                }
-            });
-        return res;
-    },
-    // TODO: Remove this part, as now SVG support in image resize tools is included
-    //Python PIL does not support SVG, so converting SVG to PNG
-    svg_to_png: function () {
-        var img = this.$el.find("img#slide-image")[0];
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext("2d").drawImage(img, 0, 0);
-        return canvas.toDataURL("image/png").split(',')[1];
-    },
-    // Values and save
-    get_value: function () {
-        var canvas = this.$('#data_canvas')[0],
-            values = {
-                'channel_id': this.channel_id || '',
-                'name': this.$('#name').val(),
-                'url': this.$('#url').val(),
-                'description': this.$('#description').val(),
-                'tag_ids': this.get_tag_ids(),
-                'category_id': this.get_category_id()
-            };
-        if (this.file.type === 'application/pdf') {
-            _.extend(values, {
-                'image': canvas.toDataURL().split(',')[1],
-                'index_content': this.index_content,
-                'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
-                'mime_type': this.file.type,
-                'datas': this.file.data
-            });
-        }
-        if (/^image\/.*/.test(this.file.type)) {
-            _.extend(values, {
-                'slide_type': 'infographic',
-                'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
-                'datas': this.file.type === 'image/svg+xml' ? this.svg_to_png() : this.file.data
-            });
-        }
-        return values;
-    },
-    validate: function () {
-        this.$('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-        if (!this.$('#name').val()) {
-            this.$('#name').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-            return false;
-        }
-        var url = this.$('#url').val() ? this.is_valid_url : false;
-        if (!(this.file.name || url)) {
-            this.$('#url').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-            return false;
-        }
-        return true;
-    },
-    save: function (ev) {
-        var self = this;
-        if (this.validate()) {
-            var values = this.get_value();
-            if ($(ev.target).data('published')) {
-                values.website_published = true;
-            }
-            this.$('.oe_slides_upload_loading').show();
-            this.$('.modal-footer, .modal-body').hide();
-            ajax.jsonRpc("/slides/add_slide", 'call', values).then(function (data) {
-                if (data.error) {
-                    self.display_alert(data.error);
-                    self.$('.oe_slides_upload_loading').hide();
-                    self.$('.modal-footer, .modal-body').show();
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-                } else {
-                    window.location = data.url;
-                }
-            });
-        }
+    /**
+     * @override
+     */
+    _bindEventButton: function () {
+        var channel_id = $(this).attr('channel_id');
+        slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
     },
-    cancel: function () {
-        this.trigger("cancel");
-    }
+
 });
-
-// bind the event to the button
-$('.oe_slide_js_upload').on('click', function () {
-    var channel_id = $(this).attr('channel_id');
-    slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
-});
-
-// automatically open the upload dialog if requested from query string
-if ($.deparam.querystring().enable_slide_upload !== undefined) {
-    $('.oe_slide_js_upload').click();
-}
 
 });
