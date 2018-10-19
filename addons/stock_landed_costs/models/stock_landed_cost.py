@@ -109,16 +109,9 @@ class LandedCost(models.Model):
             for line in cost.valuation_adjustment_lines.filtered(
                     lambda line: line.move_id and
                     line.move_id.product_id.cost_method == 'fifo'):
-                # Prorate the value at what's still in stock
-                cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                move_set |= line.move_id
+                new_landed[line.move_id.id] += line.additional_landed_cost
 
-                new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
-                line.move_id.write({
-                    'landed_cost_value': new_landed_cost_value,
-                    'value': line.move_id.value + line.additional_landed_cost,
-                    'remaining_value': line.move_id.remaining_value + cost_to_add,
-                    'price_unit': (line.move_id.value + line.additional_landed_cost) / line.move_id.product_qty,
-                })
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
@@ -161,7 +154,22 @@ class LandedCost(models.Model):
                     line._create_accounting_entries(move, qty_out))
 
             # /!\ NOTE: Writing Stock Moves once in one batch
-            for stock_move in move_set:
+            for stock_move in move_set.filtered(
+                lambda mov: mov.product_id.cost_method == 'fifo'):
+                stock_move.write({
+                    'landed_cost_value': (
+                        stock_move.landed_cost_value +
+                        new_landed[stock_move.id]),
+                    'value': stock_move.value + new_landed[stock_move.id],
+                    'remaining_value': (
+                        stock_move.remaining_value + stock_move.remaining_qty /
+                        stock_move.product_qty * new_landed[stock_move.id]),
+                    'price_unit':  (
+                        (stock_move.value + new_landed[stock_move.id]) /
+                        stock_move.product_qty), })
+
+            for stock_move in move_set.filtered(
+                lambda mov: mov.product_id.cost_method == 'average'):
                 stock_move.write({
                     'landed_cost_value': new_landed[stock_move.id],
                     # /|\ NOTE: Do changing this values affect somehow
