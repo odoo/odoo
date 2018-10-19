@@ -362,15 +362,17 @@ class Website(Home):
         return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
-    def theme_customize(self, enable, disable, get_bundle=False):
+    def theme_customize(self, enable=None, disable=None, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates """
         def set_active(xml_ids, active):
             if xml_ids:
                 real_ids = self.get_view_ids(xml_ids)
                 request.env['ir.ui.view'].browse(real_ids).write({'active': active})
 
-        set_active(disable, False)
-        set_active(enable, True)
+        if disable:
+            set_active(disable, False)
+        if enable:
+            set_active(enable, True)
 
         if get_bundle:
             context = dict(request.context)
