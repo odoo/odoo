@@ -437,46 +437,49 @@
 
     <opt>: Declares a new toggle option
         -> id (optional) = an ID to associate to the option
+
         -> string (optional) = option's text
         -> data-icon (optional) = an image URL to set as option's background
-        -> data-xmlid (optional) = template(s) to enable if the input is checked (list of comma-separated xml ids)
-        -> data-enable (optional) = enable other options (list of comma-separated option ids)
-        -> data-disable (optional) = disable other options (list of comma-separated option ids)
-        -> data-reload (optional) = force the reloading of the page if the url matches the value
-                                    Otherwise, only the main assets are reloaded
-        -> data-font (optional) = indicates which fonts to use to style the option and adds
-                                  default sample text if no 'string' is specified
-                                  (see $o-theme-fonts in scss)
-        -> data-color-palette (optional) = indicates which color palette to use to style the option
-                                           (see $o-theme-color-palettes in scss)
+        -> data-font (optional) = indicates which fonts to use to style the
+                option and adds default sample text if no 'string' is specified
+                (see $o-theme-fonts in scss)
+        -> data-col (optional, default 6) = bootstrap column size for the option
+                (ignored for options in a <list/>)
 
-    <more>: Declares a subset of options which is hidden by default (with a button to show it)
-        -> string = button's text
+        -> data-xmlid (optional) = template(s) to enable if the input is
+                checked (list of comma-separated xml ids)
+        -> data-enable (optional) = enable other options (list of
+                comma-separated option ids)
+        -> data-disable (optional) = disable other options (list of
+                comma-separated option ids)
+        -> data-reload (optional) = force the reloading of the page if the url
+                matches the value. Otherwise, only the main assets are reloaded
+
+        -> data-widget (optional) = indicates which widget to use (available
+                widgets are: color_palette)
 
     <list>: Declares a subset of options showed as a list
         -> string = list's title
+        -> data-col (optional, default 6) = bootstrap column size for the list
 -->
 <template id="theme_customize">
     <div>
         <!-- Color options -->
         <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
-            <opt data-xmlid="" data-color-palette="user" string="Choose your colors"/>
+            <opt data-widget="color_palette" data-col="12"/>
         </content>
 
         <!-- Layout Options -->
         <content id="theme_customize_content_layout" string="Layout" title="Choose your layout">
-            <!-- In a <more/> so that it is on a new line if themes add options before -->
-            <more data-depends="">
-                <list string="Body">
-                    <opt string="Full" data-xmlid="" data-icon="/website/static/src/img/options/layout-full.png"/>
-                    <opt id="option_layout_boxed" string="Boxed" data-xmlid="website.option_layout_boxed_variables" data-icon="/website/static/src/img/options/layout-boxed.png"/>
-                </list>
-                <list string="Background">
-                    <opt id="option_no_background" string="None" data-xmlid=""/>
-                    <opt string="Choose an image" data-xmlid="website.option_custom_body_image"/>
-                    <opt string="Choose a pattern" data-xmlid="website.option_custom_body_image, website.option_custom_body_pattern"/>
-                </list>
-            </more>
+            <list string="Body">
+                <opt string="Full" data-xmlid="" data-icon="/website/static/src/img/options/layout-full.png"/>
+                <opt id="option_layout_boxed" string="Boxed" data-xmlid="website.option_layout_boxed_variables" data-icon="/website/static/src/img/options/layout-boxed.png"/>
+            </list>
+            <list string="Background">
+                <opt id="option_no_background" string="None" data-xmlid=""/>
+                <opt string="Choose an image" data-xmlid="website.option_custom_body_image"/>
+                <opt string="Choose a pattern" data-xmlid="website.option_custom_body_image, website.option_custom_body_pattern"/>
+            </list>
         </content>
 
         <!-- Font options -->
