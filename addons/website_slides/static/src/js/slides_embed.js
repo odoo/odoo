@@ -1,50 +1,77 @@
 /*global $, _, PDFSlidesViewer*/
 odoo.define('website_slides.slides_embed', function (require) {
-    "use strict";
-    
-    var time = require('web.time');
-    var Widget = require('web.Widget');
-    require('website_slides.slides');
-    
-    (function () {
-        /*
-        * Embedded Code Widget
-        */
-        var SlideSocialEmbed = Widget.extend({
-            events: {
-                'change input' : 'change_page',
-            },
-            init: function(parent, max_page){
-                this._super(parent);
-                this.max_page = max_page || false;
-            },
-            change_page: function(ev){
-                ev.preventDefault();
-                var input = this.$('input');
-                var page = parseInt(input.val());
-                if (this.max_page && !(page > 0 && page <= this.max_page)) {
-                    page = 1;
-                }
-                this.update_embedded_code(page);
-            },
-            update_embedded_code: function(page){
-                var embed_input = this.$('.slide_embed_code');
-                var new_code = embed_input.val().replace(/(page=).*?([^\d]+)/, '$1' + page + '$2');
-                embed_input.val(new_code);
-            },
-        });
+"use strict";
 
-        $('iframe.o_wslides_iframe_viewer').ready(function() {
-            // TODO : make it work. For now, once the iframe is loaded, the value of #page_count is
-            // still now set (the pdf is still loading)
-            var $iframe = $(this);
-            var max_page = $iframe.contents().find('#page_count').val();
-            slides.page_widgets['social_embed'] = new SlideSocialEmbed($iframe, max_page).setElement($('.oe_slide_js_embed_code_widget'));
-        });
-    
-    })();
-    
+var Widget = require('web.Widget');
+require('website_slides.slides');
+var sAnimations = require('website.content.snippets.animation');
+
+// Embedded Code Widget
+var SlideSocialEmbed = Widget.extend({
+    events: {
+        'change input' : '_changePage',
+    },
+    /**
+     * @override
+     * @param {Object} parent
+     * @param {Number} max_page
+     */
+    init: function (parent, max_page){
+        this._super(parent);
+        this.max_page = max_page || false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Object} ev
+     */
+    _changePage: function (ev){
+        ev.preventDefault();
+        var input = this.$('input');
+        var page = parseInt(input.val());
+        if (this.max_page && !(page > 0 && page <= this.max_page)) {
+            page = 1;
+        }
+        this._updateEmbeddedCode(page);
+    },
+    /**
+     * @private
+     * @param {Number} page
+     */
+    _updateEmbeddedCode: function (page){
+        var embed_input = this.$('.slide_embed_code');
+        var new_code = embed_input.val().replace(/(page=).*?([^\d]+)/, '$1' + page + '$2');
+        embed_input.val(new_code);
+    },
 });
+
+sAnimations.registry.websiteSlidesEmbed = sAnimations.Class.extend({
+    selector: 'main',
+    read_events: {
+        'ready iframe.o_wslides_iframe_viewer': '_onIframeViewer',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onIframeViewer: function () {
+        // TODO : make it work. For now, once the iframe is loaded, the value of #page_count is
+        // still now set (the pdf is still loading)
+        var $iframe = $(this);
+        var max_page = $iframe.contents().find('#page_count').val();
+        new SlideSocialEmbed($iframe, max_page).setElement($('.oe_slide_js_embed_code_widget'));
+    },
+});
+});
+
 /**
 This file is a minimal version of the PDFViewer widget.
 It is NOT use in the website_slides module, but it is
@@ -250,5 +277,3 @@ $(document).ready(function () {
         });
     }
 });
-
-
