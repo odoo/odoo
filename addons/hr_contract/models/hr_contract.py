@@ -128,7 +128,7 @@ class Contract(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'pending':
-            return 'hr_contract.mt_contract_pending'
+            return self.env.ref('hr_contract.mt_contract_pending')
         elif 'state' in init_values and self.state == 'close':
-            return 'hr_contract.mt_contract_close'
+            return self.env.ref('hr_contract.mt_contract_close')
         return super(Contract, self)._track_subtype(init_values)

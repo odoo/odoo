@@ -151,9 +151,9 @@ class Track(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state' in init_values and self.kanban_state == 'blocked':
-            return 'website_event_track.mt_track_blocked'
+            return self.env.ref('website_event_track.mt_track_blocked')
         elif 'kanban_state' in init_values and self.kanban_state == 'done':
-            return 'website_event_track.mt_track_ready'
+            return self.env.ref('website_event_track.mt_track_ready')
         return super(Track, self)._track_subtype(init_values)
 
     @api.multi

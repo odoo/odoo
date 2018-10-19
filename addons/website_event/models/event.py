@@ -118,9 +118,9 @@ class Event(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'is_published' in init_values and self.is_published:
-            return 'website_event.mt_event_published'
+            return self.env.ref('website_event.mt_event_published')
         elif 'is_published' in init_values and not self.is_published:
-            return 'website_event.mt_event_unpublished'
+            return self.env.ref('website_event.mt_event_unpublished')
         return super(Event, self)._track_subtype(init_values)
 
     @api.multi

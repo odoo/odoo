@@ -331,7 +331,7 @@ can override the ``_track_subtype()`` function:
                 # in cache
                 self.ensure_one()
                 if 'state' in init_values and self.state == 'confirmed':
-                    return 'my_module.mt_state_change'  # Full external id
+                    return self.env.ref('my_module.mt_state_change')
                 return super(BusinessTrip, self)._track_subtype(init_values)
 
 

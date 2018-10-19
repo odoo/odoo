@@ -73,7 +73,7 @@ class LandedCost(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'done':
-            return 'stock_landed_costs.mt_stock_landed_cost_open'
+            return self.env.ref('stock_landed_costs.mt_stock_landed_cost_open')
         return super(LandedCost, self)._track_subtype(init_values)
 
     @api.multi

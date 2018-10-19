@@ -390,7 +390,7 @@ class AccountVoucher(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values:
-            return 'account_voucher.mt_voucher_state_change'
+            return self.env.ref('account_voucher.mt_voucher_state_change')
         return super(AccountVoucher, self)._track_subtype(init_values)
 
 

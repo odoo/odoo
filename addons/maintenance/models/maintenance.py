@@ -98,7 +98,7 @@ class MaintenanceEquipment(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'owner_user_id' in init_values and self.owner_user_id:
-            return 'maintenance.mt_mat_assign'
+            return self.env.ref('maintenance.mt_mat_assign')
         return super(MaintenanceEquipment, self)._track_subtype(init_values)
 
     @api.multi
@@ -267,9 +267,9 @@ class MaintenanceRequest(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values and self.stage_id.sequence <= 1:
-            return 'maintenance.mt_req_created'
+            return self.env.ref('maintenance.mt_req_created')
         elif 'stage_id' in init_values and self.stage_id.sequence > 1:
-            return 'maintenance.mt_req_status'
+            return self.env.ref('maintenance.mt_req_status')
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
     def _get_default_team_id(self):
