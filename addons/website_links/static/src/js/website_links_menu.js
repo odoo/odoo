@@ -3,10 +3,22 @@
  * when the user click the link "Share this page" on top of the page.
 */
 
-(function () {
-  'use strict';
+odoo.define('website_links.website_links_menu', function (require) {
+"use strict";
 
-  $(document).ready(function () {
-    $('#o_website_links_share_page').attr('href', '/r?u=' + encodeURIComponent(window.location.href));
-  });
-})();
+var sAnimations = require('website.content.snippets.animation');
+
+sAnimations.registry.websiteLinksMenu = sAnimations.Class.extend({
+	selector: '.navbar',
+
+	/**
+     * @override
+     * @param {Object} parent
+     */
+    start: function (parent) {
+        $('#o_website_links_share_page').attr('href', '/r?u=' + encodeURIComponent(window.location.href));
+    },
+
+});
+
+});
