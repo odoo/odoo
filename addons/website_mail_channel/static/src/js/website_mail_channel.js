@@ -1,11 +1,26 @@
 odoo.define('website_mail_channel', function (require) {
 "use strict";
 
+var sAnimations = require('website.content.snippets.animation');
 var ajax = require('web.ajax');
 
-$(document).ready(function () {
+sAnimations.registry.websiteMailChannel = sAnimations.Class.extend({
+    selector: '#group_message #messages_short',
+    read_events: {
+        'click .o_mg_link_hide': '_onHideLink',
+        'click .o_mg_link_show': '_onShowLink',
+        'click button.o_mg_read_more': '_onReadMore'
+    },
+    
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-    $('.o_mg_link_hide').on('click', function (ev) {
+    /**
+     * @private
+     * @param {Object} ev
+     */
+    _onHideLink: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $container = $link.parents('div').first();
@@ -13,9 +28,12 @@ $(document).ready(function () {
         $container.find('.o_mg_link_show').first().show();
         $container.find('.o_mg_link_content').first().show();
         return false;
-    });
-
-    $('.o_mg_link_show').on('click', function (ev) {
+    },
+    /**
+     * @private
+     * @param {Object} ev
+     */
+    _onShowLink: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $container = $link.parents('div').first();
@@ -23,9 +41,12 @@ $(document).ready(function () {
         $container.find('.o_mg_link_show').first().hide();
         $container.find('.o_mg_link_content').first().hide();
         return false;
-    });
-
-    $('body').on('click', 'button.o_mg_read_more', function (ev) {
+    },
+    /**
+     * @private
+     * @param {Object} ev
+     */
+     _onReadMore: function (ev) {
         var $link = $(ev.target);
         return ajax.jsonRpc($link.data('href'), 'call', {
             'last_displayed_id': $link.data('msg-id'),
@@ -43,7 +64,8 @@ $(document).ready(function () {
             $show_more.remove();
             return true;
         });
-    });
+     },
+
 });
 
 });
