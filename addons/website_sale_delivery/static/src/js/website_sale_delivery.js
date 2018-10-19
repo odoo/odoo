@@ -1,15 +1,54 @@
-'use strict';
 odoo.define('website_sale_delivery.checkout', function (require) {
+'use strict';
 
-    require('web.dom_ready');
-    var ajax = require('web.ajax');
-    var core = require('web.core');
-    var _t = core._t;
+var sAnimations = require('website.content.snippets.animation');
+var ajax = require('web.ajax');
+var core = require('web.core');
+var _t = core._t;
 
-    /* Handle interactive carrier choice + cart update */
-    var $pay_button = $('#o_payment_form_pay');
+sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
+    selector: '.oe_website_sale',
+    read_events: {
+        'change .oe_website_sale select[name="shipping_id"]': '_onSetAddress',
+        'click #delivery_carrier input[name="delivery_type"]': '_onCarrierClick'
+    },
 
-    var _onCarrierUpdateAnswer = function(result) {
+    /**
+     * @override
+     * @param {Object} parent
+     */
+    start: function (parent) {
+        var $carriers = $("#delivery_carrier input[name='delivery_type']");
+        // Workaround to:
+        // - update the amount/error on the label at first rendering
+        // - prevent clicking on 'Pay Now' if the shipper rating fails
+        if ($carriers.length > 0) {
+            $carriers.filter(':checked').click();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Object} ev
+     */
+    _onCarrierClick: function (ev) {
+        var $pay_button = $('#o_payment_form_pay');
+        $pay_button.prop('disabled', true);
+        var carrier_id = $(ev.currentTarget).val();
+        var values = {'carrier_id': carrier_id};
+        ajax.jsonRpc('/shop/update_carrier', 'call', values)
+          .then(this._onCarrierUpdateAnswer);
+    },
+    /**
+     * @private
+     * @param {Object} result
+     */
+    _onCarrierUpdateAnswer: function (result) {
+        var $pay_button = $('#o_payment_form_pay');
         var $amount_delivery = $('#order_delivery span.oe_currency_value');
         var $amount_untaxed = $('#order_total_untaxed span.oe_currency_value');
         var $amount_tax = $('#order_total_taxes span.oe_currency_value');
@@ -45,28 +84,18 @@ odoo.define('website_sale_delivery.checkout', function (require) {
             $amount_tax.text(result.new_amount_tax);
             $amount_total.text(result.new_amount_total);
         }
-    };
+    },
 
-    var _onCarrierClick = function(ev) {
-        $pay_button.prop('disabled', true);
-        var carrier_id = $(ev.currentTarget).val();
-        var values = {'carrier_id': carrier_id};
-        ajax.jsonRpc('/shop/update_carrier', 'call', values)
-          .then(_onCarrierUpdateAnswer);
-    };
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-    var $carriers = $("#delivery_carrier input[name='delivery_type']");
-    $carriers.click(_onCarrierClick);
-    // Workaround to:
-    // - update the amount/error on the label at first rendering
-    // - prevent clicking on 'Pay Now' if the shipper rating fails
-    if ($carriers.length > 0) {
-        $carriers.filter(':checked').click();
-    }
-
-    /* Handle stuff */
-    $(".oe_website_sale select[name='shipping_id']").on('change', function () {
-        var value = $(this).val();
+    /**
+     * @private
+     * @param {Object} ev
+     */
+    _onSetAddress: function (ev) {
+        var value = $(ev.currentTarget).val();
         var $provider_free = $("select[name='country_id']:not(.o_provider_restricted), select[name='state_id']:not(.o_provider_restricted)");
         var $provider_restricted = $("select[name='country_id'].o_provider_restricted, select[name='state_id'].o_provider_restricted");
         if (value === 0) {
@@ -78,6 +107,8 @@ odoo.define('website_sale_delivery.checkout', function (require) {
             $provider_free.show().attr('disabled', false).change();
             $provider_restricted.hide().attr('disabled', true);
         }
-    });
+    },
+
+});
 
 });
