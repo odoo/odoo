@@ -353,8 +353,7 @@ class Registry(Mapping):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
-        for model in self.models.values():
-            model.clear_caches()
+        self._clear_cache()
 
     def setup_signaling(self):
         """ Setup the inter-process signaling on this registry. """
