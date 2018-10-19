@@ -3,7 +3,7 @@
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_is_zero, pycompat
 from odoo.addons import decimal_precision as dp
 
 
@@ -165,8 +165,14 @@ class StockMove(models.Model):
         processed_moves = self.env['stock.move']
         factor = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id) / bom.product_qty
         boms, lines = bom.sudo().explode(self.product_id, factor, picking_type=bom.picking_type_id)
-        for bom_line, line_data in lines:
-            phantom_moves += self._generate_move_phantom(bom_line, line_data['qty'])
+        if float_is_zero(self.quantity_done, precision_rounding=self.product_uom.rounding):
+            for bom_line, line_data in lines:
+                phantom_moves += self._generate_move_phantom(bom_line, line_data['qty'])
+        else:
+            factor_done = self.product_uom._compute_quantity(self.quantity_done, bom.product_uom_id) / bom.product_qty
+            boms, lines_done = bom.sudo().explode(self.product_id, factor_done, picking_type=bom.picking_type_id)
+            for data, data_done in pycompat.izip(lines, lines_done):
+                phantom_moves += self._generate_move_phantom(data[0], data[1]['qty'], data_done[1]['qty'])
 
         for new_move in phantom_moves:
             processed_moves |= new_move.action_explode()
@@ -182,8 +188,8 @@ class StockMove(models.Model):
         self.sudo().unlink()
         return processed_moves
 
-    def _prepare_phantom_move_values(self, bom_line, quantity):
-        return {
+    def _prepare_phantom_move_values(self, bom_line, quantity, quantity_done=0):
+        res = {
             'picking_id': self.picking_id.id if self.picking_id else False,
             'product_id': bom_line.product_id.id,
             'product_uom': bom_line.product_uom_id.id,
@@ -191,10 +197,13 @@ class StockMove(models.Model):
             'state': 'draft',  # will be confirmed below
             'name': self.name,
         }
+        if quantity_done:
+            res['quantity_done'] = quantity_done
+        return res
 
-    def _generate_move_phantom(self, bom_line, quantity):
+    def _generate_move_phantom(self, bom_line, quantity, quantity_done=0):
         if bom_line.product_id.type in ['product', 'consu']:
-            return self.copy(default=self._prepare_phantom_move_values(bom_line, quantity))
+            return self.copy(default=self._prepare_phantom_move_values(bom_line, quantity, quantity_done=quantity_done))
         return self.env['stock.move']
 
     def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):
