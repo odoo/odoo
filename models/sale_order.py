@@ -135,6 +135,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': 1.0,
                 'product_uom': program.discount_line_product_id.uom_id.id,
                 'is_reward_line': True,
+                'tax_id': [(4, tax.id, False) for tax in program.discount_line_product_id.taxes_id],
             }]
         reward_dict = {}
         lines = self._get_paid_order_lines()
