@@ -16,6 +16,10 @@
         padding: 0;
         display: flex;
 
+        @media print {
+            display: none;
+        }
+
         > .o_topbar_right_area {
             border-bottom: 1px solid transparent;
             position: relative;
