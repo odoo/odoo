@@ -6,6 +6,7 @@
         <field name="model">hr.leave.allocation</field>
         <field name="arch" type="xml">
             <search string="Search allocations">
+                <field name="employee_id"/>
                 <field name="name"/>
                 <field name="accrual"/>
                 <filter domain="[('state','in',('confirm', 'validate1'))]" string="To Approve" name="approve"/>
@@ -24,8 +25,7 @@
                 <separator/>
                 <filter string="My Allocations" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
-                <field name="employee_id"/>
-                <field name="department_id"/>
+                <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>
                 <separator/>
                 <filter string="Late Activities" name="activities_overdue"
@@ -172,7 +172,7 @@
             <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
                    decoration-bf="message_needaction == True">
                 <field name="employee_id"/>
-                <field name="department_id" invisible="1"/>
+                <field name="department_id"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
                 <field name="number_of_days" string="Allocated Days" sum="Total allocated days"/>
@@ -202,6 +202,9 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_approve']" position="attributes">

@@ -54,7 +54,7 @@
                     <field name="date_end"/>
                     <field name="resource_calendar_id"/>
                     <field name="employee_id"/>
-                    <field name="department_id"/>
+                    <field name="department_id" operator="child_of"/>
                     <field name="state"/>
                     <filter string="To Renew" name="to_renew" domain="[('state', '=', 'pending')]"/>
                     <separator />
