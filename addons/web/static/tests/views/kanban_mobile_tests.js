@@ -81,8 +81,8 @@ QUnit.module('Views', {
             "first column is the active column with class 'o_current'");
         assert.containsN(kanban, '.o_kanban_group:first > div.o_kanban_record', 2,
             "there are 2 records in active tab");
-        assert.strictEqual(kanban.$('.o_kanban_group:nth(1) > div.o_kanban_record').length, 0,
-            "there is no records in next tab. Records will be loaded when it will be opened");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth(1) > div.o_kanban_record').length, 2,
+            "there are 2 records in next tab. Records will be loaded when the kanban is opened");
 
         // quick create in first column
         await testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));

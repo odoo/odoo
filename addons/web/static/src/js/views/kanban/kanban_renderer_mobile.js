@@ -5,7 +5,6 @@ odoo.define('web.KanbanRendererMobile', function (require) {
  * The purpose of this file is to improve the UX of grouped kanban views in
  * mobile. It includes the KanbanRenderer (in mobile only) to only display one
  * column full width, and enables the swipe to browse to the other columns.
- * Moreover, records in columns are lazy-loaded.
  */
 
 var config = require('web.config');
@@ -101,7 +100,6 @@ KanbanRenderer.include({
                 $column.css({left: left});
             }
             $column.scrollTop(scrollTop); // required when clicking on 'Load More'
-            self._enableSwipe();
         });
     },
 
@@ -292,22 +290,23 @@ KanbanRenderer.include({
      *   and displayed
      */
     _moveToGroup: function (moveToIndex, animate) {
-        var self = this;
         if (moveToIndex < 0 || moveToIndex >= this.widgets.length) {
             this._layoutUpdate(animate);
             return Promise.resolve();
         }
         this.activeColumnIndex = moveToIndex;
         var column = this.widgets[this.activeColumnIndex];
-        return new Promise(function (resolve) {
-            self.trigger_up('kanban_load_records', {
-                columnID: column.db_id,
-                onSuccess: function () {
-                    self._layoutUpdate(animate);
-                    resolve();
-                },
+        if (column.data.isOpen) {
+            this._layoutUpdate(animate);
+        } else {
+            // Unfold column and fetch records
+            this.trigger_up('column_toggle_fold', {
+                db_id: column.db_id,
+                onSuccess: () => this._layoutUpdate(animate)
             });
-        });
+        }
+        this._enableSwipe();
+        return Promise.resolve();
     },
 
     /**
