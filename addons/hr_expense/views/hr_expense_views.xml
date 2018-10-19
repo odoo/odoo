@@ -578,7 +578,7 @@
                     <field name="state"/>
                     <separator />
                     <field name="employee_id"/>
-                    <field name="department_id" string="Department"/>
+                    <field name="department_id" operator="child_of" string="Department"/>
                     <field name="journal_id"/>
                     <filter string="My Reports" name="my_reports" domain="[('employee_id.user_id', '=', uid)]"/>
                     <filter string="My Team Reports" name="my_team_reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
