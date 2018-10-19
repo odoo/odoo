@@ -93,6 +93,12 @@ class LandedCost(models.Model):
             raise UserError(_('Cost and adjustments lines do not match. You should maybe recompute the landed costs.'))
 
         for cost in self:
+            avg_price = {}
+            avg_qty = {}
+            add_to_product = defaultdict(lambda: 0.0)
+            new_landed = defaultdict(lambda: 0.0)
+            product_set = self.env['product.product']
+            move_set = self.env['account.move']
             move = self.env['account.move']
             move_vals = {
                 'journal_id': cost.account_journal_id.id,
@@ -100,7 +106,9 @@ class LandedCost(models.Model):
                 'ref': cost.name,
                 'line_ids': [],
             }
-            for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
+            for line in cost.valuation_adjustment_lines.filtered(
+                    lambda line: line.move_id and
+                    line.move_id.product_id.cost_method == 'fifo'):
                 # Prorate the value at what's still in stock
                 cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
 
@@ -119,6 +127,61 @@ class LandedCost(models.Model):
                 elif line.move_id._is_out():
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
+
+            for line in cost.valuation_adjustment_lines.filtered(
+                    lambda line: line.move_id and
+                    line.move_id.product_id.cost_method == 'average'):
+
+                # /!\ NOTE: Let us save the Available qty and Average of
+                # product prior to make any computation on it
+                avg_price.setdefault(
+                    line.move_id.product_id.id,
+                    line.move_id.product_id.standard_price)
+                qty = avg_qty.setdefault(
+                    line.move_id.product_id.id,
+                    line.move_id.product_id.qty_available)
+
+                # On Landed Costs with several costs to add and several stock
+                # moves to apply for writing several time on the same stock
+                # moves could be a huge CPU cost
+                add_to_product[line.move_id.product_id.id] += (
+                    line.additional_landed_cost)
+                product_set |= line.move_id.product_id
+                move_set |= line.move_id
+                new_landed.setdefault(
+                    line.move_id.id, line.move_id.landed_cost_value)
+                new_landed[line.move_id.id] += line.additional_landed_cost
+
+                # `remaining_qty` is negative if the move is out and delivered
+                # products that were not in stock.
+                qty_out = 0
+                if qty <= 0:
+                    qty_out = line.move_id.product_qty
+                move_vals['line_ids'] += (
+                    line._create_accounting_entries(move, qty_out))
+
+            # /!\ NOTE: Writing Stock Moves once in one batch
+            for stock_move in move_set:
+                stock_move.write({
+                    'landed_cost_value': new_landed[stock_move.id],
+                    # /|\ NOTE: Do changing this values affect somehow
+                    # computation of stock.move.line
+                    # 'value': line.move_id.value + cost_to_add,
+                    # 'remaining_value': line.move_id.remaining_value + cost_to_add,  # noqa
+                    # /|\ NOTE: Let us keep the price_unit the same for the
+                    # sake of traceability. For me @hbto this value shall not
+                    # be changed as it can be used later for audition
+                    # 'price_unit': (line.move_id.value + cost_to_add) / line.move_id.product_qty,  # noqa
+                })
+
+            # /!\ NOTE: Recomputing all Product Averages in one batch
+            for prod in product_set:
+                if avg_qty[prod.id] <= 0:
+                    continue
+                prod.write({
+                    'standard_price': (
+                        (avg_price[prod.id] * avg_qty[prod.id] +
+                            add_to_product[prod.id]) / avg_qty[prod.id])})
 
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
@@ -146,8 +209,10 @@ class LandedCost(models.Model):
         lines = []
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
-            # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'fifo':
+            # it doesn't make sense to make a landed cost for a product that
+            # isn't set as being valuated in real time at real cost
+            if (move.product_id.valuation != 'real_time' or
+                    move.product_id.cost_method not in ('fifo', 'average')):
                 continue
             vals = {
                 'product_id': move.product_id.id,
@@ -160,7 +225,10 @@ class LandedCost(models.Model):
             lines.append(vals)
 
         if not lines and self.mapped('picking_ids'):
-            raise UserError(_("You cannot apply landed costs on the chosen transfer(s). Landed costs can only be applied for products with automated inventory valuation and FIFO costing method."))
+            raise UserError(_(
+                "You cannot apply landed costs on the chosen transfer(s). "
+                "Landed costs can only be applied for products with automated "
+                "inventory valuation and either FIFO or AVCO costing method."))
         return lines
 
     @api.multi
