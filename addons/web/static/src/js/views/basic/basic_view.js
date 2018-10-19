@@ -225,7 +225,7 @@ var BasicView = AbstractView.extend({
             attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
         }
 
-        if (attrs.on_change && !field.onChange) {
+        if (attrs.on_change && attrs.on_change !== "0" && !field.onChange) {
             field.onChange = "1";
         }
 
