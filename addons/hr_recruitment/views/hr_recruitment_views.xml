@@ -201,7 +201,7 @@
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="job_id"/>
-                <field name="department_id"/>
+                <field name="department_id" operator="child_of"/>
                 <field name="user_id"/>
                 <field name="stage_id" domain="[]"/>
                 <separator/>
@@ -907,7 +907,7 @@
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
                 <field name="job_id"/>
-                <field name="department_id"/>
+                <field name="department_id" operator="child_of"/>
                 <field name="user_id"/>
                 <filter string="Creation Date" name="year" date="create_date" default_period="this_year"/>
                 <separator/>
