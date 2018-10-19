@@ -302,9 +302,9 @@
                                 <field name="fields_lines">
                                      <tree string="Field Mappings" editable="bottom">
                                         <field name="col1" domain="['|', ('model_id', '=', parent.crud_model_id), ('model_id', '=', parent.model_id)]"/>
-                                        <field name="type"/>
-                                        <field name="resource_ref" attrs="{'readonly': [('type', '!=', 'reference')]}" options="{'hide_model': True}"/>
-                                        <field name="value" attrs="{'readonly': [('type', '=', 'reference')]}" force_save="1"/>
+                                        <field name="evaluation_type"/>
+                                        <field name="resource_ref" attrs="{'readonly': [('evaluation_type', '!=', 'reference')]}" options="{'hide_model': True}"/>
+                                        <field name="value" attrs="{'readonly': [('evaluation_type', '=', 'reference')]}" force_save="1"/>
                                     </tree>
                                 </field>
                             </page>
