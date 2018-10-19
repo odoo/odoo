@@ -148,51 +148,68 @@ class HolidaysAllocation(models.Model):
                                 '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
 
         for holiday in holidays:
-            values = {}
+            employee_ids = {"company": holiday.mode_company_id.user_ids,
+                            "department": holiday.department_id.member_ids,
+                            "category": holiday.category_id.employee_ids,
+                            "employee": holiday.employee_id
+                           }[holiday.holiday_type]
 
-            delta = relativedelta(days=0)
+            for employee in employee_ids:
 
-            if holiday.interval_unit == 'weeks':
-                delta = relativedelta(weeks=holiday.interval_number)
-            if holiday.interval_unit == 'months':
-                delta = relativedelta(months=holiday.interval_number)
-            if holiday.interval_unit == 'years':
-                delta = relativedelta(years=holiday.interval_number)
+                values = {
+                    'name': holiday.name,
+                    'holiday_type': 'employee',
+                    'holiday_status_id': holiday.holiday_status_id.id,
+                    'notes': holiday.notes,
+                    'number_of_days': holiday.number_of_days,
+                    'parent_id': holiday.id,
+                    'employee_id': employee.id
+                }
 
-            values['nextcall'] = (holiday.nextcall if holiday.nextcall else today) + delta
+                delta = relativedelta(days=0)
 
-            period_start = datetime.combine(today, time(0, 0, 0)) - delta
-            period_end = datetime.combine(today, time(0, 0, 0))
+                if holiday.interval_unit == 'weeks':
+                    delta = relativedelta(weeks=holiday.interval_number)
+                if holiday.interval_unit == 'months':
+                    delta = relativedelta(months=holiday.interval_number)
+                if holiday.interval_unit == 'years':
+                    delta = relativedelta(years=holiday.interval_number)
 
-            # We have to check when the employee has been created
-            # in order to not allocate him/her too much leaves
-            creation_date = fields.Datetime.from_string(holiday.employee_id.create_date)
+                values['nextcall'] = (holiday.nextcall if holiday.nextcall else today) + delta
 
-            # If employee is created after the period, we cancel the computation
-            if period_end <= creation_date:
+                period_start = datetime.combine(today, time(0, 0, 0)) - delta
+                period_end = datetime.combine(today, time(0, 0, 0))
+
+                # We have to check when the employee has been created
+                # in order to not allocate him/her too much leaves
+                creation_date = fields.Datetime.from_string(employee.create_date)
+
+                # If employee is created after the period, we cancel the computation
+                if period_end <= creation_date:
+                    holiday.write(values)
+                    continue
+
+                # If employee created during the period, taking the date at which he has been created
+                if period_start <= creation_date:
+                    period_start = creation_date
+
+                worked = employee.get_work_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+                left = employee.get_leave_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+                prorata = worked / (left + worked) if worked else 0
+
+                days_to_give = holiday.number_per_interval
+                if holiday.unit_per_interval == 'hours':
+                    # As we encode everything in days in the database we need to convert
+                    # the number of hours into days for this we use the
+                    # mean number of hours set on the employee's calendar
+                    days_to_give = days_to_give / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+
+                values['number_of_days'] = holiday.number_of_days + days_to_give * prorata
+                if holiday.accrual_limit > 0:
+                    values['number_of_days'] = min(values['number_of_days'], holiday.accrual_limit)
+
                 holiday.write(values)
-                continue
 
-            # If employee created during the period, taking the date at which he has been created
-            if period_start <= creation_date:
-                period_start = creation_date
-
-            worked = holiday.employee_id.get_work_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
-            left = holiday.employee_id.get_leave_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
-            prorata = worked / (left + worked) if worked else 0
-
-            days_to_give = holiday.number_per_interval
-            if holiday.unit_per_interval == 'hours':
-                # As we encode everything in days in the database we need to convert
-                # the number of hours into days for this we use the
-                # mean number of hours set on the employee's calendar
-                days_to_give = days_to_give / (holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
-
-            values['number_of_days'] = holiday.number_of_days + days_to_give * prorata
-            if holiday.accrual_limit > 0:
-                values['number_of_days'] = min(values['number_of_days'], holiday.accrual_limit)
-
-            holiday.write(values)
 
     @api.multi
     @api.depends('number_of_days')
