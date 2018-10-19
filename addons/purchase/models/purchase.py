@@ -179,11 +179,11 @@ class PurchaseOrder(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'purchase':
-            return 'purchase.mt_rfq_approved'
+            return self.env.ref('purchase.mt_rfq_approved')
         elif 'state' in init_values and self.state == 'to approve':
-            return 'purchase.mt_rfq_confirmed'
+            return self.env.ref('purchase.mt_rfq_confirmed')
         elif 'state' in init_values and self.state == 'done':
-            return 'purchase.mt_rfq_done'
+            return self.env.ref('purchase.mt_rfq_done')
         return super(PurchaseOrder, self)._track_subtype(init_values)
 
     @api.onchange('partner_id', 'company_id')
