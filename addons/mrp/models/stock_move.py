@@ -265,3 +265,11 @@ class StockMove(models.Model):
     def _should_be_assigned(self):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
+
+    def _push_apply(self):
+        for move in self:
+            # if move is raw material for production, not apply push rule in virtual production location.
+            if move.raw_material_production_id and move.location_dest_id.usage == 'production':
+                continue
+            else:
+                super(StockMove, move)._push_apply()
