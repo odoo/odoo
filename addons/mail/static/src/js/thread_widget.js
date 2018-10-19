@@ -446,6 +446,9 @@ var ThreadWidget = Widget.extend({
         if (this._messageMailPopover) {
             this._messageMailPopover.popover('hide');
         }
+        if (!this.$('.o_thread_tooltip').length) {
+            return;
+        }
         this._messageMailPopover = this.$('.o_thread_tooltip').popover({
             html: true,
             boundary: 'viewport',
