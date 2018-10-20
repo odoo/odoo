@@ -81,8 +81,11 @@ Overview
 
     The Credits
 
+.. note:: The credits went from integer to float value starting **October 2018**
+    Integer values are still supported.
+
     Every service provided through the In-App platform can be used by the
-    clients with tokens or *credits*. The credits are an integer unit and
+    clients with tokens or *credits*. The credits are an float unit and
     their monetary value depends on the service and is decided by the
     provider. This could be:
 
@@ -157,7 +160,8 @@ The first step is to register your service on the IAP endpoint (production
 and/or test) before you can actually query user accounts. To create a service,
 go to your *Portal Account* on the IAP endpoint (https://iap.odoo.com for
 production, https://iap-sandbox.odoo.com for testing, the endpoints are
-*independent* and *not synchronized*). 
+*independent* and *not synchronized*). Alternatively, you can go to your portal
+on Odoo (https://iap.odoo.com/my/home) and select *In-App Services*.
 
 .. note:: 
     
@@ -166,33 +170,45 @@ production, https://iap-sandbox.odoo.com for testing, the endpoints are
     on sandbox to ease the tests.
 
 Log in then go to :menuselection:`My Account --> Your In-App Services`, click
-Create and provide the name of your service. 
+Create and provide the informations of your service.
 
 
-The now created service has *two* important fields:
+The service has *four* important fields:
 
 * :samp:`name` - :class:`ServiceName`: this will identify your service in the
-  client's :ref:`app <iap-odoo-app>` communicates directly with IAP.
-* :samp:`key` - :class:`ServiceKey`: the developer key that identifies you in 
-  IAP (see :ref:`your service <iap-service>`) and allows to draw credits from
-  the client's account.
-
+  client's :ref:`app <iap-odoo-app>` communicates directly with IAP, choose it 
+  carefully!
 .. warning::
     The :class:`ServiceName` is unique and should usually match the name of your 
-    Odoo App.
+    Odoo Client App.
 
+* :samp:`Icon` - :class:`Icon`: A generic icon that will serve as default for your
+  :ref:`packages <iap-packages>`
+
+* :samp:`key` - :class:`ServiceKey`: the developer key that identifies you in 
+  IAP (see :ref:`your service <iap-service>`) and allows to draw credits from
+  the client's account. It will be shown only once upon creation of the service
+  and can be regenerated at will.
 .. danger:: 
     Your :class:`ServiceKey` *is a secret*, leaking your service key
     allows other application developers to draw credits bought for
     your service(s).
 
-.. image:: images/service_select.png
+* :samp:`privacy policy` - :class:`PrivacyPolicy`: This is an url to the privacy
+  policy of your service. This should explicitly mention the **information you collect**,
+  How you **use it, its relevance** to make your service work and inform the 
+  client on how they can **access, update or delete their personal information**.
+
+.. image:: images/menu.png
     :align: center
 
-.. image:: images/service_create.png
+.. image:: images/service_list.png
     :align: center
 
-.. image:: images/service_packs.png
+.. image:: images/creating_service.png
+    :align: center
+
+.. image:: images/service_created.png
     :align: center
 
 You can then create *credit packs* which clients can purchase in order to
@@ -203,9 +219,10 @@ use your service.
 Packages
 --------
 
-The credit packages are essentially a product with 4 characteristics.
+The credit packages are essentially a product with 5 characteristics.
 
 * Name: the name of the package,
+* Icon: A specific icon for the package. If not provided, it will fallback on the service icon
 * Description: details on the package that will appear on the shop page as
   well as the invoice,
 * Credits: the amount of credits the client is entitled to when buying the package,
@@ -362,7 +379,6 @@ parameters we can use to make things clearer to the end-user:
 .. patch::
 
 
-
 .. TODO:: how do you test your service?
 
 JSON-RPC2_ Transaction API
@@ -394,13 +410,13 @@ Authorize
 
     :param ServiceKey key:
     :param UserToken account_token:
-    :param int credit:
+    :param float credit:
     :param str description: optional, helps users identify the reason for
                             charges on their accounts.
     :returns: :class:`TransactionToken` if the authorization succeeded.
     :raises: :class:`~odoo.exceptions.AccessError` if the service token is invalid
     :raises: :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` if the account does
-    :raises: ``TypeError`` if the ``credit`` value is not an integer
+    :raises: ``TypeError`` if the ``credit`` value is not an integer or a float
 
 .. code-block:: python
 
@@ -434,7 +450,7 @@ Capture
 
     :param TransactionToken token:
     :param ServiceKey key:
-    :param int credit_to_capture: (new - 15 Jan 2018) optional parameter to capture a smaller amount of credits than authorized
+    :param float credit_to_capture: (new - 15 Jan 2018) optional parameter to capture a smaller amount of credits than authorized
     :raises: :class:`~odoo.exceptions.AccessError`
 
 .. code-block:: python
@@ -534,6 +550,33 @@ care how they are implemented
 
     Raised by any unexpeted behaviour at the discretion of the App developer (*you*).
 
+
+Test the API
+------------
+
+In order to test the developped app, we propose a sandbox platform that allows you to:
+
+1. Test the whole flow from the client's point of view - Actual services and transactions
+   that can be consulted. (again this requires to change the endpoint, see the danger note
+   in :ref:`Service <iap-service>`)
+2. Test the API.
+
+The latter consists in specific tokens that will work on **IAP-Sandbox only**.
+
+* token ``000000``: represents a non-existing account. Returns
+  an :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` on authorize attempt.
+* token ``000111``: Represents an account without sufficient credits to perform any service.
+  Returns an :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` on authorize attempt.
+* token ``111111``: Represents an account with enough credits to perform any service. 
+  An authorize attempt will return a dummy transacion token that is processed by the capture 
+  and cancel routes.
+
+.. note::
+
+    * Those tokens are only active on the IAP-Sanbox server.
+    * The service key is completely ignored with this flow, If you want to run a robust test 
+      of your service, you should ignore these tokens.
+
 Odoo Helpers
 ============
 
@@ -548,7 +591,7 @@ Charging
 .. note::
 
     A new functionality was introduced to capture a different amount of credits than reserved.
-    As this patch was added on the 15th of January 2018, you will need to upgrade your ``iap`` module in order to use it.
+    As this patch was added on the **15th of January 2018**, you will need to upgrade your ``iap`` module in order to use it.
     The specifics of the new functionality are highlighted in the code. 
 
 .. class:: odoo.addons.iap.models.iap.charge(env, key, account_token, credit[, description, credit_template])
@@ -567,12 +610,12 @@ Charging
                                      configuration key
     :param ServiceKey key:
     :param UserToken token:
-    :param int credit:
+    :param float credit:
     :param str description:
     :param Qweb template credit_template:
 
 .. code-block:: python
-  :emphasize-lines: 10,13,14,15
+  :emphasize-lines: 11,13,14,15
 
     @route('/deathstar/superlaser', type='json')
     def superlaser(self, user_account,
@@ -583,7 +626,8 @@ Charging
                        0.0 is none, 1.0 is full power
         """
         credits = int(MAXIMUM_POWER * factor)
-        with charge(request.env, SERVICE_KEY, user_account, credits) as transaction:
+        description = "We will demonstrate the power of this station on your home planet of Alderaan."
+        with charge(request.env, SERVICE_KEY, user_account, credits, description) as transaction:
             # TODO: allow other targets
             transaction.credit = max(credits, 2)
             # Sales ongoing one the energy price,
