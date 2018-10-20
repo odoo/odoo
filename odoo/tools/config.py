@@ -386,6 +386,10 @@ class configmanager(object):
 
         self.rcfile = os.path.abspath(
             self.config_file or opt.config or os.environ.get('ODOO_RC') or os.environ.get('OPENERP_SERVER') or rcfilepath)
+        if os.path.isdir(self.rcfile):
+            self.rcfiles = sorted([os.path.join(self.rcfile, f) for f in os.listdir(self.rcfile) if os.path.isfile(os.path.join(self.rcfile, f))])
+        else:
+            self.rcfiles = [self.rcfile]
         self.load()
 
         # Verify that we want to log or not, if not the output will go to stdout
@@ -537,7 +541,7 @@ class configmanager(object):
         }
         p = ConfigParser.RawConfigParser()
         try:
-            p.read([self.rcfile])
+            p.read(self.rcfiles)
             for (name,value) in p.items('options'):
                 name = outdated_options_map.get(name, name)
                 if value=='True' or value=='true':
@@ -562,6 +566,8 @@ class configmanager(object):
             pass
 
     def save(self):
+        if os.path.isdir(self.rcfile):
+            sys.stderr.write("ERROR: cannot write out config file when using config directories\n")
         p = ConfigParser.RawConfigParser()
         loglevelnames = dict(zip(self._LOGLEVELS.values(), self._LOGLEVELS))
         p.add_section('options')
