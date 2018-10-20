@@ -20,16 +20,18 @@
 # Tina Rittmüller <tr@ife.de>, 2018
 # Jan Brodersen <4rmitxes@gmail.com>, 2018
 # Luc Muller <lmuller@ityou.de>, 2018
+# m sc <michael.schuett.lwl@gmail.com>, 2018
 # JackTheHunter <Maximilian.N98@gmail.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Jan Meyer, 2018
+# Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
 "PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Jan Meyer, 2018\n"
+"Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +95,7 @@ msgstr "%s (Kopie)"
 #: code:addons/account/models/account.py:688
 #, python-format
 msgid "%s Sequence"
-msgstr ""
+msgstr "%s Sequenz"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -118,12 +120,12 @@ msgstr "-> teilweise ausgeglichene Buchungen anzeigen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
 msgid "/account/static/src/img/account_dashboard_onboarding_bg.jpg"
-msgstr ""
+msgstr "/account/static/src/img/account_dashboard_onboarding_bg.jpg"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
 msgid "/account/static/src/img/account_invoice_onboarding_bg.jpg"
-msgstr ""
+msgstr "/account/static/src/img/account_invoice_onboarding_bg.jpg"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -176,6 +178,21 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Sehr geehrte(r) ${object.partner_id.name}<br/><br/>\n"
+"Wir haben Ihre Zahlung dankend erhalten\n"
+"Anbei übersenden wir Ihnen die Zahlungsbestätigung<strong>${(object.name or '').replace('/','-')} </strong>\n"
+"für<strong>${format_amount(object.amount, object.currency_id)}</strong>von ${object.company_id.name}.\n"
+"<br/><br/>\n"
+"Bei Rückfragen stehen wir Ihnen jederzeit zur Verfügung.\n"
+"<br/><br/>\n"
+"Mit freundlichen Grüßen<br/>\n"
+" % if user and user.signature:\n"
+" ${user.signature | safe}\n"
+" % endif\n"
+"</p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -319,15 +336,15 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Alle ausgewählten Buchungssätze werden geprüft "
+"und gebucht. Danach können sie nicht mehr verändert werden.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Default Taxes</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"o_form_label\">Voreingestellte Steuern</span>\n"
-"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Die hier eingetragenen Werte sind unternehmensspezifisch\" aria-label=\"Die hier eingetragenen Werte sind unternehmensspezifisch\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr "<span class=\"o_form_label\">Voreingestellte Steuern</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -353,7 +370,7 @@ msgstr "<span class=\"o_form_label\">Rundungsmethode</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "<span class=\"o_form_label\">of the month</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">des Monates</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -366,6 +383,8 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Es werden nur Journale vorgeschlagen, die noch "
+"nicht mit einem Bankkonto verknüpft sind</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -387,17 +406,17 @@ msgstr "<span role=\"separator\">Neu</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr ""
+msgstr "<span role=\"separator\">Abgleich</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">View</span>"
-msgstr ""
+msgstr "<span role=\"separator\">Ansicht</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Guthaben im Hauptbuch</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -417,7 +436,7 @@ msgstr "<span> Bis </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount Paid</span>"
-msgstr ""
+msgstr "<span>bezahlter Betrag</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -477,7 +496,7 @@ msgstr "<span>Geschäftsvorfälle</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Original Amount</span>"
-msgstr ""
+msgstr "<span>ursprünglicher Betrag</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -502,7 +521,7 @@ msgstr "<span>Steuern</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr ""
+msgstr "<span>Preis pro Einheit</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4949,7 +4968,7 @@ msgstr "Nicht ausgeglichene Einträge vorhanden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
 msgid "Has all required arguments"
-msgstr ""
+msgstr "Hat alle erforderlichen Argumente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__has_error
@@ -6061,7 +6080,7 @@ msgstr "Juni"
 #: selection:res.company,account_setup_coa_state:0
 #: selection:res.company,account_setup_fy_data_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Gerade erledigt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__reason
@@ -6370,7 +6389,7 @@ msgstr "Letzte Rechnungen & Zahlungen am Datum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__layout
 msgid "Layout"
-msgstr ""
+msgstr "Layout"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -7063,7 +7082,7 @@ msgstr ""
 #: selection:res.company,account_setup_coa_state:0
 #: selection:res.company,account_setup_fy_data_state:0
 msgid "Not done"
-msgstr ""
+msgstr "Nicht fertig"
 
 #. module: account
 #. openerp-web

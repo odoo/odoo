@@ -1,82 +1,156 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * l10n_multilang
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# Per Rasmussen <perhgrasmussen@gmail.com>, 2018
+# Morten Schou <ms@msteknik.dk>, 2018
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Ejner Sønniksen <ejner@vkdata.dk>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:20+0000\n"
-"PO-Revision-Date: 2016-04-11 13:28+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
-"Language: da\n"
+"POT-Creation-Date: 2018-10-08 14:33+0000\n"
+"PO-Revision-Date: 2018-10-08 14:33+0000\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2018\n"
+"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
 msgid "Account"
+msgstr "Konto"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_account_tag
+msgid "Account Tag"
+msgstr "Konto mærke"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
+msgid ""
+"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
 msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analyse konto"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_res_country_state
+msgid "Country state"
+msgstr "Landets tilstand"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__description
+msgid "Display on Invoices"
+msgstr "Vis på fakturaer"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__name
 msgid "Fiscal Position"
-msgstr "Konterings gruppe"
+msgstr "Bogføringsgruppe"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__name
+msgid "Fiscal Position Template"
+msgstr "Skabelon til bogføringsgruppe"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_base_language_install
+msgid "Install Language"
+msgstr "Installer sprog"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_journal__name
+msgid "Journal Name"
+msgstr "Journal navn"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__description
+msgid "Label on Invoices"
+msgstr "Tekst på fakturaer"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_fiscal_position__note
+msgid "Legal mentions that have to be printed on the invoices."
+msgstr "Juridiske navne, der skal udskrives på fakturaerne."
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+msgid "Name"
+msgstr "Navn"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__note
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
+msgid "Notes"
+msgstr "Noter"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
 msgid "Spoken Languages"
-msgstr ""
+msgstr "Talte sprog"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
+#: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
+msgid "State Name"
+msgstr "Delstatens navn"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
 msgid ""
 "State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in "
-"the final object when generating them from templates. You must provide the "
+"loaded at the time of installation of this localization module and copied in"
+" the final object when generating them from templates. You must provide the "
 "language codes separated by ';'"
 msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "Moms"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
+msgid "Tax Name"
+msgstr "Momsnavn"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Skabelon for konterings gruppe"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr ""
+msgstr "Skabelon for bogføringsgruppe"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_template
 msgid "Templates for Accounts"
-msgstr ""
+msgstr "Skabeloner for konti"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr ""
+msgstr "Moms skabeloner"

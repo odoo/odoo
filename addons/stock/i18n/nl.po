@@ -196,7 +196,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">On Hand</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Beschikbaar</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -272,7 +272,7 @@ msgstr "<strong>Locatie</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>Lot/serienummer</strong>"
+msgstr "<strong>Partij/Serienummer</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -382,6 +382,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Een voorraad product is een product waarvan u voorraad beheerd. De voorraad app moet geïnstalleerd worden.\n"
+"Een verbruiksproduct, is een product waarvoor geen voorraad wordt bijgehouden.\n"
+"Een dienst is een immateriëel product dat uw verkoopt."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -591,7 +594,7 @@ msgid ""
 "Are you sure you want to confirm this operation? This may lead to "
 "inconsistencies in your inventory."
 msgstr ""
-"Weet u zeker dat u deze operatie wilt uitvoeren? Dit kan leiden tot "
+"Weet u zeker dat u deze bewerking wilt uitvoeren? Dit kan leiden tot "
 "inconsistenties in uw voorraad."
 
 #. module: stock
@@ -1180,7 +1183,7 @@ msgstr "Maak een nieuwe voorraadaanpassing"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Create a new operation type"
-msgstr "Maak een nieuw soort operatie aan"
+msgstr "Maak een nieuw soort bewerking aan"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -1621,6 +1624,9 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
+"Afhankelijk van de geïnstalleerde modules geeft u dit de mogelijkheid om de "
+"route van het product aan te geven. Of het product gekocht wordt, gemaakt "
+"wordt of MTO/MTS,etc...."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
@@ -1714,7 +1720,7 @@ msgstr "Bestemmingsroute"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
-msgstr "Gedetailleerde operaties"
+msgstr "Gedetailleerde bewerkingen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_details_visible
@@ -1848,6 +1854,8 @@ msgstr "Boek datum"
 #: model:ir.model.fields,help:stock.field_stock_scrap__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
+"Zorg voor de traceerbaarheid van een product dat kan worden opgeslagen in uw"
+" magazijn."
 
 #. module: stock
 #. openerp-web
@@ -2200,7 +2208,7 @@ msgid ""
 "If a product is not at the right place, set the checked quantity to 0 and "
 "create a new line with correct location."
 msgstr ""
-"Als een product niet op de juiste plaats is zet u de hoeveelheid op 1 en "
+"Als een product niet op de juiste plaats is zet u de hoeveelheid op 0 en "
 "maakt u een nieuwe regel met de huidige locatie."
 
 #. module: stock
@@ -3622,7 +3630,7 @@ msgstr "Bewerkingsoorten"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr "Operaties zonder verpakking"
+msgstr "Bewerkingen zonder verpakking"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__partner_id
@@ -4105,7 +4113,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations faster with barcodes"
-msgstr "Verwerk je operaties sneller met barcodes"
+msgstr "Verwerk je bewerkingen sneller met barcodes"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4262,7 +4270,7 @@ msgstr "Product sjabloon"
 #: model:ir.model.fields,field_description:stock.field_product_template__type
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_type
 msgid "Product Type"
-msgstr "Soort product"
+msgstr "Productsoort"
 
 #. module: stock
 #: model:ir.model,name:stock.model_uom_uom
@@ -5249,7 +5257,7 @@ msgstr "Toon controle beschikbaarheid"
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_operations
 msgid "Show Detailed Operations"
-msgstr "Toon gedetailleerde operaties"
+msgstr "Toon gedetailleerde bewerkingen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_m2o
@@ -5647,7 +5655,7 @@ msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
 msgstr ""
-"Technisch veld welke wordt gebruikt voor herbevooradingsroutes tussen "
+"Technisch veld welke wordt gebruikt voor herbevoorradingsroutes tussen "
 "magazijnen, welke behoren bij dit bedrijf"
 
 #. module: stock
@@ -6409,7 +6417,7 @@ msgstr "Update beschikbare Hvh"
 #: code:addons/stock/models/product.py:563
 #, python-format
 msgid "Update quantity on hand"
-msgstr ""
+msgstr "Bijwerken beschikbare voorraad"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0

@@ -3,18 +3,18 @@
 # * website_partner
 # 
 # Translators:
-# jonas jensen <j.jensen@tcomp.dk>, 2017
-# Ejner Sønniksen <ejner@vkdata.dk>, 2017
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
+# Martin Trigaux, 2018
+# jonas jensen <j.jensen@tcomp.dk>, 2018
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Ejner Sønniksen <ejner@vkdata.dk>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2018\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,48 +28,72 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__is_published
+#: model:ir.model.fields,field_description:website_partner.field_res_users__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__is_seo_optimized
+#: model:ir.model.fields,field_description:website_partner.field_res_users__is_seo_optimized
+msgid "SEO optimized"
+msgstr ""
+
+#. module: website_partner
 #: model_terms:ir.ui.view,arch_db:website_partner.partner_detail
 msgid "Short Description for List View"
 msgstr "Kort beskrivelse til Listevisning"
 
 #. module: website_partner
-#: model:ir.model.fields,help:website_partner.field_res_users_website_url
+#: model:ir.model.fields,help:website_partner.field_res_partner__website_url
+#: model:ir.model.fields,help:website_partner.field_res_users__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Den fulde URL for at få adgang til dokumentet via hjemmesiden."
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_users_website_published
-msgid "Visible in Website"
-msgstr "Synlig på website"
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_published
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_published
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_description
-#: model:ir.model.fields,field_description:website_partner.field_res_users_website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_description
 msgid "Website Partner Full Description"
 msgstr "Hjemmeside partner fuld beskrivelse"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_short_description
-#: model:ir.model.fields,field_description:website_partner.field_res_users_website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_short_description
 msgid "Website Partner Short Description"
 msgstr "Hjemmeside partner kort beskrivelse"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_users_website_url
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_url
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_url
 msgid "Website URL"
-msgstr "Website URL"
+msgstr "Hjemmeside URL"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_description
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_description
 msgid "Website meta description"
 msgstr "Meta beskrivelse"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_keywords
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_keywords
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_keywords
 msgid "Website meta keywords"
 msgstr "Meta nøgleord"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_title
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_title
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_title
 msgid "Website meta title"
 msgstr "Meta titel"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_og_img
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""

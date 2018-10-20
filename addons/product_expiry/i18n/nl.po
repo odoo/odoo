@@ -27,6 +27,8 @@ msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Verval waarschuwing</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -41,7 +43,7 @@ msgstr "Signalering datum"
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
 msgid "Alert Date Reached"
-msgstr ""
+msgstr "Waarschuwingsdatum bereikt"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
@@ -86,7 +88,7 @@ msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
 msgstr ""
 "Aantal dagen voordat een waarschuwing getoond moet worden op het "
-"lot/serienummer."
+"serie/partijnummer."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__life_time
@@ -115,6 +117,8 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+"Aantal dagen voordat de goederen achteruitgaan, zonder gevaarlijk te zijn. "
+"Dit wordt berekend op de partij/serie nummer."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -175,7 +179,7 @@ msgstr "De waarschuwingsdatum is bereikt."
 #: code:addons/product_expiry/models/production_lot.py:84
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
-msgstr ""
+msgstr "De waarschuwingsdatum is bereikt voor dit serie/partijnummer."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
