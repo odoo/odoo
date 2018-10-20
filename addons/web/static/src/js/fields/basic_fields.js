@@ -1363,7 +1363,7 @@ var AbstractFieldBinary = AbstractField.extend({
         'click .o_select_file_button': function () {
             this.$('.o_input_file').click();
         },
-        'click .o_clear_file_button': 'on_clear',
+        'click .o_clear_file_button': '_onClearClick',
     }),
     init: function (parent, name, record) {
         this._super.apply(this, arguments);
@@ -1449,10 +1449,32 @@ var AbstractFieldBinary = AbstractField.extend({
             });
         }
     },
-    on_clear: function () {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    /**
+     * Clear the file input
+     *
+     * @private
+     */
+    _clearFile: function (){
         this.set_filename('');
         this._setValue(false);
         this._render();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+     * On "clear file" button click
+     *
+     * @param {MouseEvent} ev
+     * @private
+     */
+    _onClearClick: function (ev) {
+        this._clearFile();
     },
 });
 
@@ -1510,7 +1532,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         this.$('> img').remove();
         this.$el.prepend($img);
         $img.on('error', function () {
-            self.on_clear();
+            self._clearFile();
             $img.attr('src', self.placeholder);
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });

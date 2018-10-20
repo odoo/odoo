@@ -78,7 +78,7 @@
         <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
         <div class="container">
             <div class="row s_nb_column_fixed">
-                <div class="col-lg-7 bg-white jumbotron pt32 pb32" data-name="Box">
+                <div class="col-lg-7 bg-white jumbotron rounded pt32 pb32" data-name="Box">
                     <div class="row">
                         <div class="col-lg-12 s_title s_col_no_bgcolor" data-name="Title">
                             <h1 class="s_title_thin"><font style="font-size: 62px;"><b>Sell Online.</b> Easily.</font></h1>
@@ -1003,7 +1003,7 @@
     </div>
 
     <!-- STYLES | .s_rating -->
-    <div data-selector=".s_rating [class*='col-lg-']">
+    <div data-selector=".s_rating > div">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item">Icon</a>
             <div class="dropdown-menu" role="menu">
@@ -1081,7 +1081,7 @@
                 <a href="#" class="dropdown-item" role="menuitem" data-select-class="slide">Slide</a>
                 <a href="#" class="dropdown-item" role="menuitem" data-select-class="carousel-fade slide">Fade</a>
                 <div class="dropdown-divider"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_no_transition">None</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="">None</a>
             </div>
         </div>
         <div class="dropdown-submenu">
@@ -1278,35 +1278,33 @@
 
     <!-- Color | Columns -->
     <div data-js="colorpicker"
-        data-selector="section [class*='col-lg-']"
-        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor > [class*='col-lg-'], .o_gallery [class*='col-lg-']">
+        data-selector="section .row > div"
+        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
             <div class="dropdown-menu" role="menu"/>
         </div>
     </div>
 
-    <div data-selector="section [class*='col-lg-']"
-        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor > [class*='col-lg-'], .o_gallery [class*='col-lg-']">
+    <div data-selector="section .row > div"
+        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-magic"/>Styles</a>
             <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="border">Border</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="rounded">Rounded</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="shadow">Shadow</a>
-                <div class="dropdown-divider"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="">None</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="border">Border</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="rounded">Rounded</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-toggle-class="shadow">Shadow</a>
             </div>
         </div>
     </div>
 
     <div data-js="sizing_y"
-        data-selector="section, .row > [class*='col-lg-'], :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn"/>
+        data-selector="section, .row > div, :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn"/>
 
     <div data-js="sizing_x"
-        data-selector=".row > [class*='col-lg-']"
-        data-drop-near=".row > [class*='col-lg-']"
-        data-exclude=".s_col_no_resize > [class*='col-lg-']">
+        data-selector=".row > div"
+        data-drop-near=".row > div"
+        data-exclude=".s_col_no_resize.row > div">
     </div>
 
     <div id="so_snippet_addition"
