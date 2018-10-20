@@ -46,6 +46,24 @@ def _code_get(self, cr, uid, context=None):
     cr.execute('select code, name from ir_sequence_type')
     return cr.fetchall()
 
+def _predict_nextval(self, cr, seq_id):
+    """Predict next value for PostgreSQL sequence without consuming it"""
+    # Cannot use currval() as it requires prior call to nextval()
+    query = """SELECT last_value,
+                      (SELECT increment_by
+                       FROM pg_sequences
+                       WHERE sequencename = 'ir_sequence_%(seq_id)s'),
+                      is_called
+               FROM ir_sequence_%(seq_id)s"""
+    if cr._cnx.server_version < 100000:
+        query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%(seq_id)s"
+    cr.execute(query % {'seq_id': seq_id})
+    (last_value, increment_by, is_called) = cr.fetchone()
+    if is_called:
+        return last_value + increment_by
+    # sequence has just been RESTARTed to return last_value next time
+    return last_value
+
 class ir_sequence(openerp.osv.osv.osv):
     """ Sequence model.
 
@@ -56,7 +74,7 @@ class ir_sequence(openerp.osv.osv.osv):
     """
     _name = 'ir.sequence'
     _order = 'name'
-    
+
     def _get_number_next_actual(self, cr, user, ids, field_name, arg, context=None):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
@@ -65,19 +83,8 @@ class ir_sequence(openerp.osv.osv.osv):
             if  element.implementation != 'standard':
                 res[element.id] = element.number_next
             else:
-                # get number from postgres sequence. Cannot use
-                # currval, because that might give an error when
-                # not having used nextval before.
-                statement = (
-                    "SELECT last_value, increment_by, is_called"
-                    " FROM ir_sequence_%03d"
-                    % element.id)
-                cr.execute(statement)
-                (last_value, increment_by, is_called) = cr.fetchone()
-                if is_called:
-                    res[element.id] = last_value + increment_by
-                else:
-                    res[element.id] = last_value
+                seq_id = "%03d" % element.id
+                res[element.id] = _predict_nextval(self, cr, seq_id)
         return res
 
     def _set_number_next_actual(self, cr, uid, id, name, value, args=None, context=None):
