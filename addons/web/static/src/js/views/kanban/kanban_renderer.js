@@ -9,6 +9,7 @@ var quick_create = require('web.kanban_quick_create');
 var QWeb = require('web.QWeb');
 var session = require('web.session');
 var utils = require('web.utils');
+var viewUtils = require('web.viewUtils');
 
 var ColumnQuickCreate = quick_create.ColumnQuickCreate;
 
@@ -89,6 +90,9 @@ var KanbanRenderer = BasicRenderer.extend({
 
     /**
      * @override
+     * @param {Object} params
+     * @param {boolean} params.quickCreateEnabled set to false to disable the
+     *   quick create feature
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
@@ -107,6 +111,7 @@ var KanbanRenderer = BasicRenderer.extend({
         if (this.columnOptions.hasProgressBar) {
             this.columnOptions.progressBarStates = {};
         }
+        this.quickCreateEnabled = params.quickCreateEnabled;
 
         this._setState(state);
     },
@@ -359,6 +364,7 @@ var KanbanRenderer = BasicRenderer.extend({
             draggable: draggable,
             group_by_tooltip: groupByTooltip,
             grouped_by_m2o: this.groupedByM2O,
+            quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state),
             relation: grouped_by_field,
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
