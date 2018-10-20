@@ -45,17 +45,17 @@ msgstr "<b>Serienummer:</b>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
-msgstr ""
+msgstr "<span class=\"badge badge-warning float-right\">Geannuleerd</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"ml8\">hours</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">uren</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>Rapportering</span>"
+msgstr "<span>Rapportages</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -65,7 +65,7 @@ msgstr "<span>Bekijk</span>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Equipments:</strong>"
-msgstr "<strong>Uitrustingen:</strong>"
+msgstr "<strong>Apparatuur:</strong>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
@@ -127,7 +127,7 @@ msgstr "Voeg een nieuw apparaat toe"
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_category_action
 msgid "Add a new equipment category"
-msgstr "Voeg een nieuwe apparatuur categorie toe"
+msgstr "Voeg een nieuwe apparatuurcategorie toe"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action
@@ -342,6 +342,8 @@ msgid ""
 "Date at which the equipment became effective. This date will be used to "
 "compute the Mean Time Between Failure."
 msgstr ""
+"Datum waarop de apparatuur effectief werd. Deze datum wordt gebruikt om de "
+"MTBF te berekenen."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
@@ -442,7 +444,7 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create new maintenance request for this equipment category."
 msgstr ""
-"E-mail alias voor deze apparatuurcategorie. Emails aan deze alias maken "
+"E-mail alias voor deze apparatuurcategorie. E-mails aan deze alias maken "
 "automatisch een nieuwe onderhoudsopdracht aan voor deze categorie."
 
 #. module: maintenance
@@ -464,12 +466,12 @@ msgstr "Apparatuur toegewezen"
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_cat
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Equipment Categories"
-msgstr "Categorie apparatuur "
+msgstr "Apparatuurcategorieën"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__category_id
 msgid "Equipment Category"
-msgstr "Categorie apparatuur "
+msgstr "Apparatuurcategorie"
 
 #. module: maintenance
 #: model:res.groups,name:maintenance.group_equipment_manager
@@ -605,7 +607,7 @@ msgstr "indien aangevinkt hebben sommige leveringen een fout."
 #: selection:maintenance.request,kanban_state:0
 #: model:maintenance.stage,name:maintenance.stage_1
 msgid "In Progress"
-msgstr "In Behandeling"
+msgstr "In behandeling"
 
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_maintenance
@@ -724,7 +726,7 @@ msgstr "Onderhoud materiaal"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
 msgid "Maintenance Equipment Category"
-msgstr ""
+msgstr "Onderhoud apparatuurcategorie"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
@@ -788,7 +790,7 @@ msgstr "Onderhoudsteam"
 #: model:ir.model,name:maintenance.model_maintenance_team
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_teams
 msgid "Maintenance Teams"
-msgstr "Onderhoud teams"
+msgstr "Onderhoudsteams"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__maintenance_type
@@ -1089,7 +1091,7 @@ msgstr "Gerepareerd"
 #: model:ir.ui.menu,name:maintenance.maintenance_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapportages"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__request_ids
@@ -1288,7 +1290,7 @@ msgstr "Technisch persoon"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Technicians"
-msgstr "Technisch persoon"
+msgstr "Technische personen"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_model_id
@@ -1364,6 +1366,8 @@ msgid ""
 "Track equipments and link it to an employee or department.\n"
 "                You will be able to manage allocations, issues and maintenance of your equipment."
 msgstr ""
+"Volg apparatuur en koppel dit aan een werknemer of een afdeling.\n"
+"U kunt toewijzingen, problemen en onderhoud van uw apparatuur beheren."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search

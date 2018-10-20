@@ -3,19 +3,18 @@
 # * sms
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Morten Schou <ms@msteknik.dk>, 2017
-# Jesper Carstensen <jc@danodoo.dk>, 2017
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
-# Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# Martin Trigaux, 2018
+# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2018
+# Morten Schou <ms@msteknik.dk>, 2018
+# Jesper Carstensen <jc@danodoo.dk>, 2018
+# lhmflexerp <lhm@flexerp.dk>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2018\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,9 +23,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/js/sms_widget.js:93
+#, python-format
+msgid "%s chars, fits in %s SMS (%s) "
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Cancel"
-msgstr "Annullér"
+msgstr "Annuller"
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_partner
@@ -34,18 +40,18 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_uid
 msgid "Created by"
 msgstr "Oprettet af"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_date
 msgid "Created on"
 msgstr "Oprettet den"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_display_name
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_display_name
+#: model:ir.model.fields,field_description:sms.field_sms_api__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
@@ -55,8 +61,8 @@ msgid "Email Thread"
 msgstr "Email-tråd"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_id
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_id
+#: model:ir.model.fields,field_description:sms.field_sms_api__id
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__id
 msgid "ID"
 msgstr "ID"
 
@@ -64,51 +70,63 @@ msgstr "ID"
 #: code:addons/sms/models/mail_thread.py:53
 #, python-format
 msgid "Insufficient credit, unable to send SMS message: %s"
-msgstr ""
+msgstr "Ikke nok kredit, ikke muligt at sende SMS besked: %s"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api___last_update
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms___last_update
+#: model:ir.model.fields,field_description:sms.field_sms_api____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms____last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_uid
 msgid "Last Updated by"
 msgstr "Sidst opdateret af"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_message
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__message
 msgid "Message"
 msgstr "Besked"
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:48
+#: code:addons/sms/wizard/send_sms.py:82
 #, python-format
 msgid "Missing mobile number for %s."
-msgstr ""
+msgstr "Mangler mobilnummer for %s."
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:55
 #, python-format
 msgid "No mobile number defined, unable to send SMS message: %s"
+msgstr "Intet mobilnummer angivet, ikke muligt at sende SMS besked: %s"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
+msgid "Recipients"
+msgstr "Modtagere"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_api
+msgid "SMS API"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_recipients
-msgid "Recipients"
-msgstr "Modtagere"
+#. openerp-web
+#: code:addons/sms/static/src/xml/sms_widget.xml:4
+#, python-format
+msgid "SMS Pricing"
+msgstr ""
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:48
 #, python-format
 msgid "SMS message sent: %s"
-msgstr ""
+msgstr "SMS besked sendt: %s"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
@@ -118,20 +136,12 @@ msgstr "Send"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.model,name:sms.model_sms_send_sms
+#: model_terms:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
-msgstr ""
+msgstr "Send SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
 msgstr "Send en SMS"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_api
-msgid "sms.api"
-msgstr ""
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_send_sms
-msgid "sms.send_sms"
-msgstr ""

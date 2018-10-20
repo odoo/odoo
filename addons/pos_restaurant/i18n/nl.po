@@ -88,7 +88,7 @@ msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
 msgstr ""
-"Een achtergrond afbeelding gebruikt om de verdieping lay-out te tonen in de "
+"Een achtergrond afbeelding gebruikt om de ruimte lay-out te tonen in de "
 "kassa interface"
 
 #. module: pos_restaurant
@@ -97,7 +97,7 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
-"Een restaurant verdieping stelt de plaats voor waarde klanten worden bediend, dit is waar u\n"
+"Een restaurant ruimte stelt de plaats voor waarde klanten worden bediend, dit is waar u\n"
 "de positie van de tafels kan definiëren."
 
 #. module: pos_restaurant
@@ -127,7 +127,7 @@ msgstr "Voeg notitie toe"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Add a new restaurant floor"
-msgstr "Voeg een nieuwe restaurantverdieping toe"
+msgstr "Voeg een nieuwe restaurantruimte toe"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
@@ -139,7 +139,7 @@ msgstr "Voeg een nieuwe restaurant orderprinter toe"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "Add button"
-msgstr ""
+msgstr "Knop toevoegen"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -174,7 +174,7 @@ msgstr "Een interne identificatie van de printer"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__name
 msgid "An internal identification of the restaurant floor"
-msgstr "Een interne identificatie van een restaurant verdieping"
+msgstr "Een interne identificatie van een restaurantruimte"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -201,7 +201,7 @@ msgstr "Terug"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:82
 #, python-format
 msgid "Back to floor"
-msgstr ""
+msgstr "Terug naar vloer"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_color
@@ -226,7 +226,7 @@ msgstr "Rekening"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
 #, python-format
 msgid "Bill Printing"
-msgstr "Factuur afdrukken"
+msgstr "Rekening afdrukken"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -303,7 +303,7 @@ msgstr "Verwijder"
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
 msgid "Desk Organizer"
-msgstr ""
+msgstr "Tafel organizer"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -346,6 +346,11 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Elke orderprinter heeft een IP adres dat voor elke IoT Box/Hardware\n"
+"de proxy aangeeft waar de printer kan gevonden worden met een lijst van productcategorieën.\n"
+"Een orderprinter drukt alleen updates voor producten die behoren\n"
+"tot één\n"
+"van zijn categorieën."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -362,23 +367,23 @@ msgstr "Sta splitsen van rekeningen toe in de kassa."
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
 msgid "Floor"
-msgstr "Verdieping"
+msgstr "Ruimte"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__name
 msgid "Floor Name"
-msgstr "Naam verdieping"
+msgstr "Ruimtenaam"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
 msgid "Floor Plans"
-msgstr "Vloerplannen"
+msgstr "Ruimteindeling"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Floors"
-msgstr "Verdiepingen"
+msgstr "Ruimtes"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -732,7 +737,7 @@ msgstr "Rond"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:126
 #, python-format
 msgid "Round Shape"
-msgstr ""
+msgstr "Ronde vorm"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -781,7 +786,7 @@ msgstr "Vierkant"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:125
 #, python-format
 msgid "Square Shape"
-msgstr ""
+msgstr "Vierkante vorm"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -922,7 +927,7 @@ msgstr "Dit product wordt gebruikt als referentie op klantticketten."
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:129
 #, python-format
 msgid "Tint"
-msgstr ""
+msgstr "Tint"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -947,7 +952,7 @@ msgstr "Overplaatsing"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:156
 #, python-format
 msgid "Turquoise"
-msgstr ""
+msgstr "Turquoise"
 
 #. module: pos_restaurant
 #: model:product.product,uom_name:pos_restaurant.coke

@@ -6,6 +6,7 @@
 # Martin Trigaux, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Jean-Paul Ladage <j.ladage@zestsoftware.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
 # Wynand Tastenhoye <wta@odoo.com>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
@@ -57,14 +58,14 @@ msgstr "${object.project_id.company_id.name}: Tevredenheidsenquête"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr "%P"
+msgstr "% Op"
 
 #. module: project
 #: code:addons/project/models/project.py:302
 #: code:addons/project/models/project.py:624
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (copy)"
+msgstr "%s (kopie)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -72,7 +73,7 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks. Do you want to"
 " proceed?"
 msgstr ""
-"Een project (on)archiveren (on)archiveert de taken. Wilt u verder gaan?"
+"Het archiveren van een project archiveert ook de taken. Wilt u verder gaan?"
 
 #. module: project
 #. openerp-web
@@ -296,7 +297,7 @@ msgstr "<p>Eenmaal u taak klaar is kan u ze bewaren.</p>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<small class=\"text-muted\">Project - </small>"
-msgstr "<small class=\"text-muted\">Projekt - </small>"
+msgstr "<small class=\"text-muted\">Project - </small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -1478,7 +1479,7 @@ msgstr ""
 #: selection:report.project.task.user,state:0
 #, python-format
 msgid "In Progress"
-msgstr "In Behandeling"
+msgstr "In behandeling"
 
 #. module: project
 #. openerp-web
@@ -1555,7 +1556,7 @@ msgstr "Kanban valide uitleg"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "KPI Waarde geopende projecttaken"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1592,7 +1593,7 @@ msgstr "Laatste fase aanpassing"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Last Updated On"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1632,7 +1633,7 @@ msgstr "Laatste beoordeling: tevreden"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Legend priority"
-msgstr ""
+msgstr "Legenda prioriteit"
 
 #. module: project
 #. openerp-web
@@ -1667,7 +1668,7 @@ msgstr "Live"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr ""
+msgstr "Log tijd op taken"
 
 #. module: project
 #. openerp-web
@@ -1703,7 +1704,7 @@ msgstr "Hoofd bijlagen"
 #. module: project
 #: model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr "Beheerder"
+msgstr "Manager"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -2157,7 +2158,7 @@ msgstr "Project"
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Projectbeheerder"
+msgstr "Projectmanager"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2199,7 +2200,7 @@ msgstr "Project: activeer voorbeeld project"
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr "Project: stuur beoordeling"
+msgstr "Project: verstuur beoordeling"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2389,7 +2390,7 @@ msgstr "Verwijder afbeelding"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapportages"
 
 #. module: project
 #. openerp-web
@@ -2699,7 +2700,7 @@ msgstr "Taak geblokkeerd"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr "Taak teller"
+msgstr "Antal taken"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -3256,12 +3257,12 @@ msgstr "activeer een voorbeeld project"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "average"
-msgstr ""
+msgstr "gemiddeld"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "bad"
-msgstr ""
+msgstr "slecht"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

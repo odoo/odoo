@@ -49,7 +49,7 @@ msgstr "${object.company_id.name} 订单 (编号 ${object.name or 'n/a' })"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr "三匹配"
+msgstr "三方匹配"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
@@ -671,7 +671,7 @@ msgstr "草稿询价单"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
 msgid "Drop Ship Address"
-msgstr "直运地址"
+msgstr "代发货地址"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -771,7 +771,7 @@ msgstr "如果勾选此项， 某些信息将会产生传递错误。"
 msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
-msgstr "如果启用，激活三供应商账单配套：项目必须以支付发票收到。"
+msgstr "如果启用，激活三路供应商账单匹配：项目必须收到以便支付发票。"
 
 #. module: purchase
 #: code:addons/purchase/models/product.py:38
@@ -910,7 +910,7 @@ msgstr "管理供应商价格"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "管理你的采购协议（招标，毛毯订单）"
+msgstr "管理你的采购协议（招标，一揽子订单）"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -920,7 +920,7 @@ msgstr "经理"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Managers must approve orders"
-msgstr "经理必须批准订单。"
+msgstr "经理必须批准订单"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1038,7 +1038,7 @@ msgstr "没消息"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "No longer edit orders once confirmed"
-msgstr "不再编辑订单一旦确认"
+msgstr "订单一旦确认不再编辑"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_image
@@ -1479,7 +1479,7 @@ msgstr "如果你想直接从供应商发货给客户，就填写一个地址。
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr "供应商收取的数量"
+msgstr "供应商账单数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty

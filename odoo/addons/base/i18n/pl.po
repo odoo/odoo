@@ -568,7 +568,7 @@ msgid ""
 "        Bridge between HR and Maintenance."
 msgstr ""
 "\n"
-"        Połączenie pomiędzy HR a Utrzymaniem."
+"        Połączenie pomiędzy HR a Konserwacją."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -602,8 +602,8 @@ msgid ""
 msgstr ""
 "\n"
 "        Elektroniczne raporty księgowe\n"
-"            - COA\n"
-"            - Trial Balance\n"
+"            - Plan kont\n"
+"            - Bilans próbny\n"
 "        Raport DIOT\n"
 "    "
 
@@ -875,7 +875,7 @@ msgid ""
 "        Track equipments and maintenance requests"
 msgstr ""
 "\n"
-"        Śledź sprzęt i zarządzaj zleceniami serwisowymi"
+"        Śledź sprzęt i zarządzaj zleceniami konserwacyjnymi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_plaid
@@ -908,7 +908,7 @@ msgid ""
 msgstr ""
 "\n"
 "Wykorzystuj formularze rozmów kwalifikacyjnych podczas procesu rekrutacji.\n"
-"Ten moduł jest zintegrowany z modułem ankietowym,\n"
+"Ten moduł jest zintegrowany z modułem Ankiety,\n"
 "aby pozwolić tobie zdefiniować rozmowy kwalifikacyjne dla różnych posad."
 
 #. module: base
@@ -966,7 +966,7 @@ msgstr ""
 "    * Wielojęzyczna obsługa dla Planu kont, podatków, kodów podatkowych, dzienników,\n"
 "      szablonów księgowych, analitycznych planów kont i dzienników analitycznych.\n"
 "    * Zmiany kreatora instalacji\n"
-"        - Kopiowanie tłumaczeń dla COA, podatków, kodów podatkowych i pozycji fiskalnych z\n"
+"        - Kopiowanie tłumaczeń dla planu kont, podatków, kodów podatkowych i pozycji fiskalnych z\n"
 "          szablonów na obiekty docelowe.\n"
 "    "
 
@@ -977,7 +977,7 @@ msgid ""
 "    Adds Quality Control to workorders.\n"
 msgstr ""
 "\n"
-"    Dodaje kontrolę jakości do zleceń.\n"
+"    Dodaje Kontrolę Jakości do zleceń.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -986,7 +986,7 @@ msgid ""
 "    Adds workcenters to Quality Control\n"
 msgstr ""
 "\n"
-"Dodaje centra robocze do kontroli jakości\n"
+"Dodaje centra robocze do Kontroli Jakości\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_iot
@@ -1022,7 +1022,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Widok Gantta dla konsoli urlopów"
+"Widok Gantta dla Konsoli Urlopów"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -1063,9 +1063,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    PayuMoney Payment Acquirer dla Indii.\n"
+"    Bramka płatności PayUMoney dla Indii.\n"
 "\n"
-"    Bramka płatności PayUmoney obsługuje tylko walutę INR.\n"
+"    Bramka płatności PayUMoney obsługuje tylko walutę INR.\n"
 "    "
 
 #. module: base
@@ -1503,7 +1503,7 @@ msgstr ""
 "    * Kontrakt\n"
 "    * Miejsce urodzenia,\n"
 "    * Data badania lekarskiego\n"
-"    * Pojazd firmowy\n"
+"    * Samochód służbowy\n"
 "\n"
 "Możesz przypisać kilka kontraktów na pracownika.\n"
 "    "
@@ -1882,7 +1882,7 @@ msgstr ""
 "Zarządzanie zasobami\n"
 "=================\n"
 "Zarządzaj zasobami należącymi do firmy lub osoby.\n"
-"Śledzi deprecjacje i tworzy odpowiednie wpisy do dziennika.\n"
+"Śledzi amortyzację i tworzy odpowiednie wpisy do dziennika.\n"
 "\n"
 "    "
 
@@ -2044,6 +2044,15 @@ msgid ""
 "When you proceed with the reconciliation, simply select the corresponding batch payment to reconcile all the payments within.\n"
 "    "
 msgstr ""
+"\n"
+"Pakiety płatności\n"
+"=======================================\n"
+"Płatności w trybie wsadowym umożliwiają płatności grupowe.\n"
+"\n"
+"Są one na przykład używane do przegrupowania kilku otrzymanych czeków, zanim złożysz je w jednej partii do banku.\n"
+"Całkowita wpłacona kwota pojawi się jako pojedyncza transakcja na wyciągu bankowym.\n"
+"Gdy kontynuujesz proces uzgadniania, po prostu wybierz odpowiednią płatność, aby uzgodnić wszystkie płatności w ramach.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -2967,7 +2976,7 @@ msgstr ""
 "\n"
 "Ten moduł umożliwia zdalne korzystanie z urządzeń peryferyjnych podłączonych do tego serwera.\n"
 "\n"
-"Te moduły zawierają tylko szkielet umożliwiający. Rzeczywiste sterowniki urządzeń\n"
+"Te moduły zawierają tylko szkielet uruchamiający. Rzeczywiste sterowniki urządzeń\n"
 "znajdują się w innych modułach, które należy zainstalować osobno.\n"
 "\n"
 
@@ -2997,14 +3006,14 @@ msgstr ""
 "Helpdesk - aplikacja do zarządzania zgłoszeniami\n"
 "================================\n"
 "Funkcje: \n"
-"- Przetwarzaj bilety poprzez różne etapy, aby je rozwiązać.\n"
+"- Przetwarzaj zgłoszenia poprzez różne etapy, aby je rozwiązać.\n"
 "- Dodaj priorytety, rodzaje, opisy i znaczniki, aby zdefiniować swoje zgłoszenia. \n"
-"- Użyj czatu, aby przekazać dodatkowe informacje i skontaktować się z współpracownikami w sprawie tych zgłoszeń pomocy.\n"
+"- Użyj czatu, aby przekazać dodatkowe informacje i skontaktować się z współpracownikami w sprawie tych zgłoszeń.\n"
 "- Korzystaj z dostosowanego pulpitu nawigacyjnego i łatwego w użyciu widoku kanban do obsługi zgłoszeń. \n"
 "- Dokonaj dogłębnej analizy swoich zgłoszeń, korzystając z widoku przestawnego w menu raportów. \n"
 "- Stwórz zespół i określ jego członków, jeśli chcesz, użyj automatycznej metody przypisywania. \n"
 "- Użyj aliasu pocztowego, aby automatycznie tworzyć zgłoszenia i komunikować się z klientami.\n"
-"- Automatycznie dodawaj uzgodnione terminy SLA dla usług zgodnie z SLA klienta dla zgłoszeń przez Helpdesk.\n"
+"- Automatycznie dodawaj uzgodnione terminy SLA dla usług, zgodnie z SLA klienta w zgłoszeniach przez Helpdesk.\n"
 "- Uzyskaj opinie klientów za pomocą ocen. \n"
 "- Łatwo instaluj dodatkowe funkcje, korzystając z widoku formularza zespołu."
 
@@ -3255,7 +3264,7 @@ msgid ""
 "It links the module iot with the pos restaurant, so you don't have to call the  \n"
 msgstr ""
 "\n"
-"Łączy moduł IoT z restauracją pos, więc już nie ,musisz dzwonić  \n"
+"Łączy moduł IoT z restauracją pos, więc już nie musisz dzwonić  \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -3579,6 +3588,39 @@ msgid ""
 "* Monthly Turnover (Graph)\n"
 "    "
 msgstr ""
+"\n"
+"Zarządzaj ofertami sprzedaży i zamówieniami\n"
+"==================================\n"
+"\n"
+"Ta aplikacja pozwala zarządzać celami sprzedażowymi w efektywny i wydajny sposób, śledząc wszystkie zamówienia sprzedaży i historię.\n"
+"\n"
+"Obsługuje pełny obieg pracy:\n"
+"\n"
+"* **Oferta** -> **Zamówienie sprzedaży** -> **Faktura**\n"
+"\n"
+"Preferencje (tylko z zainstalowanym Zarządzaniem Magazynowym)\n"
+"------------------------------------------------------\n"
+"\n"
+"Jeśli zainstalowałeś również Zarządzanie Magazynem, możesz sobie poradzić z następującymi preferencjami:\n"
+"\n"
+"* Wysyłka: Wybór dostawy jednorazowej lub częściowej dostawy\n"
+"* Fakturowanie: wybierz sposób zapłaty faktur\n"
+"* Warunki Incoterms: Międzynarodowe warunki handlowe\n"
+"\n"
+"Możesz wybrać elastyczne metody fakturowania:\n"
+"\n"
+"* *Na żądanie*: Faktury są tworzone ręcznie z zamówień sprzedaży w razie potrzeby\n"
+"* *Przy zamówieniu dostawy*: faktury są generowane z odbioru (dostawy)\n"
+"* *Przed dostawą*: Faktura proforma jest tworzona i musi zostać opłacona przed dostawą\n"
+"\n"
+"Za pomocą tego modułu można personalizować zamówienie sprzedaży i raport faktury za pomocą\n"
+"kategorii, sum częściowych lub podziałów strony.\n"
+"\n"
+"Konsola dla Menedżera sprzedaży będzie zawierać\n"
+"------------------------------------------------\n"
+"* Moje oferty\n"
+"* Miesięczny obrót (wykres)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -3596,6 +3638,18 @@ msgid ""
 "* Incoterms: International Commercial terms\n"
 "\n"
 msgstr ""
+"\n"
+"Zarządzaj ofertami sprzedaży i zamówieniami\n"
+"==================================\n"
+"\n"
+"Ten moduł tworzy powiązanie między aplikacjami do zarządzania sprzedażą i magazynami.\n"
+"\n"
+"Preferencje\n"
+"-----------\n"
+"* Wysyłka: Wybór dostawy jednorazowej lub częściowej dostawy\n"
+"* Fakturowanie: wybierz sposób zapłaty faktur\n"
+"* Warunki Incoterms: Międzynarodowe warunki handlowe\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
@@ -3607,6 +3661,12 @@ msgid ""
 "Then it can be made specific at the product level.\n"
 "    "
 msgstr ""
+"\n"
+"Zarządzaj inwentarzem swoich produktów i wyświetlaj ich stan dostępności w swoim sklepie eCommerce.\n"
+"W przypadku braku zakupu możesz zdecydować o zablokowaniu lub kontynuowaniu dalszej sprzedaży.\n"
+"Domyślne zachowanie można wybrać w ustawieniach witryny.\n"
+"Następnie można go sprecyzować na poziomie produktu.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event
@@ -4074,6 +4134,13 @@ msgid ""
 "chatter messages and channel.\n"
 "    "
 msgstr ""
+"\n"
+"Powiadomienia chmury Odoo (OCN)\n"
+"===============================\n"
+"\n"
+"Ten moduł umożliwia wysyłanie powiadomień do zarejestrowanych urządzeń dla wiadomości bezpośrednich,\n"
+"komunikatów głosowych i kanału.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_dashboard
@@ -4086,6 +4153,13 @@ msgid ""
 "can embed graph and/or pivot views, and displays aggregate values.\n"
 "        "
 msgstr ""
+"\n"
+"Widok konsoli Odoo.\n"
+"========================\n"
+"\n"
+"Ten moduł definiuje widok konsoli, nowy typ widoku raportowania. Ten widok\n"
+"może osadzać widoki wykresów i / lub widoki przestawne oraz wyświetla wartości zagregowane.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -4159,6 +4233,14 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Konsola Odoo\n"
+"==============\n"
+"* Szybki dostęp do instalacji aplikacji\n"
+"* Szybkie dodawanie użytkowników\n"
+"* Szybki dostęp do sklepu z aplikacjami i motywami\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_gantt
@@ -4375,6 +4457,9 @@ msgid ""
 "Publish your customers as business references on your website to attract new potential prospects.\n"
 "    "
 msgstr ""
+"\n"
+"Opublikuj swoich klientów jako referencje biznesowe w swojej witrynie, aby przyciągnąć nowych potencjalnych klientów.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr
@@ -4383,6 +4468,9 @@ msgid ""
 "Publish your employees public information on About Us website page.\n"
 "    "
 msgstr ""
+"\n"
+"Publikuj informacje publiczne swoich pracowników na stronie internetowej O nas.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_membership
@@ -4391,6 +4479,9 @@ msgid ""
 "Publish your members/association directory publicly.\n"
 "    "
 msgstr ""
+"\n"
+"Opublikuj swój katalog członków / stowarzyszeń.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_ebay
@@ -4437,6 +4528,15 @@ msgid ""
 "* Possibility to add a measure to the quality check with a min/max tolerance\n"
 "* Define your stages for the quality alerts\n"
 msgstr ""
+"\n"
+"Baza jakości\n"
+"===============\n"
+"* Zdefiniuj punkty jakości, które będą generować kontrole jakości przy zbiorze,\n"
+"  produkcji zamówień lub zleceniach pracy (quality_mrp)\n"
+"* Alerty jakości mogą być tworzone niezależnie lub związane z kontrolą jakości\n"
+"* Możliwość dodania miary do kontroli jakości z tolerancją minimum / maksimum\n"
+"* Określ swoje etapy dla alertów jakości\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_control
@@ -4450,6 +4550,16 @@ msgid ""
 "* Possibility to add a measure to the quality check with a min/max tolerance\n"
 "* Define your stages for the quality alerts\n"
 msgstr ""
+"\n"
+"Kontrola jakości\n"
+"===============\n"
+"\n"
+"* Zdefiniuj punkty jakości, które będą generować kontrole jakości przy zbiorze,\n"
+"  produkcji zamówień lub zleceniach pracy (quality_mrp)\n"
+"* Alerty jakości mogą być tworzone niezależnie lub związane z kontrolą jakości\n"
+"* Możliwość dodania miary do kontroli jakości z tolerancją minimum / maksimum\n"
+"* Określ swoje etapy dla alertów jakości\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -4577,6 +4687,11 @@ msgid ""
 "Once the order is paid, the file is made available in the order confirmation page and in the customer portal.\n"
 "    "
 msgstr ""
+"\n"
+"Sprzedawaj e-towary w swoim sklepie eCommerce (np. Webinaria, artykuły, e-booki, samouczki wideo).\n"
+"Aby to zrobić, utwórz produkt i dołącz plik do udostępnienia za pomocą przycisku * Pliki * w formularzu produktu.\n"
+"Po zapłaceniu zamówienia plik zostaje udostępniony na stronie potwierdzenia zamówienia oraz w portalu klienta.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -4585,6 +4700,9 @@ msgid ""
 "Sell event tickets through eCommerce app.\n"
 "    "
 msgstr ""
+"\n"
+"Sprzedawaj bilety na wydarzenia za pośrednictwem aplikacji eCommerce.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest
@@ -4593,6 +4711,9 @@ msgid ""
 "Send KPI Digests periodically\n"
 "=============================\n"
 msgstr ""
+"\n"
+"Wysyłaj okresowo deklaracje KPI\n"
+"=============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_bpost
@@ -4678,6 +4799,9 @@ msgid ""
 "Show your company address/partner address on Google Maps. Configure an API key in the Website settings.\n"
 "    "
 msgstr ""
+"\n"
+"Pokaż adres swojej firmy / adres partnera w Mapach Google. Skonfiguruj klucz API w ustawieniach witryny.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -5062,6 +5186,9 @@ msgid ""
 "This is a base module. It holds website-related stuff for Contact model (res.partner).\n"
 "    "
 msgstr ""
+"\n"
+"To jest moduł podstawowy. Zawiera elementy związane z witryną dla modelu Kontakty (res.partner).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
@@ -5070,6 +5197,9 @@ msgid ""
 "This is a bridge module which integrates payment acquirers with Website app.\n"
 "    "
 msgstr ""
+"\n"
+"Jest to moduł łączący, który integruje nabywców płatności z aplikacją WWW.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -5106,6 +5236,10 @@ msgid ""
 "========================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Jest to podstawowy moduł do zarządzania jednostkami miary.\n"
+"========================================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -5450,6 +5584,9 @@ msgid ""
 "This module adds a Twitter roller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł dodaje do budowania strony internetowej blok konstrukcyjny rolka Twitter, dzięki czemu możesz wyświetlać kanały Twittera na dowolnej stronie swojej witryny.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -5462,6 +5599,13 @@ msgid ""
 "Finally, the module comes with an option to display an attribute summary table in product web pages (available in Customize menu).\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł dodaje narzędzie do porównywania do sklepu eCommerce, dzięki czemu kupujący mogą łatwo porównywać produkty na podstawie ich atrybutów. Znacznie przyspieszy to decyzję o zakupie.\n"
+"\n"
+"Aby skonfigurować atrybuty produktu, aktywuj * Atrybuty i warianty * w ustawieniach witryny. Spowoduje to dodanie specjalnej sekcji w formularzu produktu. W konfiguracji moduł ten dodaje pole kategorii do atrybutów produktu, aby uporządkować tabelę porównawczą klienta.\n"
+"\n"
+"Na koniec moduł posiada opcję wyświetlania tabeli podsumowań atrybutów na stronach internetowych produktów (dostępne w menu Dostosuj).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_dashboard
@@ -5472,6 +5616,11 @@ msgid ""
 "It also provides new tools to analyse your data.\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł dodaje nowy widok konsoli w aplikacji WWW.\n"
+"Ten nowy typ widoku zawiera podstawowe statystyki, wykres i podzbiór przestawny, które pozwalają uzyskać szybki przegląd sprzedaży online.\n"
+"Zapewnia również nowe narzędzia do analizy danych.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -5626,6 +5775,9 @@ msgid ""
 "This module allows ecommerce users to enter their UPS account number and delivery fees will be charged on that account number.\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł pozwala użytkownikom e-commerce wprowadzić swój numer konta UPS, a opłaty za dostawę będą naliczane na ten numer konta.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -5641,6 +5793,16 @@ msgid ""
 "trigger an automatic reminder email.\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł umożliwia implementację reguł działania dla dowolnego obiektu.\n"
+"============================================================\n"
+"\n"
+"Użyj automatycznych działań, aby automatycznie uruchamiać akcje dla różnych ekranów.\n"
+"\n"
+"**Przykład:** Potencjalny klient utworzony przez określonego użytkownika może zostać automatycznie ustawiony na konkretny\n"
+"zespół sprzedaży lub szansę, która nadal ma status oczekujący po 14 dniach, może\n"
+"wywołać automatyczny e-mail z przypomnieniem.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_check_printing
@@ -5659,6 +5821,19 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł umożliwia drukowanie płatności na wcześniej wydrukowanym papierze czekowym.\n"
+"Możesz skonfigurować dane wyjściowe (układ, informacje dodatkowe itp.) W ustawieniach firmy i zarządzać\n"
+"numeracją czeków (jeśli używasz wydrukowanych czeków bez numerów) w ustawieniach dziennika.\n"
+"\n"
+"Obsługiwane formaty\n"
+"-----------------\n"
+"Ten moduł obsługuje trzy najpopularniejsze formaty czeków i będzie działać od razu z połączonymi czekami z checkdepot.net.\n"
+"\n"
+"- Check on top: Standard Quicken / QuickBooks (https://www.checkdepot.net/checks/checkorder/59209.htm)\n"
+"- Check on middle: Standard Peachtree (https://www.checkdepot.net/checks/checkorder/513791.htm)\n"
+"- Check on bottom: Standard ADP (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -5676,6 +5851,18 @@ msgid ""
 "- Check on bottom: ADP standard\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł umożliwia drukowanie płatności na wcześniej wydrukowanym papierze czekowym.\n"
+"Możesz skonfigurować dane wyjściowe (układ, informacje dodatkowe itp.) W ustawieniach firmy i zarządzać\n"
+"numeracją czeków (jeśli używasz wydrukowanych czeków bez numerów) w ustawieniach dziennika.\n"
+"Jako Stowarzyszenie płatności kanadyjskich (https://www.payments.ca/sites/default/files/standard_006_complete_0.pdf)\n"
+"\n"
+"Obsługiwane formaty\n"
+"-----------------\n"
+"- Check on top: standard Quicken / QuickBooks\n"
+"- Check on middle: standard Peachtree\n"
+"- Check on bottom: standard ADP\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -5696,6 +5883,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Moduł ten pozwala na publikowanie odsprzedawców / partnerów na swojej stronie internetowej oraz przekazywanie im potencjalnych klientów / szans.\n"
+"\n"
+"\n"
+"** Opublikuj partnera **\n"
+"\n"
+"Aby opublikować partnera, ustaw * Poziom * w formularzu kontaktowym (w sekcji Przypisanie partnera) i kliknij przycisk * Opublikuj *.\n"
+"\n"
+"** Przekazani potencjalni klienci **\n"
+"\n"
+"Przekazania potencjalnych klientów można wykonać dla jednego lub kilku leadów naraz. Działanie jest dostępne w sekcji * Przypisani partnerzy * w widoku formularza potencjalnego klienta / szansy oraz w menu * Akcja * widoku listy.\n"
+"\n"
+"Automatyczne przypisanie oblicza się na podstawie wagi poziomów partnerów i geolokalizacji. Partnerzy otrzymują potencjalnych klientów, którzy są wokół nich.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -5704,6 +5906,9 @@ msgid ""
 "This module allows to send website content to Gengo translation service in a single click. Gengo then gives back the translated terms in the destination language.\n"
 "    "
 msgstr ""
+"\n"
+"Moduł ten pozwala na wysyłanie treści witryny do usługi tłumaczenia Gengo za pomocą jednego kliknięcia. Gengo następnie oddaje przetłumaczone terminy w języku docelowym.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -5826,6 +6031,10 @@ msgid ""
 "On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing app.\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł wprowadza nowy element konstrukcyjny z widżetem listy mailingowej, który można upuścić na dowolnej stronie witryny.\n"
+"Za jednym kliknięciem użytkownicy mogą zasubskrybować listy mailingowe zarządzane w aplikacji Email Marketing.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -5872,6 +6081,10 @@ msgid ""
 "by enabling cohort view for registered attendees.\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł pomaga analizować wzór rejestracji zdarzeń,\n"
+"włączając wyświetlanie kohort dla zarejestrowanych uczestników.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -5998,6 +6211,9 @@ msgid ""
 "This module overrides community website features and introduces enterprise look and feel.\n"
 "    "
 msgstr ""
+"\n"
+"Ten moduł zastępuje funkcje serwisu społecznościowego i przedstawia wygląd firmy.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp
@@ -6043,6 +6259,8 @@ msgid ""
 "\n"
 "This module provides management of your IoT Boxes inside Odoo.\n"
 msgstr ""
+"\n"
+"Ten moduł zapewnia zarządzanie Twoimi skrzynkami IoT wewnątrz Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap

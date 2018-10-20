@@ -3,16 +3,17 @@
 # * website_hr
 # 
 # Translators:
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
-# jonas jensen <j.jensen@tcomp.dk>, 2017
-# Per Rasmussen <perhgrasmussen@gmail.com>, 2017
+# Martin Trigaux, 2018
+# jonas jensen <j.jensen@tcomp.dk>, 2018
+# Per Rasmussen <perhgrasmussen@gmail.com>, 2018
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Per Rasmussen <perhgrasmussen@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,8 +23,14 @@ msgstr ""
 
 #. module: website_hr
 #: model:ir.model,name:website_hr.model_hr_employee
+#: model_terms:ir.ui.view,arch_db:website_hr.aboutus
 msgid "Employee"
-msgstr "Medarbejder"
+msgstr "Ansat"
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_hr
 #: model_terms:ir.ui.view,arch_db:website_hr.aboutus
@@ -31,11 +38,36 @@ msgid "Our Team"
 msgstr "Vores team"
 
 #. module: website_hr
-#: model:ir.model.fields,field_description:website_hr.field_hr_employee_public_info
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__public_info
 msgid "Public Info"
 msgstr "Offentlig information"
+
+#. module: website_hr
+#: model:ir.model.fields,help:website_hr.field_hr_employee__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
+
+#. module: website_hr
+#: model:ir.model.fields,help:website_hr.field_hr_employee__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Den fulde URL for at få adgang til dokumentet via hjemmesiden."
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_published
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_id
+msgid "Website"
+msgstr "Hjemmeside"
 
 #. module: website_hr
 #: model:ir.actions.act_url,name:website_hr.action_open_website
 msgid "Website About"
 msgstr "Hjemmeside Om"
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_url
+msgid "Website URL"
+msgstr "Hjemmeside URL"

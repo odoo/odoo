@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # * product_expiry
 # 
+# Translators:
+# Martin Trigaux, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Stefan Stieranka <stieranka@itec.sk>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Stefan Stieranka <stieranka@itec.sk>, 2018\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +36,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
-msgstr ""
+msgstr "Dátum výstrahy"
 
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
@@ -41,7 +46,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
-msgstr ""
+msgstr "Dátum minimálnej trvanlivosti"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
@@ -55,12 +60,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
-msgstr ""
+msgstr "Dátum"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
 msgid "End of Life Date"
-msgstr ""
+msgstr "Dátum konca životnosti"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
@@ -70,7 +75,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Šarža/Sériové"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -106,13 +111,13 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
 msgid "Procurement Group"
-msgstr ""
+msgstr "Skupina obstarávania"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Čas upozornenia produktu"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
@@ -123,35 +128,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Životnosť produktu"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Čas odobratia produktu"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "šablona produktu"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Čas použitia výrobku"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "Kvanty"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
-msgstr ""
+msgstr "Dátum odstránenia"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
@@ -170,6 +175,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr ""
+"Toto je dátum, od ktorého sa môže tovar s týmto sériovým číslom stať "
+"nebezpečný a nesmie byť konzumovaný."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__removal_date
@@ -178,6 +185,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
 msgstr ""
+"Toto je dátum kedy by mal byť tovar s týmro sériovým číslom odstránený zo "
+"skladu."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
@@ -185,3 +194,5 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
+"Toto je dátum kedy začne byť tovar s týmto sériovým číslom opotrebovaný, bez"
+" toho aby bol už nebezpečný."

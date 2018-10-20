@@ -3,17 +3,16 @@
 # * website_sale_digital
 # 
 # Translators:
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Morten Schou <ms@msteknik.dk>, 2017
-# Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# Martin Trigaux, 2018
+# Morten Schou <ms@msteknik.dk>, 2018
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,32 +21,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_digital
-#: model:product.template,description_sale:website_sale_digital.product_1
-msgid ""
-"Alice's Adventures in Wonderland (commonly shortened to Alice in Wonderland)"
-" is an 1865 novel written by English author Charles Lutwidge Dodgson under "
-"the pseudonym Lewis Carroll. It tells of a girl named Alice falling through "
-"a rabbit hole into a fantasy world populated by peculiar, anthropomorphic "
-"creatures. The tale plays with logic, giving the story lasting popularity "
-"with adults as well as with children. It is considered to be one of the best"
-" examples of the literary nonsense genre. Its narrative course and "
-"structure, characters and imagery have been enormously influential in both "
-"popular culture and literature, especially in the fantasy genre."
-msgstr ""
-"Alice i Eventyrland er en 1865-roman skrevet af engelsk forfatter Charles "
-"Lutwidge Dodgson under pseudonymet Lewis Carroll. Den fortæller om en pige "
-"ved navn Alice, der falder gennem et kaninhul i en fantasiverden befolket af"
-" ejendommelige, antropomorfe skabninger. Fortællingen spiller på logik, "
-"hvilket giver historien varig popularitet hos både voksne og børn. Det anses"
-" for at være et af de bedste eksempler på den litterære eventyrgenre. Dens "
-"fortællingskurs og struktur, figurer og billedsprog har været enormt "
-"indflydelsesrige i både populærkulturen og litteraturen, især i "
-"fantasygenren."
-
-#. module: website_sale_digital
-#: model:product.template,name:website_sale_digital.product_1
-msgid "Alice's Adventures in Wonderland - Lewis Caroll"
-msgstr "Alice i eventyrland - Lewis Caroll"
+#: model:ir.model,name:website_sale_digital.model_ir_attachment
+msgid "Attachment"
+msgstr "Bilag"
 
 #. module: website_sale_digital
 #: code:addons/website_sale_digital/models/product.py:23
@@ -57,19 +33,24 @@ msgid "Digital Attachments"
 msgstr "Vedhæftede filer"
 
 #. module: website_sale_digital
-#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment_product_downloadable
-#: model:ir.model.fields,field_description:website_sale_digital.field_mrp_document_product_downloadable
+#: model_terms:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
+#: model_terms:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
+msgid "Digital Files"
+msgstr ""
+
+#. module: website_sale_digital
+#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__product_downloadable
 msgid "Downloadable from product portal"
 msgstr "Download fra produktportal"
 
 #. module: website_sale_digital
-#: model_terms:ir.ui.view,arch_db:website_sale_digital.portal_order_page_downloads
-msgid "Downloads <span class=\"caret\"/>"
-msgstr "Downloads <span class=\"caret\"/>"
+#: model_terms:ir.ui.view,arch_db:website_sale_digital.sale_order_portal_content_inherit_website_sale_digital
+msgid "Downloads"
+msgstr ""
 
 #. module: website_sale_digital
-#: model:ir.model.fields,field_description:website_sale_digital.field_product_product_attachment_count
-#: model:ir.model.fields,field_description:website_sale_digital.field_product_template_attachment_count
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_product__attachment_count
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_template__attachment_count
 msgid "File"
 msgstr "Fil"
 
@@ -77,17 +58,6 @@ msgstr "Fil"
 #: model:ir.model,name:website_sale_digital.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Fakturalinje"
-
-#. module: website_sale_digital
-#: model:product.template,description:website_sale_digital.product_1
-msgid "Novel by Lewis Caroll."
-msgstr "Novellle af Lewis Caroll."
-
-#. module: website_sale_digital
-#: model_terms:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
-#: model_terms:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
-msgid "Portal Files"
-msgstr "Portalfiler"
 
 #. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_product_product
@@ -100,6 +70,16 @@ msgid "Product Template"
 msgstr "Produktskabelon"
 
 #. module: website_sale_digital
-#: model:ir.model,name:website_sale_digital.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
+#: model:product.template,uom_name:website_sale_digital.product_1
+msgid "Unit(s)"
+msgstr "stk"
+
+#. module: website_sale_digital
+#: model:product.template,name:website_sale_digital.product_1
+msgid "eBook: Office Renovation for Dummies"
+msgstr ""
+
+#. module: website_sale_digital
+#: model:product.template,weight_uom_name:website_sale_digital.product_1
+msgid "kg"
+msgstr "kg"

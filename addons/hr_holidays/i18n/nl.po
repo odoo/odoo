@@ -72,7 +72,7 @@ msgstr "%s : %.2f dag(en)"
 #: code:addons/hr_holidays/models/hr_leave.py:440
 #, python-format
 msgid "%s on %s :%.2f day(s)"
-msgstr ""
+msgstr "%s op %s :%.2f dage(en)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -351,7 +351,7 @@ msgstr "<small class=\"text-muted\">van</small>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
 msgid "<small class=\"text-muted\">to</small>"
-msgstr "<small class=\"text-muted\">naar</small>"
+msgstr "<small class=\"text-muted\">t/m</small>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -395,7 +395,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_inline\" attrs=\"{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}\">\n"
-"                                    Tot\n"
+"                                    T/m\n"
 "                                </span>"
 
 #. module: hr_holidays
@@ -406,7 +406,7 @@ msgstr "<span class=\"text-muted\">van</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">to</span>"
-msgstr "<span class=\"text-muted\">tot</span>"
+msgstr "<span class=\"text-muted\">t/m</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -1222,7 +1222,7 @@ msgstr "Uur van"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_to
 msgid "Hour to"
-msgstr "Uur tot"
+msgstr "Uur t/m"
 
 #. module: hr_holidays
 #: selection:hr.leave.allocation,unit_per_interval:0
@@ -1621,7 +1621,7 @@ msgstr "Hoofd bijlage"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
 msgid "Manager"
-msgstr "Beheerder"
+msgstr "Manager"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
@@ -1918,7 +1918,7 @@ msgstr "Vervallen"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_hl
 msgid "Overtime Compensation"
-msgstr ""
+msgstr "Overwerkcompensatie"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -1928,7 +1928,7 @@ msgstr "Overzicht"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cla
 msgid "Paid Time Off 2018"
-msgstr ""
+msgstr "Betaald verlof 2018"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
@@ -1939,7 +1939,7 @@ msgstr "Bovenliggend"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
 msgid "Parental Leaves"
-msgstr ""
+msgstr "Ouderschapsverlof"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_payroll
@@ -2079,12 +2079,12 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run Until"
-msgstr "Uitvoeren tot"
+msgstr "Uitvoeren t/m"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
-msgstr "Draai tot"
+msgstr "Draai t/m"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2459,7 +2459,7 @@ msgstr "Controleur"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Validity"
-msgstr "Geldig vanaf"
+msgstr "Geldig t/m"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -2574,4 +2574,4 @@ msgstr "van de"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
-msgstr "tot"
+msgstr "t/m"

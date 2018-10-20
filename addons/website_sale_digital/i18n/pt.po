@@ -1,77 +1,64 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_digital
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2018
+# MS, 2018
+# Nuno Silva <nuno.silva@arxi.pt>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-01-14 10:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
-"pt/)\n"
-"Language: pt\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2018\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_digital
-#: model:product.template,description_sale:website_sale_digital.product_1
-msgid ""
-"Alice's Adventures in Wonderland (commonly shortened to Alice in Wonderland) "
-"is an 1865 novel written by English author Charles Lutwidge Dodgson under "
-"the pseudonym Lewis Carroll. It tells of a girl named Alice falling through "
-"a rabbit hole into a fantasy world populated by peculiar, anthropomorphic "
-"creatures. The tale plays with logic, giving the story lasting popularity "
-"with adults as well as with children. It is considered to be one of the best "
-"examples of the literary nonsense genre. Its narrative course and structure, "
-"characters and imagery have been enormously influential in both popular "
-"culture and literature, especially in the fantasy genre."
-msgstr ""
+#: model:ir.model,name:website_sale_digital.model_ir_attachment
+msgid "Attachment"
+msgstr "Anexo"
 
 #. module: website_sale_digital
-#: model:product.template,name:website_sale_digital.product_1
-msgid "Alice's Adventures in Wonderland - Lewis Caroll"
-msgstr ""
-
-#. module: website_sale_digital
-#: code:addons/website_sale_digital/product.py:29
-#: code:addons/website_sale_digital/product.py:56
+#: code:addons/website_sale_digital/models/product.py:23
+#: code:addons/website_sale_digital/models/product.py:54
 #, python-format
 msgid "Digital Attachments"
-msgstr ""
+msgstr "Anexos Digitais"
 
 #. module: website_sale_digital
-#: code:addons/website_sale_digital/product.py:22
-#, python-format
-msgid "Digital Content"
-msgstr ""
-
-#. module: website_sale_digital
-#: model_terms:ir.ui.view,arch_db:website_sale_digital.orders_followup_downloads
-msgid "Downloads <span class=\"caret\"/>"
-msgstr ""
-
-#. module: website_sale_digital
-#: model:ir.model.fields,field_description:website_sale_digital.field_product_product_attachment_count
-#: model:ir.model.fields,field_description:website_sale_digital.field_product_template_attachment_count
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
+msgid "Digital Files"
+msgstr ""
+
+#. module: website_sale_digital
+#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__product_downloadable
+msgid "Downloadable from product portal"
+msgstr "Transferível do portal do artigo"
+
+#. module: website_sale_digital
+#: model_terms:ir.ui.view,arch_db:website_sale_digital.sale_order_portal_content_inherit_website_sale_digital
+msgid "Downloads"
+msgstr ""
+
+#. module: website_sale_digital
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_product__attachment_count
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_template__attachment_count
 msgid "File"
 msgstr "Ficheiro"
 
 #. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Linha de Fatura"
-
-#. module: website_sale_digital
-#: model:product.template,description:website_sale_digital.product_1
-msgid "Novel by Lewis Caroll."
-msgstr ""
+msgstr "Linha da Fatura"
 
 #. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_product_product
@@ -81,4 +68,19 @@ msgstr "Artigo"
 #. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_product_template
 msgid "Product Template"
-msgstr "Template Artigo"
+msgstr "Modelo de Artigo"
+
+#. module: website_sale_digital
+#: model:product.template,uom_name:website_sale_digital.product_1
+msgid "Unit(s)"
+msgstr "Unidade(s)"
+
+#. module: website_sale_digital
+#: model:product.template,name:website_sale_digital.product_1
+msgid "eBook: Office Renovation for Dummies"
+msgstr ""
+
+#. module: website_sale_digital
+#: model:product.template,weight_uom_name:website_sale_digital.product_1
+msgid "kg"
+msgstr "kg"

@@ -19,7 +19,6 @@
 # Felix Yuen <fyu@odoo.com>, 2018
 # gary chk <garychk@163.com>, 2018
 # guohuadeng <guohuadeng@hotmail.com>, 2018
-# Emily JIA <eji@odoo.com>, 2018
 # roye w <159820@qq.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # 湘子 南 <1360857908@qq.com>, 2018
@@ -403,7 +402,7 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">采用本地财务</span>\n"
+"<span class=\"o_form_label\">财务本地化</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
@@ -1336,7 +1335,7 @@ msgstr "添加第二行"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a section"
-msgstr "添加小节"
+msgstr "添加部分"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1878,7 +1877,7 @@ msgstr "仅应用于有增值税编码的业务伙伴."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
-msgstr "适用于在欧盟销售的数字产品的增值税税率"
+msgstr "对于欧盟销售的数字产品应用正确的VAT税率"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -1895,7 +1894,7 @@ msgstr "已归档"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Ask for a Credit Note"
-msgstr "申请信用证"
+msgstr "要求提供信用证"
 
 #. module: account
 #: selection:account.account.type,internal_group:0
@@ -3191,7 +3190,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr "主营业务收入成本"
+msgstr "收入成本"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:192
@@ -3932,7 +3931,7 @@ msgstr "创建科目类型"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash."
-msgstr "定义使用现金支付的最小货币单位。"
+msgstr "定义用于现金支付的最小货币面值。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
@@ -4531,7 +4530,7 @@ msgstr "税科目调整"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Localization"
-msgstr "财政定位"
+msgstr "财务本地化"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__position_id
@@ -5127,7 +5126,7 @@ msgstr "如勾选此项，此凭证会在你定义的日期被红冲。"
 msgid ""
 "If you check this box, you will be able to collect payments using SEPA "
 "Direct Debit mandates."
-msgstr "如果你检查这个盒子，你可使用SEPA直接收集款项。"
+msgstr "如果你检查此框，你可使用SEPA直接收集款项。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5290,7 +5289,7 @@ msgstr "停用"
 #. module: account
 #: selection:account.payment.method,payment_type:0
 msgid "Inbound"
-msgstr "来电"
+msgstr "入"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
@@ -5391,7 +5390,7 @@ msgstr "库存计价的入库科目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Install More Packages"
-msgstr "安装更多的软件包"
+msgstr "安装更多软件包"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_id
@@ -5686,7 +5685,7 @@ msgstr "无付款的发票"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "初级会计"
+msgstr "开票"
 
 #. module: account
 #: selection:account.reconcile.model,match_amount:0
@@ -6317,7 +6316,7 @@ msgstr "本行总税额"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Line subtotals tax display"
-msgstr "本行总税额"
+msgstr "行小计显示税金"
 
 #. module: account
 #: selection:account.setup.bank.manual.config,create_or_link_option:0
@@ -6506,7 +6505,7 @@ msgstr "三月"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Margin Analysis"
-msgstr "利润分析"
+msgstr "毛利分析"
 
 #. module: account
 #: selection:account.abstract.payment,payment_difference_handling:0
@@ -6645,7 +6644,7 @@ msgstr "消息"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
-msgstr "减 主营业务收入成本"
+msgstr "减 收入成本"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -6693,12 +6692,12 @@ msgstr "销售订单行缺少必要字段."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderator_id
 msgid "Moderated By"
-msgstr "管理人"
+msgstr "审核人"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderation_status
 msgid "Moderation Status"
-msgstr "管理状态"
+msgstr "审核状态"
 
 #. module: account
 #. openerp-web
@@ -6720,7 +6719,7 @@ msgstr "修改：创建信用证，调节，并创建草稿发票"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr "从发票中查看产品的利润"
+msgstr "从发票中监视产品利润"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -6832,7 +6831,7 @@ msgstr "待处理"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__need_moderation
 msgid "Need moderation"
-msgstr "需要调节"
+msgstr "需要审核"
 
 #. module: account
 #. openerp-web
@@ -7332,7 +7331,7 @@ msgstr "其他信息"
 #. module: account
 #: selection:account.payment.method,payment_type:0
 msgid "Outbound"
-msgstr "境外"
+msgstr "出"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -7386,7 +7385,7 @@ msgstr "概览"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
-msgstr "包裹"
+msgstr "软件包"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -7904,13 +7903,13 @@ msgstr "发布所有分录 "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__post_at_bank_rec
 msgid "Post At Bank Reconciliation"
-msgstr "银行对账后"
+msgstr "银行对账时过账"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Post Difference In"
-msgstr "给差异过账"
+msgstr "过账差额在"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
@@ -7966,7 +7965,7 @@ msgstr "转账帐户的前缀"
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
-msgstr "预付账款"
+msgstr "预付款"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model
@@ -8014,7 +8013,7 @@ msgstr "通过默认值打印"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Print checks to pay your vendors"
-msgstr "打印支票支付给你的供应商"
+msgstr "打印支票支付你的供应商"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
@@ -8067,7 +8066,7 @@ msgstr "利润"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Profit &amp; Loss"
-msgstr "损益"
+msgstr "损益表"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
@@ -8295,7 +8294,7 @@ msgstr "登记一张新的供应商账单"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
-msgstr "登记外币的交易"
+msgstr "用外币记录交易"
 
 #. module: account
 #: code:addons/account/models/account.py:930
@@ -8851,7 +8850,7 @@ msgstr "第二核销金额"
 #: selection:account.invoice.line,display_type:0
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_line_form
 msgid "Section"
-msgstr "部分"
+msgstr "部分部分部分部分部分部分分段"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_token
@@ -9635,7 +9634,7 @@ msgstr "含税"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "TaxCloud"
-msgstr "税"
+msgstr "TaxCloud"
 
 #. module: account
 #: selection:account.account.tag,applicability:0
@@ -9650,7 +9649,7 @@ msgstr "税"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Taxes"
-msgstr "税率"
+msgstr "税"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10525,7 +10524,7 @@ msgstr "这个选项用于确定您是否希望提示用户输入销售和采购
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This feature is useful if you issue a high amounts of invoices."
-msgstr "如果有大量的发票，这个功能很有用。"
+msgstr "这个功能对于有大量的发票的你很有用。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_id
@@ -10812,7 +10811,7 @@ msgstr "所有的交易行."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs &amp; revenues by project, department, etc."
-msgstr "跟踪项目、部门等的成本和收入等等."
+msgstr "按项目、部门等跟踪成本 &amp; 收入"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__tracking_value_ids
@@ -11066,7 +11065,7 @@ msgstr "使用折旧版，将摊销项自动化"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use follow-up levels and schedule actions"
-msgstr "使用催款等级并安排活动"
+msgstr "使用催款等级及安排动作"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_products_in_bills
