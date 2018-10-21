@@ -1,27 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_hr
-#
+# 
 # Translators:
+# MS, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-11-25 14:00+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
-"pt/)\n"
-"Language: pt\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: MS, 2018\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_hr
 #: model:ir.model,name:website_hr.model_hr_employee
+#: model_terms:ir.ui.view,arch_db:website_hr.aboutus
 msgid "Employee"
 msgstr "Funcionário"
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_hr
 #: model_terms:ir.ui.view,arch_db:website_hr.aboutus
@@ -29,21 +35,36 @@ msgid "Our Team"
 msgstr "A Nossa Equipa"
 
 #. module: website_hr
-#: model:ir.model.fields,field_description:website_hr.field_hr_employee_public_info
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__public_info
 msgid "Public Info"
-msgstr "Info Pública"
+msgstr "Informação Pública"
+
+#. module: website_hr
+#: model:ir.model.fields,help:website_hr.field_hr_employee__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
+
+#. module: website_hr
+#: model:ir.model.fields,help:website_hr.field_hr_employee__website_url
+msgid "The full URL to access the document through the website."
+msgstr "O URL completo para aceder ao documento através do site da web."
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_published
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_id
+msgid "Website"
+msgstr "Site da Web"
 
 #. module: website_hr
 #: model:ir.actions.act_url,name:website_hr.action_open_website
 msgid "Website About"
-msgstr "Sobre o Website"
+msgstr "Sobre o Site da Web"
 
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr ""
-#~ "O endereço URL completo para aceder ao documento através do website."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Visível no Website"
-
-#~ msgid "Website URL"
-#~ msgstr "URL da Página Web"
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_url
+msgid "Website URL"
+msgstr "URL do Site da web"

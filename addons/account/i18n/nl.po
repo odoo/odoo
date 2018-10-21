@@ -5,12 +5,12 @@
 # Translators:
 # Martin Trigaux, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
 # dpms <pieter.van.de.wygaert@telenet.be>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
 # Wynand Tastenhoye <wta@odoo.com>, 2018
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Jordy Blankestijn <jblankestijn@erpopen.nl>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
@@ -294,7 +294,7 @@ msgid ""
 "                                    <span>Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                        <strong>E-mail mass mailing</strong> op\n"
+"                                        <strong>E-mail bulkmailing</strong> op\n"
 "                                        <span>de geselecteerde records</span>\n"
 "                                    </span>\n"
 "                                    <span>Volgers van het document en</span>"
@@ -1005,13 +1005,13 @@ msgstr "Grootboek labels"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Account Tax"
-msgstr "Belasting-grootboekrekening"
+msgstr "BTW-rekening"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr "Belastingrekening sjabloon"
+msgstr "BTW sjabloon"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
@@ -1103,7 +1103,7 @@ msgstr "Rekening op product"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr "Boekhoudkundige rapportering met betalingsoverzicht"
+msgstr "Boekhoudkundige rapporten met betaalregels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
@@ -1127,8 +1127,8 @@ msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
 msgstr ""
-"Stel de rekening in welke wordt gebruikt bij belastingregels van facturen. "
-"Laat leeg om de kostenrekening te gebruiken."
+"Stel de rekening in welke wordt gebruikt bij BTW regels van facturen. Laat "
+"leeg om de kostenrekening te gebruiken."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template__refund_account_id
@@ -2377,7 +2377,7 @@ msgstr "Factuurregels"
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Billing"
-msgstr "Facturatie"
+msgstr "Boekhouding"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
@@ -2853,7 +2853,7 @@ msgid ""
 "tax."
 msgstr ""
 "Vink dit aan als de prijs die u voor het product en op de facturen gebruikt "
-"inclusief deze belasting is."
+"inclusief BTW is."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__reconcile
@@ -2890,7 +2890,7 @@ msgstr "Kies grootboekrekening sjabloon"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr "Kies een algemene verkoopsbelasting voor uw producten"
+msgstr "Kies een algemene verkoop BTW voor uw producten"
 
 #. module: account
 #. openerp-web
@@ -3387,7 +3387,7 @@ msgstr "Maak een nieuw verkoopbaar product"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
 msgid "Create a new tax"
-msgstr "Maak een nieuwe belasting"
+msgstr "Maak een nieuwe BTW"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
@@ -4127,9 +4127,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
-"Bepaald waar de belasting selecteerbaar is. Note : 'None' betekend  dat een "
-"belasting niet gebruikt kan worden. Ze kan wel toegepast worden in een groep"
-" gebruikt. 'adjustment' is used to perform tax adjustment."
+"Bepaald waar de BTW selecteerbaar is. Note : 'Geen' betekend  dat een BTW "
+"niet gebruikt kan worden. Ze kan wel toegepast worden in een groep gebruikt."
+" 'adjustment' is used to perform tax adjustment."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
@@ -4276,7 +4276,7 @@ msgid ""
 "mailing only)"
 msgstr ""
 "Bewaar geen kopie van de e-mail in de document communicatie geschiedenis "
-"(alleen bij mass-mailing)"
+"(alleen bij bulkmailing)"
 
 #. module: account
 #: selection:res.company,account_dashboard_onboarding_state:0
@@ -4803,14 +4803,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__force_second_tax_included
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__force_second_tax_included
 msgid "Force the second tax to be managed as a price included tax."
-msgstr ""
-"Activeer het tweede belasting tarief als belasting inbegrepen in de prijs."
+msgstr "Forceer de tweede BTW om te beheren als prijzen inclusief BTW."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__force_tax_included
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr "Activeer belastingbeheer als belasting inbegrepen in de prijs."
+msgstr "Forceer om te beheren als prijzen inclusief BTW."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -4944,7 +4943,8 @@ msgstr "Geeft de volgorde weer, bij de weergave van bankafschriftregels."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_tax__sequence
 msgid "Gives the sequence order when displaying a list of invoice tax."
-msgstr "Bepaalt de volgorde bij afbeelden lijst van factuur belasting."
+msgstr ""
+"Bepaalt de volgorde bij weergaven van een lijst van BTW's op een factuur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__sequence
@@ -5240,8 +5240,8 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
-"Indien aangevinkt wordt het bedrag berekend voor deze belasting aan dezelfde"
-" kostenplaats (indien aanwezig) toegewezen."
+"Indien aangevinkt wordt het bedrag berekend door deze BTW aan dezelfde "
+"kostenplaats (indien aanwezig) toegewezen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -5878,7 +5878,7 @@ msgstr "Facturen zonder betaling"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Facturatie"
+msgstr "Boekhouding"
 
 #. module: account
 #: selection:account.reconcile.model,match_amount:0
@@ -6663,7 +6663,7 @@ msgstr "Handmatig"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tax_form
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tax_tree
 msgid "Manual Invoice Taxes"
-msgstr "Handmatige Factuur Belasting"
+msgstr "Handmatige BTW factuur"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_ids
@@ -6743,7 +6743,7 @@ msgstr "Bulk mailing campagne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
 msgid "Mass Mailing Name"
-msgstr "Mass mailing naam"
+msgstr "Bulkmailing naam"
 
 #. module: account
 #: selection:account.reconcile.model,match_label:0
@@ -6862,7 +6862,7 @@ msgstr "Berichten"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
-msgstr "Min inkoopwaarde van de omzet"
+msgstr "Min kosten van de omzet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -7556,7 +7556,7 @@ msgstr "Herkomst van betaling"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
 msgid "Originator tax"
-msgstr "Herkomst van de belasting"
+msgstr "Herkomst van de BTW"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
@@ -8375,7 +8375,7 @@ msgstr "Inkoop vertegenwoordiger"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
-msgstr "Inkoop belasting"
+msgstr "Inkoop BTW"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -8559,7 +8559,7 @@ msgstr "Transacties registreren in vreemde valuta"
 #: code:addons/account/models/account.py:930
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr "Recursie gevonden voor belasting '%s'."
+msgstr "Recursie gevonden voor BTW'%s'."
 
 #. module: account
 #. openerp-web
@@ -8686,7 +8686,7 @@ msgstr "Resterend openstaand bedrag."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_dest_id
 msgid "Replacement Tax"
-msgstr "Vervangende belasting"
+msgstr "Vervangende BTW"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__reply_to
@@ -9045,7 +9045,7 @@ msgstr "Zoek mutatie"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
 msgid "Search Tax Templates"
-msgstr "Zoek belastingsjablonen"
+msgstr "Zoek BTW sjablonen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_search
@@ -9292,13 +9292,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr ""
-"Zet actief naar onwaar om de belasting te verbergen zonder de belasting te "
-"verwijderen."
+"Zet actief naar onwaar om de BTW te verbergen zonder de BTW te verwijderen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Set taxes"
-msgstr "Stel belastingtarieven in"
+msgstr "Stel BTW in"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__visible
@@ -9643,7 +9642,7 @@ msgstr "Subtype"
 #: code:addons/account/models/chart_template.py:933
 #, python-format
 msgid "Suggest counterpart values."
-msgstr "Stel tegen waardes voor."
+msgstr "Stel tegenwaardes voor."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9693,7 +9692,7 @@ msgstr "Welke boekingen"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
-msgstr "Belasting"
+msgstr "BTW"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:279
@@ -9707,7 +9706,7 @@ msgstr "BTW %.2f%%"
 #: model:ir.model.fields,field_description:account.field_account_tax__account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__account_id
 msgid "Tax Account"
-msgstr "Belastingrekening"
+msgstr "BTW-rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_account_id
@@ -9717,13 +9716,13 @@ msgstr "BTW rekening voor creditfacturen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__refund_account_id
 msgid "Tax Account on Refunds"
-msgstr "Belastingrekening voor terugbetalingen"
+msgstr "BTW rekening voor terugbetalingen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Tax Adjustments"
-msgstr "Belasting aanpassing"
+msgstr "BTW aanpassing"
 
 #. module: account
 #: model:ir.model,name:account.model_tax_adjustments_wizard
@@ -9735,7 +9734,7 @@ msgstr "BTW aanpassing wizard"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__amount
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Tax Amount"
-msgstr "Belastingbedrag"
+msgstr "BTW bedrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__tax_amount_type
@@ -9745,7 +9744,7 @@ msgstr "BTW bedrag type"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Application"
-msgstr "Belastingstoepassing"
+msgstr "BTW toepassing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_calculation_rounding_method
@@ -9776,7 +9775,7 @@ msgstr "Belastingaangifte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__name
 msgid "Tax Description"
-msgstr "Belasting omschrijving"
+msgstr "BTW omschrijving"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
@@ -9795,7 +9794,7 @@ msgstr "Exclusief BTW"
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_group_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_group_id
 msgid "Tax Group"
-msgstr "Belastingsgroep"
+msgstr "BTW-groep"
 
 #. module: account
 #. openerp-web
@@ -9809,14 +9808,14 @@ msgstr "Prijs Inclusief BTW"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__tax_line_ids
 msgid "Tax Lines"
-msgstr "Belastingregels"
+msgstr "BTW regels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "Vervangingstabel belasting"
+msgstr "Vervangingstabel BTW"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -9849,7 +9848,7 @@ msgstr "BTW over"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_src_id
 msgid "Tax Source"
-msgstr "Belastingrubriek"
+msgstr "BTW rubriek"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -9859,7 +9858,7 @@ msgstr "BTW sjabloon"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__tax_template_ids
 msgid "Tax Template List"
-msgstr "Lijst belasting-sjablonen"
+msgstr "Lijst BTW-sjablonen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -9894,17 +9893,17 @@ msgstr "BTW weergave B2C"
 #. module: account
 #: sql_constraint:account.tax:0 sql_constraint:account.tax.template:0
 msgid "Tax names must be unique !"
-msgstr "Belasting namen moeten uniek zijn!"
+msgstr "BTW namen moeten uniek zijn!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
 msgid "Tax on Product"
-msgstr "Belasting op product"
+msgstr "BTW op product"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
 msgid "Tax to Apply"
-msgstr "Belasting om toe te passen"
+msgstr "Toe te passen BTW"
 
 #. module: account
 #: selection:res.config.settings,show_line_subtotals_tax_selection:0
@@ -10471,8 +10470,7 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
-"De fiscale positie bepaald de belastingen/rekeningen gebruikt voor dit "
-"contact."
+"De fiscale positie bepaald de BTW/rekeningen gebruikt voor dit contact."
 
 #. module: account
 #: code:addons/account/models/account.py:555
@@ -10957,8 +10955,8 @@ msgid ""
 msgstr ""
 "Deze boolean helpt u te kiezen of u aan de gebruiker wilt voorstellen om de "
 "koop en verkoop tarieven in te geven of van een lijst van BTW te kiezen. Bij"
-" de laatste keuze wordt ervan uitgegaan dat de set van de belasting "
-"gedefinieerd op dit sjabloon is voltooid"
+" de laatste keuze wordt ervan uitgegaan dat de set van de BTW's gedefinieerd"
+" op dit sjabloon is voltooid"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11228,7 +11226,7 @@ msgstr "Totaal resterend"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__user_currency_price_total
 msgid "Total Without Tax in Currency"
-msgstr "Totaal zonder belasting in valuta"
+msgstr "Totaal exclusief BTW in valuta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_subtotal_signed
@@ -11925,7 +11923,7 @@ msgstr "Afschrijvingsbedrag"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Values"
-msgstr "Tegen waardes"
+msgstr "Tegenwaardes"
 
 #. module: account
 #: sql_constraint:account.move.line:0

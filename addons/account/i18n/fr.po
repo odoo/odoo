@@ -7,6 +7,7 @@
 # Eloïse Stilmant <est@odoo.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # Frédéric LIETART <stuff@tifred.fr>, 2018
+# Alain van de Werve <avw@openerp.com>, 2018
 # Fabien Pinckaers <fp@openerp.com>, 2018
 # f5f0a0dac17dde787a1d812a6989680e, 2018
 # Xavier Belmere <Info@cartmeleon.com>, 2018
@@ -24,14 +25,14 @@
 # Léonie Bouchat <lbo@odoo.com>, 2018
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2018
 # Nathan Noël <nathan070@me.com>, 2018
-# Alain van de Werve <avw@openerp.com>, 2018
+# Satish kumar <Satishafd@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
 "PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Alain van de Werve <avw@openerp.com>, 2018\n"
+"Last-Translator: Satish kumar <Satishafd@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -449,7 +450,7 @@ msgstr "<span role=\"separator\">Voir</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr "<span title=\"Balance in Odoo\">Balance dans le Grand Livre</span>"
+msgstr "<span title=\"Balance in Odoo\">Balance GL</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -489,7 +490,7 @@ msgstr "<span>Rem.(%)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr "<span>Importer les factures</span>"
+msgstr "<span>Upload factures</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1086,6 +1087,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"Compte le nom du titulaire, dans le cas où il est différent du nom du "
+"titulaire du compte."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -1197,7 +1200,7 @@ msgstr "Écritures comptables"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Overview"
-msgstr ""
+msgstr "Vue d'ensemble Comptable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1296,7 +1299,7 @@ msgstr "Ajouter Signature"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Add a bank"
-msgstr "Ajouter une banque"
+msgstr "Ajouter un compte bancaire"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -3772,7 +3775,7 @@ msgstr "Personnaliser"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Customize the look of your invoices."
-msgstr "Personnalisez le look de vos factures."
+msgstr "Personnalisez la mise en forme de vos factures."
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAF
@@ -4037,8 +4040,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Define your fiscal years opening &amp; closing dates."
-msgstr ""
-"Définissez vos dates d'ouverture &amp; fermeture de vos années fiscales."
+msgstr "Définissez la date d'ouverture &amp; fermeture fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -4437,7 +4439,7 @@ msgstr "Email par défaut"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email your Vendor Bills"
-msgstr ""
+msgstr "Factures fournisseur par email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__date_to
@@ -5363,7 +5365,7 @@ msgstr "Paiement immédiat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_import_wizard_form_view
 msgid "Import"
-msgstr "Importer"
+msgstr "Confirmer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_qif
@@ -5696,7 +5698,7 @@ msgstr "Icône de Facturation"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Invoice Layout"
-msgstr "Layout de Facturation"
+msgstr "Layout Facture"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_line
@@ -7509,6 +7511,7 @@ msgid ""
 "Or share the email %s to your vendors: bills will be created automatically "
 "upon mail reception."
 msgstr ""
+"Transférez vos factures à %s pour qu’elles soient créées automatiquement."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:694
@@ -7517,6 +7520,7 @@ msgid ""
 "Or share the emails %s to your vendors: bills will be created automatically "
 "upon mail reception."
 msgstr ""
+"Transférez vos factures à %s pour qu’elles soient créées automatiquement."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -8916,13 +8920,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Sample Invoice"
-msgstr "Facture d'exemple"
+msgstr "Exemple de facture"
 
 #. module: account
 #: code:addons/account/models/company.py:462
 #, python-format
 msgid "Sample invoice"
-msgstr "Facture d'exemple"
+msgstr "Exemple de facture"
 
 #. module: account
 #: code:addons/account/models/company.py:468
@@ -8939,7 +8943,7 @@ msgstr "Ligne de facture d'exemple 2 "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Sample invoice sent!"
-msgstr "Facture d'exemple envoyée!"
+msgstr "Exemple de facture envoyée!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
@@ -9199,12 +9203,12 @@ msgstr "Envoyer une facture d'exemple"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Send an invoice to test the customer portal."
-msgstr "Envoyer une facture pour tester le portail clients."
+msgstr "Envoyez une facture pour tester le portail clients."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Send sample"
-msgstr ""
+msgstr "Envoyer exemple"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -9315,13 +9319,12 @@ msgstr "Configurez vos comptes bancaires et synchronisez vos relevés."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "Configurez votre plan comptable et reportez les soldes initiaux."
+msgstr "Configurez le plan comptable et reportez vos soldes initiaux."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_company_step
 msgid "Setup your company's data for reports headers."
-msgstr ""
-"Entrez les informations de votre société pour le header des documents."
+msgstr "Entrez les données de votre société pour les entêtes de documents."
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_invoice_action_share
@@ -11397,12 +11400,12 @@ msgstr "Mettre à jour les taux de change automatiquement"
 #: code:addons/account/static/src/xml/bills_tree_upload_views.xml:5
 #, python-format
 msgid "Upload"
-msgstr "Télécharger"
+msgstr "Upload"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_import_wizard_form_view
 msgid "Upload Files"
-msgstr ""
+msgstr "Upload Fichiers"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 msgid ""
@@ -80,6 +81,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hallo ${object.partner_id.name},<br/>\n"
+"        Hier is uw reparatieorder ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (met referenctie: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            voor het bedrag van <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        U kunt op deze e-mail reageren als u vragen heeft.\n"
+"        <br/><br/>\n"
+"        Bedankt,\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -92,16 +111,18 @@ msgid ""
 "<span class=\"o_form_label\">This operation will cancel the Repair process, "
 "but will not cancel it's Invoice. Do you want to continue?</span>"
 msgstr ""
+"<span class=\"o_form_label\">Deze handeling zal het reparatieproces "
+"annuleren, maar zal niet de factuur annuleren. Wilt u doorgaan?</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr "<strong>Lot/Serienummer:</strong>"
+msgstr "<strong>Partij/Serienummer:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
-msgstr "<strong>Operaties</strong>"
+msgstr "<strong>Bewerkingen</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -126,7 +147,7 @@ msgstr "<strong>Afleveradres:</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total Without Taxes</strong>"
-msgstr "<strong>Totaal zonder BTW</strong>"
+msgstr "<strong>Totaal exclusief BTW</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -218,6 +239,8 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Kies de relatie voor wie de order wordt gefactureerd en geleverd. U kunt een"
+" relatie vinden op naam, BTW nummer of interne referentie"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
@@ -257,7 +280,7 @@ msgstr "Maak factuur"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
+msgstr "Aanmaken bulkfactuur (reparatie)"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -350,6 +373,8 @@ msgstr "Stop reparatie"
 #: model:ir.model.fields,help:repair.field_repair_order__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
+"Zorg voor de traceerbaarheid van een product dat kan worden opgeslagen in uw"
+" magazijn."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -804,7 +829,7 @@ msgstr "Repareer"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "Reparatiekosten"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1006,6 +1031,8 @@ msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
 msgstr ""
+"De productmaateenheid die u heeft gekozen heeft een andere categorie dan het"
+" productmaateenheid."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:246
@@ -1118,7 +1145,7 @@ msgstr "Excl. BTW"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "Waarschuwing onvoldoende reparatiehoeveelheid"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:172

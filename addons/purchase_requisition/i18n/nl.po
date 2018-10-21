@@ -39,7 +39,7 @@ msgstr "<strong>Omschrijving</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Product UoM</strong>"
-msgstr "<strong>Product UoM</strong>"
+msgstr "<strong>Maateenheid</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -210,6 +210,10 @@ msgid ""
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
+"Maak een concept inkooporder aan: Gebaseerd op uw productinstellingen, zal "
+"het systeem een concept inkooporder aanmaken. Aanbesteding voorstellen: Als "
+"de module 'purchase_requisition' is geïnstalleerd en deze optie is "
+"geactiveerd, zal het systeem een concept aanbesteding aanmaken."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -521,7 +525,7 @@ msgstr "Stel aanbesteding voor"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
-msgstr "Inkoop afspraak"
+msgstr "Inkoopafspraak"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -529,7 +533,7 @@ msgstr "Inkoop afspraak"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr "Inkoop overeenkomst soorten"
+msgstr "Inkoopovereenkomst soorten"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -538,7 +542,7 @@ msgstr "Inkoop overeenkomst soorten"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
-msgstr "Inkoop overeenkomsten"
+msgstr "Inkoopovereenkomsten"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -580,7 +584,7 @@ msgstr "Inkoopaanvraag regel"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Requisition Type"
-msgstr ""
+msgstr "Inkooporderaanvraagtype"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -612,7 +616,7 @@ msgstr "Aanvullen"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr "Offerte-aanvraag"
+msgstr "Offerteaanvraag"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -637,7 +641,7 @@ msgstr "Aanvraagregel"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
 msgid "Requistion Line"
-msgstr ""
+msgstr "Anvraagregel"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -652,7 +656,7 @@ msgstr "Geplande datum"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Purchase Agreements"
-msgstr "Zoek inkoop overeenkomsten"
+msgstr "Zoek inkoopovereenkomsten"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
@@ -729,7 +733,7 @@ msgstr "Leveranciers info"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Prijslijst Leverancier"
+msgstr "Prijslijst leverancier"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -750,6 +754,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you to "
 "use to complete this open blanket order instead of creating a new one."
 msgstr ""
+"Er is al een open afroeporder voor deze leverancier. U kunt beter deze open "
+"afroeporder afronden in plaats van een nieuwe aan te maken."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -827,7 +833,7 @@ msgstr "U kan enkel concept aanvragen verwijderen."
 #: code:addons/purchase_requisition/models/purchase_requisition.py:123
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr ""
+msgstr "U kan overeenkomst '%s' niet bevestigen omdat er geen productlijn is."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:127

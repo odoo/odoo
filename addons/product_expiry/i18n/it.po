@@ -30,6 +30,8 @@ msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Avviso di scadenza</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -44,7 +46,7 @@ msgstr "Data Avviso"
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
 msgid "Alert Date Reached"
-msgstr ""
+msgstr "Data di avviso raggiunta"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
@@ -57,8 +59,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
-"Data utilizzata per determinare i lotti e i numeri di serie scaduti con il "
-"filtro \"Avvisi di Scadenza\"."
+"Data utilizzata per determinare i numeri di lotti e di serie scaduti con il "
+"filtro \"Avvisi di scadenza\"."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -75,7 +77,7 @@ msgstr "Data di fine vita"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
-msgstr ""
+msgstr "Avvisi di scadenza"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -88,8 +90,8 @@ msgstr "Lotto/Seriale"
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
 msgstr ""
-"Numero di giorni prima dell'attivazione di un avviso per questo lotto/numero"
-" di serie."
+"Numero di giorni prima dell'attivazione di un avviso per questo numero di "
+"lotto/di serie."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__life_time
@@ -99,7 +101,7 @@ msgid ""
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
 "Numero di giorni prima che la merce diventi pericolosa e non consumabile. "
-"Calcolato in base al lotto/numero di serie."
+"Calcolato in base al numero di lotto/di serie."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -109,7 +111,7 @@ msgid ""
 " computed on the lot/serial number."
 msgstr ""
 "Numero di giorni prima del ritiro della merce dal magazzino. Calcolato in "
-"base al lotto/numero di serie."
+"base al numero di lotto/di serie."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -118,6 +120,8 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+"Numero di giorni prima che la merce inizi a deteriorarsi, senza essere "
+"pericolosa. Calcolato in base al numero di lotto/di serie. "
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -172,13 +176,14 @@ msgstr "Data di rimozione"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Alert Date has been reached."
-msgstr "Avviso di Scadenza raggiunto."
+msgstr "La data di avviso di scadenza è stata raggiunta."
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/production_lot.py:84
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
 msgstr ""
+"La data di avviso è stata raggiunta per questo numero di lotto/di serie"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
