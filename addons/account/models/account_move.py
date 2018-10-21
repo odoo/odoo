@@ -381,6 +381,10 @@ class AccountMove(models.Model):
         if not self.ids:
             return True
         prec = self.env.user.company_id.currency_id.decimal_places
+        if self.env.user.company_id.tax_calculation_rounding_method == 'round_globally':
+            rounding = 10 ** (-prec)
+        else:
+            rounding = 10 ** (-max(5, prec))
 
         self._cr.execute("""\
             SELECT      move_id
@@ -388,7 +392,7 @@ class AccountMove(models.Model):
             WHERE       move_id in %s
             GROUP BY    move_id
             HAVING      abs(sum(debit) - sum(credit)) > %s
-            """, (tuple(self.ids), 10 ** (-max(5, prec))))
+            """, (tuple(self.ids), rounding))
         if len(self._cr.fetchall()) != 0:
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True

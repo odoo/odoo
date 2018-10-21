@@ -1752,7 +1752,12 @@ exports.Orderline = Backbone.Model.extend({
             }
             else {
                 var tax_amount = self._compute_all(tax, base, quantity);
-                tax_amount = round_pr(tax_amount, currency_rounding);
+                if (tax.price_include){
+                    tax_amount = round_pr(tax_amount, currency_rounding_bak);
+                }
+                else{
+                    tax_amount = round_pr(tax_amount, currency_rounding);
+                }
 
                 if (tax_amount){
                     if (tax.price_include) {
