@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Linas Versada <paulius.sladkevicius@gmail.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Anatolij, 2017
@@ -36,6 +35,9 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"Reliatyvus arba absoliutus URL, nurodantis į kvadratinį jūsų prekės ženklo "
+"ar produkto paveikslėlį. Toks, kaip nustatyta jūsų \"Stripe\" profilyje: "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -55,7 +57,7 @@ msgstr "Kortelės savininko vardas"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "Apmokėjimo paveikslėlio URL"
 
 #. module: payment_stripe
 #. openerp-web
@@ -81,7 +83,7 @@ msgstr "Galiojimas (Mėnuo/ Metai)"
 #: code:addons/payment_stripe/static/src/js/stripe.js:32
 #, python-format
 msgid "Just one more second, confirming your payment..."
-msgstr ""
+msgstr "Sekundėlę, patvirtinamas jūsų apmokėjimas..."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -91,14 +93,14 @@ msgstr "Mokėjimo gavėjas"
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Mokėjimo transakcija"
+msgstr "Mokėjimo operacija"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:57
 #, python-format
 msgid "Payment error"
-msgstr ""
+msgstr "Mokėjimo klaida"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:167
@@ -107,40 +109,42 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"Galbūt problemą galima išspręsti dar kartą patikrinus kortelės duomenis ar "
+"susisiekus su banku?"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Stripe skelbiamas raktas"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe slaptas raktas"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:165
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "\"Stripe\" suteikė mums šią informaciją apie problemą: \"%s\""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:177
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
-msgstr ""
+msgstr "Stripe: %s užsakymai rasti numeriui %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:173
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr ""
+msgstr "Stripe: numeriui %s nerasta užsakymų"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:163
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr ""
+msgstr "Apgailestaujame, tačiau operacija nepavyko."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token

@@ -12,13 +12,14 @@
 # Anton Vassilev, 2018
 # Antoan Georgiev <expocarbg@gmail.com>, 2018
 # Maria Boyadjieva <marabo2000@gmail.com>, 2018
+# Георги Пехливанов <sonaris@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
 "PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
+"Last-Translator: Георги Пехливанов <sonaris@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,12 +40,12 @@ msgstr "3D защита HTML"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Сума:</b>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Референция:</b>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -54,23 +55,23 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Обратно към Моя П�
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"> Плащам</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\"> Добави нова карта</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/> Изтрий"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:122
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Отказ,</i> Вашето плащане е отменено."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:118
@@ -79,6 +80,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Готово,</i> Вашето онлайн плащане е успешно обработено. Благодарим Ви, за"
+" поръчката!"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:126
@@ -88,6 +91,9 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Грешка,</i> Моля, имайте предвид, че по време на транзакцията възникна "
+"грешка. Поръчката е потвърдена, но няма да бъде платена. Не се колебайте да "
+"се свържете с нас, ако имате въпроси относно състоянието на вашата поръчка."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:114
@@ -96,13 +102,15 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>Очаквано,</i> Вашата онлайн плащане бе успешно обработена. Но вашата "
+"поръчка все още не е потвърдена."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:350
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
+msgstr "<p>Тази карта понастоящем е свързана със следните записи:<p/>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -224,12 +232,12 @@ msgstr "Референция към приобретател"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "Получатели"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "Получатели списък"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -273,7 +281,7 @@ msgstr "Сума"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr ""
+msgstr "Позволен механизъм за поддръжка"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -301,22 +309,22 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_res_id
 msgid "Callback Document ID"
-msgstr ""
+msgstr "ID на документ за обръщение"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "Модел на документ за обръщение"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Хеш за обръщение"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "Метод за обръщение"
 
 #. module: payment
 #. openerp-web
@@ -340,18 +348,18 @@ msgstr "Отменени"
 #: code:addons/payment/static/src/js/payment_form.js:188
 #, python-format
 msgid "Cannot set-up the payment"
-msgstr ""
+msgstr "Плащането не може да бъде настроено"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:111
 #, python-format
 msgid "Cannot setup the payment."
-msgstr ""
+msgstr "Плащането не може да бъде настроено"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "Въведете количество ръчно"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -361,7 +369,7 @@ msgstr "Уловете тразакция"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr ""
+msgstr "Вземете количество от Odoo, когато доставката завърши."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -377,7 +385,7 @@ msgstr "Натиснете, за да създадете обработчик н
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Click to create a payment icon."
-msgstr ""
+msgstr "Кликнете, за да създадете икона за плащане."
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -405,7 +413,7 @@ msgstr "Настройване"
 #: code:addons/payment/static/src/js/payment_form.js:357
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Потвърдете изтриването"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -548,7 +556,7 @@ msgstr "Съобщение за грешка"
 #: code:addons/payment/static/src/js/payment_form.js:428
 #, python-format
 msgid "Error: "
-msgstr ""
+msgstr "Грешка: "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
@@ -627,6 +635,8 @@ msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
 msgstr ""
+"Ако оставите полето празно, придобиващият плащания ще бъде на разположение "
+"за всички държави."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
@@ -637,7 +647,7 @@ msgstr "Изображение"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "Изображение, показано във формуляра за плащане"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -697,7 +707,7 @@ msgstr "Позволете на клиента да реши"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon_acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "Списък на купувачите, поддържащи тази икона за плащане."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -708,7 +718,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr "Управление на начини за плащане"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
@@ -790,6 +800,8 @@ msgstr "Съобщения"
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
 msgstr ""
+"Липсва партньорска референция, когато се опитвате да създадете нов символ за"
+" плащане"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
@@ -814,7 +826,7 @@ msgstr "Никога"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "Няма намерен получател на плащане."
 
 #. module: payment
 #. openerp-web
@@ -822,7 +834,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:308
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "Няма избран начин на плащане"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_payment_token_id
@@ -839,6 +851,8 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
+"Забележка: Абонаментите не поемат това поле в сметката, по подразбиране той "
+"използва сървър към сървър."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -902,19 +916,19 @@ msgstr "Обработчици на плащане"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
 msgid "Payment Flow"
-msgstr ""
+msgstr "Паричен поток"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
-msgstr ""
+msgstr "Икона за плащане"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "Икона за плащане"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
@@ -959,7 +973,7 @@ msgstr "Транзакции за плащания"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Payment from Odoo"
-msgstr ""
+msgstr "Плащане от Odoo"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:59
@@ -972,7 +986,7 @@ msgstr "Неуспешна платежна транзакция (%s)"
 #: code:addons/payment/controllers/portal.py:135
 #, python-format
 msgid "Payment transaction failed."
-msgstr ""
+msgstr "Платежната транзакция се провали"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -992,6 +1006,14 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"Плащанията ще бъдат регистрирани в този списък. \n"
+"Ако плащате направо по банковата си сметка,\n"
+"                си изберете сметка. Ако Ви плащат по списък от няколко транзакции, създайте конкретен \n"
+"                списък от плащания за този получател, за да управлявате лесно банковите разплащания.\n"
+"                Задържате количество пари във временна сметка за преводи на вашия списък (създадена автоматично, когато създавате\n"
+"                дневника за разплащания). След това, когато плащате по банковата си сметка от получателя на плащането,\n"
+"                 съгласувате линията на банковото извлечение с тази временна сметка за трансфер. \n"
+"                Използвайте шаблони за съгласуване, за да го направите с един клик."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1017,7 +1039,7 @@ msgstr "Телефон"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Моля, конфигурирайте получателя на плащането."
 
 #. module: payment
 #. openerp-web
@@ -1031,24 +1053,24 @@ msgstr "Моля, изберете начин на плащане."
 #: code:addons/payment/static/src/js/payment_form.js:309
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "Моля, изберете опцията за добавяне на нов начин на плащане."
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
-msgstr ""
+msgstr "Моля, използвайте следните данни за трансфера"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "Моля, използвайте името на поръчката като референция за комуникация."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "Обработено от"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -1065,7 +1087,7 @@ msgstr "Доставчик"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "Пренасочване към уебсайта на обработчика"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
