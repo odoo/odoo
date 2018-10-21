@@ -65,7 +65,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} 憑單(參考：${object.number或『不適用』})"
+msgstr "${object.company_id.name} 憑單(Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -907,7 +907,7 @@ msgstr "<strong>下一動作：</strong><br/>"
 msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
-msgstr "<strong>飛速付款調節：</strong>創建憑單時自動生成欠款付款。"
+msgstr "<strong>飛速付款調節：</strong>創建憑單時自動生成登記付款。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

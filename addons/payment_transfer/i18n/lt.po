@@ -5,7 +5,6 @@
 # Translators:
 # Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
@@ -46,6 +45,13 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<h3>Naudokite šiuos operacijos duomenys</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Komunikacija</h4>\n"
+"<p>Naudokite užsakymo pavadinimą kaip komunikacijos numerį.</p>\n"
+"</div>"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:26
@@ -67,10 +73,10 @@ msgstr "Mokėjimo gavėjas"
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Mokėjimo transakcija"
+msgstr "Mokėjimo operacija"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:66
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "gauti duomenys numeriui %s"
