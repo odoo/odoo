@@ -33,6 +33,7 @@ class TestProcurement(TestMrpCommon):
             'bom_id': self.bom_3.id,
             'product_uom_id': self.product_6.uom_id.id,
         })
+        production_product_6.action_confirm()
         production_product_6.action_assign()
 
         # check production state is Confirmed
@@ -125,7 +126,7 @@ class TestProcurement(TestMrpCommon):
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
 
-        # create MO, but check it raises error as components are in make to order and not everyone has 
+        # create MO, but check it raises error as components are in make to order and not everyone has
         with self.assertRaises(UserError):
             production_product_4 = self.env['mrp.production'].create({
                 'name': 'MO/Test-00002',
@@ -134,3 +135,4 @@ class TestProcurement(TestMrpCommon):
                 'bom_id': self.bom_1.id,
                 'product_uom_id': self.product_4.uom_id.id,
             })
+            production_product_4.action_confirm()
