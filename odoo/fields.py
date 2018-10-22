@@ -31,7 +31,7 @@ from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
-DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
+DATETIME_LENGTH = len(datetime.utcnow().strftime(DATETIME_FORMAT))
 EMPTY_DICT = frozendict()
 
 RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
@@ -1545,7 +1545,7 @@ class Date(Field):
             can't be converted between timezones).
         :rtype: date
         """
-        today = timestamp or datetime.now()
+        today = timestamp or datetime.utcnow()
         context_today = None
         tz_name = record._context.get('tz') or record.env.user.tz
         if tz_name:
@@ -1627,14 +1627,14 @@ class Datetime(Field):
             This function may be used to compute default values.
         """
         # microseconds must be annihilated as they don't comply with the server datetime format
-        return datetime.now().replace(microsecond=0)
+        return datetime.utcnow().replace(microsecond=0)
 
     @staticmethod
     def today(*args):
         """
         Return the current day, at midnight (00:00:00).
         """
-        return Datetime.now().replace(hour=0, minute=0, second=0)
+        return Datetime.utcnow().replace(hour=0, minute=0, second=0)
 
     @staticmethod
     def context_timestamp(record, timestamp):
