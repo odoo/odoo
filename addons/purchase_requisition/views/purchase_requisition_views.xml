@@ -73,22 +73,6 @@
 
     <!-- Purchase Orders -->
 
-    <record model="ir.ui.view" id="purchase_order_form_inherit">
-        <field name="name">purchase.order.form.inherit</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_form"/>
-        <field name="arch" type="xml">
-          <field name="partner_id" position="replace">
-            <field name="is_quantity_copy" invisible="1"/>
-            <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'readonly': ['|', ('is_quantity_copy', '=', 'none'), ('state', 'in', ['purchase', 'done', 'cancel'])]}" force_save="1"/>
-            </field>
-            <field name="partner_ref" position="after">
-                <field name="requisition_id"
-                    domain="[('state', 'in', ('in_progress', 'open', 'ongoing')), ('vendor_id', 'in', (partner_id, False))]"/>
-            </field>
-        </field>
-    </record>
-
     <record model="ir.ui.view" id="supplier_info_form_inherit">
         <field name="name">product.supplierinfo.requisition.view</field>
         <field name="model">product.supplierinfo</field>
@@ -99,17 +83,6 @@
                     attrs="{'invisible': [('purchase_requisition_id', '=', False)]}"
                     />
             </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="purchase_order_search_inherit">
-        <field name="name">purchase.order.list.select.inherit</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='approved']" position="after">
-                <filter string="Requisition" name="requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
-            </xpath>
         </field>
     </record>
 
@@ -329,38 +302,6 @@
         sequence="10"
         parent="purchase.menu_procurement_management"
         action="action_purchase_requisition"/>
-
-    <record model="ir.ui.view" id="product_template_form_view_inherit">
-        <field name="name">product.template.form.inherit</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
-        <field name="arch" type="xml">
-            <group name="bill" position="before">
-                <group string="Reordering" attrs="{'invisible': [('type', '=', 'service')]}">
-                    <field name="purchase_requisition" widget="radio"/>
-                </group>
-            </group>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="product_supplierinfo_tree_view_inherit">
-        <field name="name">product.template.product.form.inherit</field>
-        <field name="model">product.supplierinfo</field>
-        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
-        <field name="arch" type="xml">
-          <xpath expr="//field[@name='min_qty']" position="before">
-              <field name="purchase_requisition_id"/>
-          </xpath>
-        </field>
-    </record>
-
-    <act_window
-            domain="[('requisition_id', '=', active_id)]"
-            context="{'default_requisition_id': active_id}"
-            id="act_res_partner_2_purchase_order"
-            name="Purchase orders"
-            res_model="purchase.order"
-            src_model="purchase.requisition"/>
 
     </data>
 </odoo>
