@@ -267,19 +267,19 @@ var ListController = BasicController.extend({
         if (ids.length === 0) {
             return $.when();
         }
-        var options = {};
+        var additionalContext = {};
         if (this.allSelected) {
             var record = this.model.get(this.handle);
-            options['active_model'] = record.model;
+            additionalContext['active_model'] = record.model;
             if (record.groupedBy.length) {
                 var openedGroups = this.renderer._getOpenedLeafGroups(record.data);
-                options['active_domain'] = this._prepareGroupsDomain(openedGroups);
+                additionalContext['active_domain'] = this._prepareGroupsDomain(openedGroups);
             } else {
-                options['active_domain'] = record.getDomain();
+                additionalContext['active_domain'] = record.getDomain();
             }
         }
         return this.model
-            .toggleActive(ids, !archive, this.handle, options)
+            .toggleActive(ids, !archive, this.handle, additionalContext)
             .then(this.update.bind(this, {}, {reload: false}));
     },
     /**
@@ -489,18 +489,18 @@ var ListController = BasicController.extend({
      * @private
      */
     _onDeleteSelectedRecords: function () {
-        var options = {};
+        var additionalContext = {};
         if (this.allSelected) {
             var record = this.model.get(this.handle);
-            options['active_model'] = record.model;
+            additionalContext['active_model'] = record.model;
             if (record.groupedBy.length) {
                 var openedGroups = this.renderer._getOpenedLeafGroups(record.data);
-                options['active_domain'] = this._prepareGroupsDomain(openedGroups);
+                additionalContext['active_domain'] = this._prepareGroupsDomain(openedGroups);
             } else {
-                options['active_domain'] = record.getDomain();
+                additionalContext['active_domain'] = record.getDomain();
             }
         }
-        this._deleteRecords(this.selectedRecords, options);
+        this._deleteRecords(this.selectedRecords, additionalContext);
     },
     /**
      * Handler called when the user clicked on the 'Discard' button.

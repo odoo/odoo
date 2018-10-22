@@ -388,22 +388,22 @@ var BasicModel = AbstractModel.extend({
      * @param {string[]} recordIds list of local resources ids. They should all
      *   be of type 'record', be of the same model and have the same parent.
      * @param {string} modelName mode name used to unlink the records
-     * @param {Object} options
-     * @param {Array} options.active_domain
-     * @param {string} options.active_model
+     * @param {Object} additionalContext
+     * @param {Array} additionalContext.active_domain
+     * @param {string} additionalContext.active_model
      * @returns {Deferred}
      */
-    deleteRecords: function (recordIds, modelName, options) {
+    deleteRecords: function (recordIds, modelName, additionalContext) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
-        var context = _.extend(records[0].getContext(), session.user_context, options);
+        var context = _.extend(records[0].getContext(), session.user_context, additionalContext);
         var params = {
             model: modelName,
             method: 'unlink',
             args: [_.pluck(records, 'res_id')],
             context: context,
         };
-        if (options && options.active_domain) {
+        if (additionalContext && additionalContext.active_domain) {
             params['route'] = '/web/dataset/call_kw_with_domain';
         }
         return this._rpc(params)
@@ -1167,25 +1167,25 @@ var BasicModel = AbstractModel.extend({
      * @param {Array} recordIDs local ids of the records to (un)archive
      * @param {boolean} value false to archive, true to unarchive (value of the active field)
      * @param {string} parentID id of the parent resource to reload
-     * @param {Object} options
-     * @param {Array} options.active_domain
-     * @param {string} options.active_model
+     * @param {Object} additionalContext
+     * @param {Array} additionalContext.active_domain
+     * @param {string} additionalContext.active_model
      * @returns {Deferred<string>} resolves to the parent id
      */
-    toggleActive: function (recordIDs, value, parentID, options) {
+    toggleActive: function (recordIDs, value, parentID, additionalContext) {
         var self = this;
         var parent = this.localData[parentID];
         var resIDs = _.map(recordIDs, function (recordID) {
             return self.localData[recordID].res_id;
         });
-        var context = _.extend(this.localData[parentID].getContext(), session.user_context, options);
+        var context = _.extend(this.localData[parentID].getContext(), session.user_context, additionalContext);
         var params = {
             model: parent.model,
             method: 'write',
             args: [resIDs, { active: value }],
             context: context,
         };
-        if (options && options.active_domain) {
+        if (additionalContext && additionalContext.active_domain) {
             params['route'] = '/web/dataset/call_kw_with_domain';
         }
         return this._rpc(params)
