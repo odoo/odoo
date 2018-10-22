@@ -23,8 +23,8 @@ class ProductTemplate(models.Model):
         default='no',
         help="Expenses and vendor bills can be re-invoiced to a customer."
              "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
+    visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
-    hide_expense_policy = fields.Boolean(compute='_compute_hide_expense_policy')
     invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
         ('delivery', 'Delivered quantities')], string='Invoicing Policy',
@@ -34,10 +34,10 @@ class ProductTemplate(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _compute_hide_expense_policy(self):
-        hide_expense_policy = self.user_has_groups('!analytic.group_analytic_accounting,!project.group_project_user,!hr_expense.group_hr_expense_user')
-        for template in self:
-            template.hide_expense_policy = hide_expense_policy
+    def _compute_visible_expense_policy(self):
+        visibility = self.user_has_groups('analytic.group_analytic_accounting')
+        for product_template in self:
+            product_template.visible_expense_policy = visibility
 
     @api.multi
     @api.depends('product_variant_ids.sales_count')
