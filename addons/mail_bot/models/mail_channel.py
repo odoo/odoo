@@ -14,14 +14,9 @@ class Channel(models.Model):
     @api.model
     def channel_fetch_listeners(self, uuid):
         """ Return the id, name and email of partners listening to the given channel """
-        odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
-        self._cr.execute("""
-            SELECT P.id, P.name, P.email
-            FROM mail_channel_partner CP
-                INNER JOIN res_partner P ON CP.partner_id = P.id
-                INNER JOIN mail_channel C ON CP.channel_id = C.id
-            WHERE C.uuid = %s OR P.id = %s""", (uuid, odoobot_id,))
-        return self._cr.dictfetchall()
+        result = super().channel_fetch_listeners(uuid)
+        odoobot = self.env.ref("base.partner_root").sudo()
+        return result + [{'id': odoobot.id, 'name': odoobot.name, 'email': odoobot.email}]
 
     @api.model
     def init_odoobot(self):
