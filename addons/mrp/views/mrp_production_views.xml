@@ -149,16 +149,16 @@
                                 Use the Produce button or process the work orders to create some finished products.
                             </p>
                         </page>
-                        <page string="Miscellaneous" groups="stock.group_stock_multi_locations, base.group_no_one">
+                        <page string="Miscellaneous">
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
-                                    <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                    <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
-                                <group>
-                                    <field name="availability" groups="base.group_no_one"/>
-                                </group>
+                            </group>
+                            <group>
+                                <field name="reservation_state"/>
                             </group>
                         </page>
                     </notebook>
