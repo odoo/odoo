@@ -136,30 +136,11 @@ var BasicRenderer = AbstractRenderer.extend({
             dom.setSelectionRange(field.getFocusableElement().get(0), {start: offset, end: offset});
         }
     },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Add a tooltip on a $node, depending on a field description
-     *
-     * @param {FieldWidget} widget
-     * @param {$node} $node
-     */
-    _addFieldTooltip: function (widget, $node) {
-        // optional argument $node, the jQuery element on which the tooltip
-        // should be attached if not given, the tooltip is attached on the
-        // widget's $el
-        $node = $node.length ? $node : widget.$el;
-        $node.tooltip({
-            title: function () {
-                return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.debug,
-                    widget: widget,
-                });
-            }
-        });
-    },
     /**
      * Activates the widget at the given index for the given record if possible
      * or the "next" possible one. Usually, a widget can be activated if it is
@@ -237,6 +218,26 @@ var BasicRenderer = AbstractRenderer.extend({
     _activatePreviousFieldWidget: function (record, currentIndex) {
         currentIndex = currentIndex ? (currentIndex - 1) : ((this.allFieldWidgets[record.id] || []).length - 1);
         return this._activateFieldWidget(record, currentIndex, {inc:-1});
+    },
+    /**
+     * Add a tooltip on a $node, depending on a field description
+     *
+     * @param {FieldWidget} widget
+     * @param {$node} $node
+     */
+    _addFieldTooltip: function (widget, $node) {
+        // optional argument $node, the jQuery element on which the tooltip
+        // should be attached if not given, the tooltip is attached on the
+        // widget's $el
+        $node = $node.length ? $node : widget.$el;
+        $node.tooltip({
+            title: function () {
+                return qweb.render('WidgetLabel.tooltip', {
+                    debug: config.debug,
+                    widget: widget,
+                });
+            }
+        });
     },
     /**
      * Does the necessary DOM updates to match the given modifiers data. The
@@ -685,7 +686,6 @@ var BasicRenderer = AbstractRenderer.extend({
 
         return $el;
     },
-
     /**
      * Rerenders a given widget and make sure the associated data which
      * referenced the old one is updated.
