@@ -77,7 +77,7 @@ var ActionManager = Widget.extend({
     /**
      * Called each time the action manager is attached into the DOM.
      */
-    on_attach_callback: function() {
+    on_attach_callback: function () {
         this.isInDOM = true;
         var currentController = this.getCurrentController();
         if (currentController) {
@@ -87,7 +87,7 @@ var ActionManager = Widget.extend({
     /**
      * Called each time the action manager is detached from the DOM.
      */
-    on_detach_callback: function() {
+    on_detach_callback: function () {
         this.isInDOM = false;
         var currentController = this.getCurrentController();
         if (currentController) {
@@ -573,12 +573,12 @@ var ActionManager = Widget.extend({
             return $.Deferred();
         } else {
             var w = window.open(url, '_blank');
-            if (!w || w.closed || typeof w.closed === 'undefined') {
-                var message = _t('A popup window has been blocked. You ' +
+            if (!w || w.closed || typeof w.closed === 'undefined') {
+                var message = _t('A popup window has been blocked. You ' +
                              'may need to change your browser settings to allow ' +
                              'popup windows for this page.');
                 this.do_warn(_t('Warning'), message, true);
-            }
+            }
         }
 
         options.on_close();

@@ -739,24 +739,24 @@ var ListRenderer = BasicRenderer.extend({
      * a cell using the keyboard, if he presses enter, enter the model represented by the line
      *
      * @private
-     * @param {KeyboardEvent} e
+     * @param {KeyboardEvent} ev
      */
-    _onKeyDown: function (e) {
+    _onKeyDown: function (ev) {
         if (!this.editable) {
-            switch (e.which) {
+            switch (ev.which) {
                 case $.ui.keyCode.DOWN:
-                    $(e.currentTarget).next().find('input').focus();
-                    e.preventDefault();
+                    $(ev.currentTarget).next().find('input').focus();
+                    ev.preventDefault();
                     break;
                 case $.ui.keyCode.UP:
-                    $(e.currentTarget).prev().find('input').focus();
-                    e.preventDefault();
+                    $(ev.currentTarget).prev().find('input').focus();
+                    ev.preventDefault();
                     break;
                 case $.ui.keyCode.ENTER:
-                    e.preventDefault();
-                    var id = $(e.currentTarget).data('id');
+                    ev.preventDefault();
+                    var id = $(ev.currentTarget).data('id');
                     if (id) {
-                        this.trigger_up('open_record', { id: id, target: e.target });
+                        this.trigger_up('open_record', { id: id, target: ev.target });
                     }
                     break;
             }
@@ -764,43 +764,43 @@ var ListRenderer = BasicRenderer.extend({
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onRowClicked: function (event) {
+    _onRowClicked: function (ev) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!$(event.target).prop('special_click')) {
-            var id = $(event.currentTarget).data('id');
+        if (!$(ev.target).prop('special_click')) {
+            var id = $(ev.currentTarget).data('id');
             if (id) {
-                this.trigger_up('open_record', { id: id, target: event.target });
+                this.trigger_up('open_record', { id: id, target: ev.target });
             }
         }
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onSelectRecord: function (event) {
-        event.stopPropagation();
+    _onSelectRecord: function (ev) {
+        ev.stopPropagation();
         this._updateSelection();
-        if (!$(event.currentTarget).find('input').prop('checked')) {
+        if (!$(ev.currentTarget).find('input').prop('checked')) {
             this.$('thead .o_list_record_selector input').prop('checked', false);
         }
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onSortColumn: function (event) {
-        var name = $(event.currentTarget).data('name');
+    _onSortColumn: function (ev) {
+        var name = $(ev.currentTarget).data('name');
         this.trigger_up('toggle_column_order', { id: this.state.id, name: name });
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onToggleGroup: function (event) {
-        var group = $(event.currentTarget).data('group');
+    _onToggleGroup: function (ev) {
+        var group = $(ev.currentTarget).data('group');
         if (group.count) {
             this.trigger_up('toggle_group', { group: group });
         }
@@ -810,10 +810,10 @@ var ListRenderer = BasicRenderer.extend({
      * to toggle its status.
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onToggleSelection: function (event) {
-        var checked = $(event.currentTarget).prop('checked') || false;
+    _onToggleSelection: function (ev) {
+        var checked = $(ev.currentTarget).prop('checked') || false;
         this.$('tbody .o_list_record_selector input:not(":disabled")').prop('checked', checked);
         this._updateSelection();
     },

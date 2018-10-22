@@ -175,17 +175,17 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * Do what need to be done when a button from the control panel is clicked.
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onButtonClick: function (event) {
-        var $target = $(event.target);
+    _onButtonClick: function (ev) {
+        var $target = $(ev.target);
         var parent;
         var field;
         if ($target.hasClass('o_graph_button')) {
             this._setMode($target.data('mode'));
         } else if ($target.parents('.o_graph_measures_list').length) {
-            event.preventDefault();
-            event.stopPropagation();
+            ev.preventDefault();
+            ev.stopPropagation();
             field = $target.data('field');
             this._setMeasure(field);
         }
