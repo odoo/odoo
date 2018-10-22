@@ -20,6 +20,10 @@ odoo.define('project.portal_project', function (require) {
         return $.Deferred().reject("No params were passed to 'portal-project'")
     };
 
+    $target.addClass('hide');
+    var $spinner = $('<div class="o_loading_spinner"><i class="fa fa-spinner fa-spin"/></div>');
+    $target.before($spinner);
+
     var params = $target.data('params');
     var options = $target.data('options') || {};
     switch (params['viewType']) {
@@ -27,11 +31,19 @@ odoo.define('project.portal_project', function (require) {
             var PortalKanban = require('project.PortalKanban');
             var portalKanban = new PortalKanban(webClient, params, options);
             portalKanban.appendTo($target);
+            portalKanban.opened(function() {
+                $spinner.remove();
+                $target.addClass('show').removeClass('hide');
+            });
             break;
         case 'form':
             var PortalForm = require('project.PortalForm');
             var portalForm = new PortalForm(webClient, params, options);
             portalForm.appendTo($target);
+            portalForm.opened(function() {
+                $spinner.remove();
+                $target.addClass('show').removeClass('hide');
+            });
             break;
         default:
             return $.Deferred().reject("No view type was specified in the params passed to 'portal-project'");

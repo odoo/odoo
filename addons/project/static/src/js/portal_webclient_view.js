@@ -30,6 +30,7 @@ var Widget = require('web.Widget');
 var PortalWebclientView = Widget.extend({
     init: function (parent, params) {
         this._super.apply(this, arguments);
+        this._opened = $.Deferred()
         this._completeContext();
         /**
          * this.view will contain the "backend view" information:
@@ -91,10 +92,13 @@ var PortalWebclientView = Widget.extend({
             if (self.searchView['controller']) {
                 self.searchView.controller.on('search', self, self._onSearch);
             };  
-        });
+        }).then(self._opened.resolve);
     },
     start: function () {
         return this._super.apply(this, arguments);
+    },
+    opened: function (handler) {
+        return (handler)? this._opened.then(handler) : this._opened;
     },
     /**
      * @override
