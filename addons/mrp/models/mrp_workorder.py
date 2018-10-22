@@ -40,7 +40,7 @@ class MrpWorkorder(models.Model):
         help='Technical: used in views only.')
     production_availability = fields.Selection(
         'Stock Availability', readonly=True,
-        related='production_id.availability', store=True,
+        related='production_id.reservation_state', store=True,
         help='Technical: used in views and domains only.')
     production_state = fields.Selection(
         'Production State', readonly=True,
@@ -428,7 +428,6 @@ class MrpWorkorder(models.Model):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
         if self.production_id.state != 'progress':
             self.production_id.write({
-                'state': 'progress',
                 'date_start': datetime.now(),
             })
         timeline.create({
