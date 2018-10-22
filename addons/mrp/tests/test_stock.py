@@ -84,7 +84,7 @@ class TestWarehouse(common.TestMrpCommon):
         production_3.action_assign()
 
         # Check Manufacturing order's availability.
-        self.assertEqual(production_3.availability, 'assigned', "Production order's availability should be Available.")
+        self.assertEqual(production_3.reservation_state, 'assigned', "Production order's availability should be Available.")
 
         location_id = production_3.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) and production_3.location_src_id.id or production_3.location_dest_id.id,
 

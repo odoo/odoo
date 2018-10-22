@@ -65,7 +65,6 @@ class MrpProductProduce(models.TransientModel):
         self.check_finished_move_lots()
         if self.production_id.state == 'confirmed':
             self.production_id.write({
-                'state': 'progress',
                 'date_start': datetime.now(),
             })
         return {'type': 'ir.actions.act_window_close'}

@@ -45,7 +45,7 @@ class TestProcurement(TestMrpCommon):
         produce_product_4 = self.env['mrp.production'].search([('product_id', '=', self.product_4.id),
                                                                ('move_dest_ids', '=', move_raw_product4[0].id)])
         # produce product
-        self.assertEqual(produce_product_4.availability, 'waiting', "Consume material not available")
+        self.assertEqual(produce_product_4.reservation_state, 'confirmed', "Consume material not available")
 
         # Create production order
         # -------------------------
@@ -61,7 +61,7 @@ class TestProcurement(TestMrpCommon):
         produce_product_4.action_assign()
         self.assertEqual(produce_product_4.product_qty, 8, "Wrong quantity of finish product.")
         self.assertEqual(produce_product_4.product_uom_id, self.uom_dozen, "Wrong quantity of finish product.")
-        self.assertEqual(produce_product_4.availability, 'assigned', "Consume material not available")
+        self.assertEqual(produce_product_4.reservation_state, 'assigned', "Consume material not available")
 
         # produce product4
         # ---------------
@@ -91,7 +91,7 @@ class TestProcurement(TestMrpCommon):
 
         # ------------------------------------
 
-        self.assertEqual(production_product_6.availability, 'assigned', "Consume material not available")
+        self.assertEqual(production_product_6.reservation_state, 'assigned', "Consume material not available")
         produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': production_product_6.id,
             'active_ids': [production_product_6.id],

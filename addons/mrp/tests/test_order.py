@@ -195,7 +195,7 @@ class TestMrpOrder(TestMrpCommon):
         })
         # assign consume material
         man_order.action_assign()
-        self.assertEqual(man_order.availability, 'waiting', "Production order should be in waiting state.")
+        self.assertEqual(man_order.reservation_state, 'confirmed', "Production order should be in waiting state.")
 
         # check consume materials of manufacturing order
         self.assertEqual(len(man_order.move_raw_ids), 4, "Consume material lines are not generated proper.")
@@ -247,7 +247,7 @@ class TestMrpOrder(TestMrpCommon):
         man_order.action_assign()
 
         # Check production order status after assign.
-        self.assertEqual(man_order.availability, 'assigned', "Production order should be in assigned state.")
+        self.assertEqual(man_order.reservation_state, 'assigned', "Production order should be in assigned state.")
         # Plan production order.
         man_order.button_plan()
 
@@ -302,6 +302,7 @@ class TestMrpOrder(TestMrpCommon):
         """
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_4).unlink()
+        self.bom_3.ready_to_produce = 'all_available'
 
         production_2 = self.env['mrp.production'].create({
             'name': 'MO-Test001',
@@ -313,7 +314,7 @@ class TestMrpOrder(TestMrpCommon):
         production_2.action_assign()
 
         # check sub product availability state is waiting
-        self.assertEqual(production_2.availability, 'waiting', 'Production order should be availability for waiting state')
+        self.assertEqual(production_2.reservation_state, 'confirmed', 'Production order should be availability for waiting state')
 
         # Update Inventory
         inventory_wizard = self.env['stock.change.product.qty'].create({
@@ -324,7 +325,7 @@ class TestMrpOrder(TestMrpCommon):
 
         production_2.action_assign()
         # check sub product availability state is partially available
-        self.assertEqual(production_2.availability, 'partially_available', 'Production order should be availability for partially available state')
+        self.assertEqual(production_2.reservation_state, 'confirmed', 'Production order should be availability for partially available state')
 
         # Update Inventory
         inventory_wizard = self.env['stock.change.product.qty'].create({
@@ -335,7 +336,7 @@ class TestMrpOrder(TestMrpCommon):
 
         production_2.action_assign()
         # check sub product availability state is assigned
-        self.assertEqual(production_2.availability, 'assigned', 'Production order should be availability for assigned state')
+        self.assertEqual(production_2.reservation_state, 'assigned', 'Production order should be availability for assigned state')
 
     def test_empty_routing(self):
         """ Check what happens when you work with an empty routing"""
@@ -409,7 +410,7 @@ class TestMrpOrder(TestMrpCommon):
             'bom_id': bom_custom_laptop.id
         })
         mo_custom_laptop.action_assign()
-        self.assertEqual(mo_custom_laptop.availability, 'assigned')
+        self.assertEqual(mo_custom_laptop.reservation_state, 'assigned')
 
         # produce one item, call `post_inventory`
         context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
