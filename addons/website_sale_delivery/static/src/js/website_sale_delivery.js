@@ -3,6 +3,8 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 
     require('web.dom_ready');
     var ajax = require('web.ajax');
+    var core = require('web.core');
+    var _t = core._t;
 
     /* Handle interactive carrier choice + cart update */
     var $pay_button = $('#o_payment_form_pay');
@@ -14,6 +16,17 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         var $amount_total = $('#order_total span.oe_currency_value');
         var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.d-none');
         var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
+        var $discount = $('#order_discounted');
+
+        if ($discount && result.new_amount_order_discounted) {
+            // Cross module without bridge
+            // Update discount of the order
+            $discount.find('.oe_currency_value').text(result.new_amount_order_discounted);
+
+            // We are in freeshipping, so every carrier is Free
+            $('#delivery_carrier .badge').text(_t('Free'));
+        }
+
         if (result.status === true) {
             $amount_delivery.text(result.new_amount_delivery);
             $amount_untaxed.text(result.new_amount_untaxed);

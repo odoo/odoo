@@ -712,11 +712,15 @@ class IrModelFields(models.Model):
                 field = getattr(obj, '_fields', {}).get(item.name)
 
                 if vals.get('name', item.name) != item.name:
-                    # We need to rename the column
+                    # We need to rename the field
                     item._prepare_update()
-                    if column_rename:
-                        raise UserError(_('Can only rename one field at a time!'))
-                    column_rename = (obj._table, item.name, vals['name'], item.index)
+                    if item.ttype in ('one2many', 'many2many'):
+                        # those field names are not explicit in the database!
+                        pass
+                    else:
+                        if column_rename:
+                            raise UserError(_('Can only rename one field at a time!'))
+                        column_rename = (obj._table, item.name, vals['name'], item.index)
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
@@ -779,6 +783,7 @@ class IrModelFields(models.Model):
             'index': bool(field.index),
             'store': bool(field.store),
             'copied': bool(field.copy),
+            'on_delete': getattr(field, 'ondelete', None),
             'related': ".".join(field.related) if field.related else None,
             'readonly': bool(field.readonly),
             'required': bool(field.required),

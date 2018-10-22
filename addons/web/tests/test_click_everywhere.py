@@ -7,7 +7,7 @@ import odoo.tests
 class TestMenusAdmin(odoo.tests.HttpCase):
 
     def test_01_click_everywhere_as_admin(self):
-        self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']();", "odoo.isReady === true", login="admin", timeout=1800)
+        self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']();", "odoo.isReady === true", login="admin", timeout=45*60)
 
 
 @odoo.tests.tagged('click_all', 'post_install', '-at_install', '-standard')

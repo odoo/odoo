@@ -1508,7 +1508,7 @@ Reporting
 Printed reports
 ---------------
 
-Odoo 11.0 uses a report engine based on :ref:`reference/qweb`,
+Odoo uses a report engine based on :ref:`reference/qweb`,
 `Twitter Bootstrap`_ and Wkhtmltopdf_. 
 
 A report is a combination two elements:

@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
-# zpq001 <zpq001@live.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# zpq001 <zpq001@live.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
@@ -16,14 +17,14 @@
 # roye w <159820@qq.com>, 2018
 # diaojiaolou <124412206@qq.com>, 2018
 # neter ji <jifuyi@qq.com>, 2018
-# keecome <7017511@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
 "Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -288,6 +289,11 @@ msgid "CRM Stages"
 msgstr "CRM 阶段"
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "来电要求演示"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -360,7 +366,7 @@ msgstr "点击这里 <b>添加你的商机</b>."
 msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
-msgstr "点击这里<b>创建您的第一条上级</b>， 并且加入到您的商机管道."
+msgstr "点击这里<b>创建您的第一条上级</b>， 并且加入到您的商机漏斗."
 
 #. module: crm
 #. openerp-web
@@ -421,6 +427,11 @@ msgstr "配置"
 #, python-format
 msgid "Configuration options are available in the Settings app."
 msgstr "配置选项在模块的设置里可用。"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "咨询"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -505,9 +516,9 @@ msgstr "转换为商机"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
-"Convert visitors of your website into leads in the CRM. Wre do data "
+"Convert visitors of your website into leads in the CRM. We do data "
 "enrichment based on their IP address."
-msgstr "转换你的网站访客到CRM的线索。我们基于他们的IP地址做数据处理。"
+msgstr "转换你的网站访客到CRM线索。我们基于他们的IP地址做数据处理。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
@@ -711,6 +722,11 @@ msgid "Describe the lead..."
 msgstr "说明线索..."
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "设计"
+
+#. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
 msgstr "摘要"
@@ -779,7 +795,7 @@ msgstr "联系人邮箱地址"
 msgid ""
 "Email sent to <strong>${email}</strong> generate opportunities in your "
 "pipeline.<br>"
-msgstr "发送到 <strong>${email}</strong>  的Email在里的流水线生成商机.<br>"
+msgstr "发送到 <strong>${email}</strong>  的Email在里的漏斗生成商机.<br>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -872,6 +888,11 @@ msgstr "额外信息"
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
 msgid "Folded in Pipeline"
 msgstr "在漏斗中折叠"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "跟进报价"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
@@ -1048,6 +1069,11 @@ msgstr "给线索 & 商机导入模板"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 msgid "Include archived"
 msgstr "包括已存档"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "信息"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1295,6 +1321,11 @@ msgid "Main Attachment"
 msgstr "附件"
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "制作报价"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
 msgid "Manual Assignation of Emails"
 msgstr "手动分配电子邮件"
@@ -1345,7 +1376,7 @@ msgstr "市场"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "普通"
+msgstr "媒介"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:958
@@ -1707,6 +1738,11 @@ msgid "Opportunity won"
 msgstr "获胜的商机"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "其他"
+
+#. module: crm
 #: selection:crm.lead,activity_state:0
 msgid "Overdue"
 msgstr "逾期"
@@ -1798,10 +1834,10 @@ msgid ""
 "mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the Sales Team."
 msgstr ""
-"商机分析给你随时访问\n"
+"漏斗分析给你随时访问\n"
 "商机的信息，如预期收入，计划成本\n"
 "错过最后期限或每个机会的交互次数。这个报告\n"
-"主要用于销售经理定期和销售团队检查商机。"
+"主要用于销售经理定期和销售团队评审漏斗。"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:224
@@ -1842,6 +1878,11 @@ msgstr "概率"
 #: model:ir.model.fields,field_description:crm.field_crm_stage__probability
 msgid "Probability (%)"
 msgstr "概率(%)"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "产品"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
@@ -1988,9 +2029,14 @@ msgid "Sequence"
 msgstr "序号"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "服务"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr "在你的商机管道中设置一个新阶段"
+msgstr "在你的商机漏斗中设置一个新阶段"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__on_change
@@ -2026,6 +2072,11 @@ msgstr "仅显示线索"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "仅显示商机"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "软件"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2101,7 +2152,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "State"
-msgstr "状态"
+msgstr "省份"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_state
@@ -2174,7 +2225,7 @@ msgstr "标签"
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Team Pipelines"
-msgstr "团队管道"
+msgstr "团队漏斗"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -2296,6 +2347,11 @@ msgstr "太昂贵"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
 msgstr "追踪"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "培训"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -2511,7 +2567,7 @@ msgstr "耶！团队最近 7 天的交易。"
 msgid ""
 "You have to enable the Pipeline on your Sales Team to be able to set it as a"
 " content for the graph"
-msgstr "你必须在销售团队中启用管道才能将其设置为图表的内容"
+msgstr "你必须在销售团队中启用漏斗才能将其设置为图表的内容"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:404

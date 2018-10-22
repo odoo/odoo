@@ -155,7 +155,7 @@
                 <field name="activity_type_id"/>
                 <separator/>
                 <filter string="My Activities" name="activities_my"
-                        domain="[('create_uid', '=', uid)]"/>
+                        domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Late Activities" name="activities_overdue"
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -168,7 +168,7 @@
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
-                    <filter string="Created By" name="createdby" context="{'group_by': 'create_uid'}"/>
+                    <filter string="Created By" name="createdby" context="{'group_by': 'create_user_id'}"/>
                     <filter string="Activity Type" name="activittype" context="{'group_by': 'activity_type_id'}"/>
                 </group>
             </search>
@@ -198,7 +198,7 @@
         <field name="arch" type="xml">
             <calendar string="Activity" date_start="date_deadline" color="activity_type_id">
                 <field name="res_name"/>
-                <field name="create_uid"/>
+                <field name="user_id"/>
                 <field name="summary"/>
             </calendar>
         </field>

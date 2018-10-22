@@ -4,11 +4,12 @@
 import itertools
 from unittest.mock import patch
 
-from odoo.addons.test_mail.tests import common
-from odoo.tests import tagged
-from odoo.tools import mute_logger
 from odoo import api
 from odoo.addons.base.models.ir_mail_server import IrMailServer
+from odoo.addons.test_mail.tests import common
+from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
 @tagged('resend_test')
@@ -18,26 +19,14 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
     def setUpClass(cls):
         super(TestMailResend, cls).setUpClass()
         #Two users
-        cls.user1 = cls.env['res.users'].with_context(cls._quick_create_user_ctx).create({
-            'name': 'Employee 1',
-            'login': 'e1',
-            'email': 'e1',  # invalid email
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])]
-        })
-        cls.user2 = cls.env['res.users'].with_context(cls._quick_create_user_ctx).create({
-            'name': 'Employee 2',
-            'login': 'e2',
-            'email': 'e2@example.com',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])]
-        })
+        cls.user1 = mail_new_test_user(cls.env, login='e1', groups='base.group_public', name='Employee 1', email='e1')  # invalid email
+        cls.user2 = mail_new_test_user(cls.env, login='e2', groups='base.group_portal', name='Employee 2', email='e2@example.com')
         #Two partner
-        cls.partner1 = cls.env['res.partner'].with_context(cls._quick_create_user_ctx).create({
+        cls.partner1 = cls.env['res.partner'].with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Partner 1',
             'email': 'p1'  # invalid email
         })
-        cls.partner2 = cls.env['res.partner'].with_context(cls._quick_create_user_ctx).create({
+        cls.partner2 = cls.env['res.partner'].with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Partner 2',
             'email': 'p2@example.com'
         })

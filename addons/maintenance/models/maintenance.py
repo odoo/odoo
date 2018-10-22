@@ -349,8 +349,8 @@ class MaintenanceRequest(models.Model):
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
-        if self.stage_id.done and 'stage_id' in vals:
-            self.write({'close_date': fields.Date.today()})
+        if 'stage_id' in vals:
+            self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
         if vals.get('user_id') or vals.get('schedule_date'):
             self.activity_update()

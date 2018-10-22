@@ -92,7 +92,7 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="taxcloud_settings">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_taxcloud"/>
+                                    <field name="module_account_taxcloud" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="account_taxcloud_right_pane">
                                     <label for="module_account_taxcloud" string="TaxCloud"/>
@@ -411,7 +411,7 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account." groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_budget"/>
+                                    <field name="module_account_budget" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_account_budget"/>
@@ -529,7 +529,7 @@
                         <div class="row mt16 o_settings_container" id="recommended_apps" groups="account.group_account_user">
                             <div class="col-12 col-lg-6 o_setting_box" id="asset_types" title="This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_account_asset"/>
+                                    <field name="module_account_asset" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_account_asset"/>

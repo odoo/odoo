@@ -58,6 +58,7 @@ var ThreadWidget = Widget.extend({
         this._enabledOptions = _.defaults(options || {}, {
             displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
+            displayModerationCommands: false,
             displayStars: true,
             displayDocumentLinks: true,
             displayAvatars: true,
@@ -70,6 +71,7 @@ var ThreadWidget = Widget.extend({
         this._disabledOptions = {
             displayOrder: this._enabledOptions.displayOrder,
             displayMarkAsRead: false,
+            displayModerationCommands: false,
             displayStars: false,
             displayDocumentLinks: false,
             displayAvatars: this._enabledOptions.displayAvatars,
@@ -443,6 +445,9 @@ var ThreadWidget = Widget.extend({
     _renderMessageMailPopover: function (messages) {
         if (this._messageMailPopover) {
             this._messageMailPopover.popover('hide');
+        }
+        if (!this.$('.o_thread_tooltip').length) {
+            return;
         }
         this._messageMailPopover = this.$('.o_thread_tooltip').popover({
             html: true,

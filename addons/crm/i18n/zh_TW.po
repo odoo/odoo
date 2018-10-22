@@ -4,16 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# amos lin <seeing@edirect168.com>, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
-# sejun huang <sejun.huang@gmail.com>, 2018
+# amos lin <seeing@edirect168.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
-"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"Last-Translator: amos lin <seeing@edirect168.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +29,7 @@ msgstr "#會議"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% endif"
-msgstr ""
+msgstr "% endif"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -39,6 +38,9 @@ msgid ""
 "    % if email\n"
 "    <strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
 msgstr ""
+"% set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name\n"
+"    % if email\n"
+"    <strong style=\"font-size: 16px;\">調試信件網關</strong>"
 
 #. module: crm
 #. openerp-web
@@ -47,7 +49,7 @@ msgstr ""
 msgid ""
 "<b>Choose a name</b> for your opportunity, example: <i>'Need a new "
 "website'</i>"
-msgstr ""
+msgstr "為您的商機 <b>選擇一個名字</b> ，例如： <i>'需要一個新的網站'</i>"
 
 #. module: crm
 #. openerp-web
@@ -75,6 +77,10 @@ msgid ""
 "    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
+"<p class='o_view_nocontent_smiling_face'>添加新商機</p><p>\n"
+"您還不是目前銷售團隊的成員\n"
+"您應該先把自己添加到目前銷售團隊\n"
+"</p>"
 
 #. module: crm
 #. openerp-web
@@ -116,7 +122,7 @@ msgstr "<span class=\"oe_grey\"> 在 </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
-msgstr "接收郵件來自"
+msgstr "接收信件來自"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
@@ -175,7 +181,7 @@ msgstr "活動類型"
 #: code:addons/crm/models/crm_lead.py:933
 #, python-format
 msgid "Add a new lead"
-msgstr ""
+msgstr "添加一條新的線索"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -227,7 +233,7 @@ msgstr "分派日期"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件計數"
+msgstr "附件數量"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -237,7 +243,7 @@ msgstr "平均概率"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
 msgid "Blacklist"
-msgstr ""
+msgstr "黑名單"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:400
@@ -265,7 +271,12 @@ msgstr "CRM活動分析"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
 msgid "CRM Stages"
-msgstr ""
+msgstr "CRM 階段"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "來電要求演示"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
@@ -331,7 +342,7 @@ msgstr "歸類和分析您的線索/商機類別， 例如：培訓、服務"
 #: code:addons/crm/static/src/js/tour.js:32
 #, python-format
 msgid "Click here to <b>add your opportunity</b>."
-msgstr ""
+msgstr "點選這裡 <b>添加您的商機</b>."
 
 #. module: crm
 #. openerp-web
@@ -340,14 +351,14 @@ msgstr ""
 msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
-msgstr "點選這裡以<b>創建您的第一條商機</b>， 並且加入到您的商機漏斗。"
+msgstr "點選這裡以<b>創建您的第一條商機</b>， 並且加入到您的商機漏斗管理。"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:60
 #, python-format
 msgid "Click on the opportunity to zoom in."
-msgstr ""
+msgstr "點選商機放大。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_closed
@@ -387,7 +398,7 @@ msgstr "公司名稱"
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置設置"
+msgstr "配置設定"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_config
@@ -401,6 +412,11 @@ msgstr "配置"
 #, python-format
 msgid "Configuration options are available in the Settings app."
 msgstr "配置選項在模組的設定裡可用。"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "咨詢"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -449,12 +465,12 @@ msgstr "轉換選項"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Convert Lead to Opportunity (in mass)"
-msgstr ""
+msgstr "轉化線索為商機（批量）"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
-msgstr ""
+msgstr "轉化線索為商機（單個）"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -485,7 +501,7 @@ msgstr "轉換為商機"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
-"Convert visitors of your website into leads in the CRM. Wre do data "
+"Convert visitors of your website into leads in the CRM. We do data "
 "enrichment based on their IP address."
 msgstr ""
 
@@ -519,7 +535,7 @@ msgstr "創建和編輯"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "從您的網站流量創建線索/商機"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -536,12 +552,12 @@ msgstr "創建新客戶"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid "Create a new lead"
-msgstr ""
+msgstr "創建新線索"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Create a new tag for your opportunities"
-msgstr ""
+msgstr "為您的商機創建一個新的標籤"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
@@ -552,20 +568,20 @@ msgstr "創建商機"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Create an new opportunity related to this customer"
-msgstr ""
+msgstr "創建一個新的商機關聯到此客戶"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:935
 #, python-format
 msgid "Create an opportunity in your pipeline"
-msgstr ""
+msgstr "在您的漏斗管理中創造商機"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and tack your opportunities."
-msgstr ""
+msgstr "創建適合的標籤給您的業務（產品結構，銷售類型等），以更好地管理和發揮您的商機。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__author_id
@@ -609,7 +625,7 @@ msgstr "創建日期"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 msgid "Crm: My Pipeline"
-msgstr "Crm：我的商機漏斗"
+msgstr "Crm：我的商機漏斗管理"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_currency
@@ -635,7 +651,7 @@ msgstr "客戶"
 #: code:addons/crm/models/crm_lead.py:1170
 #, python-format
 msgid "Customer Email"
-msgstr "客戶郵件"
+msgstr "客戶信件"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_name
@@ -678,7 +694,7 @@ msgstr "預設線索別名名稱"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Define a new lost reason"
-msgstr ""
+msgstr "定義一個丟失的理由。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -691,9 +707,14 @@ msgid "Describe the lead..."
 msgstr "說明線索..."
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "設計"
+
+#. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "摘要"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
@@ -718,7 +739,7 @@ msgstr "顯示名稱"
 #: code:addons/crm/models/digest.py:18 code:addons/crm/models/digest.py:29
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "無權訪問，跳過用戶摘要電子郵件的此數據"
+msgstr "無權訪問，跳過使用者摘要電子信件的此數據"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -730,7 +751,7 @@ msgstr "不要鏈接到某個客戶"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Dropdown menu"
-msgstr ""
+msgstr "下拉選單"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -759,7 +780,7 @@ msgstr "聯絡人郵箱地址"
 msgid ""
 "Email sent to <strong>${email}</strong> generate opportunities in your "
 "pipeline.<br>"
-msgstr ""
+msgstr "發送到 <strong>${email}</strong>  的Email在裡的流水線生成商機.<br>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -769,6 +790,7 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
+"收到該地址的電子郵件會生成尚未分配給任何銷售團隊的新潛在客戶。這可以在將它們轉化為機會時進行。傳入的電子郵件可以自動分配給特定的銷售團隊。為此，請在銷售團隊中設置電子郵件別名。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -850,7 +872,12 @@ msgstr "額外信息"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
 msgid "Folded in Pipeline"
-msgstr "商機漏斗中折疊"
+msgstr "商機漏斗管理中折疊"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "跟進報價"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
@@ -870,7 +897,7 @@ msgstr "關注者(業務夥伴)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Followup"
-msgstr ""
+msgstr "關注"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -880,7 +907,7 @@ msgstr "強制分配"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Format phone numbers based on national conventions"
-msgstr "Format phone numbers based on national conventions"
+msgstr "根據國家公約設置電話號碼格式"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:606
@@ -899,6 +926,8 @@ msgid ""
 "Generate leads from incoming emails and assign them\n"
 "                                    to a Sales Team manually"
 msgstr ""
+"從收到的電子郵件中生成潛在客戶\n"
+"                                  並手動將其分配給銷售團隊"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -908,7 +937,7 @@ msgstr "得到丟失原因"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
-msgstr ""
+msgstr "為您的團隊提供將機會移到此階段的要求。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -927,7 +956,7 @@ msgstr "快，快，快！祝賀您獲得首單交易。"
 #: code:addons/crm/static/src/js/tour.js:95
 #, python-format
 msgid "Good job! You completed the tour of the CRM app."
-msgstr ""
+msgstr "幹得好！您完成了 CRM 應用程式的課程。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -940,7 +969,7 @@ msgstr "分組"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__dashboard_graph_group_pipeline
 msgid "Grouping Method"
-msgstr ""
+msgstr "分組方式"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
@@ -988,14 +1017,14 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_partner__team_id
 msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
-msgstr ""
+msgstr "設置後，此銷售團隊將用於與此合作夥伴相關的銷售和潛在商機分配"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1003,7 +1032,7 @@ msgstr ""
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
-msgstr ""
+msgstr "存在於黑名單的電子信件表示收件者不會再收到任何列表的群發信件。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -1019,7 +1048,7 @@ msgstr "導入並同步"
 #: code:addons/crm/models/crm_lead.py:1230
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr ""
+msgstr "導入潛在客戶和商機的範本"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -1027,9 +1056,14 @@ msgid "Include archived"
 msgstr "包括歸檔"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "信息"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Initial Contact Information"
-msgstr ""
+msgstr "初始聯繫信息"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1040,7 +1074,7 @@ msgstr "內部備註"
 #. module: crm
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Invoices"
-msgstr "發票"
+msgstr "營運收入憑證"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
@@ -1060,12 +1094,12 @@ msgstr "看板狀態"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr ""
+msgstr "Kpi: Crm潛在客戶創建的價值"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
 msgid "Kpi Crm Opportunities Won Value"
-msgstr ""
+msgstr "Kpi: Crm商機贏得價值"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
@@ -1136,7 +1170,7 @@ msgstr "線索"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Lead Tag"
-msgstr ""
+msgstr "潛在客戶標籤"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_tag_form
@@ -1218,7 +1252,7 @@ msgstr "線索/商機"
 #: code:addons/crm/static/src/js/tour.js:47
 #, python-format
 msgid "Let's schedule an activity."
-msgstr ""
+msgstr "讓我們安排一個活動。"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -1231,7 +1265,7 @@ msgstr "鏈接到現有客戶"
 msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
-msgstr ""
+msgstr "串連的合作夥伴（可選）。通常在轉換潛在客戶時創建。您可以通過名稱，統一發票，電子郵件或內部參考找到合作夥伴。"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1122
@@ -1269,7 +1303,12 @@ msgstr "低"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "主要附件"
+msgstr "附件"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "製作報價"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1279,17 +1318,17 @@ msgstr "手動分配電子信件"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manual Assignation of Incoming Emails"
-msgstr ""
+msgstr "手動設置入向電子郵件"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
 msgid "Mark All Activities as Done"
-msgstr "Mark All Activities as Done"
+msgstr "將所有活動標記為已完成"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_late_activities_done
 msgid "Mark Late Activities as Done"
-msgstr "Mark Late Activities as Done"
+msgstr "將延遲的活動標記為完成"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1304,7 +1343,7 @@ msgstr "標記為已贏得"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Mark as Lost"
-msgstr ""
+msgstr "標記為丟失"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
@@ -1352,7 +1391,7 @@ msgstr "合併線索/商機"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge Opportunities"
-msgstr ""
+msgstr "合併商機"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
@@ -1397,7 +1436,7 @@ msgstr "合併商機"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error
 msgid "Message Delivery error"
-msgstr "郵件傳遞錯誤"
+msgstr "消息遞送錯誤"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_ids
@@ -1433,7 +1472,7 @@ msgstr "我的商機"
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
-msgstr "我的商機漏斗"
+msgstr "我的商機漏斗管理"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__name
@@ -1449,7 +1488,7 @@ msgstr "新建"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
 msgid "New Leads/Opportunities"
-msgstr ""
+msgstr "新的潛在客戶/商機"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
@@ -1496,7 +1535,7 @@ msgstr "無主題"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
 msgid "No next activity"
-msgstr ""
+msgstr "沒有下一個活動"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
@@ -1526,7 +1565,7 @@ msgstr "行動數量"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
 msgid "Number of error"
-msgstr "錯誤數量"
+msgstr "錯誤數"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -1536,7 +1575,7 @@ msgstr "需要行動消息的數量"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "發送錯誤的郵件數"
+msgstr "遞送錯誤的消息數量"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
@@ -1555,7 +1594,7 @@ msgid ""
 "                    up potential sales and better forecast your future revenues."
 msgstr ""
 "Odoo幫助您追蹤\n"
-"您的銷售商機漏斗以跟進潛在銷售並更好的預測您的未來收入。"
+"您的銷售商機漏斗管理以跟進潛在銷售並更好的預測您的未來收入。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -1570,7 +1609,7 @@ msgstr "打開商機"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Opp. Lost Reason"
-msgstr ""
+msgstr "商機失去的理由"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -1605,17 +1644,17 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
-"機會分析讓您立即有機會獲取預計收入、計劃成本、錯過的期限或每次機會的交流次數等信息。此報告主要由銷售經理使用，以便對銷售漏斗管理管理的渠道進行週期性評估。"
+"機會分析讓您立即有機會獲取預計收入、計劃成本、錯過的期限或每次機會的交流次數等信息。此報告主要由銷售經理使用，以便對銷售漏斗管理的渠道進行週期性評估。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
-msgstr ""
+msgstr "商機收入"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won
 msgid "Opportunities Won"
-msgstr ""
+msgstr "贏得商機"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1625,7 +1664,7 @@ msgstr "分配給我的商機"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunities with a date of Expected Closing which is in the past"
-msgstr ""
+msgstr "具有預期結算日期的商機"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:446
@@ -1646,7 +1685,7 @@ msgstr "商機"
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Opportunity Created"
-msgstr ""
+msgstr "創建的商機"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_lost
@@ -1673,7 +1712,7 @@ msgstr "獲得的商機"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Opportunity created"
-msgstr ""
+msgstr "已創建的商機"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
@@ -1684,6 +1723,11 @@ msgstr "失去的商機"
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
 msgstr "獲得的商機"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "其他"
 
 #. module: crm
 #: selection:crm.lead,activity_state:0
@@ -1708,17 +1752,17 @@ msgstr "業務夥伴聯繫姓名"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_phone
 msgid "Partner Contact Phone"
-msgstr ""
+msgstr "合作夥伴聯繫電話"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
 msgid "Partner is blacklisted"
-msgstr ""
+msgstr "合作夥伴黑名單"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Partner linking/binding in CRM wizard"
-msgstr ""
+msgstr "CRM 嚮導中的合作夥伴連結/綁定"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__partner_id
@@ -1734,7 +1778,7 @@ msgstr "電話"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_phone_validation
 msgid "Phone Formatting"
-msgstr "Phone Formatting"
+msgstr "電話號碼格式"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:155
@@ -1745,7 +1789,7 @@ msgstr "Phone Formatting"
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
 #, python-format
 msgid "Pipeline"
-msgstr "管道"
+msgstr "商機"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -1755,7 +1799,7 @@ msgstr "管道"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
-msgstr "商機漏斗分析"
+msgstr "商機漏斗管理分析"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -1766,9 +1810,9 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the\n"
 "teams of the sales pipeline."
 msgstr ""
-"商機漏斗分析讓您以信息，例如：預期收入、計劃成本、\n"
+"商機漏斗管理分析讓您以信息，例如：預期收入、計劃成本、\n"
 "錯過最後日期或每個相互影響商機的數量來立刻訪問您的商機。這個報告\n"
-"主要給銷售經理使用以定期審查團隊的銷售商機漏斗。"
+"主要給銷售經理使用以定期審查團隊的銷售商機漏斗管理。"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_graph
@@ -1779,12 +1823,14 @@ msgid ""
 "mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the Sales Team."
 msgstr ""
+"商機分析為您提供了即時訪問您的機會的資訊, 如預期收入、規劃成本、錯過最後期限或每個商機的交互次數。此報表主要由銷售經理使用, "
+"以便定期與銷售團隊一起審閱商機。"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:224
 #, python-format
 msgid "Pipeline: Expected Revenue"
-msgstr "商機漏斗：預計收入"
+msgstr "商機漏斗管理：預計收入"
 
 #. module: crm
 #: selection:crm.lead,activity_state:0
@@ -1821,6 +1867,11 @@ msgid "Probability (%)"
 msgstr "概率(%)"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "產品"
+
+#. module: crm
 #: model:crm.stage,name:crm.stage_lead3
 msgid "Proposition"
 msgstr "建議"
@@ -1828,7 +1879,7 @@ msgstr "建議"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
 msgid "Prorated Revenue"
-msgstr ""
+msgstr "按比例分攤收入"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -1843,7 +1894,7 @@ msgstr "驗證"
 msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the"
 " <b>CRM</b> app."
-msgstr ""
+msgstr "準備好提升你的銷售額了嗎？您的 <b> 商機 </b> 可以在這裡找到, 在 <b> CRM </b> 應用程式下。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -1871,7 +1922,7 @@ msgstr "要求"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
 msgid "Responsible User"
-msgstr "責任用戶"
+msgstr "責任使用者"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1913,7 +1964,7 @@ msgstr "銷售團隊"
 #: code:addons/crm/models/crm_lead.py:1125
 #, python-format
 msgid "Sales Team Settings"
-msgstr ""
+msgstr "銷售團隊設定"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
@@ -1957,7 +2008,7 @@ msgstr "選擇商機/線索"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send an email"
-msgstr ""
+msgstr "發送電子信件"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
@@ -1965,9 +2016,14 @@ msgid "Sequence"
 msgstr "序列"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "服務"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr ""
+msgstr "在您的商機管道中設定一個新階段"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__on_change
@@ -2003,6 +2059,11 @@ msgstr "僅顯示線索"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "僅顯示商機"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "軟體"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2151,7 +2212,7 @@ msgstr "摘要"
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Team Pipelines"
-msgstr ""
+msgstr "團隊商機"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -2194,7 +2255,7 @@ msgstr "這些郵箱地址將添加到所有接收和發送信件的抄送字段
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
-msgstr ""
+msgstr "此欄允許根據計畫的活動篩選商機。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -2220,7 +2281,7 @@ msgstr "這是鏈接源，例如，搜尋引擎、其他域名或電子信件列
 #: code:addons/crm/static/src/js/tour.js:42
 #, python-format
 msgid "This opportunity has <b>no activity planned</b>."
-msgstr ""
+msgstr "這個商機沒有<b>計劃的活動</b>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__probability
@@ -2275,9 +2336,14 @@ msgid "Tracking"
 msgstr "追蹤"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "培訓"
+
+#. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try Now"
-msgstr ""
+msgstr "現在試用"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -2358,6 +2424,8 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"在創建商機或客戶之前, 如果需要限定步驟, 請使用潛在客戶。它可以是你收到的名片, 一個填寫在你的網站上的聯繫表格, 或一個不合格的潛在客戶的檔, "
+"等等。一旦合格, 潛在客戶就可以轉換為您的通訊錄中的商機和/或新客戶。"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2369,14 +2437,14 @@ msgstr "用丟失原因去解釋為什麼一個機會會失去."
 msgid ""
 "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
-msgstr "用商機來追蹤您的銷售商機漏斗，跟進潛在的銷售並且更好的預測未來收入。"
+msgstr "用商機來追蹤您的銷售商機漏斗管理，跟進潛在的銷售並且更好的預測未來收入。"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:72
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
-msgstr "使用麵包屑 <b>回到您的銷售商機漏斗</b>。"
+msgstr "使用麵包屑 <b>回到您的銷售商機漏斗管理</b>。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_login
@@ -2442,7 +2510,7 @@ msgstr "聯絡人網站"
 #: model:ir.model.fields,help:crm.field_crm_lead__team_id
 msgid ""
 "When sending mails, the default email address is taken from the Sales Team."
-msgstr ""
+msgstr "發送郵件時, 預設電子郵件地址是在銷售團隊中設定的。"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
@@ -2489,7 +2557,7 @@ msgstr "耶！團隊最近 7 天的交易。"
 msgid ""
 "You have to enable the Pipeline on your Sales Team to be able to set it as a"
 " content for the graph"
-msgstr ""
+msgstr "您必須在銷售團隊中啟用商機才能將其設定為圖表的內容"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:404
@@ -2521,7 +2589,7 @@ msgid ""
 "                    documents, track all discussions, and much more."
 msgstr ""
 "您將能夠計劃來自機會的會議和電話，\n"
-"將其轉換為報價，附加相關文檔，\n"
+"將其轉換為報價，附加相關文件，\n"
 "追蹤所有討論等等。"
 
 #. module: crm
@@ -2555,12 +2623,12 @@ msgstr "例如：www.odoo.com"
 #: code:addons/crm/models/crm_lead.py:946
 #, python-format
 msgid "or send an email to %s"
-msgstr ""
+msgstr "或者發送電子信件給 %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
 msgid "team_count"
-msgstr ""
+msgstr "team_count"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:952

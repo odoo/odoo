@@ -341,7 +341,6 @@ return AbstractRenderer.extend({
 
         var data = [];
         var ticksLabels = [];
-        var tickValues = [];
         var measure = this.state.fields[this.state.measure].string;
         var values;
 
@@ -362,18 +361,6 @@ return AbstractRenderer.extend({
                     values: values,
                     key: measure + ' (compare)',
                     color: '#ff7f0e',
-                });
-
-                if (this.state.comparisonData.length > graphData.length) {
-                    tickValues = this.state.comparisonData.map(function (d, i) {
-                        return i;
-                    });
-                }
-            }
-
-            if (!tickValues.length) {
-                tickValues = graphData.map(function (d, i) {
-                    return i;
                 });
             }
 
@@ -403,7 +390,6 @@ return AbstractRenderer.extend({
             for (var i = 0; i < this.state.data.length; i++) {
                 if (graphData[i].labels[0] !== tickLabel) {
                     tickLabel = this.state.data[i].labels[0];
-                    tickValues.push(tick);
                     ticksLabels.push(tickLabel);
                     tick++;
                 }
@@ -438,7 +424,6 @@ return AbstractRenderer.extend({
         });
         chart.forceY([0]);
         chart.xAxis
-            .tickValues(tickValues)
             .tickFormat(function (d) {
                 return ticksLabels[d];
             });
@@ -491,19 +476,6 @@ return AbstractRenderer.extend({
                 $('.nv-y .tick > line').attr('x2', function (i, value) {
                     return Math.abs(value);
                 });
-
-                // We don't need to show all labels
-                $('.o_graph_svg_container svg .nv-x g.tick > text').show();
-                var $ticksText = $('svg .nv-x g.tick:not(.zero) > text');
-                var ticksLength = $ticksText.length;
-                var tickTextMargin = 5;
-                if (ticksLength) {
-                    var tickWidth = $ticksText[0].getBBox().width + tickTextMargin;
-                    var svgWidth = $('.o_graph_svg_container').width();
-                    var keepOneOf = Math.ceil(ticksLength / (svgWidth / tickWidth));
-                    // FIXME: should work with two line charts
-                    $('.o_graph_svg_container svg .nv-x g.tick:not(:nth-child(' + keepOneOf + 'n+1)) > text').hide();
-                }
             })
 
             chartResize(chart);

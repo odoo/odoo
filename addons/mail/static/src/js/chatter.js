@@ -44,6 +44,9 @@ var Chatter = Widget.extend({
      * @param {string} [mailFields.mail_activity]
      * @param {string} [mailFields.mail_followers]
      * @param {string} [mailFields.mail_thread]
+     * @param {Object} options
+     * @param {string} [options.viewType=record.viewType] current viewType in
+     *   which the chatter is instantiated
      */
     init: function (parent, record, mailFields, options) {
         this._super.apply(this, arguments);
@@ -66,7 +69,7 @@ var Chatter = Widget.extend({
         }
         if (mailFields.mail_thread) {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
-            var fieldsInfo = this.record.fieldsInfo[record.viewType];
+            var fieldsInfo = record.fieldsInfo[options.viewType || record.viewType];
             var nodeOptions = fieldsInfo[mailFields.mail_thread].options || {};
             this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';

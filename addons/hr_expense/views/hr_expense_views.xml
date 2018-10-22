@@ -67,7 +67,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" context="{'default_can_be_expensed': 1}"/>
+                            <field name="product_id" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"/>
                             <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <label for="quantity"/>
                             <div>
@@ -312,6 +312,22 @@
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="product_product_expense_tree_view" model="ir.ui.view">
+            <field name="name">product.product.expense.tree</field>
+            <field name="model">product.product</field>
+            <field eval="50" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Product Variants">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
+                    <field name="standard_price"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                    <field name="barcode"/>
+                </tree>
             </field>
         </record>
 

@@ -246,4 +246,38 @@ QUnit.module('Services', {
         });
     });
 
+    QUnit.test('Display a custom notification', function (assert) {
+        var done = assert.async();
+        assert.expect(3);
+
+        var Custom = Notification.extend({
+            init: function (parent, params) {
+                this._super.apply(this, arguments);
+                assert.ok(params.customParams, 'instantiate custom notification');
+            },
+            start: function () {
+                var self = this;
+                return this._super().then(function () {
+                    self.$el.html('Custom');
+                });
+            },
+        });
+
+        var view = createView(this.viewParams);
+        view.call('notification', 'notify', {
+            Notification: Custom,
+            customParams: true,
+        });
+        assert.strictEqual(
+            $('body .o_notification_manager .o_notification:contains(Custom)').length, 1,
+            "should display the notification");
+        view.destroy();
+        setTimeout(function () {
+            assert.strictEqual(
+                $('body .o_notification_manager .o_notification').length, 0,
+                "should destroy the notification");
+            done();
+        });
+    });
+
 });});

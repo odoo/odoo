@@ -9,10 +9,10 @@
 # Viktor Basso <viktor@voit.no>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
 "Last-Translator: Viktor Basso <viktor@voit.no>, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -45,6 +45,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "/shop/payment"
 msgstr "/shop/payment"
+
+#. module: website_sale
+#: model:product.template.attribute.value,name:website_sale.product_template_attribute_value_1
+msgid "2 year"
+msgstr "2 år"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -562,6 +567,16 @@ msgid "Bank Name"
 msgstr "Banknavn"
 
 #. module: website_sale
+#: model:res.country.group,name:website_sale.benelux
+msgid "BeNeLux"
+msgstr "Benelux"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_benelux
+msgid "Benelux"
+msgstr "Benelux"
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:103
 #, python-format
@@ -580,11 +595,26 @@ msgid "Billing Address"
 msgstr "Fakturaadresse:"
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_bins
+msgid "Bins"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Boost your sales with two kinds of discount programs: promotions and coupon "
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_boxes
+msgid "Boxes"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_cabinets
+msgid "Cabinets"
 msgstr ""
 
 #. module: website_sale
@@ -653,6 +683,11 @@ msgstr ""
 "           i touchskjerm-grensesnittet."
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_chairs
+msgid "Chairs"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Underkategorier"
@@ -661,6 +696,11 @@ msgstr "Underkategorier"
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr ""
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_christmas
+msgid "Christmas"
+msgstr "Jul"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -702,6 +742,11 @@ msgstr "Firmaer"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "Company Name"
 msgstr "Firmanavn"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Components
+msgid "Components"
+msgstr "Komponenter"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -890,6 +935,11 @@ msgid "Description for the website"
 msgstr "Beskrivelse til nettsted"
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks
+msgid "Desks"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr "Bestem visningsrekkefølge i nettbutikken"
@@ -938,9 +988,19 @@ msgid "Drag this website block and drop it in your page."
 msgstr "Dra denne blokken og slipp den på siden din."
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_drawers
+msgid "Drawers"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "E-commerce Promotional Code"
 msgstr "Kampanjekode for netthandel"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_europe
+msgid "EUR"
+msgstr "EUR"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1159,6 +1219,11 @@ msgid "Kpi Website Sale Total Value"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_lamps
+msgid "Lamps"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image____last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category____last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_style____last_update
@@ -1255,6 +1320,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
 msgid "Method"
 msgstr "Metode"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_multimedia
+msgid "Multimedia"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -1964,6 +2034,11 @@ msgid "Sequence"
 msgstr "Sekvens"
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.services
+msgid "Services"
+msgstr "Tjenester"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to sell variants"
 msgstr ""
@@ -2281,6 +2356,12 @@ msgid "USPS"
 msgstr "USPS"
 
 #. module: website_sale
+#: model:product.product,uom_name:website_sale.product_product_1
+#: model:product.template,uom_name:website_sale.product_product_1_product_template
+msgid "Unit(s)"
+msgstr "Enhet(er)"
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:7
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
@@ -2314,6 +2395,24 @@ msgstr "Last opp et bilde fra ditt lokale filbibliotek"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
 msgstr "Se handlevogn ("
+
+#. module: website_sale
+#: model:product.product,name:website_sale.product_product_1
+#: model:product.template,name:website_sale.product_product_1_product_template
+msgid "Warranty"
+msgstr "Garanti"
+
+#. module: website_sale
+#: model:product.product,description_sale:website_sale.product_product_1
+#: model:product.template,description_sale:website_sale.product_product_1_product_template
+msgid ""
+"Warranty, issued to the purchaser of an article by its manufacturer, "
+"promising to repair or replace it if necessary within a specified period of "
+"time."
+msgstr ""
+"Garanti utstedt til kjøperen av et produkt fra produsenten, med løfte om å "
+"reparere eller skifte ut produktet om nødvendig innenfor et avgrenset "
+"tidsrom."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -2543,6 +2642,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "items)"
 msgstr "enheter)"
+
+#. module: website_sale
+#: model:product.product,weight_uom_name:website_sale.product_product_1
+#: model:product.template,weight_uom_name:website_sale.product_product_1_product_template
+msgid "kg"
+msgstr "kg"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product

@@ -7,6 +7,7 @@ from email.utils import formataddr
 from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError
@@ -152,12 +153,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_portal_ok(self):
-        portal_user = self.env['res.users'].with_context(self._quick_create_user_ctx).create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
-        })
+        portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
             self.test_record.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)
@@ -169,12 +165,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEmails(portal_user.partner_id, [[self.partner_1], [self.user_employee.partner_id]])
 
     def test_post_portal_crash(self):
-        portal_user = self.env['res.users'].with_context(self._quick_create_user_ctx).create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
-        })
+        portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         with self.assertRaises(AccessError):
             self.test_record.sudo(portal_user).message_post(
@@ -278,7 +269,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_mass_mail(self):
-        test_record_2 = self.env['mail.test.simple'].with_context(self._quick_create_ctx).create({'name': 'Test2'})
+        test_record_2 = self.env['mail.test.simple'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test2'})
 
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
@@ -313,7 +304,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_mass_mail_active_domain(self):
-        test_record_2 = self.env['mail.test.simple'].with_context(self._quick_create_ctx).create({'name': 'Test2'})
+        test_record_2 = self.env['mail.test.simple'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test2'})
 
         self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
@@ -331,7 +322,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_compose_mass_mail_no_active_domain(self):
-        test_record_2 = self.env['mail.test.simple'].with_context(self._quick_create_ctx).create({'name': 'Test2'})
+        test_record_2 = self.env['mail.test.simple'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test2'})
 
         self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
@@ -349,12 +340,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_compose_portal_ok(self):
-        portal_user = self.env['res.users'].with_context(self._quick_create_ctx).create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
-        })
+        portal_user = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
             ComposerPortal = self.env['mail.compose.message'].sudo(portal_user)

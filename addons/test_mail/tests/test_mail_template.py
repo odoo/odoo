@@ -5,6 +5,7 @@ import base64
 from datetime import datetime, timedelta
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -84,7 +85,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_w_template_mass_mailing(self):
-        test_record_2 = self.env['mail.test.simple'].with_context(self._quick_create_ctx).create({'name': 'Test2', 'email_from': 'laurie.poiret@example.com'})
+        test_record_2 = self.env['mail.test.simple'].with_context(BaseFunctionalTest._test_context).create({'name': 'Test2', 'email_from': 'laurie.poiret@example.com'})
 
         composer = self.env['mail.compose.message'].sudo(self.user_employee).with_context({
             'default_composition_mode': 'mass_mail',

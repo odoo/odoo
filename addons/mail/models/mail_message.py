@@ -419,14 +419,25 @@ class Message(models.Model):
 
     @api.model
     def message_fetch(self, domain, limit=20, moderated_channel_ids=None):
+        """ Get a limited amount of formatted messages with provided domain.
+            :param domain: the domain to filter messages;
+            :param limit: the maximum amount of messages to get;
+            :param list(int) moderated_channel_ids: if set, it contains the ID
+              of a moderated channel. Fetched messages should include pending
+              moderation messages for moderators. If the current user is not
+              moderator, it should still get self-authored messages that are
+              pending moderation;
+            :returns list(dict).
+        """
         messages = self.search(domain, limit=limit)
-        user_mod_channels = self.env.user.moderation_channel_ids.ids
-        if moderated_channel_ids and set(moderated_channel_ids).issubset(user_mod_channels):
+        if moderated_channel_ids:
             # Split load moderated and regular messages, as the ORed domain can
             # cause performance issues on large databases.
-            moderated_messages_dom = [['model', '=', 'mail.channel'],
-                                      ['res_id', 'in', moderated_channel_ids],
-                                      ['need_moderation', '=', True]]
+            moderated_messages_dom = [('model', '=', 'mail.channel'),
+                                      ('res_id', 'in', moderated_channel_ids),
+                                      '|',
+                                      ('author_id', '=', self.env.user.partner_id.id),
+                                      ('need_moderation', '=', True)]
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`
             messages = messages.sorted(key='id', reverse=True)[:limit]

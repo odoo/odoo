@@ -49,15 +49,17 @@
 # khalidoss <k.lakhsam@gmail.com>, 2018
 # Melanie Bernard <mbe@odoo.com>, 2018
 # Alexis de Lattre <alexis@via.ecp.fr>, 2018
+# Alain van de Werve <avw@openerp.com>, 2018
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
+# Satish kumar <Satishafd@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:14+0000\n"
-"PO-Revision-Date: 2018-10-02 10:14+0000\n"
-"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 07:02+0000\n"
+"PO-Revision-Date: 2018-10-08 07:02+0000\n"
+"Last-Translator: Satish kumar <Satishafd@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3342,6 +3344,20 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_iot
+msgid ""
+"\n"
+"It links the module \n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_restaurant_iot
+msgid ""
+"\n"
+"It links the module iot with the pos restaurant, so you don't have to call the  \n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
 msgid ""
 "\n"
@@ -5288,7 +5304,7 @@ msgstr ""
 "Ainsi, la copie pure du modèle de tableau est générée.\n"
 "\n"
 "Assistants fournis par ce module:\n"
-" --------------------------------\n"
+"--------------------------------\n"
 " * Partenaire TVA intra : enregistrer les partenaires avec leur TVA afférente et les montants facturés. \n"
 "Préparer un format de fichier XML.\n"
 "\n"
@@ -6292,7 +6308,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_iot
 msgid ""
 "\n"
-"This module provides management of your IoT boxes inside Odoo.\n"
+"This module provides management of your IoT Boxes inside Odoo.\n"
 msgstr ""
 
 #. module: base
@@ -6766,7 +6782,7 @@ msgstr ""
 "Fonctionne avec clés Worldline version 2.0, implémente d'un intermédiaire de paiement en utilisant Worldline SIPS."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1083
+#: code:addons/base/models/ir_ui_view.py:1091
 #, python-format
 msgid " - %r in %s=%r"
 msgstr ""
@@ -7773,7 +7789,7 @@ msgid "ABA Credit Transfer"
 msgstr ""
 
 #. module: base
-#: code:addons/fields.py:1760
+#: code:addons/fields.py:1770
 #, python-format
 msgid "ASCII characters are required for %s in %s"
 msgstr ""
@@ -7908,6 +7924,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"Compte le nom du titulaire, dans le cas où il est différent du nom du "
+"titulaire du compte."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -9551,7 +9569,6 @@ msgid "C5E 24  163 x 229 mm"
 msgstr "C5E 24  163 x 229 mm"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_crm
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
 msgstr "CRM"
@@ -10446,6 +10463,11 @@ msgstr "Les contraintes de même nom sont uniques dans un module."
 #: model:res.partner.industry,name:base.res_partner_industry_F
 msgid "Construction"
 msgstr "Construction"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_8
+msgid "Consulting Services"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -11544,6 +11566,11 @@ msgid "Design, send and track emails"
 msgstr "Concevoir, envoyer et suivre des e-mails"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_14
+msgid "Desk Manufacturers"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
 msgid "Destination Contact"
 msgstr "Contact de destination"
@@ -12014,19 +12041,19 @@ msgid "EDI for Mexico"
 msgstr "EDI pour le Mexique"
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:541
+#: code:addons/base/models/ir_attachment.py:542
 #, python-format
 msgid "ERROR: Invalid PDF file!"
 msgstr "ERREUR: fichier PDF invalide!"
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:588
+#: code:addons/base/models/ir_attachment.py:589
 #, python-format
 msgid "ERROR: Invalid list of pages to split. Example: 1,5-9,10"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:583
+#: code:addons/base/models/ir_attachment.py:584
 #, python-format
 msgid "ERROR: the file must be a PDF"
 msgstr "ERREUR: le fichier doit être un PDF"
@@ -12143,8 +12170,8 @@ msgid "Electronic invoicing for Colombia with Carvajal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:611
-#: code:addons/base/models/ir_ui_view.py:692
+#: code:addons/base/models/ir_ui_view.py:619
+#: code:addons/base/models/ir_ui_view.py:700
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "L'élément '%s' ne peut être localisé dans la vue parente"
@@ -12197,6 +12224,7 @@ msgstr "Contrats des Employés"
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
 #: model:ir.module.module,shortdesc:base.module_hr
+#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "Employés"
 
@@ -12260,7 +12288,7 @@ msgid "Error"
 msgstr "Erreur"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:518
+#: code:addons/base/models/ir_ui_view.py:526
 #, python-format
 msgid ""
 "Error context:\n"
@@ -12926,7 +12954,7 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "Le champ \"Type\" ne peut pas être modifié dans les modèles"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1082
+#: code:addons/base/models/ir_ui_view.py:1090
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
 msgstr ""
@@ -12958,7 +12986,7 @@ msgid "Field Type"
 msgstr "Type de Champ"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1076
+#: code:addons/base/models/ir_ui_view.py:1084
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Le champ `%(field_name)s` n'existe pas"
@@ -14660,6 +14688,11 @@ msgid "Implementation of sparse fields."
 msgstr "Mise en œuvre de champs creux."
 
 #. module: base
+#: model:ir.module.module,summary:base.module_auth_password_policy
+msgid "Implements basic password policy configuration & check"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_blackbox_be
 msgid ""
 "Implements the registered cash system, adhering to guidelines by FPS "
@@ -15106,7 +15139,7 @@ msgid "Invalid model name %r in action definition."
 msgstr "Nom de modèle %r non valide dans la définition de l'action."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:683
+#: code:addons/base/models/ir_ui_view.py:691
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "Position incorrecte pour l'attribut : '%s'"
@@ -15124,7 +15157,7 @@ msgid "Invalid search criterion"
 msgstr "Critère de recherche invalide"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:604
+#: code:addons/base/models/ir_ui_view.py:612
 #, python-format
 msgid "Invalid specification for moved nodes: '%s'"
 msgstr ""
@@ -15142,13 +15175,13 @@ msgid "Invalid value for %s.%s: %s"
 msgstr "Valeur invalide pour %s.%s: %s"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:345
+#: code:addons/base/models/ir_ui_view.py:353
 #, python-format
 msgid "Invalid view %s definition in %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:347
+#: code:addons/base/models/ir_ui_view.py:355
 #, python-format
 msgid ""
 "Invalid view %s definition in %s \n"
@@ -15955,6 +15988,16 @@ msgid "Link using field"
 msgstr "Lien utilisant un champ"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_iot
+msgid "Link your PoS configuration with an IoT Box"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_pos_restaurant_iot
+msgid "Link your PoS configuration with an IoT Box for the restaurant"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:629
 #, python-format
 msgid "List of contact fields to display in the widget"
@@ -16315,7 +16358,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Manage financial and analytic accounting"
-msgstr ""
+msgstr "Comptabilité Financière et Analytique"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
@@ -16443,6 +16486,16 @@ msgstr "Îles Marshall"
 #: model:res.country,name:base.mq
 msgid "Martinique"
 msgstr "Martinique"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_mass_mailing
+msgid "Mass Mail Tests"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_mass_mailing
+msgid "Mass Mail Tests: feature and performance tests for mass mailing"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_themes
@@ -16703,7 +16756,7 @@ msgid "Missing required value for the field '%s' (%s)"
 msgstr "Valeur requise manquante pour le champ '%s' (%s)"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:395
+#: code:addons/base/models/ir_ui_view.py:403
 #, python-format
 msgid "Missing view architecture."
 msgstr "Architecture de vue manquante."
@@ -16832,8 +16885,8 @@ msgid "Model name of the object to open in the view window"
 msgstr "Nom du modèle de l'objet à ouvrir dans la vue à l'écran"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:822
-#: code:addons/base/models/ir_ui_view.py:1044
+#: code:addons/base/models/ir_ui_view.py:830
+#: code:addons/base/models/ir_ui_view.py:1052
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Modèle non trouvé : %(model)s"
@@ -17235,7 +17288,7 @@ msgid "No gap"
 msgstr "Sans écart"
 
 #. module: base
-#: code:addons/fields.py:2360
+#: code:addons/fields.py:2372
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "Pas de champ inverse %r trouvé pour %r"
@@ -19274,6 +19327,11 @@ msgid "OdooBot for livechat"
 msgstr "OdooBot pour le Live Chat"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_12
+msgid "Office Supplies"
+msgstr "Fournitures de bureau"
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
@@ -19376,6 +19434,12 @@ msgstr "Seuls les administrateurs peuvent modifier les paramètres"
 #, python-format
 msgid "Only administrators can execute this action."
 msgstr "Seuls les administrateurs peuvent exécuter cette action."
+
+#. module: base
+#: code:addons/fields.py:1764
+#, python-format
+msgid "Only admins can upload SVG files."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__mode
@@ -20045,6 +20109,16 @@ msgid "Password"
 msgstr "Mot de passe"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_auth_password_policy
+msgid "Password Policy"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_auth_password_policy_signup
+msgid "Password Policy support for Signup"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__path
 msgid "Path"
 msgstr "Chemin"
@@ -20644,6 +20718,11 @@ msgstr ""
 "module personnalisé!"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_2
+msgid "Prospects"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron__link_field_id
 msgid ""
@@ -20942,7 +21021,7 @@ msgid "Qweb field many2many"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:354
+#: code:addons/base/models/ir_ui_view.py:362
 #, python-format
 msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
@@ -22023,6 +22102,11 @@ msgid "Server action"
 msgstr "Action du serveur"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_11
+msgid "Services"
+msgstr "Services"
+
+#. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
 msgstr "Mettre NULL"
@@ -22046,9 +22130,7 @@ msgstr "Entrer les informations de votre compagnie."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Set your company's data for documents header/footer."
-msgstr ""
-"Entrer les informations de votre compagnie pour les header et footer des "
-"documents."
+msgstr "Entrez les données de votre société pour les entêtes de documents."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__binding_model_id
@@ -22283,7 +22365,7 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Parfois appelé BIC ou Swift."
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:381
+#: code:addons/base/models/ir_attachment.py:382
 #: code:addons/base/models/ir_model.py:1222
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
@@ -22495,11 +22577,6 @@ msgstr "L'étape ne doit pas être zéro."
 #: model:ir.module.module,summary:base.module_note_pad
 msgid "Sticky memos, Collaborative"
 msgstr "Notes auto-collantes, collaboratives"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_stock
-msgid "Stock"
-msgstr "Stock"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
@@ -23592,6 +23669,14 @@ msgid ""
 "This module contains tests related to mail. Those are\n"
 "contained in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_mass_mailing
+msgid ""
+"This module contains tests related to mass mailing. Those\n"
+"are contained in a separate module to use specific test models defined in\n"
+"test_mail. "
 msgstr ""
 
 #. module: base
@@ -24762,6 +24847,11 @@ msgid "Vat Label"
 msgstr "Étiquette TVA"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Vendor"
+msgstr "Fournisseur"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
 msgstr "Facture fournisseur : livraison à payer"
@@ -25349,7 +25439,7 @@ msgid "You cannot create recursive companies."
 msgstr "Vous ne pouvez pas créer de sociétés récursives."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:361
+#: code:addons/base/models/ir_ui_view.py:369
 #, python-format
 msgid "You cannot create recursive inherited views."
 msgstr "Vous ne pouvez pas créer de vues héritées récursives."
@@ -25535,6 +25625,11 @@ msgstr "caractère"
 #: selection:base.language.export,state:0
 msgid "choose"
 msgstr "choisir"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_crm
+msgid "crm"
+msgstr "crm"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:320
@@ -25753,7 +25848,7 @@ msgid "mrp"
 msgstr "mrp"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:515
+#: code:addons/base/models/ir_ui_view.py:523
 #, python-format
 msgid "n/a"
 msgstr "n/a"
@@ -25809,6 +25904,11 @@ msgstr "snailmail_account"
 #: model:ir.module.module,shortdesc:base.module_social_media
 msgid "social_media"
 msgstr "social_media"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_stock
+msgid "stock"
+msgstr "stock"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_zebra

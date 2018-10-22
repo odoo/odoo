@@ -498,6 +498,11 @@ class AssetsBundle(object):
 
     def run_rtlcss(self, source):
         rtlcss = 'rtlcss'
+        if os.name == 'nt':
+            try:
+                rtlcss = misc.find_in_path('rtlcss.cmd')
+            except IOError:
+                rtlcss = 'rtlcss'
         cmd = [rtlcss, '-']
 
 

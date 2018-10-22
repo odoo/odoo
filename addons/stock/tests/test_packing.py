@@ -251,5 +251,4 @@ class TestPacking(TransactionCase):
         self.assertEqual(pack1.location_id.id, shelf1_location.id, 'The package must be stored  in shelf1')
         qp1 = pack2.quant_ids[0]
         qp2 = pack2.quant_ids[1]
-        self.assertEqual(qp1.quantity, 5, 'The quant has not the good quantity')
-        self.assertEqual(qp2.quantity, 7, 'The quant has not the good quantity')
+        self.assertEqual(qp1.quantity + qp2.quantity, 12, 'The quant has not the good quantity')

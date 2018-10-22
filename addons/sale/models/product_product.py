@@ -75,7 +75,7 @@ class ProductAttributeValue(models.Model):
         attribute type is 'Color'.""")
 
 
-class ProductProductAttributeValue(models.Model):
+class ProductTemplateAttributeValue(models.Model):
     _inherit = "product.template.attribute.value"
 
     html_color = fields.Char('HTML Color Index', related="product_attribute_value_id.html_color")

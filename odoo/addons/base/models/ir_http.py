@@ -307,7 +307,7 @@ class IrHttp(models.AbstractModel):
                 if not cls._check_access_mode(env, id, access_mode, model, access_token=access_token,
                                              related_id=related_id):
                     return (403, [], None)
-            elif not consteq(obj.access_token or '', access_token):
+            elif not consteq(obj.access_token or u'', access_token):
                 return (403, [], None)
 
         # check read access

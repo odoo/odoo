@@ -38,7 +38,9 @@ class View(models.Model):
         '''
         current_website_id = self._context.get('website_id')
         if current_website_id:
-            for view in self:
+            # Optional views are inactive but we need to write them
+            # if their parent is copied
+            for view in self.with_context(active_test=False):
                 if not view.key and not vals.get('key'):
                     view.with_context(no_cow=True).key = 'website.key_%s' % str(uuid.uuid4())[:6]
                 if not view.website_id and current_website_id and not self._context.get('no_cow'):

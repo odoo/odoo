@@ -375,6 +375,7 @@
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="mode">primary</field>
+            <field name="priority">20</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -429,8 +430,10 @@
                         </div>
                         <group>
                             <group>
-                                <field name="bank_acc_number"/>
-                                <field name="bank_id"/>
+                                <field name="company_partner_id" invisible="1"/>
+                                <field name="bank_account_id"/>
+                                <field name="bank_acc_number" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -931,7 +934,7 @@
                                        attrs="{'invisible': [('match_partner', '=', False)]}"/>
                             </group>
                         </group>
-                        <group string="Write-off Values"
+                        <group string="Counterpart Values"
                                attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
                             <group>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"

@@ -3223,10 +3223,10 @@ QUnit.module('Views', {
             foo: {
                 fields: {int_field: {string: "int_field", type: "integer", sortable: true}},
                 records: [
-                    {id: 1, int_field: 0},
-                    {id: 2, int_field: 1},
-                    {id: 3, int_field: 2},
-                    {id: 4, int_field: 3},
+                    {id: 1, int_field: 11},
+                    {id: 2, int_field: 12},
+                    {id: 3, int_field: 13},
+                    {id: 4, int_field: 14},
                 ]
             }
         };
@@ -3245,14 +3245,15 @@ QUnit.module('Views', {
                         assert.deepEqual(args, {
                             model: "foo",
                             ids: [4, 3],
-                            offset: 2,
+                            offset: 13,
                             field: "int_field",
                         });
                     }
                     if (moves === 1) {
                         assert.deepEqual(args, {
                             model: "foo",
-                            ids: [1, 4, 2, 3],
+                            ids: [4, 2],
+                            offset: 12,
                             field: "int_field",
                         });
                     }
@@ -3260,14 +3261,15 @@ QUnit.module('Views', {
                         assert.deepEqual(args, {
                             model: "foo",
                             ids: [2, 4],
-                            offset: 1,
+                            offset: 12,
                             field: "int_field",
                         });
                     }
                     if (moves === 3) {
                         assert.deepEqual(args, {
                             model: "foo",
-                            ids: [1, 4, 2, 3],
+                            ids: [4, 2],
+                            offset: 12,
                             field: "int_field",
                         });
                     }
@@ -3334,7 +3336,6 @@ QUnit.module('Views', {
                         "should write the right field as sequence");
                     assert.deepEqual(args.ids, [4, 2, 3],
                         "should write the sequence in correct order");
-                    return $.when();
                 }
                 return this._super.apply(this, arguments);
             },
@@ -3464,13 +3465,16 @@ QUnit.module('Views', {
                   '</tree>',
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
+                    var _super = this._super.bind(this);
                     assert.strictEqual(args.offset, 1,
                         "should write the sequence starting from the lowest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
                     assert.deepEqual(args.ids, [4, 2, 3],
                         "should write the sequence in correct order");
-                    return $.when(def);
+                    return $.when(def).then(function () {
+                        return _super(route, args);
+                    });
                 }
                 return this._super.apply(this, arguments);
             },
