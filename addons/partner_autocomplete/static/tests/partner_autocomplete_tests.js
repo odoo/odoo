@@ -2,9 +2,11 @@ odoo.define('partner_autocomplete.tests', function (require) {
     "use strict";
 
     var FormView = require('web.FormView');
+    var concurrency = require('web.concurrency');
     var testUtils = require("web.test_utils");
     var AutocompleteCore = require('partner.autocomplete.core');
     var AutocompleteField = require('partner.autocomplete.fieldchar');
+    var PartnerField = require('partner.autocomplete.many2one');
 
     var createView = testUtils.createAsyncView;
 
@@ -100,6 +102,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                             searchable: true
                         },
                         name: {string: "Name", type: "char", searchable: true},
+                        parent_id: {string: "Company", type: "many2one", relation: "res.partner"},
                         website: {string: "Website", type: "char", searchable: true},
                         image: {string: "Image", type: "binary", searchable: true},
                         email: {string: "Email", type: "char", searchable: true},
@@ -330,6 +333,42 @@ odoo.define('partner_autocomplete.tests', function (require) {
             form.destroy();
 
             done();
+        });
+    });
+
+    QUnit.test("Partner autocomplete : render Many2one", function (assert) {
+        var done = assert.async();
+        assert.expect(3);
+
+        var M2O_DELAY = PartnerField.prototype.AUTOCOMPLETE_DELAY;
+        PartnerField.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        createView({
+            View: FormView,
+            model: 'res.partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="name"/>' +
+                    '<field name="parent_id" widget="res_partner_many2one"/>' +
+                '</form>',
+        }).then(function (form) {
+            var $input = form.$('.o_field_many2one[name="parent_id"] input:visible');
+            assert.strictEqual($input.length, 1, "there should be an <input/> for the Many2one");
+
+            $input.val('odoo').trigger('input');
+
+            concurrency.delay(0).then(function () {
+                var $dropdown = $input.autocomplete('widget');
+                assert.strictEqual($dropdown.length, 1, "there should be an opened dropdown");
+                assert.ok($dropdown.is('.o_partner_autocomplete_dropdown'), 
+                    "there should be a partner_autocomplete");
+
+                PartnerField.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+                form.destroy();
+
+                done();
+            });
         });
     });
 });
