@@ -10,6 +10,7 @@ var KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');
 var session = require('web.session');
 var testUtils = require('web.test_utils');
+var field_registry = require('web.field_registry');
 
 var createView = testUtils.createView;
 var createAsyncView = testUtils.createAsyncView;
@@ -1907,6 +1908,49 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test("pdf_viewer: upload rendering", function (assert) {
+        assert.expect(6);
+
+        testUtils.patch(field_registry.map.pdf_viewer, {
+            on_file_change: function (ev) {
+                ev.target = {files: [new Blob()]};
+                this._super.apply(this, arguments);
+            },
+            _getURI: function (fileURI) {
+                var res = this._super.apply(this, arguments);
+                assert.step('_getURI');
+                assert.ok(_.str.startsWith(fileURI, 'blob:'));
+                this.PDFViewerApplication = {
+                    open: function (URI) {
+                        assert.step('open');
+                        assert.ok(_.str.startsWith(URI, 'blob:'));
+                    },
+                };
+                return 'about:blank';
+            },
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="document" widget="pdf_viewer"/>' +
+                '</form>',
+        });
+
+        // first upload initialize iframe
+        form.$('input[type="file"]').trigger('change');
+        assert.verifySteps(['_getURI']);
+        // second upload call pdfjs method inside iframe
+        form.$('input[type="file"]').trigger('change');
+        assert.verifySteps(['_getURI', 'open']);
+
+        testUtils.unpatch(field_registry.map.pdf_viewer);
+        form.destroy();
+    });
+
     QUnit.test('text field rendering in list view', function (assert) {
         assert.expect(1);
 
@@ -2102,6 +2146,40 @@ QUnit.module('basic_fields', {
             "The view's image should have been fetched",
             "The dialog's image should have been fetched",
         ]);
+
+        form.destroy();
+    });
+
+    QUnit.test('image fields in x2many list are loaded correctly', function (assert) {
+        assert.expect(2);
+
+        this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
+        this.data.partner_type.records[0].image = 'product_image';
+        this.data.partner.records[0].timmy = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="image" widget="image"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === 'data:image/png;base64,product_image') {
+                    assert.ok(true, "The list's image should have been fetched");
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            'There should be one record in the many2many');
 
         form.destroy();
     });
@@ -2590,6 +2668,40 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field with warn_future option', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="date" options="{\'datepicker\': {\'warn_future\': true}}"/>' +
+                 '</form>',
+            res_id: 4,
+        });
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        // open datepicker and select another value
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year').eq(11).click();  // last year
+        $('.bootstrap-datetimepicker-widget .month').eq(11).click();  // December
+        $('.day:contains(31)').click(); // select the 31 December
+
+        var $warn = form.$('.o_datepicker_warning:visible');
+        assert.strictEqual($warn.length, 1, "should have a warning in the form view");
+
+        form.$('.o_field_widget[name=date] input').val('').trigger('change');  // remove the value
+
+        $warn = form.$('.o_datepicker_warning:visible');
+        assert.strictEqual($warn.length, 0, "the warning in the form view should be hidden");
+
+        form.destroy();
+    });
+
     QUnit.test('date field in editable list view', function (assert) {
         assert.expect(8);
 
@@ -2745,8 +2857,7 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('.o_datepicker_input').val(), expectedDateString,
             'the datetime should be correct in edit mode');
-        // click on the input and select 22 February at 8:23:33
-        form.$('.o_datepicker_input').click();
+        // select 22 February at 8:23:33
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
@@ -2866,8 +2977,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('input.o_datepicker_input').val(), expectedDateString,
             'the date should be correct in edit mode');
 
-        // click on the input and select 22 February at 8:23:33
-        list.$('input.o_datepicker_input').click();
+        // select 22 February at 8:23:33
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
@@ -3023,6 +3133,32 @@ QUnit.module('basic_fields', {
         form.$('.o_field_widget[name=p] .o_data_row').click();
         assert.strictEqual($('.modal .o_field_date[name=datetime]').text(), '02/08/2017',
             'the datetime (date widget) should be correctly displayed in form view');
+
+        form.destroy();
+    });
+
+    QUnit.test('datepicker option: daysOfWeekDisabled', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.datetime.default = "2017-08-02 12:00:05";
+        this.data.partner.fields.datetime.required = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="datetime" ' +
+                            'options=\'{"datepicker": {"daysOfWeekDisabled": [0, 6]}}\'/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_create').click();
+        assert.ok($('.day:last-child(),.day:nth-child(2)').hasClass('disabled'),
+            'first and last days must be disabled');
+        assert.notOk($('.day:not(:last-child()):not(:nth-child(2))').hasClass('disabled'),
+            'other days must stay clickable');
 
         form.destroy();
     });

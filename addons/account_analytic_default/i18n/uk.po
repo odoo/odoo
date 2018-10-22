@@ -4,17 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Bohdan Lisnenko, 2018
-# ТАрас <tratatuta@i.ua>, 2018
-# Роман Яхненко <bsap132@gmail.com>, 2018
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,22 +20,22 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
 msgstr "<i class=\"fa fa-calendar\"/> Від"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Клієнт</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Товар</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
 msgstr "Рахунки"
 
@@ -49,20 +46,22 @@ msgid ""
 "An analytic default requires at least an analytic account or an analytic "
 "tag."
 msgstr ""
+"Аналітичне значення за замовчуванням вимагає принаймні аналітичний рахунок "
+"або аналітичний тег."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Аналітичний рахунок"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr "Типова аналітика"
+msgstr "Аналітика за замовчуванням"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
@@ -71,7 +70,6 @@ msgstr "Аналітичний розподіл"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
 msgstr "Правила аналітики"
@@ -79,23 +77,23 @@ msgstr "Правила аналітики"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Мітки аналітики"
+msgstr "Теги аналітики"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "Компанія"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
 msgstr "Умови"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_uid
 msgid "Created by"
-msgstr "Створив"
+msgstr "Створено"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
@@ -103,19 +101,19 @@ msgid "Created on"
 msgstr "Створено"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
 msgid "Default Analytic Values"
 msgstr "Аналітичні значення за замовчуванням"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
-msgstr "Типова кінцева дата для цього аналітичного рахунку."
+msgstr "Кінцева дата за замовчуванням для цього аналітичного рахунку."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
-msgstr "Типова початкова дата для цього аналітичного рахунку."
+msgstr "Початкова дата за замовчуванням для цього аналітичного рахунку."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
@@ -135,7 +133,7 @@ msgstr ""
 "Дає порядок послідовності при відображенні списку аналітичного розподілу"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
 msgstr "Групувати за"
 
@@ -166,13 +164,13 @@ msgstr "Останнє оновлення"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "Партнер"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Товар"
 
@@ -237,11 +235,11 @@ msgstr "Початкова дата"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Користувач"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "to"
 msgstr "по"

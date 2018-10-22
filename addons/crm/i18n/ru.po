@@ -6,13 +6,15 @@
 # Martin Trigaux, 2018
 # Максим Дронь <dronmax@gmail.com>, 2018
 # Denis Baranov <baranov@itlibertas.com>, 2018
+# Collex100, 2018
+# Артур Чеботарь <artcha.chebotar@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
-"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"Last-Translator: Артур Чеботарь <artcha.chebotar@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -273,6 +275,11 @@ msgid "CRM Stages"
 msgstr ""
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "Позвонить для демо"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -419,6 +426,11 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Параметры конфигурации доступны в приложении настройки."
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Консалтинг"
+
+#. module: crm
 #: model:ir.model,name:crm.model_res_partner
 msgid "Contact"
 msgstr "Контакт"
@@ -501,7 +513,7 @@ msgstr "Преобразовать в предложение"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
-"Convert visitors of your website into leads in the CRM. Wre do data "
+"Convert visitors of your website into leads in the CRM. We do data "
 "enrichment based on their IP address."
 msgstr ""
 
@@ -707,6 +719,11 @@ msgid "Describe the lead..."
 msgstr "Опишите инициативу…"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Дизайн"
+
+#. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
 msgstr ""
@@ -872,6 +889,11 @@ msgstr "Доп. инфо"
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
 msgid "Folded in Pipeline"
 msgstr "Свернуто в воронке"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "Подписка на запрос"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
@@ -1048,6 +1070,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 msgid "Include archived"
 msgstr "Включая архивные"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Информация"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1299,6 +1326,11 @@ msgstr "Низкий"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "Сделать запрос"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1720,6 +1752,11 @@ msgid "Opportunity won"
 msgstr "Возможность выиграна"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Другое"
+
+#. module: crm
 #: selection:crm.lead,activity_state:0
 msgid "Overdue"
 msgstr "Просроченные"
@@ -1857,6 +1894,11 @@ msgstr "Вероятность"
 #: model:ir.model.fields,field_description:crm.field_crm_stage__probability
 msgid "Probability (%)"
 msgstr "Вероятность (%)"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Продукт"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
@@ -2003,6 +2045,11 @@ msgid "Sequence"
 msgstr "Нумерация"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Услуги"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
 msgstr ""
@@ -2042,6 +2089,11 @@ msgstr "Показать только инициативу"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "Показать только предложения"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Программное обеспечение"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2322,6 +2374,11 @@ msgstr "Слишком дорого"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
 msgstr "Отслеживание"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Обучение"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0

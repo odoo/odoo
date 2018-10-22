@@ -154,6 +154,12 @@ class AccountInvoice(models.Model):
                             product = self.env['product.product'].search([('default_code', '=', line_elements[0].text)])
                             if product:
                                 invoice_line_form.product_id = product
+                        if not invoice_line_form.product_id:
+                            line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:GlobalID', namespaces=tree.nsmap)
+                            if line_elements and line_elements[0].text:
+                                product = self.env['product.product'].search([('barcode', '=', line_elements[0].text)])
+                                if product:
+                                    invoice_line_form.product_id = product
 
                         # Price Unit.
                         line_elements = element.xpath('.//ram:GrossPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)

@@ -520,7 +520,7 @@ sAnimations.registry.websiteSaleCart = sAnimations.Class.extend({
         $new.removeClass('js_change_shipping');
         $new.addClass('border_primary');
 
-        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.hide');
+        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
         $.post($form.attr('action'), $form.serialize()+'&xhr=1');
     },
     /**

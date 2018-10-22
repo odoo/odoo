@@ -239,7 +239,7 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _compute_message_attachment_count(self):
-        read_group_var = self.env['ir.attachment'].read_group([('res_model', '=', self._name)],
+        read_group_var = self.env['ir.attachment'].read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],
                                                               fields=['res_id'],
                                                               groupby=['res_id'])
 
@@ -2336,6 +2336,8 @@ class MailThread(models.AbstractModel):
         :param template: XML ID of template used for the notification;
         """
         if not self or self.env.context.get('mail_auto_subscribe_no_notify'):
+            return
+        if not self.env.registry.ready:  # Don't send notification during install
             return
 
         view = self.env['ir.ui.view'].browse(self.env['ir.model.data'].xmlid_to_res_id(template))

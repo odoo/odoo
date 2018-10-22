@@ -4,34 +4,20 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# ТАрас <tratatuta@i.ua>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Дія кодового сервера може бути виконана з веб-сайту, використовуючи "
-"спеціальний контролер. Адресою є <base>/website/action/<website_path>. "
-"Встановіть це поле як Вірно, щоб дозволити користувачам запускати цю дію. "
-"Якщо встановлено значення Неправильно, дія не може бути виконана через веб-"
-"сайт."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -117,16 +103,47 @@ msgid "Automation"
 msgstr "Автоматизація"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Доступно на сайті"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Базове правило дії: перевірити та виконати"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr "Базова автоматизація: тестове рекурсивне правило"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr "Базова автоматизація: правило тестування на створення"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr "Базова автоматизація: тестове правило перевизначення"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr "Базова автоматизація: правило випробувань на вторинну модель"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr "Базова автоматизація: тестове правило на написання"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr "Базова автоматизація: тестове правило написання перевірки контексту"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -277,11 +294,6 @@ msgstr "Години"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "ID дії, якщо зазначене в файлі XML "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -550,11 +562,6 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "URL-адреса повністю, для доступу до сервера через сайт"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger Condition"
 msgstr "Умова тригера"
@@ -632,16 +639,6 @@ msgstr "Картографічне значення"
 #, python-format
 msgid "Warning"
 msgstr "Попередження"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Перехід на сайт"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Url-адреса веб-сайту"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

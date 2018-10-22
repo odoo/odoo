@@ -12,10 +12,10 @@
 # ТАрас <tratatuta@i.ua>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: ТАрас <tratatuta@i.ua>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -235,9 +235,19 @@ msgid "A problem has occured"
 msgstr "Виникла проблема"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_2_4
+msgid "A process is defined for all enterprise flows"
+msgstr "Процес визначається для всіх корпоративних процесів"
+
+#. module: survey
 #: sql_constraint:survey.user_input:0
 msgid "A token must be unique!"
 msgstr "Токен повинен бути унікальним!"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_1
+msgid "About your Odoo usage"
+msgstr "Про ваше використання Odoo"
 
 #. module: survey
 #: selection:survey.mail.compose.message,moderation_status:0
@@ -292,6 +302,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Add existing contacts..."
 msgstr "Додайте існуючі контакти..."
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_3
+#: model:survey.label,value:survey.fcol_2_2_3
+#: model:survey.label,value:survey.fcol_2_5_3
+#: model:survey.label,value:survey.fcol_2_7_3
+msgid "Agree"
+msgstr "Погодитися"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -349,6 +367,11 @@ msgid "Archived"
 msgstr "Заархівовано"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_1_1
+msgid "Are you using Odoo on a daily basis?"
+msgstr "Чи використовуєте ви Odoo на щоденній основі?"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
@@ -395,6 +418,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
 msgstr "Повернутися до опитування"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_4
+msgid "CRM"
+msgstr "CRM"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -466,6 +494,11 @@ msgid "Comment Message"
 msgstr "Повідомлення коментаря"
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_3
+msgid "Community and contributors"
+msgstr "Спільнота та учасники"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
 msgid "Company name"
 msgstr "Назва компанії"
@@ -491,6 +524,11 @@ msgstr "Режим створення"
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "Налаштування"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_2
+msgid "Configuration wizard exists for each important setting"
+msgstr "Майстер налаштуваня існує для кожного важливого налаштування"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -624,12 +662,16 @@ msgid "Delete sent emails (mass mailing only)"
 msgstr "Видалити відправлені електронні листи (лише для масової розсилки)"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__description
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
 msgid "Description"
 msgstr "Опис"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_1
+msgid "Descriptions and help tooltips are clear enough"
+msgstr "Пояснення та довідкові підказки досить чіткі"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -639,6 +681,14 @@ msgid ""
 msgstr ""
 "Легко спроектуйте своє опитування, надсилайте запрошення на відповідь "
 "електронною поштою та аналізуйте відповіді."
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_2
+#: model:survey.label,value:survey.fcol_2_2_2
+#: model:survey.label,value:survey.fcol_2_5_2
+#: model:survey.label,value:survey.fcol_2_7_2
+msgid "Disagree"
+msgstr "Незгода"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__display_mode
@@ -670,6 +720,21 @@ msgid ""
 msgstr ""
 "Не зберігайте копію повідомлення електронної пошти в історії повідомлень "
 "документа (лише для масової розсилки)."
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_3
+msgid "Do you have a proposition to attract new contributors?"
+msgstr "Чи є у вас пропозиція залучити нових учасників?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_2
+msgid "Do you have a proposition to help people to contribute?"
+msgstr "Чи є у вас пропозиція, щоб допомогти людям зробити свій внесок?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_3
+msgid "Do you have suggestions on how to improve the process view ?"
+msgstr "Чи є у вас пропозиції щодо вдосконалення вигляду процесу?"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
@@ -722,6 +787,11 @@ msgid "Email composition wizard for Survey"
 msgstr "Майстер створення електронного листа для опитування"
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_2
+msgid "Ergonomy and ease of use"
+msgstr "Ергономічність та легкість використання"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_error_msg
 msgid "Error message"
 msgstr "Повідомлення про помилку"
@@ -732,6 +802,11 @@ msgid "Existing contacts"
 msgstr "Існуючі контакти"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_7_3
+msgid "Extra modules proposed are relevant"
+msgstr "Запропоновані додаткові модулі є актуальними"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__starred_partner_ids
 msgid "Favorited By"
 msgstr "В улюблених у"
@@ -740,6 +815,11 @@ msgstr "В улюблених у"
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Filter question"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_3
+msgid "Financial Management"
+msgstr "Фінансове управління"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage__fold
@@ -796,6 +876,66 @@ msgid "Has error"
 msgstr ""
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_3_1
+msgid "How do you contribute or plan to contribute to Odoo?"
+msgstr "Як ви робитимете внесок або плануєте внести свій вклад в Odoo?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Resources"
+msgstr "Людські ресурси"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_3
+msgid "I develop new features"
+msgstr "Я розробляю нові характеристики"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_4
+msgid "I do not publish my developments"
+msgstr "Я не публікую мої розробки"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_4
+msgid "I help to translate"
+msgstr "Я допомагаю перекладати"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_3
+msgid "I host them on my own website"
+msgstr "Я приймаю їх на своєму веб-сайті"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_1
+msgid "I participate to discussion and forums"
+msgstr "Я беру участь у дискусіях і форумах"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_1
+msgid "I use Github, like all official Odoo projects"
+msgstr "Я використовую Github, як усі офіційні проекти Odoo"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_2
+msgid "I use another repository system (SourceForge...)"
+msgstr "Я використовую іншу систему сховища (SourceForge ...)"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_3
+msgid "I use the contextual help in Odoo"
+msgstr "Я використовую контекстну допомогу в Odoo"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_5
+msgid "I write documentations"
+msgstr "Я пишу документацію"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_2
+msgid "I'd like to contribute but I don't know how?"
+msgstr "Я хочу зробити свій внесок, але не знаю, як це зробити?"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__id
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__id
 #: model:ir.model.fields,field_description:survey.field_survey_page__id
@@ -842,9 +982,27 @@ msgstr "Якщо закрито, люди не зможуть відповіст
 
 #. module: survey
 #: code:addons/survey/models/survey.py:471
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
 #, python-format
 msgid "If other, please specify:"
 msgstr "Якщо інше, вкажіть:"
+
+#. module: survey
+#: model_terms:survey.page,description:survey.feedback_4
+msgid "If you do not contribute or develop in Odoo, skip this page."
+msgstr "Якщо ви не сплачуєте або не розробляєте Odoo, пропустіть цю сторінку."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.sfinished
@@ -891,6 +1049,36 @@ msgstr "Закрито"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__designed
 msgid "Is designed?"
 msgstr "Розроблено?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_2
+msgid "It can be improved"
+msgstr "Це може бути покращено"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_2
+msgid "It helps in the beginning"
+msgstr "Це допомагає на початку"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_5
+msgid "It is clear"
+msgstr "Зрозуміло"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_4
+msgid "It is complete"
+msgstr "Це повно"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_1
+msgid "It is up-to-date"
+msgstr "Це актуально"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_5
+msgid "It's easy to find the process you need"
+msgstr "Легко знайти потрібний вам процес"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__sequence
@@ -1067,11 +1255,6 @@ msgid "Message Record Name"
 msgstr "Назва запису повідомлення"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Опис повідомлення: тема або початок тіла листа"
-
-#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
 msgid ""
 "Message type: email for email message, notification for system message, "
@@ -1226,6 +1409,11 @@ msgstr "Немає ланцюжків для відповіді"
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input_line
 msgid "No user input lines found"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_4
+msgid "No, I just tested it"
+msgstr "Ні, я просто протестував це"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_selected_survey_user_input
@@ -1450,6 +1638,11 @@ msgid "Print link"
 msgstr "Надрукуйте посилання"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_2_5
+msgid "Project Management"
+msgstr "Керування проектами"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__public_url_html
 msgid "Public HTML web link"
 msgstr "Публічне веб-посилання на HTML"
@@ -1480,9 +1673,9 @@ msgid "Public url"
 msgstr "Публічна url-адреса"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__website_published
-msgid "Published"
-msgstr "Опубліковано"
+#: model:survey.label,value:survey.choice_1_2_2
+msgid "Purchases Management"
+msgstr "Керування закупівлями"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__question_id
@@ -1516,6 +1709,11 @@ msgstr "Назва питання"
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
 msgid "Questions"
 msgstr "Запитання"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_4
+msgid "Questions for developers"
+msgstr "Питання для розробників"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__quizz_mode
@@ -1605,6 +1803,16 @@ msgstr "Рядки"
 #: model:ir.model.fields,field_description:survey.field_survey_question__labels_ids_2
 msgid "Rows of the Matrix"
 msgstr "Рядки матриці"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_4
+msgid "Running the configuration wizards is a good way to spare time"
+msgstr "Запуск майстра налаштування - це хороший спосіб звільнити час"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_1
+msgid "Sales Management"
+msgstr "Керування продажами"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -1986,6 +2194,18 @@ msgid "Thanks Message"
 msgstr "Повідомлення подяки"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_5_3
+msgid "The 'Usability/Extended View' group helps in daily work"
+msgstr "Група \"Працездатність/розширений перегляд\" допомагає в щоденній роботі"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_4
+msgid "The 'Usability/Extended View' group hides only optional fields"
+msgstr ""
+"Група 'Зручний у використанні/Розширений вигляд' приховує лише необов'язкові"
+" поля"
+
+#. module: survey
 #: code:addons/survey/models/survey.py:819
 #, python-format
 msgid "The answer must be in the right type"
@@ -1993,6 +2213,19 @@ msgstr "Відповідь має бути у правильному типі"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:485
+#: model:survey.question,validation_error_msg:survey.feedback_1_1
+#: model:survey.question,validation_error_msg:survey.feedback_1_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_1
+#: model:survey.question,validation_error_msg:survey.feedback_2_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_3
+#: model:survey.question,validation_error_msg:survey.feedback_2_4
+#: model:survey.question,validation_error_msg:survey.feedback_2_5
+#: model:survey.question,validation_error_msg:survey.feedback_2_6
+#: model:survey.question,validation_error_msg:survey.feedback_2_7
+#: model:survey.question,validation_error_msg:survey.feedback_3_1
+#: model:survey.question,validation_error_msg:survey.feedback_3_2
+#: model:survey.question,validation_error_msg:survey.feedback_3_3
+#: model:survey.question,validation_error_msg:survey.feedback_4_1
 #, python-format
 msgid "The answer you entered has an invalid format."
 msgstr "Введена вами відповідь має неправильний формат."
@@ -2008,9 +2241,68 @@ msgstr ""
 "спеціальну URL-адресу опитування."
 
 #. module: survey
+#: model:survey.label,value:survey.choice_2_4_1
+msgid "The current menu structure is good"
+msgstr "Поточна структура меню хороша"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_5
+msgid "The groups set on menu items are relevant"
+msgstr "Групи, встановлені в пунктах меню, є релевантними"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_3
+msgid "The number of groups is good"
+msgstr "Кількість груп - хороші"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "The page you were looking for could not be authorized."
 msgstr "Не вдалося авторизувати сторінку, яку Ви шукали."
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_1
+msgid "The security rules defined on groups are useful"
+msgstr "Правила безпеки, визначені в групах, є корисними"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_2
+msgid "There are too few groups defined, security isn't accurate enough"
+msgstr "Визначено забагато груп, безпека недостатньо точна"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_1
+msgid "There are too many groups defined, security is too complex to set"
+msgstr "Визначено забагато груп, безпека занадто складна для встановлення"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_3
+msgid "There are too much menus, it's complex to understand"
+msgstr "Дуже багато пунктів меню, важко зрозуміти"
+
+#. module: survey
+#: model_terms:survey.page,description:survey.feedback_2
+msgid ""
+"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
+"what have been your difficulties."
+msgstr ""
+"Ці питання стосуються ергономіки та простоти використання Odoo. Спробуйте нагадати свої перші дні в Odoo і \n"
+"ваші труднощі."
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_2
+msgid "They are clean and correct"
+msgstr "Вони є зрозумілі і правильні"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_3
+msgid "They are useful on a daily usage"
+msgstr "Вони корисні для повсякденного використання"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_1
+msgid "They help new users to understand Odoo"
+msgstr "Вони допомагають новим користувачам зрозуміти Odoo"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:544
@@ -2056,6 +2348,19 @@ msgstr ""
 
 #. module: survey
 #: code:addons/survey/models/survey.py:489
+#: model:survey.question,constr_error_msg:survey.feedback_1_1
+#: model:survey.question,constr_error_msg:survey.feedback_1_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_1
+#: model:survey.question,constr_error_msg:survey.feedback_2_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_3
+#: model:survey.question,constr_error_msg:survey.feedback_2_4
+#: model:survey.question,constr_error_msg:survey.feedback_2_5
+#: model:survey.question,constr_error_msg:survey.feedback_2_6
+#: model:survey.question,constr_error_msg:survey.feedback_2_7
+#: model:survey.question,constr_error_msg:survey.feedback_3_1
+#: model:survey.question,constr_error_msg:survey.feedback_3_2
+#: model:survey.question,constr_error_msg:survey.feedback_3_3
+#: model:survey.question,constr_error_msg:survey.feedback_4_1
 #, python-format
 msgid "This question requires an answer."
 msgstr "Це питання потребує відповіді."
@@ -2076,6 +2381,20 @@ msgid "This survey is open only to registered people. Please"
 msgstr "Це дослідження доступне тільки зареєстрованим особам. Будь ласка,"
 
 #. module: survey
+#: model_terms:survey.survey,description:survey.feedback_form
+msgid "This survey should take less than five minutes."
+msgstr "Це опитування займе менше п'яти хвилин."
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_2
+msgid ""
+"Those security rules are standard and can be used out-of-the-box in most "
+"cases"
+msgstr ""
+"Ці правила безпеки є стандартними, і в більшості випадків вони можуть бути "
+"використані нестандартно"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__title
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Title"
@@ -2090,6 +2409,22 @@ msgstr "Сьогодні"
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Today Activities"
 msgstr "Сьогоднішні дії"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_4
+#: model:survey.label,value:survey.fcol_2_2_4
+#: model:survey.label,value:survey.fcol_2_5_4
+#: model:survey.label,value:survey.fcol_2_7_4
+msgid "Totally agree"
+msgstr "Повністю погоджуюсь"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_1
+#: model:survey.label,value:survey.fcol_2_2_1
+#: model:survey.label,value:survey.fcol_2_5_1
+#: model:survey.label,value:survey.fcol_2_7_1
+msgid "Totally disagree"
+msgstr "Повністю не погоджуюсь"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__tracking_value_ids
@@ -2165,6 +2500,11 @@ msgid "User"
 msgstr "Користувач"
 
 #. module: survey
+#: model:survey.survey,title:survey.feedback_form
+msgid "User Feedback Form"
+msgstr "Форма відгуку користувача"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__user_input_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "User Input"
@@ -2232,11 +2572,6 @@ msgid "View results"
 msgstr "Перегляньте результати"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__website_published
-msgid "Visible on the website as a comment"
-msgstr "Показано на сайті як коментар"
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Vote"
 msgstr "Голос"
@@ -2252,9 +2587,47 @@ msgid "Website communication history"
 msgstr "Історія бесіди на сайті"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_2_7
+msgid "What do you think about configuration wizards?"
+msgstr "Що ви думаєте про майстрів налаштування?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_1
+msgid "What do you think about the documentation available on doc.odoo.com?"
+msgstr "Що ви думаєте про документацію, доступну на doc.odoo.com?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_5
+msgid "What do you think about the groups of users?"
+msgstr "Що ви думаєте про групи користувачів?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_2
+msgid ""
+"What do you think about the process views of Odoo, available in the web "
+"client ?"
+msgstr "Що ви думаєте про процесні перегляди Odoo, доступні у веб-клієнті?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_4
+#: model:survey.question,question:survey.feedback_2_6
+msgid "What do you think about the structure of the menus?"
+msgstr "Що ви думаєте про структуру меню?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_4_1
+msgid "Where do you develop your new features?"
+msgstr "Де ви розробляєте свої нові функції?"
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__is_log
 msgid "Whether the message is an internal note (comment mode only)"
 msgstr "Чи повідомлення є внутрішньою нотаткою (лише для режиму коментарів)"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_2
+msgid "Which modules are you using/testing?"
+msgstr "Які модулі ви використовуєте/тестуєте?"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2262,6 +2635,21 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_1
+msgid "Yes, I use a version < 7.0"
+msgstr "Так, я використовую версію < 7.0"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_2
+msgid "Yes, I use the 7.0 version, installed locally"
+msgstr "Так, я використовую версію 7.0, що встановлена локально"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_3
+msgid "Yes, I use the online version of Odoo"
+msgstr "Так, я використовую онлайн-версію Odoo"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form

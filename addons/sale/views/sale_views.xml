@@ -598,6 +598,7 @@
         <record id="view_sales_order_filter" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
+            <field name="priority" eval="15"/>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name" string="Sales Order" filter_domain="['|','|',('name','ilike',self),('client_order_ref','ilike',self),('partner_id','child_of',self)]"/>

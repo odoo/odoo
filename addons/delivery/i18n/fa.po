@@ -6,14 +6,14 @@
 # Martin Trigaux, 2018
 # Hamid Darabi, 2018
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2018
-# mohammad azarbara <mohammadazarbara98@gmail.com>, 2018
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2018
 # Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -245,7 +245,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
 msgstr "روش تحویل"
@@ -537,6 +536,13 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
 msgstr "تایید"
@@ -721,6 +727,13 @@ msgid "Stock Move"
 msgstr "انتقال موجودی"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:53
 #, python-format
 msgid ""
@@ -744,7 +757,6 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
 
@@ -790,6 +802,10 @@ msgstr "واحد اندازه گیری وزن"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Unit(s)"
 msgstr "عدد"
@@ -902,6 +918,10 @@ msgstr ""
 
 #. module: delivery
 #: model:product.product,weight_uom_name:delivery.product_product_delivery
+#: model:product.product,weight_uom_name:delivery.product_product_delivery_normal
+#: model:product.product,weight_uom_name:delivery.product_product_delivery_poste
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,weight_uom_name:delivery.product_product_delivery_product_template
 msgid "kg"
 msgstr "کیلوگرم"

@@ -77,9 +77,9 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                     self.model.get(recordID),
                     {
                         mode: 'edit',
-                        can_create: false,
                         attrs: {
-                            'placeholder': _.str.sprintf(_t("Add %s"), self.title),
+                            placeholder: _.str.sprintf(_t("Add %s"), self.title),
+                            can_create: false
                         },
                     });
             });

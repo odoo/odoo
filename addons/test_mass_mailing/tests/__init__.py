@@ -3,3 +3,8 @@
 
 from . import test_blacklist
 from . import test_blacklist_mixin
+from . import test_composer
+from . import test_mail_auto_blacklist
+from . import test_mail_channel
+from . import test_mass_mailing
+from . import test_performance

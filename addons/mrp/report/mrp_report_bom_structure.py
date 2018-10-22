@@ -55,7 +55,7 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def get_operations(self, bom_id=False, qty=0, level=0):
         bom = self.env['mrp.bom'].browse(bom_id)
-        lines = self._get_operation_line(bom.routing_id, qty, level)
+        lines = self._get_operation_line(bom.routing_id, float_round(qty / bom.product_qty, precision_rounding=1, rounding_method='UP'), level)
         values = {
             'bom_id': bom_id,
             'currency': self.env.user.company_id.currency_id,
@@ -109,7 +109,7 @@ class ReportBomStructure(models.AbstractModel):
         else:
             product = bom.product_tmpl_id
             attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', product.id)])
-        operations = self._get_operation_line(bom.routing_id, (bom_quantity / bom.product_qty), 0)
+        operations = self._get_operation_line(bom.routing_id, float_round(bom_quantity / bom.product_qty, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
             'bom': bom,
             'bom_qty': bom_quantity,
@@ -139,7 +139,7 @@ class ReportBomStructure(models.AbstractModel):
                 continue
             price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line_quantity
             if line.child_bom_id:
-                factor = line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) * line.child_bom_id.product_qty
+                factor = float_round(line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty, precision_rounding=1, rounding_method='UP')
                 sub_total = self._get_price(line.child_bom_id, factor)
             else:
                 sub_total = price
@@ -167,7 +167,8 @@ class ReportBomStructure(models.AbstractModel):
         operations = []
         total = 0.0
         for operation in routing.operation_ids:
-            duration_expected = qty * operation.time_cycle + operation.workcenter_id.time_stop + operation.workcenter_id.time_start
+            operation_cycle = float_round(qty / operation.workcenter_id.capacity, precision_rounding=1, rounding_method='UP')
+            duration_expected = operation_cycle * operation.time_cycle + operation.workcenter_id.time_stop + operation.workcenter_id.time_start
             total = ((duration_expected / 60.0) * operation.workcenter_id.costs_hour)
             operations.append({
                 'level': level or 0,

@@ -89,6 +89,7 @@
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <group>
+                            <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field domain="[('company_id', '=', parent.company_id)]" name="account_id" groups="account.group_account_user"/>
                             <field name="invoice_line_tax_ids" context="{'type':parent.type}" domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'no_create': True}"/>
                             <field domain="[('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>

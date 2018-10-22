@@ -467,7 +467,7 @@ class Website(models.Model):
         website_id = self._get_current_website_id(domain_name, country_id, fallback=fallback)
         return self.browse(website_id)
 
-    @tools.cache('domain_name', 'country_id')
+    @tools.cache('domain_name', 'country_id', 'fallback')
     def _get_current_website_id(self, domain_name, country_id, fallback=True):
         # sort on country_group_ids so that we fall back on a generic website (empty country_group_ids)
         websites = self.search([('domain', '=', domain_name)]).sorted('country_group_ids')
@@ -1113,6 +1113,13 @@ class Menu(models.Model):
             if default_menu and vals.get('parent_id') == default_menu.id:
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
+
+    @api.multi
+    def unlink(self):
+        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
+            self.env['website.menu'].search([('url', '=', menu.url), ('id', '!=', menu.id)]).unlink()
+        return super(Menu, self).unlink()
 
     @api.one
     def _compute_visible(self):

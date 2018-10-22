@@ -16,10 +16,10 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
 "Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -281,6 +281,11 @@ msgid "CRM Stages"
 msgstr ""
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "Demo için Ara"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -419,6 +424,11 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Konfigürasyon seçenekleri Ayarlar uygulamasında mevcut."
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Danışmanlık"
+
+#. module: crm
 #: model:ir.model,name:crm.model_res_partner
 msgid "Contact"
 msgstr "İletişim"
@@ -501,7 +511,7 @@ msgstr "Fırsata dönüştür"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
-"Convert visitors of your website into leads in the CRM. Wre do data "
+"Convert visitors of your website into leads in the CRM. We do data "
 "enrichment based on their IP address."
 msgstr ""
 
@@ -707,6 +717,11 @@ msgid "Describe the lead..."
 msgstr "Vaka açıklaması..."
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Tasarım"
+
+#. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
 msgstr ""
@@ -872,6 +887,11 @@ msgstr "Diğer Bilgiler"
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
 msgid "Folded in Pipeline"
 msgstr "Fırsatlarda Katlanmış"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "Teklif Takibi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
@@ -1048,6 +1068,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 msgid "Include archived"
 msgstr "Arşivlenenleri dahil et"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Bilgi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1297,7 +1322,12 @@ msgstr "Düşük"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Ana Ek"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "Teklif Yap"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1554,7 +1584,7 @@ msgstr "Eylemlerin Sayısı"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Hata Sayısı"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -1719,6 +1749,11 @@ msgid "Opportunity won"
 msgstr "Fırsat kazanıldı"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Diğer"
+
+#. module: crm
 #: selection:crm.lead,activity_state:0
 msgid "Overdue"
 msgstr "Geciken"
@@ -1854,6 +1889,11 @@ msgstr "Olasılık"
 #: model:ir.model.fields,field_description:crm.field_crm_stage__probability
 msgid "Probability (%)"
 msgstr "Olasılık (%)"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Ürün"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
@@ -2000,6 +2040,11 @@ msgid "Sequence"
 msgstr "Sıra"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Hizmetler"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
 msgstr ""
@@ -2040,6 +2085,11 @@ msgstr "Sadece adayı göster"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "Sadece fırsatı göster"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Yazılım"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2323,6 +2373,11 @@ msgstr "Çok pahalı"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
 msgstr "İzleme"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Eğitim"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0

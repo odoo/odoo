@@ -20,10 +20,10 @@
 # Petra <bop@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: Petra <bop@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -355,7 +355,6 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__activation
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__activation
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_res_partner_filter_assign
@@ -424,6 +423,11 @@ msgstr "Assegnazione automatica"
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Automatically sanitized HTML contents"
 msgstr "Pulisci automaticamente il contenuto HTML"
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_bronze
+msgid "Bronze"
+msgstr "Bronzo"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_partner_report_assign
@@ -677,6 +681,11 @@ msgstr ""
 " nessuna assegnazione)."
 
 #. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_gold
+msgid "Gold"
+msgstr "Oro"
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
 msgid "Grade"
 msgstr "Qualità"
@@ -709,19 +718,16 @@ msgstr "ID"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_ids
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_ids
 msgid "Implementation References"
 msgstr "Riferimenti dell'implementazione"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_count
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_count
 msgid "Implemented Count"
 msgstr "Numero di Implementazioni"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__assigned_partner_id
 msgid "Implemented by"
 msgstr "Implementato da"
 
@@ -768,7 +774,6 @@ msgstr "Ultima data di assegnazione/inoltro a partner del caso"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review
 msgid "Latest Partner Review"
 msgstr "Ultima revisione partner"
 
@@ -809,7 +814,6 @@ msgstr "Lead/Opportunità"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__grade_id
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Livello"
@@ -822,7 +826,6 @@ msgstr "Nome Livello"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__partner_weight
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__partner_weight
 msgid "Level Weight"
 msgstr "Peso del livello"
 
@@ -906,7 +909,6 @@ msgstr "Data prossima attività"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review_next
 msgid "Next Partner Review"
 msgstr "Prossima Revisione Partner"
 
@@ -1017,7 +1019,6 @@ msgstr "Analisi partnership"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_partnership
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_partnership
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_partnership
 msgid "Partnership Date"
 msgstr "Data partnership"
 
@@ -1035,6 +1036,11 @@ msgstr "Telefono"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Planned Revenue"
 msgstr "Entrate pianificate"
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
+msgid "Platinum"
+msgstr "Platino"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1134,7 +1140,6 @@ msgstr "Invia email"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__sequence
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__sequence
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__grade_sequence
 msgid "Sequence"
 msgstr "Sequenza"
 
@@ -1149,6 +1154,11 @@ msgstr "Imposta un indirizzo mail per il partner %s"
 #, python-format
 msgid "Set an email address for the partner(s): %s"
 msgstr "Imposta un indirizzo mail per il(i) partner: %s"
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
+msgid "Silver"
+msgstr "Argento"
 
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
@@ -1216,7 +1226,6 @@ msgstr "Questo lead è un spam"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner__partner_weight
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users__partner_weight
 msgid ""
 "This should be a numerical value greater than 0 which will decide the "
 "contention for this partner to take this lead/opportunity."

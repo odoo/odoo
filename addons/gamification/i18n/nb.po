@@ -7,10 +7,10 @@
 # Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -309,9 +309,8 @@ msgid ""
 "                                                                <div style=\"height:${heightA}px;\">\n"
 "                                                                    ${extra_div | safe}   \n"
 "                                                                    <div style=\"height:55px;\">\n"
-"                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small\n"
-"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"data:image/jpeg;base64,${path}\" alt=\"${goal['name']}\"/>\n"
-"                                                                    </div> \n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_small)\" alt=\"${goal['name']}\"/>\n"
+"                                                                    </div>\n"
 "                                                                    <div align=\"center\" style=\"color:${bgColor};height:20px\">\n"
 "                                                                        ${goal['name']}\n"
 "                                                                    </div>\n"
@@ -2092,18 +2091,6 @@ msgstr "Brukere"
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
 msgstr "Nettsted/forum"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge__website_message_ids
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__website_message_ids
-msgid "Website Messages"
-msgstr "Nettstedmeldinger"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge__website_message_ids
-#: model:ir.model.fields,help:gamification.field_gamification_challenge__website_message_ids
-msgid "Website communication history"
-msgstr "Kommunikasjonshistorikk på nettstedet"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0

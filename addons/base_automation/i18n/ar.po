@@ -14,29 +14,19 @@
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Zuhair Hammadi <zuhair12@gmail.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
-# Abdulmajeed Alomar <majeeed87@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Abdulmajeed Alomar <majeeed87@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -122,15 +112,46 @@ msgid "Automation"
 msgstr "Automation"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "متوفر في الموقع"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
 msgstr ""
 
 #. module: base_automation
@@ -279,11 +300,6 @@ msgstr "الساعات"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "المعرف"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -548,11 +564,6 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr ""
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger Condition"
 msgstr ""
@@ -623,16 +634,6 @@ msgstr "Value Mapping"
 #, python-format
 msgid "Warning"
 msgstr "تحذير"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "مسار الموقع"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "رابط الموقع"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

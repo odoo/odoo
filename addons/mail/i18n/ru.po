@@ -7,13 +7,14 @@
 # Collex100, 2018
 # Владимир Куряев <istercul@gmail.com>, 2018
 # Sergey Vilizhanin, 2018
+# Gennady Marchenko <gennadym@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Sergey Vilizhanin, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Gennady Marchenko <gennadym@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:917
+#: code:addons/mail/models/mail_channel.py:921
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr "Это личный канал. Присоединиться к нему могут только приглашённые."
@@ -135,21 +136,7 @@ msgid "0 Today"
 msgstr ""
 
 #. module: mail
-#: model:mail.template,body_html:mail.mail_template_channel_send_guidelines
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<div>\n"
-"<p>Hello ${object.name or ''},</p>\n"
-"<p>Please find below the guidelines of the ${ctx['channel'].name} channel.</p>\n"
-"<p>\n"
-"${ctx['channel'].moderation_guidelines_msg}\n"
-"</p>\n"
-"<p/>\n"
-"</div>\n"
-msgstr ""
-
-#. module: mail
-#: code:addons/mail/models/mail_channel.py:922
+#: code:addons/mail/models/mail_channel.py:926
 #, python-format
 msgid ""
 "<br><br>\n"
@@ -160,7 +147,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:717
+#: code:addons/mail/models/mail_channel.py:721
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
@@ -169,7 +156,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:824
+#: code:addons/mail/models/mail_channel.py:828
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
@@ -179,8 +166,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:724
-#: code:addons/mail/models/mail_channel.py:798
+#: code:addons/mail/models/mail_channel.py:728
+#: code:addons/mail/models/mail_channel.py:802
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
@@ -739,7 +726,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_channel.py:921
+#: code:addons/mail/models/mail_channel.py:925
 #: code:addons/mail/static/src/js/models/messages/message.js:148
 #, python-format
 msgid "Anonymous"
@@ -2329,8 +2316,9 @@ msgid "Guidelines"
 msgstr "Руководство"
 
 #. module: mail
-#: model:mail.template,subject:mail.mail_template_channel_send_guidelines
-msgid "Guidelines of channel ${ctx['channel'].name}"
+#: code:addons/mail/models/mail_channel.py:448
+#, python-format
+msgid "Guidelines of channel %s"
 msgstr ""
 
 #. module: mail
@@ -2377,6 +2365,7 @@ msgstr "Заголовки"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "Hello"
 msgstr ""
 
@@ -2626,7 +2615,8 @@ msgstr ""
 " \"{'field': 'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_blacklist.py:73
+#: code:addons/mail/models/mail_blacklist.py:126
+#: code:addons/mail/models/mail_blacklist.py:129
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr ""
@@ -2882,7 +2872,7 @@ msgstr "Отгул"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_channel.py:931
+#: code:addons/mail/models/mail_channel.py:935
 #: code:addons/mail/static/src/xml/discuss.xml:147
 #, python-format
 msgid "Leave this channel"
@@ -2904,7 +2894,7 @@ msgstr ""
 "Список партнеров, которые будут добавлены в подписчики текущего документа."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:942
+#: code:addons/mail/models/mail_channel.py:946
 #, python-format
 msgid "List users in the current channel"
 msgstr "Показать всех подписчиков канала"
@@ -4209,6 +4199,11 @@ msgid "Please contact us instead using"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
+msgid "Please find below the guidelines of the"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:544
 #, python-format
@@ -4868,7 +4863,7 @@ msgid "Show all records which has next action date is before today"
 msgstr "Показать все записи с просроченой датой следующего действия"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:910
+#: code:addons/mail/models/mail_channel.py:914
 #, python-format
 msgid "Show an helper message"
 msgstr "Показать краткую справку"
@@ -5583,7 +5578,7 @@ msgid "Users"
 msgstr "Пользователи"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:955
+#: code:addons/mail/models/mail_channel.py:959
 #, python-format
 msgid "Users in this channel: %s %s and you."
 msgstr "Пользователи в этом канале: %s %s и вы."
@@ -5738,7 +5733,7 @@ msgid "You added <b>%s</b> to the conversation."
 msgstr "Вы добавили <b>%s</b> в обсуждение."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:952
+#: code:addons/mail/models/mail_channel.py:956
 #, python-format
 msgid "You are alone in this channel."
 msgstr "Вы единственный человек в этом канале"
@@ -5772,13 +5767,13 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:921
+#: code:addons/mail/models/mail_channel.py:925
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
 msgstr "У вас приватная беседа с <b>@%s</b>."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:915
+#: code:addons/mail/models/mail_channel.py:919
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Вы находитесь в канале <b>#%s</b>."
@@ -5944,6 +5939,11 @@ msgid "assigned you an activity"
 msgstr ""
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "застолье"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:43
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5956,6 +5956,11 @@ msgstr "по"
 msgid ""
 "cannot be processed. This address\n"
 "    is used to collect replies and should not be used to directly contact"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
+msgid "channel."
 msgstr ""
 
 #. module: mail
@@ -6114,6 +6119,11 @@ msgstr ""
 "публикация сообщения без модели должна быть с parent_id (личное сообщение)"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread_widget.js:20
 #, python-format
@@ -6169,6 +6179,11 @@ msgstr ""
 #, python-format
 msgid "restricted to known authors"
 msgstr ""
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "продажи"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1025

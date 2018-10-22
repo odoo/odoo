@@ -8,10 +8,10 @@
 # sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -32,11 +32,18 @@ msgid "%s (copy)"
 msgstr "%s(副本)"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "5 Intensive Days"
+msgstr "緊張的 5 天"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        到</b>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -53,6 +60,50 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"親愛的${object.name},\n"
+" 感謝您的咨詢.\n"
+" 這是您參加活動【${object.event_id.name}】的徽章.\n"
+" 如果您有任何的問題，請告訴我們.\n"
+" \n"
+"謝謝,\n"
+" % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+" ${object.event_id.user_id.signature | safe}\n"
+" % endif"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
+" event or change the dates on which it is held.)</em>"
+msgstr "<em>（Chamber Works 保留取消、重命名或重新安排<br>活動或更改活動舉辦日期的權利。）</em>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
+" Programming</i></font>"
+msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">學習 <i>Odoo "
+"系統程式編制</i></font>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<i>You will be able to create dynamic page interacting with the ORM.</i>"
+msgstr "<i>您將能創建和 ORM 相互作用的動態頁面。</i>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<i>You will be able to develop a full application with backend and user "
+"interface.</i>"
+msgstr "<i>您將能開發出一個帶有後台和前端界面的完整應用。</i>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<i>You will be able to develop simple dynamic components in HTML pages.</i>"
+msgstr "<i>您將能在 Html 頁面開發出簡單的動態組件。</i>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -61,19 +112,77 @@ msgid "<i>to</i>"
 msgstr "<i>到</i>"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "<small>John Doe, CEO</small>"
+msgstr "<small>John Doe，CEO</small>"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        到\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
+msgstr "警告：這活動的登記人數沒有達到最低的人數要求，您確定要確認它嗎？"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
 msgstr ""
+"<span style=\"text-align: -webkit-center; \">本課程是專門為  "
+"那些需要掌握<strong>業務應用開發流程的開發者</strong>開設。本課程面向希望更多地學習技術方面內容的新開發人員或者專業人士。</span>"
+" "
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "<strong>Conference for Architects</strong>"
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
+msgstr "<strong>參加了這門課程，學員應具備：</strong>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+#: model_terms:event.event,description:event.event_2
+msgid "<strong>Objectives:</strong>"
+msgstr "<strong>目標:</strong>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "<strong>Our prices include:</strong>"
+msgstr "<strong>我們的價格包括:</strong>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "<strong>Program:</strong>"
+msgstr "<strong>程序:</strong>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "<strong>Requirements:</strong>"
+msgstr "<strong>要求：</strong>"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "<strong>Where to find us:</strong>"
+msgstr "<strong>可以在這裡找到我們:</strong>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -471,12 +580,17 @@ msgstr "將導航選單添加到您的活動網頁，其中包括時間表、追
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
-msgstr ""
+msgstr "添加新的參與者"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr ""
+msgstr "添加新的活動"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Advanced JQuery"
+msgstr "高級的 JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -501,6 +615,11 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr "是否確定要取消這個活動？所有鏈接的參與者也將被取消。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Arrays"
+msgstr "陣列"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -605,6 +724,31 @@ msgid "Before the event"
 msgstr "此事件之前"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Best regards,"
+msgstr "致以最誠摯的問候，"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Bootstrap CSS"
+msgstr "引導CSS"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Bring your own laptop."
+msgstr "帶上您自己的筆記本電腦。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Building a Full Application"
+msgstr "構建一個完整的應用程序"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Calling the ORM"
+msgstr "調用 ORM"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
 msgstr "取消"
@@ -631,6 +775,11 @@ msgid "Category"
 msgstr "類別"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
+msgstr "Chamber Works 60, Rosewood Court 底特律, 密歇根 48212 (美國)"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
 msgstr "溝通"
@@ -648,9 +797,19 @@ msgid "Compose Email"
 msgstr "撰寫電子信件"
 
 #. module: event
+#: model:event.type,name:event.event_type_2
+msgid "Conference"
+msgstr "會議"
+
+#. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference for Architects"
+msgstr ""
+
+#. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置設置"
+msgstr "配置設定"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -701,9 +860,19 @@ msgid "Contact"
 msgstr "聯絡人"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Controllers and Views"
+msgstr "控制器和視圖"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
 msgid "Country"
 msgstr "國家"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Course Summary"
+msgstr "課程總結"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__create_uid
@@ -737,7 +906,22 @@ msgstr "客戶"
 #: code:addons/event/models/event.py:457
 #, python-format
 msgid "Customer Email"
-msgstr "客戶郵件"
+msgstr "客戶信件"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Day 1"
+msgstr "第 1 天"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Day 2"
+msgstr "第 2 天"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Day 3"
+msgstr "第 3 天"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -756,6 +940,16 @@ msgid "Description"
 msgstr "描述"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Design Fair Los Angeles"
+msgstr ""
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Develop a new module for a particular application."
+msgstr "為特定應用開發新模組。"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__display_name
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
 #: model:ir.model.fields,field_description:event.field_event_mail__display_name
@@ -772,6 +966,11 @@ msgid "Display order"
 msgstr "顯示順序"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Dive into Strings"
+msgstr "深入到字元串"
+
+#. module: event
 #: selection:event.event,state:0
 msgid "Done"
 msgstr "完成"
@@ -779,6 +978,13 @@ msgstr "完成"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Dropdown menu"
+msgstr "下拉選單"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid ""
+"During this conference, our team will give a detailed overview of our "
+"business applications. You’ll know all the benefits of using it."
 msgstr ""
 
 #. module: event
@@ -911,6 +1117,18 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
+"活動安排:\n"
+"                              - 活動: %s (%s)\n"
+"                              - 時間: %s\n"
+"                              - 模板: %s (%s)\n"
+"\n"
+"                            失敗和錯誤:\n"
+"                              - %s\n"
+"\n"
+"                            您收到這封信件是因為您是:\n"
+"                              - 活動的組織者,\n"
+"                              - 或活動的負責人\n"
+"                              - 或您進行了該模板最後的變更."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -933,7 +1151,6 @@ msgstr "活動：信件安排工具"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
-#: model:ir.model.fields,field_description:event.field_res_users__event_count
 #: model:ir.ui.menu,name:event.event_event_menu_pivot_report
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -977,6 +1194,11 @@ msgid "Events in New state"
 msgstr "在新建狀態的活動"
 
 #. module: event
+#: model:event.type,name:event.event_type_1
+msgid "Exhibition"
+msgstr "展覽"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
 msgstr "預期"
@@ -1010,6 +1232,11 @@ msgid "Followers (Partners)"
 msgstr "關注者(業務夥伴)"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "For any additional information, please contact us at"
+msgstr "對於任何額外的信息，請和我們取得聯繫"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
@@ -1026,16 +1253,48 @@ msgstr ""
 "對於每一個事件您都可以定義一個最小的座位數（與會者），如果註冊的人數沒有達到此所述登記數目，該活動則不被確認（最小值設為0將不受該條件限制）"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Functional flow of the main applications;"
+msgstr "主要應用的功能流程；"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Functions"
+msgstr "功能"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
 msgstr "分組"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Having attended this conference, participants should be able to:"
+msgstr "已出席本次會議的參加者應能："
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Hello World"
+msgstr "美好的每一天!"
+
+#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Hour(s)"
 msgstr "小時"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "How to Debug"
+msgstr "怎樣調試"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"I did not expect such a great learning experience. I feel like I can develop"
+" anything now."
+msgstr "我沒有想到會有這麼棒的學習體驗，現在我覺得我可以開發所有東西。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__id
@@ -1064,7 +1323,7 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #: model:ir.model.fields,help:event.field_event_event__message_has_error
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__state
@@ -1083,10 +1342,40 @@ msgid "Immediately"
 msgstr "馬上"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Install and administer your own server;"
+msgstr "安裝並管理自己的伺服器；"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Integrated Help"
+msgstr "集成的幫助"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
 msgstr "間隔"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Introduction to JQuery"
+msgstr "JQuery 介紹"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Introduction to Javascript"
+msgstr "Javascript 介紹"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Introduction to QWeb"
+msgstr "Qweb 介紹"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Introduction, CRM, Sales Management"
+msgstr "簡介，CRM，銷售管理"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -1165,6 +1454,16 @@ msgid "Logo"
 msgstr "徽標"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Loops"
+msgstr "循環"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Luigi Roni, Senior Event Manager"
+msgstr "Luigi Roni， 高級活動經理"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
 msgstr "郵箱註冊"
@@ -1188,7 +1487,7 @@ msgstr "信件排程器"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "根據活動分類的信件調度"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -1242,7 +1541,7 @@ msgstr "最大參與者人數應該大於最小參與者人數。"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error
 msgid "Message Delivery error"
-msgstr "郵件傳遞錯誤"
+msgstr "信件傳遞錯誤"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_ids
@@ -1259,6 +1558,11 @@ msgstr "與會者最少數量"
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_min
 msgid "Minimum Registrations"
 msgstr "最小註冊數"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Modules"
+msgstr "模組"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1307,7 +1611,6 @@ msgstr "錯誤數量"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
-#: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
 msgstr "合作夥伴已參與的活動數量。"
 
@@ -1321,13 +1624,23 @@ msgstr "需要行動消息的數量"
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "發送錯誤的郵件數"
+msgstr "發送錯誤的信件數"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_unread_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_unread_counter
 msgid "Number of unread messages"
 msgstr "未讀消息的數量"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Odoo Official Website"
+msgstr "Odoo 官方網站"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Odoo Web Client"
+msgstr "ODoo Web 客戶端"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_online
@@ -1379,6 +1692,20 @@ msgid "Participant"
 msgstr "參與者"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"Participants are expected to have some knowledge in programming. A basic "
+"knowledge of the Python programming is recommended."
+msgstr "參與者需要有一定的程式知識。建議最好懂Python程式。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"Participants preferably have a functional knowledge of our software (see "
+"Functional Training)."
+msgstr "參與者最好是對我們軟體的功能知識比較瞭解（參照功能培訓）。"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
 msgstr "業務夥伴"
@@ -1394,11 +1721,36 @@ msgid "Physical Event"
 msgstr "實體活動"
 
 #. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Point of Sale (POS), Introduction to report customization."
+msgstr "銷售點（POS），報告定制介紹。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Project management, Human resources, Contract management."
+msgstr "專案管理、人力資源、合同管理。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
+msgstr "採購、銷售和採購管理、財務會計。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Python Objects"
+msgstr "Python 對像"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Read Great Contents"
+msgstr "閱讀重要內容"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_registration__origin
 msgid ""
 "Reference of the document that created the registration, for example a sales"
 " order"
-msgstr "參考創建註冊的文檔，例如銷售訂單"
+msgstr "參考創建註冊的文件，例如銷售訂單"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1451,9 +1803,19 @@ msgid "Registration mail"
 msgstr "登記的信件"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Report Engine"
+msgstr "報表引擎"
+
+#. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
 msgstr "報告"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Requirements"
+msgstr "要求"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
@@ -1482,6 +1844,8 @@ msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
+"高效的安排和組織您的活動:\n"
+"                追蹤註冊和參與的情況, 自動確認信件、銷售門票等."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -1502,6 +1866,11 @@ msgstr "在您的網站上售票"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
 msgstr "憑銷售訂單售票"
+
+#. module: event
+#: model:event.type,name:event.event_type_0
+msgid "Seminar"
+msgstr "研討會"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1530,9 +1899,14 @@ msgid "Settings"
 msgstr "設定"
 
 #. module: event
+#: model:event.type,name:event.event_type_3
+msgid "Show"
+msgstr "顯示"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__origin
 msgid "Source Document"
-msgstr "來來源單據"
+msgstr "來來來源單據"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -1557,7 +1931,7 @@ msgstr "狀態"
 #: code:addons/event/models/event.py:269
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr ""
+msgstr "結束日期不能早於開始日期."
 
 #. module: event
 #: code:addons/event/models/event.py:313
@@ -1566,6 +1940,13 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr "已經有參與者參加過這項活動。如果您想取消此項活動，請將其重置為草稿。"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid ""
+"This course help me build my first application within a month. Definetly "
+"worth its price."
+msgstr "該課程幫助我在一個月內創建第一個應用程序，物超所值。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__template_id
@@ -1586,9 +1967,24 @@ msgid "Timezone"
 msgstr "時區"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "To get more information, visit the"
+msgstr "要獲取更多信息，請訪問"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
 msgstr "專場和日程"
+
+#. module: event
+#: model:event.type,name:event.event_type_4
+msgid "Training"
+msgstr "培訓"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Training Center Module"
+msgstr "培訓中心模組"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
@@ -1617,6 +2013,21 @@ msgstr "未確認"
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "未確認的席位預訂"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Underscore"
+msgstr "Underscore"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Understand the development concepts and architecture;"
+msgstr "了解開發概念和結構；"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "瞭解不同的模組"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -1651,7 +2062,7 @@ msgstr "今天將開始的活動"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "即將到來的 或 運行中的"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_hashtag
@@ -1669,6 +2080,11 @@ msgid "User"
 msgstr "使用者"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Variables &amp; Operators"
+msgstr "變量和操作符"
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Visibility"
 msgstr "可見性"
@@ -1677,25 +2093,33 @@ msgstr "可見性"
 #: code:addons/event/models/event_mail.py:130
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr ""
+msgstr "警告: 活動安排存在錯誤: %s"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
-msgid "Website Messages"
-msgstr "網站信息"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event__website_message_ids
-#: model:ir.model.fields,help:event.field_event_registration__website_message_ids
-msgid "Website communication history"
-msgstr "網站溝通記錄"
+#: model_terms:event.event,description:event.event_2
+msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
+msgstr "倉庫管理、製造（MRP）和銷售。導入/導出。"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Week(s)"
 msgstr "周"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What do people say about this course?"
+msgstr "大家怎麼評價  這個課程？"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What you will learn?"
+msgstr "您將學些什麼？"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "Workflows"
+msgstr "工作流"
 
 #. module: event
 #: code:addons/event/models/event.py:426
@@ -1723,6 +2147,16 @@ msgstr "您的登記在${object.event_id.name}"
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "drinks and lunch;"
+msgstr "飲料和午餐；"
+
+#. module: event
+#: model_terms:event.event,description:event.event_2
+msgid "events@odoo.com"
+msgstr "events@odoo.com"
 
 #. module: event
 #: code:addons/event/models/event.py:526
@@ -1759,3 +2193,8 @@ msgstr "今天"
 #, python-format
 msgid "tomorrow"
 msgstr "明天"
+
+#. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "training material."
+msgstr "培訓資料。"

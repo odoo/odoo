@@ -4,36 +4,22 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Eine Code-Server-Aktion kann von der Website aus mit Hilfe eines dedizierten"
-" Controllers ausgeführt werden. Die Adresse lautet "
-"<base>/website/action/<website_path>. Setzen Sie dieses Feld auf True, damit"
-" Benutzer diese Aktion ausführen können. Wenn es auf False gesetzt ist, kann"
-" die Aktion nicht über die Website ausgeführt werden."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -119,16 +105,47 @@ msgid "Automation"
 msgstr "Automation"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Verfügbar auf der Website"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Basisaktionsregel: Überprüfen und Ausführen"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr "Basisautomatisierung: rekursive Regel testen"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr "Basisautomatisierung: Testregel für Erstellen"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr "Basisautomatisierung: Testregel für Erneut berechnen"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr "Basisautomatisierung: Testregel für sekundäres Modell"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr "Basisautomatisierung: Testregel für Schreiben"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr "Basisautomatisierung: Testregel für Schreiben bei Kontextprüfung"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -279,11 +296,6 @@ msgstr "Stunden"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "Die ID für diese ist in einem xml File definiert."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -557,12 +569,6 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr ""
-"Die komplette URL zum Zugriff auf die Server-Aktion durch die Website."
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger Condition"
 msgstr "Triggerbedingung"
@@ -640,16 +646,6 @@ msgstr "Wertzuordnung"
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Website-Pfad"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Website-URL"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

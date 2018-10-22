@@ -30,6 +30,8 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      *   moderator of this channel.
      * @param {string} [params.data.last_message_date] date in server-format
      * @param {integer} [params.data.message_unread_counter]
+     * @param {boolean} [params.data.moderation=false] whether the channel is
+     *   moderated or not
      * @param {string} params.data.state
      * @param {string} [params.data.uuid]
      * @param {Object} params.options
@@ -56,7 +58,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._folded = data.state === 'folded';
         // if set: hide 'Leave channel' button
         this._groupBasedSubscription = data.group_based_subscription;
-        this._isModerated = data.is_moderation;
+        this._isModerated = data.moderation;
         this._isMyselfModerator = data.is_moderator;
         this._lastMessageDate = undefined;
         this._members = [];
@@ -356,24 +358,31 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         });
     },
     /**
-     * Get the domain to fetch all the messages in the current channel
+     * Override so that it tells whether the channel is moderated or not. This
+     * is useful in order to display pending moderation messages when the
+     * current user is either moderator of the channel or has posted some
+     * messages that are pending moderation.
      *
-     * Note that with moderation, even though some messages are not really
-     * linked to a channel ('channel_ids'), we should nonetheless display them.
-     * These messages are fetched from their associated document
-     * ('mail.channel' with provided channel ID), and messages that are pending
-     * moderation.
+     * @override
+     * @private
+     * @returns {Object}
+     */
+    _getFetchMessagesKwargs: function () {
+        var kwargs = this._super.apply(this, arguments);
+        if (this.isModerated()) {
+            kwargs.moderated_channel_ids = [this.getID()];
+        }
+        return kwargs;
+    },
+    /**
+     * Get the domain to fetch all the messages in the current channel
      *
      * @override
      * @private
      * @returns {Array}
      */
     _getThreadDomain: function () {
-        return ['|', '&', '&',
-                ['model', '=', 'mail.channel'],
-                ['res_id', 'in', [this._id]],
-                ['need_moderation', '=', true],
-                ['channel_ids', 'in', [this._id]]];
+        return [['channel_ids', 'in', [this._id]]];
     },
     /**
      * @override {mail.model.ThreadTypingMixin}

@@ -1,0 +1,10 @@
+///
+/// This file regroups the CSS rules made to fix/extend bootstrap in all places
+/// where it is used in Odoo (backend / frontend / reports / ...)
+///
+
+.alert {
+    // Alerts are block elements with relative positioning.
+    // They would go over floating elements, which is never what we want.
+    clear: both;
+}

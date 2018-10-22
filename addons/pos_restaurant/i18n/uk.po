@@ -6,19 +6,71 @@
 # Martin Trigaux, 2018
 # Zoriana Zaiats, 2018
 # ТАрас <tratatuta@i.ua>, 2018
+# Bohdan Lisnenko, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:16+0000\n"
-"PO-Revision-Date: 2018-09-21 13:16+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 3.12"
+msgstr "$ 3.12"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.40"
+msgstr "$ 4.40"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.50"
+msgstr "$ 4.50"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 8.50"
+msgstr "$ 8.50"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_amount\">$ 0.86</span>"
+msgstr "<span class=\"pos-change_amount\">$ 0.86</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_title\">Change</span>"
+msgstr "<span class=\"pos-change_title\">Змінити</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"total-amount-formatting\">TOTAL</span>"
+msgstr "<span class=\"total-amount-formatting\">ВСЬОГО</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
+msgstr "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>$ 470.00</span>"
+msgstr "<span>$ 470.00</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>Cash (USD):</span>"
+msgstr "<span>Готівка (USD):</span>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -217,6 +269,12 @@ msgid "Close"
 msgstr "Закрити"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.coke
+#: model:product.template,name:pos_restaurant.coke_product_template
+msgid "Coca-Cola"
+msgstr "Coca-Cola"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
 msgid "Color"
 msgstr "Колір"
@@ -243,6 +301,11 @@ msgid "Delete"
 msgstr "Видалити"
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Desk Organizer"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:91
 #, python-format
@@ -262,6 +325,11 @@ msgstr "Знижки"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.drinks
+msgid "Drinks"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -403,6 +471,11 @@ msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Led Lamp"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:141
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:155
@@ -421,6 +494,17 @@ msgstr "Логотип"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
 msgstr "Управління замовленнями на столи"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.minute_maid
+#: model:product.template,name:pos_restaurant.minute_maid_product_template
+msgid "Minute Maid"
+msgstr "Minute Maid"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Monitor Stand"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -451,6 +535,11 @@ msgstr "Примітка"
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Кількість місць?"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Odoo Logo"
+msgstr "Логотип Odoo"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -513,6 +602,11 @@ msgid "Payment"
 msgstr "Оплата"
 
 #. module: pos_restaurant
+#: model:product.category,name:pos_restaurant.product_category_pos
+msgid "PoS"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_id
 msgid "Point of Sale"
 msgstr "Касовий термінал"
@@ -526,6 +620,11 @@ msgstr "Налаштування касового терміналу"
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
 msgstr "Замовлення касового терміналу"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Price"
+msgstr "Ціна"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -566,6 +665,11 @@ msgstr "IP адреса проксі"
 #, python-format
 msgid "Purple"
 msgstr "Пурпур"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Quantity"
+msgstr "Кількість"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -839,6 +943,16 @@ msgid "Turquoise"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:product.product,uom_name:pos_restaurant.coke
+#: model:product.product,uom_name:pos_restaurant.minute_maid
+#: model:product.product,uom_name:pos_restaurant.water
+#: model:product.template,uom_name:pos_restaurant.coke_product_template
+#: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,uom_name:pos_restaurant.water_product_template
+msgid "Unit(s)"
+msgstr "шт"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
 msgid "Used to sort Floors"
 msgstr "Використовується для сортування залів"
@@ -847,6 +961,17 @@ msgstr "Використовується для сортування залів"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
 msgid "Vertical Position"
 msgstr "Вертикальне розташування"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.water
+#: model:product.template,name:pos_restaurant.water_product_template
+msgid "Water"
+msgstr "Вода"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Whiteboard Pen"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
@@ -905,3 +1030,13 @@ msgstr "кнопку в меню редагування, щоб створити
 #, python-format
 msgid "discount"
 msgstr "знижка"
+
+#. module: pos_restaurant
+#: model:product.product,weight_uom_name:pos_restaurant.coke
+#: model:product.product,weight_uom_name:pos_restaurant.minute_maid
+#: model:product.product,weight_uom_name:pos_restaurant.water
+#: model:product.template,weight_uom_name:pos_restaurant.coke_product_template
+#: model:product.template,weight_uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,weight_uom_name:pos_restaurant.water_product_template
+msgid "kg"
+msgstr "кг"

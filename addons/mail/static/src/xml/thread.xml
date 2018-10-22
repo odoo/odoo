@@ -13,6 +13,7 @@
         @param {mail.model.AbstractThread} thread
         @param {Object} options
         @param {boolean} [options.displayEmptyThread]
+        @param {boolean} [options.displayModerationCommands]
         @param {boolean} [options.displayNoMatchFound]
         @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
@@ -257,9 +258,6 @@
     <!--
         @param {mail.model.AbstractThread} thread
         @param {string} dateFormat
-        @param {Object[]} hideAuthorMessages dict where key is message ID and
-          value is boolean. It tells whether the message with this ID should
-          hide the author visually or not.
         @param {Object} options
         @param {mail.model.AbstractMessage} message
         @param {Object} options
@@ -267,6 +265,8 @@
         @param {boolean} [options.displayDocumentLinks]
         @param {boolean} [options.displayEmailIcons]
         @param {boolean} [options.displayMarkAsRead]
+        @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
+          the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
         @param {boolean} [options.displayReplyIcons]
         @param {boolean} [options.displayStars]
         @param {boolean} [options.displaySubjectsOnMessages]
@@ -300,7 +300,7 @@
             </div>
             <div class="o_thread_message_core">
                 <p t-if="displayAuthorMessages[message.getID()]" class="o_mail_info text-muted">
-                    <input t-if="message.needsModeration() and message.needsModerationByUser()" type="checkbox" class="moderation_checkbox" t-att-data-message-id="message.getID()"/>
+                    <input t-if="message.needsModeration() and message.needsModerationByUser() and options.displayModerationCommands" type="checkbox" class="moderation_checkbox" t-att-data-message-id="message.getID()"/>
                     <t t-if="message.isNote()">
                         Note by
                     </t>
@@ -346,12 +346,7 @@
                            t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>
 
                         <t t-if="message.needsModeration() and message.originatesFromChannel()">
-                            <t t-if="message.needsModerationByUser()">
-                                <t t-call="mail.MessageModerationDecision"/>
-                            </t>
-                            <t t-elif="message.isMyselfAuthor()">
-                                <t t-call="mail.MessageModerationFeedback"/>
-                            </t>
+                            <t t-call="mail.MessageModeration"/>
                         </t>
                     </span>
                 </p>
@@ -406,6 +401,19 @@
 
     <!--
         @param {mail.model.Message} message
+        @param {Object} options
+        @param {boolean} [options.displayModerationCommands]
+    -->
+    <t t-name="mail.MessageModeration">
+        <i t-if="message.isMyselfAuthor()" class="text-danger" title="Your message is pending moderation"><b>Pending moderation</b></i>
+        <t t-elif="message.needsModerationByUser()">
+            <t t-if="options.displayModerationCommands" t-call="mail.MessageModerationDecision"/>
+            <i t-else="" class="text-danger" title="Open Channel in Discuss to moderate"><b>Pending moderation</b></i>
+        </t>
+    </t>
+
+    <!--
+        @param {mail.model.Message} message
     -->
     <t t-name="mail.MessageModerationDecision">
         <i class="o_thread_icon ml4 o_thread_message_moderation text-success"
@@ -418,10 +426,6 @@
            t-att-data-message-id="message.getID()" data-decision="allow" title="Add this email address to white list of people"><b>Always Allow |</b></i>
         <i class="o_thread_icon ml4 o_thread_message_moderation text-danger"
            t-att-data-message-id="message.getID()" data-decision="ban" title="Ban this email address"><b>Ban</b></i>
-    </t>
-
-    <t t-name="mail.MessageModerationFeedback">
-        <i class="text-danger" title="Your message is pending moderation"><b>Pending moderation</b></i>
     </t>
 
     <t t-name="mail.MessagesSeparator">

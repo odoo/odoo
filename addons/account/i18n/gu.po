@@ -13,13 +13,14 @@
 # Gaurav Marsoniya <marsoniyagaurav@gmail.com>, 2018
 # Falguni Rana <kankurana@gmail.com>, 2018
 # viki chavada <vikic@emiprotechnologies.com>, 2018
+# Pranjal Spellbound <pranjal.spellbound@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
-"Last-Translator: viki chavada <vikic@emiprotechnologies.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"Last-Translator: Pranjal Spellbound <pranjal.spellbound@gmail.com>, 2018\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +127,11 @@ msgid "30 Net Days"
 msgstr "૩૦ દિવસ પૂરા"
 
 #. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr ""
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "૪૫  દિવસ"
@@ -198,7 +204,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/>ડાઉનલોડ કરો"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -4191,6 +4197,11 @@ msgid "End Date"
 msgstr "અંતિમ તારીખ"
 
 #. module: account
+#: model:account.payment.term,name:account.account_payment_term
+msgid "End of Following Month"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end_real
 msgid "Ending Balance"
 msgstr ""
@@ -7512,8 +7523,18 @@ msgid "Payment terms: 30 Net Days"
 msgstr ""
 
 #. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr ""
+
+#. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
+msgstr ""
+
+#. module: account
+#: model:account.payment.term,note:account.account_payment_term
+msgid "Payment terms: End of Following Month"
 msgstr ""
 
 #. module: account
@@ -9156,7 +9177,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:20
 #: code:addons/account/models/chart_template.py:933
 #, python-format
-msgid "Suggest a write-off."
+msgid "Suggest counterpart values."
 msgstr ""
 
 #. module: account
@@ -11177,7 +11198,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-msgid "Write-off Values"
+msgid "Counterpart Values"
 msgstr ""
 
 #. module: account

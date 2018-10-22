@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -119,7 +120,7 @@ msgstr "分析標籤"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件計數"
+msgstr "附件數量"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -135,12 +136,12 @@ msgstr "一攬子訂購"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 msgid "Blanket order"
-msgstr ""
+msgstr "採購協議"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
 msgid "Call for Tender"
-msgstr ""
+msgstr "進行招標"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
@@ -208,6 +209,8 @@ msgid ""
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
+"創建採購訂單草稿: 根據您的產品配置, 系統將創建採購訂單草稿。建議投標: 如果安裝了 \"purchase_requisition\" 模組, "
+"並且選擇了此選項, 系統將創建招標的草稿呼叫。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -281,7 +284,7 @@ msgstr "終止日期"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
-msgstr "採購協議的例子包括招標和一攬子訂單。"
+msgstr "採購協議的例子包括招標和採購協議。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -305,7 +308,7 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
-"對於一攬子訂單，您可以記錄特定期限\n"
+"對於採購協議，您可以記錄特定期限\n"
 "（例如一年）的協議，並且您在本協議內訂購產品，從協商價格中受益。"
 
 #. module: purchase_requisition
@@ -333,7 +336,7 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -387,12 +390,12 @@ msgstr "明細行"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "主要附件"
+msgstr "附件"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr "郵件傳遞錯誤"
+msgstr "消息遞送錯誤"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -407,7 +410,7 @@ msgstr "多個申請"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
-msgstr ""
+msgstr "我的採購協議"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -442,7 +445,7 @@ msgstr "需要行動消息的數量"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "發送錯誤的郵件數"
+msgstr "遞送錯誤的消息數量"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
@@ -561,7 +564,7 @@ msgstr "包含請購的採購單"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr ""
+msgstr "採購類型"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -577,7 +580,7 @@ msgstr "採購申請行"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Requisition Type"
-msgstr ""
+msgstr "採購協議類型"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -629,12 +632,12 @@ msgstr "申請"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
 msgid "Requisition Line"
-msgstr ""
+msgstr "協議名細"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
 msgid "Requistion Line"
-msgstr ""
+msgstr "協議名細"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -690,17 +693,17 @@ msgstr "來源"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
 msgid "Source Document"
-msgstr "來來源單據"
+msgstr "來來來源單據"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr ""
+msgstr "啟動新的採購協定"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr ""
+msgstr "啟動長期採購協議"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -716,12 +719,12 @@ msgstr "庫存移動"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "庫存規則"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
-msgstr ""
+msgstr "供應商資訊"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
@@ -745,7 +748,7 @@ msgstr "所有產品收到的預期和預定交貨日期"
 msgid ""
 "There is already an open blanket order for this supplier. We suggest you to "
 "use to complete this open blanket order instead of creating a new one."
-msgstr ""
+msgstr "這個供應商已經有了一個開放的採購協議訂單。我們建議您使用完成這個未完成的採購協議, 而不是創建一個新的。"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -817,13 +820,13 @@ msgstr "網站溝通記錄"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:178
 #, python-format
 msgid "You can only delete draft requisitions."
-msgstr ""
+msgstr "您只能刪除草稿採購協議。"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:123
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr ""
+msgstr "無法確認採購協定 \"%s\", 因為沒有產品項目。"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:127
@@ -831,13 +834,13 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:228
 #, python-format
 msgid "You cannot confirm the blanket order without price."
-msgstr ""
+msgstr "您無法確認沒有價格的採購協議。"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:129
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr ""
+msgstr "您無法確認沒有數量的採購協議。"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:156

@@ -44,7 +44,7 @@ Other optional directories compose the module.
 
 - *wizard/* : regroups the transient models (``models.TransientModel``) and their views
 - *report/* : contains the printable reports and models based on SQL views. Python objects and XML views are included in this directory
-- *tests/* : contains the Python/YML tests
+- *tests/* : contains the Python tests
 
 
 File naming
@@ -622,17 +622,47 @@ online documentation of pyscopg2 to learn of to use it properly:
 - Advanced parameter types (http://initd.org/psycopg/docs/usage.html#adaptation-of-python-values-to-sql-types)
 
 
-Keep your methods short/simple when possible
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Think extendable
+~~~~~~~~~~~~~~~~
 Functions and methods should not contain too much logic: having a lot of small
 and simple methods is more advisable than having few large and complex methods.
-A good rule of thumb is to split a method as soon as:
-- it has more than one responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle)
-- it is too big to fit on one screen.
+A good rule of thumb is to split a method as soon as it has more than one
+responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle).
 
-Also, name your functions accordingly: small and properly named functions are the starting point of readable/maintainable code and tighter documentation.
+Hardcoding a business logic in a method should be avoided as it prevents to be
+easily extended by a submodule.
 
-This recommendation is also relevant for classes, files, modules and packages. (See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
+.. code-block:: python
+
+    # do not do this
+    # modifying the domain or criteria implies overriding whole method
+    def action(self):
+        ...  # long method
+        partners = self.env['res.partner'].search(complex_domain)
+        emails = partners.filtered(lambda r: arbitrary_criteria).mapped('email')
+
+    # better but do not do this either
+    # modifying the logic forces to duplicate some parts of the code
+    def action(self):
+        ...
+        partners = self._get_partners()
+        emails = partners._get_emails()
+
+    # better
+    # minimum override
+    def action(self):
+        ...
+        partners = self.env['res.partner'].search(self._get_partner_domain())
+        emails = partners.filtered(lambda r: r._filter_partners()).mapped('email')
+
+The above code is over extendable for the sake of example but the readability
+must be taken into account and a tradeoff must be made.
+
+Also, name your functions accordingly: small and properly named functions are
+the starting point of readable/maintainable code and tighter documentation.
+
+This recommendation is also relevant for classes, files, modules and packages.
+(See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
 
 
 Never commit the transaction
@@ -862,7 +892,7 @@ Symbols and Conventions
         seats_available = fields.Integer(oldname='register_avail', string='Available Seats',
             store=True, readonly=True, compute='_compute_seats')
         price = fields.Integer(string='Price')
-        type = fields.Selection(string="Type", selection='_selection_type')
+        event_type = fields.Selection(string="Type", selection='_selection_type')
 
         # compute and search fields, in the same order of fields declaration
         @api.multi

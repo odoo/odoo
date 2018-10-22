@@ -78,6 +78,46 @@ class IapTransaction(object):
     def __init__(self):
         self.credit = None
 
+def authorize(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
+    endpoint = get_endpoint(env)
+    params = {
+        'account_token': account_token,
+        'credit': credit,
+        'key': key,
+        'description': description,
+    }
+    if dbuuid:
+        params.update({'dbuuid': dbuuid})
+    try:
+        transaction_token = jsonrpc(endpoint + '/iap/1/authorize', params=params)
+    except InsufficientCreditError as e:
+        if credit_template:
+            arguments = json.loads(e.args[0])
+            arguments['body'] = pycompat.to_text(env['ir.qweb'].render(credit_template))
+            e.args = (json.dumps(arguments),)
+        raise e
+    return transaction_token
+
+def cancel(env, transaction_token, key):
+    endpoint = get_endpoint(env)
+    params = {
+        'token': transaction_token,
+        'key': key,
+    }
+    r = jsonrpc(endpoint + '/iap/1/cancel', params=params)
+    return r
+
+def capture(env, transaction_token, key, credit):
+    endpoint = get_endpoint(env)
+    params = {
+        'token': transaction_token,
+        'key': key,
+        'credit_to_capture': credit,
+    }
+    r = jsonrpc(endpoint + '/iap/1/capture', params=params)
+    return r
+
+
 @contextlib.contextmanager
 def charge(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
     """
@@ -97,42 +137,16 @@ def charge(env, key, account_token, credit, dbuuid=False, description=None, cred
                             credits for the requested operation
     :type credit_template: str
     """
-    endpoint = get_endpoint(env)
-    params = {
-        'account_token': account_token,
-        'credit': credit,
-        'key': key,
-        'description': description,
-    }
-    if dbuuid:
-        params.update({'dbuuid': dbuuid})
-    try:
-        transaction_token = jsonrpc(endpoint + '/iap/1/authorize', params=params)
-    except InsufficientCreditError as e:
-        if credit_template:
-            arguments = json.loads(e.args[0])
-            arguments['body'] = pycompat.to_text(env['ir.qweb'].render(credit_template))
-            e.args = (json.dumps(arguments),)
-        raise e
+    transaction_token = authorize(env, key, account_token, credit, dbuuid, description, credit_template)
     try:
         transaction = IapTransaction()
         transaction.credit = credit
         yield transaction
     except Exception as e:
-        params = {
-            'token': transaction_token,
-            'key': key,
-        }
-        r = jsonrpc(endpoint + '/iap/1/cancel', params=params)
+        r = cancel(env,transaction_token, key)
         raise e
     else:
-        params = {
-            'token': transaction_token,
-            'key': key,
-            'credit_to_capture': transaction.credit,
-        }
-        r = jsonrpc(endpoint + '/iap/1/capture', params=params) # noqa
-
+        r = capture(env,transaction_token, key, transaction.credit)
 
 #----------------------------------------------------------
 # Models for client

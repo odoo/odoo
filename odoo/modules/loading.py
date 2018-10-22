@@ -103,6 +103,7 @@ def force_demo(cr):
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
     graph = odoo.modules.graph.Graph()
+    cr.execute('UPDATE ir_module_module SET demo=True')
     cr.execute(
         "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
     )
@@ -112,7 +113,6 @@ def force_demo(cr):
     for package in graph:
         load_demo(cr, package, {}, 'init')
 
-    cr.execute('update ir_module_module set demo=%s', (True,))
     env = api.Environment(cr, SUPERUSER_ID, {})
     env['ir.module.module'].invalidate_cache(['demo'])
 

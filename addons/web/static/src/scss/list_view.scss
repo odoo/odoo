@@ -23,6 +23,9 @@
         border-bottom: 1px solid #cacaca;
         > tr > th {
             border-left: 1px solid #dfdfdf;
+            @include media-breakpoint-down(sm) {
+                white-space: nowrap;
+            }
             &:not(.o_column_sortable):hover {
                 cursor: default;
             }
@@ -80,9 +83,10 @@
 
     .o_list_record_remove button {
         padding: 0px;
-        background-style: none;
+        background: none;
         border-style: none;
         display: table-cell;
+        cursor: pointer;
     }
 
     // Contextual classes
@@ -93,8 +97,10 @@
 
     // Grouped list views
     tbody > tr.o_group_header {
-        height: 31px;
-
+        > th, > td {
+            padding-top: ($table-cell-padding-sm*2);
+            padding-bottom: ($table-cell-padding-sm*2);
+        }
         .o_group_name {
             white-space: nowrap;
         }

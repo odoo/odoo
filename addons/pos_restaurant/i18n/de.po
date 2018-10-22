@@ -5,19 +5,70 @@
 # Translators:
 # Martin Trigaux, 2018
 # Wolfgang Taferner, 2018
+# Niki Waibel, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:16+0000\n"
-"PO-Revision-Date: 2018-09-21 13:16+0000\n"
-"Last-Translator: Wolfgang Taferner, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"Last-Translator: Niki Waibel, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 3.12"
+msgstr "3,12 $"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.40"
+msgstr "4,40 $"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.50"
+msgstr "4,50 $"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 8.50"
+msgstr "8,50 $"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_amount\">$ 0.86</span>"
+msgstr "<span class=\"pos-change_amount\"/>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_title\">Change</span>"
+msgstr "<span class=\"pos-change_title\"/>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"total-amount-formatting\">TOTAL</span>"
+msgstr "<span class=\"total-amount-formatting\">GESAMT</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
+msgstr "<span class=\"pos_total-amount\" id=\"total-amount\"/>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>$ 470.00</span>"
+msgstr "<span/>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>Cash (USD):</span>"
+msgstr "<span/>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -214,6 +265,12 @@ msgid "Close"
 msgstr "Schließen"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.coke
+#: model:product.template,name:pos_restaurant.coke_product_template
+msgid "Coca-Cola"
+msgstr "Coca Cola"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
 msgid "Color"
 msgstr "Farbe"
@@ -240,6 +297,11 @@ msgid "Delete"
 msgstr "Löschen"
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Desk Organizer"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:91
 #, python-format
@@ -259,6 +321,11 @@ msgstr "Rabatte"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.drinks
+msgid "Drinks"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -400,6 +467,11 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Led Lamp"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:141
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:155
@@ -418,6 +490,17 @@ msgstr "Logo"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
 msgstr "Tabellenaufträge verwalten"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.minute_maid
+#: model:product.template,name:pos_restaurant.minute_maid_product_template
+msgid "Minute Maid"
+msgstr "Cappy"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Monitor Stand"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -448,6 +531,11 @@ msgstr "Notiz"
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Anzahl an Sitzplätzen?"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Odoo Logo"
+msgstr "Odoo-Logo"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -511,6 +599,11 @@ msgid "Payment"
 msgstr "Zahlung"
 
 #. module: pos_restaurant
+#: model:product.category,name:pos_restaurant.product_category_pos
+msgid "PoS"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_id
 msgid "Point of Sale"
 msgstr "Point of Sale"
@@ -524,6 +617,11 @@ msgstr "Point Of Sale Konfiguration"
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
 msgstr "Point Of Sale Verkäufe"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Price"
+msgstr "Preis"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -564,6 +662,11 @@ msgstr "Proxy IP Adresse"
 #, python-format
 msgid "Purple"
 msgstr "Lila"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Quantity"
+msgstr "Menge"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -840,6 +943,16 @@ msgid "Turquoise"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:product.product,uom_name:pos_restaurant.coke
+#: model:product.product,uom_name:pos_restaurant.minute_maid
+#: model:product.product,uom_name:pos_restaurant.water
+#: model:product.template,uom_name:pos_restaurant.coke_product_template
+#: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,uom_name:pos_restaurant.water_product_template
+msgid "Unit(s)"
+msgstr "Einheit(en)"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
 msgid "Used to sort Floors"
 msgstr "Zum Sortieren von Ebenen verwendet"
@@ -848,6 +961,17 @@ msgstr "Zum Sortieren von Ebenen verwendet"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
 msgid "Vertical Position"
 msgstr "Vertikale Position"
+
+#. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.water
+#: model:product.template,name:pos_restaurant.water_product_template
+msgid "Water"
+msgstr "Wasser"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Whiteboard Pen"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
@@ -908,3 +1032,13 @@ msgstr "Button in der Toolbar zur Bearbeitung, um neue Tische zu erstellen"
 #, python-format
 msgid "discount"
 msgstr "Rabatt"
+
+#. module: pos_restaurant
+#: model:product.product,weight_uom_name:pos_restaurant.coke
+#: model:product.product,weight_uom_name:pos_restaurant.minute_maid
+#: model:product.product,weight_uom_name:pos_restaurant.water
+#: model:product.template,weight_uom_name:pos_restaurant.coke_product_template
+#: model:product.template,weight_uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,weight_uom_name:pos_restaurant.water_product_template
+msgid "kg"
+msgstr "kg"

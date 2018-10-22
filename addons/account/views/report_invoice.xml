@@ -48,7 +48,7 @@
 
                     <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
 
-                    <table t-attf-class="table table-sm" name="invoice_line_table">
+                    <table class="table table-sm" name="invoice_line_table">
                         <thead>
                             <tr>
                                 <t t-set="colspan" t-value="6"/>

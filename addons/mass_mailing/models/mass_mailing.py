@@ -717,7 +717,6 @@ class MassMailing(models.Model):
             'view_mode': 'tree',
             'res_model': self.mailing_model_real,
             'domain': [('id', 'in', res_ids)],
-            'context': self.env.context,
         }
 
     #------------------------------------------------------

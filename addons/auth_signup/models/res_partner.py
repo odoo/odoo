@@ -27,14 +27,14 @@ class ResPartner(models.Model):
     signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
     signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
-    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
+    signup_valid = fields.Boolean(compute='_compute_signup_valid', compute_sudo=True, string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
     @api.multi
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
-        for partner in self.sudo():
+        for partner in self:
             partner.signup_valid = bool(partner.signup_token) and \
             (not partner.signup_expiration or dt <= partner.signup_expiration)
 

@@ -33,11 +33,18 @@
         width: 400px;
         text-align: right;
         float: right;
+        margin-bottom: 4px;
 
         &, & + .oe_avatar {
             + .oe_title {
                 width: 400px;
             }
+        }
+
+        // TODO remove me in master (this rule is a copy of the one in the
+        // bootstrap_review.scss file)
+        + .alert {
+            clear: both;
         }
 
         .oe_stat_button {

@@ -9,15 +9,15 @@
 # Hamid Darabi, 2018
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2018
-# mohammad azarbara <mohammadazarbara98@gmail.com>, 2018
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2018
 # Hamed Mohammadi <hamed@dehongi.com>, 2018
 # Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
 "Last-Translator: Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -165,6 +165,12 @@ msgid "Add a new expense,"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
 msgstr ""
@@ -241,7 +247,6 @@ msgid "Can Reset"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 msgid "Can be Expensed"
 msgstr ""
@@ -251,6 +256,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Cancel"
 msgstr "لغو"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -982,14 +993,14 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:705
+#: code:addons/hr_expense/models/hr_expense.py:706
 #, python-format
 msgid "Only HR Officers or the concerned employee can reset to draft."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:666
-#: code:addons/hr_expense/models/hr_expense.py:687
+#: code:addons/hr_expense/models/hr_expense.py:667
+#: code:addons/hr_expense/models/hr_expense.py:688
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr ""
@@ -1241,7 +1252,6 @@ msgid "Show all records which has next action date is before today"
 msgstr "تمام رکوردهایی که تاریخ اعمال بعدی قبل از امروز است را نشان بده"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
 msgstr ""
@@ -1406,7 +1416,9 @@ msgid "Unit of Measure"
 msgstr "واحد اندازه گیری"
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.air_ticket
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.template,uom_name:hr_expense.air_ticket_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
 msgid "Unit(s)"
 msgstr "عدد"
@@ -1474,7 +1486,7 @@ msgid "Website communication history"
 msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:674
+#: code:addons/hr_expense/models/hr_expense.py:675
 #, python-format
 msgid "You can only approve your department expenses"
 msgstr ""
@@ -1486,7 +1498,7 @@ msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:695
+#: code:addons/hr_expense/models/hr_expense.py:696
 #, python-format
 msgid "You can only refuse your department expenses"
 msgstr ""
@@ -1508,7 +1520,7 @@ msgid "You cannot add expenses of another employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:671
+#: code:addons/hr_expense/models/hr_expense.py:672
 #, python-format
 msgid "You cannot approve your own expenses"
 msgstr ""
@@ -1526,7 +1538,7 @@ msgid "You cannot delete a posted or paid expense."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:692
+#: code:addons/hr_expense/models/hr_expense.py:693
 #, python-format
 msgid "You cannot refuse your own expenses"
 msgstr ""
@@ -1569,10 +1581,20 @@ msgid "has been refused"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,weight_uom_name:hr_expense.air_ticket
+#: model:product.product,weight_uom_name:hr_expense.car_travel
 #: model:product.product,weight_uom_name:hr_expense.product_product_fixed_cost
+#: model:product.template,weight_uom_name:hr_expense.air_ticket_product_template
+#: model:product.template,weight_uom_name:hr_expense.car_travel_product_template
 #: model:product.template,weight_uom_name:hr_expense.product_product_fixed_cost_product_template
 msgid "kg"
 msgstr "کیلوگرم"
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.car_travel
+#: model:product.template,uom_name:hr_expense.car_travel_product_template
+msgid "km"
+msgstr "کیلومتر"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:159

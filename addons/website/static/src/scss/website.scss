@@ -56,14 +56,18 @@ $-font-numbers: (
     // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
     // Note: this only works because navbar-light is defined before navbar-dark,
     // we may want to use a safest way when possible.
-    background-color: color('menu') !important;
-    @if (color-yiq(color('menu')) != $yiq-text-dark) {
-        @extend .navbar-dark;
+    @if color('menu') {
+        background-color: color('menu') !important;
+        @if (color-yiq(color('menu')) != $yiq-text-dark) {
+            @extend .navbar-dark;
+        }
     }
 }
 
 .o_footer {
-    @include o-bg-color(color('footer'));
+    @if color('footer') {
+        @include o-bg-color(color('footer'));
+    }
 
     > #footer {
         // FIXME needed to prevent the dropzone at the bottom of the #wrap element
@@ -262,6 +266,10 @@ table.table_desc tr td {
     }
 }
 
+// Jumbotron
+.jumbotron {
+    border-radius: 0;
+}
 
 //
 // Snippets

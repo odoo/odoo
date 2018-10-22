@@ -20,7 +20,8 @@ class Company(models.Model):
     @api.multi
     def _get_public_user(self):
         self.ensure_one()
-        public_users = self.env.ref('base.group_public').with_context(active_test=False).users
+        # We need sudo to be able to see public users from others companies too
+        public_users = self.env.ref('base.group_public').sudo().with_context(active_test=False).users
         public_users_for_website = public_users.filtered(lambda user: user.company_id == self)
 
         if public_users_for_website:
@@ -28,7 +29,7 @@ class Company(models.Model):
         else:
             return self.env.ref('base.public_user').sudo().copy({
                 'name': 'Public user for %s' % self.name,
-                'login': 'public_user@company_%s.com' % self.id,
+                'login': 'public-user@company-%s.com' % self.id,
                 'company_id': self.id,
                 'company_ids': [(6, 0, [self.id])],
             })

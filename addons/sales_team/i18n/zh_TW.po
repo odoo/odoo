@@ -6,14 +6,13 @@
 # Martin Trigaux, 2018
 # amos lin <seeing@edirect168.com>, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
-# sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +51,11 @@ msgid "Activity Types"
 msgstr "活動類型"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
+msgstr "美國"
+
+#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Archived"
 msgstr "歸檔"
@@ -59,7 +63,7 @@ msgstr "歸檔"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件計數"
+msgstr "附件數量"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -146,12 +150,17 @@ msgstr "日"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new Sales Team"
-msgstr ""
+msgstr "定義一個新的銷售團隊"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "歐洲"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
@@ -224,27 +233,26 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
-msgstr ""
+msgstr "如果設定了，這種銷售將用於銷售和合作夥伴的相關矩陣"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
-msgstr ""
+msgstr "如果活動字段設定為false，它將允許您隱藏銷售團隊而不刪除它。"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Invoices"
-msgstr "發票"
+msgstr "應收憑單"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -284,12 +292,12 @@ msgstr "上年"
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
 msgid "Line"
-msgstr "明細行"
+msgstr "明細"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "主要附件"
+msgstr "附件"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -299,7 +307,7 @@ msgstr "經理"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
 msgid "Message Delivery error"
-msgstr "郵件傳遞錯誤"
+msgstr "消息遞送錯誤"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
@@ -330,7 +338,7 @@ msgstr "行動數量"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of error"
-msgstr "錯誤數量"
+msgstr "錯誤數"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
@@ -340,7 +348,7 @@ msgstr "需要行動消息的數量"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "發送錯誤的郵件數"
+msgstr "遞送錯誤的消息數量"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
@@ -350,7 +358,7 @@ msgstr "未讀消息的數量"
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Pipeline"
-msgstr "管道"
+msgstr "商機"
 
 #. module: sales_team
 #: selection:crm.team,team_type:0
@@ -363,9 +371,7 @@ msgid "Reply-To"
 msgstr "回覆至"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-#: model:crm.team,name:sales_team.team_sales_department
-#: selection:crm.team,team_type:0
+#: selection:crm.team,dashboard_graph_model:0 selection:crm.team,team_type:0
 msgid "Sales"
 msgstr "銷售"
 
@@ -377,7 +383,6 @@ msgstr "銷售團隊"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
 #: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
@@ -388,7 +393,7 @@ msgstr "銷售團隊"
 msgid ""
 "Sales Team the user is member of. Used to compute the members of a Sales "
 "Team through the inverse one2many"
-msgstr ""
+msgstr "使用者所屬的銷售團隊。用於通過反向one2many計算銷售團隊的成員"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
@@ -439,12 +444,12 @@ msgstr "團隊成員"
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
 msgid "Team Pipelines"
-msgstr ""
+msgstr "團隊商機"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
 msgid "Team Type"
-msgstr ""
+msgstr "團隊類型"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
@@ -456,7 +461,7 @@ msgstr "銷售團隊的顏色"
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this Sales Team"
-msgstr ""
+msgstr "有關本銷售團隊的案例的信件，其被Odoo放在「回覆至」一欄的電子信件地址"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
@@ -489,7 +494,7 @@ msgstr "類型"
 #: code:addons/sales_team/models/crm_team.py:178
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "銷售團隊的不確定圖模型：%s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -508,21 +513,23 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each channel will work with a separate pipeline."
 msgstr ""
+"利用銷售團隊組織銷售部門。\n"
+" 每個渠道將與一個單獨漏斗管理進行工作。"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User's Sales Team"
-msgstr ""
+msgstr "使用者的銷售團隊"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr "使用者: 所有文檔"
+msgstr "使用者: 所有文件"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr "使用者: 僅自己的文檔"
+msgstr "使用者: 僅自己的文件"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users

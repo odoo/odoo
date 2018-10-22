@@ -8,17 +8,17 @@
 # Morovat Guivi <tarjomac@gmail.com>, 2018
 # Hamid Darabi, 2018
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# mohammad azarbara <mohammadazarbara98@gmail.com>, 2018
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2018
 # Maziar Niaki <maziarmn@gmail.com>, 2018
 # Hamed Mohammadi <hamed@dehongi.com>, 2018
 # Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018
 # Arash Sardari <arashss77@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -85,6 +85,12 @@ msgid ""
 msgstr ""
 "یک دیکشنری پایتون که برای فراهم کردن مقادیر پیشفرض هنگام ایجاد رکوردهای جدید"
 " برای این نام مستعار مورد  ارزیابی قرار می‌گیرد."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer3
+#: model:maintenance.equipment,name:maintenance.equipment_computer5
+msgid "Acer Laptop"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
@@ -276,6 +282,11 @@ msgstr "نظرها"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__company_id
 msgid "Company"
 msgstr "شرکت"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_computer
+msgid "Computers"
+msgstr "رایانه‌ها"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
@@ -532,6 +543,17 @@ msgstr "فعالیتهای آینده"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
 msgstr "گروه‌بندی بر اساس..."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_printer1
+msgid "HP Inkjet printer"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer11
+#: model:maintenance.equipment,name:maintenance.equipment_computer9
+msgid "HP Laptop"
+msgstr ""
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -795,9 +817,19 @@ msgid "Messages"
 msgstr "پیام‌ها"
 
 #. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_metrology
+msgid "Metrology"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
 msgstr "مدل"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
+msgid "Monitors"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -969,6 +1001,11 @@ msgid ""
 msgstr ""
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_phone
+msgid "Phones"
+msgstr ""
+
+#. module: maintenance
 #: selection:maintenance.equipment,activity_state:0
 #: selection:maintenance.request,activity_state:0
 msgid "Planned"
@@ -997,6 +1034,11 @@ msgstr ""
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Preventive Maintenance Frequency"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_printer
+msgid "Printers"
 msgstr ""
 
 #. module: maintenance
@@ -1096,6 +1138,13 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_monitor1
+#: model:maintenance.equipment,name:maintenance.equipment_monitor4
+#: model:maintenance.equipment,name:maintenance.equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr ""
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
 msgstr "برنامه ریزی شد"
@@ -1150,6 +1199,11 @@ msgid "Show all records which has next action date is before today"
 msgstr "تمام رکوردهایی که تاریخ اعمال بعدی قبل از امروز است را نشان بده"
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_software
+msgid "Software"
+msgstr "نرم افزار"
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__stage_id
 msgid "Stage"
 msgstr "مرحله"
@@ -1179,6 +1233,11 @@ msgstr ""
 #: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
 msgstr "وضعیت تغییر کرد"
+
+#. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_subcontractor
+msgid "Subcontractor"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1338,20 +1397,6 @@ msgstr "خیلی کم"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
 msgid "Warranty Expiration Date"
 msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__website_message_ids
-msgid "Website Messages"
-msgstr "پیام‌های وب‌سایت"
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__website_message_ids
-msgid "Website communication history"
-msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: maintenance
 #: code:addons/maintenance/models/maintenance.py:77

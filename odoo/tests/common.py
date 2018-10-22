@@ -6,8 +6,8 @@ helpers and classes to write tests.
 """
 import base64
 import collections
-import inspect
 import importlib
+import inspect
 import itertools
 import json
 import logging
@@ -34,6 +34,7 @@ from lxml import etree, html
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain
 from odoo.tools import pycompat
+from odoo.tools import single_email_re
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
@@ -115,6 +116,50 @@ def post_install(flag):
         add/remove it, although ``tagged`` only works on test classes
     """
     return tagged('post_install' if flag else '-post_install')
+
+
+def new_test_user(env, login='', groups='base.group_user', context=None, **kwargs):
+    """ Helper function to create a new test user. It allows to quickly create
+    users given its login and groups (being a comma separated list of xml ids).
+    Kwargs are directly propagated to the create to further customize the
+    created user.
+
+    User creation uses a potentially customized environment using the context
+    parameter allowing to specify a custom context. It can be used to force a
+    specific behavior and/or simplify record creation. An example is to use
+    mail-related context keys in mail tests to speedup record creation.
+
+    Some specific fields are automatically filled to avoid issues
+
+     * groups_id: it is filled using groups function parameter;
+     * name: "login (groups)" by default as it is required;
+     * email: it is either the login (if it is a valid email) or a generated
+       string 'x.x@example.com' (x being the first login letter). This is due
+       to email being required for most odoo operations;
+    """
+    if not login:
+        raise ValueError('New users require at least a login')
+    if not groups:
+        raise ValueError('New users require at least user groups')
+    if context is None:
+        context = {}
+
+    groups_id = [(6, 0, [env.ref(g).id for g in groups.split(',')])]
+    create_values = dict(kwargs, login=login, groups_id=groups_id)
+    if not create_values.get('name'):
+        create_values['name'] = '%s (%s)' % (login, groups)
+    if not create_values.get('email'):
+        if single_email_re.match(login):
+            create_values['email'] = login
+        else:
+            create_values['email'] = '%s.%s@example.com' % (login[0], login[0])
+
+    return env['res.users'].with_context(**context).create(create_values)
+
+# ------------------------------------------------------------
+# Main classes
+# ------------------------------------------------------------
+
 
 class TreeCase(unittest.TestCase):
     def __init__(self, methodName='runTest'):
@@ -314,6 +359,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         # turns out this thing may not be quite as useful as we thought...
         def assertItemsEqual(self, a, b, msg=None):
             self.assertCountEqual(a, b, msg=None)
+
 
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,

@@ -5,7 +5,7 @@
 diff --git a/openacademy/models.py b/openacademy/models.py
 --- a/openacademy/models.py
 +++ b/openacademy/models.py
-@@ -62,6 +62,9 @@ class Session(models.Model):
+@@ -64,6 +64,9 @@ class Session(models.Model):
      hours = fields.Float(string="Duration in hours",
                           compute='_get_hours', inverse='_set_hours')
  
@@ -15,7 +15,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
          for r in self:
-@@ -120,6 +123,11 @@ class Session(models.Model):
+@@ -122,6 +125,11 @@ class Session(models.Model):
          for r in self:
              r.duration = r.hours / 24
  

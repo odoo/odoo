@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
 # guohuadeng <guohuadeng@hotmail.com>, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
 # 湘子 南 <1360857908@qq.com>, 2018
-# keecome <7017511@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 msgid ""
 msgstr ""
@@ -49,7 +49,7 @@ msgstr "${object.company_id.name} 订单 (编号 ${object.name or 'n/a' })"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr "三匹配"
+msgstr "三方匹配"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
@@ -671,7 +671,7 @@ msgstr "草稿询价单"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
 msgid "Drop Ship Address"
-msgstr "直运地址"
+msgstr "代发货地址"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -694,7 +694,7 @@ msgstr "更多明细 %s"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__fiscal_position_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Fiscal Position"
-msgstr "财政状况"
+msgstr "税科目调整"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
@@ -771,7 +771,7 @@ msgstr "如果勾选此项， 某些信息将会产生传递错误。"
 msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
-msgstr "如果启用，激活三供应商账单配套：项目必须以支付发票收到。"
+msgstr "如果启用，激活三路供应商账单匹配：项目必须收到以便支付发票。"
 
 #. module: purchase
 #: code:addons/purchase/models/product.py:38
@@ -860,7 +860,7 @@ msgstr "逾期活动"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
 msgid "Levels of Approvals"
-msgstr "审核等级"
+msgstr "批准等级"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
@@ -910,7 +910,7 @@ msgstr "管理供应商价格"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "管理你的采购协议（招标，毛毯订单）"
+msgstr "管理你的采购协议（招标，一揽子订单）"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -920,7 +920,7 @@ msgstr "经理"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Managers must approve orders"
-msgstr "经理必须批准订单。"
+msgstr "经理必须批准订单"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1038,7 +1038,7 @@ msgstr "没消息"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "No longer edit orders once confirmed"
-msgstr "不再编辑订单一旦确认"
+msgstr "订单一旦确认不再编辑"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_image
@@ -1333,7 +1333,7 @@ msgstr "采购订单 #"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
 msgid "Purchase Order Approval"
-msgstr "采购订单审核"
+msgstr "采购订单批准"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1349,7 +1349,7 @@ msgstr "采购订单数"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Order Fiscal Position"
-msgstr "采购订单财政状况"
+msgstr "采购订单税科目调整"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -1401,7 +1401,7 @@ msgstr "采购订单"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "Purchase Orders #"
-msgstr "采购单数 #"
+msgstr "采购单号 #"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_graph
@@ -1479,7 +1479,7 @@ msgstr "如果你想直接从供应商发货给客户，就填写一个地址。
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr "供应商收取的数量"
+msgstr "供应商账单数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -1744,14 +1744,14 @@ msgstr "供应商货币"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
 msgid "Tax"
-msgstr "税金"
+msgstr "税率"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Taxes"
-msgstr "税金"
+msgstr "税率"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1930,12 +1930,12 @@ msgstr "不含税"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "未含税金额"
+msgstr "未税金额"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Untaxed Amount:"
-msgstr "不含税金额"
+msgstr "未税金额:"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -1946,9 +1946,9 @@ msgid ""
 "            or received quantities."
 msgstr ""
 "使用此菜单来控制从您的发票收到\n"
-"            供应商。 注册新账单时，设置采购订单\n"
-"             Odoo会根据订单自动填写账单\n"
-"             或收到的数量。"
+"            供应商。 注册新账单时，设置采购订单\n"
+"            Odoo会根据订单自动填写账单\n"
+"            或收到的数量."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user

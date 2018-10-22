@@ -394,6 +394,9 @@ class configmanager(object):
         # the same for the pidfile
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
+        # the same for the test_tags
+        if self.options['test_tags'] == 'None':
+            self.options['test_tags'] = None
         # and the server_wide_modules
         if self.options['server_wide_modules'] in ('', 'None', 'False'):
             self.options['server_wide_modules'] = 'base,web'
@@ -467,6 +470,8 @@ class configmanager(object):
             self.options['addons_path'] = ",".join(
                     os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
                       for x in self.options['addons_path'].split(','))
+
+        self.options['data_dir'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['data_dir'].strip())))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options['demo'] = (dict(self.options['init'])

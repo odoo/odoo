@@ -63,23 +63,47 @@ label.css_attribute_color.css_not_available {
     background-size: cover;
 }
 
+.variant_attribute {
+    padding-bottom: 0.5rem;
+
+    .attribute_name {
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    .radio_input {
+        margin-right: 0.7rem;
+        vertical-align: middle;
+    }
+
+    .radio_input_value {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1;
+    }
+
+    .variant_custom_value {
+        margin-bottom: 0.7rem;
+    }
+
+    .custom_value_radio {
+        margin: 0.3rem 0rem 0.3rem 1.6rem;
+    }
+
+    .variant_custom_value_label {
+        margin: 0.3rem 0rem;
+    }
+}
+
 .o_product_configurator {
     .product_detail_img {
         max-height: 240px;
     }
 
-    .variant_custom_value {
-        margin-bottom: 10px;
-    }
-
-    .variant_custom_value_label {
-        margin-top: 10px;
-    }
-}
-
-.configurator_container {
-    ul ul {
-        margin-left: 1.5rem;
+    .variant_attribute {
+        .custom_value_radio {
+            margin: 0.3rem 0rem 0.3rem 2.1rem;
+        }
     }
 }
 
@@ -133,7 +157,7 @@ label.css_attribute_color.css_not_available {
     }
 
     .td-qty {
-        width: 130px;
+        width: 200px;
         a.input-group-addon {
             background-color: transparent;
             border: 0px;

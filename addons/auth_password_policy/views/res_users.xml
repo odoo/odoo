@@ -5,7 +5,7 @@
         <field name="model">change.password.user</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='new_passwd']" position="attributes">
-                <attribute name="options">{'password_meter': True}</attribute>
+                <attribute name="widget">password_meter</attribute>
             </xpath>
         </field>
     </record>

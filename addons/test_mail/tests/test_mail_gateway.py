@@ -9,6 +9,7 @@ from odoo.addons.test_mail.data.test_mail_data import \
     MAIL_TEMPLATE, MAIL_TEMPLATE_PLAINTEXT, MAIL_MULTIPART_MIXED, MAIL_MULTIPART_MIXED_TWO, \
     MAIL_MULTIPART_IMAGE, MAIL_SINGLE_BINARY, MAIL_EML_ATTACHMENT, MAIL_XHTML
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tools import mute_logger
 
 
@@ -57,7 +58,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         super(TestMailgateway, cls).setUpClass()
         mail_test_simple_model = cls.env['ir.model']._get('mail.test.simple')
 
-        cls.partner_1 = cls.env['res.partner'].with_context(cls._quick_create_ctx).create({
+        cls.partner_1 = cls.env['res.partner'].with_context(BaseFunctionalTest._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
         })
@@ -431,7 +432,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(self.test_record.message_ids[0].author_id, from_1)
         self.test_record.message_unsubscribe([from_1.id])
 
-        from_2 = self.env['res.users'].with_context(self._quick_create_user_ctx).create({'name': 'Brice Denisse', 'login': 'B', 'email': 'from.test@example.com'})
+        from_2 = mail_new_test_user(self.env, login='B', groups='base.group_user', name='Brice Denisse', email='from.test@example.com')
 
         self.format_and_process(MAIL_TEMPLATE, msg_id='<2>', email_from='Brice Denisse <from.test@example.com>')
         self.assertEqual(self.test_record.message_ids[0].author_id, from_2.partner_id)

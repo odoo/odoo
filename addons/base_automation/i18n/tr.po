@@ -10,10 +10,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -21,20 +21,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Bir kod sunucusu eylemi, özel bir denetleyiciyi kullanarak web sitesinden "
-"yürütülebilir. Adres <base> / web sitesi / action / <web sitesi_ yolu> "
-"şeklindedir. Kullanıcıların bu işlemi gerçekleştirmesine izin vermek için bu"
-" alanı True olarak ayarlayın. False olarak ayarlanırsa, eylem web sitesi "
-"aracılığıyla çalıştırılamaz."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -120,16 +106,47 @@ msgid "Automation"
 msgstr "Otomasyon"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Web Sitesinde Görünür"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Temel İşlem Kuralları: kontrol et ve çalıştır"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr "Temel Otomasyon: Yineleme kuralı testi"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr "Temel Otomasyon: Test kuralı oluştur"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr "Temel Otomasyon: Yeniden hesaplama için test kuralı"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr "Temel Otomasyon: İkincil model test kuralı"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr "Temel Otomasyon: Yazma testi kuralı"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr "Temel Otomasyon: Yazma kontrol test kuralı"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -280,11 +297,6 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "Bir XML dosyasında tanımlıysa, eylemin kimliği"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -555,11 +567,6 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "Web sitesinden sunucu eylemine erişmek için tam URL."
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger Condition"
 msgstr "Tetikleyici Şart"
@@ -638,16 +645,6 @@ msgstr "Değer Eşleme"
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Web Sitesi Yolu"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Web Sitesi URL'si"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

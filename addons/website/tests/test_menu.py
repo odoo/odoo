@@ -59,3 +59,11 @@ class TestMenu(common.TransactionCase):
         total_menus = Menu.search_count([])
         Website.create({'name': 'new website'})
         self.assertEqual(total_menus + 4, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Contactus/Sub Default Menu)")
+
+    def test_default_menu_unlink(self):
+        Menu = self.env['website.menu']
+        total_menu_items = Menu.search_count([])
+
+        default_menu = self.env.ref('website.main_menu')
+        default_menu.child_id[0].unlink()
+        self.assertEqual(total_menu_items - 3, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")

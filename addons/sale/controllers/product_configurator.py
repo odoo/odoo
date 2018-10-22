@@ -125,9 +125,26 @@ class ProductConfiguratorController(http.Controller):
                     lambda filter_line: filter_line.product_tmpl_id == product
                 ) for value_id in filter_line.value_ids.ids]
 
+        # Query all archived products for this template
+        archived_combinations = request.env['product.product'].search(
+            [('product_tmpl_id', '=', product.id), ('active', '=', False)])
+
+        if archived_combinations:
+            # Old archived variants could have a different set of attributes and are not relevant here
+            # -> filter them out
+            attribute_ids = product_attribute_values.mapped('attribute_id')
+            archived_combinations = archived_combinations.filtered(
+                lambda product: all(
+                    attribute_id in product.mapped('product_template_attribute_value_ids.attribute_id')
+                    for attribute_id in attribute_ids
+                )
+            )
+
         return {
             'exclusions': mapped_exclusions,
-            'parent_exclusions': parent_exclusions
+            'parent_exclusions': parent_exclusions,
+            'archived_combinations': [archived_combination.product_template_attribute_value_ids.ids
+                for archived_combination in archived_combinations]
         }
 
     def _get_product_context(self, pricelist=None, **kw):

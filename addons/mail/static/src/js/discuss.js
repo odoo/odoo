@@ -448,6 +448,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             displayEmailIcons: false,
             displayReplyIcons: true,
             displayBottomThreadFreeSpace: true,
+            displayModerationCommands: true,
         };
     },
     /**

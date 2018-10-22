@@ -9,7 +9,11 @@
 
     <t t-extend="ListView.buttons" t-name="BillsListView.buttons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
-            <t t-call="ImportView.import_button"/>
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
             <t t-call="BillsListView.upload_button"/>
         </t>
     </t>

@@ -182,6 +182,8 @@ class StockMoveLine(models.Model):
 
         for ml in mls:
             if ml.state == 'done':
+                if 'qty_done' in vals:
+                    ml.move_id.product_uom_qty = ml.move_id.quantity_done
                 if ml.product_id.type == 'product':
                     Quant = self.env['stock.quant']
                     quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -507,6 +509,8 @@ class StockMoveLine(models.Model):
                         candidate.product_uom_qty = 0.0
                     else:
                         candidate.unlink()
+                    if float_is_zero(quantity, precision_rounding=rounding):
+                        break
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
@@ -514,8 +518,6 @@ class StockMoveLine(models.Model):
                         precision_rounding=self.product_uom_id.rounding,
                         rounding_method='UP')
                     candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
-                    quantity -= quantity_split
                     move_to_recompute_state |= candidate.move_id
-                if quantity == 0.0:
                     break
             move_to_recompute_state._recompute_state()

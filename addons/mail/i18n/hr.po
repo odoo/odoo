@@ -238,7 +238,7 @@ msgstr ""
 "marketing, proizvod XYZ, zabava nakon posla itd.).</p>"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
 "                                <strong>Email mass mailing</strong> on\n"
@@ -255,7 +255,7 @@ msgstr ""
 "<span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Pratitelji dokumenta i</span>"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
 "                                    If you want to send it for all the records matching your search criterion, check this box :\n"
@@ -266,14 +266,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this mail again to the recipients you did not select."
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
@@ -282,7 +282,7 @@ msgstr ""
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
@@ -291,12 +291,12 @@ msgstr ""
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "<span class=\"oe_inline ml4\">days</span>"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>\n"
 "                                    All records matching your current search filter will be mailed,\n"
@@ -307,26 +307,26 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_activity_done
+#: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong> Feedback</strong>"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_notification_email
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<strong>Recommended Activities</strong>"
 msgstr ""
 
@@ -342,7 +342,7 @@ msgstr ""
 " zapis za ovaj alias."
 
 #. module: mail
-#: model:ir.actions.act_window,help:mail.mail_shortcode_action
+#: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
@@ -403,7 +403,7 @@ msgstr "Standardno aktivirano kod pretplate"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Active"
 msgstr "Aktivan"
 
@@ -418,10 +418,10 @@ msgstr "Aktivna domena"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_ids
-#: model:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-#: model:ir.ui.view,arch_db:mail.mail_activity_type_view_search
-#: model:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
-#: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 #: model:mail.message.subtype,name:mail.mt_activities
 #, python-format
 msgid "Activities"
@@ -432,9 +432,9 @@ msgstr "Aktivnosti"
 #: code:addons/mail/static/src/xml/chatter.xml:60
 #: model:ir.model,name:mail.model_mail_activity
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_type_id
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_calendar
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #, python-format
 msgid "Activity"
 msgstr "Aktivnost"
@@ -453,14 +453,14 @@ msgstr "Status aktivnosti"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Activity Type"
 msgstr "Vrsta aktivnosti"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_type
-#: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Activity Types"
 msgstr "Tipovi aktivnosti"
 
@@ -491,7 +491,7 @@ msgstr "Dodaj kanal"
 #: code:addons/mail/static/src/xml/followers.xml:61
 #: selection:ir.actions.server,state:0
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__partner_ids
-#: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
 msgstr "Dodaj sljedbenike"
@@ -537,13 +537,13 @@ msgid "Add a private channel"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add channels to notify..."
 msgstr "Dodaj kanale kojima ide obavijest..."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
-#: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
 msgstr "Dodaj kontakte kojima ide obavijest..."
 
@@ -560,12 +560,12 @@ msgid "Additional Contacts"
 msgstr "Dodatni kontakti"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Advanced"
 msgstr "Napredno"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Advanced Settings"
 msgstr "Napredne postavke"
 
@@ -573,8 +573,8 @@ msgstr "Napredne postavke"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_id
 #: model:ir.model.fields,field_description:mail.field_res_users__alias_id
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_form
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Alias"
 msgstr "Alias"
 
@@ -627,7 +627,7 @@ msgid "All"
 msgstr "Sve"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_moderation_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Allowed Emails"
 msgstr ""
 
@@ -681,7 +681,7 @@ msgid "Apply"
 msgstr "Primjeni"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_type_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_search
 msgid "Archived"
 msgstr "Arhivirano"
 
@@ -711,7 +711,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Attach a file"
 msgstr "Priloži datoteku"
 
@@ -721,7 +721,7 @@ msgstr "Priloži datoteku"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__attachment_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template__attachment_ids
-#: model:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Attachments"
 msgstr "Privitci"
 
@@ -750,12 +750,12 @@ msgstr "Ovjereni partneri"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__author_id
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Author"
 msgstr "Autor"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Author Signature (mass mail only)"
 msgstr "Potpis autora (samo za masovnu poštu)"
 
@@ -795,7 +795,7 @@ msgid "Auto Subscription"
 msgstr "auto pretplata"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
 msgstr "Auto pretplata"
 
@@ -810,7 +810,7 @@ msgid "Automatic notification"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Available for mass mailing"
 msgstr "Dostupan za masovno slanje e-pošte"
 
@@ -822,7 +822,7 @@ msgid "Ban"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Ban List"
 msgstr ""
 
@@ -834,7 +834,7 @@ msgid "Ban this email address"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_moderation_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Banned Emails"
 msgstr ""
 
@@ -848,8 +848,8 @@ msgstr "Budite oprezni s kanalima koji prate interne obavijesti"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__body_html
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
-#: model:ir.ui.view,arch_db:mail.view_mail_form
-#: model:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_message_form
 msgid "Body"
 msgstr "Tijelo"
 
@@ -873,22 +873,22 @@ msgstr "Poziv"
 #. openerp-web
 #: code:addons/mail/static/src/js/followers.js:341
 #: code:addons/mail/static/src/xml/activity.xml:65
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
-#: model:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
-#: model:ir.ui.view,arch_db:mail.mail_resend_message_view_form
-#: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
-#: model:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Cancel"
 msgstr "Odustani"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Cancel Email"
 msgstr "Otkaži e-mail"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Cancel notification in failure"
 msgstr ""
 
@@ -943,7 +943,7 @@ msgid "Cc"
 msgstr "Cc (kopija)"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Change"
 msgstr "Promjeni"
 
@@ -955,7 +955,7 @@ msgstr "Promijenjeno polje"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__channel_id
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__channel_id
-#: model:ir.ui.view,arch_db:mail.mail_channel_partner_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_form
 #: selection:mail.channel,channel_type:0
 msgid "Channel"
 msgstr "Kanal"
@@ -995,7 +995,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
-#: model:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
 msgid "Channels"
 msgstr "Kanali prodaje"
@@ -1034,7 +1034,7 @@ msgid "Child Messages"
 msgstr "Podređene poruke"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Choose an example"
 msgstr "Izaberi primjer"
 
@@ -1044,12 +1044,12 @@ msgid "Closed"
 msgstr "Zatvoren"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
 msgstr "Adrese primatelja u CC-u odvojene zarezom "
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
 msgstr "Ids primatelja odvojeni zarezima"
 
@@ -1063,7 +1063,7 @@ msgstr ""
 "tekstovi)"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
 msgstr "Adrese primatelja odvojene zarezom"
 
@@ -1074,7 +1074,7 @@ msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr "Adrese primatelja odvojene zarezom"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 #: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
 msgid "Comment"
@@ -1087,7 +1087,7 @@ msgstr "Tvrtke"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Compose Email"
 msgstr "Sastavi e-poštu"
 
@@ -1097,7 +1097,7 @@ msgid "Composition mode"
 msgstr "Mod sastavljanja"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your activity types"
 msgstr ""
 
@@ -1121,8 +1121,8 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
-#: model:ir.ui.view,arch_db:mail.view_message_search
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Content"
 msgstr "Sadržaj"
 
@@ -1186,7 +1186,7 @@ msgid "Create a new Record"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Created By"
 msgstr "Kreirao"
 
@@ -1239,7 +1239,7 @@ msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Creation Date"
 msgstr "Datum kreiranja"
 
@@ -1259,17 +1259,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__date
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
 #: model:ir.model.fields,field_description:mail.field_mail_message__date
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Date"
 msgstr "Datum"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Deadline"
 msgstr "Krajnji rok"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_user_assigned
+#: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
 msgstr "Poštovani"
 
@@ -1310,7 +1310,7 @@ msgstr ""
 "- e-mail (pomoću email_from ili e-mail polje)"
 
 #. module: mail
-#: model:ir.actions.act_window,help:mail.mail_shortcode_action
+#: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Define a new chat shortcode"
 msgstr ""
 
@@ -1338,7 +1338,7 @@ msgstr "Isporuka nije uspjela"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__description
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__description
-#: model:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Description"
 msgstr "Opis"
 
@@ -1362,14 +1362,14 @@ msgstr "Izravne poruke"
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:81
 #: code:addons/mail/static/src/xml/discuss.xml:150
-#: model:ir.ui.view,arch_db:mail.email_template_preview_form
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Discard"
 msgstr "Odbaci"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Discard delivery failures"
 msgstr ""
 
@@ -1394,7 +1394,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
-#: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Discuss"
 msgstr "Rasprava"
 
@@ -1442,7 +1442,7 @@ msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
@@ -1489,7 +1489,7 @@ msgstr "Riješeno"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:77
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
 msgstr ""
@@ -1515,7 +1515,7 @@ msgid "Due in %d days"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Dynamic Placeholder Generator"
 msgstr "Dinamički Placeholder Generator"
 
@@ -1527,7 +1527,7 @@ msgid "Edit"
 msgstr "Uredi"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
 msgstr ""
 
@@ -1549,7 +1549,7 @@ msgstr "Uredi pretplatu "
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__partner_email
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__email
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__email
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 #: model:mail.activity.type,name:mail.mail_activity_data_email
 #: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
@@ -1557,7 +1557,7 @@ msgid "Email"
 msgstr "E-pošta"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Email Alias"
 msgstr "e-mail alias"
 
@@ -1567,17 +1567,17 @@ msgid "Email Aliases"
 msgstr "Alias e-maila"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
 msgstr "Postavke email-a"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Email Preview"
 msgstr "Pregled e-maila"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email Search"
 msgstr "Pretraga e-pošte"
 
@@ -1632,7 +1632,7 @@ msgstr ""
 "nijedan partner i zamjenjuje autor_id polje u chatu."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
 msgstr "E-mail adresa za preusmjerenje odgovora"
 
@@ -1642,8 +1642,8 @@ msgid "Email composition wizard"
 msgstr "Čarobnjak za sastavljanje e-pošte"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_form
-#: model:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Email message"
 msgstr "E-mail poruka"
 
@@ -1655,7 +1655,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
 #: model:ir.ui.menu,name:mail.menu_mail_mail
-#: model:ir.ui.view,arch_db:mail.view_mail_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
 msgstr "E-mailovi"
 
@@ -1715,7 +1715,7 @@ msgid "Execute several actions"
 msgstr "Izvršava nekoliko akcija"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
 msgstr "Prošireni filtri..."
 
@@ -1725,7 +1725,7 @@ msgid "Fail Mail"
 msgstr "Neuspješne poruke"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Failed"
 msgstr "Neuspjelo"
 
@@ -1737,7 +1737,7 @@ msgstr "Neuspješno generianje predloška %r korištenjem vrijednosti %r"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
-#: model:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
 msgstr "Razlog neuspjeha"
 
@@ -1842,7 +1842,7 @@ msgstr "Slijedi"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
-#: model:ir.ui.view,arch_db:mail.view_followers_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
 msgstr "Pratitelji"
 
@@ -1863,7 +1863,7 @@ msgid "Followers (Partners)"
 msgstr "Pratitelji (Partneri)"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_subscription_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
 msgid "Followers Form"
 msgstr "Obrazac pratitelja"
 
@@ -1909,13 +1909,13 @@ msgid "Future"
 msgstr "Budućnost"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Future Activities"
 msgstr "Buduće aktivnosti"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.view_message_form
 msgid "Gateway"
 msgstr "Prolaz"
 
@@ -1926,19 +1926,19 @@ msgid "Go to the configuration panel"
 msgstr "Idi na ploču za konfiguriranje"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_search
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Group By"
 msgstr "Grupiraj po"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_email_template_search
+#: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Group by..."
 msgstr "Grupiraj po..."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_tree
 msgid "Groups"
 msgstr "Grupe"
 
@@ -1968,12 +1968,12 @@ msgid "Has Cancel"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_message_search
+#: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_message_search
+#: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has attachments"
 msgstr "Ima prilog"
 
@@ -1989,13 +1989,13 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
-#: model:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
 msgstr "Zaglavlja"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_bounce_catchall
-#: model:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
+#: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 msgid "Hello"
 msgstr ""
 
@@ -2158,7 +2158,7 @@ msgstr ""
 "unesite naziv domene ovdje."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid ""
 "If you want to re-send them, click Cancel now, then click on the "
 "notification and review them one by one by clicking on the red envelope next"
@@ -2166,7 +2166,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all failures"
 msgstr ""
 
@@ -2201,7 +2201,7 @@ msgstr "Inicijalna nit poruke"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_integrations_menu
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Integrations"
 msgstr ""
 
@@ -2296,12 +2296,12 @@ msgid "Invited people only"
 msgstr "Samo pozvani"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_moderation_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Is Allowed"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_moderation_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Is Banned"
 msgstr ""
 
@@ -2344,7 +2344,7 @@ msgid "Is pinned on the interface"
 msgstr "Je prikvačeno na sučelje"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
 msgstr "Pridruži se"
 
@@ -2447,8 +2447,8 @@ msgid "Late"
 msgstr "Kasni"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Late Activities"
 msgstr ""
 
@@ -2460,7 +2460,7 @@ msgid "Layout"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
 msgstr "Odsustvo"
 
@@ -2520,7 +2520,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chatter_composer.js:30
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
 msgstr "Zapisnik"
@@ -2533,12 +2533,12 @@ msgid "Log a note. Followers will not be notified."
 msgstr "Priljavi bilježku. Sljedbenici neće biti obaviješteni."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Log a note..."
 msgstr "Zabilježi napomenu..."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Log an Activity"
 msgstr "Zabilježi aktivnost"
 
@@ -2581,7 +2581,7 @@ msgid "Mail Body"
 msgstr "Sadržaj maila"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Mail Channel Form"
 msgstr "Obrazac mail kanala"
 
@@ -2593,7 +2593,7 @@ msgstr "Isporuka pošte nije uspjela"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
-#: model:ir.ui.view,arch_db:mail.model_search_view
+#: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "Rasprava e-pošte"
 
@@ -2628,7 +2628,7 @@ msgid "Mailbox unavailable - %s"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "Mailing Opt-Out"
 msgstr "Odjavljen s mailing liste"
 
@@ -2654,7 +2654,7 @@ msgid "Mark all read"
 msgstr "Označi sve pročitane"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Mark as Done"
 msgstr "Označi kao izvršeno"
 
@@ -2704,7 +2704,7 @@ msgid "Meeting"
 msgstr "Sastanak"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Members"
 msgstr "Članovi"
 
@@ -2729,7 +2729,7 @@ msgstr "Spojeno sa sljedećim partnerima:"
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__message
-#: model:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.view_message_form
 msgid "Message"
 msgstr "Poruka"
 
@@ -2846,12 +2846,12 @@ msgstr "Id-poruke"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
-#: model:ir.ui.view,arch_db:mail.view_message_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_message_tree
 msgid "Messages"
 msgstr "Poruke"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_message_search
+#: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Messages Search"
 msgstr "Pretraga poruka"
 
@@ -2877,8 +2877,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__res_model
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__model
-#: model:ir.ui.view,arch_db:mail.view_email_template_search
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_search
+#: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Model"
 msgstr "Model"
 
@@ -2903,7 +2903,7 @@ msgstr "Modeli"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/services/chat_manager.js:1241
-#: model:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 #, python-format
 msgid "Moderate Messages"
 msgstr ""
@@ -2937,12 +2937,12 @@ msgstr ""
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_moderation_action
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Moderation"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_moderation_view_tree
+#: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
 msgid "Moderation Lists"
 msgstr ""
 
@@ -2981,8 +2981,8 @@ msgid "Module Uninstallation"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "My Activities"
 msgstr "Moje aktivnosti"
 
@@ -2992,7 +2992,7 @@ msgstr "Moje aktivnosti"
 #: model:ir.model.fields,field_description:mail.field_mail_channel__name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
 #: model:ir.model.fields,field_description:mail.field_mail_template__name
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Name"
 msgstr "Naziv"
 
@@ -3020,7 +3020,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_compose_message__needaction
 #: model:ir.model.fields,help:mail.field_mail_mail__needaction
 #: model:ir.model.fields,help:mail.field_mail_message__needaction
-#: model:ir.ui.view,arch_db:mail.view_message_search
+#: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
 msgstr "Potrebna akcija"
 
@@ -3119,7 +3119,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_tree
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Next Activities"
 msgstr "Sljedeće aktivnosti"
 
@@ -3220,7 +3220,7 @@ msgid "Note by"
 msgstr "Bilješka od"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Notification"
 msgstr "Obavijest"
 
@@ -3300,9 +3300,9 @@ msgid "Number of unread messages"
 msgstr "Broj nepročitanih poruka"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_notification_borders
-#: model:ir.ui.view,arch_db:mail.mail_notification_light
-#: model:ir.ui.view,arch_db:mail.message_notification_email
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -3410,12 +3410,12 @@ msgid "Open"
 msgstr "Otvori"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Document"
 msgstr "Otvori dokument"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Parent Document"
 msgstr "Otvori nadređeni dokument"
 
@@ -3495,7 +3495,7 @@ msgid "Other"
 msgstr "Ostalo"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
 msgid "Outgoing"
 msgstr "Odlazno"
 
@@ -3525,7 +3525,7 @@ msgid "Overdue"
 msgstr "Dospjelo"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
 msgstr "Prijeđi autorov e-mail"
 
@@ -3613,7 +3613,7 @@ msgid "Partner with additionnal information for mail resend"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
 "Partneri koji nisu tražili da budu uključeni u kampanju masovnog slanja "
@@ -3710,7 +3710,7 @@ msgid "Planned in"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Planned in (days)"
 msgstr ""
 
@@ -3729,7 +3729,7 @@ msgid "Please complete customer's informations and email"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_bounce_catchall
+#: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
 msgstr ""
 
@@ -3765,8 +3765,8 @@ msgstr ""
 "- pratitelji: samo pratitelji srodne dokumentacije\n"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_notification_borders
-#: model:ir.ui.view,arch_db:mail.mail_notification_light
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Powered by"
 msgstr "Podržano od "
 
@@ -3776,7 +3776,7 @@ msgid "Preceding Activities"
 msgstr "Prethodne aktivnosti"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preferred reply address"
 msgstr "Željena adresa odgovora"
 
@@ -3787,12 +3787,12 @@ msgid "Preferred response address (placeholders may be used here)"
 msgstr "Preferirana adresa za odgovor"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preview"
 msgstr "Pregled"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Preview of"
 msgstr "Pregled"
 
@@ -3810,7 +3810,7 @@ msgstr "Ispis"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__public
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Privacy"
 msgstr "Privatnost"
 
@@ -3848,13 +3848,13 @@ msgid "Ready to Send"
 msgstr "Spremno za slanje"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
 msgid "Received"
 msgstr "Primljeno"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__partner_id
-#: model:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Recipient"
 msgstr "Primatelj"
 
@@ -3864,8 +3864,8 @@ msgstr "Primatelj"
 #: model:ir.model.fields,field_description:mail.field_mail_message__partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__partner_ids
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
-#: model:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.view_message_form
 msgid "Recipients"
 msgstr "Primatelji"
 
@@ -3892,7 +3892,7 @@ msgid "References"
 msgstr "Reference"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_bounce_catchall
+#: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Regards,"
 msgstr ""
 
@@ -3950,7 +3950,7 @@ msgid "Related Document Model Name"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Related Message"
 msgstr "Povezana poruka"
 
@@ -3984,7 +3984,7 @@ msgid "Remove message without explanation"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
 "Ukloni dodatnu akciju da se ovaj predložak koristi na povezanim dokumentima"
@@ -3999,7 +3999,7 @@ msgstr "Ukloni sljedbenika"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:203
-#: model:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Reply"
 msgstr "Odgovori"
@@ -4034,7 +4034,7 @@ msgid "Resend mail"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Resend to selected"
 msgstr ""
 
@@ -4058,8 +4058,8 @@ msgid "Responsible User"
 msgstr "Odgovorna osoba"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_form
-#: model:ir.ui.view,arch_db:mail.view_mail_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Retry"
 msgstr "Pokušaj ponovo"
 
@@ -4081,7 +4081,7 @@ msgid "Rotate"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_email_template_search
+#: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "SMTP Server"
 msgstr "SMTP poslužitelj"
 
@@ -4091,12 +4091,12 @@ msgid "Sample Document"
 msgstr "Primjer dokumenta"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as a new template"
 msgstr "Spremi kao novi predložak"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
 msgstr "Spremi kao novi predložak"
 
@@ -4108,7 +4108,7 @@ msgid "Say something"
 msgstr "Reci nešto"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
 msgstr "Planer"
 
@@ -4140,22 +4140,22 @@ msgstr "Planirani datum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
 msgstr "Planirani datum slanja"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Search Alias"
 msgstr "Traži alias"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_search
 msgid "Search Groups"
 msgstr "Traži grupe"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_moderation_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Search Moderation List"
 msgstr ""
 
@@ -4182,7 +4182,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid ""
 "Select the action to do on each mail and correct the email address if "
 "needed. The modified address will be saved on the corresponding contact."
@@ -4197,7 +4197,7 @@ msgstr "Odabrana grupa korisnika"
 #. openerp-web
 #: code:addons/mail/static/src/js/composer.js:384
 #: code:addons/mail/static/src/js/discuss.js:141
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Send"
 msgstr "Pošalji"
@@ -4220,8 +4220,8 @@ msgid "Send Mail (%s)"
 msgstr "Pošalji e-mail (%s)"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_form
-#: model:ir.ui.view,arch_db:mail.view_mail_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Send Now"
 msgstr "Pošalji odmah"
 
@@ -4240,7 +4240,7 @@ msgid "Send explanation to author"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Send guidelines"
 msgstr ""
 
@@ -4286,13 +4286,13 @@ msgid "Sends messages by email"
 msgstr "Šalje poruke e-mailom"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
 #: selection:mail.notification,email_status:0
 msgid "Sent"
 msgstr "Poslano"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_notification_email
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "Sent by"
 msgstr ""
 
@@ -4308,8 +4308,8 @@ msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_shortcode_view_form
-#: model:ir.ui.view,arch_db:mail.mail_shortcode_view_tree
+#: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_tree
 msgid "Shortcodes"
 msgstr "Kratki kodovi"
 
@@ -4319,8 +4319,8 @@ msgid "Shortcut"
 msgstr "Prečac"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records which has next action date is before today"
 msgstr ""
 
@@ -4401,8 +4401,8 @@ msgstr "Stanje"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__state
 #: model:ir.model.fields,field_description:mail.field_mail_moderation__status
-#: model:ir.ui.view,arch_db:mail.view_mail_form
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Status"
 msgstr "Status"
 
@@ -4445,12 +4445,12 @@ msgstr "Predmet"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__subject
 #: model:ir.model.fields,help:mail.field_mail_template__subject
-#: model:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Subject (placeholders may be used here)"
 msgstr "Naslov"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Subject..."
 msgstr "Naslov..."
 
@@ -4471,7 +4471,7 @@ msgstr "Zamjena"
 #: model:ir.model.fields,field_description:mail.field_mail_followers__subtype_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail__subtype_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__subtype_id
-#: model:ir.ui.view,arch_db:mail.view_message_subtype_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_message_subtype_tree
 msgid "Subtype"
 msgstr "Podvrsta"
 
@@ -4506,19 +4506,19 @@ msgstr "Pregled predloška"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
 #: model:ir.ui.menu,name:mail.menu_email_templates
-#: model:ir.ui.view,arch_db:mail.email_template_form
-#: model:ir.ui.view,arch_db:mail.email_template_tree
-#: model:ir.ui.view,arch_db:mail.view_email_template_search
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
 msgstr "Predlošci"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 msgid "Thank you!"
 msgstr "Hvala vam!"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_bounce_catchall
+#: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The"
 msgstr "!"
 
@@ -4528,7 +4528,7 @@ msgid "The email address must be unique per channel !"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_bounce_catchall
+#: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
 msgstr ""
 
@@ -4602,7 +4602,7 @@ msgid "The type of document this template can be used with"
 msgstr "Tip dokumenta s kojim se može koristiti ovaj predložak"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_origin_link
+#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
 msgstr "Ovaj"
 
@@ -4624,7 +4624,7 @@ msgstr ""
 " pozivanja."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Nit"
 
@@ -4672,8 +4672,8 @@ msgid "Today"
 msgstr "Danas"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Today Activities"
 msgstr "Današnje aktivnosti"
 
@@ -4685,7 +4685,7 @@ msgid "Tomorrow"
 msgstr "Sutra"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Topics discussed in this group..."
 msgstr "Teme raspravljane u grupi..."
 
@@ -4702,13 +4702,13 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__track_visibility
-#: model:ir.ui.view,arch_db:mail.view_message_form
+#: model_terms:ir.ui.view,arch_db:mail.view_message_form
 msgid "Tracking"
 msgstr "Praćenje"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
-#: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
 msgstr "Vrijednost praćenja"
 
@@ -4809,7 +4809,7 @@ msgid "Unread Messages Counter"
 msgstr "Brojač nepročitanih poruka"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_message_search
+#: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Unread messages"
 msgstr "Nepročitane poruke"
 
@@ -4884,7 +4884,7 @@ msgid "Use template"
 msgstr "Koristi predložak"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use your own email servers"
 msgstr ""
 
@@ -4894,9 +4894,9 @@ msgid "Used to order subtypes."
 msgstr "Koristi se za poredak podtipova."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_alias_search
-#: model:ir.ui.view,arch_db:mail.view_mail_form
-#: model:ir.ui.view,arch_db:mail.view_mail_tree
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "User"
 msgstr "Korisnik"
 
@@ -4920,7 +4920,7 @@ msgid "Users in this channel: %s %s and you."
 msgstr "Korisnici na ovom kanalu: %s %s i Vi."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "Using your own email server is required to send/receive emails in Community "
 "and Enterprise versions. Online users already benefit from a ready-to-use "
@@ -4929,7 +4929,7 @@ msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:723
-#: model:ir.ui.view,arch_db:mail.message_user_assigned
+#: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
 msgstr "Pogled"
@@ -4992,7 +4992,7 @@ msgid "White List / Black List"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Who can follow the group's activities?"
 msgstr "Tko može pratiti aktivnost grupe?"
 
@@ -5053,7 +5053,7 @@ msgid "You are going to discard 1 message. Do you confirm the action?"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid ""
 "You are going to send the guidelines to all the subscribers. Do you confirm "
 "the action?"
@@ -5102,7 +5102,7 @@ msgstr ""
 "modulima."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_user_assigned
+#: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
 msgstr "Dodijeljeno Vam je"
 
@@ -5114,7 +5114,7 @@ msgid "You have been invited to: "
 msgstr "Pozvani ste da:"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
+#: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
 msgstr ""
 
@@ -5157,7 +5157,7 @@ msgid "You:"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_notification_light
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Your"
 msgstr ""
 
@@ -5214,19 +5214,19 @@ msgid "base.partner.merge.automatic.wizard"
 msgstr "base.partner.merge.automatic.wizard"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "by"
 msgstr "od"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_bounce_catchall
+#: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid ""
 "cannot be processed. This address\n"
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_origin_link
+#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "created"
 msgstr "kreirano"
 
@@ -5237,14 +5237,14 @@ msgid "document"
 msgstr "dokument"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_activity_done
+#: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid ""
 "done\n"
 "        by"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "e.g. Discuss proposal"
 msgstr "npr. Raspraviti o prijedlogu"
 
@@ -5270,7 +5270,7 @@ msgid "for"
 msgstr "za"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_origin_link
+#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "from:"
 msgstr "od:"
 
@@ -5280,7 +5280,7 @@ msgid "general"
 msgstr "općenito"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_origin_link
+#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
 msgstr "je bio"
 
@@ -5332,12 +5332,12 @@ msgstr ""
 "model %s ne prihvaća ažuriranje dokumenta, vrati se na kreiranje dokumenta"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_origin_link
+#: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "modified"
 msgstr "modificirano"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "mycompany.odoo.com"
 msgstr "mycompany.odoo.com"
 
@@ -5351,7 +5351,7 @@ msgstr "sada"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:171
-#: model:ir.ui.view,arch_db:mail.view_mail_form
+#: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
 msgstr "na"
@@ -5391,7 +5391,7 @@ msgid "read more"
 msgstr "pročitaj više"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.email_template_preview_form
+#: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "record:"
 msgstr "zapis:"
 
@@ -5447,7 +5447,7 @@ msgid "skipping"
 msgstr "preskačem"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.mail_bounce_catchall
+#: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "team."
 msgstr ""
 
@@ -5471,6 +5471,6 @@ msgid "unknown target model %s"
 msgstr "nepoznati odredišni model %s"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.message_notification_email
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "using"
 msgstr ""

@@ -47,10 +47,10 @@
 # Firas Asad <firas101@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
 "Last-Translator: Firas Asad <firas101@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -160,6 +160,11 @@ msgstr "شهران"
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
 msgstr "صافي 30 يوم"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% مقدم والباقي نهاية الشهر التالي"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -865,7 +870,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "قالب لمخطط الحساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -3105,7 +3110,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ضبط الإعدادات"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -4373,6 +4378,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_print_journal__date_to
 msgid "End Date"
 msgstr "تاريخ الإنتهاء"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term
+msgid "End of Following Month"
+msgstr "نهاية شهر المتابعة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end_real
@@ -7772,9 +7782,19 @@ msgid "Payment terms: 30 Net Days"
 msgstr "شروط السداد: 30 يوم صافي"
 
 #. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "شروط السداد: 30% مقدم ونهاية الشهر التالي"
+
+#. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
 msgstr ""
+
+#. module: account
+#: model:account.payment.term,note:account.account_payment_term
+msgid "Payment terms: End of Following Month"
+msgstr "شروط السداد: نهاية الشهر التالي"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
@@ -9437,7 +9457,7 @@ msgstr "النوع الفرعي"
 #: code:addons/account/models/account_reconcile_model.py:20
 #: code:addons/account/models/chart_template.py:933
 #, python-format
-msgid "Suggest a write-off."
+msgid "Suggest counterpart values."
 msgstr ""
 
 #. module: account
@@ -11531,7 +11551,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-msgid "Write-off Values"
+msgid "Counterpart Values"
 msgstr ""
 
 #. module: account

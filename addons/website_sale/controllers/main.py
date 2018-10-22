@@ -189,8 +189,11 @@ class WebsiteSale(ProductConfiguratorController):
         '''/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>'''
     ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
-        if category and not category.can_access_from_current_website():
-            raise NotFound()
+        if category:
+            category = request.env['product.public.category'].search([('id', '=', int(category))], limit=1)
+            if not category or not category.can_access_from_current_website():
+                raise NotFound()
+
         if ppg:
             try:
                 ppg = int(ppg)
@@ -199,11 +202,6 @@ class WebsiteSale(ProductConfiguratorController):
             post["ppg"] = ppg
         else:
             ppg = PPG
-
-        if category:
-            category = request.env['product.public.category'].search([('id', '=', int(category))], limit=1)
-            if not category:
-                raise NotFound()
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
@@ -1070,6 +1068,23 @@ class WebsiteSale(ProductConfiguratorController):
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
             phone_code=country.phone_code
         )
+
+    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
+    def update_eshop_carrier(self, **post):
+        results = {}
+        if hasattr(self, '_update_website_sale_delivery'):
+            results.update(self._update_website_sale_delivery(**post))
+
+        if hasattr(self, '_update_website_sale_coupon'):
+            results.update(self._update_website_sale_coupon(**post))
+
+        return results
+
+    def _format_amount(self, amount, currency):
+        fmt = "%.{0}f".format(currency.decimal_places)
+        lang = request.env['res.lang']._lang_get(request.env.context.get('lang') or 'en_US')
+        return lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+            .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
     def cart_options_update_json(self, product_id, add_qty=1, set_qty=0, goto_shop=None, lang=None, **kw):

@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:04+0000\n"
 "PO-Revision-Date: 2018-10-02 10:04+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,8 +40,8 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
-"<i>Mercury配置</i>定義在銷售點用信用卡進行交易的Mercury帳號\n"
-"設定Mercury配置能夠讓您用不同的付款方式支付（例如Visa， 萬事達卡，Discovery，美國運通等等）。配置好之後您應該把他和銷售點的付款方式聯繫起來。"
+"<i>Mercury配置</i>定義在POS用信用卡進行交易的Mercury帳號\n"
+"設定Mercury配置能夠讓您用不同的付款方式支付（例如Visa， 萬事達卡，Discovery，美國運通等等）。配置好之後您應該把他和POS的付款方式聯繫起來。"
 
 #. module: pos_mercury
 #. openerp-web
@@ -64,7 +65,7 @@ msgstr "別名"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "自動設為空白"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
@@ -97,7 +98,7 @@ msgstr "信用卡號"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
 msgid "Card Number Prefix"
-msgstr ""
+msgstr "卡號首碼"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
@@ -123,7 +124,7 @@ msgstr "客戶"
 #. module: pos_mercury
 #: model_terms:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
-msgstr ""
+msgstr "配置讀卡機"
 
 #. module: pos_mercury
 #. openerp-web
@@ -157,7 +158,7 @@ msgid ""
 "Credit card refunds are not supported. Instead select your credit card "
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
-msgstr ""
+msgstr "不支援信用卡退款。相反, 選擇您的信用卡付款條件, 點擊 ' 驗證 ' 和退還原始費用手動通過 Vantiv 後端。"
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -222,7 +223,7 @@ msgstr "如果您還沒有Mercury帳戶，請撥打+1 (800) 846-4472以創建帳
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
-msgstr "Mercury支付的發票號碼"
+msgstr "Mercury支付的憑單號碼"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
@@ -281,7 +282,7 @@ msgstr "Mercury 憑據"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
 msgid "Mercury invoice number"
-msgstr "Mercury發票號碼"
+msgstr "Mercury憑單號碼"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line__mercury_record_no
@@ -313,7 +314,7 @@ msgstr "沒有與日記帳關聯的 Mercury 配置。"
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:22
 #, python-format
 msgid "No opened point of sale session for user %s found."
-msgstr ""
+msgstr "找不到使用者%s 的已打開POS會話。"
 
 #. module: pos_mercury
 #. openerp-web
@@ -389,12 +390,12 @@ msgstr "請設定您的Mercury商人帳戶。"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Mercury Configuration"
-msgstr ""
+msgstr "POSMercury配置"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Mercury Transaction"
-msgstr ""
+msgstr "POSMercury交易記錄"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -411,7 +412,7 @@ msgstr "標價產品"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
 #, python-format
 msgid "Refunds not supported"
-msgstr ""
+msgstr "不支援折讓"
 
 #. module: pos_mercury
 #. openerp-web
@@ -500,7 +501,7 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
-"在銷售點使用Mercury集成比較容易：只要按下相關的付款方式。\n"
+"在POS使用Mercury集成比較容易：只要按下相關的付款方式。\n"
 "之後金額會像其他在其他付款行一樣能被調整（例如現金返回）。\n"
 "不管任何時候只要付款行建立起來，就可以通過讀卡設備刷卡。"
 

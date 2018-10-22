@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
-# keecome <7017511@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # Allen Xie <xfz@forisen.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
 "Last-Translator: Allen Xie <xfz@forisen.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -148,7 +148,7 @@ msgid ""
 "            payment of the employees. It can be the social security, the\n"
 "            state or anyone that collect or inject money on payslips."
 msgstr ""
-"缴费登记方是参与员工工资 \n"
+"缴款名册是参与员工工资 \n"
 " 支付的第三方。有可能是社会保障、\n"
 " 国家或在工资单中收取或注入资金的任何人。"
 
@@ -177,7 +177,7 @@ msgstr "有效"
 #. module: hr_payroll
 #: model_terms:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Add a new contribution register"
-msgstr "添加提留登记册"
+msgstr "添加缴款名册"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -365,7 +365,7 @@ msgstr "公司"
 #: model:hr.salary.rule.category,name:hr_payroll.COMP
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
-msgstr "公司提留"
+msgstr "公司缴款"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -420,7 +420,7 @@ msgstr "合同优势模板"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
 msgid "Contribution"
-msgstr "提留"
+msgstr "缴款"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
@@ -428,12 +428,12 @@ msgstr "提留"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__register_id
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Contribution Register"
-msgstr "提留登记册"
+msgstr "缴款名册"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Contribution Register's Payslip Lines"
-msgstr "提留登记册的工资单明细"
+msgstr "缴款名册的工资单明细"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
@@ -441,7 +441,17 @@ msgstr "提留登记册的工资单明细"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
-msgstr "提留登记册"
+msgstr "缴款名册"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr "交通补贴"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr "Gravie交通补贴"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
@@ -708,6 +718,11 @@ msgid "Generate payslips for all selected employees"
 msgstr "为已选的所有员工生成工资单"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr "获得销售额的1％"
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
@@ -719,6 +734,11 @@ msgstr "总额"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
 msgstr "分组"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr "住房补贴"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
@@ -894,6 +914,11 @@ msgid "Maximum Range"
 msgstr "最大范围"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr "餐券"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "Minimum Range"
@@ -1014,7 +1039,7 @@ msgstr "工资单明细按供款记录"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Lines by Contribution Register"
-msgstr "工资单明细行，按缴纳登记册"
+msgstr "工资单明细行，按缴款名册"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -1031,7 +1056,7 @@ msgstr "工资表"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "Payroll Contribution Register Report"
-msgstr "工资表提留登记册报告"
+msgstr "工资表缴款名册报告"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1112,12 +1137,12 @@ msgstr "工资单明细"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
-msgstr "工资单明细行，按缴纳登记册"
+msgstr "工资单明细行，按缴款名册"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "Payslip Lines by Contribution Registers"
-msgstr "工资单明细行，按缴纳登记册"
+msgstr "工资单明细行，按缴款名册"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__name
@@ -1183,6 +1208,16 @@ msgstr "在会计账簿中发布工资单"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Print"
 msgstr "打印"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr "个人所得税"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr "公积金"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0

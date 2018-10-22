@@ -954,17 +954,12 @@ def to_re(pattern):
     """ cut down version of TimeRE converting strptime patterns to regex
     """
     pattern = re.sub(r'\s+', r'\\s+', pattern)
-    pattern = re.sub('%([a-z])', _replacer, pattern, re.IGNORECASE)
-
+    pattern = re.sub('%([a-z])', _replacer, pattern, flags=re.IGNORECASE)
+    pattern = '^' + pattern + '$'
     return re.compile(pattern, re.IGNORECASE)
 def _replacer(m):
     return _P_TO_RE[m.group(1)]
 
-def _joinre(patterns):
-    return '(' + '|'.join(
-        re.escape(p)
-        for p in sorted(patterns, key=len, reverse=True)
-    ) + ')'
 _P_TO_RE = {
     'd': r"(3[0-1]|[1-2]\d|0[1-9]|[1-9]| [1-9])",
     'H': r"(2[0-3]|[0-1]\d|\d)",

@@ -5001,14 +5001,8 @@ QUnit.module('Views', {
         // if not only 2 dropdowns are displayed.
         var $dropdowns = $('.o_web_client .o_control_panel .btn-group .o_dropdown_toggler_btn');
         var $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[1].children;
-        if ('document.document' in odoo.__DEBUG__.services) {
-            assert.strictEqual($dropdowns.length, 3,
-                "there should be 3 dropdowns (print, attachment, action) in the toolbar.");
-            $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[2].children;
-        } else {
-            assert.strictEqual($dropdowns.length, 2,
-                "there should be 2 dropdowns (print, action) in the toolbar.");
-        }
+        assert.strictEqual($dropdowns.length, 2,
+            "there should be 2 dropdowns (print, action) in the toolbar.");
         assert.strictEqual($actions.length, 3,
             "there should be 3 actions");
         var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-menu:last .dropdown-item:nth(2)');

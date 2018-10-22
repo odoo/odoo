@@ -1011,7 +1011,7 @@ attributes:
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
-  grouped, and disabled when not.
+  grouped by many2one, selection, char or boolean fields, and disabled when not.
 
   Set to ``true`` to always enable it, and to ``false`` to always disable it.
 
@@ -1727,8 +1727,12 @@ Possible children elements of the search view are:
 
         The groupby defined above allows to group data by category.
 
-        When the field is of type ``date`` or ``datetime``, the records are grouped by month by default.
-        This can be modified by using one of the following options: day, week, quarter, year.
+        When the field is of type ``date`` or ``datetime``, the filter generates a submenu of the Group By
+        menu in which the following interval options are available: day, week, month, quarter, year.
+
+        In case the filter is in the default set of filters activated at the view initialization,
+        the records are grouped by month by default. This can be changed by using the syntax
+        'date_field:interval' as in the following example.
 
         Example:
 

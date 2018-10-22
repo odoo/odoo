@@ -782,7 +782,7 @@ class TestReconciliation(AccountingTestCase):
     def test_aged_report(self):
         AgedReport = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)
         account_type = ['receivable']
-        report_date_to = time.strftime('%Y') + '-07-16'
+        report_date_to = time.strftime('%Y') + '-07-17'
         partner = self.env['res.partner'].create({'name': 'AgedPartner'})
         currency = self.env.user.company_id.currency_id
 

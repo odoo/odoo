@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> 採購訂單 </span>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -44,17 +45,17 @@ msgstr "購買規則"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr ""
+msgstr "購買再補給"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置設置"
+msgstr "配置設定"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr "創建採購訂單行"
+msgstr "創建採購訂單項目"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -66,7 +67,7 @@ msgstr "交貨到"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO, etc."
-msgstr ""
+msgstr "依您所安裝的模組， 系統允許您定義產品的特定路線， 如採購，製造，依訂單製造等。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -86,12 +87,12 @@ msgstr "直運"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "採購訂單發生例外情況："
+msgstr "採購訂單上發生異常:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
-msgstr "例外："
+msgstr "異常:"
 
 #. module: purchase_stock
 #: model:ir.ui.menu,name:purchase_stock.menu_action_picking_tree_in_move
@@ -118,7 +119,7 @@ msgstr "國際商業條款是一系列用於國際交易的商業條款。"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_invoice
 msgid "Invoice"
-msgstr "發票"
+msgstr "憑單"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -171,7 +172,7 @@ msgstr "將預期交貨日期提前"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "受影響的下一個傳輸:"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
@@ -196,12 +197,12 @@ msgstr "產品模板"
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Pull & Push"
-msgstr ""
+msgstr "推拉"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Pull From"
-msgstr ""
+msgstr "拉式"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -212,7 +213,7 @@ msgstr "採購訂單"
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr "採購訂單明細行"
+msgstr "採購訂單明細"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
@@ -224,17 +225,17 @@ msgstr "採購訂單"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "採購報告"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr ""
+msgstr "採購訂單計數"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Push To"
-msgstr ""
+msgstr "推式"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -290,12 +291,12 @@ msgstr "庫存移動"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "庫存規則"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "庫存規則報告"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -365,7 +366,7 @@ msgstr "已購買產品後能夠發運到此倉庫。"
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
 "created to fulfill the need."
-msgstr ""
+msgstr "在 <b>%s </b> 中需要產品時, 將創建 <br/> 詢價以滿足需要。"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:257
@@ -374,6 +375,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"不能減少已接收數量下的訂購數量。\n"
+"首先創建一個退貨。"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:186
@@ -394,4 +397,4 @@ msgstr "的"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
-msgstr "訂購而不是"
+msgstr "訂單替代"

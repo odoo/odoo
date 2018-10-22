@@ -4,28 +4,28 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # SHOM <shanmuxin@yeah.net>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # Lijie Ma <tony@malijie.cc>, 2018
 # Siyuan Gu <siyuancn@hotmail.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
-# Jackie Zhang <jzh@odoo.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # Emily JIA <eji@odoo.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
-# keecome <7017511@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
 # xu xiaohu <xu.xiaohu@gmail.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,6 +120,7 @@ msgstr "7月21日"
 
 #. module: mass_mailing
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid ""
 "<font>7</font>\n"
 "    <strong>Business Hacks</strong>\n"
@@ -170,7 +171,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid "<small>Step 1:</small>"
-msgstr "<small>第一步：</small>"
+msgstr "<small>第 1 步：</small>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -180,7 +181,7 @@ msgstr "<small>第 2 步:</small>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
 msgid "<small>Step 3:</small>"
-msgstr "<small>步骤3:</small>"
+msgstr "<small>第 3 步:</small>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -824,7 +825,7 @@ msgstr "电子邮箱"
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Email Marketing"
-msgstr "Email 市场营销"
+msgstr "邮件营销"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
@@ -920,6 +921,12 @@ msgid "Feedback from %s: %s"
 msgstr "反馈来自 %s: %s"
 
 #. module: mass_mailing
+#: model:mail.mass_mailing,name:mass_mailing.mass_mail_1
+#: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
+msgid "First Newsletter"
+msgstr "首次时事通讯"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_follower_ids
 msgid "Followers"
 msgstr "关注者"
@@ -990,7 +997,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_unread
 msgid "If checked new messages require your attention."
-msgstr "查看是否有需要你留意的新信息。"
+msgstr "查看是否有需要你留意的新消息。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_needaction
@@ -1009,7 +1016,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "如果勾选此项， 某些信息将会产生传递错误。"
+msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__is_blacklisted
@@ -1050,6 +1057,7 @@ msgstr "公开"
 
 #. module: mass_mailing
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid ""
 "Join our Marketing newsletter and get <strong>this white paper "
 "instantly</strong>"
@@ -1292,6 +1300,11 @@ msgid "Manage campaigns of mass emails with process stages"
 msgstr "通过进程阶段管理邮件群发的营销活动"
 
 #. module: mass_mailing
+#: model:mail.mass_mailing.tag,name:mass_mailing.mass_mail_tag_1
+msgid "Marketing"
+msgstr "市场营销"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__name
 msgid "Mass Mail"
 msgstr "群发邮件"
@@ -1493,6 +1506,12 @@ msgid "New Mailing List Name"
 msgstr "新邮件列表名称"
 
 #. module: mass_mailing
+#: model:mail.mass_mailing.campaign,name:mass_mailing.mass_mail_campaign_1
+#: model:utm.campaign,name:mass_mailing.mass_mail_campaign_1_utm_campaign
+msgid "Newsletter"
+msgstr "新闻信"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "No customization"
 msgstr "没有定制"
@@ -1581,6 +1600,7 @@ msgstr "Odoo"
 
 #. module: mass_mailing
 #: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+#: model_terms:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_2
 msgid "Odoo Presents"
 msgstr "Odoo 出品"
 
@@ -2299,7 +2319,7 @@ msgstr "如果您提供关于更新<br/>订阅的反馈意见，我们将不胜�
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__website_message_ids
 msgid "Website Messages"
-msgstr "网站信息"
+msgstr "网站消息"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__website_message_ids
