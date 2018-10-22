@@ -51,17 +51,17 @@ class MrpProduction(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])],
         readonly=True, required=True,
-        states={'confirmed': [('readonly', False)]})
+        states={'draft': [('readonly', False)]})
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=True)
     product_qty = fields.Float(
         'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
         readonly=True, required=True, track_visibility='onchange',
-        states={'confirmed': [('readonly', False)]})
+        states={'draft': [('readonly', False)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         oldname='product_uom', readonly=True, required=True,
-        states={'confirmed': [('readonly', False)]})
+        states={'draft': [('readonly', False)]})
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
@@ -70,27 +70,27 @@ class MrpProduction(models.Model):
         'stock.location', 'Raw Materials Location',
         default=_get_default_location_src_id,
         readonly=True,  required=True,
-        states={'confirmed': [('readonly', False)]},
+        states={'draft': [('readonly', False)]},
         help="Location where the system will look for components.")
     location_dest_id = fields.Many2one(
         'stock.location', 'Finished Products Location',
         default=_get_default_location_dest_id,
         readonly=True,  required=True,
-        states={'confirmed': [('readonly', False)]},
+        states={'draft': [('readonly', False)]},
         help="Location where the system will stock the finished products.")
     date_planned_start = fields.Datetime(
         'Deadline Start', copy=False, default=fields.Datetime.now,
         index=True, required=True,
-        states={'confirmed': [('readonly', False)]}, oldname="date_planned")
+        states={'draft': [('readonly', False)]}, oldname="date_planned")
     date_planned_finished = fields.Datetime(
         'Deadline End', copy=False, default=fields.Datetime.now,
         index=True,
-        states={'confirmed': [('readonly', False)]})
+        states={'draft': [('readonly', False)]})
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
-        readonly=True, states={'confirmed': [('readonly', False)]},
+        readonly=True, states={'draft': [('readonly', False)]},
         help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
@@ -100,6 +100,7 @@ class MrpProduction(models.Model):
              "work centers based on production planning.")
 
     state = fields.Selection([
+        ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
         ('planned', 'Planned'),
         ('progress', 'In Progress'),
@@ -108,7 +109,8 @@ class MrpProduction(models.Model):
         ('cancel', 'Cancelled')], string='State',
         compute='_compute_state', copy=False, index=True, readonly=True,
         store=True, track_visibility='onchange',
-        help=" * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
+        help=" * Draft: The MO is not confirmed yet.\n"
+             " * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
              " * Planned: The WO are planned.\n"
              " * In Progress: The production has started (on the MO or on the WO).\n"
              " * To Close: The production is done, the MO has to be closed.\n"
@@ -171,7 +173,7 @@ class MrpProduction(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'production_id', 'Scraps')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
-                                readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
+                                readonly=True, states={'draft': [('readonly', False)]}, default='1')
     is_locked = fields.Boolean('Is Locked', default=True, copy=False)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production', readonly=False)
@@ -263,9 +265,9 @@ class MrpProduction(models.Model):
         # TODO: duplicated code with stock_picking.py
         for production in self:
             if not production.move_raw_ids:
-                production.state = 'confirmed'
+                production.state = 'draft'
             elif all(move.state == 'draft' for move in production.move_raw_ids):
-                production.state = 'confirmed'
+                production.state = 'draft'
             elif all(move.state == 'cancel' for move in production.move_raw_ids):
                 production.state = 'cancel'
             elif all(move.state in ['cancel', 'done'] for move in production.move_raw_ids):
@@ -284,7 +286,7 @@ class MrpProduction(models.Model):
 
             # Compute reservation state
             # State where the reservation does not matter.
-            if production.state in ('done', 'cancel'):
+            if production.state in ('draft', 'done', 'cancel'):
                 production.reservation_state = False
             # Compute reservation state according to its component's moves.
             else:
@@ -384,6 +386,14 @@ class MrpProduction(models.Model):
             moves.write({
                 'date_expected': vals['date_planned_start'],
             })
+        for production in self:
+            if 'move_raw_ids' in vals and production.state != 'draft':
+                production.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
+            # TODO: maybe use update wizard instead
+            if any(field in vals for field in ('bom_id', 'product_qty')) and production.state == 'draft':
+                production.move_raw_ids.filtered(lambda m: m.bom_line_id).unlink()
+                production.move_finished_ids.unlink()
+                production._generate_moves()
         return res
 
     @api.model
@@ -419,9 +429,6 @@ class MrpProduction(models.Model):
             factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             production._generate_raw_moves(lines)
-            # Check for all draft moves whether they are mto or not
-            production._adjust_procure_method()
-            production.move_raw_ids._action_confirm()
         return True
 
     def _generate_finished_moves(self):
@@ -443,7 +450,6 @@ class MrpProduction(models.Model):
             'propagate': self.propagate,
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
         })
-        move._action_confirm()
         return move
 
     def _generate_raw_moves(self, exploded_lines):
@@ -461,15 +467,7 @@ class MrpProduction(models.Model):
             return self.env['stock.move']
         if bom_line.product_id.type not in ['product', 'consu']:
             return self.env['stock.move']
-        if self.routing_id:
-            routing = self.routing_id
-        else:
-            routing = self.bom_id.routing_id
-        if routing and routing.location_id:
-            source_location = routing.location_id
-        else:
-            source_location = self.location_src_id
-        original_quantity = (self.product_qty - self.qty_produced) or 1.0
+        source_location = self._get_raw_location()
         data = {
             'sequence': bom_line.sequence,
             'name': self.name,
@@ -491,9 +489,18 @@ class MrpProduction(models.Model):
             'warehouse_id': source_location.get_warehouse().id,
             'group_id': self.procurement_group_id.id,
             'propagate': self.propagate,
-            'unit_factor': quantity / original_quantity,
         }
         return self.env['stock.move'].create(data)
+
+    def _get_raw_location(self):
+        if self.routing_id:
+            routing = self.routing_id
+        else:
+            routing = self.bom_id.routing_id
+        if routing and routing.location_id:
+            return routing.location_id
+        else:
+            return self.location_src_id
 
     @api.multi
     def _adjust_procure_method(self):
@@ -553,6 +560,18 @@ class MrpProduction(models.Model):
             return 'assigned'
         return 'confirmed'
 
+    def action_confirm(self):
+        for production in self:
+            for move_raw in production.move_raw_ids:
+                move_raw.write({
+                    'group_id': production.procurement_group_id.id,
+                    'unit_factor': move_raw.product_uom_qty / production.product_qty
+                })
+            production._adjust_procure_method()
+            production.move_raw_ids._action_confirm()
+            production.move_finished_ids._action_confirm()
+        return True
+
     @api.multi
     def action_assign(self):
         for production in self:
@@ -570,6 +589,7 @@ class MrpProduction(models.Model):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
         for order in orders_to_plan:
+            order.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
             quantity = order.product_uom_id._compute_quantity(order.product_qty, order.bom_id.product_uom_id) / order.bom_id.product_qty
             boms, lines = order.bom_id.explode(order.product_id, quantity, picking_type=order.bom_id.picking_type_id)
             order._generate_workorders(boms)

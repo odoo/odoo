@@ -61,7 +61,7 @@ class TestTraceability(TestMrpCommon):
                 'product_qty': 1,
                 'bom_id': bom.id,
             })
-            
+            mo.action_confirm()
             mo.action_assign()
 
             # Start MO production

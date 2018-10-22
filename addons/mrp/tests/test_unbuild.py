@@ -521,6 +521,7 @@ class TestUnbuild(TestMrpCommon):
             'bom_id': bom.id,
         })
         self.assertEqual(len(mo), 1, 'MO should have been created')
+        mo.action_confirm()
         mo.action_assign()
 
         # Produce the final product

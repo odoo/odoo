@@ -44,6 +44,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_qty': qty_final,
             'bom_id': bom_1.id,
         })
+        mo.action_confirm()
         return mo, bom_1, product_to_build, product_to_use_1, product_to_use_2
 
     @classmethod

@@ -57,6 +57,7 @@ class TestMrpByProduct(common.TransactionCase):
                         'product_uom_id': self.uom_unit_id,
                         'bom_id': bom_product_a.id,
                     })
+        mnf_product_a.action_confirm()
 
         # I compute the data of production order
         context = {"active_model": "mrp.production", "active_ids": [mnf_product_a.id], "active_id": mnf_product_a.id}

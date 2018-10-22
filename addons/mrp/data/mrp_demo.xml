@@ -660,6 +660,10 @@
             <field name="date_start" eval="(datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
+        <function model="mrp.production" name="action_confirm">
+            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+        </function>
+
         <function model="mrp.production" name="action_assign">
             <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
         </function>

@@ -30,6 +30,7 @@ class TestWorkOrderProcess(common.TransactionCase):
             'product_uom_id': dining_table.uom_id.id,
             'bom_id': self.ref("mrp.mrp_bom_desk")
         })
+        production_table.action_confirm()
 
         # Set tracking lot on finish and consume products.
         dining_table.tracking = 'lot'
@@ -137,13 +138,14 @@ class TestWorkOrderProcess(common.TransactionCase):
             'product_uom_id': dining_table.uom_id.id,
             'bom_id': bom.id,
         })
+        production_table.action_confirm()
 
         # Set tracking lot on finish and consume products.
         dining_table.tracking = 'lot'
         product_table_sheet.tracking = 'lot'
         product_table_leg.tracking = 'lot'
         product_bolt.tracking = "lot"
-
+        production_table.action_confirm()
         # Initial inventory of product sheet, lags and bolt
         lot_sheet = self.env['stock.production.lot'].create({'product_id': product_table_sheet.id})
         lot_leg = self.env['stock.production.lot'].create({'product_id': product_table_leg.id})
@@ -283,6 +285,7 @@ class TestWorkOrderProcess(common.TransactionCase):
             'product_uom_id': unit,
             'bom_id': bom_custom_laptop.id})
 
+        mo_custom_laptop.action_confirm()
         # Assign component to production order.
         mo_custom_laptop.action_assign()
 
@@ -496,6 +499,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         # Start Production ...
         # --------------------
 
+        mo_custom_product.action_confirm()
         mo_custom_product.action_assign()
         context = {"active_ids": [mo_custom_product.id], "active_id": mo_custom_product.id}
         produce_form = Form(self.env['mrp.product.produce'].with_context(context))
@@ -546,6 +550,7 @@ class TestWorkOrderProcess(common.TransactionCase):
             'bom_id': bom_laptop.id
         })
 
+        mo_laptop.action_confirm()
         mo_laptop.button_plan()
         workorders = mo_laptop.workorder_ids
         self.assertEqual(len(workorders), 3)

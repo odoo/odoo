@@ -81,6 +81,7 @@ class TestWarehouse(common.TestMrpCommon):
             'bom_id': self.bom_3.id,
             'product_uom_id': self.product_6.uom_id.id,
         })
+        production_3.action_confirm()
         production_3.action_assign()
 
         # Check Manufacturing order's availability.
