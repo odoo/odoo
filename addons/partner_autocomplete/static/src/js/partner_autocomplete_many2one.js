@@ -65,6 +65,11 @@ var PartnerField = FieldMany2One.extend({
      */
     _modifyAutompleteRendering: function (){
         var api = this.$input.data('ui-autocomplete');
+        // FIXME: bugfix to prevent traceback in mobile apps due to override 
+        // of Many2one widget with native implementation.
+        if (!api) {
+            return;
+        }
         api._renderItem = function(ul, item){
             ul.addClass('o_partner_autocomplete_dropdown');
             var $a = $('<a/>')["html"](item.label);
