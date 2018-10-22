@@ -64,7 +64,7 @@
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
-                                        <td>
+                                        <td class="text-right">
                                             <t t-esc="wish.product_id.website_price" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
                                         </td>
                                         <td class='text-center td-wish-btn'>

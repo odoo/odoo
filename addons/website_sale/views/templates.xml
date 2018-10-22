@@ -1367,8 +1367,8 @@
                             <tr>
                                 <th class="border-top-0 td-img">Product</th>
                                 <th class="border-top-0"></th>
-                                <th class="border-top-0 td-qty">Quantity</th>
-                                <th class="border-top-0 text-center td-price">Price</th>
+                                <th class="border-top-0 text-right td-qty">Quantity</th>
+                                <th class="border-top-0 text-right td-price">Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1382,10 +1382,10 @@
                                         <strong t-field="line.name_short" />
                                     </div>
                                 </td>
-                                <td class='td-qty'>
+                                <td class='text-right td-qty'>
                                     <div t-esc="line.product_uom_qty" />
                                 </td>
-                                <td class="text-center td-price">
+                                <td class="text-right td-price pr-2">
                                     <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="account.group_show_line_subtotals_tax_excluded" />
                                     <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
                                 </td>
@@ -1488,19 +1488,19 @@
                   </tr>
                   <tr id="order_total_untaxed">
                       <td class="text-right noborder">Subtotal:</td>
-                      <td class="text-xl-right noborder" >
+                      <td class="text-right noborder" >
                           <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total_taxes">
                       <td class="text-right noborder">Taxes:</td>
-                      <td class="text-xl-right noborder">
+                      <td class="text-right noborder">
                            <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total">
                       <td class="text-right"><strong>Total:</strong></td>
-                      <td class="text-xl-right">
+                      <td class="text-right">
                           <strong t-field="website_sale_order.amount_total"
                               t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                       </td>
@@ -1516,7 +1516,7 @@
                 <span class=''>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">
-                        <a href="#" class="show_coupon">I have a promo code</a>
+                        <a href="#" class="show_coupon pr-2">I have a promo code</a>
                     </t>
                     <div t-attf-class="coupon_form #{not force_coupon and 'd-none'}">
                         <t t-call="website_sale.coupon_form"/>
