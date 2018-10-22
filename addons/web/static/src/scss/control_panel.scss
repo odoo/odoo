@@ -12,7 +12,9 @@
 
         > li {
             @include o-text-overflow($max-width: 90%);
-
+            @include media-breakpoint-down(sm) {
+                padding-top: 3px;
+            }
             > a {
                 cursor: pointer;
             }
