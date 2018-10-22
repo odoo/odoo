@@ -132,23 +132,9 @@
                     <t t-raw="0"/>
                 </div>
                 <div class="col-md-12 col-lg-3" id="right-column">
-                    <div t-if="not header.get('ask_hide') and not request.env.user.has_group('base.group_public')" t-attf-class="btn-group btn-block mb-2 #{(user.karma &lt; forum.karma_ask) and not is_public_user and 'karma_required' or ''}" t-attf-data-karma="#{forum.karma_ask}">
+                    <div t-if="not header.get('ask_hide') and not request.env.user.has_group('base.group_public')" t-attf-class="mb-2 #{(user.karma &lt; forum.karma_ask) and not is_public_user and 'karma_required' or ''}" t-attf-data-karma="#{forum.karma_ask}">
                         <t t-set="multi_type" t-value="(forum.allow_link and forum.allow_question) or (forum.allow_link and forum.allow_discussion) or (forum.allow_question and forum.allow_discussion)"/>
-                        <a role="button" type="button"  t-attf-class="btn btn-primary btn-lg #{'col-md-10' if multi_type else 'col-md-12'}" t-attf-href="/forum/#{slug(forum)}/ask?post_type=#{forum.default_post_type}">
-                            <t t-if="forum.default_post_type == 'question'">Ask a Question</t>
-                            <t t-if="forum.default_post_type == 'link'">Submit a Link</t>
-                            <t t-if="forum.default_post_type == 'discussion'">New Discussion</t>
-                        </a>
-                        <t t-if="multi_type">
-                            <button type="button" class="btn btn-primary btn-lg col-md-2 dropdown-toggle" data-toggle="dropdown">
-                                <span class="sr-only">Select Post</span>
-                            </button>
-                            <div class="dropdown-menu" role="menu">
-                                <a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=question" class="dropdown-item" t-if="forum.allow_question">Ask a Question</a>
-                                <a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=link" class="dropdown-item" t-if="forum.allow_link">Submit a Link</a>
-                                <a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=discussion" class="dropdown-item" t-if="forum.allow_discussion">New Discussion</a>
-                            </div>
-                        </t>
+                        <a role="button" type="button" class="btn btn-primary btn-lg col-12" t-attf-href="/forum/#{slug(forum)}/ask?post_type=#{forum.default_post_type}">Ask a Question</a>
                     </div>
                     <div class="card border-0" t-if="question">
                         <h5 class="card-header bg-secondary h6 font-weight-bold">Writer</h5>
@@ -159,19 +145,21 @@
                             <h5><a t-attf-href="/forum/#{slug(forum)}/user/#{question.create_uid.sudo().id}" t-field="question.create_uid" t-options='{"widget": "contact", "fields": ["name", "country_id"]}' class="d-inline font-weight-bold text-secondary"/></h5>
                         </div>
                     </div>
-                    <div class="card mt-3 border-0" t-if="question">
-                        <t t-if="len(question.tag_ids)&lt;=1">
-                            <h5 class="card-header bg-secondary h6 font-weight-bold">Tag</h5>
-                        </t>
-                        <t t-else="">
-                            <h5 class="card-header bg-secondary h6 font-weight-bold">Tags</h5>
-                        </t>
-                        <div class="card-body">
-                            <t t-foreach="question.tag_ids" t-as="tag">
-                                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge bg-200 border px-2 py-1" t-field="tag.name"/>
+                    <!-- <t t-if="not len(question.tag_ids)&lt;=0"> -->
+                        <div class="card mt-3 border-0" t-if="question and not len(question.tag_ids)&lt;=0">
+                            <t t-if="len(question.tag_ids)&lt;=1">
+                                <h5 class="card-header bg-secondary h6 font-weight-bold">Tag</h5>
                             </t>
+                            <t t-else="">
+                                <h5 class="card-header bg-secondary h6 font-weight-bold">Tags</h5>
+                            </t>
+                            <div class="card-body">
+                                <t t-foreach="question.tag_ids" t-as="tag">
+                                    <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge bg-200 border px-2 py-1" t-field="tag.name"/>
+                                </t>
+                            </div>
                         </div>
-                    </div>
+                    <!-- </t> -->
                     <div class="card mt-3 border-0" t-if="question">
                         <h5 class="card-header bg-secondary h6 font-weight-bold">Keep Informed</h5>
                         <div class="card-body o_subscribe_post">

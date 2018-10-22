@@ -341,7 +341,7 @@ class WebsiteForum(http.Controller):
     def post_create(self, forum, post_parent=None, post_type=None, **post):
         if post_type == 'question' and not post.get('post_name', ''):
             return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
-        if post.get('content', '') == '<p><br></p>':
+        if post.get('content', '') == '<p class="fa fa-user"><br></p>':
             return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Question should not be empty.')})
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
