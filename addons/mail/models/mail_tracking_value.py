@@ -63,8 +63,8 @@ class MailTracking(models.Model):
             values.update({
                 'old_value_integer': initial_value and initial_value.id or 0,
                 'new_value_integer': new_value and new_value.id or 0,
-                'old_value_char': initial_value and initial_value.name_get()[0][1] or '',
-                'new_value_char': new_value and new_value.name_get()[0][1] or ''
+                'old_value_char': initial_value and initial_value.sudo().name_get()[0][1] or '',
+                'new_value_char': new_value and new_value.sudo().name_get()[0][1] or ''
             })
         else:
             tracked = False

@@ -58,6 +58,8 @@ var NotificationService = AbstractService.extend({
      * Note that this method does not wait for the appendTo method to complete.
      *
      * @param {Object} params
+     * @param {function} [params.Notification] javascript class of a notification
+     *   to instantiate by default use 'web.Notification'
      * @param {string} params.title notification title
      * @param {string} params.message notification main message
      * @param {string} params.type 'notification' or 'warning'
@@ -78,7 +80,8 @@ var NotificationService = AbstractService.extend({
             this.$el = $('<div class="o_notification_manager"/>');
             this.$el.prependTo('body');
         }
-        var notification = this.notifications[++id] = new Notification(this, params);
+        var NotificationWidget = params.Notification || Notification;
+        var notification = this.notifications[++id] = new NotificationWidget(this, params);
         notification.appendTo(this.$el);
         return id;
     },

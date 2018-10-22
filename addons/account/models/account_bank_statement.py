@@ -381,7 +381,7 @@ class AccountBankStatementLine(models.Model):
     ####################################################
 
     def _get_common_sql_query(self, overlook_partner = False, excluded_ids = None, split = False):
-        acc_type = "acc.internal_type IN ('payable', 'receivable')" if (self.partner_id or overlook_partner) else "acc.reconcile = true"
+        acc_type = "acc.reconcile = true"
         select_clause = "SELECT aml.id "
         from_clause = "FROM account_move_line aml JOIN account_account acc ON acc.id = aml.account_id "
         account_clause = ''

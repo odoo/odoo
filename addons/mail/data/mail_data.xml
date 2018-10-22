@@ -297,7 +297,7 @@
         <!-- Discuss utility templates for notifications -->
         <template id="message_user_assigned">
 <p style="margin: 0px;">
-    <span>Dear <t t-esc="object.user_id.name"/>,</span><br />
+    <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span><br />
     <span style="margin-top: 8px;">You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</span>
 </p>
 <p style="margin-top: 24px; margin-bottom: 16px;">

@@ -1011,7 +1011,7 @@ attributes:
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
-  grouped, and disabled when not.
+  grouped by many2one, selection, char or boolean fields, and disabled when not.
 
   Set to ``true`` to always enable it, and to ``false`` to always disable it.
 

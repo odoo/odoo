@@ -225,7 +225,7 @@ var BasicView = AbstractView.extend({
             attrs.options = attrs.options ? pyUtils.py_eval(attrs.options) : {};
         }
 
-        if (attrs.on_change && !field.onChange) {
+        if (attrs.on_change && attrs.on_change !== "0" && !field.onChange) {
             field.onChange = "1";
         }
 
@@ -377,6 +377,10 @@ var BasicView = AbstractView.extend({
                     }
                     if (!(dependency_name in fields)) {
                         fields[dependency_name] = dependency_dict;
+                    }
+
+                    if (fv.fields && !(dependency_name in fv.fields)) {
+                        fv.fields[dependency_name] = dependency_dict;
                     }
                 }
             }

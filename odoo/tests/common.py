@@ -6,8 +6,8 @@ helpers and classes to write tests.
 """
 import base64
 import collections
-import inspect
 import importlib
+import inspect
 import itertools
 import json
 import logging

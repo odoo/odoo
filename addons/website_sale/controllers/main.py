@@ -1069,6 +1069,23 @@ class WebsiteSale(ProductConfiguratorController):
             phone_code=country.phone_code
         )
 
+    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
+    def update_eshop_carrier(self, **post):
+        results = {}
+        if hasattr(self, '_update_website_sale_delivery'):
+            results.update(self._update_website_sale_delivery(**post))
+
+        if hasattr(self, '_update_website_sale_coupon'):
+            results.update(self._update_website_sale_coupon(**post))
+
+        return results
+
+    def _format_amount(self, amount, currency):
+        fmt = "%.{0}f".format(currency.decimal_places)
+        lang = request.env['res.lang']._lang_get(request.env.context.get('lang') or 'en_US')
+        return lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+            .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
     def cart_options_update_json(self, product_id, add_qty=1, set_qty=0, goto_shop=None, lang=None, **kw):
         if lang:

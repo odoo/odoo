@@ -119,6 +119,8 @@ class MailMail(models.Model):
             ids = filtered_ids
         else:
             ids = list(set(filtered_ids) & set(ids))
+        ids.sort()
+
         res = None
         try:
             # auto-commit except in testing mode
@@ -292,7 +294,6 @@ class MailMail(models.Model):
                     values['partner_id'] = partner
                     email_list.append(values)
 
-
                 # headers
                 headers = {}
                 ICP = self.env['ir.config_parameter'].sudo()
@@ -316,6 +317,22 @@ class MailMail(models.Model):
                     'state': 'exception',
                     'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
                 })
+                # Update notification in a transient exception state to avoid concurrent
+                # update in case an email bounces while sending all emails related to current
+                # mail record.
+                notifs = self.env['mail.notification'].search([
+                    ('is_email', '=', True),
+                    ('mail_id', 'in', mail.ids),
+                    ('email_status', 'not in', ('sent', 'canceled'))
+                ])
+                if notifs:
+                    notif_msg = _('Error without exception. Probably due do concurrent access update of notification records. Please see with an administrator.')
+                    notifs.write({
+                        'email_status': 'exception',
+                        'failure_type': 'UNKNOWN',
+                        'failure_reason': notif_msg,
+                    })
+
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:

@@ -430,8 +430,10 @@
                         </div>
                         <group>
                             <group>
-                                <field name="bank_acc_number"/>
-                                <field name="bank_id"/>
+                                <field name="company_partner_id" invisible="1"/>
+                                <field name="bank_account_id"/>
+                                <field name="bank_acc_number" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>

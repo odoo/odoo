@@ -43,6 +43,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         var defs = [this._super.apply(this, arguments)];
         this.time = Date.now();
         this.$progress = this.$('.progress');
+        this.clickStatementName = this._initialState.bank_statement_id ? true : false;
 
         if (this._initialState.bank_statement_id) {
             var def = this.model.makeRecord("account.bank.statement", [{

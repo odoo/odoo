@@ -108,6 +108,7 @@ CREATE TABLE res_company (
     name varchar NOT NULL,
     partner_id integer,
     currency_id integer,
+    sequence integer,
     create_date timestamp without time zone,
     primary key(id)
 );
