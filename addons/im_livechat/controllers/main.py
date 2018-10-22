@@ -70,14 +70,19 @@ class LivechatController(http.Controller):
     @http.route('/im_livechat/get_session', type="json", auth='public')
     def get_session(self, channel_id, anonymous_name, **kwargs):
         user_id = None
+        country_id = None
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
             user_id = request.env.user.id
+            country_id = request.env.user.country_id.id
         # if geoip, add the country name to the anonymous name
         elif request.session.geoip:
-            anonymous_name = anonymous_name + " ("+request.session.geoip.get('country_name', "")+")"
-        return request.env["im_livechat.channel"].with_context(lang=False).get_mail_channel(channel_id, anonymous_name, user_id)
-
+            # get the country of the anonymous person, if any
+            country_code = request.session.geoip.get('country_code', "")
+            country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
+            if country:
+                anonymous_name, country_id = _("%s (%s)") % (anonymous_name, country.name), country.id
+        return request.env["im_livechat.channel"].with_context(lang=False).get_mail_channel(channel_id, anonymous_name, user_id, country_id)
 
     @http.route('/im_livechat/feedback', type='json', auth='public')
     def feedback(self, uuid, rate, reason=None, **kwargs):
