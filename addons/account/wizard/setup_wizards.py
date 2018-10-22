@@ -11,11 +11,11 @@ class FinancialYearOpeningWizard(models.TransientModel):
     opening_move_posted = fields.Boolean(string='Opening Move Posted', compute='_compute_opening_move_posted')
     opening_date = fields.Date(string='Opening Date', required=True, related='company_id.account_opening_date', help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.")
     fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True,
-                                         help="The last day of the month will be taken if the chosen day doesn't exist.")
+                                         help="Fiscal year last day.")
     fiscalyear_last_month = fields.Selection(selection=[(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
                                              related="company_id.fiscalyear_last_month",
                                              required=True,
-                                             help="The last day of the month will be taken if the chosen day doesn't exist.")
+                                             help="Fiscal year last month.")
     account_setup_fy_data_done = fields.Boolean(string='Financial year setup marked as done', compute="_compute_setup_marked_done")
 
     @api.depends('company_id.account_setup_fy_data_done')

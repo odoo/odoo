@@ -119,6 +119,16 @@ Best Regards,'''))
             if period_lock_date < fiscalyear_lock_date:
                 raise ValidationError(_('You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set before the lock date for users.'))
 
+    @api.constrains('account_opening_date', 'fiscalyear_last_day', 'fiscalyear_last_month')
+    def _check_fiscalyear_last_day(self):
+        # account_opening_date may not be set, we only want to check the day validity
+        if not self.account_opening_date:
+            return
+        opening_date = datetime.strptime(self.account_opening_date, '%Y-%m-%d')
+        max_day = calendar.monthrange(opening_date.year, self.fiscalyear_last_month)[1]
+        if self.fiscalyear_last_day > max_day:
+            raise ValidationError(_("Invalid fiscal year last day"))
+
     @api.model
     def _verify_fiscalyear_last_day(self, company_id, last_day, last_month):
         # FIXME: Remove this method in master
