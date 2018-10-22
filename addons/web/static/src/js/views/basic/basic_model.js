@@ -1719,7 +1719,7 @@ var BasicModel = AbstractModel.extend({
             case 'CREATE':
                 var options = {position: command.position};
                 def = this._addX2ManyDefaultRecord(list, options).then(function (id) {
-                    if (command.position === 'bottom' && list.orderedResIDs.length >= list.limit) {
+                    if (command.position === 'bottom' && (list.orderedResIDs || []).length >= list.limit) {
                         list.tempLimitIncrement = (list.tempLimitIncrement || 0) + 1;
                         list.limit += 1;
                     }
