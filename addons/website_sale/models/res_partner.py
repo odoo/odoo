@@ -13,11 +13,13 @@ class ResPartner(models.Model):
     @api.multi
     def _compute_last_website_so_id(self):
         SaleOrder = self.env['sale.order']
-        website_team = self.env.ref('sales_team.salesteam_website_sales', raise_if_not_found=False)
         for partner in self:
-            if request and hasattr(request, 'website'):
-                my_website_so = SaleOrder.search([('partner_id', '=', partner.id), ('team_id', '=', website_team.id)])
-                current_website_orders = my_website_so.filtered(lambda so: so.order_line.mapped('product_id.product_tmpl_id').can_access_from_current_website())
-                partner.last_website_so_id = current_website_orders and current_website_orders[0]
+            if request and hasattr(request, 'website') and not any([u._is_public() for u in partner.user_ids]):
+                partner.last_website_so_id = SaleOrder.search([
+                    ('partner_id', '=', partner.id),
+                    ('team_id.team_type', '=', 'website'),
+                    ('website_id', '=', request.website.id),
+                    ('state', '=', 'draft'),
+                ], order='write_date desc', limit=1)
             else:
-                partner.last_website_so_id = False  # Not in a website context
+                partner.last_website_so_id = SaleOrder  # Not in a website context or public User
