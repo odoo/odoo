@@ -892,14 +892,14 @@ class DataSet(http.Controller):
 
     @http.route('/web/dataset/search_read', type='json', auth="user")
     def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
-        return self.do_search_read(model, fields, offset, limit, domain, sort)
+        return self.do_search_read(request.env[model], fields, offset, limit, domain, sort)
 
-    def do_search_read(self, model, fields=False, offset=0, limit=False, domain=None
+    def do_search_read(self, Model, fields=False, offset=0, limit=False, domain=None
                        , sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
-        :param str model: the name of the model to search on
+        :param Object Model: the model to search on
         :param fields: a list of the fields to return in the result records
         :type fields: [str]
         :param int offset: from which index should the results start being returned
@@ -911,8 +911,6 @@ class DataSet(http.Controller):
                   matching fields selection set)
         :rtype: list
         """
-        Model = request.env[model]
-
         records = Model.search_read(domain, fields,
                                     offset=offset or 0, limit=limit or False, order=sort or False)
         if not records:
@@ -960,13 +958,13 @@ class DataSet(http.Controller):
         return False
 
     @http.route('/web/dataset/resequence', type='json', auth="user")
-    def resequence(self, model, ids, field='sequence', offset=0):
+    def resequence(self, model, ids, offset=0):
         """ Re-sequences a number of records in the model, by their ids
 
         The re-sequencing starts at the first model of ``ids``, the sequence
         number is incremented by one after each record and starts at ``offset``
 
-        :param model: (str or Object) name or instance of the model
+        :param str model: the name of the model
         :param ids: identifiers of the records to resequence, in the new sequence order
         :type ids: list(id)
         :param str field: field used for sequence specification, defaults to
@@ -975,13 +973,8 @@ class DataSet(http.Controller):
                            starting the resequencing from an arbitrary number,
                            defaults to ``0``
         """
-        m = request.env[model] if isinstance(model, str) else model
-        if not m.fields_get([field]):
-            return False
-        # python 2.6 has no start parameter
-        for i, record in enumerate(m.browse(ids)):
-            record.write({field: i + offset})
-        return True
+        m = request.env[model]
+        return m.resequence(ids, offset)
 
 class View(http.Controller):
 

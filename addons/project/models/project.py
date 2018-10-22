@@ -175,12 +175,20 @@ class Project(models.Model):
         # Project User has no write access for project.
         not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
+    
+    @api.depends('privacy_visibility')
+    def _compute_is_public(self):
+        for project in self:
+            project.is_public = project.privacy_visibility in ['portal', 'portaledit']
+
+    def _search_is_public(self, operator, value):
+        return [('privacy_visibility', 'in' if (operator == '=') == value else 'not in', ['portal', 'portaledit'])]
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
     name = fields.Char("Name", index=True, required=True, tracking=True)
-    access_token = fields.Char('Security Token (readonly)', copy=False, default=str(uuid.uuid4()))
+    access_token = fields.Char('Security Token (readonly)', copy=False, default=lambda self: str(uuid.uuid4()))
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
@@ -210,10 +218,10 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', _('On invitation only')),
-            ('employees', _('Visible by all employees')),
-            ('portal', _('Visible by following customers')),
-            ('portaledit', _('Editable by following customers')),
+            ('followers', "On invitation only"),
+            ('employees', "Visible by all employees"),
+            ('portal', "Visible by following customers"),
+            ('portaledit', "Editable by following customers"),
         ],
         string='Privacy', required=True,
         default='portal',
@@ -222,10 +230,12 @@ class Project(models.Model):
                 "- Visible by all employees: employees can see all projects and edit all tasks.\n"
                 "- Visible by following customers: employees can see all projects and edit all tasks ;\n"
                 "   if website is activated, portal users can see (but not edit) projects and tasks\n"
-                "   followed by them or by someone of their company, and write in the chatter."
-                "- Editable by following customers: employees can see all projects and edit all tasks. ;\n"
+                "   followed by them or by someone of their company, and write in the chatter.\n"
+                "- Editable by following customers: employees can see all projects and edit all tasks.\n"
                 "   if website is activated, portal users can see and edit projects and tasks\n"
                 "   followed by them or by someone of their company, and write in the chatter.")
+    is_public = fields.Boolean(compute='_compute_is_public', string="Is public", search="_search_is_public",
+                               help="Whether this project is visible in the customer portal.")
     public_link = fields.Char(compute='_get_public_link', string="Public link")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
@@ -257,7 +267,7 @@ class Project(models.Model):
 
     def _compute_access_warning(self):
         super(Project, self)._compute_access_warning()
-        for project in self.filtered(lambda x: x.privacy_visibility not in ['portal', 'portaledit']):
+        for project in self.filtered(lambda x: not x.is_public):
             project.access_warning = _(
                 "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 
@@ -308,7 +318,7 @@ class Project(models.Model):
         project = super(Project, self).create(vals)
         if not vals.get('subtask_project_id'):
             project.subtask_project_id = project.id
-        if project.privacy_visibility in ['portal', 'portaledit'] and project.partner_id:
+        if project.is_public and project.partner_id:
             project.message_subscribe(project.partner_id.ids)
         return project
 
@@ -323,7 +333,7 @@ class Project(models.Model):
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
         if vals.get('partner_id') or vals.get('privacy_visibility'):
-            for project in self.filtered(lambda project: project.privacy_visibility in ['portal', 'portaledit']):
+            for project in self.filtered(lambda project: project.is_public):
                 project.message_subscribe(project.partner_id.ids)
         return res
 
@@ -561,7 +571,7 @@ class Task(models.Model):
 
     def _compute_access_warning(self):
         super(Task, self)._compute_access_warning()
-        for task in self.filtered(lambda x: x.project_id.privacy_visibility not in ['portal', 'portaledit']):
+        for task in self.filtered(lambda x: not x.project_id.is_public):
             task.access_warning = _(
                 "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 

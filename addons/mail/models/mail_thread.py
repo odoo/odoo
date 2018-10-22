@@ -626,7 +626,7 @@ class MailThread(models.AbstractModel):
         return changes, tracking_value_ids
 
     @api.multi
-    def message_track(self, tracked_fields, initial_values, **kwargs):
+    def message_track(self, tracked_fields, initial_values, author_id=None):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
         the updated values. This message can be linked to a mail.message.subtype
@@ -649,9 +649,9 @@ class MailThread(models.AbstractModel):
                 if not subtype.exists():
                     _logger.debug('subtype "%s" not found' % subtype.name)
                     continue
-                record.message_post(subtype_id=subtype.id, tracking_value_ids=tracking_value_ids, **kwargs)
+                record.message_post(subtype_id=subtype.id, tracking_value_ids=tracking_value_ids, **{'author_id': author_id})
             elif tracking_value_ids:
-                record._message_log(tracking_value_ids=tracking_value_ids)
+                record._message_log(tracking_value_ids=tracking_value_ids, **{'author_id': author_id})
 
         self._message_track_post_template(tracking)
 
@@ -2186,9 +2186,9 @@ class MailThread(models.AbstractModel):
             author = self.env['res.partner'].sudo().browse(kw_author)
         else:
             author = self.env.user.partner_id
-        if not author.email:
+        if not author.email and author.name != 'Public user':
             raise exceptions.UserError(_("Unable to log message, please configure the sender's email address."))
-        email_from = formataddr((author.name, author.email))
+        email_from = formataddr((author.name, author.email)) if author.email else author.name
 
         message_values = {
             'subject': subject,

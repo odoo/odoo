@@ -3484,6 +3484,26 @@ Fields:
 
         return True
 
+    @api.multi
+    def resequence(self, ids, offset=0):
+        """ Re-sequences a number of records in the model, by their ids
+
+        The re-sequencing starts at the first model of ``ids``, the sequence
+        number is incremented by one after each record and starts at ``offset``
+
+        :param ids: identifiers of the records to resequence, in the new sequence order
+        :type ids: list(id)
+        :param int offset: sequence number for first record in ``ids``, allows
+                           starting the resequencing from an arbitrary number,
+                           defaults to ``0``
+        """
+        if not self.fields_get(['sequence']):
+            return False
+        # python 2.6 has no start parameter
+        for i, record in enumerate(self.browse(ids)):
+            record.write({'sequence': i + offset})
+        return True
+    
     @api.model_create_multi
     @api.returns('self', lambda value: value.id)
     def create(self, vals_list):

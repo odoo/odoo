@@ -20,7 +20,7 @@ class CustomerPortal(CustomerPortal):
         Project = request.env['project.project']
         Task = request.env['project.task']
         # portal users can't view projects they don't follow
-        projects = Project.sudo().search([('privacy_visibility', 'in', ['portal', 'portaledit'])])
+        projects = Project.sudo().search([('is_public', '=', True)])
         values['project_count'] = Project.search_count([('id', 'in', projects.ids)])
         values['task_count'] = Task.search_count([('project_id', 'in', projects.ids)])
         return values
@@ -39,7 +39,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
-        domain = [('privacy_visibility', 'in', ['portal', 'portaledit'])]
+        domain = [('is_public', '=', True)]
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import functools
 from odoo import api, http, SUPERUSER_ID, _
 from odoo.addons.web.controllers.main import clean_action, DataSet
 from odoo.exceptions import AccessError
@@ -9,6 +10,8 @@ from odoo.tools import consteq
 
 
 class PublicProject(http.Controller):
+
+    # ROUTES
 
     @http.route('/embed/project/security/check_access', type='json', auth="public")
     def check_access(self, access_token, project_id=None, task_id=None, action=None):
@@ -42,188 +45,132 @@ class PublicProject(http.Controller):
             return user_rights == 2
         return levels[user_rights]
 
-    def _chatter_get_track_args(self, task_id, fields_to_track):
-        """Get the values required by task.message_track, as well as the task itself.
+    # DECORATORS
 
-        Note: Must be called before the write operation in order to get initial values.
+    def chatter_track(operation):
+        """Prepare values for chatter tracking, then call the decorated function, then track for chatter.
 
-        :param task_id: (int) The ID of the task to track
-        :param fields_to_track: ([str]) The list of fields to track on the task
-        :return: (Object, dict, dict) The task object, tracked fields and their initial values
+        :param operation: (str) 'read', 'write' or 'create' (note: fields to track are defined in function
+                                of that operation type, via self._tracked_fields(operation)).
         """
-        task = request.env['project.task']
-        task = task.sudo() if not self._is_logged_in() else task
-        task = task.browse(task_id) if task_id else task
-        tracked_fields = task.fields_get(fields_to_track) if task else None
-        initial_values = dict([(task.id, {field: task[field] for field in fields_to_track})])
-        return task, tracked_fields, initial_values
+        def decorator(f):
+            @functools.wraps(f)
+            def response_wrap(self, *args, **kw):
+                fields = self._tracked_fields(operation)
 
-    def _chatter_track(self, task, tracked_fields, initial_values):
-        """Track fields of a task for the chatter, as Public User if user is not logged in.
+                task = request.env['project.task']
+                task = task.sudo() if not self._is_logged_in() else task
 
-        :param task: (Object) The task object
-        :param tracked_fields: (dict) The tracked fields
-        :param initial_values: (dict) The tracked fields' initial values
-        :return: True
-        """
-        kwargs = {'author_id': request.env.uid} if not self._is_logged_in() else {}
-        task.message_track(tracked_fields, initial_values, **kwargs)
-        return True
+                if operation == 'write' and args[0]:
+                    task = task.browse(args[0])
+                    tracked_fields = task.fields_get(fields) if task else None
+                    initial_values = dict([(task.id, {field: task[field] for field in fields})])
 
-    def _check_and_perform(self, method_to_call, submethod=None, access_info=None, **kw):
-        """Check permissions before calling a given method.
+                response = f(self, *args, **kw)
 
-        :param method_to_call: (str) The name of the method to call if access is granted.
-        :param submethod: (str) The name of the method that the method to call will call
-                                if access is granted (if method_to_call == call or call_kw).
-                                Defaults to None.
-        :param kw: (dict) All args and kwargs passed to the method to call.
-        :return: (any) The result of the method to call or None if no access was granted.
-        """
-        read_words = ['read', 'load', 'default', 'get', 'search',
-                     'message', 'mail',  # we want to allow readonly users to use the chatter
-                     'onchange', 'export_data']
-        edit_words = ['write', 'resequence', 'set']
+                # If we're creating a task, we only get the task's id after creating it
+                # The initial values are pre-creation of the task so by definition they're all None
+                if operation == 'create' and response:
+                    task = task.browse(response)
+                    tracked_fields = task.fields_get(fields) if task else None
+                    initial_values = dict([(task.id, {field: None for field in fields})])
 
-        if any(word in (submethod or method_to_call) for word in read_words):
-            return self._check_and_perform_read(method_to_call,
-                                                submethod=submethod,
-                                                access_info=access_info,
-                                                **kw)
-        if any(word in (submethod or method_to_call) for word in edit_words):
-            return self._check_and_perform_write(method_to_call,
-                                                 submethod=submethod,
-                                                 access_info=access_info,
-                                                 **kw)
-        if 'create' in (submethod or method_to_call):
-            return self._check_and_perform_create(method_to_call,
-                                                  submethod=submethod,
-                                                  access_info=access_info,
-                                                  **kw)
-        return
+                if task and initial_values and tracked_fields:
+                    author_id = request.env.uid if not self._is_logged_in() else None
+                    task.message_track(tracked_fields, initial_values, author_id=author_id)
+                return response
+            return response_wrap
+        return decorator
     
-    def _check_and_perform_create(self, method_to_call, submethod=None, access_info={}, **kw):
-        """Check the user's create permissions. If access is granted, redirect
-        to all create read methods called by project's kanban and form views,
-        as sudo.
+    def verify_and_dispatch(method_to_call):
+        def decorator(f):
+            @functools.wraps(f)
+            def response_wrap(self, *args, **kw):
+                is_logged_in = self._is_logged_in()
+                access_info = kw.pop('access_info')
+                submethod = kw.get('method')
 
-        :param method_to_call: (str) The name of the method to call if access is granted.
-        :param submethod: (str) The name of the method that the method to call will call
-                                if access is granted (if method_to_call == call or call_kw).
-                                Defaults to None.
-        :param kw: (dict) All args and kwargs passed to the method to call.
-        :return: (any) The result of the method to call or None if no access was granted.
-        """
-        access_token = access_info.get('access_token', None)
-        project_id = access_info.get('project_id')
-        task_id = access_info.get('task_id')
+                access_token = access_info.pop('access_token')
+                project_id = access_info.get('project_id')
+                task_id = access_info.get('task_id')
 
-        # If there is a valid token, perform the operation as sudo
-        if access_token and self.check_access(access_token,
-                                              project_id=project_id,
-                                              task_id=None,
-                                              action='edit'):
-            model_name = kw.pop('model', None)
-            model = request.env[model_name] if model_name else None
-            if method_to_call == 'call':
-                return self._sudo_call_kw(model, submethod, *kw.get('args', None), {})
-            elif method_to_call == 'call_kw':
-                return self._sudo_call_kw(model, submethod, kw.get('args', None), kw.get('kwargs', {}))
-        # Otherwise if the user is logged in, perform the operation as that user
-        elif self._is_logged_in():
-            return getattr(self, method_to_call)(**kw)
-        # If there is no valid token and the user is not logged in, raise an AccessError
-        else:
-            raise AccessError(_("Create rights denied."))
+                # 1. Get operation type ('read', 'write', 'create') of the method
+                operation = self._check_operation(submethod if method_to_call in ['call', 'call_kw'] else method_to_call)
 
-    def _check_and_perform_read(self, method_to_call, submethod=None, access_info={}, **kw):
-        """Check the user's read permissions. If access is granted, redirect
-        to all various read methods called by project's kanban and form views,
-        as sudo.
+                # 2. Check token and whitelists
+                if operation and access_token:
+                    action = 'edit' if operation in ['write', 'create'] else 'read'
+                    has_access = self.check_access(access_token,
+                                                   project_id=project_id,
+                                                   task_id=task_id if operation != 'create' else None,
+                                                   action=action)
+                    model = kw.get('model')
+                    fields = kw.get('kwargs', {}).get('fields', [])
+                    domain = kw.get('kwargs', {}).get('domain', [])
 
-        :param method_to_call: (str) The name of the method to call if access is granted.
-        :param submethod: (str) The name of the method that the method to call will call
-                                if access is granted (if method_to_call == call or call_kw).
-                                Defaults to None.
-        :param kw: (dict) All args and kwargs passed to the method to call.
-        :return: (any) The result of the method to call or None if no access was granted.
-        """
-        access_token = access_info.get('access_token', None)
-        project_id = access_info.get('project_id')
-        task_id = access_info.get('task_id', None)
+                    # `BaseModel.read()` passes the fields as args[1]
+                    if submethod == 'read':
+                        fields = kw.get('args')[1]
+                        # `BaseModel.read()` defaults with *all fields* if no fields are passed.
+                        if not fields:
+                            raise AccessError(_("Forbidden to read all fields on this model."))
+                    # BaseModel.default_get() and .create() pass the fields as args[0]
+                    elif submethod in ['default_get', 'create']:
+                        fields = kw.get('args')[0]
+                    
+                    is_whitelisted = self._check_whitelists(operation, model, fields, domain)
 
-        # If there is a valid token, perform the operation as sudo
-        if access_token and self.check_access(access_token,
-                                              project_id=project_id,
-                                              task_id=task_id,
-                                              action='read'):
-            model_name = kw.pop('model', None)
-            model = request.env[model_name] if model_name else None
-            if method_to_call == 'call':
-                return self._sudo_call_kw(model, submethod, *kw.get('args', None), {})
-            elif method_to_call == 'call_kw':
-                return self._sudo_call_kw(model, submethod, kw.get('args', None), kw.get('kwargs', {}))
-            elif method_to_call == 'load_action':
-                return self._sudo_load_action(**kw)
-            elif method_to_call == 'mail_init_messaging':
-                return self._sudo_mail_init_messaging()
-            elif method_to_call == 'read':
-                return self._sudo_read(model, **kw.get('kwargs', {}))
-            elif method_to_call == 'read_group':
-                return self._sudo_read_group(model, **kw.get('kwargs', {}))
-            elif method_to_call == 'read_progress_bar':
-                return self._sudo_read_progress_bar(model, **kw.get('kwargs', {}))
-            elif method_to_call == 'search_read':
-                return self._sudo_search_read(model, **kw)
-        # Otherwise if the user is logged in, perform the operation as that user
-        elif self._is_logged_in():
-            method_to_call = 'load' if method_to_call == 'load_action' else method_to_call
-            return getattr(self, method_to_call)(**kw)
-        # If there is no valid token and the user is not logged in, raise an AccessError
-        else:
-            raise AccessError(_("Read rights denied."))
+                    if has_access and is_whitelisted:
+                        if method_to_call in ['call', 'call_kw']:
+                            return f(self, operation, task_id, *args, **kw)
+                        if method_to_call == 'resequence':
+                            return f(self, task_id, *args, **kw)
+                        return f(self, *args, **kw)
+                
+                # 3. Or revert to regular perm checks for user
+                if is_logged_in:
+                    mtc = 'load' if method_to_call == 'load_action' else method_to_call
+                    return getattr(self, mtc)(**kw)
+                
+                # If [no valid token or operation not whitelisted]
+                # and user is not logged in:
+                raise AccessError(_("Access denied."))
+            return response_wrap
+        return decorator
 
-    def _check_and_perform_write(self, method_to_call, submethod=None, access_info={}, **kw):
-        """Check the user's write permissions. If access is granted, redirect
-        to all various write methods called by project's kanban and form views,
-        as sudo.
+    # PRIVATE METHODS
 
-        :param method_to_call: (str) The name of the method to call if access is granted.
-        :param submethod: (str) The name of the method that the method to call will call
-                                if access is granted (if method_to_call == call or call_kw).
-                                Defaults to None.
-        :param kw: (dict) All args and kwargs passed to the method to call.
-        :return: (any) The result of the method to call or None if no access was granted.
-        """
-        res = None
-        access_token = access_info.get('access_token')
-        project_id = access_info.get('project_id')
-        task_id = access_info.get('task_id')
-        fields_to_track = ['kanban_state_label', 'stage_id', 'priority']
-        task, tracked_fields, initial_values = self._chatter_get_track_args(task_id, fields_to_track)
+    def _check_operation(self, method):
+        wl = self._whitelist()
+        for op_name in wl:
+            op = wl.get(op_name)
+            if method in op['all']['methods']:
+                return op_name
+            for model in op:
+                if method in op.get(model)['methods']:
+                    return op_name
+        return
 
-        # If there is a valid token, perform the operation as sudo
-        if access_token and self.check_access(access_token,
-                                              project_id=project_id,
-                                              task_id=task_id,
-                                              action='edit'):
-            model = request.env[kw.pop('model', '')]
-            if method_to_call == 'call':
-                res = self._sudo_call_kw(model, submethod, *kw.get('args', None), {})
-            elif method_to_call == 'call_kw':
-                res = self._sudo_call_kw(model, submethod, kw.get('args', None), kw.get('kwargs', {}))
-            elif method_to_call == 'resequence':
-                res = self._sudo_resequence(model, **kw)
-        # Otherwise if the user is logged in, perform the operation as that user
-        elif self._is_logged_in():
-            res = getattr(self, method_to_call)(**kw)
-        # If there is no valid token and the user is not logged in, raise an AccessError
-        else:
-            raise AccessError(_("Edit rights denied."))
-        # This has to happen after the operation was performed
-        self._chatter_track(task=task, tracked_fields=tracked_fields, initial_values=initial_values)
-        return res
+    def _check_whitelists(self, operation, model, fields, domain):
+        if model:
+            # 1. Check the model access (for that operation)
+            if not self._is_whitelisted(operation, model=model):
+                return
+            # 2. Check the fields access (for that operation on that model)
+            for field in fields:
+                if not self._is_whitelisted(operation, model=model, field=field):
+                    return
 
+        # 3. Check the domain (for that operation on that model)
+        for d in domain:
+            if not isinstance(d, str):
+                # d[0] is a field name
+                is_field_ok = self._is_whitelisted(operation, model=model, field=d[0])
+                if not is_field_ok:
+                    return
+        
+        return True
+    
     def _public_project_check_token(self, access_token, project_id=None, task_id=None, action='read'):
         """Check the token for a project or task, for a given action.
 
@@ -266,12 +213,40 @@ class PublicProject(http.Controller):
         """
         return request.session.uid is not None
 
+    def _is_whitelisted(self, operations, method=None, model=None, field=None):
+        # Can't have method AND field (makes no sense anyway)
+        operations = [operations] if isinstance(operations, str) else operations
+        whitelist = self._whitelist()
+        for op in operations:
+            wl = whitelist.get(op)
+            if field:
+                if field in wl['all']['fields'] or model and field in wl.get(model)['fields']:
+                    return op
+            elif method:
+                if method in wl['all']['methods'] or model and method in wl.get(model)['methods']:
+                    return op
+            elif model:
+                if model in wl:
+                    return op
+        return False
+
     def _sudo_call_kw(self, model, method_name, args, kw):
         """Override api.call_kw to pass it the model as sudo."""
         # message_post should have the public user as author if not logged in
         if method_name == 'message_post' and not self._is_logged_in():
             kw['author_id'] = request.uid or None
         return api.call_kw(model.sudo(), method_name, args, kw)
+
+    @chatter_track('create')
+    def _sudo_call_kw_create(self, model, method_name, args, kw):
+        return self._sudo_call_kw(model, method_name, args, kw)
+    
+    def _sudo_call_kw_read(self, model, method_name, args, kw):
+        return self._sudo_call_kw(model, method_name, args, kw)
+    
+    @chatter_track('write')
+    def _sudo_call_kw_write(self, task_id, model, method_name, args, kw):
+        return self._sudo_call_kw(model, method_name, args, kw)
 
     def _sudo_load_action(self, **kw):
         action_id = kw.get('action_id')
@@ -342,28 +317,150 @@ class PublicProject(http.Controller):
         progress_bar = kw.get('progress_bar', {})
         return model.sudo().read_progress_bar(domain, group_by, progress_bar)
 
+    @chatter_track('write')
     def _sudo_resequence(self, model, **kw):
-        """Override Dataset.resequence to pass it the model as sudo."""
+        """Override BaseModel.resequence to pass it the model as sudo."""
         ids = kw.get('ids', [])
-        kwargs = {k: v for k, v in kw.items() if k in ['fields', 'offset']}
-        return DataSet.resequence(self, model.sudo(), ids, **kwargs)
+        return model.sudo().resequence(ids, offset=kw.get('offset', 0))
 
     def _sudo_search_read(self, model, **kw):
         """Override models.search_read to pass it the model as sudo."""
         kwargs = {k: v for k, v in kw.items() if k in ['domain', 'fields', 'offset', 'limit', 'order']}
-        model_sudo = model.sudo()
-        records = model_sudo.search_read(**kwargs)
+        return DataSet.do_search_read(self, model.sudo(), **kwargs)
 
-        if not records:
-            return {
-                'length': 0,
-                'records': []
-            }
-        if kw.get('limit') and len(records) == kw.get('limit'):
-            length = model_sudo.search_count(kw.get('domain'))
-        else:
-            length = len(records) + (kw.get('offset', 0))
+    def _tracked_fields(self, operation):
+        if operation == 'create':
+            return ['project_id', 'name', 'kanban_stage', 'stage_id']
+        if operation == 'read':
+            return []
+        if operation == 'write':
+            return ['kanban_state_label', 'stage_id', 'priority']
+
+    def _whitelist(self):
+        # operation.model.list_name.values
+        # operation.all.list_name.values show methods and fields that are ok across fields and methods
+        # list_name is methods or fields
         return {
-            'length': length,
-            'records': records
+            'create': {
+                'all': {
+                    'fields': [],
+                    'methods': [],
+                },
+                'project.task': {
+                    'fields': ['name'],
+                    'methods': ['create'],
+                },
+            },
+            'read': {
+                'all': {
+                    'fields': [],
+                    'methods': ['load_action',
+                                'mail_init_messaging'],
+                },
+                'project.project': {
+                    'fields': [],
+                    'methods': ['name_get'],
+                },
+                'project.task': {
+                    'fields': [
+                        'color',
+                        'priority',
+                        'stage_id',
+                        'user_id', # keep ?
+                        'user_email', # keep ?
+                        'description',
+                        'sequence',
+                        'date_deadline',
+                        'message_needaction_counter',
+                        'attachment_ids',
+                        'displayed_image_id',
+                        'active',
+                        'legend_blocked',
+                        'legend_normal',
+                        'legend_done',
+                        'activity_ids',
+                        'activity_state',
+                        'rating_last_value',
+                        'rating_ids',
+                        'name',
+                        'project_id',
+                        'email_from',
+                        'tag_ids',
+                        'kanban_state', # only for kanban
+                        # only for form:
+                        'subtask_count',
+                        'rating_count',
+                        'partner_id',
+                        'email_cc',
+                        'parent_id',
+                        'child_ids',
+                        'subtask_project_id',
+                        'company_id',
+                        'date_assign',
+                        'date_last_stage_update',
+                        'working_hours_open',
+                        'working_days_open',
+                        'working_hours_close',
+                        'working_days_close',
+                        'message_ids',
+                        'message_attachment_count',
+                        'display_name',
+                    ],
+                    'methods': ['default_get',
+                                'load_views',
+                                'message_get_suggested_recipients',
+                                'message_post', # technically a 'write' method but we want to use the chatter in readonly
+                                'read',
+                                'read_group',
+                                'read_progress_bar',
+                                'search_read'],
+                },
+                'project.task.type': {
+                    'fields': ['display_name',
+                               'description',
+                               'legend_priority',
+                               'id',
+                               'fold',
+                               'project_ids'],
+                    'methods': ['read',
+                                'search_read',
+                                'name_get'],
+                },
+                'project.tags': {
+                    'fields': ['display_name',
+                               'color'],
+                    'methods': ['read'],
+                },
+                'ir.ui.view': {
+                    'fields': [],
+                    'methods': ['get_view_id'],
+                },
+                'mail.message': {
+                    'fields': [],
+                    'methods': ['message_format',
+                                'toggle_message_starred'],
+                },
+                'mail.channel': {
+                    'fields': [],
+                    'methods': ['channel_join_and_get_info'],
+                },
+            },
+            'write': {
+                'all': {
+                    'fields': [],
+                    'methods': [],
+                },
+                'project.task': {
+                    'fields': ['priority',
+                               'kanban_state',
+                               'stage_id'],
+                    'methods': ['write',
+                                'onchange',
+                                'resequence'],
+                },
+                'project.task.type': {
+                    'fields': ['stage_id'],
+                    'methods': ['resequence'],
+                },
+            },
         }
