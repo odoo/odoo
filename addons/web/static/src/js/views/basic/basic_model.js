@@ -202,6 +202,27 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * Completes the fields and fieldsInfo of a dataPoint with the given ones.
+     * It is useful for the cases where a record element is shared between
+     * various views, such as a one2many with a tree and a form view.
+     *
+     * @param {string} recordID a valid element ID
+     * @param {Object} viewInfo
+     * @param {Object} viewInfo.fields
+     * @param {Object} viewInfo.fieldsInfo
+     */
+    addFieldsInfo: function (recordID, viewInfo) {
+        var record = this.localData[recordID];
+        record.fields = _.extend({}, record.fields, viewInfo.fields);
+        // complete the given fieldsInfo with the fields of the main view, so
+        // that those field will be reloaded if a reload is triggered by the
+        // secondary view
+        var fieldsInfo = _.mapObject(viewInfo.fieldsInfo, function (fieldsInfo) {
+            return _.defaults({}, fieldsInfo, record.fieldsInfo[record.viewType]);
+        });
+        record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
+    },
+    /**
      * Add and process default values for a given record. Those values are
      * parsed and stored in the '_changes' key of the record. For relational
      * fields, sub-dataPoints are created, and missing relational data is
@@ -309,108 +330,52 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
-     * Compute the default value that the handle field should take.
-     * We need to compute this in order for new lines to be added at the correct position.
+     * Returns true if a record can be abandoned.
      *
-     * @private
-     * @param {Object} listID
-     * @param {string} position
-     * @return {Object} empty object if no overrie has to be done, or:
-     *  field: the name of the field to override,
-     *  value: the value to use for that field
+     * Case for not abandoning the record:
+     *
+     * 1. flagged as 'no abandon' (i.e. during a `default_get`, including any
+     *    `onchange` from a `default_get`)
+     * 2. registered in a list on addition
+     *
+     *    2.1. registered as non-new addition
+     *    2.2. registered as new additon on update
+     *
+     * 3. record is not new
+     *
+     * Otherwise, the record can be abandoned.
+     *
+     * This is useful when discarding changes on this record, as it means that
+     * we must keep the record even if some fields are invalids (e.g. required
+     * field is empty).
+     *
+     * @param {string} id id for a local resource
+     * @returns {boolean}
      */
-    _computeOverrideDefaultFields: function (listID, position) {
-        var list = this.localData[listID];
-        var handleField;
-
-        // Here listID is actually just parentID, it's not yet confirmed
-        // to be a list.
-        // If we are not in the case that interests us,
-        // listID will be undefined and this check will work.
-        if (!list) {
-            return {};
+    canBeAbandoned: function (id) {
+        // 1. no drop if flagged
+        if (this.localData[id]._noAbandon) {
+            return false;
         }
-
-        position = position || 'bottom';
-
-        // Let's find if there is a field with handle.
-        if (!list.fieldsInfo) {
-            return {};
-        }
-        for (var field in list.fieldsInfo.list) {
-            if (list.fieldsInfo.list[field].widget === 'handle') {
-                handleField = field;
-                break;
-                // If there are 2 handle fields on the same list,
-                // we take the first one we find.
-                // And that will be alphabetically on the field name...
+        // 2. no drop in a list on "ADD in some cases
+        var record = this.localData[id];
+        var parent = this.localData[record.parentID];
+        if (parent) {
+            var entry = _.findWhere(parent._savePoint, {operation: 'ADD', id: id});
+            if (entry) {
+                // 2.1. no drop on non-new addition in list
+                if (!entry.isNew) {
+                    return false;
+                }
+                // 2.2. no drop on new addition on "UPDATE"
+                var lastEntry = _.last(parent._savePoint);
+                if (lastEntry.operation === 'UPDATE' && lastEntry.id === id) {
+                    return false;
+                }
             }
         }
-
-        if (!handleField) {
-            return {};
-        }
-
-        // We don't want to override the default value
-        // if the list is not ordered by the handle field.
-        var isOrderedByHandle = list.orderedBy
-            && list.orderedBy.length
-            && list.orderedBy[0].asc === true
-            && list.orderedBy[0].name === handleField;
-
-        if (!isOrderedByHandle) {
-            return {};
-        }
-
-        // We compute the list (get) to apply the pending changes before doing our work,
-        // otherwise new lines might not be taken into account.
-        // We use raw: true because we only need to load the first level of relation.
-        var computedList = this.get(list.id, {raw: true});
-
-        // We don't need to worry about the position of a new line if the list is empty.
-        if (!computedList || !computedList.data || !computedList.data.length) {
-            return {};
-        }
-
-        // If there are less elements in the list than the limit of
-        // the page then take the index of the last existing line.
-
-        // If the button is at the top, we want the new element on
-        // the first line of the page.
-
-        // If the button is at the bottom, we want the new element
-        // after the last line of the page
-        // (= theorically it will be the first element of the next page).
-
-        // We ignore list.offset because computedList.data
-        // will only have the current page elements.
-
-        var index = Math.min(
-            computedList.data.length - 1,
-            position !== 'top' ? list.limit - 1 : 0
-        );
-
-        // This positioning will almost be correct. There might just be
-        // an issue if several other lines have the same handleFieldValue.
-
-        // TODO ideally: if there is an element with the same handleFieldValue,
-        // that one and all the following elements must be incremented
-        // by 1 (at least until there is a gap in the numbering).
-
-        // We don't do it now because it's not an important case.
-        // However, we can for sure increment by 1 if we are on the last page.
-
-        var handleFieldValue = computedList.data[index].data[handleField];
-        if (position === 'top') {
-            handleFieldValue--;
-        } else if (list.count <= list.offset + list.limit - (list.tempLimitIncrement || 0)) {
-            handleFieldValue++;
-        }
-
-        return {
-            field: handleField,
-            value: handleFieldValue,
-        };
+        // 3. drop new records
+        return this.isNew(id);
     },
     /**
      * Delete a list of records, then, if the records have a parent, reload it.
@@ -516,6 +481,20 @@ var BasicModel = AbstractModel.extend({
                     context: context,
                 });
             });
+    },
+    /**
+     * For list resources, this freezes the current records order.
+     *
+     * @param {string} listID a valid element ID of type list
+     */
+    freezeOrder: function (listID) {
+        var list = this.localData[listID];
+        if (list.type === 'record') {
+            return;
+        }
+        list = this._applyX2ManyOperations(list);
+        this._sortList(list);
+        this.localData[listID].orderedResIDs = list.res_ids;
     },
     /**
      * The get method first argument is the handle returned by the load method.
@@ -690,54 +669,6 @@ var BasicModel = AbstractModel.extend({
             return record.data.display_name;
         }
         return _t("New");
-    },
-    /**
-     * Returns true if a record can be abandoned.
-     *
-     * Case for not abandoning the record:
-     *
-     * 1. flagged as 'no abandon' (i.e. during a `default_get`, including any
-     *    `onchange` from a `default_get`)
-     * 2. registered in a list on addition
-     *
-     *    2.1. registered as non-new addition
-     *    2.2. registered as new additon on update
-     *
-     * 3. record is not new
-     *
-     * Otherwise, the record can be abandoned.
-     *
-     * This is useful when discarding changes on this record, as it means that
-     * we must keep the record even if some fields are invalids (e.g. required
-     * field is empty).
-     *
-     * @param {string} id id for a local resource
-     * @returns {boolean}
-     */
-    canBeAbandoned: function (id) {
-        // 1. no drop if flagged
-        if (this.localData[id]._noAbandon) {
-            return false;
-        }
-        // 2. no drop in a list on "ADD in some cases
-        var record = this.localData[id];
-        var parent = this.localData[record.parentID];
-        if (parent) {
-            var entry = _.findWhere(parent._savePoint, {operation: 'ADD', id: id});
-            if (entry) {
-                // 2.1. no drop on non-new addition in list
-                if (!entry.isNew) {
-                    return false;
-                }
-                // 2.2. no drop on new addition on "UPDATE"
-                var lastEntry = _.last(parent._savePoint);
-                if (lastEntry.operation === 'UPDATE' && lastEntry.id === id) {
-                    return false;
-                }
-            }
-        }
-        // 3. drop new records
-        return this.isNew(id);
     },
     /**
      * Returns true if a record is dirty. A record is considered dirty if it has
@@ -1174,41 +1105,6 @@ var BasicModel = AbstractModel.extend({
             }
             return def;
         });
-    },
-    /**
-     * Completes the fields and fieldsInfo of a dataPoint with the given ones.
-     * It is useful for the cases where a record element is shared between
-     * various views, such as a one2many with a tree and a form view.
-     *
-     * @param {string} recordID a valid element ID
-     * @param {Object} viewInfo
-     * @param {Object} viewInfo.fields
-     * @param {Object} viewInfo.fieldsInfo
-     */
-    addFieldsInfo: function (recordID, viewInfo) {
-        var record = this.localData[recordID];
-        record.fields = _.extend({}, record.fields, viewInfo.fields);
-        // complete the given fieldsInfo with the fields of the main view, so
-        // that those field will be reloaded if a reload is triggered by the
-        // secondary view
-        var fieldsInfo = _.mapObject(viewInfo.fieldsInfo, function (fieldsInfo) {
-            return _.defaults({}, fieldsInfo, record.fieldsInfo[record.viewType]);
-        });
-        record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
-    },
-    /**
-     * For list resources, this freezes the current records order.
-     *
-     * @param {string} listID a valid element ID of type list
-     */
-    freezeOrder: function (listID) {
-        var list = this.localData[listID];
-        if (list.type === 'record') {
-            return;
-        }
-        list = this._applyX2ManyOperations(list);
-        this._sortList(list);
-        this.localData[listID].orderedResIDs = list.res_ids;
     },
     /**
      * Manually sets a resource as dirty. This is used to notify that a field
@@ -2060,6 +1956,110 @@ var BasicModel = AbstractModel.extend({
             });
         }
         return hasOnchange ? specs : false;
+    },
+    /**
+     * Compute the default value that the handle field should take.
+     * We need to compute this in order for new lines to be added at the correct position.
+     *
+     * @private
+     * @param {Object} listID
+     * @param {string} position
+     * @return {Object} empty object if no overrie has to be done, or:
+     *  field: the name of the field to override,
+     *  value: the value to use for that field
+     */
+    _computeOverrideDefaultFields: function (listID, position) {
+        var list = this.localData[listID];
+        var handleField;
+
+        // Here listID is actually just parentID, it's not yet confirmed
+        // to be a list.
+        // If we are not in the case that interests us,
+        // listID will be undefined and this check will work.
+        if (!list) {
+            return {};
+        }
+
+        position = position || 'bottom';
+
+        // Let's find if there is a field with handle.
+        if (!list.fieldsInfo) {
+            return {};
+        }
+        for (var field in list.fieldsInfo.list) {
+            if (list.fieldsInfo.list[field].widget === 'handle') {
+                handleField = field;
+                break;
+                // If there are 2 handle fields on the same list,
+                // we take the first one we find.
+                // And that will be alphabetically on the field name...
+            }
+        }
+
+        if (!handleField) {
+            return {};
+        }
+
+        // We don't want to override the default value
+        // if the list is not ordered by the handle field.
+        var isOrderedByHandle = list.orderedBy
+            && list.orderedBy.length
+            && list.orderedBy[0].asc === true
+            && list.orderedBy[0].name === handleField;
+
+        if (!isOrderedByHandle) {
+            return {};
+        }
+
+        // We compute the list (get) to apply the pending changes before doing our work,
+        // otherwise new lines might not be taken into account.
+        // We use raw: true because we only need to load the first level of relation.
+        var computedList = this.get(list.id, {raw: true});
+
+        // We don't need to worry about the position of a new line if the list is empty.
+        if (!computedList || !computedList.data || !computedList.data.length) {
+            return {};
+        }
+
+        // If there are less elements in the list than the limit of
+        // the page then take the index of the last existing line.
+
+        // If the button is at the top, we want the new element on
+        // the first line of the page.
+
+        // If the button is at the bottom, we want the new element
+        // after the last line of the page
+        // (= theorically it will be the first element of the next page).
+
+        // We ignore list.offset because computedList.data
+        // will only have the current page elements.
+
+        var index = Math.min(
+            computedList.data.length - 1,
+            position !== 'top' ? list.limit - 1 : 0
+        );
+
+        // This positioning will almost be correct. There might just be
+        // an issue if several other lines have the same handleFieldValue.
+
+        // TODO ideally: if there is an element with the same handleFieldValue,
+        // that one and all the following elements must be incremented
+        // by 1 (at least until there is a gap in the numbering).
+
+        // We don't do it now because it's not an important case.
+        // However, we can for sure increment by 1 if we are on the last page.
+
+        var handleFieldValue = computedList.data[index].data[handleField];
+        if (position === 'top') {
+            handleFieldValue--;
+        } else if (list.count <= list.offset + list.limit - (list.tempLimitIncrement || 0)) {
+            handleFieldValue++;
+        }
+
+        return {
+            field: handleField,
+            value: handleFieldValue,
+        };
     },
     /**
      * Evaluate modifiers

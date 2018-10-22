@@ -2,10 +2,10 @@ odoo.define('web.KanbanRenderer', function (require) {
 "use strict";
 
 var BasicRenderer = require('web.BasicRenderer');
+var ColumnQuickCreate = require('web.kanban_column_quick_create');
 var core = require('web.core');
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
-var ColumnQuickCreate = require('web.kanban_column_quick_create');
 var QWeb = require('web.QWeb');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -151,7 +151,10 @@ var KanbanRenderer = BasicRenderer.extend({
     addQuickCreate: function () {
         return this.widgets[0].addQuickCreate();
     },
-    giveFocus:function() {
+    /**
+     * Focuses the first kanban record
+     */
+    giveFocus: function () {
         this.$('.o_kanban_record:first').focus();
     },
     /**
@@ -249,21 +252,22 @@ var KanbanRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
     /**
-    * @private
-    * @param {DOMElement} currentColumn
-    */
-    _focusOnNextCard: function(currentCardElement) {
+     * @private
+     * @param {DOMElement} currentColumn
+     */
+    _focusOnNextCard: function (currentCardElement) {
         var nextCard = currentCardElement.nextElementSibling;
         if (nextCard) {
             nextCard.focus();
         }
     },
     /**
-    * @private
-    * @param {DOMElement} currentColumn
-    */
-    _focusOnPreviousCard: function(currentCardElement) {
+     * @private
+     * @param {DOMElement} currentColumn
+     */
+    _focusOnPreviousCard: function (currentCardElement) {
         var previousCard = currentCardElement.previousElementSibling;
         if (previousCard && previousCard.classList.contains("o_kanban_record")) { //previous element might be column title
             previousCard.focus();
@@ -500,6 +504,7 @@ var KanbanRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
     /**
      * Closes the opened quick create widgets in columns
      *
@@ -513,10 +518,10 @@ var KanbanRenderer = BasicRenderer.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onQuickCreateColumnUpdated: function (event) {
-        event.stopPropagation();
+    _onQuickCreateColumnUpdated: function (ev) {
+        ev.stopPropagation();
         this._toggleNoContentHelper();
     },
     /**
