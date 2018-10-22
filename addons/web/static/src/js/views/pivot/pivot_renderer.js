@@ -280,13 +280,12 @@ var PivotRenderer = AbstractRenderer.extend({
 
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onTdHover: function (event) {
+    _onTdHover: function (ev) {
         var $td = $(event.target);
         $td.closest('table').find('col:eq(' + $td.index()+')').toggleClass('hover');
-    }
-
+    };
 });
 
 return PivotRenderer;

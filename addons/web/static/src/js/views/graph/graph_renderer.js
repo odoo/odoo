@@ -68,6 +68,11 @@ return AbstractRenderer.extend({
         this._super.apply(this, arguments);
         this.isInDOM = false;
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      * @param {Object} state

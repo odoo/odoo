@@ -974,9 +974,14 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-    _onActivateNextWidget: function (e) {
-        e.stopPropagation();
-        var index = this.allFieldWidgets[this.state.id].indexOf(e.data.target);
+
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onActivateNextWidget: function (ev) {
+        ev.stopPropagation();
+        var index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
         this._activateNextFieldWidget(this.state, index);
     },
     /**
@@ -1014,9 +1019,9 @@ var FormRenderer = BasicRenderer.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onTranslate: function (event) {
-        event.preventDefault();
-        this.trigger_up('translate', {fieldName: event.target.name, id: this.state.id});
+    _onTranslate: function (ev) {
+        ev.preventDefault();
+        this.trigger_up('translate', {fieldName: ev.target.name, id: this.state.id});
     },
 });
 

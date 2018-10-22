@@ -202,11 +202,11 @@ var KanbanController = BasicController.extend({
      * a group and to update the renderer
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onAddColumn: function (event) {
+    _onAddColumn: function (ev) {
         var self = this;
-        this.model.createGroup(event.data.value, this.handle).then(function () {
+        this.model.createGroup(ev.data.value, this.handle).then(function () {
             var state = self.model.get(self.handle, {raw: true});
             var ids = _.pluck(state.data, 'res_id').filter(_.isNumber);
             return self._resequenceColumns(ids);
@@ -219,15 +219,15 @@ var KanbanController = BasicController.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onAddRecordToColumn: function (event) {
+    _onAddRecordToColumn: function (ev) {
         var self = this;
-        var record = event.data.record;
-        var column = event.target;
+        var record = ev.data.record;
+        var column = ev.target;
         this.alive(this.model.moveRecord(record.db_id, column.db_id, this.handle))
             .then(function (column_db_ids) {
-                return self._resequenceRecords(column.db_id, event.data.ids)
+                return self._resequenceRecords(column.db_id, ev.data.ids)
                     .then(function () {
                         _.each(column_db_ids, function (db_id) {
                             var data = self.model.get(db_id);
@@ -238,12 +238,12 @@ var KanbanController = BasicController.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onButtonClicked: function (event) {
-        event.stopPropagation();
-        var attrs = event.data.attrs;
-        var record = event.data.record;
+    _onButtonClicked: function (ev) {
+        ev.stopPropagation();
+        var attrs = ev.data.attrs;
+        var record = ev.data.record;
         if (attrs.context) {
             attrs.context = new Context(attrs.context)
                 .set_eval_context({
@@ -260,7 +260,7 @@ var KanbanController = BasicController.extend({
                 model: record.model,
                 resIDs: record.res_ids,
             },
-            on_closed: this._reloadAfterButtonClick.bind(this, event.target, event.data),
+            on_closed: this._reloadAfterButtonClick.bind(this, ev.target, ev.data),
         });
     },
     /**
@@ -290,28 +290,28 @@ var KanbanController = BasicController.extend({
      * Moves the focus from the controller buttons to the first kanban record
      *
      * @private
-     * @param {jQueryEvent} e
+     * @param {jQueryEvent} ev
      */
-    _onButtonsKeyDown: function (e) {
-        switch(e.keyCode) {
+    _onButtonsKeyDown: function (ev) {
+        switch(ev.keyCode) {
             case $.ui.keyCode.DOWN:
                 this.$('.o_kanban_record:first').focus();
         }
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onColumnResequence: function (event) {
-        this._resequenceRecords(event.target.db_id, event.data.ids);
+    _onColumnResequence: function (ev) {
+        this._resequenceRecords(ev.target.db_id, ev.data.ids);
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onDeleteColumn: function (event) {
+    _onDeleteColumn: function (ev) {
         var self = this;
-        var column = event.target;
+        var column = ev.target;
         var state = this.model.get(this.handle, {raw: true});
         var relatedModelName = state.fields[state.groupedBy[0]].relation;
         this.model
@@ -330,26 +330,26 @@ var KanbanController = BasicController.extend({
      * lazy loaded)
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onLoadColumnRecords: function (event) {
+    _onLoadColumnRecords: function (ev) {
         var self = this;
-        this.model.loadColumnRecords(event.data.columnID).then(function (dbID) {
+        this.model.loadColumnRecords(ev.data.columnID).then(function (dbID) {
             var data = self.model.get(dbID);
             self.renderer.updateColumn(dbID, data);
             self._updateEnv();
-            if (event.data.onSuccess) {
-                event.data.onSuccess();
+            if (ev.data.onSuccess) {
+                ev.data.onSuccess();
             }
         });
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onLoadMore: function (event) {
+    _onLoadMore: function (ev) {
         var self = this;
-        var column = event.target;
+        var column = ev.target;
         this.model.loadMore(column.db_id).then(function (db_id) {
             var data = self.model.get(db_id);
             self.renderer.updateColumn(db_id, data);
@@ -411,34 +411,34 @@ var KanbanController = BasicController.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onRecordDelete: function (event) {
-        this._deleteRecords([event.data.id]);
+    _onRecordDelete: function (ev) {
+        this._deleteRecords([ev.data.id]);
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onResequenceColumn: function (event) {
+    _onResequenceColumn: function (ev) {
         var self = this;
-        this._resequenceColumns(event.data.ids).then(function () {
+        this._resequenceColumns(ev.data.ids).then(function () {
             self._updateEnv();
         });
     },
     /**
      * @private
-     * @param {OdooEvent} event
-     * @param {boolean} [event.data.openQuickCreate=false] if true, opens the
+     * @param {OdooEvent} ev
+     * @param {boolean} [ev.data.openQuickCreate=false] if true, opens the
      *   QuickCreate in the toggled column (it assumes that we are opening it)
      */
-    _onToggleColumn: function (event) {
+    _onToggleColumn: function (ev) {
         var self = this;
-        var column = event.target;
+        var column = ev.target;
         this.model.toggleGroup(column.db_id).then(function (db_id) {
             var data = self.model.get(db_id);
             var options = {
-                openQuickCreate: !!event.data.openQuickCreate,
+                openQuickCreate: !!ev.data.openQuickCreate,
             };
             self.renderer.updateColumn(db_id, data, options);
             self._updateEnv();
@@ -459,12 +459,12 @@ var KanbanController = BasicController.extend({
      * Allow the user to archive/restore all the records of a column.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onToggleActiveRecords: function (event) {
+    _onToggleActiveRecords: function (ev) {
         var self = this;
-        var active = !event.data.archive;
-        var column = event.target;
+        var active = !ev.data.archive;
+        var column = ev.target;
         var recordIds = _.pluck(column.records, 'db_id');
         if (recordIds.length) {
             this.model

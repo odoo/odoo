@@ -22,10 +22,10 @@ ActionManager.include({
         env_updated: '_onEnvUpdated',
         execute_action: '_onExecuteAction',
         get_controller_context: '_onGetControllerContext',
+        navigation_move: '_onNavigationMove',
         update_filters: '_onUpdateFilters',
         search: '_onSearch',
         switch_view: '_onSwitchView',
-        navigation_move: '_onNavigationMove',
     }),
 
     //--------------------------------------------------------------------------
@@ -815,6 +815,22 @@ ActionManager.include({
         ev.data.callback(context || {});
     },
     /**
+     * Called mainly from the control panel when the focus should be given to a
+     * controller
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onNavigationMove : function (ev) {
+        switch(ev.data.direction) {
+            case 'down' :
+                var currentController = this.getCurrentController().widget;
+                currentController.giveFocus();
+                ev.stopPropagation();
+                break;
+        }
+    },
+    /**
      * Handles a request to add/remove search view filters.
      *
      * @param {OdooEvent} ev
@@ -829,21 +845,6 @@ ActionManager.include({
         var data = ev.data;
         var addedFilters = action.searchView.updateFilters(data.newFilters, data.filtersToRemove);
         data.callback(addedFilters);
-    },
-    /**
-     * Called mainly from the control panel when the focus should be given to a controller
-     * 
-     * @param {OdooEvent} event
-     * @private
-     */
-    _onNavigationMove : function(event) {
-        switch(event.data.direction) {
-            case 'down' :
-                var currentController = this.getCurrentController().widget;
-                currentController.giveFocus();
-                event.stopPropagation();
-                break;
-        }
     },
     /**
      * Called when there is a change in the search view, so the current action's
