@@ -12,6 +12,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var view_dialogs = require('web.view_dialogs');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -35,12 +36,15 @@ var KanbanController = BasicController.extend({
     /**
      * @override
      * @param {Object} params
+     * @param {boolean} params.quickCreateEnabled set to false to disable the
+     *   quick create feature
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
 
         this.on_create = params.on_create;
         this.hasButtons = params.hasButtons;
+        this.quickCreateEnabled = params.quickCreateEnabled;
     },
 
     //--------------------------------------------------------------------------
@@ -268,8 +272,8 @@ var KanbanController = BasicController.extend({
      */
     _onButtonNew: function () {
         var state = this.model.get(this.handle, {raw: true});
-        var hasColumns = state.groupedBy.length > 0 && state.data.length > 0;
-        if (hasColumns && this.on_create === 'quick_create') {
+        var quickCreateEnabled = this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state);
+        if (this.on_create === 'quick_create' && quickCreateEnabled) {
             // Activate the quick create in the first column
             this.renderer.addQuickCreate();
         } else if (this.on_create && this.on_create !== 'quick_create') {
@@ -396,10 +400,11 @@ var KanbanController = BasicController.extend({
                 var columnState = self.model.get(column.db_id, {raw: true});
                 var context = columnState.getContext();
                 var state = self.model.get(self.handle, {raw: true});
-                context['default_' + state.groupedBy[0]] = columnState.res_id;
+                var groupedBy = state.groupedBy[0];
+                context['default_' + groupedBy] = viewUtils.getGroupValue(columnState, groupedBy);
                 new view_dialogs.FormViewDialog(self, {
                     res_model: state.model,
-                    context: _.extend({default_name: name}, context),
+                    context: _.extend({default_name: values.name || values.display_name}, context),
                     title: _t("Create"),
                     disable_multiple_selection: true,
                     on_saved: function (record) {

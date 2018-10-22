@@ -471,6 +471,8 @@ class configmanager(object):
                     os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
                       for x in self.options['addons_path'].split(','))
 
+        self.options['data_dir'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['data_dir'].strip())))
+
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options['demo'] = (dict(self.options['init'])
                                 if not self.options['without_demo'] else {})

@@ -6,6 +6,7 @@ var BoardView = require('board.BoardView');
 var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
 var ListRenderer = require('web.ListRenderer');
+var pyUtils = require('web.py_utils');
 
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
@@ -744,6 +745,46 @@ QUnit.test('save to dashboard actions with flag keepSearchView', function (asser
     $('.o_add_to_dashboard_button').click();
 
     actionManager.destroy();
+});
+
+QUnit.test("Views should be loaded in the user's language", function (assert) {
+    assert.expect(2);
+    var form = createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        session: {user_context: {lang: 'fr_FR'}},
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{\'lang\': \'en_US\'}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'load_views') {
+                assert.deepEqual(pyUtils.eval('context', args.kwargs.context), {lang: 'fr_FR'},
+                    'The views should be loaded with the correct context');
+            }
+            if (route === "/web/dataset/search_read") {
+                assert.deepEqual(args.context, {lang: 'fr_FR'},
+                    'The data should be loaded with the correct context');
+            }
+            if (route === '/web/action/load') {
+                return $.when({
+                    res_model: 'partner',
+                    views: [[4, 'list']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,list':
+                '<list string="Partner"><field name="foo"/></list>',
+        },
+    });
+
+    form.destroy();
 });
 
 });

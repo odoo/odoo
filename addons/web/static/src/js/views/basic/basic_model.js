@@ -1016,27 +1016,51 @@ var BasicModel = AbstractModel.extend({
                 route: '/web/dataset/resequence',
                 params: params,
             })
-            .then(function () {
-                var offset = options.offset ? options.offset : 0;
-                var old_data = data.data.slice();
-                data.data = _.sortBy(data.data, function (d) {
-                    if (_.contains(resIDs, self.localData[d].res_id)) {
-                        return _.indexOf(resIDs, self.localData[d].res_id) + offset;
-                    } else {
-                        return _.indexOf(old_data, d);
+            .then(function (wasResequenced) {
+                if (!wasResequenced) {
+                    // the field on which the resequence was triggered does not
+                    // exist, so no resequence happened server-side
+                    return $.when();
+                }
+                var field = params.field ? params.field : 'sequence';
+
+                return self._rpc({
+                    model: modelName,
+                    method: 'read',
+                    args: [resIDs, [field]],
+                }).then(function (records) {
+                    if (data.data.length) {
+                        var dataType = self.localData[data.data[0]].type;
+                        if (dataType === 'record') {
+                            _.each(data.data, function (dataPoint) {
+                                var recordData = self.localData[dataPoint].data;
+                                var inRecords = _.findWhere(records, {id: recordData.id});
+                                if (inRecords) {
+                                    recordData[field] = inRecords[field];
+                                }
+                            });
+                            data.data = _.sortBy(data.data, function (d) {
+                                return self.localData[d].data[field];
+                            });
+                        }
+                        if (dataType === 'list') {
+                            data.data = _.sortBy(data.data, function (d) {
+                                return _.indexOf(resIDs, self.localData[d].res_id)
+                            });
+                        }
                     }
-                });
-                data.res_ids = [];
-                _.each(data.data, function (d) {
-                    var dataPoint = self.localData[d];
-                    if (dataPoint.type === 'record') {
-                        data.res_ids.push(dataPoint.res_id);
-                    } else {
-                        data.res_ids = data.res_ids.concat(dataPoint.res_ids);
-                    }
-                });
-                self._updateParentResIDs(data);
-                return parentID;
+                    data.res_ids = [];
+                    _.each(data.data, function (d) {
+                        var dataPoint = self.localData[d];
+                        if (dataPoint.type === 'record') {
+                            data.res_ids.push(dataPoint.res_id);
+                        } else {
+                            data.res_ids = data.res_ids.concat(dataPoint.res_ids);
+                        }
+                    });
+                    self._updateParentResIDs(data);
+                    return parentID;
+                })
             });
     },
     /**

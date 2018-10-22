@@ -11,9 +11,11 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_qty_procurement(self):
-        if not self.move_ids.filtered(lambda r: r.state != 'cancel') and self.purchase_line_ids.filtered(lambda r: r.state != 'cancel'):
+        # People without purchase rights should be able to do this operation
+        purchase_lines_sudo = self.sudo().purchase_line_ids
+        if not self.move_ids.filtered(lambda r: r.state != 'cancel') and purchase_lines_sudo.filtered(lambda r: r.state != 'cancel'):
             qty = 0.0
-            for po_line in self.purchase_line_ids.filtered(lambda r: r.state != 'cancel'):
+            for po_line in purchase_lines_sudo.filtered(lambda r: r.state != 'cancel'):
                 qty += po_line.product_uom._compute_quantity(po_line.product_qty, self.product_uom, rounding_method='HALF-UP')
             return qty
         else:

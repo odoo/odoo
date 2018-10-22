@@ -810,7 +810,7 @@
 
 <t t-name="FieldMany2One">
     <t t-if="widget.mode === 'readonly'">
-        <a t-if="!widget.nodeOptions.no_open" class="o_form_uri" href="#"/>
+        <a t-if="!widget.nodeOptions.no_open" t-att-tabindex="widget.attrs.tabindex" class="o_form_uri" href="#"/>
         <span t-if="widget.nodeOptions.no_open"/>
     </t>
     <div t-if="widget.mode === 'edit'" class="o_field_widget o_field_many2one" aria-atomic="true">
