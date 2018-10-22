@@ -192,6 +192,8 @@ QUnit.module('Views', {
         var done = assert.async();
         assert.expect(8);
 
+        this.data.product.fields.sequence = {string: "Sequence", type: "integer"};
+        this.data.partner.fields.sequence = {string: "Sequence", type: "integer"};
         this.data.partner.records.push({id: 3, foo: 'aaa', product_id: 37});
 
         var nbReseq = 0;
@@ -204,7 +206,7 @@ QUnit.module('Views', {
                     if (nbReseq === 1) { // resequencing columns
                         assert.deepEqual(args.ids, [41, 37],
                             "ids should be correct");
-                        assert.strictEqual(args.model, 'product_id',
+                        assert.strictEqual(args.model, 'product',
                             "model should be correct");
                     } else if (nbReseq === 2) { // resequencing records
                         assert.deepEqual(args.ids, [3, 1],
@@ -212,7 +214,6 @@ QUnit.module('Views', {
                         assert.strictEqual(args.model, 'partner',
                             "model should be correct");
                     }
-                    return $.when();
                 }
                 return this._super.apply(this, arguments);
             },
@@ -229,7 +230,7 @@ QUnit.module('Views', {
                     "first group should be res_id 37");
 
                 // resequence columns
-                return model.resequence('product_id', [41, 37], stateID);
+                return model.resequence('product', [41, 37], stateID);
             })
             .then(function (stateID) {
                 var state = model.get(stateID);

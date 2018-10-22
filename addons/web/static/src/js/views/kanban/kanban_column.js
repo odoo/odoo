@@ -7,6 +7,7 @@ var Dialog = require('web.Dialog');
 var KanbanRecord = require('web.KanbanRecord');
 var RecordQuickCreate = require('web.kanban_record_quick_create');
 var view_dialogs = require('web.view_dialogs');
+var viewUtils = require('web.viewUtils');
 var Widget = require('web.Widget');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 
@@ -201,7 +202,7 @@ var KanbanColumn = Widget.extend({
         this.trigger_up('close_quick_create'); // close other quick create widgets
         this.trigger_up('start_quick_create');
         var context = this.data.getContext();
-        context['default_' + this.groupedBy] = this.id;
+        context['default_' + this.groupedBy] = viewUtils.getGroupValue(this.data, this.groupedBy);
         this.quickCreateWidget = new RecordQuickCreate(this, {
             context: context,
             formViewRef: this.quickCreateView,

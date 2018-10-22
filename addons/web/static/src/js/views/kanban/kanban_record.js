@@ -509,10 +509,12 @@ var KanbanRecord = Widget.extend({
                 ischild = false;
             }
             var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== 'bs.tooltip');
+            var testLinkWithHref = elem.nodeName.toLowerCase() === 'a' && elem.href;
             if (ischild) {
                 children.push(elem);
-                if (test_event) {
-                    // do not trigger global click if one child has a click event registered
+                if (test_event || testLinkWithHref) {
+                    // Do not trigger global click if one child has a click
+                    // event registered (or it is a link with href)
                     trigger = false;
                 }
             }

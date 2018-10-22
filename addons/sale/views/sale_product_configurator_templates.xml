@@ -131,14 +131,12 @@
         <input type="hidden" class="product_display_name" t-attf-name="optional-productname-#{product.id}" t-att-value="product.product_variant_id.display_name if len(product.product_variant_ids) == 1 else ''"/>
         <span t-field="product.image_small" t-options='{"widget": "image"}' class="variant_image"/>
         </td>
-        <td class='td-product_name'>
+        <td class='td-product_name' colspan="2">
         <div class="float-left">
             <strong class="product-name" t-field="product.name"/>
             <div class="text-muted small" t-field="product.description_sale"/>
         </div>
-        </td>
-        <td class="td-qty">
-        <div class="float-left">
+        <div class="float-right">
             <t t-call="sale.variants"/>
         </div>
         </td>

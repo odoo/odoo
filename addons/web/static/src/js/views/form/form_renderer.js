@@ -995,10 +995,7 @@ var FormRenderer = BasicRenderer.extend({
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
-        if (ev.data.direction !== "cancel") {
-            ev.stopPropagation();
-        }
-
+        ev.stopPropagation();
         var index;
         if (ev.data.direction === "next") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target || ev.target);
