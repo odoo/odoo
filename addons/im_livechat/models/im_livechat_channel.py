@@ -132,11 +132,12 @@ class ImLivechatChannel(models.Model):
         return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online')
 
     @api.model
-    def get_mail_channel(self, livechat_channel_id, anonymous_name, user_id=None):
+    def get_mail_channel(self, livechat_channel_id, anonymous_name, user_id=None, country_id=None):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
             :param livechat_channel_id : the identifier if the im_livechat.channel
             :param anonymous_name : the name of the anonymous person of the channel
             :param user_id : the id of the logged in visitor, if any
+            :param country_code : the country of the anonymous person of the channel
             :type livechat_channel_id : int
             :type anonymous_name : str
             :return : channel header
@@ -158,6 +159,7 @@ class ImLivechatChannel(models.Model):
             'channel_partner_ids': channel_partner_to_add,
             'livechat_channel_id': livechat_channel_id,
             'anonymous_name': False if user_id else anonymous_name,
+            'country_id': country_id,
             'channel_type': 'livechat',
             'name': ', '.join([self.env['res.users'].browse(user_id).name if user_id else anonymous_name, operator.name]),
             'public': 'private',
