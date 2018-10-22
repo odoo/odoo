@@ -1847,7 +1847,7 @@ QUnit.module('basic_fields', {
             var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
             evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
             $('.discreteBar')[0].dispatchEvent(evt);
-            var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
+            var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText.trim();
             assert.equal(tooltip, graph_key, "graph tooltip should be generated ");
             $('.nvtooltip').remove();
 
