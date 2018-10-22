@@ -35,6 +35,7 @@ class MailChannel(models.Model):
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
+    country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
 
     @api.multi
     def _channel_message_notifications(self, message):
