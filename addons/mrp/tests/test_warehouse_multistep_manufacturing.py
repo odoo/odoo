@@ -98,6 +98,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         production_form.product_id = self.finished_product
         production_form.picking_type_id = self.warehouse.manu_type_id
         production = production_form.save()
+        production.action_confirm()
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 1)

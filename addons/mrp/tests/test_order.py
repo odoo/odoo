@@ -72,6 +72,8 @@ class TestMrpOrder(TestMrpCommon):
             'location_src_id': self.location_1.id,
             'location_dest_id': self.warehouse_1.wh_output_stock_loc_id.id,
         })
+        self.assertEqual(man_order.state, 'draft', "Production order should be in draft state.")
+        man_order.action_confirm()
         self.assertEqual(man_order.state, 'confirmed', "Production order should be in confirmed state.")
 
         # check production move
@@ -194,6 +196,7 @@ class TestMrpOrder(TestMrpCommon):
             'tracking': 'none',
         })
         # assign consume material
+        man_order.action_confirm()
         man_order.action_assign()
         self.assertEqual(man_order.reservation_state, 'confirmed', "Production order should be in waiting state.")
 
@@ -311,6 +314,7 @@ class TestMrpOrder(TestMrpCommon):
             'bom_id': self.bom_3.id,
             'product_uom_id': self.product_6.uom_id.id,
         })
+        production_2.action_confirm()
         production_2.action_assign()
 
         # check sub product availability state is waiting
@@ -409,6 +413,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_uom_id': unit,
             'bom_id': bom_custom_laptop.id
         })
+        mo_custom_laptop.action_confirm()
         mo_custom_laptop.action_assign()
         self.assertEqual(mo_custom_laptop.reservation_state, 'assigned')
 
@@ -450,6 +455,7 @@ class TestMrpOrder(TestMrpCommon):
                                            'product_qty': 20,
                                            'bom_id': bom_eff.id,
                                            'product_uom_id': self.product_6.uom_id.id,})
+        production.action_confirm()
         #Check the production order has the right quantities
         self.assertEqual(production.move_raw_ids[0].product_qty, 41, 'The quantity should be rounded up')
         self.assertEqual(production.move_raw_ids[1].product_qty, 84, 'The quantity should be rounded up')
@@ -651,6 +657,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': plastic_laminate.id,
         })
 
+        mo.action_confirm()
         mo.action_assign()
         self.assertEqual(mo.move_raw_ids.product_qty, 12, '12 units should be reserved.')
 
