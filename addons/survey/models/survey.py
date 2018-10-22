@@ -90,7 +90,7 @@ class Survey(models.Model):
     def _compute_survey_statistic(self):
         UserInput = self.env['survey.user_input']
 
-        sent_survey = UserInput.search([('survey_id', 'in', self.ids), ('type', '=', 'link')])
+        sent_survey = UserInput.search([('survey_id', 'in', self.ids), ('input_type', '=', 'link')])
         start_survey = UserInput.search(['&', ('survey_id', 'in', self.ids), '|', ('state', '=', 'skip'), ('state', '=', 'done')])
         complete_survey = UserInput.search([('survey_id', 'in', self.ids), ('state', '=', 'done')])
 
