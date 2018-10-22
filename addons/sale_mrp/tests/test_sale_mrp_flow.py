@@ -254,7 +254,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # --------------------------------------------------
 
         mnf_product_d.action_assign()
-        self.assertEqual(mnf_product_d.availability, 'assigned', 'Availability should be assigned')
+        self.assertEqual(mnf_product_d.reservation_state, 'assigned', 'Availability should be assigned')
         self.assertEqual(move.state, 'assigned', "Wrong state in 'To consume line' of manufacturing order.")
 
         # ------------------
@@ -272,7 +272,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         mnf_product_d.post_inventory()
 
         # Check state of manufacturing order.
-        self.assertEqual(mnf_product_d.state, 'progress', 'Manufacturing order should still be in progress state.')
+        self.assertEqual(mnf_product_d.state, 'done', 'Manufacturing order should still be in progress state.')
         # Check available quantity of product D.
         self.assertEqual(product_d.qty_available, 20, 'Wrong quantity available of product D.')
 
@@ -307,7 +307,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # ---------------------------------------------------
 
         mnf_product_a.action_assign()
-        self.assertEqual(mnf_product_a.availability, 'assigned', 'Manufacturing order inventory state should be available.')
+        self.assertEqual(mnf_product_a.reservation_state, 'assigned', 'Manufacturing order inventory state should be available.')
         moves = self.StockMove.search([('raw_material_production_id', '=', mnf_product_a.id), ('product_id', '=', product_c.id)])
 
         # Check product c move line state.
@@ -316,15 +316,16 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # Produce product A.
         # ------------------
-        produce_a = self.ProductProduce.with_context(
-            # {'active_ids': [mnf_product_a.id], 'active_id': mnf_product_a.id}).create({'mode': 'consume_produce', 'product_qty': mnf_product_a.product_qty})
-        # produce_a.on_change_qty()
-            {'active_ids': [mnf_product_a.id], 'active_id': mnf_product_a.id}).create({})
+
+        produce_form = Form(self.ProductProduce.with_context({
+            'active_id': mnf_product_a.id,
+            'active_ids': [mnf_product_a.id],
+        }))
+        produce_a = produce_form.save()
         produce_a.do_produce()
         mnf_product_a.post_inventory()
-
         # Check state of manufacturing order product A.
-        self.assertEqual(mnf_product_a.state, 'progress', 'Manufacturing order should still be in the progress state.')
+        self.assertEqual(mnf_product_a.state, 'done', 'Manufacturing order should still be in the progress state.')
         # Check product A avaialble quantity should be 120.
         self.assertEqual(product_a.qty_available, 120, 'Wrong quantity available of product A.')
 

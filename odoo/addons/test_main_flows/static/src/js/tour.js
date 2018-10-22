@@ -555,7 +555,7 @@ tour.register('main_flow_tour', {
     content: _t("Check availability"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button.btn-primary:enabled:contains('Produce')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Produce')",
     content: _t("Produce"),
     position: "bottom",
 }, {

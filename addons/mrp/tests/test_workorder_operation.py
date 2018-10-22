@@ -288,7 +288,7 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         # Check production order status of availablity
 
-        self.assertEqual(mo_custom_laptop.availability, 'waiting')
+        self.assertEqual(mo_custom_laptop.reservation_state, 'confirmed')
 
         # --------------------------------------------------
         # Set inventory for rawmaterial charger and keybord
@@ -321,7 +321,7 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         # Check consumed move status
         mo_custom_laptop.action_assign()
-        self.assertEqual( mo_custom_laptop.availability, 'assigned')
+        self.assertEqual(mo_custom_laptop.reservation_state, 'assigned')
 
         # Check current status of raw materials.
         for move in mo_custom_laptop.move_raw_ids:
