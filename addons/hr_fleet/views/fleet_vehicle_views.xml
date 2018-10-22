@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
+        <field name="name">fleet.vehicle.assignation.log.view.tree.inherit.hr.fleet</field>
+        <field name="model">fleet.vehicle.assignation.log</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_assignation_log_view_list" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_end']" position="after">
+                <field name="attachment_number" string=" "/>
+                <button name="action_get_attachment_view" string="View Attachments" type="object" icon="fa-paperclip"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
