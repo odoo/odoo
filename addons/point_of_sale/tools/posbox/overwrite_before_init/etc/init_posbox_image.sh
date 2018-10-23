@@ -104,6 +104,9 @@ mkdir /home/pi/odoo/addons/hw_drivers/drivers/
 chmod 777 /home/pi/odoo/addons/hw_drivers/drivers/
 echo "addons/hw_drivers/drivers/" > /home/pi/odoo/.git/info/exclude
 
+# Build list with all supported driver
+sudo lpinfo -m > /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/list_printer.txt
+
 # create dirs for ramdisks
 create_ramdisk_dir () {
     mkdir "${1}_ram"

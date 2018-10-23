@@ -79,7 +79,7 @@ class StatusController(http.Controller):
             url = data['token'].split('|')[0]
             reboot = 'noreboot'
             subprocess.call(['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_server.sh', url, iotname, token, reboot])
-            send_iot_box_device(False)
+            send_iot_box_device()
             return 'IoTBox connected'
 
     @http.route('/hw_drivers/drivers/status', type='http', auth='none', cors='*')
@@ -124,7 +124,7 @@ class StatusController(http.Controller):
 
     @http.route('/hw_drivers/send_iot_box', type='http', auth='none', cors='*')
     def send_iot_box(self):
-        send_iot_box_device(False)
+        send_iot_box_device()
         return 'ok'
 
 #----------------------------------------------------------
@@ -194,7 +194,7 @@ class GattBtManager(gatt.DeviceManager):
                 if d.supported():
                     drivers[path] = d
                     d.connect()
-                    send_iot_box_device(False)
+                    send_iot_box_device()
 
 class BtManager(Thread):
     gatt_manager = False
@@ -249,8 +249,7 @@ class BtDriver(Driver, metaclass=BtMetaClass):
 class USBDeviceManager(Thread):
     devices = {}
     def run(self):
-        first_time = True
-        send_iot_box_device(False)
+        send_iot_box_device()
         cpt = 0
         while 1:
             sendJSON = False
@@ -278,14 +277,94 @@ class USBDeviceManager(Thread):
                         d.daemon = True
                         d.start()
                         sendJSON = True
-            if sendJSON or first_time or cpt == 100:
-                send_iot_box_device(first_time)
-                first_time = False
+            if sendJSON or cpt == 100:
+                send_iot_box_device()
                 cpt = 0
             time.sleep(3)
             cpt += 1
 
-def send_iot_box_device(send_printer):
+# Build device JSON
+def get_devices():
+    devicesList = {}
+    for path in drivers:
+        device_name = drivers[path].get_name()
+        device_connection = drivers[path].get_connection()
+        identifier = path.split('_')[0] + '_' + path.split('_')[1]
+        devicesList[identifier] = {'name': device_name,
+                                     'type': 'device',
+                                     'connection': device_connection
+                                    }
+
+    return devicesList
+
+# Build camera JSON
+def get_cameras():
+    devicesList = {}
+    try:
+        cameras = subprocess.check_output("v4l2-ctl --list-devices", shell=True).decode('utf-8').split('\n\n')
+        for camera in cameras:
+            if camera:
+                camera = camera.split('\n\t')
+                serial = re.sub('[^a-zA-Z0-9 ]+', '', camera[0].split(': ')[0]).replace(' ','_')
+                devicesList[serial] = {
+                                        'name': camera[0].split(': ')[0],
+                                        'connection': 'direct',
+                                        'type': 'camera'
+                                    }
+    except:
+        pass
+
+    return devicesList
+
+# Build printer JSON
+def get_printers(maciotbox):
+    printerList = {}
+    printers = subprocess.check_output("sudo lpinfo -lv", shell=True).decode('utf-8').split('Device')
+    for printer in printers:
+        printerTab = printer.split('\n')
+        if printer and printerTab[4].split('=')[1] != ' ':
+            device_connection = printerTab[1].split('= ')[1]
+            model = ''
+            for device_id in printerTab[4].split('= ')[1].split(';'):
+                if any(x in device_id for x in ['MDL','MODEL']):
+                    model = device_id.split(':')[1]
+            name = printerTab[2].split('= ')[1]
+            serial = re.sub('[^a-zA-Z0-9 ]+', '', model).replace(' ','_')
+            identifier = ''
+            if device_connection == 'direct':
+                identifier = serial + '_' + maciotbox  #name + macIOTBOX
+            elif device_connection == 'network' and 'socket' in printerTab[0]:
+                socketIP = printerTab[0].split('://')[1]
+                macprinter = subprocess.check_output("arp -a " + socketIP + " |awk NR==1'{print $4}'", shell=True).decode('utf-8').split('\n')[0]
+                identifier = macprinter  # macPRINTER
+            elif device_connection == 'network' and 'dnssd' in printerTab[0]:
+                hostname_printer = subprocess.check_output("ippfind -n \"" + model + "\" | awk \'{split($0,a,\"/\"); print a[3]}\' | awk \'{split($0,b,\":\"); print b[1]}\'", shell=True).decode('utf-8').split('\n')[0]
+                if hostname_printer:
+                    macprinter = subprocess.check_output("arp -a " + hostname_printer + " |awk NR==1'{print $4}'", shell=True).decode('utf-8').split('\n')[0]
+                    identifier = macprinter  # macprinter
+
+            identifier = identifier.replace(':','_')
+            if identifier and identifier not in printerList:
+                printerList[identifier] = {
+                                    'name': model,
+                                    'connection': device_connection,
+                                    'type': 'printer'
+                }
+
+                # install these printers
+                list_installed_printer = subprocess.check_output("lpstat -v", shell=True).decode('utf-8')
+                if identifier not in list_installed_printer:
+                    try:
+                        ppd = subprocess.check_output("sudo grep '" + model + "' /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/list_printer.txt", shell=True).decode('utf-8').split('\n')
+                        if len(ppd) > 2:
+                            subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
+                        else:
+                            subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "' -m '" + ppd[0].split(' ')[0] + "'", shell=True)
+                    except:
+                        subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
+    return printerList
+
+def send_iot_box_device():
     maciotbox = subprocess.check_output("/sbin/ifconfig eth0 |grep -Eo ..\(\:..\){5}", shell=True).decode('utf-8').split('\n')[0]
     server = "" # read from file
     try:
@@ -307,84 +386,6 @@ def send_iot_box_device(send_printer):
                     ips = conf.get('addr')
                     break
 
-        # Build device JSON
-        devicesList = {}
-        for path in drivers:
-            device_name = drivers[path].get_name()
-            device_connection = drivers[path].get_connection()
-            identifier = path.split('_')[0] + '_' + path.split('_')[1]
-            devicesList[identifier] = {'name': device_name,
-                                 'type': 'device',
-                                 'connection': device_connection}
-
-        # Build camera JSON
-        try:
-            cameras = subprocess.check_output("v4l2-ctl --list-devices", shell=True).decode('utf-8').split('\n\n')
-            for camera in cameras:
-                if camera:
-                    camera = camera.split('\n\t')
-                    serial = re.sub('[^a-zA-Z0-9 ]+', '', camera[0].split(': ')[0]).replace(' ','_')
-                    devicesList[serial] = {
-                                            'name': camera[0].split(': ')[0],
-                                            'connection': 'direct',
-                                            'type': 'camera'
-                                        }
-        except:
-            pass
-
-        # Build printer JSON
-        printerList = {}
-        if send_printer:
-            printers = subprocess.check_output("sudo lpinfo -lv", shell=True).decode('utf-8').split('Device')
-            for printer in printers:
-                printerTab = printer.split('\n')
-                if printer and printerTab[4].split('=')[1] != ' ':
-                    device_connection = printerTab[1].split('= ')[1]
-                    model = ''
-                    for device_id in printerTab[4].split('= ')[1].split(';'):
-                        if any(x in device_id for x in ['MDL','MODEL']):
-                            model = device_id.split(':')[1]
-                    name = printerTab[2].split('= ')[1]
-                    serial = re.sub('[^a-zA-Z0-9 ]+', '', model).replace(' ','_')
-                    identifier = ''
-                    if device_connection == 'direct':
-                        identifier = serial + '_' + maciotbox  #name + macIOTBOX
-                    elif device_connection == 'network' and 'socket' in printerTab[0]:
-                        socketIP = printerTab[0].split('://')[1]
-                        macprinter = subprocess.check_output("arp -a " + socketIP + " |awk NR==1'{print $4}'", shell=True).decode('utf-8').split('\n')[0]
-                        identifier = macprinter  # macPRINTER
-                    elif device_connection == 'network' and 'dnssd' in printerTab[0]:
-                        hostname_printer = subprocess.check_output("ippfind -n \"" + model + "\" | awk \'{split($0,a,\"/\"); print a[3]}\' | awk \'{split($0,b,\":\"); print b[1]}\'", shell=True).decode('utf-8').split('\n')[0]
-                        if hostname_printer:
-                            macprinter = subprocess.check_output("arp -a " + hostname_printer + " |awk NR==1'{print $4}'", shell=True).decode('utf-8').split('\n')[0]
-                            identifier = macprinter  # macprinter
-
-                    identifier = identifier.replace(':','_')
-                    if identifier and identifier not in printerList:
-                        printerList[identifier] = {
-                                            'name': model,
-                                            'connection': device_connection,
-                                            'type': 'printer'
-                        }
-
-                        # install these printers
-                        try:
-                            ppd = subprocess.check_output("sudo lpinfo -m |grep '" + model + "'", shell=True).decode('utf-8').split('\n')
-                            if len(ppd) > 2:
-                                subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
-                            else:
-                                subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "' -m '" + ppd[0].split(' ')[0] + "'", shell=True)
-                        except:
-                            subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
-            subprocess.call('> /tmp/printers', shell=True)
-            for printer in printerList:
-                subprocess.call('echo "' + printerList[printer]['name'] + '" >> /tmp/printers', shell=True)
-
-        if devicesList:
-            subprocess.call('> /tmp/devices', shell=True)
-            for device in devicesList:
-                subprocess.call('echo "' + str(device) + '|' + devicesList[device]['name'] + '" >> /tmp/devices', shell=True)
-
         #build JSON with all devices
         hostname = subprocess.check_output('hostname').decode('utf-8').split('\n')[0]
         token = "" # read from file
@@ -396,8 +397,25 @@ def send_iot_box_device(send_printer):
         except: #In case the file does not exist
             token=''
         token = token.split('\n')[0]
-        data = {'name': hostname,'identifier': maciotbox, 'ip': ips, 'token': token}
+
+        devicesList = {}
+        devicesList.update(get_devices())
+        devicesList.update(get_cameras())
+
+        if devicesList:
+            subprocess.call('> /tmp/devices', shell=True)
+            for device in devicesList:
+                subprocess.call('echo "' + str(device) + '|' + devicesList[device]['name'] + '" >> /tmp/devices', shell=True)
+
+        printerList = {}
+        printerList.update(get_printers(maciotbox))
         devicesList.update(printerList)
+        
+        subprocess.call('> /tmp/printers', shell=True)
+        for printer in printerList:
+            subprocess.call('echo "' + printerList[printer]['name'] + '" >> /tmp/printers', shell=True)
+
+        data = {'name': hostname,'identifier': maciotbox, 'ip': ips, 'token': token}
         data['devices'] = devicesList
         data_json = json.dumps(data).encode('utf8')
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
