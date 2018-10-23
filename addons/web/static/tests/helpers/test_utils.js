@@ -323,11 +323,12 @@ function patchDate(year, month, day, hours, minutes, seconds) {
     var fakeDate = new RealDate(year, month, day, hours, minutes, seconds);
     var timeInterval = actualDate.getTime() - (fakeDate.getTime());
 
-    Date = (function (NativeDate) {
+    window.Date = (function (NativeDate) {
         function Date(Y, M, D, h, m, s, ms) {
+            var date;
             var length = arguments.length;
             if (arguments.length > 0) {
-                var date = length == 1 && String(Y) === Y ? // isString(Y)
+                date = length ===1 && String(Y) === Y ? // isString(Y)
                     // We explicitly pass it through parse:
                     new NativeDate(Date.parse(Y)) :
                     // We have to manually make calls depending on argument
@@ -344,7 +345,7 @@ function patchDate(year, month, day, hours, minutes, seconds) {
                 date.constructor = Date;
                 return date;
             } else {
-                var date = new NativeDate();
+                date = new NativeDate();
                 var time = date.getTime();
                 time -= timeInterval;
                 date.setTime(time);
@@ -822,11 +823,10 @@ function removeSrcAttribute(el, widget) {
         nodes = Array.prototype.slice.call(el.getElementsByTagName('img'))
             .concat(Array.prototype.slice.call(el.getElementsByTagName('iframe')));
     }
-    var node;
-    while (node = nodes.pop()) {
+    var node = nodes.pop();
+    while (node) {
         var src = node.attributes.src && node.attributes.src.value;
         if (src && src !== 'about:blank') {
-            var $el = $(node);
             node.setAttribute('data-src', src);
             if (node.nodeName === 'IMG') {
                 node.attributes.removeNamedItem('src');
@@ -837,6 +837,7 @@ function removeSrcAttribute(el, widget) {
                 widget._rpc({ route: src });
             }
         }
+        node = nodes.pop();
     }
 }
 
