@@ -5,11 +5,10 @@
         <field name="model">snailmail.letter</field>
         <field name="arch" type="xml">
             <tree decoration-danger="state=='error'" decoration-muted="state=='sent'" string="Letters">
-                <field name="attachment_id"/>
-                <field name="model"/>
-                <field name="res_id"/>
-                <field name="company_id"/>
-                <field name="state"/>
+                <field name="attachment_id" string="Document"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="state" invisible="1"/>
                 <field name="info_msg" widget="html"/>
             </tree>
         </field>
@@ -26,16 +25,22 @@
                     <field name="state" widget="statusbar" statusbar_visible="pending,sent,cancel"/>
                 </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
                     <group>
-                        <field name="attachment_id"/>
-                        <field name="partner_id"/>
-                        <field name="user_id"/>
-                        <field name="model"/>
-                        <field name="res_id"/>
-                        <field name="color"/>
-                        <field name="duplex"/>
+                        <field name="reference" widget="reference" readonly="1"/>
+                        <field name="attachment_datas" filename="attachment_fname" readonly="1" />
+                        <field name="attachment_fname" invisible="1"/>
+                        <field name="partner_id" readonly="1"/> 
+                        <field name="user_id" readonly="1"/>
                         <field name="info_msg" widget="html" readonly="1"/>
-                        <field name="company_id"/>
+                    </group>
+                    <group groups="base.group_no_one">
+                        <field name="model" readonly="1"/>
+                        <field name="res_id" readonly="1"/>
+                        <field name="color" readonly="1"/>
+                        <field name="duplex" readonly="1"/>
                     </group>
                 </sheet>
             </form>
@@ -43,7 +48,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_mail_letters">
-        <field name="name">Letters</field>
+        <field name="name">Snailmail Letters</field>
         <field name="res_model">snailmail.letter</field>
         <field name="view_type">form</field>
         <field name="view_mode">form,tree</field>

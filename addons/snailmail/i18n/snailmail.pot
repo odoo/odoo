@@ -18,7 +18,7 @@ msgstr ""
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:249
 #, python-format
-msgid "An error occured when sending the document by post.<br>Error: %s"
+msgid "An error occured when sending the document by post.<br>Error: %s <br>Go to 'Configuration > Management > Snailmail Letters' to see all letters awaiting dispatch to Snailmail."
 msgstr ""
 
 #. module: snailmail
@@ -28,7 +28,9 @@ msgid "An unknown error happened. Please contact the support."
 msgstr ""
 
 #. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:343
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
+#, python-format
 msgid "Attachment"
 msgstr ""
 
@@ -104,6 +106,12 @@ msgid "Display Name"
 msgstr ""
 
 #. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
+msgid "Document"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
 msgid "Document ID"
 msgstr ""
@@ -149,8 +157,6 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: snailmail
-#: model:ir.actions.act_window,name:snailmail.action_mail_letters
-#: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
 msgstr ""
@@ -218,8 +224,19 @@ msgid "Sent"
 msgstr ""
 
 #. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
+msgid "Sent by"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.actions.act_window,name:snailmail.action_mail_letters
+#: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
+msgid "Snailmail Letters"
 msgstr ""
 
 #. module: snailmail
@@ -253,8 +270,8 @@ msgid "The document was correctly sent by post.<br>The tracking id is %ssend_id"
 msgstr ""
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
-msgid "User sending the letter"
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__title
+msgid "Title"
 msgstr ""
 
 #. module: snailmail
