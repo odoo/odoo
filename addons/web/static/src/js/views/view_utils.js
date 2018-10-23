@@ -1,5 +1,7 @@
-odoo.define('web.viewUtils', function () {
+odoo.define('web.viewUtils', function (require) {
 "use strict";
+
+var dom = require('web.dom');
 
 var utils = {
     /**
@@ -39,6 +41,34 @@ var utils = {
             return false;
         }
         return true;
+    },
+    /**
+     * Renders a button according to a given arch node element.
+     *
+     * @param {Object} node
+     * @param {Object} [options]
+     * @param {string} [options.extraClass]
+     * @param {boolean} [options.textAsTitle=false]
+     * @returns {jQuery}
+     */
+    renderButtonFromNode: function (node, options) {
+        var btnOptions = {
+            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options'),
+            icon: node.attrs.icon,
+        };
+        if (options && options.extraClass) {
+            var classes = btnOptions.attrs.class ? btnOptions.attrs.class.split(' ') : [];
+            btnOptions.attrs.class = _.uniq(classes.concat(options.extraClass.split(' '))).join(' ');
+        }
+        var str = (node.attrs.string || '').replace(/_/g, '');
+        if (str) {
+            if (options && options.textAsTitle) {
+                btnOptions.attrs.title = str;
+            } else {
+                btnOptions.text = str;
+            }
+        }
+        return dom.renderButton(btnOptions);
     },
 };
 

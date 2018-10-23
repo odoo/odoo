@@ -4680,7 +4680,9 @@ QUnit.module('Views', {
         // call destroy function of controller to ensure that it correctly destroys everything
         kanban.__destroy();
 
-        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+        // + 4 (parent + ControlPanelModel/Renderer/Controller)
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 4,
+            "every widget must be destroyed exept the parent");
 
         kanban.destroy();
 

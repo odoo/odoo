@@ -16,7 +16,7 @@ odoo.define('web.relational_fields', function (require) {
 var AbstractField = require('web.AbstractField');
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
-var ControlPanel = require('web.ControlPanel');
+var ControlPanelView = require('web.ControlPanelView');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
@@ -1029,7 +1029,13 @@ var FieldX2Many = AbstractField.extend({
         }
         var self = this;
         var defs = [];
-        this.control_panel = new ControlPanel(this, "X2ManyControlPanel");
+        var controlPanelView = new ControlPanelView(null, {
+            template: 'X2ManyControlPanel',
+        });
+        var cpDef = controlPanelView.getController(this).then(function (controlPanel) {
+            self.control_panel = controlPanel;
+            return self.control_panel.prependTo(self.$el);
+        });
         this.pager = new Pager(this, this.value.count, this.value.offset + 1, this.value.limit, {
             single_page_hidden: true,
             withAccessKey: false,
@@ -1052,7 +1058,7 @@ var FieldX2Many = AbstractField.extend({
         });
         this._renderButtons();
         defs.push(this.pager.appendTo($('<div>'))); // start the pager
-        defs.push(this.control_panel.prependTo(this.$el));
+        defs.push(cpDef);
         return $.when.apply($, defs).then(function () {
             self.control_panel.update({
                 cp_content: {

@@ -8,6 +8,7 @@ var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
 var utils = require('web.utils');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 
@@ -329,7 +330,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderButton: function (record, node) {
         var self = this;
-        var $button = this._renderButtonFromNode(node, {
+        var $button = viewUtils.renderButtonFromNode(node, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
         });

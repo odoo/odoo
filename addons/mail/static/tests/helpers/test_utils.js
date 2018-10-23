@@ -8,7 +8,7 @@ var MailService = require('mail.Service');
 
 var AbstractStorageService = require('web.AbstractStorageService');
 var Class = require('web.Class');
-var ControlPanel = require('web.ControlPanel');
+var ControlPanelView = require('web.ControlPanelView');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -38,8 +38,12 @@ function createDiscuss(params) {
     testUtils.addMockEnvironment(parent, params);
     var discuss = new Discuss(parent, params);
     var selector = params.debug ? 'body' : '#qunit-fixture';
-    var controlPanel = new ControlPanel(parent);
-    controlPanel.appendTo($(selector));
+    var controlPanelView = new ControlPanelView();
+    controlPanelView.getController(parent).then(function (controlPanel) {
+        // link the view to the control panel
+        discuss.set_cp(controlPanel);
+        controlPanel.appendTo($(selector));
+    });
 
     // override 'destroy' of discuss so that it calls 'destroy' on the parent
     // instead, which is the parent of discuss and the mockServer.
@@ -49,9 +53,6 @@ function createDiscuss(params) {
         delete discuss.destroy;
         parent.destroy();
     };
-
-    // link the view to the control panel
-    discuss.set_cp(controlPanel;
 
     return  discuss.appendTo($(selector)).then(function () {
         return discuss;

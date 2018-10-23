@@ -266,6 +266,9 @@ ActionManager.include({
         if (action.searchView && !action._keepSearchView) {
             action.searchView.destroy();
         }
+        if (action.controlPanel) {
+            action.controlPanel.destroy();
+        }
     },
     /**
      * Executes actions of type 'ir.actions.act_window'.
@@ -343,7 +346,7 @@ ActionManager.include({
                         // controller should be placed just before the current one
                         var index = self.controllerStack.length - 1;
                         self.controllerStack.splice(index, 0, lazyLoadedController.jsID);
-                        self.controlPanel.update({
+                        action.controlPanel.update({
                             breadcrumbs: self._getBreadcrumbs(),
                         }, {clear: false});
                     }
@@ -590,6 +593,14 @@ ActionManager.include({
                 if (action.on_reverse_breadcrumb) {
                     def = action.on_reverse_breadcrumb();
                 }
+                // temporary fix to make the web_dashboard test about the
+                // keepSearchView option pass (we fool the controlPanel by
+                // updating it with nothing, s.t. it detaches the searchView
+                // from the other instance and attaches in the current one)
+                action.controlPanel.update({
+                    cp_content: {$searchview: action.searchView && action.searchView.$el},
+                    searchview: undefined,
+                }, {clear: false});
                 return $.when(def).then(function () {
                     return self._switchController(action, controller.viewType);
                 });
@@ -617,7 +628,7 @@ ActionManager.include({
                     var widget = controller.widget;
                     if (widget.need_control_panel) {
                         // set the ControlPanel bus on the controller to allow it to update it
-                        widget.set_cp(self.controlPanel);
+                        widget.set_cp(action.controlPanel);
                     }
                     return self._startController(controller);
                 });

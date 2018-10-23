@@ -203,6 +203,7 @@ class View(models.Model):
                              ('diagram', 'Diagram'),
                              ('gantt', 'Gantt'),
                              ('kanban', 'Kanban'),
+                             ('controlpanel', 'Control Panel'),
                              ('search', 'Search'),
                              ('qweb', 'QWeb')], string='View Type')
     arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture', nodrop=True)

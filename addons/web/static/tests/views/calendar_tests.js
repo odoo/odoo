@@ -253,17 +253,17 @@ QUnit.module('Views', {
         actionManager.doAction(1);
 
         // displays month mode by default
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");
 
         // switch to day mode
-        actionManager.controlPanel.$('.o_calendar_button_day').click();
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
+        $('.o_control_panel .o_calendar_button_day').click();
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 12, 2016)', "should display the current day");
 
         // switch to month mode
-        actionManager.controlPanel.$('.o_calendar_button_month').click();
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
+        $('.o_control_panel .o_calendar_button_month').click();
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 2016)', "should display the current month");
 
         actionManager.destroy();
@@ -2058,7 +2058,9 @@ QUnit.module('Views', {
         // call destroy function of controller to ensure that it correctly destroys everything
         calendar.__destroy();
 
-        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+        // + 4 (parent + ControlPanelModel/Renderer/Controller)
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 4,
+            "every widget must be destroyed exept the parent");
 
         calendar.destroy();
 
@@ -2144,7 +2146,7 @@ QUnit.module('Views', {
         });
 
         actionManager.doAction(1);
-        var $groupBy = actionManager.controlPanel.$('span.fa.fa-bars');
+        var $groupBy = $('.o_control_panel span.fa.fa-bars');
         assert.strictEqual($groupBy.length, 1, 'just making sure we have the groupby menu');
         assert.ok(!$groupBy.is(':visible'), 'groupby menu should not be visible');
         actionManager.destroy();

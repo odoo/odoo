@@ -14,7 +14,7 @@ var ActionManager = require('web.ActionManager');
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
 var config = require('web.config');
-var ControlPanel = require('web.ControlPanel');
+var ControlPanelView = require('web.ControlPanelView');
 var core = require('web.core');
 var DebugManager = require('web.DebugManager');
 var dom = require('web.dom');
@@ -253,8 +253,6 @@ function createAsyncView(params) {
 
     // reproduce the DOM environment of views
     var $web_client = $('<div>').addClass('o_web_client').prependTo($target);
-    var controlPanel = new ControlPanel(widget);
-    controlPanel.appendTo($web_client);
     var $content = $('<div>').addClass('o_content').appendTo($web_client);
 
     if (params.interceptsPropagate) {
@@ -263,7 +261,18 @@ function createAsyncView(params) {
         });
     }
 
-    return view.getController(widget).then(function (view) {
+    var viewDef = view.getController(widget);
+    var cpDef;
+    var $target;
+    if (params.View.prototype.viewType !== 'controlpanel') {
+        var controlPanelView = new ControlPanelView();
+        cpDef = controlPanelView.getController(widget);
+        $target = $content;
+    } else {
+        // append the controlpanel view in the o_web_client instant of o_content
+        $target = $web_client;
+    }
+    return $.when(viewDef, cpDef).then(function (view, controlPanel) {
         // override the view's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the view and the mockServer.
         view.__destroy = view.destroy;
@@ -274,14 +283,17 @@ function createAsyncView(params) {
             widget.destroy();
         };
 
-        // link the view to the control panel
-        view.set_cp(controlPanel);
+        if (controlPanel) {
+            controlPanel.appendTo($web_client);
+            // link the view to the control panel
+            view.set_cp(controlPanel);
+        }
 
         // render the view in a fragment as they must be able to render correctly
         // without being in the DOM
         var fragment = document.createDocumentFragment();
         return view.appendTo(fragment).then(function () {
-            dom.append($content, fragment, {
+            dom.prepend($target, fragment, {
                 callbacks: [{ widget: view }],
                 in_DOM: true,
             });

@@ -13,7 +13,7 @@ var AbstractAction = require('web.AbstractAction');
 var Bus = require('web.Bus');
 var concurrency = require('web.concurrency');
 var Context = require('web.Context');
-var ControlPanel = require('web.ControlPanel');
+var ControlPanelView = require('web.ControlPanelView');
 var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -62,17 +62,6 @@ var ActionManager = Widget.extend({
         // 'currentDialogController' is the current controller opened in a
         // dialog (i.e. coming from an action with target='new')
         this.currentDialogController = null;
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        // AAB: temporarily instantiate a unique main ControlPanel used by
-        // controllers in the controllerStack
-        this.controlPanel = new ControlPanel(this);
-        var def = this.controlPanel.insertBefore(this.$el);
-
-        return $.when(def, this._super.apply(this, arguments));
     },
     /**
      * Called each time the action manager is attached into the DOM.
@@ -267,12 +256,12 @@ var ActionManager = Widget.extend({
             this.trigger_up('scrollTo', controller.scrollPosition);
         }
 
-        if (!controller.widget.need_control_panel) {
-            this.controlPanel.do_hide();
-        } else {
-            this.controlPanel.update({
+        var action = this.actions[controller.actionID];
+        if (action.controlPanel) {
+            action.controlPanel.update({
                 breadcrumbs: this._getBreadcrumbs(),
             }, {clear: false});
+            action.controlPanel.$el.insertBefore(this.$el); // TODO: use dom utils
         }
     },
     /**
@@ -297,6 +286,34 @@ var ActionManager = Widget.extend({
         }
     },
     /**
+     * @todo: remove this as soon as ControlPanel is instantiated by the
+     * controller
+     *
+     * @private
+     * @param {Object} controller
+     * @returns {$.Promise}
+     */
+    _createControlPanel: function (controller) {
+        var widget = controller.widget;
+        if (!widget.need_control_panel) {
+            return $.when();
+        }
+
+        var action = this.actions[controller.actionID];
+        var params = {
+            context: action.context,
+            modelName: action.res_model, // FIXME: act_window specific
+        };
+        var viewInfo = action.searchFieldsView; // FIXME: act_window specific
+        var controlPanelView = new ControlPanelView(viewInfo, params);
+        return controlPanelView.getController(this).then(function (controlPanel) {
+            action.controlPanel = controlPanel;
+            // set the ControlPanel on the controller to allow it to update it
+            widget.set_cp(controlPanel);
+            return controlPanel.appendTo(document.createDocumentFragment());
+        });
+    },
+    /**
      * Detaches the current controller from the DOM and stores its scroll
      * position, in case we'd come back to that controller later.
      *
@@ -306,7 +323,12 @@ var ActionManager = Widget.extend({
         var currentController = this.getCurrentController();
         if (currentController) {
             currentController.scrollPosition = this._getScrollPosition();
-            dom.detach([{widget: currentController.widget}]);
+            var toDetach = [{widget: currentController.widget}];
+            var currentAction = this.actions[currentController.actionID];
+            if (currentAction.controlPanel) {
+                toDetach.push({widget: currentAction.controlPanel});
+            }
+            dom.detach(toDetach);
         }
     },
     /**
@@ -330,18 +352,15 @@ var ActionManager = Widget.extend({
             return this._executeActionInDialog(action, options);
         }
 
+        var controller = self.controllers[action.controllerID];
         return this.clearUncommittedChanges()
             .then(function () {
-                var controller = self.controllers[action.controllerID];
-                var widget = controller.widget;
-                // AAB: this will be moved to the Controller
-                if (widget.need_control_panel) {
-                    // set the ControlPanel on the controller to allow it to update it
-                    widget.set_cp(self.controlPanel);
-                }
+                return self.dp.add(self._createControlPanel(controller));
+            })
+            .then(function () {
                 return self.dp.add(self._startController(controller));
             })
-            .then(function (controller) {
+            .then(function () {
                 if (self.currentDialogController) {
                     self._closeDialog({ silent: true });
                 }
@@ -817,6 +836,9 @@ var ActionManager = Widget.extend({
         delete this.actions[action.jsID];
         delete this.controllers[action.controllerID];
         controller.widget.destroy();
+        if (action.controlPanel) {
+            action.controlPanel.destroy();
+        }
     },
     /**
      * Removes the given controllers and their corresponding actions.
@@ -881,7 +903,7 @@ var ActionManager = Widget.extend({
             var action = self.actions[controller.actionID];
             if (!action.flags || !action.flags.headless) {
                 var breadcrumbs = self._getBreadcrumbs();
-                self.controlPanel.update({breadcrumbs: breadcrumbs}, {clear: false});
+                action.controlPanel.update({breadcrumbs: breadcrumbs}, {clear: false});
             }
         });
         return controller.widget.appendTo(fragment).then(function () {

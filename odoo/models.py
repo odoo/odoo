@@ -1444,7 +1444,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         View = self.env['ir.ui.view']
 
         # Get the view arch and all other attributes describing the composition of the view
-        result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = None
+        if view_type == 'search':
+            try:
+                result = self._fields_view_get(view_id=view_id, view_type='controlpanel', toolbar=toolbar, submenu=submenu)
+            except UserError:
+                pass
+        result = result or self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
         # Override context for postprocessing
         if view_id and result.get('base_model', self._name) != self._name:
