@@ -44,7 +44,7 @@ var ListRenderer = BasicRenderer.extend({
         'keypress thead tr td': '_onKeyPress',
         'keydown tr': '_onKeyDown',
         'keydown thead tr': '_onKeyDown',
-        'click .o_list_view_select_action': '_onClickSelectionBarAction',
+        'click .o_list_view_select_action': '_onAllRecordSelectorBarAction',
     },
     /**
      * @constructor
@@ -66,7 +66,7 @@ var ListRenderer = BasicRenderer.extend({
                 return py.parse(py.tokenize(value));
             }).value();
         this.hasSelectors = params.hasSelectors;
-        this.hasSelectionBar = params.hasSelectionBar;
+        this.hasAllSelectorBar = params.hasAllSelectorBar;
         this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.allSelected = false;
@@ -94,7 +94,11 @@ var ListRenderer = BasicRenderer.extend({
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
         }
-        this.allSelected = false;
+        // Do not set allSelected to false if view is not rendered again
+        // noRender is set true when record is saved from editable list or resequence rows
+        if (!params.noRender) {
+            this.allSelected = false;
+        }
         return this._super.apply(this, arguments);
     },
 
@@ -231,11 +235,11 @@ var ListRenderer = BasicRenderer.extend({
         });
     },
     /**
-     * Remove selection bar.
+     * Remove all record selection bar.
      *
      * @private
      */
-    _removeAllSelectorBar: function () {
+    _removeAllRecordSelectorBar: function () {
         this.allSelected = false;
         this.$el.find('.o_list_view_select_all').remove();
     },
@@ -644,11 +648,11 @@ var ListRenderer = BasicRenderer.extend({
         return _.map(this.state.data, this._renderRow.bind(this));
     },
     /**
-     * Render selection label to select all records
+     * Render all record selection bar
      *
      * @private
      */
-    _renderAllSelectorBar: function () {
+    _renderAllRecordSelectorBar: function () {
         var data = {
             selectedRecords: this.$('td.o_list_record_selector').length,
             totalRecords: this.state.count,
@@ -779,9 +783,11 @@ var ListRenderer = BasicRenderer.extend({
         var isAllSelected = this.selection.length === this.$('td.o_list_record_selector').length;
         // check any records are in other page or not.
         var hasOtherRecords = this.state.groupedBy.length ? this.pagers.length > 0 : this.state.count > this.selection.length;
-        if (this.hasSelectionBar && isAllSelected && hasOtherRecords) {
+        if (this.hasAllSelectorBar && isAllSelected && hasOtherRecords) {
             this.$el.find('.o_list_view_select_all').remove();
-            this._renderAllSelectorBar();
+            this._renderAllRecordSelectorBar();
+        } else {
+            this._removeAllRecordSelectorBar();
         }
         this.trigger_up('selection_changed', { selection: this.selection, allSelected: this.allSelected });
         this._updateFooter();
@@ -837,7 +843,7 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      * @param {MouseEvent} event
      */
-    _onClickSelectionBarAction: function (event) {
+    _onAllRecordSelectorBarAction: function (event) {
         event.preventDefault();
         var actionType = $(event.currentTarget).data('action-type');
         if (actionType === 'select_all') {
@@ -845,11 +851,11 @@ var ListRenderer = BasicRenderer.extend({
             // make thead input checked if all records are selected. so that we can get domain while exporting records.
             this.$('thead .o_list_record_selector input').prop('checked', true);
             this.$('.o_list_clear_selection').removeClass('d-none');
-            this.$('.o_list_all_selected').addClass('d-none');
+            this.$('.o_list_select_all').addClass('d-none');
         } else {
             this.$('.o_list_record_selector input').prop('checked', false);
             this.selection = [];
-            this._removeAllSelectorBar();
+            this._removeAllRecordSelectorBar();
         }
         this.trigger_up('selection_changed', { selection: this.selection, allSelected: this.allSelected });
     },
@@ -862,7 +868,7 @@ var ListRenderer = BasicRenderer.extend({
         this._updateSelection();
         if (!$(ev.currentTarget).find('input').prop('checked')) {
             this.$('thead .o_list_record_selector input').prop('checked', false);
-            this._removeAllSelectorBar();
+            this._removeAllRecordSelectorBar();
         }
     },
     /**
@@ -893,9 +899,6 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleSelection: function (ev) {
         var checked = $(ev.currentTarget).prop('checked') || false;
         this.$('tbody .o_list_record_selector input:not(":disabled")').prop('checked', checked);
-        if (!checked) {
-            this._removeAllSelectorBar();
-        }
         this._updateSelection();
     },
 });

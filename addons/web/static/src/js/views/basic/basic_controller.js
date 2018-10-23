@@ -310,15 +310,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * Delete records (and ask for confirmation if necessary)
      *
      * @param {string[]} ids list of local record ids
-     * @param {Object} options
-     * @param {Array} options.active_domain
-     * @param {string} options.active_model
+     * @param {Object} additionalContext
+     * @param {Array} additionalContext.active_domain
+     * @param {string} additionalContext.active_model
      */
-    _deleteRecords: function (ids, options) {
+    _deleteRecords: function (ids, additionalContext) {
         var self = this;
         function doIt() {
             return self.model
-                .deleteRecords(ids, self.modelName, options)
+                .deleteRecords(ids, self.modelName, additionalContext)
                 .then(self._onDeletedRecords.bind(self, ids));
         }
         if (this.confirmOnDelete) {

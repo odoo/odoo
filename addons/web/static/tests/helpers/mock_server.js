@@ -1064,10 +1064,6 @@ var MockServer = Class.extend({
      *          exception (@see performRpc for error handling).
      */
     _performRpc: function (route, args) {
-        if (args.kwargs && args.kwargs.context && args.kwargs.context.active_domain) {
-            var records = this._getRecords(args.model, args.kwargs.context.active_domain);
-            args.args[0] = _.pluck(records, 'id');
-        }
         switch (route) {
             case '/web/action/load':
                 return $.when(this._mockLoadAction(args.kwargs));
@@ -1077,6 +1073,10 @@ var MockServer = Class.extend({
 
             case '/web/dataset/resequence':
                 return $.when(this._mockResequence(args));
+
+            case '/web/dataset/call_kw_with_domain': // For other routes test case should mock RPC and handle active_domain
+                var records = this._getRecords(args.model, args.kwargs.context.active_domain);
+                args.args[0] = _.pluck(records, 'id');
         }
         if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
             return $.when();

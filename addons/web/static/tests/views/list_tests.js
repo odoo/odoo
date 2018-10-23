@@ -4059,18 +4059,18 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('list view "hasSelectionBar" param', function (assert) {
+    QUnit.test('list view "hasAllSelectorBar" param', function (assert) {
         assert.expect(1);
          var list = createView({
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: { hasSelectionBar: false},
+            viewOptions: { hasAllSelectorBar: false},
             arch: '<tree limit="2"><field name="foo"/></tree>',
         });
          list.$('thead .o_list_record_selector input').click();
         assert.strictEqual(list.$('.o_list_view_select_all').length, 0,
-            "Don't display selection bar if 'hasSelectionBar' param is false");
+            "Don't display selection bar if 'hasAllSelectorBar' param is false");
         list.destroy();
     });
 
@@ -4100,7 +4100,7 @@ QUnit.module('Views', {
             "Don't display selection bar if single record of page is unselected");
         // select record
         list.$('tbody .o_list_record_selector input').eq(1).click();
-        assert.ok(!list.$('.o_list_all_selected').hasClass('d-none'),
+        assert.ok(!list.$('.o_list_select_all').hasClass('d-none'),
             "Display action to select all records of current domain");
         assert.ok(list.$('.o_list_clear_selection').hasClass('d-none'),
             "Don't display action to clear selection");
@@ -4108,7 +4108,7 @@ QUnit.module('Views', {
         assert.ok(list.allSelected, "boolean value of allSelected should be true");
         assert.ok(!list.$('.o_list_clear_selection').hasClass('d-none'),
             "Display action to clear current selection");
-        assert.ok(list.$('.o_list_all_selected').hasClass('d-none'),
+        assert.ok(list.$('.o_list_select_all').hasClass('d-none'),
             "Don't display action to select all records");
         list.$('.o_list_view_select_action[data-action-type="clear_selection"]').click();
         assert.ok(!list.allSelected, "boolean value of allSelected should be false");
