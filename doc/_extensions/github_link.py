@@ -94,11 +94,12 @@ def add_doc_link(app, pagename, templatename, context, doctree):
     if not app.config.github_user and app.config.github_project:
         return
 
-    # FIXME: find other way to recover current document's source suffix
-    # in Sphinx 1.3 it's possible to have mutliple source suffixes and that
-    # may be useful in the future
     source_suffix = app.config.source_suffix
-    source_suffix = source_suffix if isinstance(source_suffix, basestring) else source_suffix[0]
+    # in 1.3 source_suffix can be a list
+    # in 1.8 source_suffix can be a mapping
+    # FIXME: will break if we ever add support for !rst markdown documents maybe
+    if not isinstance(source_suffix, basestring):
+        source_suffix = next(iter(source_suffix))
     # can't use functools.partial because 3rd positional is line not mode
     context['github_link'] = lambda mode='edit': make_github_link(
         app, 'doc/%s%s' % (pagename, source_suffix), mode=mode)
