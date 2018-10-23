@@ -2151,9 +2151,9 @@ class MailThread(models.AbstractModel):
             author = self.env['res.partner'].sudo().browse(kw_author)
         else:
             author = self.env.user.partner_id
-        if not author.email:
+        if not author.email and author.name != 'Public user':
             raise exceptions.UserError(_("Unable to notify message, please configure the sender's email address."))
-        email_from = formataddr((author.name, author.email))
+        email_from = formataddr((author.name, author.email)) if author.email else False
 
         msg_values = {
             'subject': subject,
@@ -2188,7 +2188,7 @@ class MailThread(models.AbstractModel):
             author = self.env.user.partner_id
         if not author.email and author.name != 'Public user':
             raise exceptions.UserError(_("Unable to log message, please configure the sender's email address."))
-        email_from = formataddr((author.name, author.email)) if author.email else author.name
+        email_from = formataddr((author.name, author.email)) if author.email else False
 
         message_values = {
             'subject': subject,
