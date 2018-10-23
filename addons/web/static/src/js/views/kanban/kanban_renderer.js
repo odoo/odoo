@@ -241,9 +241,12 @@ var KanbanRenderer = BasicRenderer.extend({
      * @override
      */
     updateState: function (state) {
+        var self = this;
         this._setState(state);
         this._toggleNoContentHelper();
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(function () {
+            _.invoke(self.widgets, 'on_attach_callback');
+        });
     },
 
     //--------------------------------------------------------------------------

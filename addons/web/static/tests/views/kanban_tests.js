@@ -4203,6 +4203,44 @@ QUnit.module('Views', {
         delete widgetRegistry.map.test;
     });
 
+
+    QUnit.test('handle subWidgets rendered with "on_attach_callback" after updating state', function (assert) {
+        assert.expect(9);
+
+        var MyWidget = Widget.extend({
+            on_attach_callback: function () {
+                assert.step('on_attach_callback');
+            },
+        });
+        fieldRegistry.add('test', MyWidget);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                    '<div>' +
+                    '<field name="foo" widget="test"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+        });
+        // simulate an update coming from the searchview
+        kanban.update({groupBy: false});
+        assert.verifySteps([
+            'on_attach_callback',
+            'on_attach_callback',
+            'on_attach_callback',
+            'on_attach_callback',
+            'on_attach_callback',
+            'on_attach_callback',
+            'on_attach_callback',
+            'on_attach_callback',
+        ],
+        "Should call 'on_attach_callback' 4 times (1 time per record) while rendering for the first time, and 4 times after updating state)");
+        kanban.destroy();
+        delete fieldRegistry.map.test;
+    });
+
     QUnit.test('column progressbars properly work', function (assert) {
         assert.expect(2);
 
