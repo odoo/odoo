@@ -465,6 +465,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'discount_type': 'fixed_amount',
             'discount_fixed_amount': 249.0,
         })
+        self.tax_0pc_excl = self.env['account.tax'].create({
+            'name': "0% Tax excl",
+            'amount_type': 'percent',
+            'amount': 0,
+        })
+        fixed_amount_program.discount_line_product_id.write({'taxes_id': [(4, self.tax_0pc_excl.id, False)]})
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.computerCase.id,
             'name': 'Computer Case',
@@ -478,6 +484,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(order.amount_total, 176, "Fixed amount discount should be totally deduced")
         self.assertEqual(len(order.order_line.ids), 2, "Number of lines should be unchanged as we just recompute the reward line")
+        sol2 = order.order_line.filtered(lambda l: l.id != sol1.id)
+        self.assertEqual(len(sol2.tax_id.ids), 1, "One tax should be present on the reward line")
+        self.assertEqual(sol2.tax_id.id, self.tax_0pc_excl.id, "The tax should be 0% Tax excl")
         fixed_amount_program.write({'active': False})  # Check archived product will remove discount lines on recompute
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1, "Archiving the program should remove the program reward line")
