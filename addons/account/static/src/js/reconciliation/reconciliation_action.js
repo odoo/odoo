@@ -61,9 +61,6 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
             limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
         });
         this.widgets = [];
-        if (!this.action_manager) {
-            this.set_cp_bus(new Widget());
-        }
         // Adding values from the context is necessary to put this information in the url via the action manager so that
         // you can retrieve it if the person shares his url or presses f5
         _.each(params.params, function (value, name) {

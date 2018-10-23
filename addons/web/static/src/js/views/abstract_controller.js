@@ -246,16 +246,16 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         // and this controller should no longer update the control panel.
         // note that this won't be necessary as soon as each controller will have
         // its own control panel
-        var cpUpdateIndex = this.cp_bus && this.cp_bus.updateIndex;
+        var cpUpdateIndex = this._controlPanel && this._controlPanel.updateIndex;
         return this.dp.add(def).then(function (handle) {
-            if (self.cp_bus && cpUpdateIndex !== self.cp_bus.updateIndex) {
+            if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
                 return;
             }
             self.handle = handle || self.handle; // update handle if we reloaded
             var state = self.model.get(self.handle);
             var localState = self.renderer.getLocalState();
             return self.dp.add(self.renderer.updateState(state, params)).then(function () {
-                if (self.cp_bus && cpUpdateIndex !== self.cp_bus.updateIndex) {
+                if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
                     return;
                 }
                 self.renderer.setLocalState(localState);

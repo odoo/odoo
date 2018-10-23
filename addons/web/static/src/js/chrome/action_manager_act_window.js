@@ -616,9 +616,8 @@ ActionManager.include({
                     // AAB: this will be moved to the Controller
                     var widget = controller.widget;
                     if (widget.need_control_panel) {
-                        // set the ControlPanel bus on the controller to allow it to
-                        // communicate its status
-                        widget.set_cp_bus(self.controlPanel.get_bus());
+                        // set the ControlPanel bus on the controller to allow it to update it
+                        widget.set_cp(self.controlPanel);
                     }
                     return self._startController(controller);
                 });

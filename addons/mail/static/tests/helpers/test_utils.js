@@ -37,7 +37,6 @@ function createDiscuss(params) {
     };
     testUtils.addMockEnvironment(parent, params);
     var discuss = new Discuss(parent, params);
-    discuss.set_cp_bus(new Widget());
     var selector = params.debug ? 'body' : '#qunit-fixture';
     var controlPanel = new ControlPanel(parent);
     controlPanel.appendTo($(selector));
@@ -52,7 +51,7 @@ function createDiscuss(params) {
     };
 
     // link the view to the control panel
-    discuss.set_cp_bus(controlPanel.get_bus());
+    discuss.set_cp(controlPanel;
 
     return  discuss.appendTo($(selector)).then(function () {
         return discuss;

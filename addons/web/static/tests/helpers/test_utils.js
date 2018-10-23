@@ -275,7 +275,7 @@ function createAsyncView(params) {
         };
 
         // link the view to the control panel
-        view.set_cp_bus(controlPanel.get_bus());
+        view.set_cp(controlPanel);
 
         // render the view in a fragment as they must be able to render correctly
         // without being in the DOM

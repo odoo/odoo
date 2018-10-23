@@ -39,19 +39,18 @@ odoo.define('web.ControlPanelMixin', function (require) {
 var ControlPanelMixin = {
     need_control_panel: true,
     /**
-     * @param {web.Bus} [cp_bus] Bus to communicate with the ControlPanel
+     * @param {web.ControlPanel} [cp]
      */
-    set_cp_bus: function(cp_bus) {
-        this.cp_bus = cp_bus;
+    set_cp: function (cp) {
+        this._controlPanel = cp;
     },
     /**
-     * Triggers 'update' on the cp_bus to update the ControlPanel according to cp_status
      * @param {Object} [cp_status] see web.ControlPanel.update() for a description
      * @param {Object} [options] see web.ControlPanel.update() for a description
      */
-    update_control_panel: function(cp_status, options) {
-        if (this.cp_bus) {
-            this.cp_bus.trigger("update", cp_status || {}, options || {});
+    update_control_panel: function (cp_status, options) {
+        if (this._controlPanel) {
+            this._controlPanel.update(cp_status || {}, options || {});
         }
     },
 };
@@ -63,7 +62,6 @@ return ControlPanelMixin;
 odoo.define('web.ControlPanel', function (require) {
 "use strict";
 
-var Bus = require('web.Bus');
 var data = require('web.data');
 var Widget = require('web.Widget');
 
@@ -79,11 +77,9 @@ var ControlPanel = Widget.extend({
             this.template = template;
         }
 
-        this.bus = new Bus(this);
         // the updateIndex is used to prevent concurrent updates of the control
         // panel depending on asynchronous code to be executed in the wrong order
-        this.bus.updateIndex = 0;
-        this.bus.on("update", this, this.update);
+        this.updateIndex = 0;
     },
     /**
      * Renders the control panel and creates a dictionnary of its exposed elements
@@ -111,12 +107,6 @@ var ControlPanel = Widget.extend({
         return this._super();
     },
     /**
-     * @return {Object} the Bus the ControlPanel is listening on
-     */
-    get_bus: function() {
-        return this.bus;
-    },
-    /**
      * Updates the content and displays the ControlPanel
      * @param {Object} [status.active_view] the current active view
      * @param {Array} [status.breadcrumbs] the breadcrumbs to display (see _render_breadcrumbs() for
@@ -129,7 +119,7 @@ var ControlPanel = Widget.extend({
      * elements that are not in status.cp_content
      */
     update: function(status, options) {
-        this.bus.updateIndex++;
+        this.updateIndex++;
 
         this._toggle_visibility(!status.hidden);
 

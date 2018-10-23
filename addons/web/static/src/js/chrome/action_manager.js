@@ -336,9 +336,8 @@ var ActionManager = Widget.extend({
                 var widget = controller.widget;
                 // AAB: this will be moved to the Controller
                 if (widget.need_control_panel) {
-                    // set the ControlPanel bus on the controller to allow it to
-                    // communicate its status
-                    widget.set_cp_bus(self.controlPanel.get_bus());
+                    // set the ControlPanel on the controller to allow it to update it
+                    widget.set_cp(self.controlPanel);
                 }
                 return self.dp.add(self._startController(controller));
             })
@@ -387,12 +386,6 @@ var ActionManager = Widget.extend({
         var self = this;
         var controller = this.controllers[action.controllerID];
         var widget = controller.widget;
-        // AAB: this will be moved to the Controller
-        if (widget.need_control_panel) {
-            // set the ControlPanel bus on the controller to allow it to
-            // communicate its status
-            widget.set_cp_bus(new Bus());
-        }
 
         return this._startController(controller).then(function (controller) {
             var prevDialogOnClose;
