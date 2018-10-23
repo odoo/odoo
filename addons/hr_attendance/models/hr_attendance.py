@@ -85,7 +85,7 @@ class HrAttendance(models.Model):
                 if no_check_out_attendances:
                     raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s") % {
                         'empl_name': attendance.employee_id.name_related,
-                        'datetime': fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(no_check_out_attendances.check_in))),
+                        'datetime': fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(no_check_out_attendances[0].check_in))),
                     })
             else:
                 # we verify that the latest attendance with check_in time before our check_out time
