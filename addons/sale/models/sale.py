@@ -70,25 +70,7 @@ class SaleOrder(models.Model):
         deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
         line_invoice_status_all = [(d['order_id'][0], d['invoice_status']) for d in self.env['sale.order.line'].read_group([('order_id', 'in', self.ids), ('product_id', '!=', deposit_product_id.id)], ['order_id', 'invoice_status'], ['order_id', 'invoice_status'], lazy=False)]
         for order in self:
-            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
-            # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
-            # 'account.invoice.refund')
-            # use like as origin may contains multiple references (e.g. 'SO01, SO02')
-            refunds = invoice_ids.search([('origin', 'like', order.name), ('company_id', '=', order.company_id.id), ('type', 'in', ('out_invoice', 'out_refund'))])
-            invoice_ids |= refunds.filtered(lambda r: order.name in [origin.strip() for origin in r.origin.split(',')])
-
-            # Search for refunds as well
-            domain_inv = expression.OR([
-                ['&', ('origin', '=', inv.number), ('journal_id', '=', inv.journal_id.id)]
-                for inv in invoice_ids if inv.number
-            ])
-            if domain_inv:
-                refund_ids = self.env['account.invoice'].search(expression.AND([
-                    ['&', ('type', '=', 'out_refund'), ('origin', '!=', False)], 
-                    domain_inv
-                ]))
-            else:
-                refund_ids = self.env['account.invoice'].browse()
+            invoice_ids = order.order_line.mapped('invoice_lines.invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
 
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
 
@@ -104,8 +86,8 @@ class SaleOrder(models.Model):
                 invoice_status = 'no'
 
             order.update({
-                'invoice_count': len(set(invoice_ids.ids + refund_ids.ids)),
-                'invoice_ids': invoice_ids.ids + refund_ids.ids,
+                'invoice_count': len(set(invoice_ids.ids)),
+                'invoice_ids': invoice_ids.ids,
                 'invoice_status': invoice_status
             })
 
