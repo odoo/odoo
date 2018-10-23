@@ -13,7 +13,7 @@ from odoo.addons import decimal_precision as dp
 class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
     _description = 'Work Order'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
         'Work Order', required=True,
