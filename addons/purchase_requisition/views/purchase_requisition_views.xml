@@ -187,6 +187,7 @@
             </sheet>
             <div class="oe_chatter">
               <field name="message_follower_ids" widget="mail_followers"/>
+              <field name="activity_ids" widget="mail_activity"/>
               <field name="message_ids" widget="mail_thread"/>
             </div>
             </form>
@@ -258,6 +259,14 @@
                     <separator/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <filter string="My Agreements" name="my_agreements" domain="[('user_id','=', uid)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <field name="user_id" />
                     <group expand="0" string="Group By">
                         <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>

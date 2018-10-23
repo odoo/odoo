@@ -18,7 +18,7 @@ class StockMove(models.Model):
 class LandedCost(models.Model):
     _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
         'Name', default=lambda self: _('New'),
