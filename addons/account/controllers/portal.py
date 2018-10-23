@@ -32,7 +32,8 @@ class PortalAccount(CustomerPortal):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.invoice']
 
-        domain = []
+        portal_domain_action = request.env.ref('account.account_invoice_action_portal_domain', False)
+        domain = portal_domain_action and portal_domain_action.run() or []
 
         searchbar_sortings = {
             'date': {'label': _('Invoice Date'), 'order': 'date_invoice desc'},
@@ -47,8 +48,7 @@ class PortalAccount(CustomerPortal):
 
         archive_groups = self._get_archive_groups('account.invoice', domain)
         if date_begin and date_end:
-            server_action = request.env.ref('account.action_portal_invoice_date_domain')
-            domain += server_action.with_context(date_begin=date_begin, date_end=date_end).run()
+            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
         # count for pager
         invoice_count = AccountInvoice.search_count(domain)
