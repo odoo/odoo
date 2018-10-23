@@ -61,3 +61,11 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self)._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty, **kwargs)
         self.recompute_coupon_lines()
         return res
+
+    def _get_free_shipping_lines(self):
+        self.ensure_one()
+        free_shipping_prgs_ids = self.no_code_promo_program_ids.filtered(lambda p: p.reward_type == 'free_shipping')
+        if not free_shipping_prgs_ids:
+            return self.env['sale.order.line']
+        free_shipping_product_ids = free_shipping_prgs_ids.mapped('discount_line_product_id')
+        return self.order_line.filtered(lambda l: l.product_id in free_shipping_product_ids)
