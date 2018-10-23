@@ -231,8 +231,8 @@ class PurchaseRequisitionLine(models.Model):
         return res
 
     def unlink(self):
-        if self.requisition_id.state not in ['draft', 'cancel', 'done']:
-            self.supplier_info_ids.unlink()
+        to_unlink = self.filtered(lambda r: r.requisition_id.state not in ['draft', 'cancel', 'done'])
+        to_unlink.mapped('supplier_info_ids').unlink()
         return super(PurchaseRequisitionLine, self).unlink()
 
     def create_supplier_info(self):
