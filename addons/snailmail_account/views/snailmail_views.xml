@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.actions.act_window" id="action_mail_invoice_letters">
+        <field name="name">Snailmail Letters</field>
+        <field name="res_model">snailmail.letter</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="domain">[('state', '!=', 'draft'), ('model','=','account.invoice')]</field>
+        <field name="view_id" ref="snailmail.snailmail_letter_list" />
+    </record>
+    
+    <menuitem id="menu_snailmail_invoice_letters" parent="account.account_management_menu" action="action_mail_invoice_letters"
+              sequence="10"/>
+
+</odoo>
