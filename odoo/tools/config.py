@@ -160,7 +160,9 @@ class configmanager(object):
         group.add_option("--test-tags", dest="test_tags",
                          default=('+standard'),
                          help="Comma separated list of tags to filter which tests to excute")
-
+        group.add_option("--browser-args", dest="browser_args",
+                        default="",
+                         help="Additional args to pass to the headless browser (single quoted)")
         parser.add_option_group(group)
 
         # Logging Group
@@ -427,7 +429,7 @@ class configmanager(object):
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_enable', 'test_tags',
+            'test_file', 'test_enable', 'test_tags', 'browser_args',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',

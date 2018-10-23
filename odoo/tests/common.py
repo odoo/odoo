@@ -427,6 +427,7 @@ class ChromeBrowser():
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
+        cmd += odoo.tools.config['browser_args'].split()
         url = 'about:blank'
         cmd.append(url)
         self._logger.info('chrome_run executing %s', ' '.join(cmd))
