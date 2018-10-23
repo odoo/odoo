@@ -130,12 +130,10 @@
                 <div class="form-group row">
                     <label class="control-label col-md-5" for="date_publish">Publishing Date</label>
                     <div class="col-md-7">
-                        <div class='input-group date' id='date_publish_container'>
-                            <input type='text' class="form-control" name="date_publish" id="date_publish" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <span class="fa fa-calendar" role="img" aria-label="Publish date" title="Publish date"></span>
-                                </span>
+                        <div class="input-group date" id="date_publish_container" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#date_publish_container" id="date_publish"/>
+                            <div class="input-group-append" data-target="#date_publish_container" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
                     </div>
