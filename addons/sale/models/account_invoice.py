@@ -81,13 +81,16 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _refund_cleanup_lines(self, lines):
+        """ This override will link Sale line to all its invoice lines (direct invoice, refund create from invoice, ...)
+            in order to have the invoiced quantity taking invoice (in/out) into account in its computation everytime,
+            whatever the refund policy (create, cancel or modify).
+        """
         result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
-        if self.env.context.get('mode') == 'modify':
+        if lines._name == 'account.invoice.line':  # avoid side effects as lines can be taxes ....
             for i, line in enumerate(lines):
                 for name, field in line._fields.items():
                     if name == 'sale_line_ids':
-                        result[i][2][name] = [(6, 0, line[name].ids)]
-                        line[name] = False
+                        result[i][2][name] = [(4, line_id) for line_id in line[name].ids]
         return result
 
     @api.multi
