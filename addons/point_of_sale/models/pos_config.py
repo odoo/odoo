@@ -413,7 +413,7 @@ class PosConfig(models.Model):
     def _check_journal(self):
         ctx = dict(self.env.context, company_id=self.company_id.id)
         if not self.env['account.journal'].with_context(ctx).search(['|', ('journal_user', '=', True), ('type', '=', 'cash')]):
-            raise ValidationError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
+            raise ValidationError(_("No payment method configured! \nEither Chart of Account not installed or no payment method configured for this POS"))
 
     def execute(self):
         return {
@@ -427,6 +427,7 @@ class PosConfig(models.Model):
     def open_ui(self):
         """ open the pos interface """
         self.ensure_one()
+        self._check_journal()
         return {
             'type': 'ir.actions.act_url',
             'url':   '/pos/web/',

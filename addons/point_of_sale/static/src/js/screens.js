@@ -449,6 +449,13 @@ var ActionpadWidget = PosBaseWidget.extend({
             var has_valid_product_lot = _.every(order.orderlines.models, function(line){
                 return line.has_valid_product_lot();
             });
+            if (!self.pos.cashregisters.length) {
+                self.gui.show_popup('error', {
+                    'title': _t('No payment method configured!'),
+                    'body': _t('Either Chart of Account not installed or no payment method configured for this POS.'),
+                });
+                return;
+            }
             if(!has_valid_product_lot){
                 self.gui.show_popup('confirm',{
                     'title': _t('Empty Serial/Lot Number'),
