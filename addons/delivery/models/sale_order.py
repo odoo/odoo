@@ -23,7 +23,8 @@ class SaleOrder(models.Model):
                 # Prevent SOAP call to external shipping provider when SO has no lines yet
                 continue
             else:
-                order.delivery_price = order.carrier_id.with_context(order_id=order.id).price
+                order.delivery_price = order.company_id.currency_id.with_context(date=order.date_order).compute(
+                    order.carrier_id.with_context(order_id=order.id).price, order.pricelist_id.currency_id)
 
     @api.onchange('partner_id')
     def onchange_partner_id_dtype(self):
