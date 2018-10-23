@@ -133,7 +133,7 @@ class StockMoveLine(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    to_refund = fields.Boolean(string="To Refund (update SO/PO)", copy=False,
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=False,
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     value = fields.Float(copy=False)
     remaining_qty = fields.Float(copy=False)
@@ -689,6 +689,13 @@ class StockMove(models.Model):
 class StockReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"
 
+    @api.model
+    def default_get(self, default_fields):
+        res = super(StockReturnPicking, self).default_get(default_fields)
+        for i, k, vals in res.get('product_return_moves', []):
+            vals.update({'to_refund': True})
+        return res
+
     @api.multi
     def _create_returns(self):
         new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
@@ -703,7 +710,7 @@ class StockReturnPicking(models.TransientModel):
 class StockReturnPickingLine(models.TransientModel):
     _inherit = "stock.return.picking.line"
 
-    to_refund = fields.Boolean(string="To Refund (update SO/PO)", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
 
 
 class ProcurementGroup(models.Model):
