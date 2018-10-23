@@ -323,11 +323,14 @@ var FormRenderer = BasicRenderer.extend({
      * @param {Object} node
      * @returns {jQueryElement}
      */
-    _renderGenericTag: function (node) {
+    _renderGenericTag: function (node, options) {
+        var self = this;
         var $result = $('<' + node.tag + '>', _.omit(node.attrs, 'modifiers'));
         this._handleAttributes($result, node);
         this._registerModifiers(node, this.state, $result);
-        $result.append(_.map(node.children, this._renderNode.bind(this)));
+        $result.append(_.map(node.children, function (child) {
+            return self._renderNode(child, options);
+        }));
         return $result;
     },
     /**
@@ -363,6 +366,16 @@ var FormRenderer = BasicRenderer.extend({
             }
         });
         return $buttons;
+    },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
+    _renderInnerDivField: function (node) {
+        var $field = this._renderFieldWidget(node, this.state).$el;
+        this._renderTagLabel(node);
+        return $field;
     },
     /**
      * @private
@@ -416,6 +429,8 @@ var FormRenderer = BasicRenderer.extend({
                 $tds = self._renderInnerGroupField(child);
             } else if (child.tag === 'label') {
                 $tds = self._renderInnerGroupLabel(child);
+            } else if (child.tag === 'div') {
+                $tds = self._renderInnerGroupDiv(child);
             } else {
                 $tds = $('<td/>').append(self._renderNode(child));
             }
@@ -436,6 +451,17 @@ var FormRenderer = BasicRenderer.extend({
         });
 
         return $result;
+    },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
+    _renderInnerGroupDiv: function (node) {
+        var options = {
+            innerDiv: true,
+        };
+        return $('<td/>').append(this._renderNode(node, options));
     },
     /**
      * @private
@@ -477,8 +503,13 @@ var FormRenderer = BasicRenderer.extend({
      * @param {Object} node
      * @returns {jQueryElement | string}
      */
-    _renderNode: function (node) {
-        var renderer = this['_renderTag' + _.str.capitalize(node.tag)];
+    _renderNode: function (node, options) {
+        var innerDiv = options && options.innerDiv;
+        var reflectRender = innerDiv ? '_renderInnerDiv' : '_renderTag';
+        var renderer = this[reflectRender + _.str.capitalize(node.tag)];
+        if (innerDiv && !renderer) {
+            renderer = this['_renderTag' + _.str.capitalize(node.tag)];
+        }
         if (renderer) {
             return renderer.call(this, node);
         }
@@ -488,7 +519,7 @@ var FormRenderer = BasicRenderer.extend({
         if (_.isString(node)) {
             return node;
         }
-        return this._renderGenericTag(node);
+        return this._renderGenericTag(node, options);
     },
     /**
      * @private
@@ -643,6 +674,7 @@ var FormRenderer = BasicRenderer.extend({
      */
     _renderTagLabel: function (node) {
         var self = this;
+        this.fieldLabelCache = this.fieldLabelCache || {};
         var text;
         var fieldName = node.tag === 'label' ? node.attrs.for : node.attrs.name;
         if ('string' in node.attrs) { // allow empty string
@@ -659,6 +691,9 @@ var FormRenderer = BasicRenderer.extend({
         });
         if (node.tag === 'label') {
             this._handleAttributes($result, node);
+            this.fieldLabelCache[fieldName] = $result;
+        } else if (node.tag === 'field') {
+            $result = this.fieldLabelCache[fieldName] || $result;
         }
         var modifiersOptions;
         if (fieldName) {

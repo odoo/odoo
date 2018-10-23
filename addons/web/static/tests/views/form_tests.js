@@ -629,6 +629,86 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Form - Label NOT in group', function (assert) {
+        assert.expect(2);
+        // case not supported: if not in group, the group label feature
+        // won't be active
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<label for="date" string="I really want to see you"/>' +
+                    '<field name="date"/>' +
+                '</form>',
+            res_id: 4,
+        });
+
+        var $label = form.$('.o_form_label');
+
+        assert.strictEqual($label.length, 1,
+            'One label present');
+        assert.notOk($label.hasClass('o_form_label_empty'),
+            'label not marking the field as empty');
+
+        form.destroy();
+    });
+
+    QUnit.test('Form - Label in group', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<label for="date" string="Sweet Lord"/>' +
+                        '<field name="date"/>' +
+                    '</group>' +
+                '</form>',
+            res_id: 4,
+        });
+
+        var $label = form.$('td .o_form_label');
+
+        assert.strictEqual($label.length, 1,
+            'One label present');
+        assert.ok($label.hasClass('o_form_label_empty'),
+            'label marking the field as empty');
+
+        form.destroy();
+    });
+
+    QUnit.test('Form - in group Label outside div which contains the field', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<label for="date" string="Oh My Lord"/>' +
+                        '<div>' +
+                            '<field name="date"/>' +
+                        '</div>' +
+                    '</group>' +
+                  '</form>',
+            res_id: 4,
+        });
+
+        var $label = form.$('td .o_form_label');
+
+        assert.strictEqual($label.length, 1,
+            'One label present');
+        assert.ok($label.hasClass('o_form_label_empty'),
+            'label marking the field as empty');
+
+        form.destroy();
+    });
+
     QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
         assert.expect(4);
 
