@@ -99,16 +99,10 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='description']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
             <xpath expr="//group[@name='sale']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//group[@name='invoicing']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
-            <xpath expr="//group[@name='description']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
         </field>

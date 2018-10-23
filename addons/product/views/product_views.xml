@@ -66,9 +66,9 @@
                                 <field name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
                             </group>
                         </page>
-                        <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
+                        <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales" invisible="1">
                             <group name="sale">
-                                <group groups="product.group_product_pricelist" name="pricelists">
+                                <group groups="product.group_product_pricelist">
                                     <div name="pricelist_item" groups="product.group_product_pricelist">
                                         <separator string="Pricing"/>
                                         <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
@@ -85,7 +85,7 @@
                                 </group>
                                 <group name="email_template_and_project" invisible="1"/>
                             </group>
-                            <group string="Description for Customers" name="description" invisible="1">
+                            <group string="Description for Customers" name="description">
                                 <field name="description_sale" nolabel="1" placeholder="This note will show up on sales orders &amp; invoices."/>
                             </group>
                         </page>
