@@ -41,7 +41,6 @@ class CrmLeadForwardToPartner(models.TransientModel):
         if template:
             res['body'] = template.body_html
         if leads:
-            leads = self.env['crm.lead'].get_active_records()
             if default_composition_mode == 'mass_mail':
                 partner_assigned_dict = leads.search_geo_partner()
             else:

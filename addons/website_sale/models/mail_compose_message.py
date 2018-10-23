@@ -11,7 +11,7 @@ class MailComposeMessage(models.TransientModel):
     def send_mail(self, auto_commit=False):
         context = self._context
         # TODO TDE: clean that brole one day
-        active_ids = self.env[context.get('active_model')].get_active_records().ids
+        active_ids = self.env[self.model].get_active_records().ids
         if context.get('website_sale_send_recovery_email') and self.model == 'sale.order' and active_ids:
             self.env['sale.order'].search([
                 ('id', 'in', active_ids),
