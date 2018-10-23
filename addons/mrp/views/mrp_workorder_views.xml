@@ -14,6 +14,13 @@
                 <separator/>
                 <filter string="Start Date" name="date_start_filter" date="date_start"/>
                 <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
             </search>
         </field>
     </record>
@@ -235,6 +242,7 @@
             </sheet>
             <div class="oe_chatter" groups="mrp.group_mrp_manager">
                 <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="activity_ids" widget="mail_activity"/>
                 <field name="message_ids" widget="mail_thread"/>
             </div>
             </form>
@@ -257,6 +265,14 @@
                 <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_planned_start','&lt;', current_date), ('state', '=', 'ready')]"
                     help="Production started late"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
                 <group expand="0" string="Group By">

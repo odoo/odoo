@@ -383,7 +383,7 @@ class account_register_payments(models.TransientModel):
 
 class account_payment(models.Model):
     _name = "account.payment"
-    _inherit = ['mail.thread', 'account.abstract.payment']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'account.abstract.payment']
     _description = "Payments"
     _order = "payment_date desc, name desc"
 

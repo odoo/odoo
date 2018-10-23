@@ -40,7 +40,7 @@ class PurchaseRequisitionType(models.Model):
 class PurchaseRequisition(models.Model):
     _name = "purchase.requisition"
     _description = "Purchase Requisition"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "id desc"
 
     def _get_picking_in(self):

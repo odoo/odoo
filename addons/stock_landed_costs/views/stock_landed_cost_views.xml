@@ -95,6 +95,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -158,6 +159,14 @@
                     <separator/>
                     <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Date" name="group_by_month" context="{'group_by': 'date'}"/>
                         <filter string="Status" name="status" context="{'group_by': 'state'}"/>
