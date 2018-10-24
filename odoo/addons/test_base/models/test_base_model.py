@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 class TestOne2many(models.Model):
     _name = 'test_o2m_relational.model'
+    _description = 'test relation model o2m'
 
     name = fields.Char()
     model_id = fields.Many2one('test_base.model')
@@ -11,11 +12,13 @@ class TestOne2many(models.Model):
 
 class TestMany2oneLevel1(models.Model):
     _name = 'test_m2o_level_1.model'
+    _description = 'test model level 1'
 
     name = fields.Char()
-    
+
 class TestMany2one(models.Model):
     _name = 'test_m2o_relational.model'
+    _description = 'test relation model m2o'
 
     name = fields.Char()
     many2one_id = fields.Many2one('test_m2o_relational.model')
@@ -25,12 +28,14 @@ class TestMany2one(models.Model):
 
 class TestMany2many(models.Model):
     _name = 'test_m2m_relational.model'
+    _description = 'test relation model m2m'
 
     name = fields.Char()
     parent_id = fields.Many2one('test_m2m_relational.model')
 
 class TestModel(models.Model):
     _name = "test_base.model"
+    _description = 'test mail model'
 
     name = fields.Char()
     sequence = fields.Integer()
@@ -49,16 +54,19 @@ class TestModel(models.Model):
 
 class TestM2oRequired(models.Model):
     _name = 'test_required_relational.model'
+    _description = 'test required relation model'
 
     name = fields.Char()
 
 class TestRequiredTest(models.Model):
     _name = "test_required.model"
+    _description = 'test required model'
 
     name = fields.Char()
     m2o_required_id = fields.Many2one('test_required_relational.model', required=True, help="Many2one required field")
 
 class TestTranslate(models.Model):
     _name = 'test_translation.model'
+    _description = 'test translation model'
 
     name = fields.Char(translate=True)

@@ -1027,7 +1027,7 @@ class TestFields(common.TransactionCase):
         self.assertEqual(count(message1), 0)
 
     def test_90_binary_svg(self):
-        from odoo.addons.base.tests.test_mimetypes import SVG
+        from odoo.addons.test_base.tests.test_mimetypes import SVG
         # This should work without problems
         self.env['test_new_api.binary_svg'].create({
             'name': 'Test without attachment',
@@ -1043,7 +1043,7 @@ class TestFields(common.TransactionCase):
             })
 
     def test_91_binary_svg_attachment(self):
-        from odoo.addons.base.tests.test_mimetypes import SVG
+        from odoo.addons.test_base.tests.test_mimetypes import SVG
         # This doesn't neuter SVG with admin
         record = self.env['test_new_api.binary_svg'].create({
             'name': 'Test without attachment',
@@ -1070,7 +1070,7 @@ class TestFields(common.TransactionCase):
         self.assertEqual(attachment.mimetype, 'text/plain')
 
     def test_92_binary_self_avatar_svg(self):
-        from odoo.addons.base.tests.test_mimetypes import SVG
+        from odoo.addons.test_base.tests.test_mimetypes import SVG
         demo_user = self.env.ref('base.user_demo')
         # User demo changes his own avatar
         demo_user.sudo(demo_user).image = SVG
