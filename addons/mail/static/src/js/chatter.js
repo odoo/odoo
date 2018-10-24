@@ -208,6 +208,12 @@ var Chatter = Widget.extend(chat_mixin, {
             // suggested partners when opening the composer on another record
             this.suggested_partners_def = undefined;
         }
+        var msg_ids = record.fields['message_ids'];
+        if (msg_ids.related) {
+            var r_field = record.data[msg_ids.related[0]]
+            this.context.default_res_id = r_field.res_id;
+            this.context.default_model = r_field.model;
+        }
         this.record = record;
         this.record_name = record.data.display_name;
     },
@@ -250,7 +256,7 @@ var Chatter = Widget.extend(chat_mixin, {
             this.suggested_partners_def = $.Deferred();
             var method = 'message_get_suggested_recipients';
             var args = [[this.context.default_res_id], this.context];
-            this._rpc({model: this.record.model, method: method, args: args})
+            this._rpc({model: this.context.default_model || this.record.model, method: method, args: args})
                 .then(function (result) {
                     if (!self.suggested_partners_def) {
                         return; // widget has been reset (e.g. we just switched to another record)

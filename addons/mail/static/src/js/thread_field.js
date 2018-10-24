@@ -18,6 +18,12 @@ var ThreadField = AbstractField.extend(chat_mixin, {
     // inherited
     init: function () {
         this._super.apply(this, arguments);
+        if (this.field.related) {
+            var r_name = this.field.related[0];
+            var r_field = this.recordData[r_name];
+            this.res_id = r_field.res_id;
+            this.model = r_field.model;
+        }
         this.msgIDs = this.value.res_ids;
     },
     willStart: function () {
