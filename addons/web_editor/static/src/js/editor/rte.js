@@ -591,6 +591,14 @@ var RTEWidget = Widget.extend({
             return;
         }
 
+        // Removes strange _moz_abspos attribute when it appears. Cannot
+        // find another solution which works in all cases. A grabber still
+        // appears at the same time which I did not manage to remove.
+        // TODO find a complete and better solution
+        _.defer(function () {
+            $editable.find('[_moz_abspos]').removeAttr('_moz_abspos');
+        });
+
         if ($target.is('a')) {
             /**
              * Remove content editable everywhere and add it on the link only so that characters can be added
