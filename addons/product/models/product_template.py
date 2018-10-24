@@ -381,7 +381,7 @@ class ProductTemplate(models.Model):
                     args=args,
                     operator=operator,
                     limit=limit,
-                    name_get_uid=name_get_uid)])
+                    name_get_uid=name_get_uid)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
             if (not products and not templates) or (limit and (len(templates) > limit)):
