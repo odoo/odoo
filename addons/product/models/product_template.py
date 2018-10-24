@@ -378,7 +378,7 @@ class ProductTemplate(models.Model):
             if not products_ns:
                 templates |= super(ProductTemplate, self)._name_search(
                     name=name,
-                    args=args,
+                    args=args+domain,
                     operator=operator,
                     limit=limit,
                     name_get_uid=name_get_uid)
