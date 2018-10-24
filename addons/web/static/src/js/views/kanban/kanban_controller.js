@@ -341,12 +341,7 @@ var KanbanController = BasicController.extend({
         this.model
             .deleteRecords([column.db_id], relatedModelName)
             .done(function () {
-                if (column.isEmpty()) {
-                    self.renderer.removeWidget(column);
-                    self._updateButtons();
-                } else {
-                    self.reload();
-                }
+                self.update({}, {reload: !column.isEmpty()});
             });
     },
     /**

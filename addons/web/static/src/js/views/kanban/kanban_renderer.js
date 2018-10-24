@@ -167,15 +167,6 @@ var KanbanRenderer = BasicRenderer.extend({
         this._toggleNoContentHelper();
     },
     /**
-     * Removes a widget (record if ungrouped, column if grouped) from the view.
-     *
-     * @param {Widget} widget the instance of the widget to remove
-     */
-    removeWidget: function (widget) {
-        this.widgets.splice(this.widgets.indexOf(widget), 1);
-        widget.destroy();
-    },
-    /**
      * Updates a given column with its new state.
      *
      * @param {string} localID the column id
@@ -276,6 +267,16 @@ var KanbanRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Render the Example Ghost Kanban card on the background
+     *
+     * @private
+     * @param {DocumentFragment} fragment
+     */
+    _renderExampleBackground: function (fragment) {
+        var $background = $(qweb.render('KanbanView.ExamplesBackground'));
+        $background.appendTo(fragment);
+    },
+    /**
      * Renders empty invisible divs in a document fragment.
      *
      * @private
@@ -351,9 +352,9 @@ var KanbanRenderer = BasicRenderer.extend({
                     // Open it directly if there is no column yet
                     if (!self.state.data.length) {
                         self.quickCreate.toggleFold();
+                        self._renderExampleBackground(fragment);
                     }
                 });
-
             }
         }
     },
@@ -546,6 +547,7 @@ var KanbanRenderer = BasicRenderer.extend({
     _onQuickCreateColumnUpdated: function (ev) {
         ev.stopPropagation();
         this._toggleNoContentHelper();
+        this._updateExampleBackground();
     },
     /**
      * @private
@@ -595,6 +597,21 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     _onStartQuickCreate: function () {
         this._toggleNoContentHelper(true);
+    },
+    /**
+     * Hide or display the background example:
+     *  - displayed when quick create column is display and there is no column else
+     *  - hidden otherwise
+     *
+     * @private
+     **/
+    _updateExampleBackground: function () {
+        var $elem = this.$('.o_kanban_example_background_container');
+        if (!this.state.data.length && !$elem.length) {
+            this._renderExampleBackground(this.$el);
+        } else {
+            $elem.remove();
+        }
     },
 });
 
