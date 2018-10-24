@@ -3,7 +3,7 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.tools import float_is_zero
 
 
@@ -23,18 +23,24 @@ class MrpProduction(models.Model):
         """
         super(MrpProduction, self)._cal_price(consumed_moves)
         work_center_cost = 0
-        finished_move = self.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity_done > 0)
-        if finished_move:
-            finished_move.ensure_one()
-            for work_order in self.workorder_ids:
-                time_lines = work_order.time_ids.filtered(lambda x: x.date_end and not x.cost_already_recorded)
-                duration = sum(time_lines.mapped('duration'))
-                time_lines.write({'cost_already_recorded': True})
-                work_center_cost += (duration / 60.0) * work_order.workcenter_id.costs_hour
+        for work_order in self.workorder_ids:
+            time_lines = work_order.time_ids.filtered(lambda x: x.date_end and not x.cost_already_recorded)
+            duration = sum(time_lines.mapped('duration'))
+            time_lines.write({'cost_already_recorded': True})
+            work_center_cost += (duration / 60.0) * work_order.workcenter_id.costs_hour
+
+        total_cost = sum([-m.stock_valuation_layer_ids.value for m in consumed_moves]) + work_center_cost
+
+        finished_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.quantity_done > 0)
+        for finished_move in finished_moves:
             if finished_move.product_id.cost_method in ('fifo', 'average'):
                 qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
-                extra_cost = self.extra_cost * qty_done
-                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves]) + work_center_cost + extra_cost) / qty_done
+                cost_repartition = finished_move.byproduct_id and finished_move.byproduct_id.cost_repartition or finished_move.production_id.bom_id.cost_repartition
+                reparted_cost = (cost_repartition / 100) * total_cost
+                if finished_move.product_id == self.product_id:
+                    finished_move.price_unit = (reparted_cost / qty_done) + self.extra_cost
+                else:
+                    finished_move.price_unit = (reparted_cost / qty_done)
         return True
 
     def _prepare_wc_analytic_line(self, wc_line):

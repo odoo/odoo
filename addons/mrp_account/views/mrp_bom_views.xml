@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="mrp_account_bom_form_inherit_view">
+        <field name="name">mrp.account.bom.form.inherit</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+                <div class="alert alert-warning" attrs="{'invisible': [('total_cost_repartition', '=', 100)]}" role="alert">
+                    The total repartition cost is 
+                    <field name="total_cost_repartition"/>
+                    %
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='bom_line_ids']//tree//field[@name='operation_id']" position="after">
+                <field attrs="{'column_invisible': [('parent.type', '!=', 'phantom')], 'required': [('parent.type', '=', 'phantom')]}" name="cost_repartition"/>
+            </xpath>
+            <xpath expr="//field[@name='byproduct_ids']//tree//field[@name='product_uom_id']" position="after">
+                <field required="1" name="cost_repartition"/>
+            </xpath>
+            <xpath expr="//field[@name='routing_id']" position="before">
+                <field name="cost_repartition" string="Valuation" attrs="{'invisible': [('type', '=', 'phantom')]}" groups="mrp.group_mrp_byproducts"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mrp_account_bom_line_form_inherit_view">
+        <field name="name">mrp.account.bom.line.view.form.inherit</field>
+        <field name="model">mrp.bom.line</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_line_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='operation_id']" position="after">
+                <field name="cost_repartition" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
