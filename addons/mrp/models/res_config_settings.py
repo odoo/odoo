@@ -9,7 +9,8 @@ class ResConfigSettings(models.TransientModel):
 
     manufacturing_lead = fields.Float(related='company_id.manufacturing_lead', string="Manufacturing Lead Time", readonly=False)
     use_manufacturing_lead = fields.Boolean(string="Default Manufacturing Lead Time", config_parameter='mrp.use_manufacturing_lead', oldname='default_use_manufacturing_lead')
-    module_mrp_byproduct = fields.Boolean("By-Products")
+    group_mrp_byproducts = fields.Boolean("By-Products",
+        implied_group='mrp.group_mrp_byproducts')
     module_mrp_mps = fields.Boolean("Master Production Schedule")
     module_mrp_plm = fields.Boolean("Product Lifecycle Management (PLM)")
     module_mrp_workorder = fields.Boolean("Work Orders")
