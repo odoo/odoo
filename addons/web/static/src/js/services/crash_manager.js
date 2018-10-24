@@ -130,7 +130,11 @@ var CrashManager = core.Class.extend({
             clipboard = new window.ClipboardJS($clipboardBtn[0], {
                 text: function () {
                     return (_t("Error") + ":\n" + error.message + "\n\n" + error.data.debug).trim();
-                }
+                },
+                // Container added because of Bootstrap modal that give the focus to another element.
+                // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
+                // https://github.com/zenorocha/clipboard.js/issues/155
+                container: dialog.el,
             });
             clipboard.on("success", function (e) {
                 _.defer(function () {
