@@ -2,6 +2,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 'use strict';
 
 var core = require('web.core');
+var colorPickerDialog = require('web.colorpicker');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
@@ -607,13 +608,21 @@ registry.sizing_y = registry.sizing.extend({
 registry.colorpicker = SnippetOption.extend({
     xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     events: _.extend({}, SnippetOption.prototype.events || {}, {
-        'click .colorpicker button': '_onColorButtonClick',
+        'click .colorpicker button:not(.o_add_custom_color)': '_onColorButtonClick',
         'mouseenter .colorpicker button': '_onColorButtonEnter',
         'mouseleave .colorpicker button': '_onColorButtonLeave',
         'click .note-color-reset': '_onColorResetButtonClick',
+        'click .o_add_custom_color': '_onCustomColorButtonClick',
     }),
     colorPrefix: 'bg-',
 
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.customColors = [];
+    },
     /**
      * @override
      */
@@ -659,9 +668,10 @@ registry.colorpicker = SnippetOption.extend({
                         return;
                     }
                     _.each(colorRow, function (color) {
-                        $div.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
+                        $div.append('<button class="o_common_color" style="background-color: ' + color + '" />');
                     });
                 });
+                this._renderCustomColors();
             }
 
             $pt.find('.o_colorpicker_section_tabs').append($clpicker);
@@ -687,6 +697,40 @@ registry.colorpicker = SnippetOption.extend({
 
         return res;
     },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        this._renderCustomColors();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+     /**
+     * Renderer all custom colors from the page and add to dropdown.
+     *
+     * @private
+     */
+    _renderCustomColors: function () {
+        var self = this;
+        this.$el.find('.o_custom_color').remove();
+        var $editable = window.__EditorMenuBar_$editable || $();
+        this.customColors = _.chain($editable.find('.o_custom_snippet_bg')).map(function (el) {
+            return el.style.backgroundColor;
+        }).uniq().value();
+        _.each(this.customColors, function (color) {
+            var classes = 'o_custom_color';
+            if (self.$target.css('background-color') === color) {
+                classes += ' selected';
+            }
+            var $btn = $('<button/>', {
+                class: classes,
+                style: 'background-color:' + color + ';',
+            });
+            $btn.insertBefore(self.$el.find('.o_add_custom_color'));
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -701,6 +745,7 @@ registry.colorpicker = SnippetOption.extend({
     _onColorButtonClick: function (ev) {
         this.$el.find('.colorpicker button.selected').removeClass('selected');
         $(ev.currentTarget).addClass('selected');
+        this.$target.toggleClass('o_custom_snippet_bg', $(ev.target).hasClass('o_custom_color'));
         this.$target.closest('.o_editable').trigger('content_changed');
         this.$target.trigger('background-color-event', false);
     },
@@ -715,7 +760,7 @@ registry.colorpicker = SnippetOption.extend({
         var color = $(ev.currentTarget).data('color');
         if (color) {
             this.$target.addClass(this.colorPrefix + color);
-        } else if ($(ev.target).hasClass('o_custom_color')) {
+        } else if ($(ev.target).hasClass('o_common_color') || $(ev.target).hasClass('o_custom_color')) {
             this.$target
                 .removeClass(this.classes)
                 .css('background-color', ev.currentTarget.style.backgroundColor);
@@ -749,8 +794,30 @@ registry.colorpicker = SnippetOption.extend({
      */
     _onColorResetButtonClick: function () {
         this.$target.removeClass(this.classes).css('background-color', '');
-        self.$target.trigger('content_changed');
+        this.$target.removeClass('o_custom_snippet_bg');
+        this.$target.trigger('content_changed');
         this.$el.find('.colorpicker button.selected').removeClass('selected');
+    },
+    /**
+     * Called when the custom color button is clicked -> set custom color background
+     *
+     * @private
+     */
+    _onCustomColorButtonClick: function () {
+        var self = this;
+        var colorpicker = new colorPickerDialog(this, {});
+        colorpicker.on('colorpicker:saved', this, function (ev) {
+            self.$target
+                .removeClass(self.classes)
+                .addClass('o_custom_snippet_bg')
+                .css('background-color', ev.data.cssColor);
+            this.$el.find('.colorpicker button.selected').removeClass('selected');
+            self.customColors.push(ev.data.cssColor);
+            self._renderCustomColors();
+            self.$target.closest('.o_editable').trigger('content_changed');
+            self.$target.trigger('background-color-event', false);
+        });
+        colorpicker.open();
     },
 });
 
