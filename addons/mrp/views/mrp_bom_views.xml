@@ -69,7 +69,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Byproducts" attrs="{'invisible': [('type','=','phantom')]}">
+                        <page string="Byproducts" attrs="{'invisible': [('type','=','phantom')]}" groups="mrp.group_mrp_byproducts">
                             <field name="sub_products">
                                 <tree string="Byproducts"  editable="top">
                                     <field name="product_id"/>
