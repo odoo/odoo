@@ -19,7 +19,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
      * Initializes the optional products modal
      *
      * If the "isWebsite" param is true, will also disable the following events:
-     * - change [data-attribute_exclusions]
+     * - change [data-attribute_exclusions], input.js_product_change
      * - click button.js_add_cart_json
      *
      * This has to be done because those events are already registered at the "website_sale"
@@ -67,7 +67,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
 
         if (this.isWebsite) {
-            delete this.events['change [data-attribute_exclusions]'];
+            delete this.events['change [data-attribute_exclusions], input.js_product_change'];
             delete this.events['click button.js_add_cart_json'];
         }
 

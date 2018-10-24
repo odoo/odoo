@@ -79,19 +79,19 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 run: function () {}, // it's a check
             },
             {
-                content: "check price is 750 and set quantity to 2",
+                content: "check price is 800.40 and set quantity to 2",
                 trigger: ".js_product:first input.quantity:propValue(1)",
-                extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
+                extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(800.40)",
                 run: "text 2",
             },
             {
                 content: "verify pricelist based on quantity has effect",
-                trigger: ".product_price .oe_price .oe_currency_value:containsExact(600.00)",
+                trigger: ".product_price .oe_price .oe_currency_value:containsExact(640.32)",
                 run: function () {}, // it's a check
             },
             {
-                content: "check pricelit has been applied and switch to Aluminium variant",
-                trigger: ".js_product label:contains('Aluminium')",
+                content: "check pricelit has been applied and switch to Black,Steel variant",
+                trigger: ".js_product label:contains('Black, Steel')",
             },
             {
                 content: "verify that price has changed when changing variant",
@@ -141,13 +141,13 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "price is lowered by pricelist and not multiplied by quantity",
-                trigger: "#product_confirmation .oe_price .oe_currency_value:containsExact(600.00)",
-                extra_trigger: "#product_confirmation input.quantity:propValue(2)",
+                trigger: ".oe_optional_products_modal .oe_price .oe_currency_value:containsExact(600.00)",
+                extra_trigger: ".oe_optional_products_modal input.quantity:propValue(2)",
                 run: function () {}, // it's a check
             },
             {
                 content: "set quantity to 1",
-                trigger: "#product_confirmation .js_add_cart_json .fa-minus",
+                trigger: ".oe_optional_products_modal .js_add_cart_json .fa-minus",
             },
             {
                 content: "check that product page has been updated",
@@ -157,18 +157,18 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "check that add to cart modal has been updated",
-                trigger: "#product_confirmation .oe_price .oe_currency_value:containsExact(750.00)",
-                extra_trigger: "#product_confirmation input.quantity:propValue(1)",
+                trigger: ".oe_optional_products_modal .oe_price .oe_currency_value:containsExact(750.00)",
+                extra_trigger: ".oe_optional_products_modal input.quantity:propValue(1)",
                 run: function () {}, // it's a check
             },
             {
                 content: "add an optional Warranty",
-                trigger: ".js_product:contains(Warranty) a:contains(Add to Cart)",
+                trigger: ".js_product:contains(Warranty) a.js_add",
             },
             {
                 content: "click in modal on 'Proceed to checkout' button",
-                extra_trigger: 'body:has(.js_product:contains(Warranty) a:contains(Add to Cart):hidden)',
-                trigger: '.modal-footer a:contains("Proceed to Checkout")',
+                extra_trigger: 'body:has(.js_product:contains(Warranty) a.js_add:hidden)',
+                trigger: '.modal-footer button:contains("Proceed to Checkout")',
             },
             {
                 content: "check quantity",

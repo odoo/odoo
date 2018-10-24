@@ -11,7 +11,7 @@ var ProductConfiguratorMixin = {
         'click .css_attribute_color input': '_onChangeColorAttribute',
         'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
         'click button.js_add_cart_json': 'onClickAddCartJSON',
-        'change [data-attribute_exclusions]': 'onChangeVariant'
+        'change [data-attribute_exclusions], input.js_product_change': 'onChangeVariant'
     },
 
     //--------------------------------------------------------------------------
@@ -68,7 +68,7 @@ var ProductConfiguratorMixin = {
 
         ajax.jsonRpc(this._getUri('/product_configurator/get_combination_info'), 'call', {
             product_template_id: parseInt($parent.find('.product_template_id').val()),
-            product_id: parseInt($parent.find('.product_id').val()),
+            product_id: this._getProductId($parent),
             combination: combination,
             add_qty: parseInt(qty),
             pricelist_id: this.pricelistId
@@ -386,6 +386,15 @@ var ProductConfiguratorMixin = {
             .parents('.modal')
             .find('.o_sale_product_configurator_add')
             .toggleClass('disabled', disable);
+    },
+
+    /**
+     * Extracted to a method to be extendable by other modules
+     *
+     * @param {$.Element} $parent
+     */
+    _getProductId($parent) {
+        return parseInt($parent.find('.product_id').val());
     },
 
     /**

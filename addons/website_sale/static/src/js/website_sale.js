@@ -173,11 +173,17 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             return def;
         }
 
+        var isListVariant = false;
         _.each(this.$('div.js_product'), function (product) {
+            isListVariant = $('input.js_product_change', product).length > 0;
             $('input.js_product_change', product).first().trigger('change');
         });
 
-        this.triggerVariantChange(this.$el);
+        // when the "List View of Variants" feature is enabled, the variant change
+        // is already triggered by the above.
+        if (!isListVariant) {
+            this.triggerVariantChange(this.$el);
+        }
 
         this.$('select[name="country_id"]').change();
 
