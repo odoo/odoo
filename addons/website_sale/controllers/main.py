@@ -706,9 +706,9 @@ class WebsiteSale(ProductConfiguratorController):
         order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
-        extra_step = request.env.ref('website_sale.extra_info_option')
+        extra_step = request.env['ir.ui.view']._view_obj('website_sale.extra_info_option')
         if extra_step.active:
-            return request.redirect("/shop/confirm_order")
+            return request.redirect("/shop/extra_info")
 
         return request.redirect("/shop/payment")
 
