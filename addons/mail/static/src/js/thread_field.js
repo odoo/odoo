@@ -20,6 +20,9 @@ var ThreadField = AbstractField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        // Used to automatically mark document thread as read at the moment we
+        // access the document and render the thread.
+        this._markAsReadOnNextRender = false;
         this._setDocumentThread();
     },
     /**
@@ -115,7 +118,10 @@ var ThreadField = AbstractField.extend({
                 self._threadWidget.render(self._documentThread, {
                     displayLoadMore: self._documentThread.getMessages().length < self._documentThread.getMessageIDs().length,
                 });
-                return self._documentThread.markAsRead();
+                if (self._markAsReadOnNextRender) {
+                    self._markAsReadOnNextRender = false;
+                    return self._documentThread.markAsRead();
+                }
             });
         }
     },
@@ -157,6 +163,7 @@ var ThreadField = AbstractField.extend({
             this._documentThread = null;
         } else {
             this._documentThread = this.call('mail_service', 'getOrAddDocumentThread', params);
+            this._markAsReadOnNextRender = true;
         }
     },
 
