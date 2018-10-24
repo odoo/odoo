@@ -124,7 +124,7 @@ class StockWarehouse(models.Model):
                 'create_values': {
                     'action': 'buy',
                     'picking_type_id': self.in_type_id.id,
-                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', 'Buy').id
+                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id
                 },
                 'update_values': {
                     'active': self.buy_to_resupply,
