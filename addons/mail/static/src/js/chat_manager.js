@@ -863,7 +863,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         if ('ids' in options) {
             // get messages from their ids (chatter is the main use case)
             return this._fetchDocumentMessages(options.ids, options).then(function(result) {
-                chat_manager.mark_as_read(options.ids);
+                if (options.shouldMarkAsRead) { // DO NOT FORWARD-PORT
+                    chat_manager.mark_as_read(options.ids); // DO NOT FORWARD-PORT
+                } // DO NOT FORWARD-PORT
                 return result;
             });
         }
