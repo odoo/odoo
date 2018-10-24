@@ -376,9 +376,10 @@ class ProductTemplate(models.Model):
             args = args if args is not None else []
             products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
             if not products_ns:
+                domain_tmpl = templates and [('id', 'not in', templates.ids)] or []
                 templates |= super(ProductTemplate, self)._name_search(
                     name=name,
-                    args=args+domain,
+                    args=args+domain_tmpl,
                     operator=operator,
                     limit=limit,
                     name_get_uid=name_get_uid)
