@@ -375,14 +375,21 @@ class ProductTemplate(models.Model):
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
             products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
+            if not products_ns:
+                templates |= super(ProductTemplate, self)._name_search(
+                    name=name,
+                    args=args,
+                    operator=operator,
+                    limit=limit,
+                    name_get_uid=name_get_uid)])
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
-            if (not products) or (limit and (len(templates) > limit)):
+            if (not products and not templates) or (limit and (len(templates) > limit)):
                 break
 
         # re-apply product.template order + name_get
         return super(ProductTemplate, self)._name_search(
-            '', args=[('id', 'in', list(set(templates.ids)))],
+            '', args=[('id', 'in', templates.ids)],
             operator='ilike', limit=limit, name_get_uid=name_get_uid)
 
     @api.multi
