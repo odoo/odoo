@@ -9,7 +9,7 @@
     <template id="portal_breadcrumbs" name="Portal layout: project menu entry" inherit_id="portal.portal_breadcrumbs" priority="40">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'project' or project or task" class="breadcrumb-item #{'active ' if not project and not task else ''}">
-                <a t-if="project or task" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
+                <a t-if="project or task" t-attf-href="/my/projects">Projects</a>
                 <t t-else="">Projects</t>
             </li>
             <li t-if="project" class="breadcrumb-item active">
