@@ -442,6 +442,18 @@
             </field>
         </record>
 
+       <record id="res_partner_controlpanel_view" model="ir.ui.view">
+            <field name="name">res.partner.controlpanel</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <controlpanel>
+                    <controls>
+                        <button name="crm.crm_lead_opportunities_tree_view" type="action" class="btn-primary" string="Open Pipeline"/>
+                    </controls>
+               </controlpanel>
+            </field>
+        </record>
+
        <record id="view_res_partner_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
