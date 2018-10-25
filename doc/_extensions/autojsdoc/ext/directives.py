@@ -9,7 +9,11 @@ import re
 from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.statemachine import StringList
-from sphinx import addnodes, util
+from sphinx import addnodes
+try:
+    from sphinx.util import logging as sphinx_logging
+except ImportError:
+    sphinx_logging = None
 from sphinx.ext.autodoc import members_set_option, bool_option, ALL
 
 from autojsdoc.ext.extractor import read_js
@@ -623,8 +627,9 @@ def check_parameters(documenter, doc):
 
     # use sphinx logging API if available, otherwise fall back to warning
     # via the app object (deprecated in 1.6, removed in 2.0)
-    if hasattr(util, 'logging'):
-        logger = util.logging.getLogger('autojsdoc').warning
+    # sphinx.util.logging exists in 1.5 but is basically useless
+    if hasattr(sphinx_logging, 'getLogger'):
+        logger = sphinx_logging.getLogger('autojsdoc').warning
     else:
         logger = documenter.directive.env.app.warn
 
