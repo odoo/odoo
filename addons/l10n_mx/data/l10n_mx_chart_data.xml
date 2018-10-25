@@ -116,7 +116,7 @@
         <field name='name'>Anticipo a proveedores nacional</field>
         <field name='code'>120.01.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_120_01')])]"/>
     </record>
@@ -124,7 +124,7 @@
         <field name='name'>Anticipo a proveedores extranjero</field>
         <field name='code'>120.02.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_120_02')])]"/>
     </record>
@@ -148,7 +148,7 @@
         <field name='name'>Anticipo de cliente nacional</field>
         <field name='code'>206.01.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_206_01')])]"/>
     </record>
@@ -156,9 +156,17 @@
         <field name='name'>Anticipo de cliente extranjero</field>
         <field name='code'>206.02.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_206_02')])]"/>
+    </record>
+    <record id='cuenta206_05_01' model='account.account.template'>
+        <field name='name'>Otros anticipos de clientes</field>
+        <field name='code'>206.05.01</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="reconcile" eval="True"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_206_05')])]"/>
     </record>
     <record id='cuenta208_01' model='account.account.template'>
         <field name='name'>IVA trasladado cobrado</field>
