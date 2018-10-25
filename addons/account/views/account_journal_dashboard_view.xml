@@ -240,22 +240,32 @@
                         </div>
                         <!-- On the right, show other common informations/actions -->
                         <div class="col-7 o_kanban_primary_right">
-                            <div class="row">
-                                <div class="col-7">
-                                    <span title="Balance in Odoo">Balance in General Ledger</span>
-                                </div>
-                                <div class="col-5 text-right">
-                                    <span><t t-esc="dashboard.account_balance"/></span>
-                                </div>
-                            </div>
                             <t t-if="dashboard.last_balance != dashboard.account_balance">
+                                <div class="row">
+                                    <div class="col-7 text-right">
+                                        <span title="Balance in General Ledger">Balance in GL</span>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><t t-esc="dashboard.account_balance"/></span>
+                                    </div>
+                                </div>
                                 <div class="row" name="latest_statement">
-                                  <div class="col-7">
-                                    <span title="Latest Statement">Latest Statement</span>
-                                  </div>
-                                  <div class="col-5 text-right">
-                                    <span><t t-esc="dashboard.last_balance"/></span>
-                                  </div>
+                                    <div class="col-7 text-right">
+                                        <span title="Latest Statement">Latest Statement</span>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><t t-esc="dashboard.last_balance"/></span>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="row">
+                                    <div class="col-7 text-right">
+                                        <span title="Balance in General Ledger">Balance</span>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><t t-esc="dashboard.account_balance"/></span>
+                                    </div>
                                 </div>
                             </t>
                             <t t-if="dashboard.number_to_check > 0">
@@ -282,13 +292,13 @@
                                     <span>New Bill</span>
                                 </button>
                                 <button type="action" name="%(account_invoice_import_wizard_action)d" class="btn btn-primary">
-                                    <span>Import Bills</span>
+                                    <span>Upload Bills</span>
                                 </button>
                             </t>
                         </div>
                         <div class="col-7 o_kanban_primary_right">
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-7 text-right">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
                                         <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-esc="dashboard.number_draft"/> Invoices to Validate</span>
                                         <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-esc="dashboard.number_draft"/> Bills to Validate</span>
@@ -299,7 +309,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-7 text-right">
                                     <a type="object" t-if="journal_type == 'sale'" name="open_action"
                                     context="{'search_default_unpaid':1}" id="account_dashboard_sale_pay_link">
                                         <t t-esc="dashboard.number_waiting"/> Unpaid Invoices
