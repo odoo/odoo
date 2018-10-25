@@ -25,7 +25,6 @@ MASS_MAILING_BUSINESS_MODELS = [
     'mail.mass_mailing.list',
     'mail.mass_mailing.contact'
 ]
-EMAIL_PATTERN = '([^ ,;<@]+@[^> ,;]+)'
 
 
 class MassMailingTag(models.Model):
@@ -115,16 +114,16 @@ class MassMailingList(models.Model):
             from
                 mail_mass_mailing_contact_list_rel r
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
-                left join mail_blacklist bl on (LOWER(substring(c.email, %s)) = bl.email and bl.active)
+                left join mail_blacklist bl on c.email_normalized = bl.email and bl.active
             where
                 list_id in %s
-                COALESCE(r.opt_out,FALSE) = FALSE
-                AND c.email IS NOT NULL
+                AND COALESCE(r.opt_out,FALSE) = FALSE
+                AND c.email_normalized IS NOT NULL
                 AND bl.id IS NULL
             group by
                 list_id
-        ''')
-        data = dict(self.env.cr.fetchall(), [EMAIL_PATTERN, tuple(self.ids)])
+        ''', (tuple(self.ids), ))
+        data = dict(self.env.cr.fetchall())
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
 
@@ -176,7 +175,7 @@ class MassMailingList(models.Model):
                     mail_mass_mailing_list mailing_list
                 WHERE contact.id=contact_list_rel.contact_id
                 AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
-                AND LOWER(substring(contact.email, %s)) NOT IN (select email from mail_blacklist where active = TRUE)
+                AND contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)
                 AND mailing_list.id=contact_list_rel.list_id
                 AND mailing_list.id IN %s
                 AND NOT EXISTS
@@ -190,7 +189,7 @@ class MassMailingList(models.Model):
                     AND contact_list_rel2.list_id = %s
                     )
                 ) st
-            WHERE st.rn = 1;""", (self.id, EMAIL_PATTERN, tuple(src_lists.ids), self.id))
+            WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
         self.invalidate_cache()
         if archive:
             (src_lists - self).write({'active': False})
@@ -231,7 +230,8 @@ class MassMailingContact(models.Model):
     @api.depends('email')
     def _compute_is_email_valid(self):
         for record in self:
-            record.is_email_valid = re.match(EMAIL_PATTERN, record.email)
+            normalized = self._normalize_email(record.email)
+            record.is_email_valid = normalized if not normalized else True
 
     @api.model
     def _search_opt_out(self, operator, value):

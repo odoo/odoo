@@ -39,7 +39,7 @@ class MassMailController(http.Controller):
                 # Unsubscribe directly + Let the user choose his subscriptions
                 mailing.update_opt_out(email, mailing.contact_list_ids.ids, True)
 
-                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', '=', email)])
+                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email_normalized', '=ilike', email)])
                 subscription_list_ids = contacts.mapped('subscription_list_ids')
                 # In many user are found : if user is opt_out on the list with contact_id 1 but not with contact_id 2,
                 # assume that the user is not opt_out on both
@@ -152,8 +152,7 @@ class MassMailController(http.Controller):
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
                 return 'unauthorized'
             model = request.env[mailing.mailing_model_real]
-            [email_field] = model._primary_email
-            records = model.sudo().search([(email_field, '=ilike', email)])
+            records = model.sudo().search([('email_normalized', '=ilike', email)])
             for record in records:
                 record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
             return bool(records)
