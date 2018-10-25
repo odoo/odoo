@@ -164,6 +164,7 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(rating_bad.rating_text, 'not_satisfied')
         self.assertEqual(first_task.rating_count, 1, "Task should have only one rating associated, since one is not consumed")
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
+
         self.assertEqual(self.project_goats.percentage_satisfaction_task, -1)
         self.assertEqual(self.project_pigs.percentage_satisfaction_task, -1)
 
