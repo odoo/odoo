@@ -94,8 +94,11 @@
                                         <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
                                 </td>
-                                <td t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                <td t-if="has_serial_number and move_line.lot_name" groups="stock.group_lot_on_delivery_slip">
                                     <span t-field="move_line.lot_name"/>
+                                </td>
+                                <td t-else="" groups="stock.group_lot_on_delivery_slip">
+                                    <span t-field="move_line.lot_id.name"/>
                                 </td>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>

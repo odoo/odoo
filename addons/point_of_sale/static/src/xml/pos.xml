@@ -1117,7 +1117,7 @@
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-textinput">
                 <header class="title"><t t-esc=" widget.options.title || '' " /></header>
-                <textarea rows="10" cols="40"><t t-esc="widget.options.value" /></textarea>
+                <textarea><t t-esc="widget.options.value" /></textarea>
                 <footer class="footer">
                     <div class="button confirm">
                         Ok
@@ -1269,7 +1269,7 @@
                 <t t-if="line.get_product().tracking!=='none'">
                     <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green" t-if="line.has_valid_product_lot()"
                        aria-label="Valid product lot" role="img" title="Valid product lot"/>
-                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="not(line.has_valid_product_lot())"
+                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="!line.has_valid_product_lot()"
                        aria-label="Invalid product lot" role="img" title="Invalid product lot"/>
                 </t>
             </span>

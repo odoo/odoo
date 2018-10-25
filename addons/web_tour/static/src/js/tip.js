@@ -51,7 +51,7 @@ var Tip = Widget.extend({
         this.$ideal_location = this._get_ideal_location();
 
         var position = this.$ideal_location.css("position");
-        if (position === "static") {
+        if (position === "static" || position === "relative") {
             this.$ideal_location.addClass("o_tooltip_parent");
         }
 
