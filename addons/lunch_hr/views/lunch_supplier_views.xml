@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lunch_supplier_view_form_inherit" model="ir.ui.view">
+        <field name="name">lunch.supplier.form.view.inherit</field>
+        <field name="model">lunch.supplier</field>
+        <field name="inherit_id" ref="lunch.lunch_supplier_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='recurrency_to']" position="after">
+                <field name="available_location_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
