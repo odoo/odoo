@@ -32,7 +32,8 @@ Module structure
 
 Directories
 -----------
-A module is organised in important directories. Those contain the business logic; having a look at them should make you understand the purpose of the module.
+A module is organized in important directories. Those contain the business logic;
+having a look at them should make you understand the purpose of the module.
 
 - *data/* : demo and data xml
 - *models/* : models definition
@@ -49,108 +50,186 @@ Other optional directories compose the module.
 
 File naming
 -----------
-For *views* declarations, distinguish the backend views definition (list, form, kanban, ...), the templates (QWeb pages) and bundle (JS and CSS assets). Bundles are theorically QWeb templates, but should be in their own file :file:`assets.xml`.
 
-For *models*, split the business logic by sets of models, in each set
-select a main model, this model gives its name to the set. If there is
-only one model, its name is the same as the module name. For
-each set named <main_model> the following files may be created:
+File naming is important to quickly find information through all odoo addons.
+This section explains how to name files in a standard odoo module. As an
+example we use a plant nursery application. It holds two main models plant.nursery
+and plant.order.
 
-- :file:`models/{<main_model>}.py`
-- :file:`models/{<inherited_main_model>}.py`
-- :file:`views/{<main_model>}_templates.xml`
-- :file:`views/{<main_model>}_views.xml`
-
-For instance, *sale* module introduces ``sale_order`` and
-``sale_order_line`` where ``sale_order`` is dominant. So the
-``<main_model>`` files will be named :file:`models/sale_order.py` and
-:file:`views/sale_order_views.py`.
-
-For *data*, split them by purpose : demo or data. The filename will be
-the main_model name, suffixed by *_demo.xml* or *_data.xml*.
-
-For *controllers*, the only file should be named *<my_module_name>.py*. If you need to inherit an existing controller from another module, its name will be *<module_name>.py*. Unlike *models*, each controller class should be contained in a separated file. For instance, *purchase* module implements its part of the customer portal in :file:`controllers/portal.py` and its own typical routes on :file:`controllers/purchase.py`.
-
-For *static files*, since the resources can be used in different contexts (frontend, backend, both), they will be included in only one bundle. So, CSS/Less, JavaScript and XML files should be suffixed with the name of the bundle type. i.e.: *im_chat_common.css*, *im_chat_common.js* for 'assets_common' bundle, and *im_chat_backend.css*, *im_chat_backend.js* for 'assets_backend' bundle.
-If the module owns only one file, the convention will be *<module_name>.ext* (i.e.: *project.js*).
-Don't link data (image, libraries) outside Odoo: do not use an
-URL to an image but copy it in our codebase instead.
-
-Regarding *data*, split them by purpose: data or demo. The filename will be
-the *main_model* name, suffixed by *_data.xml* or *_demo.xml*.
-
-Regarding *wizards*, naming convention is :
-
-- :file:`{<main_transient>}.py`
-- :file:`{<main_transient>}_views.xml`
-
-Where *<main_transient>* is the name of the dominant transient model, just like for *models*. <main_transient>.py can contains the models 'transient_model.action' and 'transient_model.action.line'.
-
-For *statistics reports*, their names should look like :
-
-- :file:`{<report_name_A>}_report.py`
-- :file:`{<report_name_A>}_report_views.py` (often pivot and graph views)
-
-For *printable reports*, you should have :
-
-- :file:`{<print_report_name>}_reports.py` (report actions, paperformat definition, ...)
-- :file:`{<print_report_name>}_templates.xml` (xml report templates)
-
-
-The complete tree should look like
+Concerning *models*, split the business logic by sets of models belonging to
+a same main model. Each set lies in a given file named based on its main model.
+If there is only one model, its name is the same as the module name. Each
+inherited model should be in its own file to help understanding of impacted
+models.
 
 .. code-block:: text
 
-    addons/<my_module_name>/
+    addons/plant_nursery/
+    |-- models/
+    |   |-- plant_nursery.py (first main model)
+    |   |-- plant_order.py (another main model)
+    |   |-- res_partner.py (inherited Odoo model)
+
+Concerning *security* and access rights and rules two main files should be used.
+First one is the definition of access rights done in a ``ir.model.access.csv``
+file. User groups are defined in ``<module>_groups.xml``. Access rules are
+defined in ``<model>_security.xml``.
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- security/
+    |   |-- ir.model.access.csv
+    |   |-- plant_nusery_groups.xml
+    |   |-- plant_nusery_security.xml
+    |   |-- plant_order_security.xml
+
+Concerning *views*, backend views should be split like models and suffixed
+by ``_views.xml``. Backend views are list, form, kanban, activity, graph, pivot, ..
+views. To ease split by model in views main menus not linked to specific actions
+may be extracted into an optional ``<module>_menus.xml`` file. Templates (QWeb
+pages used notably for portal / website display) and bundles (import of JS and
+CSS assets) are put in separate files. Those are respectively
+``<model>_templates.xml`` and ``assets.xml`` files.
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- views/
+    |   | -- assets.xml (import of JS / CSS)
+    |   | -- plant_nursery_menus.xml (optional definition of main menus)
+    |   | -- plant_nursery_views.xml (backend views)
+    |   | -- plant_nursery_templates.xml (portal templates)
+    |   | -- plant_order_views.xml
+    |   | -- plant_order_templates.xml
+    |   | -- res_partner_views.xml
+
+Concerning *data*, split them by purpose (demo or data) and main model. Filenames
+will be the main_model name suffixed by ``_demo.xml`` or ``_data.xml``. For instance
+for an application having demo and data for its main model as well as subtypes,
+activities and mail templates all related to mail module:
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- data/
+    |   |-- plant_nursery_data.xml
+    |   |-- plant_nursery_demo.xml
+    |   |-- mail_data.xml
+
+Concerning *controllers*, generally all controllers belong to a single controller
+contained in a file named ``<module_name>.py``. An old convention in Odoo is to
+name this file ``main.py`` but it is considered as outdated. If you need to inherit
+an existing controller from another module do it in ``<inherited_module_name>.py``.
+For example adding portal controller in an application is done in ``portal.py``.
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- controllers/
+    |   |-- plant_nursery.py
+    |   |-- portal.py (inheriting portal/controllers/portal.py)
+    |   |-- main.py (deprecated, replaced by plant_nursery.py)
+
+Concerning *static files*, Javascript files follow globally the same logic as
+python models. Each component should be in its own file with a meaningful name.
+For instance, the activity widgets are located in ``activity.js`` of mail module.
+Subdirectories can also be created to structure the 'package' (see web module
+for more details). The same logic should be applied for the templates of JS
+widgets (static XML files) and for their styles (scss files). Don't link
+data (image, libraries) outside Odoo: do not use an URL to an image but copy
+it in the codebase instead.
+
+Concerning *wizards*, naming convention is the same of for python models:
+``<transient>.py`` and ``<transient>_views.xml``. Both are put in the wizard
+directory. This naming comes from old odoo applications using the wizard
+keyword for transient models.
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- wizard/
+    |   |-- make_plant_order.py
+    |   |-- make_plant_order_views.xml
+
+Concerning *statistics reports* done with python / SQL views and classic views
+naming is the following :
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- report/
+    |   |-- plant_order_report.py
+    |   |-- plant_order_report_views.xml
+
+Concerning *printable reports* which contain mainly data preparation and Qweb
+templates naming is the following :
+
+.. code-block:: text
+
+    addons/plant_nursery/
+    |-- report/
+    |   |-- plant_order_reports.xml (report actions, paperformat, ...)
+    |   |-- plant_order_templates.xml (xml report templates)
+
+The complete tree of our Odoo module therefore looks like
+
+.. code-block:: text
+
+    addons/plant_nursery/
     |-- __init__.py
     |-- __manifest__.py
     |-- controllers/
     |   |-- __init__.py
-    |   |-- <inherited_module_name>.py
-    |   `-- <my_module_name>.py
+    |   |-- plant_nursery.py
+    |   |-- portal.py
     |-- data/
-    |   |-- <main_model>_data.xml
-    |   `-- <inherited_main_model>_demo.xml
+    |   |-- plant_nursery_data.xml
+    |   |-- plant_nursery_demo.xml
+    |   |-- mail_data.xml
     |-- models/
     |   |-- __init__.py
-    |   |-- <main_model>.py
-    |   `-- <inherited_main_model>.py
+    |   |-- plant_nursery.py
+    |   |-- plant_order.py
+    |   |-- res_partner.py
     |-- report/
     |   |-- __init__.py
-    |   |-- <main_stat_report_model>.py
-    |   |-- <main_stat_report_model>_views.xml
-    |   |-- <main_print_report>_reports.xml
-    |   `-- <main_print_report>_templates.xml
+    |   |-- plant_order_report.py
+    |   |-- plant_order_report_views.xml
+    |   |-- plant_order_reports.xml (report actions, paperformat, ...)
+    |   |-- plant_order_templates.xml (xml report templates)
     |-- security/
     |   |-- ir.model.access.csv
-    |   `-- <main_model>_security.xml
+    |   |-- plant_nusery_groups.xml
+    |   |-- plant_nusery_security.xml
+    |   |-- plant_order_security.xml
     |-- static/
     |   |-- img/
     |   |   |-- my_little_kitten.png
-    |   |   `-- troll.jpg
+    |   |   |-- troll.jpg
     |   |-- lib/
-    |   |   `-- external_lib/
-    |   `-- src/
-    |       |-- js/
-    |       |   |-- <my_module_name>.js
-                `-- <my_widget_A>.js
-    |       |-- css/
-    |       |   `-- <my_module_name>.css
-    |       |-- scss/
-    |       |   `-- <my_module_name>.scss
-    |       `-- xml/
-    |           |-- <my_module_name>.xml
-                `-- <my_widget_A>.xml
+    |   |   |-- external_lib/
+    |   |-- src/
+    |   |   |-- js/
+    |   |   |   |-- widget_a.js
+    |   |   |   |-- widget_b.js
+    |   |   |-- scss/
+    |   |   |   |-- widget_a.scss
+    |   |   |   |-- widget_b.scss
+    |   |   |-- xml/
+    |   |   |   |-- widget_a.xml
+    |   |   |   |-- widget_a.xml
     |-- views/
-    |   |-- <main_model>_templates.xml
-    |   |-- <main_model>_views.xml
-    |   |-- <inherited_main_model>_templates.xml
-    |   `-- <inherited_main_model>_views.xml
-    `-- wizard/
-        |-- <main_transient_A>.py
-        |-- <main_transient_A>_views.xml
-        |-- <main_transient_B>.py
-        `-- <main_transient_B>_views.xml
+    |   |-- assets.xml
+    |   |-- plant_nursery_menus.xml
+    |   |-- plant_nursery_views.xml
+    |   |-- plant_nursery_templates.xml
+    |   |-- plant_order_views.xml
+    |   |-- plant_order_templates.xml
+    |   |-- res_partner_views.xml
+    |-- wizard/
+    |   |--make_plant_order.py
+    |   |--make_plant_order_views.xml
 
 .. note:: File names should only contain ``[a-z0-9_]`` (lowercase
           alphanumerics and ``_``)
@@ -843,7 +922,7 @@ Symbols and Conventions
 - Variable name :
     - use camelcase for model variable
     - use underscore lowercase notation for common variable.
-    - prefix your variable name with *_id* or *_ids* if it contains a record id or list of id. Don't use ``partner_id`` to contain a record of res.partner
+    - suffix your variable name with *_id* or *_ids* if it contains a record id or list of id. Don't use ``partner_id`` to contain a record of res.partner
 
 .. code-block:: python
 
@@ -964,17 +1043,10 @@ Javascript coding guidelines
 - Use a linter (jshint, ...)
 - Never add minified Javascript Libraries
 - Use camelcase for class declaration
-- Unless your code is supposed to run on every page, target specific pages
-  using the ``if_dom_contains`` function of website module. Target an
-  element which is specific to the pages your code needs to run on
-  using JQuery.
 
-.. code-block:: javascript
-
-    odoo.website.if_dom_contains('.jquery_class_selector', function () {
-        /*your code here*/
-    });
-
+More precise JS guidelines are detailed at https://github.com/odoo/odoo/wiki/Javascript-coding-guidelines.
+You may also have a look at existing API in Javascript by looking Javascript
+References.
 
 CSS coding guidelines
 ---------------------
