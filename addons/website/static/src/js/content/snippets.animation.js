@@ -435,6 +435,7 @@ registry.slider = Animation.extend({
      */
     start: function () {
         if (!this.editableMode) {
+            this.$('img').on('load.slider', this._onImageLoaded.bind(this));
             this._computeHeights();
         }
         this.$target.carousel();
@@ -445,6 +446,7 @@ registry.slider = Animation.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
+        this.$('img').off('.slider');
         this.$target.carousel('pause');
         this.$target.removeData('bs.carousel');
         _.each(this.$('.carousel-item'), function (el) {
@@ -485,6 +487,12 @@ registry.slider = Animation.extend({
      * @private
      */
     _onEditionSlide: function () {
+        this._computeHeights();
+    },
+    /**
+     * @private
+     */
+    _onImageLoaded: function () {
         this._computeHeights();
     },
 });
