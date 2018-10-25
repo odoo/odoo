@@ -81,6 +81,9 @@ class account_abstract_payment(models.AbstractModel):
 
         invoices = self.env['account.invoice'].browse(active_ids)
 
+        # Check all invoices are on the same company.
+        if any(invoice.company_id != invoices[0].company_id for invoice in invoices):
+            raise UserError(_("You can only register payments for invoices being on the same company."))
         # Check all invoices are open
         if any(invoice.state != 'open' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
@@ -185,6 +188,8 @@ class account_abstract_payment(models.AbstractModel):
     def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
         domain = []
+        if self.invoice_ids:
+            domain.append(('company_id', '=', self.invoice_ids[0].company_id.id))
         if self.currency_id.is_zero(self.amount) and self.has_invoices:
             # In case of payment with 0 amount, allow to select a journal of type 'general' like
             # 'Miscellaneous Operations' and set this journal by default.
@@ -202,7 +207,10 @@ class account_abstract_payment(models.AbstractModel):
         jrnl_filters = self._compute_journal_domain_and_types()
         journal_types = jrnl_filters['journal_types']
         domain_on_types = [('type', 'in', list(journal_types))]
-        if self.journal_id.type not in journal_types:
+        if self.invoice_ids:
+            domain_on_types.append(('company_id', '=', self.invoice_ids[0].company_id.id))
+        if self.journal_id.type not in journal_types\
+            or (self.invoice_ids and self.journal_id.company_id != self.invoice_ids[0].company_id):
             self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
         return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
@@ -211,8 +219,10 @@ class account_abstract_payment(models.AbstractModel):
         self.amount = abs(self._compute_payment_amount())
 
         # Set by default the first liquidity journal having this currency if exists.
-        journal = self.env['account.journal'].search(
-            [('type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)], limit=1)
+        domain = [('type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)]
+        if self.invoice_ids:
+            domain.append(('company_id', '=', self.invoice_ids[0].company_id.id))
+        journal = self.env['account.journal'].search(domain, limit=1)
         if journal:
             return {'value': {'journal_id': journal.id}}
 
@@ -271,6 +281,8 @@ class account_register_payments(models.TransientModel):
         active_ids = self._context.get('active_ids')
         invoices = self.env['account.invoice'].browse(active_ids)
         self.amount = abs(self._compute_payment_amount(invoices))
+        domain_and_types = self._compute_journal_domain_and_types()
+        res['domain']['journal_id'] = domain_and_types['domain'] + [('type', 'in', list(domain_and_types['journal_types']))]
         return res
 
     @api.model
