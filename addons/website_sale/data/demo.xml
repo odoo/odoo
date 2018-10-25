@@ -653,6 +653,7 @@
             <field name="description_sale">Warranty, issued to the purchaser of an article by its manufacturer, promising to repair or replace it if necessary within a specified period of time.</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_5')])]"/>
             <field name="categ_id" ref="product.product_category_3"/>
+            <field name="invoice_policy">delivery</field>
         </record>
         <record id="product_template_attribute_line_1" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_1_product_template"/>
