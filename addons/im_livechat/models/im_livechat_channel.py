@@ -3,9 +3,9 @@
 import base64
 import random
 import re
-from datetime import datetime, timedelta
 
 from odoo import api, fields, models, modules, tools
+
 
 class ImLivechatChannel(models.Model):
     """ Livechat Channel
@@ -15,7 +15,9 @@ class ImLivechatChannel(models.Model):
     """
 
     _name = 'im_livechat.channel'
+    _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
+    _rating_satisfaction_days = 7  # include only last 7 days to compute satisfaction
 
     def _default_image(self):
         image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
@@ -39,9 +41,6 @@ class ImLivechatChannel(models.Model):
         compute='_are_you_inside', store=False, readonly=True)
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
-    rating_percentage_satisfaction = fields.Integer(
-        '% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1,
-        help="Percentage of happy ratings over the past 7 days")
 
     # images fields
     image = fields.Binary('Image', default=_default_image, attachment=True,
@@ -59,7 +58,6 @@ class ImLivechatChannel(models.Model):
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Operators', default=_default_user_ids)
     channel_ids = fields.One2many('mail.channel', 'livechat_channel_id', 'Sessions')
     rule_ids = fields.One2many('im_livechat.channel.rule', 'channel_id', 'Rules')
-
 
     @api.one
     def _are_you_inside(self):
@@ -87,19 +85,6 @@ class ImLivechatChannel(models.Model):
     def _compute_nbr_channel(self):
         for record in self:
             record.nbr_channel = len(record.channel_ids)
-
-    @api.multi
-    @api.depends('channel_ids.rating_ids')
-    def _compute_percentage_satisfaction(self):
-        for record in self:
-            dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
-            repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
-            total = sum(repartition.values())
-            if total > 0:
-                happy = repartition['great']
-                record.rating_percentage_satisfaction = ((happy*100) / total) if happy > 0 else 0
-            else:
-                record.rating_percentage_satisfaction = -1
 
     @api.model
     def create(self, vals):
@@ -210,7 +195,6 @@ class ImLivechatChannelRule(models.Model):
     _name = 'im_livechat.channel.rule'
     _description = 'Livechat Channel Rules'
     _order = 'sequence asc'
-
 
     regex_url = fields.Char('URL Regex',
         help="Regular expression specifying the web pages this rule will be applied on.")
