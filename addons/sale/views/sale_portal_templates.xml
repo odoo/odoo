@@ -411,25 +411,6 @@
                                 </a>
                             </t>
                         </ul>
-                        <t t-if="invoices2">
-                            <strong class="text-muted d-block mb-1">Invoices</strong>
-                            <div>
-                                <t t-foreach="invoices" t-as="i">
-                                    <t t-set="report_url" t-value="i.get_portal_url(report_type='pdf', download=True)"/>
-                                    <div>
-                                        <a t-att-href="report_url"><span class="fa fa-download" role="img" aria-label="Download" title="Download"/></a>
-                                        <a t-att-href="report_url"><span t-esc="i.number"/></a>
-                                        <span class="text-muted" t-field="i.date_invoice"/>
-                                        <t t-if="i.state == 'paid'">
-                                            <span class="badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Paid</span>
-                                        </t>
-                                        <t t-if="i.state != 'paid'">
-                                            <span class="badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting Payment</span>
-                                        </t>
-                                    </div>
-                                </t>
-                            </div>
-                        </t>
                     </div>
                 </div>
             </div>
