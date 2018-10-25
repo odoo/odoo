@@ -24,16 +24,30 @@ odoo.define('web.web_client', function (require) {
         },
 
         _call_service: function (ev) {
+            var self = this;
             if (ev.data.service === 'ajax' &&
                 ev.data.method === 'rpc' &&
                 ev.data.args[0] === '/mail/init_messaging') {
                 var args = arguments;
-                this._waitHijackRPCs.then(function () {
-                    this._super.apply(this, args);
-                }.bind(this));
-                return;
-            };
-            return this._super.apply(this, arguments);
+                ev.data.callback($.when(this._waitHijackRPCs.then(function () {
+                    var event = args[0];
+                    var rpc = require('web.rpc');
+                    var query = rpc.buildQuery({
+                        args: [],
+                        context: event.data.args[1]['context'],
+                        route: event.data.args[0],
+                        params: event.data.args[1],
+                    });
+                    event.data.args[0] = query.route;
+                    event.data.args[1] = query.params;
+
+                    var eventArgs = event.data.args.concat(event.target);
+                    var service = self.services[event.data.service];
+                    return service[event.data.method].apply(service, eventArgs);
+                })));
+            } else {
+                this._super.apply(this, arguments);
+            }
         },
 
         _onHijackRPCs: function (ev) {
