@@ -121,6 +121,10 @@ var KanbanRenderer = BasicRenderer.extend({
             this.columnOptions.progressBarStates = {};
         }
         this.quickCreateEnabled = params.quickCreateEnabled;
+        if (!params.readOnlyMode) {
+            var handleField = _.findWhere(this.state.fieldsInfo.kanban, {widget: 'handle'});
+            this.handleField = handleField && handleField.name;
+        }
         this._setState(state);
     },
     /**
@@ -383,6 +387,27 @@ var KanbanRenderer = BasicRenderer.extend({
             var def = kanbanRecord.appendTo(fragment);
             self.defs.push(def);
         });
+
+        // enable record resequencing if there is a field with widget='handle'
+        // and if there is no orderBy (in this case we assume that the widget
+        // has been put on the first default order field of the model), or if
+        // the first orderBy field is the one with widget='handle'
+        var orderedBy = this.state.orderedBy;
+        var hasHandle = this.handleField &&
+                        (orderedBy.length === 0 || orderedBy[0].name === this.handleField);
+        if (hasHandle) {
+            this.$el.sortable({
+                items: '.o_kanban_record:not(.o_kanban_ghost)',
+                cursor: 'move',
+                revert: 0,
+                delay: 0,
+                tolerance: 'pointer',
+                forcePlaceholderSize: true,
+                stop: function (event, ui) {
+                    self._moveRecord(ui.item.data('record').db_id, ui.item.index());
+                },
+            });
+        }
 
         // append ghost divs to ensure that all kanban records are left aligned
         var prom = Promise.all(self.defs).then(function () {

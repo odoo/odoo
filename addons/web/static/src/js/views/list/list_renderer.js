@@ -51,9 +51,6 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        // This attribute lets us know if there is a handle widget on a field,
-        // and on which field it is set.
-        this.handleField = null;
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
                 return DECORATIONS.indexOf(key) >= 0;

@@ -29,7 +29,6 @@ var ListController = BasicController.extend({
         group_edit_button_clicked: '_onEditGroupClicked',
         edit_line: '_onEditLine',
         save_line: '_onSaveLine',
-        resequence: '_onResequence',
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
         toggle_group: '_onToggleGroup',
@@ -628,33 +627,6 @@ var ListController = BasicController.extend({
             };
         }
         this._super.apply(this, arguments);
-    },
-    /**
-     * Force a resequence of the records curently on this page.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onResequence: function (ev) {
-        var self = this;
-
-        this.trigger_up('mutexify', {
-            action: function () {
-                var state = self.model.get(self.handle);
-                var resIDs = _.map(ev.data.rowIDs, function(rowID) {
-                    return _.findWhere(state.data, {id: rowID}).res_id;
-                });
-                var options = {
-                    offset: ev.data.offset,
-                    field: ev.data.handleField,
-                };
-                return self.model.resequence(self.modelName, resIDs, self.handle, options).then(function () {
-                    self._updateEnv();
-                    state = self.model.get(self.handle);
-                    return self.renderer.updateState(state, {noRender: true});
-                });
-            },
-        });
     },
     /**
      * Called when the renderer displays an editable row and the user tries to
