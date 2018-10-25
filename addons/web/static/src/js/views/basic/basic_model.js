@@ -2007,7 +2007,7 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} [options]
      * @param {string[]} [options.fieldNames] the list of fields to fetch. If
      *   not given, fetch all the fields in record.fieldNames (+ display_name)
-     * @param {string} [optinos.viewType] the type of view for which the record
+     * @param {string} [options.viewType] the type of view for which the record
      *   is fetched (usefull to load the adequate fields), by defaults, uses
      *   record.viewType
      * @returns {Deferred<Object>} resolves to the record or is rejected in
