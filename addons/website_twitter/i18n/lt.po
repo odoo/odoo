@@ -3,11 +3,10 @@
 # * website_twitter
 # 
 # Translators:
-# Anatolij, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Martin Trigaux, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
@@ -27,7 +26,7 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
 msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
-msgstr ""
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Twitter slankiklis</span>"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_key
@@ -39,7 +38,7 @@ msgstr "API raktas"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_secret
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr ""
+msgstr "API kodas"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
@@ -48,6 +47,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr ""
+"Trūksta autentifikavimo duomenų arba jie yra neteisingi. Galbūt žinutės yra "
+"apsaugotos."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
@@ -68,18 +69,18 @@ msgstr "Vaizduojamas pavadinimas"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_screen_name
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
-msgstr ""
+msgstr "Mėgstamiausi iš"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
 msgid "Get favorites from this screen name"
-msgstr ""
+msgstr "Imti mėgstamus įrašus iš šios paskyros"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:48
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
-msgstr ""
+msgstr "HTTP klaida: kas nustatyta neteisingai"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_id
@@ -90,7 +91,7 @@ msgstr "ID"
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "Internet connection refused"
-msgstr ""
+msgstr "Interneto prieiga atmesta"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
@@ -112,7 +113,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
-msgstr ""
+msgstr "Dar kartą patvirtinkite savo \"Twitter\" API raktą ir kodą!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:27
@@ -121,19 +122,21 @@ msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
 msgstr ""
+"Pasirinkite \"Twitter\" paskyrą, iš kurios gausite pamėgtus įrašus. Tai "
+"padarysite svetainės nustatymuose (paskyra nebūtinai turi būti jūsų)."
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:23
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
-msgstr ""
+msgstr "Svetainės nustatymuose nustatykite \"Twitter\" API raktą ir kodą."
 
 #. module: website_twitter
 #. openerp-web
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:35
 #, python-format
 msgid "Reload"
-msgstr ""
+msgstr "Perkrauti"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:18
@@ -141,12 +144,12 @@ msgstr ""
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
 "exhausted for the resource."
-msgstr ""
+msgstr "Užklausa negali būti įvykdyta dėl viršyto programų limito."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
 msgid "Screen Name"
-msgstr ""
+msgstr "\"Twiiter\" paskyra"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_screen_name
@@ -154,11 +157,13 @@ msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
 msgstr ""
+"\"Twitter\" paskyros vardas, iš kurio gaunate pamėgtus įrašus. Jis neturi "
+"sutapti su API raktu/kodu."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
-msgstr ""
+msgstr "Parodykite man, kaip gauti \"Twitter\" API raktą ir kodą"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:21
@@ -166,6 +171,8 @@ msgstr ""
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr ""
+"\"Twitter\" serveriai veikia, tačiau gauna per daug užklausų. Pabandykite "
+"vėliau."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:22
@@ -174,6 +181,8 @@ msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
 msgstr ""
+"\"Twitter\" serveriai veikia, tačiau užklausa negalėjo būti apdorota dėl "
+"mūsų klaidos. Pabandykite vėliau."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:17
@@ -182,6 +191,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
 msgstr ""
+"Užklausa suprasta, tačiau buvo atmesta arba negauta prieiga. Patikrinkite "
+"savo \"Twitter\" API raktą ir kodą."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:15
@@ -190,27 +201,29 @@ msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
 msgstr ""
+"Užklausa negalima ir negali būti įvykdyta. Užklausos be patvirtinimo "
+"laikomos netinkamomis ir duos šį atsakymą."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:14
 #, python-format
 msgid "There was no new data to return."
-msgstr ""
+msgstr "Nėra naujų duomenų grąžinimui."
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Tutorial"
-msgstr ""
+msgstr "Gidas"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
 msgid "Tweet ID"
-msgstr ""
+msgstr "\"Twitter\" žinutės ID"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet
 msgid "Tweets"
-msgstr ""
+msgstr "\"Twitter\" žinutės"
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -225,7 +238,7 @@ msgstr "Twitter API raktas"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API Secret"
-msgstr "Twitter API Secret"
+msgstr "Twitter API kodas"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_key
@@ -235,24 +248,24 @@ msgstr "Twitter API raktas"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "\"Twitter\" API raktą galite gauti iš https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API secret"
-msgstr "Twitter API secret"
+msgstr "Twitter API kodas"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "\"Twitter\" API kodą galite gauti iš https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:41
 #, python-format
 msgid "Twitter Configuration"
-msgstr ""
+msgstr "\"Twitter\" nustatymai"
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -263,13 +276,13 @@ msgstr ""
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Twitter authorization error!"
-msgstr ""
+msgstr "\"Twitter\" autorizacijos klaida!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:20
 #, python-format
 msgid "Twitter is down or being upgraded."
-msgstr ""
+msgstr "\"Twitter\" neveikia arba yra atnaujinamas."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:19
@@ -278,6 +291,8 @@ msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
+"Panašu, kad \"Twitter\" neveikia. Pabandykite vėliau. Galite apie problemą "
+"parašyti \"Twitter\" forume."
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
@@ -286,26 +301,28 @@ msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
 msgstr ""
+"\"Twitter\" vartotojas @%(username)s turi mažiau nei 12 pamėgtų įrašų. "
+"Pridėkite daugiau arba pasirinkite kitą vardą."
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr ""
+msgstr "\"Twitter\": paimti naujus pamėgtus įrašus"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:58
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "We failed to reach a twitter server."
-msgstr ""
+msgstr "Nepavyko susisiekti su \"Twitter\" serveriu."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_website_id
 msgid "Website"
-msgstr "Tinklalapis"
+msgstr "Internetinė svetainė"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
