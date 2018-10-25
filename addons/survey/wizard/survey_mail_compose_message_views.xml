@@ -10,10 +10,6 @@
             <field name="model">survey.mail.compose.message</field>
             <field name="arch" type="xml">
                 <form string="Compose Email">
-                    <field name="composition_mode" invisible="1"/>
-                    <field name="model" invisible="1"/>
-                    <field name="res_id" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
                     <group col="2">
                         <field name="survey_id" readonly="context.get('default_survey_id')"/>
                         <field name="public" widget="radio" invisible="context.get('survey_resent_token')" />
