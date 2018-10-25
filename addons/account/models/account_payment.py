@@ -118,11 +118,11 @@ class account_register_payments(models.TransientModel):
         total = 0
         for inv in invoice_ids:
             if inv.currency_id == payment_currency:
-                total += MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] * inv.residual_signed
+                total += inv.residual_signed
             else:
                 amount_residual = inv.company_currency_id.with_context(date=self.payment_date).compute(
                     inv.residual_company_signed, payment_currency)
-                total += MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] * amount_residual
+                total += amount_residual
         return total
 
     @api.onchange('journal_id')
@@ -569,8 +569,9 @@ class account_payment(models.Model):
             # to avoid loss of precision during the currency rate computations. See revision 20935462a0cabeb45480ce70114ff2f4e91eaf79 for a detailed example.
             total_residual_company_signed = sum(invoice.residual_company_signed for invoice in self.invoice_ids)
             total_payment_company_signed = self.currency_id.with_context(date=self.payment_date).compute(self.amount, self.company_id.currency_id)
+            # amout_wo must be positive for out_invoice and in_refund and negative for in_invoice and out_refund in standard use case
             if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
-                amount_wo = total_payment_company_signed - total_residual_company_signed
+                amount_wo = total_payment_company_signed + total_residual_company_signed
             else:
                 amount_wo = total_residual_company_signed - total_payment_company_signed
             # Align the sign of the secondary currency writeoff amount with the sign of the writeoff
