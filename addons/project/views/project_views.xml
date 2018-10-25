@@ -101,10 +101,10 @@
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('percentage_satisfaction_task', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
-                                    <field name="percentage_satisfaction_task" nolabel="1"/>
+                                    <field name="rating_percentage_satisfaction" nolabel="1"/>
                                 </span>
                                 <span class="o_stat_text">
                                     % On <field readonly="1" name="label_tasks" options="{'label_field': 'label_tasks'}" />
@@ -294,7 +294,7 @@
                     <field name="alias_name"/>
                     <field name="alias_domain"/>
                     <field name="is_favorite"/>
-                    <field name="percentage_satisfaction_task"/>
+                    <field name="rating_percentage_satisfaction"/>
                     <field name="rating_status"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -313,12 +313,12 @@
                                             </div>
                                             <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu." groups="project.group_project_rating">
                                                 <b>
-                                                    <t t-if="record.percentage_satisfaction_task.value == -1">
+                                                    <t t-if="record.rating_percentage_satisfaction.value == -1">
                                                         <i class="fa fa-smile-o"/> No rating yet
                                                     </t>
-                                                    <t t-if="record.percentage_satisfaction_task.value != -1">
+                                                    <t t-if="record.rating_percentage_satisfaction.value != -1">
                                                         <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
-                                                            <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.percentage_satisfaction_task.value"/>%
+                                                            <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
                                                         </a>
                                                     </t>
                                                 </b>
