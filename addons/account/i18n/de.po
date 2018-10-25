@@ -2051,7 +2051,9 @@ msgstr "Bargeldrundungsverwaltung zulassen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "Die Konfiguration von Steuern mit Einnahmeüberschuss zulassen"
+msgstr ""
+"Die Konfiguration von Steuern nach vereinnahmten Entgelten (z.B. in "
+"Deutschland UStG §20) zulassen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2463,7 +2465,7 @@ msgstr "Saldo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance_cash_basis
 msgid "Balance Cash Basis"
-msgstr "Saldo – Einnahmeüberschuss"
+msgstr "Saldo nach vereinnahmten Entgelten"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
@@ -2937,18 +2939,18 @@ msgstr "Präfix für Barkassen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_tax_exigibility
 msgid "Cash Basis"
-msgstr "Einnahme-Überschuss-Rechnung (EÜR)"
+msgstr "Nach vereinnahmten Entgelten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr "Einnahmeüberschuss-Journal"
+msgstr "Journal nach vereinnahmten Entgelten"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:197
 #, python-format
 msgid "Cash Basis Tax Journal"
-msgstr "Einnahmeüberschuss-Steuer-Journal"
+msgstr "Steuerjournal nach vereinnahmten Entgelten"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:210
@@ -3861,7 +3863,7 @@ msgstr "Kreditkarte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit_cash_basis
 msgid "Credit Cash Basis"
-msgstr "Haben – Einnahmeüberschuss"
+msgstr "Haben nach vereinnahmten Entgelten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_credit_move_id
@@ -4197,7 +4199,7 @@ msgstr "Soll"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit_cash_basis
 msgid "Debit Cash Basis"
-msgstr "Soll – Einnahmeüberschuss"
+msgstr "Soll nach vereinnahmten Entgelten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
@@ -5330,7 +5332,7 @@ msgstr "Setupleiste ausblenden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_hide_tax_exigibility
 msgid "Hide Use Cash Basis Option"
-msgstr "Option „Einnahmeüberschuss verwenden“ verbergen"
+msgstr "Option „Nach vereinnahmten Entgelten“ verbergen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -9187,8 +9189,8 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"Wählen Sie dies, wenn die Steuern mit Einnahmeüberschuss berechnet werden "
-"sollen, was zur Folge hat, dass erst bei Zahlungsabstimmung eine "
+"Wählen Sie dies, wenn die Steuern nach vereinnahmten Entgelten berechnet "
+"werden sollen, was zur Folge hat, dass erst bei Zahlungsabstimmung eine "
 "Steuerbuchung auf gegebenes Konto vorgenommen wird."
 
 #. module: account
@@ -9918,7 +9920,7 @@ msgstr "Hilfs-Feld zur Bedienungserleichterung"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_matched_percentage
 msgid "Technical field used in cash basis method"
-msgstr "Hilfs-Feld zur Verwendung bei Einnahmenüberschussrechnung"
+msgstr "Hilfs-Feld für die Steuerberechnung nach vereinnahmten Entgelten"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_account_setup_bank_data_done
@@ -11899,9 +11901,9 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
-"Diese Einstellung können Sie nicht deaktivieren, weil für einige Ihrer "
-"Steuern Einnahmeüberschuss gilt. Ändern Sie Ihre Steuern zuerst, bevor Sie "
-"diese Einstellung deaktivieren."
+"Diese Einstellung können Sie nicht deaktivieren, weil einige Ihrer Steuern "
+"nach vereinnahmten Entgelten abgerechnet werden. Ändern Sie Ihre Steuern "
+"zuerst, bevor Sie diese Einstellung deaktivieren."
 
 #. module: account
 #: code:addons/account/models/account.py:248
@@ -12433,3 +12435,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "-> Zähle"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""

@@ -29,7 +29,7 @@
 # Richard Mathot <rim@odoo.com>, 2017
 # Alexis de Lattre <alexis@via.ecp.fr>, 2017
 # Bertrand LATOUR <divoir@gmail.com>, 2017
-# nthnnl <nathan070@me.com>, 2017
+# Nathan Noël <nathan070@me.com>, 2017
 # Stéphane Bidoul (ACSONE), 2017
 # Omar Mezga <omar.mezgrane@aldaway.com>, 2017
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017
@@ -57,7 +57,7 @@
 # Simon Mainguy <simongmainguy@gmail.com>, 2017
 # Mensanh Dodji Anani LAWSON <omolowo73@gmail.com>, 2017
 # Saad Thaifa <saad.thaifa@gmail.com>, 2017
-# leemannd <denis.leemann@camptocamp.com>, 2017
+# Denis Leemann <denis.leemann@camptocamp.com>, 2017
 # Nissar Chababy <funilrys@outlook.com>, 2017
 # Cécile Collart <cco@odoo.com>, 2017
 # Fabri Yohann <psn@fabri.pw>, 2017
@@ -12482,3 +12482,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Compter"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""

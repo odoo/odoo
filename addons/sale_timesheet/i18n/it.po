@@ -7,9 +7,8 @@
 # Paolo Valier, 2017
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
@@ -43,11 +42,11 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"oe_view_nocontent_create\">\n"
-"                    Clicca per registrare i timesheets\n"
+"                    Fare clic per compilare i fogli presenze\n"
 "                </p><p>\n"
-"                    Puoi registrare e tracciare le tue ore di lavoro per progetto tutti\n"
-"                 i giorni. Tutto il tempo passato su un progetto diventerà un costo e potrà essere fatturato di nuovo al\n"
-"                    cliente se è necessario.\n"
+"                    È possibile registrare e tenere traccia delle ore di lavoro giornaliere per\n"
+"                    progetto. Il periodo passato su un progetto diventerà un costo e, se necessario, potrà\n"
+"                    essere rifatturato al cliente.\n"
 "                </p>\n"
 "            "
 
@@ -183,7 +182,7 @@ msgstr "Fatturazione basata su"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr "Fattura creata sulla base del timesheet"
+msgstr "Fattura creata dal foglio presenze"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -230,7 +229,7 @@ msgstr "Non fatturabile"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_count
 msgid "Number of timesheets"
-msgstr "Numero di timesheets"
+msgstr "Numero di fogli presenze"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_service_tracking
@@ -417,7 +416,7 @@ msgstr "I compiti collegati a questa vendita"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There is no timesheet for now."
-msgstr "Non c'è nessun timesheet per il momento. "
+msgstr "Nessun foglio presenze per adesso. "
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:251
@@ -448,22 +447,22 @@ msgstr "Servizi basati sul tempo"
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 #, python-format
 msgid "Timesheet"
-msgstr "Timesheet"
+msgstr "Foglio presenze"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Costo su Timesheet"
+msgstr "Costo foglio presenze"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr "Attività timesheet"
+msgstr "Attività foglio presenze"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "Attività timesheet associate a questa vendita"
+msgstr "Attività foglio presenze associate a questa vendita"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:104
@@ -475,18 +474,18 @@ msgstr "Attività timesheet associate a questa vendita"
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 #, python-format
 msgid "Timesheets"
-msgstr "Timesheet"
+msgstr "Fogli presenze"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:20
 #, python-format
 msgid "Timesheets of %s"
-msgstr "Timesheets di %s"
+msgstr "Fogli presenze di %s"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Timesheets on tasks"
-msgstr "Timesheets sui compiti"
+msgstr "Fogli presenze sulle attività"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -500,9 +499,8 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr ""
-"Non puoi modificare i timesheets gia fatturati (legati ad un elemento "
-"dell'ordine di vendita fatturato in base al tempo passato o ai materiali "
-"forniti). "
+"Impossibile modificare i fogli presenze già fatturati (collegati a voci "
+"dell'ordine di vendita fatturate su tempo e materiale). "
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:74
