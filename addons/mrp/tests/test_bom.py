@@ -228,19 +228,3 @@ class TestBoM(TestMrpCommon):
                 })
             # Check consumed materials in production order.
             self.assertEqual(mrp_order.move_raw_ids.mapped('product_id').ids, consu_product_ids)
-
-    def test_update_bom(self):
-        """Update a BoM used in open production should raise an error"""
-        mo = self.env['mrp.production'].create({
-            'name': 'MO 1',
-            'product_id': self.product_1.id,
-            'product_uom_id': self.product_1.uom_id.id,
-            'product_qty': 2,
-            'bom_id': self.bom_1.id,
-        })
-        mo.button_plan()
-        # update an authorized field
-        self.bom_1.write({'code': 'Hello'})
-        # update a not authorized field
-        with self.assertRaises(exceptions.ValidationError):
-            self.bom_1.write({'product_id': self.product_2.id})
