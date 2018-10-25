@@ -1360,7 +1360,7 @@ class AccountInvoice(models.Model):
             'amount': pay_amount or self.residual,
             'payment_date': date or fields.Date.context_today(self),
             'communication': communication,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_id.commercial_partner_id.id,
             'partner_type': self.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier',
             'journal_id': pay_journal.id,
             'payment_type': payment_type,

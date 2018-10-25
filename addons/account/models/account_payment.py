@@ -539,6 +539,9 @@ class account_payment(models.Model):
         if any(len(record.invoice_ids) != 1 for record in self):
             # For multiple invoices, there is account.register.payments wizard
             raise UserError(_("This method should only be called to process a single invoice's payment."))
+
+        # Make sure that only the commercial partner is registered for payment
+        self.partner_id = self.partner_id.commercial_partner_id
         return self.post()
 
     def _create_payment_entry(self, amount):
