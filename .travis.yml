@@ -13,4 +13,4 @@ install:
   - pip install -q $SPHINX_VERSION
   - pip install -r doc/requirements.txt
   - pip install -r requirements.txt
-script: make -C doc -e SPHINXOPTS='-vv -t solutions' html
+script: PYTHONWARNINGS=once::DeprecationWarning,once::PendingDeprecationWarning make -C doc -e SPHINXOPTS='-vv -t solutions' html
