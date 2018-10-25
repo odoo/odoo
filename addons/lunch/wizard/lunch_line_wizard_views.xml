@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="view_lunch_order_temp" model="ir.ui.view">
+        <field name="name">view.lunch.order.temp</field>
+        <field name="model">lunch.order.temp</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="currency_id" invisible="1"/>
+                <field name="quantity" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="product_category" invisible="1"/>
+                <field name="available_toppings_1" invisible="1"/>
+                <field name="available_toppings_2" invisible="1"/>
+                <field name="available_toppings_3" invisible="1"/>
+                <field name="edit" invisible="1"/>
+                <h2 class="d-flex">
+                    <div class="flex-grow-1 pr-5"><field name="product_name"/></div>
+                    <div class="flex-grow-0"><field name="price_total" widget="monetary"/></div>
+                </h2>
+                <group col="4">
+                    <field name="topping_label_1" nolabel="1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" class="o_form_label"/>
+                    <field name="topping_ids_1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1" colspan="3"/>
+                    <field name="topping_label_2" nolabel="1" attrs="{'invisible': [('available_toppings_2', '=', False)]}" class="o_form_label"/>
+                    <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1" colspan="3"/>
+                    <field name="topping_label_3" nolabel="1" attrs="{'invisible': [('available_toppings_3', '=', False)]}" class="o_form_label"/>
+                    <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1" colspan="3"/>
+                    <field name="note" placeholder="Informations, allergens, ..." colspan="3"/>
+                </group>
+                <footer>
+                    <button name="add_to_cart" string="Add To Cart"  type="object" class="oe_highlight" attrs="{'invisible': [('edit', '=', True)]}"/>
+                    <button name="add_to_cart" string="Save"  type="object" class="oe_highlight" attrs="{'invisible': [('edit', '=', False)]}"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</data>
+</odoo>
