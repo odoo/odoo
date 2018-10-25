@@ -427,13 +427,6 @@ var utils = {
                 return (strip_whitespace && node.data.trim() === '') ? undefined : node.data;
             case 1:
                 var attrs = $(node).getAttributes();
-                _.each(['domain', 'filter_domain', 'context', 'default_get'], function (key) {
-                    if (attrs[key]) {
-                        try {
-                            attrs[key] = JSON.parse(attrs[key]);
-                        } catch(e) { }
-                    }
-                });
                 return {
                     tag: node.tagName.toLowerCase(),
                     attrs: attrs,
