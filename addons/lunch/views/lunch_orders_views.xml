@@ -19,7 +19,6 @@
         <field name="arch" type="xml">
             <form string='Orders Form' class="o_lunch">
                 <header>
-                    <button name="%(action_lunch_order_line_lucky)d" type="action" string="Feeling Lucky" class="oe_highlight"/>
                     <field name='state' widget='statusbar' statusbar_visible='new,confirmed'/>
                 </header>
                 <sheet>
@@ -43,16 +42,7 @@
                             <field name='user_id' class="oe_inline" required='1'/>
                             <field name='date'/>
                         </group>
-                        <div>
-                            <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="alert alert-danger oe_edit_only" role="alert">
-                                <field name='alerts'/>
-                            </div>
-                        </div>
                     </group>
-
-                    <div>
-                        <field name='previous_order_widget' widget='previous_order' class='o_lunch_last_orders'/>
-                    </div>
 
                     <separator string='Select your order'/>
                     <field name='order_line_ids'>
@@ -60,7 +50,7 @@
                             <field name='product_id' context="{'lunch_date': parent.date}"/>
                             <field name='note' />
                             <field name='price'/>
-                            <field name='supplier' invisible="1"/>
+                            <field name='supplier_id' invisible="1"/>
                             <field name="state" invisible="1"/>
                         </tree>
                         <form string='Lunch Order Form'>
@@ -95,7 +85,7 @@
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_order_id" string="By Order" context="{'group_by':'order_id'}"/>
-                    <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier'}"/>
+                    <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier_id'}"/>
                     <filter name="group_by_date" string="Order Date" context="{'group_by':'date'}" help="Vendor Orders by Date"/>
                 </group>
             </search>
@@ -108,15 +98,14 @@
         <field name="arch" type="xml">
             <tree string="Order lines Tree" create="false" edit="false">
                 <field name='date'/>
-                <field name='supplier' invisible='1'/>
+                <field name='supplier_id' invisible='1'/>
                 <field name='product_id'/>
                 <field name='note'/>
                 <field name='state'/>
                 <field name='user_id'/>
                 <field name='price' sum="Total" string="Price"/>
-                <button name="order" string="Order" type="object" icon="fa-phone text-success" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager"/>
-                <button name="confirm" string="Receive" type="object" icon="fa-check text-success" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager"/>
-                <button name="cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_confirm" string="Confirm" type="object" icon="fa-phone text-success" attrs="{'invisible': [('state', '!=', 'ordered')]}" groups="lunch.group_lunch_manager"/>
+                <button name="action_cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state', 'in', ['cancelled', 'confirmed'])]}" groups="lunch.group_lunch_manager"/>
             </tree>
         </field>
     </record>
@@ -126,11 +115,11 @@
         <field name="model">lunch.order.line</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name='product_id'/>
-                <field name='note'/>
-                <field name='state'/>
-                <field name='user_id'/>
-                <field name='date'/>
+                <field name="product_id"/>
+                <field name="note"/>
+                <field name="state"/>
+                <field name="user_id"/>
+                <field name="date"/>
                 <field name="price"/>
                 <templates>
                     <t t-name="kanban-box">

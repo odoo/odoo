@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models, tools, _
 
 from odoo.addons import decimal_precision as dp
-from odoo.osv import expression
 
 
 class LunchProductCategory(models.Model):
@@ -20,44 +21,52 @@ class LunchProduct(models.Model):
     _name = 'lunch.product'
     _description = 'Lunch Product'
 
-    name = fields.Char('Product', required=True)
-    category_id = fields.Many2one('lunch.product.category', 'Product Category', required=True)
+    name = fields.Char('Name', required=True)
+    category_id = fields.Many2one('lunch.product.category', 'Product Category')
     description = fields.Text('Description')
-    price = fields.Float('Price', digits=dp.get_precision('Account'))
-    supplier = fields.Many2one('res.partner', 'Vendor')
+    price = fields.Float('Price', digits=dp.get_precision('Account'), required=True)
+    supplier_id = fields.Many2one('lunch.supplier', 'Vendor', required=True)
     active = fields.Boolean(default=True)
-    available = fields.Boolean(compute='_get_available_product', search='_search_available_products')
+    is_topping = fields.Boolean("This product is an extra garniture")
 
-    @api.depends('supplier')
-    def _get_available_product(self):
+    # image: all image fields are base64 encoded and PIL-supported
+    image = fields.Binary(
+        "Image", attachment=True,
+        help="This field holds the image used as image for the product, limited to 1024x1024px.")
+    image_medium = fields.Binary(
+        "Medium-sized image", attachment=True,
+        help="Medium-sized image of the product. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved, "
+             "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
+    image_small = fields.Binary(
+        "Small-sized image", attachment=True,
+        help="Small-sized image of the product. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
+             "Use this field anywhere a small image is required.")
+
+    already_ordered = fields.Boolean('Has Already Been Ordered', compute='_compute_already_ordered')
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        res = super(LunchProduct, self).search_read(domain, fields, offset, limit, order)
+
+        if not order and 'already_ordered' in fields:
+            res = sorted(res, key=lambda x: x['already_ordered'], reverse=True)
+
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            tools.image_resize_images(values)
+        return super(LunchProduct, self).create(vals_list)
+
+    def write(self, values):
+        tools.image_resize_images(values)
+        return super(LunchProduct, self).write(values)
+
+    def _compute_already_ordered(self):
+        last_ordered = fields.Date.today() - relativedelta(weeks=2)
         for product in self:
-            if not product.supplier:
-                product.available = True
-            else:
-                alerts = self.env['lunch.alert'].search([
-                    ('partner_id', '=', self.supplier.id)
-                ])
-                if alerts and not any(alert.display for alert in alerts):
-                    # every alert is not available
-                    product.available = False
-                else:
-                    # no alert for the supplier or at least one is not available
-                    product.available = True
-
-    def _search_available_products(self, operator, value):
-        alerts = self.env['lunch.alert'].search([])
-        supplier_w_alerts = alerts.mapped('partner_id')
-        available_suppliers = alerts.filtered(lambda a: a.display).mapped('partner_id')
-        available_products = self.search([
-            '|',
-                ('supplier', 'not in', supplier_w_alerts.ids),
-                ('supplier', 'in', available_suppliers.ids)
-        ])
-
-        if (operator in expression.NEGATIVE_TERM_OPERATORS and value) or \
-           (operator not in expression.NEGATIVE_TERM_OPERATORS and not value):
-            # e.g. (available = False) or (available != True)
-            return [('id', 'not in', available_products.ids)]
-        else:
-            # e.g. (available = True) or (available != False)
-            return [('id', 'in', available_products.ids)]
+            product.already_ordered = bool(self.env['lunch.order.line'].search_count(
+                [('product_id', '=', product.id), ('date', '>=', last_ordered), ('user_id', '=', self.env.user.id)]))
