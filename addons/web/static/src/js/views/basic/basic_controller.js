@@ -19,6 +19,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
         reload: '_onReload',
+        resequence_records: '_onResequenceRecords',
         set_dirty: '_onSetDirty',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
@@ -640,6 +641,37 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 keepChanges: data.keepChanges || false,
             });
         }
+    },
+    /**
+     * Resequence records in the given order.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string[]} ev.data.recordIds
+     * @param {integer} ev.data.offset
+     * @param {string} ev.data.handleField
+     */
+    _onResequenceRecords: function (ev) {
+        var self = this;
+
+        this.trigger_up('mutexify', {
+            action: function () {
+                var state = self.model.get(self.handle);
+                var resIDs = _.map(ev.data.recordIds, function (recordID) {
+                    return _.findWhere(state.data, {id: recordID}).res_id;
+                });
+                var options = {
+                    offset: ev.data.offset,
+                    field: ev.data.handleField,
+                };
+                return self.model.resequence(self.modelName, resIDs, self.handle, options)
+                    .then(function () {
+                        self._updateEnv();
+                        state = self.model.get(self.handle);
+                        return self.renderer.updateState(state, {noRender: true});
+                    });
+            },
+        });
     },
     /**
      * @private

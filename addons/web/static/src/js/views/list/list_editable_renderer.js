@@ -775,6 +775,7 @@ ListRenderer.include({
      * @override
      */
     _renderBody: function () {
+        var self = this;
         var $body = this._super.apply(this, arguments);
         if (this.hasHandle) {
             $body.sortable({
@@ -782,7 +783,11 @@ ListRenderer.include({
                 items: '> tr.o_data_row',
                 helper: 'clone',
                 handle: '.o_row_handle',
-                stop: this._resequence.bind(this),
+                stop: function (event, ui) {
+                    self.unselectRow().then(function () {
+                        self._moveRecord(ui.item.data('id'), ui.item.index());
+                    });
+                },
             });
         }
         return $body;
@@ -888,65 +893,6 @@ ListRenderer.include({
             if (self.editable) {
                 self.$('table').addClass('o_editable_list');
             }
-        });
-    },
-    /**
-     * Force the resequencing of the items in the list.
-     *
-     * @private
-     * @param {jQuery.Event} event
-     * @param {Object} ui jqueryui sortable widget
-     */
-    _resequence: function (event, ui) {
-        var self = this;
-        var movedRecordID = ui.item.data('id');
-        var rows = this.state.data;
-        var row = self._getRecord(movedRecordID);
-        var index0 = rows.indexOf(row);
-        var index1 = ui.item.index();
-        var lower = Math.min(index0, index1);
-        var upper = Math.max(index0, index1) + 1;
-
-        var order = _.findWhere(self.state.orderedBy, {name: self.handleField});
-        var asc = !order || order.asc;
-        var reorderAll = false;
-        var sequence = (asc ? -1 : 1) * Infinity;
-
-        // determine if we need to reorder all lines
-        _.each(rows, function (row, index) {
-            if ((index < lower || index >= upper) &&
-                ((asc && sequence >= row.data[self.handleField]) ||
-                 (!asc && sequence <= row.data[self.handleField]))) {
-                reorderAll = true;
-            }
-            sequence = row.data[self.handleField];
-        });
-
-        if (reorderAll) {
-            rows = _.without(rows, row);
-            rows.splice(index1, 0, row);
-        } else {
-            rows = rows.slice(lower, upper);
-            rows = _.without(rows, row);
-            if (index0 > index1) {
-                rows.unshift(row);
-            } else {
-                rows.push(row);
-            }
-        }
-
-        var sequences = _.pluck(_.pluck(rows, 'data'), self.handleField);
-        var rowIDs = _.pluck(rows, 'id');
-
-        if (!asc) {
-            rowIDs.reverse();
-        }
-        this.unselectRow().then(function () {
-            self.trigger_up('resequence', {
-                rowIDs: rowIDs,
-                offset: _.min(sequences),
-                handleField: self.handleField,
-            });
         });
     },
     /**

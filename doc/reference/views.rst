@@ -309,16 +309,14 @@ Possible children elements of the list view are:
         lists the groups which should be able to see the field
     ``widget``
         alternate representations for a field's display. Possible list view
-        values are:
+        values are (among others):
 
         ``progressbar``
             displays ``float`` fields as a progress bar.
-        ``many2onebutton``
-            replaces the m2o field's value by a checkmark if the field is
-            filled, and a cross if it is not
         ``handle``
-            for ``sequence`` fields, instead of displaying the field's value
-            just displays a drag&drop icon
+            for ``sequence`` (or ``integer``) fields by which records are
+            sorted, instead of displaying the field's value just displays a
+            drag&drop icon to reorder records.
     ``sum``, ``avg``
         displays the corresponding aggregate at the bottom of the column. The
         aggregation is only computed on *currently displayed* records. The
@@ -1101,8 +1099,14 @@ Possible children of the view element are:
     While most of the Kanban templates are standard :ref:`reference/qweb`, the
     Kanban view processes ``field``, ``button`` and ``a`` elements specially:
 
-    * by default fields are replaced by their formatted value, unless they
-      match specific kanban view widgets
+    * by default fields are replaced by their formatted value, unless the
+      ``widget`` attribute is specified, in which case their rendering and
+      behavior depends on the corresponding widget. Possible values are (among
+      others):
+
+      ``handle``
+          for ``sequence`` (or ``integer``) fields by which records are
+          sorted, allows to drag&drop records to reorder them.
 
       .. todo:: list widgets?
 

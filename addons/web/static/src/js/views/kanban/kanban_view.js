@@ -77,13 +77,13 @@ var KanbanView = BasicView.extend({
             read_only_mode: params.readOnlyMode,
         };
         this.rendererParams.quickCreateEnabled = this._isQuickCreateEnabled();
+        this.rendererParams.readOnlyMode = params.readOnlyMode;
         var examples = archAttrs.examples;
         if (examples) {
             this.rendererParams.examples = kanbanExamplesRegistry.get(examples);
         }
 
         this.controllerParams.on_create = archAttrs.on_create;
-        this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
         this.controllerParams.quickCreateEnabled = this.rendererParams.quickCreateEnabled;
 
