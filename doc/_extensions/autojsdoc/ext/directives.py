@@ -9,7 +9,7 @@ import re
 from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.statemachine import StringList
-from sphinx import addnodes
+from sphinx import addnodes, util
 from sphinx.ext.autodoc import members_set_option, bool_option, ALL
 
 from autojsdoc.ext.extractor import read_js
@@ -621,8 +621,14 @@ def check_parameters(documenter, doc):
     if not odd:
         return
 
-    app = documenter.directive.env.app
-    app.warn("Found documented params %s not in formal parameter list "
+    # use sphinx logging API if available, otherwise fall back to warning
+    # via the app object (deprecated in 1.6, removed in 2.0)
+    if hasattr(util, 'logging'):
+        logger = util.logging.getLogger('autojsdoc').warning
+    else:
+        logger = documenter.directive.env.app.warn
+
+    logger("Found documented params %s not in formal parameter list "
              "of function %s in module %s (%s)" % (
         ', '.join(odd),
         doc.name,
