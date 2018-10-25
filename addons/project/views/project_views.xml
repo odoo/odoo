@@ -294,7 +294,7 @@
                     <field name="alias_name"/>
                     <field name="alias_domain"/>
                     <field name="is_favorite"/>
-                    <field name="percentage_satisfaction_project"/>
+                    <field name="percentage_satisfaction_task"/>
                     <field name="rating_status"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -313,12 +313,12 @@
                                             </div>
                                             <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu." groups="project.group_project_rating">
                                                 <b>
-                                                    <t t-if="record.percentage_satisfaction_project.value == -1">
+                                                    <t t-if="record.percentage_satisfaction_task.value == -1">
                                                         <i class="fa fa-smile-o"/> No rating yet
                                                     </t>
-                                                    <t t-if="record.percentage_satisfaction_project.value != -1">
+                                                    <t t-if="record.percentage_satisfaction_task.value != -1">
                                                         <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
-                                                            <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.percentage_satisfaction_project.value"/>%
+                                                            <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.percentage_satisfaction_task.value"/>%
                                                         </a>
                                                     </t>
                                                 </b>
