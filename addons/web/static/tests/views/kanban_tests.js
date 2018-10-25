@@ -5571,6 +5571,82 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('ungrouped kanban with handle field', async function (assert) {
+        assert.expect(4);
+
+        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<field name="int_field" widget="handle" />' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div>' +
+                        '<field name="foo"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.deepEqual(args.ids, envIDs,
+                        "should write the sequence in correct order");
+                    return Promise.resolve(true);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.hasClass(kanban.$('.o_kanban_view'), 'ui-sortable');
+        assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
+            'yopblipgnapblip');
+
+        var $record = kanban.$('.o_kanban_view .o_kanban_record:first');
+        var $to = kanban.$('.o_kanban_view .o_kanban_record:nth-child(4)');
+        envIDs = [2, 3, 4, 1]; // first record of moved after last one
+        await testUtils.dom.dragAndDrop($record, $to, {position: "bottom"});
+
+        assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
+            'blipgnapblipyop');
+
+        kanban.destroy();
+    });
+
+    QUnit.test('ungrouped kanban without handle field', async function (assert) {
+        assert.expect(3);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div>' +
+                        '<field name="foo"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.ok(false, "should not trigger a resequencing");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'ui-sortable');
+        assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
+            'yopblipgnapblip');
+
+        var $draggedRecord = kanban.$('.o_kanban_view .o_kanban_record:first');
+        var $to = kanban.$('.o_kanban_view .o_kanban_record:nth-child(4)');
+        await testUtils.dom.dragAndDrop($draggedRecord, $to, {position: "bottom"});
+
+        assert.strictEqual(kanban.$('.o_kanban_record:not(.o_kanban_ghost)').text(),
+            'yopblipgnapblip');
+
+        kanban.destroy();
+    });
+
 });
 
 });

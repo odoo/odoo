@@ -812,7 +812,7 @@ var FieldX2Many = AbstractField.extend({
         open_record: '_onOpenRecord',
         kanban_record_delete: '_onRemoveRecord',
         list_record_remove: '_onRemoveRecord',
-        resequence: '_onResequence',
+        resequence_records: '_onResequenceRecords',
         save_line: '_onSaveLine',
         toggle_column_order: '_onToggleColumnOrder',
         activate_next_widget: '_onActiveNextWidget',
@@ -1043,6 +1043,7 @@ var FieldX2Many = AbstractField.extend({
             };
             _.extend(rendererParams, {
                 record_options: record_options,
+                readOnlyMode: this.isReadonly,
             });
         }
 
@@ -1351,38 +1352,52 @@ var FieldX2Many = AbstractField.extend({
      * Forces a resequencing of the records.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
+     * @param {string[]} ev.data.recordIds
+     * @param {integer} ev.data.offset
+     * @param {string} ev.data.handleField
      */
-    _onResequence: function (event) {
-        event.stopPropagation();
+    _onResequenceRecords: function (ev) {
+        ev.stopPropagation();
         var self = this;
-        this.trigger_up('edited_list', { id: this.value.id });
-        var rowIDs = event.data.rowIDs.slice();
-        var rowID = rowIDs.pop();
-        var defs = _.map(rowIDs, function (rowID, index) {
+        if (this.view.arch.tag === 'tree') {
+            this.trigger_up('edited_list', { id: this.value.id });
+        }
+        var handleField = ev.data.handleField;
+        var offset = ev.data.offset;
+        var recordIds = ev.data.recordIds.slice();
+        // trigger an update of all records but the last one with option
+        // 'notifyChanges' set to false, and once all those changes have been
+        // validated by the model, trigger the change on the last record
+        // (without the option, s.t. the potential onchange on parent record
+        // is triggered)
+        var recordId = recordIds.pop();
+        var proms = recordIds.map(function (recordId, index) {
             var data = {};
-            data[event.data.handleField] = event.data.offset + index;
+            data[handleField] = offset + index;
             return self._setValue({
                 operation: 'UPDATE',
-                id: rowID,
+                id: recordId,
                 data: data,
             }, {
                 notifyChange: false,
             });
         });
-        Promise.all(defs).then(function () {
+        Promise.all(proms).then(function () {
             function always() {
-                self.trigger_up('toggle_column_order', {
-                    id: self.value.id,
-                    name: event.data.handleField,
-                });
+                if (self.view.arch.tag === 'tree') {
+                    self.trigger_up('toggle_column_order', {
+                        id: self.value.id,
+                        name: handleField,
+                    });
+                }
             }
-
-            // trigger only once the onchange for parent record
+            var data = {};
+            data[handleField] = offset + recordIds.length;
             self._setValue({
                 operation: 'UPDATE',
-                id: rowID,
-                data: _.object([event.data.handleField], [event.data.offset + rowIDs.length]),
+                id: recordId,
+                data: data,
             }).then(always).guardedCatch(always);
         });
     },
