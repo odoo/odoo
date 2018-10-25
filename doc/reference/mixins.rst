@@ -201,10 +201,8 @@ The ``mail`` module adds a powerful tracking system on fields, allowing you
 to log changes to specific fields in the record's chatter.
 
 To add tracking to a field, simple add the track_visibility attribute with the
-value ``onchange`` (if it should be displayed in the notification only if the
-field changed) or ``always`` (if the value should always be displayed in change
-notifications even if this particular field did not change - useful to make
-notification more explanatory by always adding the name field, for example).
+value ``True`` to be displayed in the notification only if the
+field changed.
 
 .. admonition:: Example
 
@@ -217,9 +215,9 @@ notification more explanatory by always adding the name field, for example).
             _inherit = ['mail.thread']
             _description = 'Business Trip'
 
-            name = fields.Char(track_visibility='always')
+            name = fields.Char(track_visibility=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         track_visibility=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
 
     From now on, every change to a trip's name or responsible will log a note
@@ -307,12 +305,12 @@ can override the ``_track_subtype()`` function:
             _inherit = ['mail.thread']
             _description = 'Business Trip'
 
-            name = fields.Char(track_visibility='onchange')
+            name = fields.Char(track_visibility=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         track_visibility=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
-                                     track_visibility='onchange')
+                                     track_visibility=True)
 
             def _track_subtype(self, init_values):
                 # init_values contains the modified fields' values before the changes
@@ -627,12 +625,12 @@ you to make your alias easily configurable from the record's form view.
             _inherit = ['mail.thread', 'mail.alias.mixin']
             _description = 'Business Trip'
 
-            name = fields.Char(track_visibility='onchange')
+            name = fields.Char(track_visibility=True)
             partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         track_visibility='onchange')
+                                         track_visibility=True)
             guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
-                                     track_visibility='onchange')
+                                     track_visibility=True)
             expense_ids = fields.One2many('business.expense', 'trip_id', 'Expenses')
             alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict",
                                        required=True)
