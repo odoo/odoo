@@ -24,7 +24,7 @@ import psycopg2
 
 from .sql_db import LazyCursor
 from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar,\
-    ustr, OrderedSet, pycompat, sql, date_utils
+    ustr, OrderedSet, pycompat, sql, date_utils, groupby
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
@@ -2392,100 +2392,73 @@ class One2many(_RelationalMulti):
             cache.set(record, self, tuple(group[record.id]))
 
     def create(self, record_values):
-        if not record_values:
+        self._write(record_values)
+
+    def write(self, records, value):
+        self._write([(records, value)])
+
+    def _write(self, records_commands_list):
+        # records_commands_list = [(records, commands), ...]
+        if not records_commands_list:
             return
 
-        model = record_values[0][0]
+        model = records_commands_list[0][0].browse()
         comodel = model.env[self.comodel_name].with_context(**self.context)
         inverse = self.inverse_name
-        vals_list = []                  # vals for lines to create in batch
+
+        to_create = []                  # line vals to create
+        to_delete = []                  # line ids to delete
+        to_relink = {}                  # lines to relink {line_id: record_id}
+
+        def unlink(line_ids):
+            if comodel._fields[inverse].ondelete == 'cascade':
+                to_delete.extend(line_ids)
+            else:
+                to_relink.update(dict.fromkeys(line_ids, False))
 
         def flush():
-            if vals_list:
-                comodel.create(vals_list)
-                vals_list.clear()
-
-        def drop(lines):
-            if comodel._fields[inverse].ondelete == 'cascade':
-                lines.unlink()
-            else:
-                lines.write({inverse: False})
+            if to_create:
+                comodel.create(to_create)
+                to_create.clear()
+            if to_relink:
+                prefetch = comodel.browse(to_relink)._prefetch
+                comodel_sudo = comodel.sudo().with_context(prefetch_fields=False)
+                # group lines by record, and relink them in batch
+                groups = groupby(to_relink, to_relink.get)
+                for record_id, line_ids in groups:
+                    lines = comodel_sudo.browse(line_ids, prefetch).filtered(
+                        lambda line: int(line[inverse]) != record_id
+                    )
+                    if lines:
+                        comodel.browse(lines._ids).write({inverse: record_id})
+                to_relink.clear()
+            if to_delete:
+                comodel.browse(to_delete).unlink()
+                to_delete.clear()
 
         with model.env.norecompute():
-            for record, value in record_values:
-                for act in (value or []):
+            for records, commands in records_commands_list:
+                for act in (commands or ()):
                     if act[0] == 0:
-                        vals_list.append(dict(act[2], **{inverse: record.id}))
+                        for record in records:
+                            to_create.append(dict(act[2], **{inverse: record.id}))
                     elif act[0] == 1:
                         comodel.browse(act[1]).write(act[2])
                     elif act[0] == 2:
-                        comodel.browse(act[1]).unlink()
+                        to_delete.append(act[1])
                     elif act[0] == 3:
-                        drop(comodel.browse(act[1]))
+                        unlink([act[1]])
                     elif act[0] == 4:
-                        line = comodel.browse(act[1])
-                        line_sudo = line.sudo().with_context(prefetch_fields=False)
-                        if int(line_sudo[inverse]) != record.id:
-                            line.write({inverse: record.id})
-                    elif act[0] == 5:
+                        to_relink[act[1]] = records[-1].id
+                    elif act[0] in (5, 6):
                         flush()
-                        domain = self.domain(record) if callable(self.domain) else self.domain
-                        domain = domain + [(inverse, '=', record.id)]
-                        drop(comodel.search(domain))
-                    elif act[0] == 6:
-                        flush()
-                        comodel.browse(act[2]).write({inverse: record.id})
-                        domain = self.domain(record) if callable(self.domain) else self.domain
-                        domain = domain + [(inverse, '=', record.id), ('id', 'not in', act[2] or [0])]
-                        drop(comodel.search(domain))
-
-            flush()
-
-    def write(self, records, value):
-        comodel = records.env[self.comodel_name].with_context(**self.context)
-        inverse = self.inverse_name
-        vals_list = []                  # vals for lines to create in batch
-
-        def flush():
-            if vals_list:
-                comodel.create(vals_list)
-                vals_list.clear()
-
-        def drop(lines):
-            if comodel._fields[inverse].ondelete == 'cascade':
-                lines.unlink()
-            else:
-                lines.write({inverse: False})
-
-        with records.env.norecompute():
-            for act in (value or []):
-                if act[0] == 0:
-                    for record in records:
-                        vals_list.append(dict(act[2], **{inverse: record.id}))
-                elif act[0] == 1:
-                    comodel.browse(act[1]).write(act[2])
-                elif act[0] == 2:
-                    comodel.browse(act[1]).unlink()
-                elif act[0] == 3:
-                    drop(comodel.browse(act[1]))
-                elif act[0] == 4:
-                    record = records[-1]
-                    line = comodel.browse(act[1])
-                    line_sudo = line.sudo().with_context(prefetch_fields=False)
-                    if int(line_sudo[inverse]) != record.id:
-                        line.write({inverse: record.id})
-                elif act[0] == 5:
-                    flush()
-                    domain = self.domain(records) if callable(self.domain) else self.domain
-                    domain = domain + [(inverse, 'in', records.ids)]
-                    drop(comodel.search(domain))
-                elif act[0] == 6:
-                    flush()
-                    record = records[-1]
-                    comodel.browse(act[2]).write({inverse: record.id})
-                    domain = self.domain(records) if callable(self.domain) else self.domain
-                    domain = domain + [(inverse, 'in', records.ids), ('id', 'not in', act[2] or [0])]
-                    drop(comodel.search(domain))
+                        ids = act[2] if act[0] == 6 else []
+                        domain = self.domain(model) if callable(self.domain) else self.domain
+                        domain = domain + [(inverse, 'in', records.ids)]
+                        if ids:
+                            domain = domain + [('id', 'not in', ids)]
+                        unlink(comodel.search(domain)._ids)
+                        to_relink.update(dict.fromkeys(ids, records[-1].id))
 
             flush()
 
@@ -2642,145 +2615,127 @@ class Many2many(_RelationalMulti):
             cache.set(record, self, tuple(group[record.id]))
 
     def create(self, record_values):
-        if not record_values:
-            return
-
-        model = record_values[0][0]
-        comodel = model.env[self.comodel_name]
-
-        # determine relation {id1: ids2}
-        rel_ids = {record.id: set() for record, value in record_values}
-        recs, vals_list = [], []
-
-        def flush():
-            # create lines in batch, and add new links to them
-            if vals_list:
-                lines = comodel.create(vals_list)
-                for rec, line in pycompat.izip(recs, lines):
-                    rel_ids[rec.id].add(line.id)
-                recs.clear()
-                vals_list.clear()
-
-        for record, value in record_values:
-            for act in value or []:
-                if not isinstance(act, (list, tuple)) or not act:
-                    continue
-                if act[0] == 0:
-                    recs.append(record)
-                    vals_list.append(act[2])
-                elif act[0] == 1:
-                    comodel.browse(act[1]).write(act[2])
-                elif act[0] == 2:
-                    comodel.browse(act[1]).unlink()
-                    rel_ids[record.id].discard(act[1])
-                elif act[0] == 3:
-                    rel_ids[record.id].discard(act[1])
-                elif act[0] == 4:
-                    rel_ids[record.id].add(act[1])
-                elif act[0] in (5, 6):
-                    if recs and recs[-1] == record:
-                        flush()
-                    rel_ids[record.id].clear()
-                    if act[0] == 6:
-                        rel_ids[record.id].update(act[2])
-
-        flush()
-
-        # add links
-        links = [(id1, id2) for id1, ids2 in rel_ids.items() for id2 in ids2]
-        if links:
-            query = """
-                INSERT INTO {rel} ({id1}, {id2}) VALUES {values}
-            """.format(
-                rel=self.relation, id1=self.column1, id2=self.column2,
-                values=", ".join(["%s"] * len(links)),
-            )
-            model.env.cr.execute(query, tuple(links))
+        self._write(record_values, create=True)
 
     def write(self, records, value):
-        if not value:
+        self._write([(records, value)])
+
+    def _write(self, records_commands_list, create=False):
+        # records_commands_list = [(records, commands), ...]
+        if not records_commands_list:
             return
 
-        cr = records.env.cr
-        comodel = records.env[self.comodel_name]
+        model = records_commands_list[0][0].browse()
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        cr = model.env.cr
 
-        # determine old links (set of pairs (id1, id2))
-        clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
-        if '"%s"' % self.relation not in tables:
-            tables.append('"%s"' % self.relation)
-        query = """
-            SELECT {rel}.{id1}, {rel}.{id2} FROM {tables}
-            WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
-        """.format(
-            rel=self.relation, id1=self.column1, id2=self.column2,
-            table=comodel._table, tables=",".join(tables),
-            cond=" AND ".join(clauses) if clauses else "1=1",
-        )
-        cr.execute(query, [tuple(records.ids)] + params)
-        old_links = set(cr.fetchall())
-
-        # determine new links (set of pairs (id1, id2))
-        new_links = set(old_links)
-        vals_list = []
-
-        def pairs(ids2):
-            for id1 in records.ids:
-                for id2 in ids2:
-                    yield (id1, id2)
-
-        def flush():
-            # create lines in batch, and add new links to them
-            if vals_list:
-                lines = comodel.create(vals_list)
-                new_links.update(pairs(lines.ids))
-                vals_list.clear()
-
-        for act in value:
-            if not isinstance(act, (list, tuple)) or not act:
-                continue
-            if act[0] == 0:
-                vals_list.append(act[2])
-            elif act[0] == 1:
-                comodel.browse(act[1]).write(act[2])
-            elif act[0] == 2:
-                comodel.browse(act[1]).unlink()
-                new_links.difference_update(pairs([act[1]]))
-            elif act[0] == 3:
-                new_links.difference_update(pairs([act[1]]))
-            elif act[0] == 4:
-                new_links.update(pairs([act[1]]))
-            elif act[0] in (5, 6):
-                flush()
-                new_links.clear()
-                if act[0] == 6:
-                    new_links.update(pairs(act[2]))
-
-        flush()
-
-        # add links (beware of duplicates)
-        links = new_links - old_links
-        if links:
+        # determine old relation {x: ys}
+        old_relation = defaultdict(set)
+        if not create:
+            clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
+            if '"%s"' % self.relation not in tables:
+                tables.append('"%s"' % self.relation)
             query = """
-                INSERT INTO {rel} ({id1}, {id2})
-                VALUES {values}
-                ON CONFLICT DO NOTHING
+                SELECT {rel}.{id1}, {rel}.{id2} FROM {tables}
+                WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
             """.format(
                 rel=self.relation, id1=self.column1, id2=self.column2,
-                values=", ".join(["%s"] * len(links)),
+                table=comodel._table, tables=",".join(tables),
+                cond=" AND ".join(clauses) if clauses else "1=1",
             )
-            cr.execute(query, tuple(links))
+            ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
+            cr.execute(query, [tuple(ids)] + params)
+            for x, y in cr.fetchall():
+                old_relation[x].add(y)
 
-        # remove links
-        links = old_links - new_links
-        if links:
-            cond = "{id1}=%s AND {id2}=%s".format(id1=self.column1, id2=self.column2)
-            query = """
-                DELETE FROM {rel} WHERE {cond}
-            """.format(
-                rel=self.relation,
-                cond=" OR ".join([cond] * len(links)),
+        # determine new relation {x: ys}
+        new_relation = defaultdict(set)
+        for x, ys in old_relation.items():
+            new_relation[x] = set(ys)
+
+        # operations on new relation
+        def relation_add(xs, y):
+            for x in xs:
+                new_relation[x].add(y)
+
+        def relation_remove(xs, y):
+            for x in xs:
+                new_relation[x].discard(y)
+
+        def relation_set(xs, ys):
+            for x in xs:
+                new_relation[x] = set(ys)
+
+        def relation_delete(ys):
+            # the pairs (x, y) have been cascade-deleted from relation
+            for ys1 in old_relation.values():
+                ys1.difference_update(ys)
+            for ys1 in new_relation.values():
+                ys1.difference_update(ys)
+
+        to_create = []                  # line vals to create [(ids, vals)]
+        to_delete = []                  # line ids to delete
+
+        with model.env.norecompute():
+            for records, commands in records_commands_list:
+                for act in (commands or ()):
+                    if not isinstance(act, (list, tuple)) or not act:
+                        continue
+                    if act[0] == 0:
+                        to_create.append((records._ids, act[2]))
+                    elif act[0] == 1:
+                        comodel.browse(act[1]).write(act[2])
+                    elif act[0] == 2:
+                        to_delete.append(act[1])
+                    elif act[0] == 3:
+                        relation_remove(records._ids, act[1])
+                    elif act[0] == 4:
+                        relation_add(records._ids, act[1])
+                    elif act[0] in (5, 6):
+                        # new lines must no longer be linked to records
+                        to_create = [(set(ids) - set(records._ids), vals)
+                                     for (ids, vals) in to_create]
+                        relation_set(records._ids, act[2] if act[0] == 6 else ())
+
+            if to_create:
+                # create lines in batch, and link them
+                lines = comodel.create([vals for ids, vals in to_create])
+                for line, (ids, vals) in pycompat.izip(lines, to_create):
+                    relation_add(ids, line.id)
+
+            if to_delete:
+                # delete lines in batch
+                comodel.browse(to_delete).unlink()
+                relation_delete(to_delete)
+
+        # process pairs to add (beware of duplicates)
+        pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
+        if pairs:
+            query = "INSERT INTO {} ({}, {}) VALUES {} ON CONFLICT DO NOTHING".format(
+                self.relation, self.column1, self.column2, ", ".join(["%s"] * len(pairs)),
             )
-            cr.execute(query, tuple(arg for pair in links for arg in pair))
+            cr.execute(query, pairs)
+
+        # process pairs to remove
+        pairs = [(x, y) for x, ys in old_relation.items() for y in ys - new_relation[x]]
+        if pairs:
+            # express pairs as the union of cartesian products:
+            #    pairs = [(1, 11), (1, 12), (1, 13), (2, 11), (2, 12), (2, 14)]
+            # -> y_to_xs = {11: {1, 2}, 12: {1, 2}, 13: {1}, 14: {2}}
+            # -> xs_to_ys = {{1, 2}: {11, 12}, {2}: {14}, {1}: {13}}
+            y_to_xs = defaultdict(set)
+            for x, y in pairs:
+                y_to_xs[y].add(x)
+            xs_to_ys = defaultdict(set)
+            for y, xs in y_to_xs.items():
+                xs_to_ys[frozenset(xs)].add(y)
+            # delete the rows where (id1 IN xs AND id2 IN ys) OR ...
+            COND = "{} IN %s AND {} IN %s".format(self.column1, self.column2)
+            query = "DELETE FROM {} WHERE {}".format(
+                self.relation, " OR ".join([COND] * len(xs_to_ys)),
+            )
+            params = [arg for xs, ys in xs_to_ys.items() for arg in [tuple(xs), tuple(ys)]]
+            cr.execute(query, params)
 
 
 class Id(Field):
