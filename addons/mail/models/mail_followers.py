@@ -100,6 +100,8 @@ class Followers(models.Model):
           user groups of partner (void as irrelevant if channel ID),
         """
         if records and subtype_id:
+            subquery_partners = "UNION SELECT NULL, id, NULL, FALSE FROM res_partner WHERE id IN %s"
+            subquery_channels = "UNION SELECT NULL, NULL, id, FALSE FROM mail_channel WHERE id IN %s"
             query = """
 WITH sub_followers AS (
     SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
@@ -109,6 +111,8 @@ WITH sub_followers AS (
         RIGHT JOIN mail_message_subtype subtype
         ON subtype.id = subrel.mail_message_subtype_id
     WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
+    %s
+    %s
 )
 SELECT partner.id as pid, NULL AS cid,
         partner.active as active, partner.partner_share as pshare, NULL as ctype,
@@ -122,7 +126,7 @@ SELECT partner.id as pid, NULL AS cid,
         WHERE sub_followers.channel_id IS NULL
             AND sub_followers.partner_id = partner.id
             AND (sub_followers.internal <> TRUE OR partner.partner_share <> TRUE)
-    ) %s
+    )
     GROUP BY partner.id, users.notification_type
 UNION
 SELECT NULL AS pid, channel.id AS cid,
@@ -131,8 +135,8 @@ SELECT NULL AS pid, channel.id AS cid,
     FROM mail_channel channel
     WHERE EXISTS (
         SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
-    ) %s
-""" % ('OR partner.id IN %s' if pids else '', 'OR channel.id IN %s' if cids else '')
+    )
+""" % (subquery_partners if pids else '', subquery_channels if cids else '')
             params = [subtype_id, records._name, tuple(records.ids)]
             if pids:
                 params.append(tuple(pids))
