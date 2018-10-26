@@ -193,8 +193,8 @@ class HrPayslip(models.Model):
     def get_inputs(self, contracts, date_from, date_to):
         res = []
 
-        structure_ids = contracts.get_all_structures()
-        rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
+        structures = contracts.get_all_structures()
+        rule_ids = structures.get_all_rules()
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
         inputs = self.env['hr.salary.rule'].browse(sorted_rule_ids).mapped('input_ids')
 
@@ -240,11 +240,11 @@ class HrPayslip(models.Model):
         #get the ids of the structures on the contracts and their parent id as well
         contracts = self.env['hr.contract'].browse(contract_ids)
         if len(contracts) == 1 and payslip.struct_id:
-            structure_ids = list(set(payslip.struct_id._get_parent_structure().ids))
+            structures = payslip.struct_id._get_parent_structure()
         else:
-            structure_ids = contracts.get_all_structures()
+            structures = contracts.get_all_structures()
         #get the rules of the structure and thier children
-        rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
+        rule_ids = structures.get_all_rules()
         #run the rules by sequence
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
         sorted_rules = self.env['hr.salary.rule'].browse(sorted_rule_ids)
