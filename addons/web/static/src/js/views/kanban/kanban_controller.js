@@ -136,7 +136,11 @@ var KanbanController = BasicController.extend({
                 domain = [['active', '=', true]];
             }
             try {
-                var visible = new Domain(domain).compute(data.evalContext);
+                var domainOptions = {
+                    fields: recordModel.fields,
+                    parentFields: parent ? parent.fields : {},
+                };
+                var visible = new Domain(domain, undefined, domainOptions).compute(data.evalContext);
             } catch (e) {
                 return;
             }

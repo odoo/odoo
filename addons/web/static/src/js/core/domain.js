@@ -5,6 +5,13 @@ var collections = require("web.collections");
 var pyUtils = require("web.py_utils");
 var py = window.py; // look py.js
 
+var mapFieldSameValues = {
+    boolean: {
+        1: true,
+        0: false,
+    }
+}
+
 /**
  * The Domain Class allows to work with a domain as a tree and provides tools
  * to manipulate array and string representations of domains.
@@ -24,8 +31,10 @@ var Domain = collections.Tree.extend({
      * @param {Object} [evalContext] - in case the given domain is a string, an
      *                               evaluation context might be needed
      */
-    init: function (domain, evalContext) {
+    init: function (domain, evalContext, options) {
         this._super.apply(this, arguments);
+        this.options = options || {};
+        this.evalContext = evalContext;
         if (_.isArray(domain) || _.isString(domain)) {
             this._parse(this.normalizeArray(_.clone(this.stringToArray(domain, evalContext))));
         } else {
@@ -46,6 +55,16 @@ var Domain = collections.Tree.extend({
      * @returns {boolean}
      */
     compute: function (values) {
+        var self = this;
+        var fields = this.options && this.options.fields;
+        function isEqual(value, comparison) {
+            if (fields) {
+                var field = fields[fieldName];
+                var mappedCompare = mapFieldSameValues[field.type] && mapFieldSameValues[field.type][comparison];
+                comparison = mappedCompare !== undefined ? mappedCompare : comparison;
+            }
+            return _.isEqual(value, comparison);
+        }
         if (this._data === true || this._data === false) {
             // The domain is a always-true or a always-false domain
             return this._data;
@@ -63,6 +82,7 @@ var Domain = collections.Tree.extend({
                 fieldName = parentField[1];
                 isParentField = parentField[0] === 'parent' &&
                     fieldName in values.parent;
+                fields = this.options && this.options.parentFields;
             }
             if (!(this._data[0] in values) && !(isParentField)) {
                 throw new Error(_.str.sprintf(
@@ -80,10 +100,10 @@ var Domain = collections.Tree.extend({
             switch (this._data[1]) {
                 case "=":
                 case "==":
-                    return _.isEqual(fieldValue, this._data[2]);
+                    return isEqual(fieldValue, this._data[2]);
                 case "!=":
                 case "<>":
-                    return !_.isEqual(fieldValue, this._data[2]);
+                    return !isEqual(fieldValue, this._data[2]);
                 case "<":
                     return (fieldValue < this._data[2]);
                 case ">":
@@ -198,7 +218,7 @@ var Domain = collections.Tree.extend({
      */
     _addSubdomain: function (domain) {
         if (!domain.length) return;
-        var subdomain = new Domain(domain);
+        var subdomain = new Domain(domain, this.evalContext, this.options);
 
         if (!subdomain._children.length || subdomain._data !== this._data) {
             this._children.push(subdomain);
