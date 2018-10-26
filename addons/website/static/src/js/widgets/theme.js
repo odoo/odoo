@@ -29,7 +29,7 @@ var ThemeCustomizeDialog = Dialog.extend({
     init: function (parent, options) {
         options = options || {};
         this._super(parent, _.extend({
-            title: _t("Customize this theme"),
+            title: _t("Customize Theme"),
             buttons: [],
         }, options));
 
