@@ -11,7 +11,9 @@
         <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
         <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
 
-        <t t-call="web._assets_frontend_helpers"/>
+        <t t-call="web._assets_helpers">
+            <t t-call="web._assets_frontend_helpers"/>
+        </t>
         <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
         <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fonts.scss" />
