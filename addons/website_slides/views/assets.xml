@@ -21,7 +21,7 @@
 
         <!-- Bundle (minimal) for embedded slide iframe -->
         <template id="website_slides.slide_embed_assets" name="Website slides embed assets">
-            <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
+            <t t-call="web._assets_helpers"/>
             <t t-call="web._assets_bootstrap"/>
             <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides.scss" t-ignore="true"/>
 

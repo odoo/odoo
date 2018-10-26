@@ -3,10 +3,11 @@
     <!-- Assets for reports -->
 
     <template id="report_assets_common">
-        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
+        <t t-call="web._assets_helpers">
+            <!-- FIXME web_editor ? -->
+            <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+        </t>
 
-        <!-- FIXME web_editor ? -->
-        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
         <t t-call="web._assets_bootstrap"/>
 
         <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>

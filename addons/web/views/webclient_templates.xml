@@ -3,8 +3,10 @@
     <template id="_assets_utils">
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_functions.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_mixins.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
+
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
     </template>
 
     <template id="_assets_primary_variables">
@@ -20,26 +22,21 @@
         <t t-call="web._assets_primary_variables"/>
         <t t-call="web._assets_secondary_variables"/>
 
-        <!-- Bootstrap variables should not be necessary, all pages come with bootstrap in at least one of their -->
-        <!-- bundle and, ideally, these should be available in all assets... with their odoo override. This system -->
-        <!-- however works for now as non-backend and non-frontend assets do not need overriden BS variables yet. -->
-        <link t-if="not no_bs_vars" rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
+        <t t-raw="0"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
     </template>
 
     <template id="_assets_backend_helpers">
-        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden.scss"/>
     </template>
 
     <template id="_assets_frontend_helpers">
-        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_frontend.scss"/>
     </template>
 
     <template id="_assets_bootstrap">
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part1.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part2.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_review.scss"/>
     </template>
 
@@ -141,7 +138,9 @@
     </template>
 
     <template id="assets_backend" name="Backend Assets (used in backend interface)">
-        <t t-call="web._assets_backend_helpers"/>
+        <t t-call="web._assets_helpers">
+            <t t-call="web._assets_backend_helpers"/>
+        </t>
 
         <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
@@ -316,7 +315,9 @@
     </template>
 
     <template id="web.assets_frontend" name="Website Assets">
-        <t t-call="web._assets_frontend_helpers"/>
+        <t t-call="web._assets_helpers">
+            <t t-call="web._assets_frontend_helpers"/>
+        </t>
 
         <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
