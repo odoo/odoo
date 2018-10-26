@@ -622,6 +622,7 @@ class Picking(models.Model):
                                                     'product_id': ops.product_id.id,
                                                     'product_uom_qty': ops.qty_done,
                                                     'product_uom': ops.product_uom_id.id,
+                                                    'description_picking': ops.description_picking,
                                                     'location_id': pick.location_id.id,
                                                     'location_dest_id': pick.location_dest_id.id,
                                                     'picking_id': pick.id,

@@ -149,6 +149,20 @@ class Product(models.Model):
 
         return res
 
+    def _get_description(self, picking_type_id):
+        """ return product receipt/delivery/picking description depending on
+        picking type passed as argument.
+        """
+        self.ensure_one()
+        picking_code = picking_type_id.code
+        description = self.description or self.name
+        if picking_code == 'incoming':
+            return self.description_pickingin or description
+        if picking_code == 'outgoing':
+            return self.description_pickingout or description
+        if picking_code == 'internal':
+            return self.description_picking or description
+
     def _get_domain_locations(self):
         '''
         Parses the context and returns a list of location_ids based on it.

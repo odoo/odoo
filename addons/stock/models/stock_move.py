@@ -46,6 +46,7 @@ class StockMove(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], index=True, required=True,
         states={'done': [('readonly', True)]})
+    description_picking = fields.Text('Description of Picking')
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
         digits=0, store=True,
@@ -160,6 +161,11 @@ class StockMove(models.Model):
     has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
     package_level_id = fields.Many2one('stock.package_level', 'Package Level')
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
+
+    @api.onchange('product_id', 'picking_type_id')
+    def onchange_product(self):
+        if self.product_id:
+            self.description_picking = self.product_id._get_description(self.picking_type_id)
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
