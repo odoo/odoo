@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 
 
 class Employee(models.Model):
-
     _inherit = "hr.employee"
 
     manager = fields.Boolean(string='Is a Manager')
@@ -31,6 +31,22 @@ class Employee(models.Model):
         result = dict((data['employee_id'][0], data['employee_id_count']) for data in contract_data)
         for employee in self:
             employee.contracts_count = result.get(employee.id, 0)
+
+    def _get_contracts(self, date_from, date_to):
+        """
+        Returns the contracts of the employee between date_from and date_to
+        """
+        self.ensure_one()
+        # a contract is valid if it ends between the given dates
+        clause_1 = ['&', ('date_end', '<=', date_to), ('date_end', '>=', date_from)]
+        # OR if it starts between the given dates
+        clause_2 = ['&', ('date_start', '<=', date_to), ('date_start', '>=', date_from)]
+        # OR if it starts before the date_from and finish after the date_end (or never finish)
+        clause_3 = ['&', ('date_start', '<=', date_from), '|', ('date_end', '=', False), ('date_end', '>=', date_to)]
+        clause_final = expression.AND([
+            [('employee_id', '=', self.id), ('state', '=', 'open')],
+            expression.OR([clause_1, clause_2, clause_3])])
+        return self.env['hr.contract'].search(clause_final)
 
 
 class ContractType(models.Model):

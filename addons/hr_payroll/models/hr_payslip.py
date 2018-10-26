@@ -127,24 +127,6 @@ class HrPayslip(models.Model):
             raise UserError(_('You cannot delete a payslip which is not draft or cancelled!'))
         return super(HrPayslip, self).unlink()
 
-    # TODO move this function into hr_contract module, on hr.employee object
-    @api.model
-    def get_contract(self, employee, date_from, date_to):
-        """
-        @param employee: recordset of employee
-        @param date_from: date field
-        @param date_to: date field
-        @return: returns the ids of all the contracts for the given employee that need to be considered for the given dates
-        """
-        # a contract is valid if it ends between the given dates
-        clause_1 = ['&', ('date_end', '<=', date_to), ('date_end', '>=', date_from)]
-        # OR if it starts between the given dates
-        clause_2 = ['&', ('date_start', '<=', date_to), ('date_start', '>=', date_from)]
-        # OR if it starts before the date_from and finish after the date_end (or never finish)
-        clause_3 = ['&', ('date_start', '<=', date_from), '|', ('date_end', '=', False), ('date_end', '>=', date_to)]
-        clause_final = [('employee_id', '=', employee.id), ('state', '=', 'open'), '|', '|'] + clause_1 + clause_2 + clause_3
-        return self.env['hr.contract'].search(clause_final).ids
-
     @api.multi
     def compute_sheet(self):
         for payslip in self:
@@ -153,9 +135,9 @@ class HrPayslip(models.Model):
             payslip.line_ids.unlink()
             # set the list of contract for which the rules have to be applied
             # if we don't give the contract, then the rules to apply should be for all current contracts of the employee
-            contract_ids = payslip.contract_id.ids or \
-                self.get_contract(payslip.employee_id, payslip.date_from, payslip.date_to)
-            lines = [(0, 0, line) for line in self._get_payslip_lines(contract_ids, payslip.id)]
+            contracts = payslip.contract_id or \
+                payslip.employee_id._get_contracts(payslip.date_from, payslip.date_to)
+            lines = [(0, 0, line) for line in self._get_payslip_lines(contracts.ids, payslip.id)]
             payslip.write({'line_ids': lines, 'number': number})
         return True
 
@@ -229,6 +211,7 @@ class HrPayslip(models.Model):
                 res += [input_data]
         return res
 
+    # YTI TODO: pass recordset as argument
     @api.model
     def _get_payslip_lines(self, contract_ids, payslip_id):
         def _sum_salary_rule_category(localdict, category, amount):
@@ -377,7 +360,7 @@ class HrPayslip(models.Model):
         return list(result_dict.values())
 
     # YTI TODO To rename. This method is not really an onchange, as it is not in any view
-    # employee_id and contract_id could be browse records
+    # employee_id and contract_id could be browse records. Contract_id should be a record
     @api.multi
     def onchange_employee_id(self, date_from, date_to, employee_id=False, contract_id=False):
         #defaults
@@ -404,20 +387,21 @@ class HrPayslip(models.Model):
             'company_id': employee.company_id.id,
         })
 
+        contracts = self.env['hr.contract']
         if not self.env.context.get('contract'):
             #fill with the first contract of the employee
-            contract_ids = self.get_contract(employee, date_from, date_to)
+            contracts = employee._get_contracts(date_from, date_to)
         else:
             if contract_id:
                 #set the list of contract for which the input have to be filled
-                contract_ids = [contract_id]
+                contracts = self.env['hr.contract'].browse(contract_id)
             else:
                 #if we don't give the contract, then the input to fill should be for all current contracts of the employee
-                contract_ids = self.get_contract(employee, date_from, date_to)
+                contracts = employee._get_contracts(date_from, date_to)
 
-        if not contract_ids:
+        if not contracts:
             return res
-        contract = self.env['hr.contract'].browse(contract_ids[0])
+        contract = contracts[0]
         res['value'].update({
             'contract_id': contract.id
         })
@@ -428,7 +412,6 @@ class HrPayslip(models.Model):
             'struct_id': struct.id,
         })
         #computation of the salary input
-        contracts = self.env['hr.contract'].browse(contract_ids)
         worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
         input_line_ids = self.get_inputs(contracts, date_from, date_to)
         res['value'].update({
@@ -446,25 +429,24 @@ class HrPayslip(models.Model):
         employee = self.employee_id
         date_from = self.date_from
         date_to = self.date_to
-        contract_ids = []
 
         ttyme = datetime.combine(fields.Date.from_string(date_from), time.min)
         locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
 
+        contracts = self.env['hr.contract']
         if not self.env.context.get('contract') or not self.contract_id:
-            contract_ids = self.get_contract(employee, date_from, date_to)
-            if not contract_ids:
+            contracts = employee._get_contracts(date_from, date_to)
+            if not contracts:
                 return
-            self.contract_id = self.env['hr.contract'].browse(contract_ids[0])
+            self.contract_id = contracts[0]
 
         if not self.contract_id.struct_id:
             return
         self.struct_id = self.contract_id.struct_id
 
         #computation of the salary input
-        contracts = self.env['hr.contract'].browse(contract_ids)
         worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
         for r in worked_days_line_ids:
