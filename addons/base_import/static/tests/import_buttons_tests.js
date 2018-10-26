@@ -1,7 +1,6 @@
 odoo.define('web.base_import_tests', function (require) {
 "use strict";
 
-var config = require('web.config');
 var KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
@@ -105,52 +104,6 @@ QUnit.test('kanban without import button', function(assert) {
 
     assert.ok(!kanban.$buttons.find('.o_button_import').length, "should not have an Import button");
     kanban.destroy();
-});
-
-QUnit.test('import button should be hidden in list on mobile screens', function (assert) {
-    assert.expect(1);
-
-    var list = createView({
-        View: ListView,
-        model: 'foo',
-        data: this.data,
-        arch: '<tree><field name="foo"/></tree>',
-        config: {
-            device: {
-                size_class: config.device.SIZES.XS,
-            },
-        },
-    });
-
-    assert.notOk(list.$buttons.find('.o_button_import').is(':visible'), "import button should be hidden");
-    list.destroy();
-});
-
-QUnit.test('import button should be hidden in kanban on mobile screens', function (assert) {
-    assert.expect(1);
-    var done = assert.async();
-
-    // the kanban view is async in mobile mode, because it has to load an
-    // external additional library
-    testUtils.createAsyncView({
-        View: KanbanView,
-        model: 'foo',
-        data: this.data,
-        arch: '<kanban><templates><t t-name="kanban-box">' +
-                    '<div>' +
-                    '<field name="foo"/>' +
-                    '</div>' +
-                '</t></templates></kanban>',
-        config: {
-            device: {
-                size_class: config.device.SIZES.XS,
-            },
-        },
-    }).then(function (kanban){
-        assert.notOk(kanban.$buttons.find('.o_button_import').is(':visible'), "import button should be hidden");
-        kanban.destroy();
-        done();
-    });
 });
 
 });

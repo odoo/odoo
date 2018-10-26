@@ -583,6 +583,7 @@
                                     define.call(this, 'web.config.patch', function (require) {
                                         var config = require('web.config');
                                         config.device.isMobile = true;
+                                        config.device.size_class = config.device.SIZES.XS;
                                     });
                                 }
                             };
