@@ -158,6 +158,11 @@
     <div class="o_kanban_examples_ghost">
         <div class="o_ghost_content"/>
         <div class="o_ghost_content o_ghost_tag"/>
+            <t t-if="example.bullets">
+                <t t-if="_.random(0,5) > 3">
+                    <t t-raw="example.bullets[_.random(0, example.bullets.length-1)]"/>
+                </t>
+            </t>
         <img class="float-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
     </div>
 </t>
