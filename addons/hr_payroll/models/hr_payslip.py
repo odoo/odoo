@@ -11,6 +11,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.addons.hr_payroll.models.browsable_object import BrowsableObject, InputLine, WorkedDays, Payslips
 from odoo.exceptions import UserError, ValidationError
 
+
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
@@ -134,7 +135,7 @@ class HrPayslip(models.Model):
             # if we don't give the contract, then the rules to apply should be for all current contracts of the employee
             contracts = payslip.contract_id or \
                 payslip.employee_id._get_contracts(payslip.date_from, payslip.date_to)
-            lines = [(0, 0, line) for line in self._get_payslip_lines(contracts.ids, payslip.id)]
+            lines = [(0, 0, line) for line in payslip._get_payslip_lines(contracts)]
             payslip.write({'line_ids': lines, 'number': number})
         return True
 
@@ -210,7 +211,7 @@ class HrPayslip(models.Model):
 
     # YTI TODO: pass recordset as argument
     @api.model
-    def _get_payslip_lines(self, contract_ids, payslip_id):
+    def _get_payslip_lines(self, contracts):
         # YTI TODO: Move into browsable_object.py ?
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
@@ -218,29 +219,28 @@ class HrPayslip(models.Model):
             localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
             return localdict
 
+        self.ensure_one()
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         rules_dict = {}
         worked_days_dict = {}
         inputs_dict = {}
         blacklist = []
-        payslip = self.env['hr.payslip'].browse(payslip_id)
-        for worked_days_line in payslip.worked_days_line_ids:
+        for worked_days_line in self.worked_days_line_ids:
             worked_days_dict[worked_days_line.code] = worked_days_line
-        for input_line in payslip.input_line_ids:
+        for input_line in self.input_line_ids:
             inputs_dict[input_line.code] = input_line
 
-        categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
-        inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
-        worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict, self.env)
-        payslips = Payslips(payslip.employee_id.id, payslip, self.env)
-        rules = BrowsableObject(payslip.employee_id.id, rules_dict, self.env)
+        categories = BrowsableObject(self.employee_id.id, {}, self.env)
+        inputs = InputLine(self.employee_id.id, inputs_dict, self.env)
+        worked_days = WorkedDays(self.employee_id.id, worked_days_dict, self.env)
+        payslips = Payslips(self.employee_id.id, self, self.env)
+        rules = BrowsableObject(self.employee_id.id, rules_dict, self.env)
 
         baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
-        contracts = self.env['hr.contract'].browse(contract_ids)
-        if len(contracts) == 1 and payslip.struct_id:
-            structures = payslip.struct_id._get_parent_structure()
+        if len(contracts) == 1 and self.struct_id:
+            structures = self.struct_id._get_parent_structure()
         else:
             structures = contracts.get_all_structures()
         #get the rules of the structure and thier children
