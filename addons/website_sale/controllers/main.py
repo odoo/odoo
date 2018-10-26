@@ -341,6 +341,9 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
         order = request.website.sale_get_order()
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order()
         if order:
             from_currency = order.company_id.currency_id
             to_currency = order.pricelist_id.currency_id
