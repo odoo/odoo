@@ -3389,7 +3389,9 @@ class BaseModel(object):
                 res[f]['states'] = {}
 
             if 'string' in res[f]:
-                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US', res[f]['string'])
+                if not res_trans:
+                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
                 if res_trans:
                     res[f]['string'] = res_trans
             if 'help' in res[f]:
