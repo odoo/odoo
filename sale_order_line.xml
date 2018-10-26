@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+            <!--here we are adding this field in sale.order.from. Remember in order to add HSN number in sale.order.view form we need to inherit sale.order.line-->
+            <!--but our view model will not change view model will be sale.order always-->
+
+        <record id="sale_order_line_inherited" model="ir.ui.view">
+            <field name="model">sale.order</field>
+            <field name="name">sale.order.form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="before">
+                    <field name="hsn_no"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+
+
+
+
+
