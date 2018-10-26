@@ -118,10 +118,6 @@ class HrPayslip(models.Model):
         }
 
     @api.multi
-    def check_done(self):
-        return True
-
-    @api.multi
     def unlink(self):
         if any(self.filtered(lambda payslip: payslip.state not in ('draft', 'cancel'))):
             raise UserError(_('You cannot delete a payslip which is not draft or cancelled!'))
