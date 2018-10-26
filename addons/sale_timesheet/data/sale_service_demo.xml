@@ -4,7 +4,7 @@
 
         <record id="sale_line_services" model="sale.order.line">
             <field name="order_id" ref="sale.sale_order_3"/>
-            <field name="name">Advance</field>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('sale.advance_product_0').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="sale.advance_product_0"/>
             <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">150.0</field>
@@ -394,7 +394,7 @@
 
         <!-- Vendor bill for sale_order_1 -->
         <record id="account_analytic_line_inv_1" model="account.analytic.line">
-            <field name="name">[PCSC234] Computer SC234</field>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.product_product_3').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_2'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
@@ -406,7 +406,7 @@
 
         <!-- Expense bill for sale_order_1 -->
         <record id="account_analytic_line_exp_1" model="account.analytic.line">
-            <field name="name">[EXP] General Expenses</field>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.expense_product').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_2'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
@@ -418,7 +418,7 @@
 
         <!-- Vendor bill for sale_order_2 -->
         <record id="account_analytic_line_inv_2" model="account.analytic.line">
-            <field name="name">[PCSC234] Computer SC234</field>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.product_product_3').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_4'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
@@ -430,7 +430,7 @@
 
         <!-- Expense bill for sale_order_2 -->
         <record id="account_analytic_line_exp_2" model="account.analytic.line">
-            <field name="name">[HA0] Hotel Accommodation</field>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.expense_hotel').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_4'))]"/>
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
