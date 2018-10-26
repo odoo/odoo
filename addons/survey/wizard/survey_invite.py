@@ -18,9 +18,9 @@ emails_split = re.compile(r"[;,\n\r]+")
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
 
-class SurveyMailComposeMessage(models.TransientModel):
-    _name = 'survey.mail.compose.message'
-    _description = 'Email composition wizard for Survey'
+class SurveyInvite(models.TransientModel):
+    _name = 'survey.invite'
+    _description = 'Survey Invitation Wizard'
 
     def default_survey_id(self):
         context = self.env.context
@@ -78,7 +78,7 @@ class SurveyMailComposeMessage(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        res = super(SurveyMailComposeMessage, self).default_get(fields)
+        res = super(SurveyInvite, self).default_get(fields)
         context = self.env.context
         if context.get('active_model') == 'res.partner' and context.get('active_ids'):
             res.update({'partner_ids': context['active_ids']})

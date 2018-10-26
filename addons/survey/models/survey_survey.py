@@ -302,7 +302,7 @@ class Survey(models.Model):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'survey.mail.compose.message',
+            'res_model': 'survey.invite',
             'target': 'new',
             'context': local_context,
         }
