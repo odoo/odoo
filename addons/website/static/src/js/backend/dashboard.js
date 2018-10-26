@@ -85,7 +85,7 @@ var Dashboard = AbstractAction.extend({
         var self = this;
         var dialog = new Dialog(this, {
             size: 'medium',
-            title: _t('Google Analytics'),
+            title: _t('Connect Google Analytics'),
             $content: QWeb.render('website.ga_dialog_content', {
                 ga_key: this.dashboards_data.visits.ga_client_id,
                 ga_analytics_key: this.dashboards_data.visits.ga_analytics_key,
