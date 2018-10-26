@@ -989,10 +989,10 @@ def can_import(module):
 
 # TODO: sub-views (o2m, m2m) -> sub-form?
 # TODO: domains
-ref_re = re.compile("""
+ref_re = re.compile(r"""
 # first match 'form_view_ref' key, backrefs are used to handle single or
 # double quoting of the value
-(['"])(?P<view_type>\w+)_view_ref\1
+(['"])(?P<view_type>\w+_view_ref)\1
 # colon separator (with optional spaces around)
 \s*:\s*
 # open quote for value
@@ -1003,7 +1003,7 @@ ref_re = re.compile("""
     [.\w]+
 )
 # close with same quote as opening
-\2
+\3
 """, re.VERBOSE)
 class Form(object):
     """ Server-side form view implementation (partial)
@@ -1119,6 +1119,8 @@ class Form(object):
                 .load_views([(False, 'tree'), (False, 'form')])['fields_views']
             # embedded views should take the priority on externals
             views.update(descr['views'])
+            # re-set all resolved views on the descriptor
+            descr['views'] = views
 
             # if the default view is a kanban or a non-editable list, the
             # "edition controller" is the form view
