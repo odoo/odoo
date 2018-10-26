@@ -89,6 +89,22 @@ Best Regards,'''))
     account_invoice_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account invoice onboarding panel", default='not_done')
     account_dashboard_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account dashboard onboarding panel", default='not_done')
 
+    @api.constrains('account_opening_date', 'fiscalyear_last_day', 'fiscalyear_last_month')
+    def _check_fiscalyear_last_day(self):
+        # if the user explicitly chooses the 29th of February we allow it:
+        # there is no "fiscalyear_last_year" so we do not know his intentions.
+        if self.fiscalyear_last_day == 29 and self.fiscalyear_last_month == 2:
+            return
+
+        if self.account_opening_date:
+            year = self.account_opening_date.year
+        else:
+            year = datetime.now().year
+
+        max_day = calendar.monthrange(year, self.fiscalyear_last_month)[1]
+        if self.fiscalyear_last_day > max_day:
+            raise ValidationError(_("Invalid fiscal year last day"))
+
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
@@ -285,6 +301,7 @@ Best Regards,'''))
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
         company = self.env.user.company_id
+        company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -339,10 +356,16 @@ Best Regards,'''))
             if not default_journal:
                 raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
 
+            today = datetime.today().date()
+            opening_date = today.replace(month=self.fiscalyear_last_month, day=self.fiscalyear_last_day) + timedelta(days=1)
+            if opening_date > today:
+                opening_date = opening_date + relativedelta(years=-1)
+
             self.account_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening Journal Entry'),
                 'company_id': self.id,
                 'journal_id': default_journal.id,
+                'date': opening_date,
             })
 
     def opening_move_posted(self):
