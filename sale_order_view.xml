@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record id="my_inherited_sale_order" model="ir.ui.view">
+            <field name="name">sale.order.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="view_mode">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <!--we are adding these fields in sale.order view-->
+
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="reverse_check_box"/>
+                     <field name="fiscal_year"/>
+                </xpath>
+
+
+
+
+
+
+
+
+            </field>
+
+
+        </record>
+
+    </data>
+
+</odoo>
