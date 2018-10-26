@@ -834,7 +834,7 @@ registry.colorpicker = SnippetOption.extend({
      */
     _onColorResetButtonClick: function () {
         this.$target.removeClass(this.classes);
-        self.$target.trigger('content_changed');
+        this.$target.trigger('content_changed');
         this.$el.find('.colorpicker button.selected').removeClass('selected');
     },
 });
