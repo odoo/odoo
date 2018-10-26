@@ -71,18 +71,18 @@
                         <p>You have been successfully <strong>unsubscribed</strong>!</p>
                     </div>
 
-		    <div t-if="list_ids" class="alert alert-warning">
-		        <p class="text-center">You are currently subscribed to those newsletters. Unsubscribing means you will not receive any news from them anymore:</p>
-		        <ul class="list-group mb-4">
-			    <t t-foreach="list_ids" t-as="list_id">
-				<t t-if="list_id.is_public == True">
-				    <li class="list-group-item bg-transparent">
-					<strong><t t-esc="list_id.name"/></strong>
-				    </li>
-				</t>
-			    </t>
-			</ul>
-		    </div>
+                    <div t-if="list_ids" class="alert alert-warning">
+                        <p class="text-center">You were still subscribed to those newsletters. You will not receive any news from them anymore:</p>
+                        <ul class="list-group mb-4">
+                            <t t-foreach="list_ids" t-as="list_id">
+                                <t t-if="list_id.is_public == True">
+                                    <li class="list-group-item bg-transparent">
+                                        <strong><t t-esc="list_id.name"/></strong>
+                                    </li>
+                                </t>
+                            </t>
+                        </ul>
+                    </div>
 
                     <div t-if="show_blacklist_button" class="mb64">
                         <div class="btn btn-secondary pull-right" id="button_add_blacklist" style="display:none">Blacklist Me</div>
