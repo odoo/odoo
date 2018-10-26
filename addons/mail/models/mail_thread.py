@@ -1695,6 +1695,8 @@ class MailThread(models.AbstractModel):
             recipient_ids, email_to, email_cc = set(), False, False
             if 'partner_id' in self._fields and record.partner_id:
                 recipient_ids.add(record.partner_id.id)
+            elif 'email_normalized' in self._fields and record.email_normalized:
+                email_to = record.email_normalized
             elif 'email_from' in self._fields and record.email_from:
                 email_to = record.email_from
             elif 'partner_email' in self._fields and record.partner_email:

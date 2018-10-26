@@ -282,7 +282,7 @@ class MassMailingContact(models.Model):
 
     @api.multi
     def message_get_default_recipients(self):
-        return dict((record.id, {'partner_ids': [], 'email_to': record.email, 'email_cc': False}) for record in self)
+        return dict((record.id, {'partner_ids': [], 'email_to': record.email_normalized, 'email_cc': False}) for record in self)
 
 
 class MassMailingStage(models.Model):
@@ -646,7 +646,7 @@ class MassMailing(models.Model):
     def update_opt_out(self, email, list_ids, value):
         if len(list_ids) > 0:
             model = self.env['mail.mass_mailing.contact'].with_context(active_test=False)
-            records = model.search([('email', '=ilike', email)])
+            records = model.search([('email_normalized', '=', email)])
             opt_out_records = self.env['mail.mass_mailing.list_contact_rel'].search([
                 ('contact_id', 'in', records.ids),
                 ('list_id', 'in', list_ids),
