@@ -70,10 +70,10 @@
     <!-- ONBOARDING PANELS -->
     <template id="account_invoice_onboarding_panel" name="account.invoice.onboarding.panel">
         <t t-call="base.onboarding_container">
-            <t t-set="classes">o_onboarding_blue</t>
-            <t t-set="bg_image">/account/static/src/img/account_invoice_onboarding_bg.jpg</t>
-            <t t-set="close_method">action_close_account_invoice_onboarding</t>
-            <t t-set="close_model">res.company</t>
+            <t t-set="classes" t-value="'o_onboarding_blue'"/>
+            <t t-set="bg_image" t-value="'/account/static/src/img/account_invoice_onboarding_bg.jpg'"/>
+            <t t-set="close_method" t-value="'action_close_account_invoice_onboarding'"/>
+            <t t-set="close_model" t-value="'res.company'"/>
             <t t-set="text_completed">Congratulations! You are all set.</t>
 
             <t t-call="base.onboarding_company_step" name="company_step" />
@@ -83,10 +83,10 @@
     </template>
     <template id="account_dashboard_onboarding_panel" name="account.dashboard.onboarding.panel">
         <t t-call="base.onboarding_container">
-            <t t-set="classes">o_onboarding_orange</t>
-            <t t-set="bg_image">/account/static/src/img/account_dashboard_onboarding_bg.jpg</t>
-            <t t-set="close_method">action_close_account_dashboard_onboarding</t>
-            <t t-set="close_model">res.company</t>
+            <t t-set="classes" t-value="'o_onboarding_orange'"/>
+            <t t-set="bg_image" t-value="'/account/static/src/img/account_dashboard_onboarding_bg.jpg'"/>
+            <t t-set="close_method" t-value="'action_close_account_dashboard_onboarding'"/>
+            <t t-set="close_model" t-value="'res.company'"/>
 
             <t t-call="account.dashboard_onboarding_company_step" name="company_step" />
             <t t-call="account.onboarding_bank_account_step" name="bank_account_step" />
