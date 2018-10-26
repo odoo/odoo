@@ -456,7 +456,10 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                 }
             });
         } else if ($target.attr('name')) {
-            this.do_action($target.attr('name'));
+            this.do_action(
+                $target.attr('name'),
+                data.context && {additional_context: data.context}
+            );
         } else {
             this.do_action({
                 name: $target.attr('title') || _.str.strip($target.text()),
