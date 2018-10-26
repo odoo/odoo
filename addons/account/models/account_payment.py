@@ -388,6 +388,10 @@ class account_payment(models.Model):
     _order = "payment_date desc, name desc"
 
     @api.multi
+    def name_get(self):
+        return [(payment.id, payment.name or _('Draft Payment')) for payment in self]
+
+    @api.multi
     @api.depends('move_line_ids.reconciled')
     def _get_move_reconciled(self):
         for payment in self:
