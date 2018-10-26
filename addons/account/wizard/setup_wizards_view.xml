@@ -8,23 +8,23 @@
             <field name="arch" type="xml">
                 <form>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-2">
                             <label for="opening_date"/>
                         </div>
-                        <div class="col-8">
+                        <div class="col-3">
                             <field name="opening_move_posted" invisible="1"/>
                             <field name="opening_date" attrs="{'readonly': [('opening_move_posted', '=', True)]}"/>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-2">
                             <strong>Fiscal Year End</strong>
                         </div>
-                        <div class="col-4">
+                        <div class="col-1">
                             <field name="fiscalyear_last_day"/>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2">
                             <field name="fiscalyear_last_month"/>
                         </div>
                     </div>
@@ -65,9 +65,7 @@
                                 <field name="related_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
                             </group>
                         </group>
-
                     </sheet>
-
                     <footer>
                         <button string="Create" class="oe_highlight" type="object" name="validate"/>
                         <button string="Cancel" special="cancel"/>
