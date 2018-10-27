@@ -8,14 +8,13 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
-# Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Pieter Van de Wygaert <pieter.van.de.wygaert@telenet.be>, 2018\n"
+"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +27,12 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:152
 #, python-format
 msgid "%s changed cost from %s to %s - %s"
-msgstr ""
+msgstr "%s heeft kostprijs gewijzigd van %s naar %s - %s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Rekeningstelsel sjabloom"
+msgstr "Rekeningstelsel sjabloon"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
@@ -43,7 +42,7 @@ msgstr "Boeking"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr "Voorraad rekeningen"
+msgstr "Voorraadrekeningen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__accounting_date
@@ -67,6 +66,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
+"Heeft effect op de extra kosten bij ontvangsten en wordt gedeeld over de "
+"producten om de kostprijs bij te werken."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -220,6 +221,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventoy date will be used."
 msgstr ""
+"Datum waarop de financiële boekingen worden gemaakt bij geautomatiseerde "
+"voorraadwaardering. Indien leeg wordt de voorraaddatum gebruikt."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__display_name
@@ -430,7 +433,7 @@ msgstr "Retour boeken"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Retour pickingregel"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -546,6 +549,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
+"De boekingsregels bevinden zich niet in een consistente staat: sommige "
+"worden ontvangen en andere verlaten het bedrijf."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:369
@@ -594,7 +599,7 @@ msgstr "Maateenheid"
 #: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"
-msgstr "Kosten bijwerken"
+msgstr "Kostprijs bijwerken"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -740,6 +745,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
+"U heeft geen voorraadboek gedefinieerd op uw productcategorie, controleer of"
+" u een rekeningschema heeft geïnstalleerd."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130

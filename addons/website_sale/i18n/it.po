@@ -185,7 +185,7 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    % set company = object.company_id or object.user_id.company_id or user.company_id\n"
-"                    <span style=\"font-size: 10px;\">Il tuo carrello</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Il Suo carrello</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.name}\n"
 "                    </span>\n"
@@ -203,8 +203,8 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">C'È QUALCOSA NEL TUO CARRELLO</h1>\n"
-"                    Vuoi completare il tuo acquisto?<br/><br/>\n"
+"                    <h1 style=\"color:#A9A9A9;\">C'È QUALCOSA NEL SUO CARRELLO</h1>\n"
+"                    Vuole completare il Suo acquisto?<br/><br/>\n"
 "                    % if object.order_line:\n"
 "                        % for line in object.order_line:\n"
 "                            <hr/>\n"
@@ -226,7 +226,7 @@ msgstr ""
 "                    % endif\n"
 "                    <div style=\"text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;\">\n"
 "                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                            Riprendi l'ordine\n"
+"                            Riprenda l'ordine\n"
 "                        </a>\n"
 "                    </div>\n"
 "                    <div style=\"text-align: center;\"><strong>Grazie per aver fatto acquisti con ${user.company_id.name}!</strong></div>\n"
@@ -632,7 +632,7 @@ msgstr "Aggiungi al Carrello"
 #: code:addons/website_sale/static/src/js/website_sale_options.js:88
 #, python-format
 msgid "Add to cart"
-msgstr ""
+msgstr "Aggiungi al carrello"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -1665,7 +1665,7 @@ msgstr "Opzione per:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_price
 msgid "Option not available"
-msgstr ""
+msgstr "Opzione non disponibile"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:238
