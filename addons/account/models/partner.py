@@ -175,7 +175,7 @@ class AccountFiscalPositionTax(models.Model):
     _sql_constraints = [
         ('tax_src_dest_uniq',
          'unique (position_id,tax_src_id,tax_dest_id)',
-         'A tax fiscal position could be defined only once time on same taxes.')
+         'A tax fiscal position could be defined only one time on same taxes.')
     ]
 
 
@@ -194,7 +194,7 @@ class AccountFiscalPositionAccount(models.Model):
     _sql_constraints = [
         ('account_src_dest_uniq',
          'unique (position_id,account_src_id,account_dest_id)',
-         'An account fiscal position could be defined only once time on same accounts.')
+         'An account fiscal position could be defined only one time on same accounts.')
     ]
 
 
