@@ -14,13 +14,14 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2018
 # Maria Boyadjieva <marabo2000@gmail.com>, 2018
 # Emma Maslarska <emmaslarsky@gmail.com>, 2018
+# Георги Пехливанов <sonaris@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
 "PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Emma Maslarska <emmaslarsky@gmail.com>, 2018\n"
+"Last-Translator: Георги Пехливанов <sonaris@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1365,7 +1366,7 @@ msgstr "Запис от сметка"
 #: model:ir.ui.view,arch_db:account.view_account_group_form
 #: model:ir.ui.view,arch_db:account.view_account_group_tree
 msgid "Account Group"
-msgstr ""
+msgstr "Група Сметки"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_group_tree
@@ -1563,12 +1564,12 @@ msgstr "Несъгласувана сметка"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_group_search
 msgid "Account group"
-msgstr ""
+msgstr "Група сметка"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_group_search
 msgid "Account groups"
-msgstr ""
+msgstr "Група сметки"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
@@ -1602,6 +1603,8 @@ msgid ""
 "Account that will be set on invoice tax lines for credit notes. Leave empty "
 "to use the expense account."
 msgstr ""
+"Сметка, която ще бъде зададена върху данъчните редове за фактури за кредитни"
+" бележки. Оставете празна, за да използвате разходната сметка."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -1634,6 +1637,8 @@ msgid ""
 "Account used as counterpart for the journal entry, for taxes eligible based "
 "on payments."
 msgstr ""
+"Сметка, използвана като насрещна част за вписването в дневника, за данъците,"
+" допустими въз основа на плащания."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -1643,7 +1648,7 @@ msgstr "Счетоводство"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Accounting App Options"
-msgstr ""
+msgstr "Опции за счетоводно приложение"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
@@ -1724,7 +1729,7 @@ msgstr "Действия"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Other Currencies"
-msgstr ""
+msgstr "Активирайте други валути"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1753,12 +1758,12 @@ msgstr "Добави"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr ""
+msgstr "Добавете Кредитно Известие"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
 msgid "Add a rounding line"
-msgstr ""
+msgstr "Добавете линия за закръгляване"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_has_second_line
@@ -1877,12 +1882,12 @@ msgstr "Всички записи"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_all_partner_invoices
 msgid "All Invoices"
-msgstr ""
+msgstr "Всички фактури"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
 msgid "All Lines Reconciled"
-msgstr ""
+msgstr "Всички линии са съчетани"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1973,7 +1978,7 @@ msgstr "Позволете съчетаване на фактури и (раз)�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_product_margin
 msgid "Allow Product Margin"
-msgstr ""
+msgstr "Допустима печалба на продукта"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_reconcile
@@ -1988,12 +1993,12 @@ msgstr "Разрешете принтиране на чекове и депоз�
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr ""
+msgstr "Допускане управлението на закръгляването в брой"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr ""
+msgstr "Допускане да конфигурирате данъците на база касова основа"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2057,7 +2062,7 @@ msgstr "Дължима сума във валутата на фактурата"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "Amount Paid"
-msgstr ""
+msgstr "Платено количество"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_rounding
@@ -2663,7 +2668,7 @@ msgstr "За плащане"
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Billing Manager"
-msgstr ""
+msgstr "Мениджър на разплащанията"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2699,7 +2704,7 @@ msgstr "Направете преглед на наличните държави
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_budget
 msgid "Budget Management"
-msgstr ""
+msgstr "Управление на бюджета"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_business_intelligence_menu
@@ -2720,7 +2725,7 @@ msgstr "По държава"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr ""
+msgstr "С Кредитно Известие"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -2878,13 +2883,13 @@ msgstr "Касова основа"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr ""
+msgstr "Кеш Базиран Дневник"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:197
 #, python-format
 msgid "Cash Basis Tax Journal"
-msgstr ""
+msgstr "Кеш Базиран Данъчен Дневник"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:210
@@ -2906,19 +2911,19 @@ msgstr "Касови апарати"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_group_cash_rounding
 msgid "Cash Rounding"
-msgstr ""
+msgstr "Кешово закръгление"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_cash_rounding_id
 msgid "Cash Rounding Method"
-msgstr ""
+msgstr "Метод на кешово закръгление"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.rounding_list_action
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr ""
+msgstr "Кешови закръгления"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2940,7 +2945,7 @@ msgstr "Касова разлиса, отчетена в процеса на и�
 #: code:addons/account/models/account_journal_dashboard.py:37
 #, python-format
 msgid "Cash: Balance"
-msgstr ""
+msgstr "Кешова: Наличност"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
@@ -2976,6 +2981,8 @@ msgstr "Промяна"
 #: model:ir.model.fields,help:account.field_account_payment_writeoff_label
 msgid "Change label of the counterpart that will hold the payment difference"
 msgstr ""
+"Променете етикета на съответния партньор, който ще задържи разликата в "
+"плащането"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:146
@@ -3015,7 +3022,7 @@ msgstr "Шаблон на графика"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_coa_done
 msgid "Chart of Account Checked"
-msgstr ""
+msgstr "Графика на Проверената Сметка"
 
 #. module: account
 #. openerp-web
@@ -12210,3 +12217,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ броя"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""

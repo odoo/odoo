@@ -160,6 +160,9 @@ msgid ""
 "                        <p>You should send an email to the customers to encourage them!</p>\n"
 "                    "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Bạn có thể tìm thấy tất cả các giỏ bị bỏ rơi ở đây, tức là giỏ hàng do khách truy cập trang web của bạn tạo ra từ hơn một giờ trước mà chưa được xác nhận.\n"
+"                         Bạn nên gửi email cho khách hàng để khuyến khích họ!"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -642,7 +645,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>See it in action in Odoo</strong><br/>"
-msgstr ""
+msgstr "<strong>Xem nó thực hiện trong Hệ thống</strong><br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -731,7 +734,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "A document to provide"
-msgstr ""
+msgstr "Tài liệu để cung cấp"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -769,7 +772,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_is_abandoned_cart
 msgid "Abandoned Cart"
-msgstr ""
+msgstr "Giỏ hàng chưa hoàn tất"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:45
@@ -777,7 +780,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
 msgid "Abandoned Carts"
-msgstr ""
+msgstr "Các giỏ hàng chưa xác nhận"
 
 #. module: website_sale
 #. openerp-web
@@ -785,12 +788,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
 #, python-format
 msgid "Abandoned Carts to Recover"
-msgstr ""
+msgstr "Giỏ hàng chưa xác nhân để khôi phục"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_cart_abandoned_delay
 msgid "Abandoned Delay"
-msgstr ""
+msgstr "Chậm trễ chưa hoàn tất"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -883,7 +886,7 @@ msgstr "Sản phẩm Thay thế:"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
-msgstr ""
+msgstr "Số lượng giỏ hàng chưa hoàn tất"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -1031,7 +1034,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_can_directly_mark_as_paid
 msgid "Can be directly marked as paid"
-msgstr ""
+msgstr "Có thể được đánh dấu trực tiếp là đã thanh toán"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1053,7 +1056,7 @@ msgstr "Số lượng trong Giỏ"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_cart_recovery_mail_template
 msgid "Cart Recovery Email"
-msgstr ""
+msgstr "Email khôi phục giỏ hàng"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1063,7 +1066,7 @@ msgstr "Giỏ hàng được coi là bị bỏ rơi sau"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_recovery_email_sent
 msgid "Cart recovery email already sent"
-msgstr ""
+msgstr "Email khôi phục giỏ hàng sẵn sàng gửi"
 
 #. module: website_sale
 #. openerp-web
@@ -1071,12 +1074,12 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:84
 #, python-format
 msgid "Carts"
-msgstr ""
+msgstr "Giỏ hàng"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Cash amount or percentage discounts"
-msgstr ""
+msgstr "Số tiền mặt hoặc phần trăm giảm giá"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog
@@ -1087,12 +1090,12 @@ msgstr "Danh mục"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: High to Low"
-msgstr ""
+msgstr "Danh mục giá: từ Cao đến Thấp"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: Low to High"
-msgstr ""
+msgstr "Danh mục giá: từ Thấp đến Cao"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1145,6 +1148,8 @@ msgstr "Thành phố"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
+"Nhấp vào <i>'Thêm mới'</i> ở góc trên cùng bên phải để tạo sản phẩm đầu tiên"
+" của bạn."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -1161,7 +1166,7 @@ msgstr "Bấm vào đây để chọn một hình ảnh đại diện mô tả c
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Click here to unfold a Good Product Page"
-msgstr ""
+msgstr "Bấm vào đây để mở ra một trang sản phẩm tốt hơn"
 
 #. module: website_sale
 #. openerp-web
@@ -1175,7 +1180,7 @@ msgstr "Bấm vào <em>Tiếp tục</em> để tạo sản phẩm."
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:60
 #, python-format
 msgid "Click on this button so your customers can see it."
-msgstr ""
+msgstr "Nhấp vào nút này để khách hàng của bạn có thể nhìn thấy nó."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1431,6 +1436,8 @@ msgid ""
 "Delivery methods are selectable on the website: the customer pays for "
 "shipping costs"
 msgstr ""
+"Phương thức phân phối có thể chọn trên trang web: khách hàng thanh toán cho "
+"chi phí giao hàng"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -1490,7 +1497,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Ease the product browsing with:"
-msgstr ""
+msgstr "Dễ dàng duyệt qua sản phẩm với:"
 
 #. module: website_sale
 #. openerp-web
@@ -1508,6 +1515,8 @@ msgstr "Sửa địa chỉ này"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Edit your payment policies and security to reassure your visitors"
 msgstr ""
+"Chỉnh sửa chính sách thanh toán và bảo mật của bạn để tạo niềm tin khách "
+"truy cập của bạn"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -1527,7 +1536,7 @@ msgstr "Đồ thuật soạn thảo email"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Email for Abandoned carts"
-msgstr "Gửi Mail khi giỏ hàng chưa hoàn tất"
+msgstr "Gửi Mail cho các giỏ hàng chưa hoàn tất"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_order_mail_template
@@ -1600,7 +1609,7 @@ msgstr "Bước Bổ sung"
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
 msgid "Fast connections.The world over."
-msgstr ""
+msgstr "Kết nối nhanh. Toàn cầu"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1618,16 +1627,18 @@ msgid ""
 "Find here all the abandoned carts, i.e. the carts generated by your "
 "website's visitors more than one hour ago and not confirmed."
 msgstr ""
+"Tìm ở đây tất cả các giỏ hàng bị bỏ rơi, tức là giỏ hàng được khách truy cập"
+" trang web của bạn tạo hơn một giờ trước và chưa được xác nhận."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Free and no setup"
-msgstr ""
+msgstr "Miễn phí và không thiết đặt"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Free delivery (see Delivery Strategy section)"
-msgstr ""
+msgstr "Giao hàng miễn phí (xem phần Chiến lược phân phối)"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -1646,7 +1657,7 @@ msgstr "Từ Website"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Generate the invoice automatically when the order is confirmed"
-msgstr ""
+msgstr "Tạo hóa đơn tự động khi đơn hàng được xác nhận"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -1845,7 +1856,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Install shipping connectors"
-msgstr ""
+msgstr "Cài đặt dịch vụ kết nối giao hàng"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_module_website_sale_stock
@@ -1877,7 +1888,7 @@ msgstr "Xuất hoá đơn"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
-msgstr ""
+msgstr "Vấn đề hóa đơn cho khách hàng"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:157
@@ -2137,17 +2148,17 @@ msgstr "Không quản lý giao hàng trên Website"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "None website"
-msgstr ""
+msgstr "Không có trang web nào"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Now to Follow Your Order"
-msgstr ""
+msgstr "Bây giờ theo dõi đơn hàng của bạn"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_count
 msgid "Number of Abandoned Carts"
-msgstr ""
+msgstr "Số lượng giỏ hàng chưa hoàn tất"
 
 #. module: website_sale
 #. openerp-web
@@ -2191,7 +2202,7 @@ msgstr "Chỉ các Dịch vụ"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:68
 #, python-format
 msgid "Open your website app here."
-msgstr ""
+msgstr "Mở ứng dụng Website của bạn tại đây"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_options
@@ -2690,7 +2701,7 @@ msgstr "Bán"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Report"
-msgstr ""
+msgstr "Báo cáo bán hàng"
 
 #. module: website_sale
 #. openerp-web
@@ -2755,7 +2766,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "See how to configure payment acquirers"
-msgstr ""
+msgstr "Xem cách cấu hình nhà cung cấp thanh toán"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3167,7 +3178,7 @@ msgstr ""
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
 msgid "The desktop. In its most advanced form ever"
-msgstr ""
+msgstr "Máy tính để bàn. Ở dạng tiên tiến nhất từ trước tới giờ"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3243,7 +3254,7 @@ msgstr "Không có lệnh xác nhận gần đây nào."
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
 msgid "There's less of it, but no less to it."
-msgstr ""
+msgstr "Có ít hơn, nhưng không kém phần nào."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -3472,7 +3483,7 @@ msgstr "Khi một danh sách không đủ."
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
 msgid "Why you'll love an iPad."
-msgstr ""
+msgstr "Tại sao bạn lại thích IPad."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_wishlist
@@ -3512,12 +3523,12 @@ msgstr "Bạn không có bất kỳ đơn hàng nào đặt từ website đã đ
 #: model:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website."
-msgstr ""
+msgstr "Bạn không có bất kỳ đơn hàng nào từ trang Web"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.payment_transaction_action_payments_to_capture
 msgid "You don't have any payments to capture from the website."
-msgstr ""
+msgstr "Bạn không có bất kỳ khoản thanh toán nào được ghi nhận từ trang web."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
@@ -3527,7 +3538,7 @@ msgstr "Bạn không có bất kỳ đơn hàng nào đặt từ website mà ch�
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart."
-msgstr ""
+msgstr "Bạn đã để lại các mục trong giỏ hàng của mình."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -3641,6 +3652,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
+"nếu bạn muốn khôi phục giỏ hàng trước đó của mình. Giỏ hàng hiện tại của bạn"
+" sẽ được thay thế bằng giỏ hàng trước đó của bạn."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover

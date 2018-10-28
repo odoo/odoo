@@ -4,6 +4,7 @@
 # 
 # Translators:
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Martin Trigaux, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
@@ -28,7 +29,7 @@ msgid ""
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
 "<span class=\"label label-danger\" attrs=\"{'invisible': "
-"[('product_expiry_alert', '=', False)]}\">Besibaigiančio galiojimo laiko "
+"[('product_expiry_alert', '=', False)]}\">Besibaigiančio galiojimo "
 "perspėjimas</span>"
 
 #. module: product_expiry
@@ -44,7 +45,7 @@ msgstr "<span>dienos</span>"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
 msgid "Alert Date"
-msgstr "Galiojimo data"
+msgstr "Perspėjimo data"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_use_date
@@ -69,6 +70,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
+"Data, naudojama pasibaigusio galiojimo partijų ir serijinių numerių "
+"nustatymui, naudojant filtrą \"Besibaigiančio galiojimo perspėjimai\"."
 
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -79,12 +82,12 @@ msgstr "Datos"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_life_date
 msgid "End of Life Date"
-msgstr "Mirties data"
+msgstr "Galiojimo pabaigos data"
 
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration alerts"
-msgstr ""
+msgstr "Besibaigiančio galiojimo pranešimai"
 
 #. module: product_expiry
 #: model:product.product,name:product_expiry.product_product_jambon
@@ -101,7 +104,7 @@ msgstr "Kumpis"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Lot / Serijinis numeris"
+msgstr "Partijos / serijinis numeris"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_alert_time
@@ -109,6 +112,8 @@ msgstr "Lot / Serijinis numeris"
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
 msgstr ""
+"Dienų skaičius, kuriam likus turėtų būti skelbiamas perspėjimas partijai / "
+"serijiniam numeriui."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_life_time
@@ -117,6 +122,8 @@ msgid ""
 "Number of days before the goods may become dangerous and must not be "
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Dienų skaičius, per kurį prekės gali tapti pavojingos ir nebeturėtų būti "
+"vartojamos. Tai bus skaičiuojama pagal partijos / serijinį numerį."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_removal_time
@@ -125,6 +132,8 @@ msgid ""
 "Number of days before the goods should be removed from the stock. It will be"
 " computed on the lot/serial number."
 msgstr ""
+"Dienų skaičius, per kurį prekės turėtų būti pašalintos iš atsargų. Tai bus "
+"skaičiuojama pagal partijos / serijinį numerį."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_use_time
@@ -133,23 +142,25 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed on the lot/serial number."
 msgstr ""
+"Dienų skaičius, per kurį prekės pradeda gesti, dar netapdamos pavojingomis. "
+"Tai bus skaičiuojama pagal partijos / serijinį numerį."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product_alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
 msgid "Product Alert Time"
-msgstr "Produkto galiojimo data"
+msgstr "Produkto perspėjimo laikas"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "Produkto galiojimo perspėjimas"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product_life_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Produkto gyvavimo laikas"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product_removal_time
@@ -166,7 +177,7 @@ msgstr "Produkto šablonas"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product_use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Produkto vartojimo laikas"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
@@ -182,7 +193,7 @@ msgstr "Pašalinimo data"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_product_expiry_alert
 msgid "The Alert Date has been reached."
-msgstr ""
+msgstr "Perspėjimo data buvo pasiekta."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
@@ -190,6 +201,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr ""
+"Tai yra data, kuriai atėjus, produktai su šiuo serijiniu numeriu gali tapti "
+"pavojingais ir nebeturėtų būti vartojami."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
@@ -198,6 +211,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
 msgstr ""
+"Tai yra data, kuriai atėjus, produktai su šiuo serijiniu numeriu turėtų būti"
+" pašalinti iš atsargų."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
@@ -205,3 +220,5 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
+"Tai yra data, kuriai atėjus, produktai su šiuo serijiniu numeriu pradeda "
+"gesti, bet dar netampa pavojingais."

@@ -9,10 +9,10 @@
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Rolandas <info@paninfo.lt>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
+# Rolandas <info@paninfo.lt>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -95,6 +95,8 @@ msgid ""
 "<p>Click on <b> Action Submit To Manager </b> to submit selected expenses to"
 " your manager</p>"
 msgstr ""
+"<p>Paspauskite<b>\"Veiksmo pateikimas vadovui\"</b>, kad pateiktumėte "
+"pasirinktas išlaidas savo vadovui </p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -376,7 +378,7 @@ msgstr "Patvirtintos išlaidos"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "As employees, there are"
-msgstr ""
+msgstr "Kaip darbuotojai,"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -400,7 +402,7 @@ msgstr "Banko žurnalas"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_reference
 msgid "Bill Reference"
-msgstr "Unikalus sąskaitos numeris"
+msgstr "Mokėjimo numeris"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -433,7 +435,7 @@ msgstr "Kelionės automobiliu išlaidos"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
-msgstr ""
+msgstr "Patvirtintas įsipareigojimas, <br/>(data ir parašas).<br/><br/>"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -496,7 +498,7 @@ msgstr "Patvirtintos išlaidos"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Congratulations, you're done!"
-msgstr "Sveikiname, Jums pavyko"
+msgstr "Sveikiname, jums pavyko!"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
@@ -534,7 +536,7 @@ msgstr "Valiuta"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings_module_sale_management
 msgid "Customer Billing"
-msgstr ""
+msgstr "Kliento mokėjimas"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_accounting_date
@@ -580,7 +582,7 @@ msgstr "Dokumentai"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Don't hesitate to"
-msgstr "Nesidrovėkite"
+msgstr "Nedvejokite"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
@@ -1002,12 +1004,12 @@ msgstr "Įdiegti pardavimų programą"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Invoice Customers"
-msgstr ""
+msgstr "Pateikti sąskaitas klientams"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Invoicing at cost vs. at negotiated price"
-msgstr ""
+msgstr "Sąskaitų pateikimas pagal išlaidas arba suderėta kaina"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_account_move_id
@@ -1059,7 +1061,7 @@ msgstr "Vadovas"
 #: code:addons/hr_expense/static/src/js/tour.js:60
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
-msgstr ""
+msgstr "Vadovai šiame meniu gali matyti visas ataskaitas patvirtinimui."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_communication
@@ -1075,12 +1077,12 @@ msgstr "Mano išlaidos"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "My Expenses to Submit"
-msgstr ""
+msgstr "Mano išlaidos pateikimui"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_refused
 msgid "My Refused Reports"
-msgstr ""
+msgstr "Mano atmestos ataskaitos"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -1121,23 +1123,24 @@ msgid ""
 "No Expense account found for the product %s (or for its category), please "
 "configure one."
 msgstr ""
+"Produktui %s (ar jo kategorijai) nerasta išlaidų sąskaita, nustatykite ją."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:231
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr ""
+msgstr "Nerastas darbuotojo %s namų adresas, nustatykite jį."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:210
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr ""
+msgstr "%s žurnalui nerasta kreditinė sąskaita, sukurkite ją."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_refused
 msgid "No refused reports to display."
-msgstr ""
+msgstr "Nėra atmestų ataskaitų."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -1163,17 +1166,17 @@ msgstr "Pareigūnas"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Once a month"
-msgstr ""
+msgstr "Kartą per mėnesį"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Once approved, your expense report, goes to the accounting,"
-msgstr ""
+msgstr "Kai patvirtinama, jūsų išlaidų ataskaita nueina į apskaitą."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Once approved, your expenses report goes to the accounting,"
-msgstr ""
+msgstr "Kai patvirtinama, jūsų išlaidų ataskaita nueina į apskaitą."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1181,6 +1184,8 @@ msgid ""
 "Once expense reports approved by managers, the accounting department checks "
 "accounts, products and taxes used. Then they"
 msgstr ""
+"Kai išlaidų ataskaitos patvirtinamos vadovų, buhalterijos skyrius patikrina "
+"panaudotas sąskaitas, produktus ir mokesčius. Tada jie"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1188,6 +1193,8 @@ msgid ""
 "Once setup, you get an efficient expenses tracking process for all your "
 "employees."
 msgstr ""
+"Kai nustatysite, gausite efektyvų visų savo darbuotojų išlaidų sekimo "
+"procesą."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -1202,18 +1209,20 @@ msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
 msgstr ""
+"Kai sukursite savo išlaidas, pateikite jas savo vadovui, kuris jas "
+"patvirtins."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:543
 #, python-format
 msgid "Only HR Officers can approve expenses"
-msgstr ""
+msgstr "Tik žmogiškųjų išteklių vadovai gali patvirtinti išlaidas"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:534
 #, python-format
 msgid "Only HR Officers can refuse expenses"
-msgstr ""
+msgstr "Tik žmogiškųjų išteklių vadovai gali atmesti išlaidas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1221,6 +1230,7 @@ msgid ""
 "Optionally, <strong>expenses are invoiced to the customer "
 "afterwards.</strong>"
 msgstr ""
+"Papildomai, <strong>už išlaidas sąskaita klientui pateikiama po to.</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1268,7 +1278,7 @@ msgstr "Mokėjimo rūšis"
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Periodically, you submit expenses report to your manager,"
-msgstr ""
+msgstr "Jūs periodiškai pateikiate išlaidas savo vadovui,"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_web_planner
@@ -1282,11 +1292,13 @@ msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"Nustatykite numatytąją išlaidų sąskaitą produkto išlaidoms:\n"
+"`property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Populate your list of employees"
-msgstr ""
+msgstr "Užpildykite savo darbuotojų sąrašą"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1324,6 +1336,7 @@ msgstr "Produkto šablonas"
 msgid ""
 "Provide your customer with detailed reports (along with copies of receipts)"
 msgstr ""
+"Pateikite savo klientui detalias ataskaitas (kartu su kvitų kopijomis)"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1338,7 +1351,7 @@ msgstr "Kiekis"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Quicker to get reimbursed"
-msgstr ""
+msgstr "Greitesnis pinigų grąžinimas"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_reason
@@ -1348,27 +1361,27 @@ msgstr "Priežastis"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Reason :"
-msgstr ""
+msgstr "Priežastis:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "Išlaidų atmetimo priežastis"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Record a first expense"
-msgstr ""
+msgstr "Įveskite pirmąsias išlaidas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Recording"
-msgstr ""
+msgstr "Įrašymas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Recording Mode"
-msgstr ""
+msgstr "Įrašymo režimas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1401,7 +1414,7 @@ msgstr "Atmestos išlaidos"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports_refused
 msgid "Refused Reports"
-msgstr ""
+msgstr "Atmestos ataskaitos"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_sheet_register_payment_wizard_action
@@ -1413,7 +1426,7 @@ msgstr "Užregistruoti mokėjimą"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Reimbursement"
-msgstr ""
+msgstr "Išlaidų kompensavimas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1425,7 +1438,7 @@ msgstr "Ataskaita"
 #: selection:hr.expense,state:0
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Reported"
-msgstr ""
+msgstr "Pateikta"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
@@ -1440,32 +1453,32 @@ msgstr "Ataskaitos, kurias reikia patvirtinti"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_pay_expense_sheet
 msgid "Reports to Pay"
-msgstr ""
+msgstr "Ataskaitos apmokėjimui"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_post_expense_sheet
 msgid "Reports to Post"
-msgstr ""
+msgstr "Ataskaitos paskelbimui"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Resubmit"
-msgstr ""
+msgstr "Pateikti iš naujo"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Review expenses to approve"
-msgstr ""
+msgstr "Peržiūrėkite išlaidas patvirtinimui"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "See how to invoice expenses"
-msgstr ""
+msgstr "Kaip pateikti sąskaita už išlaidas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "See how to manage payables"
-msgstr ""
+msgstr "Kaip valdyti mokėjimus"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:93
@@ -1474,41 +1487,43 @@ msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure"
 msgstr ""
+"Pasirinktas matavimo vienetas nepriklauso tai pačiai kategorijai kaip "
+"produkto matavimo vienetas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Sell services and invoice expenses to customer"
-msgstr ""
+msgstr "Parduokite paslaugas ir klientui pateikite sąskaitą už išlaidas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Send an expense by email"
-msgstr ""
+msgstr "Siųsti išlaidas el. paštu"
 
 #. module: hr_expense
 #: model:web.planner,tooltip_planner:hr_expense.planner_hr_expense
 msgid "Send receipts by email to create expenses efficiently."
-msgstr ""
+msgstr "Siekiant išlaidas sukurti efektyviai, siųskite kvitus el. paštu."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Set Home Address to employees"
-msgstr ""
+msgstr "Nustatykite darbuotojams namų adresus"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Set a manager in the employee form"
-msgstr ""
+msgstr "Darbuotojo formoje nustatykite vadovą"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Set an email alias"
-msgstr ""
+msgstr "Nustatykite el. pašto pseudonimą"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Set invoicing method on expense products"
-msgstr ""
+msgstr "Nustatyti sąskaitų pateikimo būdą išlaidų produktams"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1519,7 +1534,7 @@ msgstr "Nustatymai"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Setup your domain alias"
-msgstr ""
+msgstr "Nustatykite savo domeno pseudinimą"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
@@ -1544,12 +1559,12 @@ msgstr "Būsena"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
 msgid "Status of the expense."
-msgstr ""
+msgstr "Išlaidos būsena."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Submit for Approval"
-msgstr ""
+msgstr "Pateikti patvirtinimui"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -1560,7 +1575,7 @@ msgstr "Pateikti vadovui"
 #: selection:hr.expense.sheet,state:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "Submitted"
-msgstr ""
+msgstr "Pateikta"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_untaxed_amount
@@ -1589,21 +1604,23 @@ msgstr ""
 msgid ""
 "The accountant can register a payment to reimburse the employee directly."
 msgstr ""
+"Apskaitininkas gali registruoti mokėjimą ir išlaidas kompensuoti tiesiogiai."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "The accountant validates entries and reimburse you."
-msgstr ""
+msgstr "Apskaitininkas patvirtina įrašus ir atsiskaito su jumis."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "The accountant validates journal entries and reimburse you."
 msgstr ""
+"Apskaitininkas patvirtina žurnalo įrašus ir kompensuoja jūsų išlaidas."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "The first step if to"
-msgstr ""
+msgstr "Pirmas žingsnis, jei"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_journal_id
@@ -1624,17 +1641,17 @@ msgstr "Mokėjimo suma turi būti teigiama. "
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr ""
+msgstr "Naudojamas mokėjimo būdas, kai išlaidos apmokamos įmonės."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "The steps to process expenses are:"
-msgstr ""
+msgstr "Išlaidų apdorojimo žingsniai yra:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "This guide helps you start with Odoo Expenses."
-msgstr ""
+msgstr "Šis gidas padės jums pradėti dirbti su \"Odoo\" išlaidomis."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1642,6 +1659,8 @@ msgid ""
 "This installs the Sales Management app.                             Expenses"
 " can be invoiced to customers from sales orders."
 msgstr ""
+"Įdiegiama pardavimų valdymo programa. Už išlaidas klientams sąskaitos gali "
+"būti pateikiamos iš pardavimo užsakymo."
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_to_approve
@@ -1657,7 +1676,7 @@ msgstr "Reikia apmokėti"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Post"
-msgstr ""
+msgstr "Paskelbimui"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -1668,7 +1687,7 @@ msgstr "Reikia pateikti"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "To do:"
-msgstr ""
+msgstr "Reikia atlikti"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_total_amount
@@ -1696,7 +1715,7 @@ msgstr "Matavimo vienetas"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Unreported Expenses"
-msgstr ""
+msgstr "Nepateiktos išlaidos"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1706,6 +1725,10 @@ msgid ""
 "sent to the company for payment, it’s better to use Vendor Bills instead of "
 "expenses in the Accounting app."
 msgstr ""
+"Naudokite šią programą sekimui darbuotojų išlaidų, kurios yra kompensuojamos"
+" įmonės arba tiesiogiai apmokamos įmonės kreditinėmis kortelėmis. Jei įmonei"
+" atsiunčiama tiekėjo sąskaita, geriau naudoti \"Tiekėjo sąskaitas\", o ne "
+"išlaidas apskaitos programoje."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
@@ -1746,25 +1769,25 @@ msgstr "Sveiki"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "What it covers and what are the limits"
-msgstr ""
+msgstr "Ką tai padengia ir kokios yra ribos"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "When you charge"
-msgstr ""
+msgstr "Kai jūs apmokęstinate"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:26
 #, python-format
 msgid "Write the name of the product, or select an existing one."
-msgstr ""
+msgstr "Parašykite produkto pavadinimą arba pasirinkite jau egzistuojantį."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:563
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
-msgstr ""
+msgstr "Jūs galite sukurti apskaitos įrašą tik patvirtintoms išlaidoms."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1775,12 +1798,18 @@ msgid ""
 "between brackets, the product will be set automatically. Type the expense "
 "amount in the mail subject to set it on the expense too."
 msgstr ""
+"Galite sukurti bendrą el. pašto pseudonimą, kad lengvai sektumėte įeinančias"
+" išlaidas. Tiesiog parašykite laišką su kvitu prisegtuke ir taip sukursite "
+"išlaidų eilutę vienu paspaudimu. Jei laiško antraštė turės vidinį numerį "
+"laužtiniuose skliaustuose, produktas bus nustatomas automatiškai. Laiško "
+"antraštėje taip pat įrašykite išlaidų kiekį, kad jį pridėtumėte prie "
+"išlaidų."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:598
 #, python-format
 msgid "You cannot add expense lines of another employee."
-msgstr ""
+msgstr "Negalite pridėti kito darbuotojo išlaidų eilučių."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:315
@@ -1792,40 +1821,42 @@ msgstr "Negalite ištrinti užregistruotos išlaidos."
 #: code:addons/hr_expense/models/hr_expense.py:469
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr ""
+msgstr "Negalite ištrinti paskelbtų arba apmokėtų išlaidų."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You cannot report expenses for different employees in the same report!"
 msgstr ""
+"Negalite toje pačioje ataskaitoje pateikti išlaidų už skirtingus "
+"darbuotojus!"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:602
 #, python-format
 msgid "You cannot report expenses with different payment modes."
-msgstr ""
+msgstr "Negalite pateikti išlaidų su skirtingais apmokėjimo būdais."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:109
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr ""
+msgstr "Negalite du kartus pateikti tos pačios eilutės išlaidų!"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "You record expenses"
-msgstr ""
+msgstr "Jūs vedate išlaidas"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "You record expenses,"
-msgstr ""
+msgstr "Jūs vedate išlaidas,"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Jūsų išlaidos"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1835,22 +1866,22 @@ msgstr "ir"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "approval process"
-msgstr ""
+msgstr "patvirtinimo procesas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "back to your customers automatically"
-msgstr ""
+msgstr "automatiškai sugrįžta jūsų klientams"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "can be:"
-msgstr ""
+msgstr "gali būti:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "configure the expense types"
-msgstr ""
+msgstr "nustatyti išlaidų tipus"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1870,23 +1901,23 @@ msgstr "pvz. Kelionė į Niujorką"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "buvo atmesta"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:344
 #, python-format
 msgid "or send receipts by email to %s."
-msgstr ""
+msgstr "arba siųskite kvitus %s el. paštu."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "post them into the books"
-msgstr ""
+msgstr "skelbti juos žurnaluose"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "proceed with the employee reimbursement"
-msgstr ""
+msgstr "tęsti kompensuojant darbuotojo išlaidas"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -1901,12 +1932,12 @@ msgstr "atsiųskite mums el. laišką"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "submit expenses to managers"
-msgstr ""
+msgstr "pateikti išlaidas vadovams"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "that your company allows. Here are some examples:"
-msgstr ""
+msgstr "kuriuos leidžia jūsų įmonė. Keli pavyzdžiai:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner

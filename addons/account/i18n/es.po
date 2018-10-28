@@ -16,7 +16,9 @@
 # David Vidal <david.vidal@trespinos.es>, 2017
 # Raquel Iciarte <ric@odoo.com>, 2017
 # oihane <oihanecruce@gmail.com>, 2017
+# Luis J. Salvatierra <ljsalvatierra@binovo.es>, 2017
 # Carlos Lopez <celm1990@hotmail.com>, 2017
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2017
 # JOSE ALEJANDRO ECHEVERRI VALENCIA <josealejandroeche@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Ana Juaristi <ajuaristio@gmail.com>, 2018
@@ -2377,7 +2379,7 @@ msgstr "Balanceo Automático de Línea"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
 msgid "Automatic Currency Rates"
-msgstr "Taza de Cambio Automática"
+msgstr "Tasa de Cambio Automática"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2433,7 +2435,7 @@ msgstr "Deudor Malo"
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Balance"
-msgstr "Balance"
+msgstr "Saldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance_cash_basis
@@ -12373,3 +12375,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Cuenta"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""

@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# Paolo Valier, 2017
+# Sergio Zanchetta <primes2h@gmail.com>, 2017
+# Paolo Valier, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
-# David Minneci <david@numeko.it>, 2018
 # Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -30,12 +30,12 @@ msgstr "Data"
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_display_name
 msgid "Display Name"
-msgstr "Visualizza Nome"
+msgstr "Nome visualizzato"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 msgid "HR Timesheet/Attendance Report"
-msgstr "Report Timesheet/Presenze"
+msgstr "Resoconto foglio ore/presenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_id
@@ -45,14 +45,14 @@ msgstr "ID"
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report___last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
+msgstr "Ultima modifica il"
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:76
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr "Verifica che la differenza totale sul foglio sia inferiore a %.2f."
+msgstr "Verificare che la differenza totale nel foglio sia inferiore a %.2f."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:85
@@ -61,36 +61,38 @@ msgid ""
 "The timesheet cannot be validated as it contains an attendance record with "
 "no Check Out."
 msgstr ""
+"Il foglio ore non può essere convalidato perché manca un'uscita in una "
+"registrazione presenza."
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "This Month"
-msgstr "Questo Mese"
+msgstr "Questo mese"
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "This Week"
-msgstr "Questa Settimana"
+msgstr "Questa settimana"
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheet / Attendance"
-msgstr "Timesheet / Presenze"
+msgstr "Foglio ore / Presenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_attendance
 msgid "Total Attendance"
-msgstr "Presenze totali"
+msgstr "Totale presenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_difference
 msgid "Total Difference"
-msgstr "Differenza Totale"
+msgstr "Totale differenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_timesheet
 msgid "Total Timesheet"
-msgstr "Orari di Lavoro Totali"
+msgstr "Totale foglio ore"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_user_id
@@ -101,7 +103,7 @@ msgstr "Utente"
 #: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:53
 #, python-format
 msgid "You cannot delete a timesheet that has attendance entries."
-msgstr "Non puoi eliminare un timesheet che ha delle presenze registrate"
+msgstr "Impossibile eliminare un foglio ore che contiene presenze registrate."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
@@ -112,4 +114,4 @@ msgstr "hr.timesheet.attendance.report"
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "timesheet attendance"
-msgstr "presenze timesheet"
+msgstr "presenza foglio ore"

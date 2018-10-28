@@ -7,13 +7,14 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
 # Martin Trigaux, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Manel Fernandez <manelfera@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:42+0000\n"
 "PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2018\n"
+"Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr "%g restant de %g"
 #: code:addons/hr_holidays/models/hr_holidays.py:333
 #, python-format
 msgid "%s : %.2f day(s)"
-msgstr ""
+msgstr "%s : %.2f dies"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:335
@@ -96,12 +97,12 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "<small class=\"text-muted\">from</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">des de</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "<small class=\"text-muted\">to</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">fins</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -219,7 +220,7 @@ msgstr "Assignació per %s"
 #: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
 msgid "Allocation of %s : %.2f day(s) To %s"
-msgstr ""
+msgstr "Assignació de %s : %.2f dies per %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
@@ -540,6 +541,7 @@ msgstr "Primera aprovació"
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
 msgstr ""
+"El contingut del formulari no és present, aquest informe no es pot imprimir."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
@@ -808,7 +810,7 @@ msgstr "Resum d'absències"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Leaves Taken:"
-msgstr ""
+msgstr "Absències realitzades:"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
@@ -866,7 +868,7 @@ msgstr "Absències/assignacions primera aprovació"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2018"
-msgstr ""
+msgstr "Absències legals 2018"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -923,7 +925,7 @@ msgstr "Director"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Leaves:"
-msgstr ""
+msgstr "Màxim d'absències:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_max_leaves
@@ -1007,6 +1009,8 @@ msgstr "Nombre d'absències"
 msgid ""
 "Number of days of the leave request according to your working schedule."
 msgstr ""
+"Nombre de dies de la petició d'absències d'acord amb el teu calendari de "
+"treball."
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
@@ -1030,6 +1034,10 @@ msgid ""
 "                type (recuperation, legal leaves, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
+"Un cop hagis guardat la petició d'absència, serà enviada\n"
+"al teu responsable per validació. Assegura't de fixar el tipus d'absència\n"
+"adequat (compensació, vacances, malaltia) i el nombre \n"
+"exacte de dies lliures en relació a la seva absència."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:477
@@ -1290,6 +1298,10 @@ msgid ""
 "The status is 'Refused', when leave request is refused by manager.\n"
 "The status is 'Approved', when leave request is approved by manager."
 msgstr ""
+"L'estat s'estableix a \"Per enviar\" quan es crea una sol·licitud d'absència.\n"
+"L'estat és \"Per aprovar\", quan la sol·licitud d'absència és confirmada per l'usuari.\n"
+"L'estat és 'Rebutjat', quan la sol·licitud d'absència és rebutjada per l'administrador.\n"
+"L'estat és 'Aprovat', quan la sol·licitud d'absència és aprovada pel director."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_first_approver_id
@@ -1320,12 +1332,16 @@ msgstr ""
 msgid ""
 "This value is given by the sum of all leaves requests with a negative value."
 msgstr ""
+"Aquest valor ve donat per la suma de totes les peticions d'absència amb "
+"valor negatiu."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_max_leaves
 msgid ""
 "This value is given by the sum of all leaves requests with a positive value."
 msgstr ""
+"Aquest valor ve donat per la suma de totes les peticions d'absència amb "
+"valor positiu."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1403,7 +1419,7 @@ msgstr "Validar"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Validator"
-msgstr ""
+msgstr "Validador"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0

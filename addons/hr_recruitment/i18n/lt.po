@@ -3,11 +3,11 @@
 # * hr_recruitment
 # 
 # Translators:
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Linas Versada <paulius.sladkevicius@gmail.com>, 2017
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Anatolij, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
@@ -112,6 +112,85 @@ msgid ""
 "          </div>\n"
 "        "
 msgstr ""
+"\n"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Pozicijos aprašymas</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px; border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hi,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Ačiū, kad domitės galimybe prisijungti prie\n"
+"                        <b>${object.company_id.name}</b> komandos. Mes norime pranešti,\n"
+"                        kad nors jūsų gyvenimo aprašymas yra stiprus,\n"
+"                        mūsų įdarbinimo komanda peržiūrėjo jūsų kandidatūrą ir <b>nepasirinko\n"
+"                        jūsų kitam etapui</b>.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Turėkite omenyje, kad įdarbinimo procedūros sudėtingos ir\n"
+"mes taip pat galime padaryti klaidų. \n"
+"                        Nedvejokite ir atrašykite jums, jei manote, kad suklydome\n"
+"arba norite gauti daugiau informacijos apie mūsų sprendimą. \n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Vis tik, mes pasiliksime jūsų gyvenimo aprašymą ir\n"
+"susisieksime su jumis, jei turėsime poziciją, kuri labiau\n"
+"tinka jūsų įgūdžiams ir patirčiai.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Linkime jums sėkmės tolimesnėse darbo paieškose\n"
+"ir tikimės, kad ateityje turėsime progą apsvarstyti jūsų kandidatūrą\n"
+"kitose pozicijose.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Linkėjimai,\n"
+"                    </p>\n"
+"\n"
+"                    <p style=\"color:grey;\">-- <br/>\n"
+"                    % if object.user_id:\n"
+"                        <strong>${object.user_id.name}</strong><br/>\n"
+"                        El. paštas: ${object.user_id.email or ''}<br/>\n"
+"                        Telefonas: ${object.user_id.phone or ''}\n"
+"                    % else:\n"
+"                        ${object.company_id.name}<br/>\n"
+"                        Žmogiškųjų išteklių komanda\n"
+"                    % endif\n"
+"                    </p>\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Išsiųsta ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Užmeskite akį į <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">kitas mūsų siūlomas pozicijas</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"          </div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -255,6 +334,145 @@ msgid ""
 "          </div>\n"
 "        "
 msgstr ""
+"\n"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            \n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Darbo pozicijos aprašymas</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                \n"
+"            </tbody><table style=\"width:600px;margin:10px auto;\">\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <div style=\"text-align: center\">\n"
+"                        <h2>Sveikiname!</h2>\n"
+"                        <div style=\"color:grey;\">Jūsų gyvenimo aprašymas buvo įvertintas teigiamai.</div>\n"
+"                        <img src=\"/hr_recruitment/static/src/img/congratulations.png\" alt=\"Congratulations!\" style=\"width:175px;margin:20px 0;\"/>\n"
+"                    </div>\n"
+"\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Mes peržiūrėjome jūsų gyvenimo aprašymą ir jis patraukė\n"
+"                        mūsų dėmesį. Kadangi manome, kad jūs galėtumėte puikiai\n"
+"tikti šiai pozicijai, jūsų kandidatūra\n"
+" buvo atrinkta skambučiui ar pokalbiui.\n"
+"                    </p>\n"
+"\n"
+"                    % if object.user_id:\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Netrukus su jumis susisieks:\n"
+"                    </p>\n"
+"                    <table style=\"width:100%; border:0px solid white;\">\n"
+"                    <tr>\n"
+"                        <td width=\"75\">\n"
+"                            <img src=\"/web/image/res.users/${object.user_id.id}/image_small\" alt=\"Avatar\" style=\"vertical-align:baseline;max-width:64px;\" />\n"
+"                        </td><td style=\"font-size:15px;\">\n"
+"                            <strong>${object.user_id.name}</strong><br/>\n"
+"                            <span>El. paštas: ${object.user_id.email or ''}</span><br/>\n"
+"                            <span>Telefonas: ${object.user_id.phone or ''}</span>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    </table>\n"
+"                    % endif\n"
+"                    <p style=\"font-size:16px;margin:24px 0;\">\n"
+"                        Iki pasimatymo,\n"
+"                    </p><p style=\"font-size:16px;color: grey;\">\n"
+"                        -- <br/>\n"
+"                        \"Odoo\" žmogiškųjų išteklių komanda\n"
+"                    </p>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Koks kitas žingsnis?</strong></h3>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Mes dažniausiai į<strong>užklausas atsakome per 3 dienas</strong>.\n"
+"                        Kitas žingsnis yra skambutis arba susitikimas mūsų biure.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Nedvejokite ir <strong>susisiekite su mumis, jei norite greitesnio\n"
+"                        atsakymo</strong> ar nepakankamai greitai gavote žinių iš mūsų\n"
+"                        (tiesiog atrašykite į šį laišką).\n"
+"                    </p>\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Norite sužinoti apie mus?</strong></h3>\n"
+"                    <ol>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56\">Įkūrėjo istorija</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.slideshare.net/openobject/the-odoo-culture\">\"Odoo\" kultūra</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/page/about-us\">Apie mus</a></li>\n"
+"                    </ol>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    % set location = ''\n"
+"                    % if object.job_id.address_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\"><strong>${object.job_id.address_id.name}</strong></p>\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street}</p>\n"
+"                        % set location = object.job_id.address_id.street\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street2:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street2}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                    % endif\n"
+"                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                    % if object.job_id.address_id.city:\n"
+"                        ${object.job_id.address_id.city},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.state_id.name:\n"
+"                        ${object.job_id.address_id.state_id.name},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.zip:\n"
+"                        ${object.job_id.address_id.zip}\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                    % endif\n"
+"                    </p>\n"
+"                    % if object.job_id.address_id.country_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.country_id.name}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                    % endif\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"\n"
+"            % if object.job_id.address_id:\n"
+"            <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"                <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                    <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                </a>\n"
+"            </div>\n"
+"            % endif\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                \n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Atsiųsta ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Užmeskite akį į <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">visas mūsų pozicijas</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"<tbody>\n"
+"                \n"
+"            </tbody>\n"
+"\n"
+"\n"
+"   </table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
@@ -389,6 +607,135 @@ msgid ""
 "          </div>\n"
 "        "
 msgstr ""
+"\n"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Darbo pozicijos aprašymas</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Sveiki,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Patvirtiname, kad gavome jūsų kandidatūrą.\n"
+"\n"
+"                        \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\"\n"
+"                        at <strong>${object.company_id.name}</strong>.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Netrukus su jumis susisieksime.\n"
+"                    </p>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"                    % if object.user_id:\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Jūsų kontaktinis asmuo:</strong></h3>\n"
+"                    <table style=\"width:100%; border:0px solid white;\">\n"
+"                    <tr>\n"
+"                        <td width=\"75\">\n"
+"                            <img src=\"/web/image/res.users/${object.user_id.id}/image_small\" alt=\"Avatar\" style=\"vertical-align:baseline;max-width:64px;\" />\n"
+"                        </td><td style=\"font-size:15px;\">\n"
+"                            <strong>${object.user_id.name}</strong><br/>\n"
+"                            <span>El. paštas: ${object.user_id.email or ''}</span><br/>\n"
+"                            <span>Telefonas: ${object.user_id.phone or ''}</span>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    </table>\n"
+"                    % endif\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Koks kitas žingsnis?</strong></h3>\n"
+"                    <p>Įprastai mes <strong>atsakome kandidatams per 3 dienas.</strong></p>\n"
+"                    <p>\n"
+"                        Nedvejokite ir <strong>susisiekite su mumis, jei norite\n"
+"                        greitesnio atsakymo</strong> arba negavote naujienų iš mūsų\n"
+"pakankamai greitai (tiesiog atrašykite į šį laišką).\n"
+"                    </p>\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Norite sužinoti daugiau?</strong></h3>\n"
+"                    <ol>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56\">Įkūrėjo istorija</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.slideshare.net/openobject/the-odoo-culture\">\"Odoo\" kultūra</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/page/about-us\">Apie mus</a></li>\n"
+"                    </ol>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    % set location = ''\n"
+"                    % if object.job_id.address_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\"><strong>${object.job_id.address_id.name}</strong></p>\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street}</p>\n"
+"                        % set location = object.job_id.address_id.street\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street2:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street2}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                    % endif\n"
+"                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                    % if object.job_id.address_id.city:\n"
+"                        ${object.job_id.address_id.city},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.state_id.name:\n"
+"                        ${object.job_id.address_id.state_id.name},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.zip:\n"
+"                        ${object.job_id.address_id.zip}\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                    % endif\n"
+"                    </p>\n"
+"                    % if object.job_id.address_id.country_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.country_id.name}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                    % endif\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"\n"
+"            % if object.job_id.address_id:\n"
+"            <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"                <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                    <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                </a>\n"
+"            </div>\n"
+"            % endif\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Atsiųsta ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Užmeskite akį į <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">visus mūsų darbus</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"\n"
+"          </div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -403,11 +750,20 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Mielieji,</p>\n"
+"<p>Labai džiaugiuosi galėdamas pranešti, kad  ${object.name}  prisijungs\n"
+"prie mūsų kaip ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Šiltai priimkite ir padėkite įsivažiuoti į darbo poziciją.</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Contact:</b>"
-msgstr "<b>Kontaktas:</b>"
+msgstr "<b>Kontaktai:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -417,7 +773,7 @@ msgstr "<b>Išsilavinimas:</b>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Departement:</b>"
-msgstr "<b>Departamentas:</b>"
+msgstr "<b>Skyrius:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -427,12 +783,12 @@ msgstr "<span class=\"o_stat_text\">Susitikimai</span>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr "<span class=\"o_stat_text\">Sekliai</span>"
+msgstr "<span class=\"o_stat_text\">Sekimas</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "<span>Folded in Recruitment Pipe: </span>"
-msgstr ""
+msgstr "<span>Sutraukta įdarbinimo piltuvėlyje:</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -471,6 +827,8 @@ msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
 msgstr ""
+"Pridėkite stulpelius, apibūdinančius <b>interviu etapus</b>.<br/><i>pvz., "
+"Naujas &gt; Kvalifikuotas &gt; Pirmas interviu &gt; Įdarbintas</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -480,37 +838,37 @@ msgstr "Darbuotojų darbo vietos adresas"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_id
 msgid "Alias"
-msgstr "Alternatyvus vardas"
+msgstr "Pseudonimas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
 msgid "Alias Contact Security"
-msgstr "Kolegų apsauga"
+msgstr "Pseudonimo kontakto apsauga"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
 msgid "Alias ID"
-msgstr "Alternatyvaus vardo ID"
+msgstr "Pseudonimo ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
 msgid "Alias Name"
-msgstr "Alternatyvus vardas"
+msgstr "Pseudonimo pavadinimas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
 msgid "Alias domain"
-msgstr "Alternatyvaus vardo domenas"
+msgstr "Pseudonimo domenas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
 msgid "Aliased Model"
-msgstr "Alternatyvaus vardo modelis"
+msgstr "Modelis su pseudonimu"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
 msgid "All Applications"
-msgstr ""
+msgstr "Visi kandidatai"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -557,6 +915,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"Kandidatai ir jų prisegti CV yra automatiškai sukuriami tada, kai išsiunčiamas laiškas.\n"
+"Jei įdiegsite dokumentų valdymo modulius, visi gyvenimo aprašymai bus indeksuojami automatiškai,\n"
+"kad galėtumėte lengvai vykdyti paiešką jų turinyje."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -565,21 +926,24 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
+"Kandidatai ir jų prisegti CV yra automatiškai sukuriami tada, kai išsiunčiamas laiškas.\n"
+"Jei įdiegsite dokumentų valdymo modulius, visi gyvenimo aprašymai bus indeksuojami automatiškai,\n"
+"kad galėtumėte lengvai vykdyti paiešką jų turinyje."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application"
-msgstr "Modulis"
+msgstr "Kandidatavimas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Application Summary"
-msgstr "Modulio aprašymas"
+msgstr "Kandidatavimo apibendrinimas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application(s)"
-msgstr "Modulis(-iai)"
+msgstr "Kandidatavimas (-ai)"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
@@ -591,12 +955,12 @@ msgstr "Modulis(-iai)"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications"
-msgstr "Moduliai"
+msgstr "Kandidatavimai"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_job_id
 msgid "Applied Job"
-msgstr "Taikomas darbas"
+msgstr "Kandidatuojamas darbas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_priority
@@ -617,27 +981,27 @@ msgstr "Priskirta"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_ids
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Attachments"
-msgstr "Priedai"
+msgstr "Prisegtukai"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
 msgid "Automated Email"
-msgstr ""
+msgstr "Automatizuotas laiškas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_availability
 msgid "Availability"
-msgstr "Prieinamumas"
+msgstr "Pasiekiamumas"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
-msgstr "Bakalauro išsilavinimas"
+msgstr "Bakalauro laipsnis"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
 msgid "By Department"
-msgstr "Pagal departamentą"
+msgstr "Pagal skyrių"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_job
@@ -647,7 +1011,7 @@ msgstr "Pagal darbo poziciją"
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
 msgid "By Recruiter"
-msgstr "Pagal vertintoją"
+msgstr "Pagal įdarbintoją"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -657,13 +1021,13 @@ msgstr "Atvejai pagal etapus ir vertinimus"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr "Kandidatų kategorija"
+msgstr "Kandidato kategorija"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job position."
-msgstr "Spauskite sukurti naują darbo poziciją."
+msgstr "Paspauskite norėdami sukurti naują darbo poziciją."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -674,12 +1038,12 @@ msgstr "Spauskite čia norėdami pridėti naują darbuotoją."
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Click to add a new stage in the recruitment process."
-msgstr "Spauskite pridėti naują etapą įdarbinimo procese."
+msgstr "Paspauskite norėdami pridėti naują etapą įdarbinimo procese."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
 msgid "Click to add a new tag."
-msgstr "Spauskite pridėti naują žymą."
+msgstr "Paspauskite norėdami pridėti naują žymą."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
@@ -709,13 +1073,13 @@ msgstr "Nustatymai"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
 #, python-format
 msgid "Contact"
-msgstr "Kontaktas"
+msgstr "Kontaktai"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:352
 #, python-format
 msgid "Contact Email"
-msgstr "Kontakto el. pašto adresas"
+msgstr "Kontaktinis el. pašto adresas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
@@ -761,14 +1125,15 @@ msgstr "Sukurti darbo poziciją"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Create alias"
-msgstr "Sukurti bendramintį"
+msgstr "Sukurti pseudonimą"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
-"Sukurkite kelis bendraminčius, kurie leis matyti iš kur kandidatai ateina."
+"Sukurkite kelis pseudonimus, kurie jums padės atsekti, iš kur atėjo "
+"kandidatai."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -806,12 +1171,12 @@ msgstr "Šiuo metu nėra jokių suplanuotų veiklų."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_close
 msgid "Days to Close"
-msgstr "Dienų skaičius iki užvėrimo"
+msgstr "Dienos iki uždarymo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_open
 msgid "Days to Open"
-msgstr "Dienų skaičius iki atvėrimo"
+msgstr "Dienos iki atidarymo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_defaults
@@ -826,8 +1191,8 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Nustatykite specifinį kontakto adresą šiai darbo pozicijai. Jei paliksite šį"
-" lauką tuščią, numatytasis kontakto el. pašto adresas bus naudojamas. Jį "
+"Nustatykite specifinį kontaktinį adresą šiai darbo pozicijai. Jei paliksite "
+"šį lauką tuščią, bus naudojamas numatytasis kontakto el. pašto adresas. Jį "
 "galima rasti žmogiškųjų išteklių nustatymuose"
 
 #. module: hr_recruitment
@@ -837,9 +1202,9 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
-"Čia nustatykite etapus viso įdarbinimo proceso, pvz.:\n"
-"            vertinimo skambutis, pirmas interviu, antras interviu, atsisakė,\n"
-"            įdarbintas."
+"Čia nustatykite įdarbinimo proceso etapus, pvz.:\n"
+"            įvertinimo skambutis, pirmasis interviu, antrasis interviu, atsisakymas,\n"
+"            įdarbinimas."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -876,18 +1241,18 @@ msgstr "Trinti"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Department"
-msgstr "Padalinys"
+msgstr "Skyrius"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_manager_id
 msgid "Department Manager"
-msgstr "Departamento vadovas"
+msgstr "Skyriaus vadovas"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
 msgid "Departments"
-msgstr "Padaliniai"
+msgstr "Skyriai"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
@@ -911,7 +1276,7 @@ msgstr "Vaizduojamas pavadinimas"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
 msgid "Doctoral Degree"
-msgstr "Doktorantūros išsilavinimas"
+msgstr "Mokslų daktaro laipsnis"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_documents_count
@@ -928,8 +1293,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
 msgstr ""
-"Nepamirškite nustatyti departamento jei įdarbinimo procesas\n"
-"            skirtas kitai darbo pozicijai."
+"Nepamirškite nustatyti skyriaus, jei įdarbinimo procesas\n"
+"            yra skirtingas pagal darbo poziciją."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_from
@@ -941,12 +1306,12 @@ msgstr "El. paštas"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr "Alternatyvus el. paštas"
+msgstr "El. pašto pseudonimas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email alias"
-msgstr ""
+msgstr "El. pašto pseudonimas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
@@ -954,8 +1319,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
-"Alternatyvus el. paštas šiai darbo pozicijai. Nauji laiškai automatiškai "
-"sukurs naujas kandidatų formas prie šios darbo pozicijos."
+"El. pašto pseudonimas šiai darbo pozicijai. Nauji laiškai automatiškai "
+"sukurs naujas kandidatų formas šiai darbo pozicijai."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -998,12 +1363,12 @@ msgstr "Planuojamas darbuotojas"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected
 msgid "Expected Salary"
-msgstr "Planuojamas atlyginimas"
+msgstr "Norimas atlyginimas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected_extra
 msgid "Expected Salary Extra"
-msgstr "Planuojamas atlyginimo priedas"
+msgstr "Norimas atlyginimo priedas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1028,7 +1393,7 @@ msgstr "Pirmas interviu"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
-msgstr "Sulankstytas įdarbinimo procese"
+msgstr "Sutraukta įdarbinimo piltuvėlyje"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1038,14 +1403,12 @@ msgstr "Ateities veiklos"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree_sequence
 msgid "Gives the sequence order when displaying a list of degrees."
-msgstr ""
-"Priskiriamas sekos numeris, pagal kurį išsilavinimo laipsnis atvaizduojamas "
-"sąraše."
+msgstr "Priskiria eilės tvarką, kai rodomas išsilavinimo laipsnių sąrašas."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "Priskiriamas sekos numeris, pagal kurį etapai atvaizduojami sąraše."
+msgstr "Priskiria eilės tvarką, kai rodomas etapų sąrašas."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1066,12 +1429,12 @@ msgstr "Grupuoti pagal"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
 msgid "HR Department"
-msgstr "Žmogiškųjų išteklių departamentas"
+msgstr "Žmogiškųjų išteklių skyrius"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_hr_responsible_id
 msgid "HR Responsible"
-msgstr ""
+msgstr "Atsakingas įdarbintojas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1093,8 +1456,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"Tėvinio įrašo ID, kuris laiko savyje dukterinį įrašą (pvz.: projektas "
-"laikantis sukurtas užduotis)"
+"Tėvinio įrašo ID, kuris turi dukterinį pseudonimą (pvz.: projektas, turintis"
+" sukurtas užduotis)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -1102,8 +1465,8 @@ msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
 msgstr ""
-"Jei nustatyta, pranešimas apie kandidato priskyrimą prie etapo bus priegtas "
-"prie kandidato kortelės."
+"Jei nustatyta, naudojant šabloną paskelbiamas pranešimas, kai kandidatas "
+"nustatomas etapui."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_active
@@ -1111,8 +1474,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
-"Pažymėjus, kad konkretus objektas yra neaktyvus, tas objektas bus paslėptas "
-"iš sąrašo, bet neištrintas."
+"Jei aktyvus laukas nustatytas kaip neigiamas, tai leis jums paslėpti atvejį "
+"jo nepašalinant."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1131,52 +1494,52 @@ msgstr "Interviu formos"
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #, python-format
 msgid "Job"
-msgstr "Pareigybės"
+msgstr "Darbo pozicija"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Job Application Confirmation: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Kandidatavimo į darbą patvirtinimas: ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Job Applications"
-msgstr ""
+msgstr "Kandidatavimai į darbą"
 
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr "Pareigų kampanija"
+msgstr "Darbo pozicijos kampanija"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Job Email"
-msgstr "Pareigų el. paštas"
+msgstr "Darbo el. paštas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
 msgid "Job ID"
-msgstr "Pareigų ID"
+msgstr "Darbo ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
 msgid "Job Location"
-msgstr "Pareigų lokacija"
+msgstr "Darbo vieta"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
 msgid "Job Position"
-msgstr "Pareigos"
+msgstr "Darbo pozicija"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
 msgid "Job Position Created"
-msgstr "Pareigos sukurtos"
+msgstr "Darbo pozicija sukurta"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
-msgstr "Pareigos sukurtos"
+msgstr "Darbo pozicija sukurta"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
@@ -1184,12 +1547,12 @@ msgstr "Pareigos sukurtos"
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position_config
 msgid "Job Positions"
-msgstr "Darbo vietos"
+msgstr "Darbo pozicijos"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
-msgstr ""
+msgstr "Darbo skelbimas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
@@ -1209,7 +1572,7 @@ msgstr "Darbo pozicijos - įdarbinimo forma"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 msgid "Jobs Sources"
-msgstr "Pareigų susiję dokumentai"
+msgstr "Darbo pozicijų šaltiniai"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant___last_update
@@ -1251,7 +1614,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Late Activities"
-msgstr "Pavėluotos veiklos"
+msgstr "Vėluojančios veiklos"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1259,7 +1622,7 @@ msgstr "Pavėluotos veiklos"
 #, python-format
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
-msgstr "Pažiūrėkime į <b>kandidantų korteles</b> į šią darbo poziciją."
+msgstr "Pažiūrėkime į <b>kandidantų piltuvėlį</b> šiai darbo pozicijai."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -1284,7 +1647,7 @@ msgstr "Mano veiksmai"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My Applications"
-msgstr ""
+msgstr "Mano kandidatavimai"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_activity
@@ -1315,12 +1678,12 @@ msgstr "Nauji kandidantai"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
 msgid "New Application"
-msgstr "Naujas kandidantas"
+msgstr "Naujas kandidatas"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
 msgid "New Applications"
-msgstr "Nauji kandidantai"
+msgstr "Nauji kandidatai"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:426
@@ -1378,7 +1741,7 @@ msgstr "Prisegtukų kiekis"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "Dienų skaičius uždarymui"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -1401,12 +1764,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Offer"
-msgstr ""
+msgstr "Pasiūlymas"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer"
-msgstr "Pareigūnas"
+msgstr "Vadovas"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
@@ -1414,6 +1777,8 @@ msgid ""
 "Once a job position is created, you can track related applications\n"
 "              and manage the recruitment process."
 msgstr ""
+"Kai darbo pozicija bus sukurta, galėsite sekti susijusius kandidatus\n"
+"ir valdyti įdarbinimo procesą."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
@@ -1422,19 +1787,19 @@ msgid ""
 "                  and manage the recruitment process related to the job\n"
 "                  position."
 msgstr ""
-"Kai darbo pozicija jau sukurta, jūs galite sekti susijusius kandidatus\n"
-"ir valdyti įdarbinimo procesą susijusį su darbo pozicija."
+"Kai darbo pozicija bus sukurta, jūs galėsite sekti kandidatus\n"
+"ir valdyti įdarbinimo procesą, susijusį su darbo pozicija."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
-msgstr "Tebevykstantis"
+msgstr "Vykstantis"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_website_hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
-msgstr ""
+msgstr "Internetinis skelbimas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1443,8 +1808,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Pasirinkto įrašo ID prie kurio bus prisegti visi įeinantys laiškai. Jei "
-"nustatyta, nauji laiškai nebus kuriami."
+"Papildomas įrašo ID, prie kurio bus prisegtos visos įeinančios žinutes, net "
+"jei jos į jį ir neatsakė. Jei nustatyta, tai visiškai išjungs naujų įrašų "
+"kūrimą."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1475,7 +1841,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_hr_responsible_id
 msgid "Person responsible of validating the employee's contracts."
-msgstr ""
+msgstr "Asmuo, atsakingas už darbo sutarčių patvirtinimus."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
@@ -1513,7 +1879,7 @@ msgstr "Siūlomas atlyginimo priedas"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
-msgstr ""
+msgstr "Skelbkite laisvas darbo pozicijas savo svetainėje"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1555,7 +1921,7 @@ msgstr "Įdarbinimo procesas"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_user_id
 msgid "Recruitment Responsible"
-msgstr ""
+msgstr "Atsakingas įdarbintojas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -1565,7 +1931,7 @@ msgstr "Įdarbinimai"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_reference
 msgid "Referred By"
-msgstr "Remiamasi"
+msgstr "Nurodytas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1580,7 +1946,7 @@ msgstr "Atmesta"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Vėl atidaryti kandidatavimą"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1614,17 +1980,17 @@ msgstr "Atlygis, kurio tikisi kandidatas"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected_extra
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr ""
+msgstr "Kandidato norimas atlygis, papildomi privalumai"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed
 msgid "Salary Proposed by the Organisation"
-msgstr ""
+msgstr "Atlygis, siūlomas organizacijos"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr ""
+msgstr "Atlygis, siūlomas organizacijos, papildomi privalumai"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -1644,7 +2010,7 @@ msgstr "Ieškoti kandidatų"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
 msgid "Second Interview"
-msgstr "Antras darbo pokalbis"
+msgstr "Antrasis darbo pokalbis"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1678,19 +2044,20 @@ msgstr "Šaltinio pavadinimas"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr ""
+msgstr "Kandidatų šaltinis"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr ""
+msgstr "Kandidatų šaltiniai"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Konkretus darbas, kuris naudoja šį etapą. Kiti darbai šio etapo nenaudos."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1731,6 +2098,8 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
+"Kandidato etapas, kuriame jis buvo prieš dabartinė etapą. Naudojamas "
+"prarastų atvejų analizei."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -1770,7 +2139,7 @@ msgstr "Žymos"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_availability
 msgid "The date at which the applicant will be available to start working"
-msgstr ""
+msgstr "Data, nuo kurios kandidatas galės pradėti dirbti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
@@ -1786,7 +2155,7 @@ msgstr ""
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
 msgid "The name of the Degree of Recruitment must be unique!"
-msgstr ""
+msgstr "Įdarbinimo laipsnio pavadinimas turi būti unikalus!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_name
@@ -1816,6 +2185,8 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Šiais pseudonimais gali būti kiekvieno šaltinio el. paštas ar nuorodos. Kai "
+"kandidatas ateina per vieną iš jų, jūs žinosite, iš kur jis atėjo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1824,9 +2195,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
-"Prieš siunčiant laišką šie el. pašto adresai bus pridėti į CC lauką visiems "
-"išsiunčiamiems ir gaunamiems šio įrašo el. laiškams. Atskirkite atskirus el."
-" pašto adresus kableliu"
+"Prieš siunčiant laišką šie el. pašto adresai bus pridėti į \"CC\" lauką "
+"visiems išeinantiems ir įeinantiems šio įrašo laiškams. Atskirkite atskirus "
+"el. pašto adresus kableliu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_from
@@ -1846,6 +2217,10 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Šis meniu leidžia jums atlikti paiešką gyvenimo aprašymuose\n"
+"ir motyvaciniuose laiškuose. \"Odoo\" automatiškai indeksuoja\n"
+" .PDF, .DOC, DOCX, .TXT failus, kad galėtumėte ieškoti raktažodžių\n"
+"šių failų turinyje."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1853,8 +2228,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ši stadija bus suskleista kanban tipo rodinyje, jei nebus nė vieno įrašo "
-"šioje stadijoje."
+"Ši stadija bus suskleista kanban tipo rodinyje, jei šioje stadijoje nebus nė"
+" vieno įrašo rodymui."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1869,6 +2244,8 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Pabandykite nusiųsti laišką šiuo adresu, jis automatiškai sukurs "
+"kandidatūrą."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1891,7 +2268,7 @@ msgstr "Atnaujinimo data"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use interview forms during recruitment process"
-msgstr ""
+msgstr "Įdarbinimo procese naudokite interviu formas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1900,13 +2277,16 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on Survey app."
 msgstr ""
+"Įdarbinimo procese naudokite interviu formas, specialiai sukurtas kiekvienai"
+" darbo pozicijai. Pasirinkite naudojamą formą iš darbo pozicijos "
+"informacijos formos. Ji susieta su Apklausų programa."
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tour.js:25
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
+msgstr "Naudokite svetainės kelią, kad <b>grįžtumėte į valdymo skydelį</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_email
@@ -1924,7 +2304,8 @@ msgstr "Labai gerai"
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
 msgstr ""
-"Norite pradėti <b>darbinti</b> kaip profesionalas? <i>Pradėkite čia.</i>"
+"Norite pradėti <b>ieškoti darbuotojų</b> kaip tikras profesionalas? "
+"<i>Pradėkite čia.</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1952,16 +2333,18 @@ msgstr ""
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
+"Turite šiam kandidatui nustatyti kandidatuojamą poziciją ir kontaktinį "
+"vardą."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 msgid "Your Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Jūsų kandidatavimas: ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Jūsų kandidatavimas į darbą: ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

@@ -65,7 +65,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} 憑單(參考：${object.number或『不適用』})"
+msgstr "${object.company_id.name} 憑單(Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -907,7 +907,7 @@ msgstr "<strong>下一動作：</strong><br/>"
 msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
-msgstr "<strong>飛速付款調節：</strong>創建憑單時自動生成欠款付款。"
+msgstr "<strong>飛速付款調節：</strong>創建憑單時自動生成登記付款。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1519,7 +1519,7 @@ msgstr "科目類型用於信息目的以生成各國特定的合規報表，以
 #: model:ir.actions.act_window,name:account.action_account_type_form
 #: model:ir.model.fields,field_description:account.field_account_financial_report_account_type_ids
 msgid "Account Types"
-msgstr "帳戶類型"
+msgstr "會計科目類型"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
@@ -7394,7 +7394,7 @@ msgstr "發起人付款"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_line_id
 msgid "Originator tax"
-msgstr "發起人稅"
+msgstr "稅別"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
@@ -11806,3 +11806,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→計數"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
