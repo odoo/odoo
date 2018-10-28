@@ -55,6 +55,8 @@ msgid ""
 "Affect landed costs on receipt operations and split them among products to "
 "update their cost price."
 msgstr ""
+"Pakeisti pilnas kainas kvito operacijose ir išskirstyti jas produktuose, "
+"taip atnaujinant jų kaštų dydį."
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
@@ -80,6 +82,8 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Nepavyko rasti produkto %s atsargų įėjimo sąskaitos. Prieš apdorodami šią "
+"operaciją, turite ją nustatyti produkto kategorijai arba vietai. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:503
@@ -89,6 +93,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Nepavyko rasti produkto %s atsargų išėjimo sąskaitos. Prieš apdorodami šią "
+"operaciją, turite ją nustatyti produkto kategorijai arba vietai. "
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -109,6 +115,8 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
+"Kaštų metodo keitimas turės įtakos jūsų inventoriaus įvertinimui. Ar tikrai "
+"norite atlikti šį pakeitimą? "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -132,6 +140,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Konfigūracijos klaida. Norėdami apdoroti šią operaciją, produktui arba jo "
+"kategorijai nustatykite kainų skirtumo sąskaitą"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -147,7 +157,7 @@ msgstr "Savikainos apskaičiavimo metodas"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Costing"
-msgstr ""
+msgstr "Kaštai"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
@@ -159,12 +169,12 @@ msgstr "Savikainos metodas"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Partnerinė sąskaita"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id_required
 msgid "Counter-Part Account Required"
-msgstr ""
+msgstr "Būtina partnerinė sąskaita"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -277,6 +287,8 @@ msgid ""
 "Manual: The accounting entries to value the inventory are not posted automatically.\n"
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company."
 msgstr ""
+"Rankinis: Apskaitos įrašai inventoriaus vertinimui nėra skelbiami automatiškai.\n"
+"Automatinis: Apskaitos įrašas yra automatiškai pridedamas inventoriaus vertinimui, kai produktas įeina ar išeina iš įmonės"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -285,6 +297,8 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
+"Rankinis: Apskaitos įrašai inventoriaus vertinimui nėra skelbiami automatiškai.\n"
+"Automatinis: Apskaitos įrašas yra automatiškai pridedamas inventoriaus vertinimui, kai produktas įeina ar išeina iš įmonės."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:128
@@ -315,7 +329,7 @@ msgstr "Kaina"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Užsakymo paraiška"
+msgstr "Planinio užsakymo paraiška"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -530,7 +544,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line_to_refund
 msgid "To Refund (update SO/PO)"
-msgstr ""
+msgstr "Grąžinti (atnaujinti pirkimo/pardavimo užsakymą)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move_to_refund
@@ -539,6 +553,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
+"Aktyvinti pristatyto/gauto kiekio sumažėjimą susietame pardavimo/pirkimo "
+"užsakyme"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date

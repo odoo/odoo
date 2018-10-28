@@ -4,14 +4,15 @@
 # 
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Thay đổi cách hệ thống tính toán trường đường phố đầy đủ dựa trên các trường"
+" con đường phố khác nhau"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -46,7 +49,7 @@ msgstr "Quốc gia"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number2
 msgid "Door Number"
-msgstr ""
+msgstr "Số cửa"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country_street_format
@@ -58,41 +61,47 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Định dạng để sử dụng cho các đường phố thuộc quốc gia này.\n"
+"\n"
+"Bạn có thể sử dụng mẫu chuỗi kiểu python với tất cả các trường của đường phố (ví dụ: sử dụng '%(street_name)s,%(street_number)s' nếu bạn muốn hiển thị tên phố, theo sau là dấu phẩy và số nhà)\n"
+"%(street_name)s: tên đường phố\n"
+"%(street_number)s: số nhà\n"
+"%(street_number2)s: số cửa"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number
 msgid "House Number"
-msgstr ""
+msgstr "Số nhà"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country_street_format
 msgid "Street Format"
-msgstr ""
+msgstr "Dạng đường phố"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Tên đường"
 
 #. module: base_address_extended
 #: model:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
 #: model:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr "Tên đường..."
 
 #. module: base_address_extended
 #: model:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "Dạng đường phố..."
 
 #. module: base_address_extended
 #: code:addons/base_address_extended/models/base_address_extended.py:60
 #: code:addons/base_address_extended/models/base_address_extended.py:126
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Trường %s không được công nhận ở Dạng đường phố."

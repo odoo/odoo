@@ -1153,11 +1153,11 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
-"Un registro di cassa consente di controllare le registrazioni di cassa nei \n"
-"               registri. Questa funzionalita' consente di controllare agevolmente i pagamenti\n"
-"               per contante giornalmente. Si imputano le pezzature presenti nella cassa\n"
-"                e successivamente si registrano le scritture con cui il contante entra\n"
-"                o esce dalla cassa."
+"Un registratore di cassa consente di organizzare le entrate in contanti\n"
+"                nei relativi registri. Questa funzionalità fornisce un modo semplice\n"
+"                per controllare i pagamenti su base giornaliera. È possibile inserire\n"
+"                la moneta di cassa e generare le registrazioni quando avvengono\n"
+"                immissioni/prelievi di denaro."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:383
@@ -2407,7 +2407,7 @@ msgstr "Attesa pagamenti"
 #: code:addons/account/models/chart_template.py:194
 #, python-format
 msgid "BILL"
-msgstr "FATTURA"
+msgstr "ACQ"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -3216,7 +3216,7 @@ msgstr "Cliccare per definire un nuovo tipo conto"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
 msgid "Click to record a new vendor bill."
-msgstr "Cliccare per registrare una nuova fattura fornitore"
+msgstr "Fare clic per registrare una nuova fattura fornitore."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_in_refund
@@ -5386,7 +5386,7 @@ msgstr "ID"
 #: code:addons/account/models/chart_template.py:193
 #, python-format
 msgid "INV"
-msgstr "INV"
+msgstr "FATT"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:389
@@ -8138,8 +8138,8 @@ msgstr "Pianificatore"
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
 msgstr ""
-"Verificare che il campo \"Registro\" sia impostato nell'estratto conto "
-"bancario."
+"Verificare che nell'estratto conto bancario sia impostato il campo "
+"\"Registro\"."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:29
@@ -10024,7 +10024,7 @@ msgstr "Il conto %s (%s) non e' indicato come riconciliabile!"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_bank_journal_id
 msgid "The accounting journal corresponding to this bank account."
-msgstr "Il registro contabile corrispondente a questo conto bancario."
+msgstr "Il registro contabile che corrisponde a questo conto bancario."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings_currency_exchange_journal_id
@@ -10111,7 +10111,7 @@ msgstr "Il saldo finale è diverso dal saldo calcolato"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code and name of the journal must be unique per company !"
-msgstr "Il codice e il nome del registro devono essere unici per azienda."
+msgstr "Il codice e il nome del registro devono essere univoci per azienda."
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -10200,7 +10200,7 @@ msgstr ""
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr ""
-"L'intestatario del conto bancario di un registro deve essere l'azienda (%s)."
+"L'intestatario del conto bancario in un registro deve essere l'azienda (%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_account_id
@@ -10401,7 +10401,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:645
 #, python-format
 msgid "The sequence of journal %s is deactivated."
-msgstr "La sequenza del registro %s e' disattivata."
+msgstr "La sequenza del registro %s è disattivata."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding_rounding_method
@@ -10619,8 +10619,8 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"Questo campo contiene informazioni sul numero di regostrazioni di questo "
-"registro."
+"Questo campo contiene informazioni sulla numerazione delle registrazioni "
+"contabili per questo registro."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_journal_id
@@ -11407,13 +11407,13 @@ msgstr "Fornitore"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Bill"
-msgstr "Fattura di acquisto"
+msgstr "Fattura fornitore"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:444
 #, python-format
 msgid "Vendor Bill - %s"
-msgstr "Fattura di acquisto - %s"
+msgstr "Fattura fornitore - %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:194
@@ -11422,7 +11422,7 @@ msgstr "Fattura di acquisto - %s"
 #: model:ir.ui.view,arch_db:account.account_planner
 #, python-format
 msgid "Vendor Bills"
-msgstr "Fatture di acquisto"
+msgstr "Fatture fornitore"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -11997,7 +11997,7 @@ msgid ""
 " to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
 msgstr ""
-"Per gestire automaticamente le registrazioni del libro contabile relativo "
+"Per gestire automaticamente le registrazioni nel libro contabile relativo "
 "alla differenze di cambio è necessario configurare il \"Registro tasso di "
 "cambio\" nelle impostazioni della contabilità."
 
@@ -12032,7 +12032,9 @@ msgstr ""
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr "Va definito un conto di \"trasferimento\" nel registro di cassa"
+msgstr ""
+"È necessario definire un \"Conto di trasferimento interno\" nel registro di "
+"cassa."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -12347,3 +12349,5 @@ msgid ""
 "Currency field should only be set if the journal's currency is different "
 "from the company's. Leave the field blank to use company currency."
 msgstr ""
+"Se la valuta del registro è diversa da quella dell'azienda è necessario "
+"impostare il campo. Lasciarlo vuoto per usare la valuta dell'azienda."
