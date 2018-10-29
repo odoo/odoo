@@ -113,6 +113,7 @@ var CustomizeMenu = Widget.extend({
 
 var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
+        close_all_widgets: '_hideEditor',
         edit: '_enterEditMode',
         ace: '_launchAce',
     }),
@@ -141,6 +142,12 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _enterEditMode: function () {
+        this._hideEditor();
+    },
+    /**
+     * @private
+     */
+    _hideEditor: function () {
         if (this.globalEditor) {
             this.globalEditor.do_hide();
         }
@@ -153,6 +160,10 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @returns {Deferred}
      */
     _launchAce: function () {
+        this.trigger_up('action_demand', {
+            actionName: 'close_all_widgets',
+        });
+
         if (this.globalEditor) {
             this.globalEditor.do_show();
             return $.when();
