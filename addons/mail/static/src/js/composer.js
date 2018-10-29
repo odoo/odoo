@@ -486,10 +486,13 @@ var BasicComposer = Widget.extend({
     },
 
     send_message: function () {
+        var $button = this.$('.o_composer_button_send');
+
         if (this.is_empty() || !this.do_check_attachment_upload()) {
             return;
         }
 
+        $button.prop('disabled', true);
         clearTimeout(this.canned_timeout);
         var self = this;
         this.preprocess_message().then(function (message) {
