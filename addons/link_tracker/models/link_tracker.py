@@ -194,7 +194,7 @@ class LinkTracker(models.Model):
             return {'Error': "This filter doesn't exist."}
 
     @api.model
-    def get_url_from_code(self, code, context=None):
+    def get_url_from_code(self, code):
         code_rec = self.env['link.tracker.code'].sudo().search([('code', '=', code)])
 
         if not code_rec:
@@ -236,7 +236,6 @@ class LinkTrackerClick(models.Model):
     _description = "Link Tracker Click"
 
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
-    click_date = fields.Date(string='Create Date')
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country', 'Country')
 
