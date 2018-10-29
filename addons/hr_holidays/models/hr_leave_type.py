@@ -63,9 +63,10 @@ class HolidaysType(models.Model):
         compute='_compute_group_days_leave', string='Group Leaves')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     validation_type = fields.Selection([
-        ('hr', 'Human Resource officer'),
-        ('manager', 'Employee Manager'),
-        ('both', 'Double Validation')], default='hr', string='Validation By')
+        ('no_validation', 'No Validation'),
+        ('hr', 'Payroll Officer'),
+        ('manager', 'Team Leader'),
+        ('both', 'Team Leader and Payroll Officer')], default='hr', string='Validation By')
     allocation_type = fields.Selection([
         ('fixed', 'Fixed by HR'),
         ('fixed_allocation', 'Fixed by HR + allocation request'),
