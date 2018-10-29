@@ -107,7 +107,12 @@ class MassMailController(http.Controller):
         # which mass_mailing doesn't depend on
         country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
 
-        request.env['link.tracker.click'].sudo().add_click(code, request.httprequest.remote_addr, country_code, stat_id=stat_id)
+        request.env['link.tracker.click'].sudo().add_click(
+            code,
+            ip=request.httprequest.remote_addr,
+            country_code=country_code,
+            mail_stat_id=stat_id
+        )
         return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
 
     @http.route('/mailing/blacklist/check', type='json', auth='none')
