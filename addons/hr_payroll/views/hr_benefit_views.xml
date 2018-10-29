@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.server" id="generate_benefit">
+        <field name="name">Generate Benefit</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    records.generate_benefit()
+        </field>
+    </record>
+
+    <record id="hr_benefit_action" model="ir.actions.act_window">
+        <field name="name">Benefit</field>
+        <field name="res_model">hr.benefit</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">calendar,tree,form</field>
+    </record>
+
+    <record id="hr_benefit_calendar" model="ir.ui.view">
+        <field name="name">hr.benefit.calendar</field>
+        <field name="model">hr.benefit</field>
+        <field name="arch" type="xml">
+            <calendar string="Benefit"
+                date_start="date_start"
+                date_stop="date_stop"
+                mode="month"
+                quick_add="False"
+                color="benefit_type_id"
+                event_limit="5">
+                <field name="state" invisible="1"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="display_warning" invisible="1"/>
+                <field name="name"/>
+                <templates>
+                    <t t-name="calendar-box">
+                        <t t-set="color" t-value="widget.getColor(event.color_index)"/>
+                        <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
+                            <field name="name"/>
+                            <div class="fc-time"/>
+                            <div class="o_fields">
+                                <t t-if="record.display_warning">
+                                    <span class="fa fa-exclamation-triangle mr-2" aria-label="Conflict" title="error"/>
+                                </t>
+                                <t t-if="record.state == 'validated'">
+                                    <span class="fa fa-check-circle-o" aria-label="Validated" title="validated"/>
+                                    <t t-esc="' '"/>
+                                </t>
+                                <t t-foreach="widget.displayFields" t-as="name">
+                                    <t t-esc="format(record, name)"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hr_benefit_form" model="ir.ui.view">
+        <field name="name">hr.benefit.form</field>
+        <field name="model">hr.benefit</field>
+        <field name="arch" type="xml">
+            <form string="Benefit" >
+                <header>
+                    <field name="display_warning" invisible="1"/>
+                    <field name="leave_id" invisible="1"/>
+                    <button name="action_cancel" states="confirmed" string="Cancel" type="object"/>
+                    <button name="action_draft" states="cancelled" string="Reset to Draft" type="object"/>
+                    <button string="Go To Conflicting Leave" name="action_leave" type="object" attrs="{'invisible': ['|', '!',('display_warning', '=', True), '!', ('leave_id', '!=', False)]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div attrs="{'invisible': [('display_warning', '=', False)]}">
+                        <div class="alert alert-warning" role="alert" attrs="{'invisible': ['!', ('benefit_type_id', '=', False)]}">
+                            This benefit cannot be validated.  The benefit type is undefined.
+                        </div>
+                        <div attrs="{'invisible': [('benefit_type_id', '=', False)]}">
+                            <div class="alert alert-warning" role="alert" attrs="{'invisible': [('leave_id', '=', False)]}">
+                                This benefit cannot be validated.  There is a leave to approve (or refuse) at the same time.
+                            </div>
+                            <div class="alert alert-warning" role="alert" attrs="{'invisible': ['!', ('leave_id', '=', False)]}">
+                                This benefit cannot be validated. It is conflicting with at least one benefit. <br/>
+                                Two benefits of the same employee cannot overlap at the same time.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Benefit Name" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="benefit_type_id" attrs="{'readonly': [('state', '=', 'validated')]}" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="leave_id" attrs="{'invisible': [('leave_id', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="duration" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_benefit_filter" model="ir.ui.view">
+        <field name="name">hr.benefit.filter</field>
+        <field name="model">hr.benefit</field>
+        <field name="arch" type="xml">
+            <search string="Search Benefit">
+                <field name="employee_id"/>
+                <field name="name"/>
+                <filter string="My Benefits" domain="[('employee_id.user_id','=',uid)]" name="my_benefits"/>
+                <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_benefit_type_form" model="ir.ui.view">
+        <field name="name">hr.benefit.type.form</field>
+        <field name="model">hr.benefit.type</field>
+        <field name="arch" type="xml">
+            <form string="Benefit Type" >
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Benefit Type Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="is_leave"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem
+        id="hr_menu_benefit_menu" name="Benefits" action="hr_benefit_action" parent="menu_hr_payroll_root" sequence="25"/>
+
+    <record id="action_view_hr_benefit_type" model="ir.actions.act_window">
+        <field name="name">Benefit Types</field>
+        <field name="res_model">hr.benefit.type</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+    <menuitem
+        id="menu_hr_benefit_type_view"
+        action="action_view_hr_benefit_type"
+        parent="menu_hr_payroll_configuration"
+        sequence="25"
+    />
+
+</odoo>

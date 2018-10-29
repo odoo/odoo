@@ -385,7 +385,14 @@
                     <field name="credit_note"/>
                 </group>
                 <separator string="Payslips"/>
-                <field name="slip_ids"/>
+                <field name="slip_ids">
+                    <tree>
+                        <field name="number"/>
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
             </sheet>
             </form>
         </field>
