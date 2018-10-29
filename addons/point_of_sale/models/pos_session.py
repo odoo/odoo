@@ -158,6 +158,14 @@ class PosSession(models.Model):
             ]) > 1:
             raise ValidationError(_("Another session is already opened for this point of sale."))
 
+    @api.constrains('start_at')
+    def _check_start_date(self):
+        for record in self:
+            company = record.config_id.journal_id.company_id
+            start_date = record.start_at.date()
+            if (company.period_lock_date and start_date <= company.period_lock_date) or (company.fiscalyear_lock_date and start_date <= company.fiscalyear_lock_date):
+                raise ValidationError(_("You cannot create a session before the accounting lock date."))
+
     @api.model
     def create(self, values):
         config_id = values.get('config_id') or self.env.context.get('default_config_id')
