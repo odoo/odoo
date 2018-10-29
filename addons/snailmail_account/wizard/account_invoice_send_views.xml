@@ -9,25 +9,48 @@
                 <xpath expr="//div[@name='option_email']" position='before'>
                     <div name="option_letter">
                         <field name="letter_ids" invisible="1"/>
+                        <field name="invalid_addresses" invisible="1"/>
                         <div name="option" class="text-left d-inline-block">
                             <field name="snailmail_is_letter" />
                             <b><label for="snailmail_is_letter"/></b>
                         </div>
-                        <div class="text-left d-inline-block mr8" name='cost' attrs="{'invisible': [('snailmail_is_letter','=', False)]}">
-                            <b>(
-                                <span>
-                                    <field name="snailmail_cost" options="{'digits':[0,0]}" class="mr4"/>
-                                    <label for="snailmail_cost" class="mr4"/>
+                        <span attrs="{'invisible': [('snailmail_is_letter','=', False)]}">
+                            <span class="mr4" attrs="{'invisible': [('snailmail_cost', '=', 0)]}">
+                                <b>(
+                                    <span>
+                                        <field name="snailmail_cost" options="{'digits':[0,0]}" class="mr4"/>
+                                        <label for="snailmail_cost" class="mr4"/>
+                                    </span>
+                                    <i class="fa fa-info-circle" role="img" aria-label="Warning" title="Make sure you have enough Stamps on your account."/>
+                                )</b>
+                            </span>
+                            <span attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
+                                <span attrs="{'invisible': [('invalid_addresses', '!=', 0)]}">
+                                    <div class="text-right text-muted d-inline-block" name="address">
+                                        <span> to: </span>
+                                        <field name="partner_id" readonly="1" force_save="1" context="{'show_address': not invalid_addresses, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
+                                    </div>
                                 </span>
-                                <i class="fa fa-info-circle" role="img" aria-label="Warning" title="
-                                The letter will be sent using the IAP service from Odoo.&#10;Make sure you have enough credits on your account or proceed to a recharge.&#10;The price is estimated based on 1 page per document.
-                                "/>
-                            )</b>
-                        </div>
-                        <div class="text-right text-muted d-inline-block" name="address" attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('snailmail_is_letter','=', False)]}">
-                            <span> to: </span>
-                            <field name="partner_id" readonly="1" force_save="1" context="{'show_address': 1, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
-                        </div>
+                                <span attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
+                                    <div class="text-right d-inline-block" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
+                                        <span class="text-muted">
+                                            Incomplete address for 
+                                            <field name="partner_id" readonly="1" force_save="1" context="{'show_address': not invalid_addresses, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
+                                        </span>
+                                    </div>
+                                </span>
+                            </span>
+                            <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
+                                <span attrs="{'invisible': [('snailmail_cost', '=', 0)]}">
+                                    <span class="text-muted" attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
+                                        Only <field name="snailmail_cost" readonly="1" options="{'digits':[0,0]}"/> of the selected invoices have a valid address.
+                                    </span>
+                                </span>
+                                <span class="text-muted" attrs="{'invisible': [('snailmail_cost', '!=', 0)]}">
+                                    None of the selected invoices have a valid address
+                                </span>
+                            </span>
+                        </span>
                     </div>
                 </xpath>
                 <xpath expr="//footer/button[hasclass('send_and_print')]" position='attributes'>

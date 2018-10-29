@@ -211,7 +211,7 @@ class SnailmailLetter(models.Model):
             'options': {
                 'color': self and self[0].color,
                 'duplex': self and self[0].duplex,
-                'currency_name': self and self[0].company_id.currency_id.name,
+                'currency_name': 'EUR',
             },
             # this will not raise the InsufficientCreditError which is the behaviour we want for now
             'batch': True,
@@ -307,7 +307,7 @@ class SnailmailLetter(models.Model):
     @api.multi
     def unlink(self):
         self.mapped('activity_id').unlink()
-        super(SnailmailLetter, self).unlink()
+        return super(SnailmailLetter, self).unlink()
 
     @api.multi
     def _snailmail_estimate(self):
