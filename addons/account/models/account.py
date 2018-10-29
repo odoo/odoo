@@ -616,11 +616,11 @@ class AccountJournal(models.Model):
         for journal in self:
             company = journal.company_id
             if ('company_id' in vals and journal.company_id.id != vals['company_id']):
-                if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
+                if self.env['account.move'].search([('journal_id', '=', journal.id)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its company.'))
                 company = self.env['res.company'].browse(vals['company_id'])
-                if self.bank_account_id.company_id and self.bank_account_id.company_id != company:
-                    self.bank_account_id.write({
+                if journal.bank_account_id.company_id and journal.bank_account_id.company_id != company:
+                    journal.bank_account_id.write({
                         'company_id': company.id,
                         'partner_id': company.partner_id.id,
                     })
@@ -633,12 +633,12 @@ class AccountJournal(models.Model):
                     new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
                     journal.refund_sequence_id.write({'prefix': new_prefix})
             if 'currency_id' in vals:
-                if not 'default_debit_account_id' in vals and self.default_debit_account_id:
-                    self.default_debit_account_id.currency_id = vals['currency_id']
-                if not 'default_credit_account_id' in vals and self.default_credit_account_id:
-                    self.default_credit_account_id.currency_id = vals['currency_id']
-                if self.bank_account_id:
-                    self.bank_account_id.currency_id = vals['currency_id']
+                if not 'default_debit_account_id' in vals and journal.default_debit_account_id:
+                    journal.default_debit_account_id.currency_id = vals['currency_id']
+                if not 'default_credit_account_id' in vals and journal.default_credit_account_id:
+                    journal.default_credit_account_id.currency_id = vals['currency_id']
+                if journal.bank_account_id:
+                    journal.bank_account_id.currency_id = vals['currency_id']
             if 'bank_account_id' in vals:
                 if not vals.get('bank_account_id'):
                     raise UserError(_('You cannot remove the bank account from the journal once set.'))
@@ -647,7 +647,7 @@ class AccountJournal(models.Model):
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if vals.get('type') == 'purchase':
-                self._update_mail_alias(vals)
+                journal._update_mail_alias(vals)
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary
@@ -666,7 +666,7 @@ class AccountJournal(models.Model):
                 journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
         # Changing the 'post_at_bank_rec' option will post the draft payment moves and change the related invoices' state.
         if 'post_at_bank_rec' in vals and not vals['post_at_bank_rec']:
-            draft_moves = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '=', 'draft')])
+            draft_moves = self.env['account.move'].search([('journal_id', 'in', self.ids), ('state', '=', 'draft')])
             pending_payments = draft_moves.mapped('line_ids.payment_id')
             pending_payments.mapped('move_line_ids.move_id').post()
             pending_payments.mapped('reconciled_invoice_ids').filtered(lambda x: x.state == 'in_payment').write({'state': 'paid'})
