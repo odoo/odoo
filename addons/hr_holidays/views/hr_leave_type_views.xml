@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <search string="Search Leave Type">
                 <field name="name" string="Leave Types"/>
+                <field name="code"/>
                 <field name="categ_id"/>
             </search>
         </field>
@@ -41,6 +42,7 @@
                     </div>
                     <group>
                         <group name="description" string="Options">
+                            <field name="code"/>
                             <field name="unpaid"/>
                             <field name="request_unit" widget="radio"/>
                             <field name="sequence" groups="base.group_no_one"/>
@@ -106,6 +108,7 @@
             <tree string="Leave Type">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="code"/>
                 <field name="allocation_type"/>
                 <field name="validation_type"/>
                 <field name="validity_start"/>
