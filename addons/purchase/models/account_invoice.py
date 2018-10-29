@@ -123,6 +123,7 @@ class AccountInvoice(models.Model):
     def _onchange_origin(self):
         purchase_ids = self.invoice_line_ids.mapped('purchase_id')
         if purchase_ids:
+            self.user_id = purchase_ids.sorted(key=lambda x: x.id)[0].user_id.id
             self.origin = ', '.join(purchase_ids.mapped('name'))
             self.reference = ', '.join(purchase_ids.filtered('partner_ref').mapped('partner_ref')) or self.reference
 
