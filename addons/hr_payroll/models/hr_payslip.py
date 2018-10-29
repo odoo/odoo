@@ -8,7 +8,9 @@ from pytz import timezone
 
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
+from odoo.addons.hr_payroll.models.browsable_object import BrowsableObject, InputLine, WorkedDays, Payslips
 from odoo.exceptions import UserError, ValidationError
+
 
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
@@ -118,32 +120,10 @@ class HrPayslip(models.Model):
         }
 
     @api.multi
-    def check_done(self):
-        return True
-
-    @api.multi
     def unlink(self):
         if any(self.filtered(lambda payslip: payslip.state not in ('draft', 'cancel'))):
             raise UserError(_('You cannot delete a payslip which is not draft or cancelled!'))
         return super(HrPayslip, self).unlink()
-
-    # TODO move this function into hr_contract module, on hr.employee object
-    @api.model
-    def get_contract(self, employee, date_from, date_to):
-        """
-        @param employee: recordset of employee
-        @param date_from: date field
-        @param date_to: date field
-        @return: returns the ids of all the contracts for the given employee that need to be considered for the given dates
-        """
-        # a contract is valid if it ends between the given dates
-        clause_1 = ['&', ('date_end', '<=', date_to), ('date_end', '>=', date_from)]
-        # OR if it starts between the given dates
-        clause_2 = ['&', ('date_start', '<=', date_to), ('date_start', '>=', date_from)]
-        # OR if it starts before the date_from and finish after the date_end (or never finish)
-        clause_3 = ['&', ('date_start', '<=', date_from), '|', ('date_end', '=', False), ('date_end', '>=', date_to)]
-        clause_final = [('employee_id', '=', employee.id), ('state', '=', 'open'), '|', '|'] + clause_1 + clause_2 + clause_3
-        return self.env['hr.contract'].search(clause_final).ids
 
     @api.multi
     def compute_sheet(self):
@@ -153,9 +133,9 @@ class HrPayslip(models.Model):
             payslip.line_ids.unlink()
             # set the list of contract for which the rules have to be applied
             # if we don't give the contract, then the rules to apply should be for all current contracts of the employee
-            contract_ids = payslip.contract_id.ids or \
-                self.get_contract(payslip.employee_id, payslip.date_from, payslip.date_to)
-            lines = [(0, 0, line) for line in self._get_payslip_lines(contract_ids, payslip.id)]
+            contracts = payslip.contract_id or \
+                payslip.employee_id._get_contracts(payslip.date_from, payslip.date_to)
+            lines = [(0, 0, line) for line in payslip._get_payslip_lines(contracts)]
             payslip.write({'line_ids': lines, 'number': number})
         return True
 
@@ -214,8 +194,8 @@ class HrPayslip(models.Model):
     def get_inputs(self, contracts, date_from, date_to):
         res = []
 
-        structure_ids = contracts.get_all_structures()
-        rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
+        structures = contracts.get_all_structures()
+        rule_ids = structures.get_all_rules()
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
         inputs = self.env['hr.salary.rule'].browse(sorted_rule_ids).mapped('input_ids')
 
@@ -229,98 +209,42 @@ class HrPayslip(models.Model):
                 res += [input_data]
         return res
 
+    # YTI TODO: pass recordset as argument
     @api.model
-    def _get_payslip_lines(self, contract_ids, payslip_id):
+    def _get_payslip_lines(self, contracts):
+        # YTI TODO: Move into browsable_object.py ?
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
             localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
             return localdict
 
-        class BrowsableObject(object):
-            def __init__(self, employee_id, dict, env):
-                self.employee_id = employee_id
-                self.dict = dict
-                self.env = env
-
-            def __getattr__(self, attr):
-                return attr in self.dict and self.dict.__getitem__(attr) or 0.0
-
-        class InputLine(BrowsableObject):
-            """a class that will be used into the python code, mainly for usability purposes"""
-            def sum(self, code, from_date, to_date=None):
-                if to_date is None:
-                    to_date = fields.Date.today()
-                self.env.cr.execute("""
-                    SELECT sum(amount) as sum
-                    FROM hr_payslip as hp, hr_payslip_input as pi
-                    WHERE hp.employee_id = %s AND hp.state = 'done'
-                    AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""",
-                    (self.employee_id, from_date, to_date, code))
-                return self.env.cr.fetchone()[0] or 0.0
-
-        class WorkedDays(BrowsableObject):
-            """a class that will be used into the python code, mainly for usability purposes"""
-            def _sum(self, code, from_date, to_date=None):
-                if to_date is None:
-                    to_date = fields.Date.today()
-                self.env.cr.execute("""
-                    SELECT sum(number_of_days) as number_of_days, sum(number_of_hours) as number_of_hours
-                    FROM hr_payslip as hp, hr_payslip_worked_days as pi
-                    WHERE hp.employee_id = %s AND hp.state = 'done'
-                    AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""",
-                    (self.employee_id, from_date, to_date, code))
-                return self.env.cr.fetchone()
-
-            def sum(self, code, from_date, to_date=None):
-                res = self._sum(code, from_date, to_date)
-                return res and res[0] or 0.0
-
-            def sum_hours(self, code, from_date, to_date=None):
-                res = self._sum(code, from_date, to_date)
-                return res and res[1] or 0.0
-
-        class Payslips(BrowsableObject):
-            """a class that will be used into the python code, mainly for usability purposes"""
-
-            def sum(self, code, from_date, to_date=None):
-                if to_date is None:
-                    to_date = fields.Date.today()
-                self.env.cr.execute("""SELECT sum(case when hp.credit_note = False then (pl.total) else (-pl.total) end)
-                            FROM hr_payslip as hp, hr_payslip_line as pl
-                            WHERE hp.employee_id = %s AND hp.state = 'done'
-                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s""",
-                            (self.employee_id, from_date, to_date, code))
-                res = self.env.cr.fetchone()
-                return res and res[0] or 0.0
-
+        self.ensure_one()
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         rules_dict = {}
         worked_days_dict = {}
         inputs_dict = {}
         blacklist = []
-        payslip = self.env['hr.payslip'].browse(payslip_id)
-        for worked_days_line in payslip.worked_days_line_ids:
+        for worked_days_line in self.worked_days_line_ids:
             worked_days_dict[worked_days_line.code] = worked_days_line
-        for input_line in payslip.input_line_ids:
+        for input_line in self.input_line_ids:
             inputs_dict[input_line.code] = input_line
 
-        categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
-        inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
-        worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict, self.env)
-        payslips = Payslips(payslip.employee_id.id, payslip, self.env)
-        rules = BrowsableObject(payslip.employee_id.id, rules_dict, self.env)
+        categories = BrowsableObject(self.employee_id.id, {}, self.env)
+        inputs = InputLine(self.employee_id.id, inputs_dict, self.env)
+        worked_days = WorkedDays(self.employee_id.id, worked_days_dict, self.env)
+        payslips = Payslips(self.employee_id.id, self, self.env)
+        rules = BrowsableObject(self.employee_id.id, rules_dict, self.env)
 
         baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
-        contracts = self.env['hr.contract'].browse(contract_ids)
-        if len(contracts) == 1 and payslip.struct_id:
-            structure_ids = list(set(payslip.struct_id._get_parent_structure().ids))
+        if len(contracts) == 1 and self.struct_id:
+            structures = self.struct_id._get_parent_structure()
         else:
-            structure_ids = contracts.get_all_structures()
+            structures = contracts.get_all_structures()
         #get the rules of the structure and thier children
-        rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
+        rule_ids = structures.get_all_rules()
         #run the rules by sequence
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
         sorted_rules = self.env['hr.salary.rule'].browse(sorted_rule_ids)
@@ -377,7 +301,7 @@ class HrPayslip(models.Model):
         return list(result_dict.values())
 
     # YTI TODO To rename. This method is not really an onchange, as it is not in any view
-    # employee_id and contract_id could be browse records
+    # employee_id and contract_id could be browse records. Contract_id should be a record
     @api.multi
     def onchange_employee_id(self, date_from, date_to, employee_id=False, contract_id=False):
         #defaults
@@ -404,20 +328,21 @@ class HrPayslip(models.Model):
             'company_id': employee.company_id.id,
         })
 
+        contracts = self.env['hr.contract']
         if not self.env.context.get('contract'):
             #fill with the first contract of the employee
-            contract_ids = self.get_contract(employee, date_from, date_to)
+            contracts = employee._get_contracts(date_from, date_to)
         else:
             if contract_id:
                 #set the list of contract for which the input have to be filled
-                contract_ids = [contract_id]
+                contracts = self.env['hr.contract'].browse(contract_id)
             else:
                 #if we don't give the contract, then the input to fill should be for all current contracts of the employee
-                contract_ids = self.get_contract(employee, date_from, date_to)
+                contracts = employee._get_contracts(date_from, date_to)
 
-        if not contract_ids:
+        if not contracts:
             return res
-        contract = self.env['hr.contract'].browse(contract_ids[0])
+        contract = contracts[0]
         res['value'].update({
             'contract_id': contract.id
         })
@@ -428,7 +353,6 @@ class HrPayslip(models.Model):
             'struct_id': struct.id,
         })
         #computation of the salary input
-        contracts = self.env['hr.contract'].browse(contract_ids)
         worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
         input_line_ids = self.get_inputs(contracts, date_from, date_to)
         res['value'].update({
@@ -446,25 +370,24 @@ class HrPayslip(models.Model):
         employee = self.employee_id
         date_from = self.date_from
         date_to = self.date_to
-        contract_ids = []
 
         ttyme = datetime.combine(fields.Date.from_string(date_from), time.min)
         locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
 
+        contracts = self.env['hr.contract']
         if not self.env.context.get('contract') or not self.contract_id:
-            contract_ids = self.get_contract(employee, date_from, date_to)
-            if not contract_ids:
+            contracts = employee._get_contracts(date_from, date_to)
+            if not contracts:
                 return
-            self.contract_id = self.env['hr.contract'].browse(contract_ids[0])
+            self.contract_id = contracts[0]
 
         if not self.contract_id.struct_id:
             return
         self.struct_id = self.contract_id.struct_id
 
         #computation of the salary input
-        contracts = self.env['hr.contract'].browse(contract_ids)
         worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
         for r in worked_days_line_ids:

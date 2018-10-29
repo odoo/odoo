@@ -57,7 +57,7 @@ class HrPayrollStructure(models.Model):
         parent = self.mapped('parent_id')
         if parent:
             parent = parent._get_parent_structure()
-        return parent + self
+        return parent | self
 
 
 class HrContributionRegister(models.Model):
