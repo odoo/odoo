@@ -33,6 +33,7 @@ var MailFailure = require('mail.model.MailFailure');
 var Message = require('mail.model.Message');
 var MultiUserChannel = require('mail.model.MultiUserChannel');
 var mailUtils = require('mail.utils');
+var utils = require('web.utils');
 
 var Bus = require('web.Bus');
 var config = require('web.config');
@@ -1094,7 +1095,7 @@ var MailManager =  AbstractService.extend({
      */
     _searchPartnerPrefetch: function (searchVal, limit) {
         var values = [];
-        var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(searchVal)), 'i');
+        var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(searchVal)), 'i');
         _.each(this._mentionPartnerSuggestions, function (partners) {
             if (values.length < limit) {
                 values = values.concat(_.filter(partners, function (partner) {

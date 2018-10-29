@@ -4,7 +4,7 @@ odoo.define('mail.composer.Basic', function (require) {
 var emojis = require('mail.emojis');
 var MentionManager = require('mail.composer.MentionManager');
 var DocumentViewer = require('mail.DocumentViewer');
-var mailUtils = require('mail.utils');
+var utils = require('web.utils');
 
 var config = require('web.config');
 var core = require('web.core');
@@ -306,7 +306,7 @@ var BasicComposer = Widget.extend({
         clearTimeout(this._cannedTimeout);
         this._cannedTimeout = setTimeout(function () {
             var cannedResponses = self.call('mail_service', 'getCannedResponses');
-            var matches = fuzzy.filter(mailUtils.unaccent(search), _.pluck(cannedResponses, 'source'));
+            var matches = fuzzy.filter(utils.unaccent(search), _.pluck(cannedResponses, 'source'));
             var indexes = _.pluck(matches.slice(0, self.options.mentionFetchLimit), 'index');
             def.resolve(_.map(indexes, function (index) {
                 return cannedResponses[index];
@@ -320,7 +320,7 @@ var BasicComposer = Widget.extend({
      * @returns {Array}
      */
     _mentionGetCommands: function (search) {
-        var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(search)), 'i');
+        var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
         return _.filter(this._mentionCommands, function (command) {
             return searchRegexp.test(command.name);
         }).slice(0, this.options.mentionFetchLimit);
@@ -349,12 +349,12 @@ var BasicComposer = Widget.extend({
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mentionFetchLimit;
-            var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(search)), 'i');
+            var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
             _.each(prefetchedPartners, function (partners) {
                 if (limit > 0) {
                     var filteredPartners = _.filter(partners, function (partner) {
                         return partner.email && searchRegexp.test(partner.email) ||
-                            partner.name && searchRegexp.test(mailUtils.unaccent(partner.name));
+                            partner.name && searchRegexp.test(utils.unaccent(partner.name));
                     });
                     if (filteredPartners.length) {
                         suggestions.push(filteredPartners.slice(0, limit));
