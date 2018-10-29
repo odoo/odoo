@@ -794,7 +794,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onSortColumn: function (ev) {
         var name = $(ev.currentTarget).data('name');
-        this.trigger('toggle_column_order', { id: this.state.id, name: name });vments trigger_up to trigger
+        this.trigger('toggle_column_order', { id: this.state.id, name: name });
     },
     /**
      * @private

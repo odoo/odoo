@@ -502,7 +502,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     _onOpenRecord: function (ev) {
         ev.stopPropagation();
         var record = this.model.get(ev.data.id, {raw: true});
-        this.trigger_up('switch_view', {
+        this.trigger('switch_view', {
             view_type: 'form',
             res_id: record.res_id,
             mode: ev.data.mode || 'readonly',
