@@ -1306,7 +1306,8 @@ class Root(object):
     @lazy_property
     def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        return routing_map([''] + odoo.conf.server_wide_modules, True)
+        server_wide_modules = {'base', 'web'} | set(odoo.conf.server_wide_modules)
+        return routing_map([''] + list(server_wide_modules), True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
