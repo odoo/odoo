@@ -31,7 +31,6 @@ class StockRule(models.Model):
 
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        cache = {}
         suppliers = product_id.seller_ids\
             .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id))
         if not suppliers:
@@ -43,17 +42,12 @@ class StockRule(models.Model):
         values['supplier'] = supplier
 
         domain = self._make_po_get_domain(values, partner)
-        if domain in cache:
-            po = cache[domain]
-        else:
-            po = self.env['purchase.order'].sudo().search([dom for dom in domain])
-            po = po[0] if po else False
-            cache[domain] = po
+        po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
+
         if not po:
             vals = self._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
             company_id = values.get('company_id') and values['company_id'].id or self.env.user.company_id.id
             po = self.env['purchase.order'].with_context(force_company=company_id).sudo().create(vals)
-            cache[domain] = po
         elif not po.origin or origin not in po.origin.split(', '):
             if po.origin:
                 if origin:
