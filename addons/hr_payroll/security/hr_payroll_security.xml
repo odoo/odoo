@@ -33,5 +33,16 @@
         <field name="groups" eval="[(4, ref('hr_payroll.group_hr_payroll_manager'))]"/>
     </record>
 
+    <record id="hr_benefit_validated" model="ir.rule">
+        <field name="name">hr.benefit: only non validated benefits updated</field>
+        <field name="model_id" ref="model_hr_benefit"/>
+        <field name="domain_force">[('state', '!=', 'validated')]</field>
+        <field name="groups" eval="[(4, ref('hr_payroll.group_hr_payroll_manager'))]"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="0"/>
+    </record>
+
 </data>
 </odoo>
