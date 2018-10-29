@@ -121,6 +121,7 @@
                            t-att-data-message-id="message.id" title="Mark as Read"/>
                     </span>
                 </p>
+                <t t-raw="message.body"/>
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
                     <t t-if="message.subtype_description">
                         <p t-esc="message.subtype_description"/>
@@ -128,9 +129,6 @@
                     <t t-call="mail.ChatThread.MessageTracking"/>
                 </t>
                 <p t-if="options.display_subject &amp;&amp; message.display_subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
-                <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
-                    <t t-raw="message.body"/>
-                </t>
                 <t t-foreach="message.attachment_ids" t-as="attachment">
                     <t t-call="mail.Attachment"/>
                 </t>

@@ -435,10 +435,16 @@ class MrpProduction(models.Model):
     @api.multi
     def _generate_workorders(self, exploded_boms):
         workorders = self.env['mrp.workorder']
+        original_one = False
         for bom, bom_data in exploded_boms:
             # If the routing of the parent BoM and phantom BoM are the same, don't recreate work orders, but use one master routing
             if bom.routing_id.id and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.routing_id.id != bom.routing_id.id):
-                workorders += self._workorders_create(bom, bom_data)
+                temp_workorders = self._workorders_create(bom, bom_data)
+                workorders += temp_workorders
+                if temp_workorders: # In order to avoid two "ending work orders"
+                    if original_one:
+                        temp_workorders[-1].next_work_order_id = original_one
+                    original_one = temp_workorders[0]
         return workorders
 
     def _workorders_create(self, bom, bom_data):
