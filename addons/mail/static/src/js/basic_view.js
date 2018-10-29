@@ -3,16 +3,15 @@ odoo.define('mail.BasicView', function (require) {
 
 var BasicView = require('web.BasicView');
 
-var mailWidgets = ['mail_followers', 'mail_thread', 'mail_activity', 'kanban_activity'];
-
 BasicView.include({
+    MAIL_WIDGETS: ['mail_followers', 'mail_thread', 'mail_activity', 'kanban_activity'],
     init: function () {
         this._super.apply(this, arguments);
         this.mailFields = {};
         var fieldsInfo = this.fieldsInfo[this.viewType];
         for (var fieldName in fieldsInfo) {
             var fieldInfo = fieldsInfo[fieldName];
-            if (_.contains(mailWidgets, fieldInfo.widget)) {
+            if (_.contains(this.MAIL_WIDGETS, fieldInfo.widget)) {
                 this.mailFields[fieldInfo.widget] = fieldName;
                 fieldInfo.__no_fetch = true;
             }

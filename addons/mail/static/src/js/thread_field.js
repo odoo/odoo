@@ -39,7 +39,7 @@ var ThreadField = AbstractField.extend({
 
         this.dp = new concurrency.DropPrevious();
 
-        this._threadWidget = new ThreadWidget(this, {
+        this._threadWidget = this.createThreadWidget({
             displayOrder: ThreadWidget.ORDER.DESC,
             displayDocumentLinks: false,
             displayMarkAsRead: false,
@@ -70,6 +70,9 @@ var ThreadField = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    createThreadWidget: function (options) {
+        return new ThreadWidget(this, options || {});
+    },
     /**
      * @param {integer[]} attachmentIDs
      */

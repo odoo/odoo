@@ -35,10 +35,13 @@
             <xpath expr="//button[@name='toggle_active']" position="replace"/>
             <xpath expr="//button[@name='%(portal.portal_share_action)d']" position="replace"/>
             <xpath expr="//field[@name='stage_id']" position="attributes">
-                    <attribute name="options">{'fold_field': 'fold'}</attribute>
+                <attribute name="options">{'fold_field': 'fold'}</attribute>
             </xpath>
             <xpath expr="//field[@name='message_follower_ids']" position="replace"/>
             <xpath expr="//field[@name='activity_ids']" position="replace"/>
+            <xpath expr="//field[@name='message_ids']" position="attributes">
+                <attribute name="widget">portal_project_mail_thread</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -78,6 +81,9 @@
             <xpath expr="//button[@name='%(portal.portal_share_action)d']" position="replace"/>
             <xpath expr="//field[@name='message_follower_ids']" position="replace"/>
             <xpath expr="//field[@name='activity_ids']" position="replace"/>
+            <xpath expr="//field[@name='message_ids']" position="attributes">
+                <attribute name="widget">portal_project_mail_thread</attribute>
+            </xpath>
         </field>
     </record>
 
