@@ -107,7 +107,7 @@ class PurchaseOrder(models.Model):
     invoice_status = fields.Selection([
         ('no', 'Nothing to Bill'),
         ('to invoice', 'Waiting Bills'),
-        ('invoiced', 'No Bill to Receive'),
+        ('invoiced', 'Fully Billed'),
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
     # There is no inverse function on purpose since the date may be different on each line
