@@ -240,32 +240,25 @@ class LinkTrackerClick(models.Model):
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country', 'Country')
 
-    @api.model
-    def add_click(self, code, ip, country_code, stat_id=False):
-        self = self.sudo()
-        code_rec = self.env['link.tracker.code'].search([('code', '=', code)])
+    def _prepare_click_values_from_route(self, **route_values):
+        click_values = dict((fname, route_values[fname]) for fname in self._fields if fname in route_values)
+        if not click_values.get('country_id') and route_values.get('country_code'):
+            click_values['country_id'] = self.env['res.country'].search([('code', '=', route_values['country_code'])], limit=1).id
+        return click_values
 
-        if not code_rec:
+    @api.model
+    def add_click(self, code, **route_values):
+        """ Main API to add a click on a link. """
+        tracker_code = self.env['link.tracker.code'].search([('code', '=', code)])
+        if not tracker_code:
             return None
 
-        again = self.search_count([('link_id', '=', code_rec.link_id.id), ('ip', '=', ip)])
+        ip = route_values.get('ip', False)
+        existing = self.search_count(['&', ('link_id', '=', tracker_code.link_id.id), ('ip', '=', ip)])
+        if existing:
+            return None
 
-        if not again:
-            self.create(
-                self._get_click_values_from_route(dict(
-                    code=code,
-                    ip=ip,
-                    country_code=country_code,
-                    stat_id=stat_id,
-                )))
+        route_values['link_id'] = tracker_code.link_id.id
+        click_values = self._prepare_click_values_from_route(**route_values)
 
-    def _get_click_values_from_route(self, route_values):
-        code = self.env['link.tracker.code'].search([('code', '=', route_values['code'])], limit=1)
-        country = self.env['res.country'].search([('code', '=', route_values['country_code'])], limit=1)
-
-        return {
-            'link_id': code.link_id.id,
-            'create_date': datetime.date.today(),
-            'ip': route_values['ip'],
-            'country_id': country.id,
-        }
+        return self.create(click_values)
