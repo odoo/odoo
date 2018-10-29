@@ -395,7 +395,9 @@ class AccountInvoice(models.Model):
     def _get_computed_reference(self):
         self.ensure_one()
         if self.company_id.invoice_reference_type == 'invoice_number':
-            identification_number = int(re.match('.*?([0-9]+)$', self.number).group(1))
+            seq_suffix = self.journal_id.sequence_id.suffix or ''
+            regex_number = '.*?([0-9]+)%s$' % seq_suffix
+            identification_number = int(re.match(regex_number, self.number).group(1))
             prefix = self.number
         else:
             #self.company_id.invoice_reference_type == 'partner'
