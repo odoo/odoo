@@ -186,6 +186,8 @@ class ResourceCalendar(models.Model):
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
 
+    full_time = fields.Boolean("Full time", default=True)
+
     @api.onchange('attendance_ids')
     def _onchange_hours_per_day(self):
         attendances = self.attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to)
