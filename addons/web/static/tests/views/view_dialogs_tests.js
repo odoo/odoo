@@ -365,6 +365,61 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Form dialog and subview with _view_ref contexts', function (assert) {
+        assert.expect(2);
+
+        this.data.instrument.records = [{id: 1, name: 'Tromblon', badassery: [1]}];
+        this.data.partner.records[0].instrument = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                     '<field name="name"/>' +
+                     '<field name="instrument" context="{\'tree_view_ref\': \'some_tree_view\'}"/>' +
+                  '</form>',
+            res_id: 1,
+            archs: {
+                'instrument,false,form': '<form>'+
+                                            '<field name="name"/>'+
+                                            '<field name="badassery" context="{\'tree_view_ref\': \'some_other_tree_view\'}"/>' +
+                                        '</form>',
+
+                'badassery,false,list': '<tree>'+
+                                                '<field name="level"/>'+
+                                            '</tree>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+
+            mockRPC: function(route, args) {
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+
+            interceptsPropagate: {
+                load_views: function (ev) {
+                    var evaluatedContext = ev.data.context.eval();
+                    if (ev.data.modelName === 'instrument') {
+                        assert.deepEqual(evaluatedContext, {tree_view_ref: 'some_tree_view'},
+                            'The correct _view_ref should have been sent to the server, first time');
+                    }
+                    if (ev.data.modelName === 'badassery') {
+                        assert.deepEqual(evaluatedContext, {tree_view_ref: 'some_other_tree_view'},
+                            'The correct _view_ref should have been sent to the server for the subview');
+                    }
+                },
+            },
+        });
+
+        form.$('.o_field_widget[name="instrument"] button.o_external_button').click();
+        form.destroy();
+    });
+
 });
 
 });
