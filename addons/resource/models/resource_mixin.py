@@ -31,6 +31,21 @@ class ResourceMixin(models.AbstractModel):
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
 
+    @api.onchange('resource_calendar_id')
+    def _onchange_resource_calendar_id(self):
+        for res in self:
+            # If there was another calendar we remove the old leaves based on it
+            # And we create the new ones
+            if hasattr(res, '_origin'):
+                resource_leaves = self.env['resource.calendar.leaves'].search([('calendar_id', '=', res._origin.resource_calendar_id.id), ('resource_id', '=', False)])
+                for rcl in resource_leaves:
+                    rcl.leave_ids.action_refuse()
+                    rcl.leave_ids.unlink()
+
+                resource_leaves = self.env['resource.calendar.leaves'].search([('calendar_id', '=', res.resource_calendar_id.id), ('resource_id', '=', False)])
+                for rcl in resource_leaves:
+                    rcl.create_leaves()
+
     @api.model
     def create(self, values):
         if not values.get('resource_id'):

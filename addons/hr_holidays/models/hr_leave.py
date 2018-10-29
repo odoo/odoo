@@ -235,6 +235,7 @@ class HolidaysRequest(models.Model):
     request_unit_half = fields.Boolean('Half Day')
     request_unit_hours = fields.Boolean('Custom Hours')
     request_unit_custom = fields.Boolean('Days-long custom hours')
+    calendar_leave_id = fields.Many2one('resource.calendar.leaves')
 
     _sql_constraints = [
         ('type_value',
@@ -549,7 +550,9 @@ class HolidaysRequest(models.Model):
             meeting_values = holiday._prepare_holidays_meeting_values()
             meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
             holiday.write({'meeting_id': meeting.id})
-            holiday._create_resource_leave()
+            # Don't create a resource.calendar.leaves if we come from resource.calendar.leaves
+            if not self.env.context.get('auto_leave_create_disable', False):
+                holiday._create_resource_leave()
 
     @api.multi
     def _prepare_holidays_meeting_values(self):
@@ -679,7 +682,8 @@ class HolidaysRequest(models.Model):
                 holiday.meeting_id.unlink()
             # If a category that created several holidays, cancel all related
             holiday.linked_request_ids.action_refuse()
-        self._remove_resource_leave()
+        if not self._context.get('no_resource_remove', False):
+            self._remove_resource_leave()
         self.activity_update()
         return True
 

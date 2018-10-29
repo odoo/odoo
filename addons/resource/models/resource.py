@@ -505,6 +505,7 @@ class ResourceCalendarLeaves(models.Model):
         'res.company', related='calendar_id.company_id', string="Company",
         readonly=True, store=True)
     calendar_id = fields.Many2one('resource.calendar', 'Working Hours')
+    date = fields.Date('Date')
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(
@@ -522,3 +523,9 @@ class ResourceCalendarLeaves(models.Model):
     def onchange_resource(self):
         if self.resource_id:
             self.calendar_id = self.resource_id.calendar_id
+
+    @api.onchange('date')
+    def onchange_date(self):
+        if self.date:
+            self.date_from = datetime.combine(self.date, time(0, 0, 0))
+            self.date_to = datetime.combine(self.date, time(23, 59, 59))

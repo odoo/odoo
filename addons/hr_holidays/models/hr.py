@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+import math
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import Warning
 from odoo.tools.float_utils import float_round
 
 
@@ -113,7 +114,10 @@ class Employee(models.Model):
     def _compute_remaining_leaves(self):
         remaining = self._get_remaining_leaves()
         for employee in self:
-            employee.remaining_leaves = float_round(remaining.get(employee.id, 0.0), precision_digits=2)
+            remaining_days = remaining.get(employee.id, 0.0)
+            if remaining_days is None:
+                remaining_days = 0.0
+            employee.remaining_leaves = float_round(remaining_days, precision_digits=2)
 
     @api.multi
     def _compute_leave_status(self):
@@ -188,7 +192,75 @@ class Employee(models.Model):
         ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]
 
+    # function to add all mandatory leaves in the future
+    def add_mandatory_leaves(self, resource_calendar_id, employee_id):
+        today_date_str = fields.Datetime.to_string(datetime.datetime.utcnow().date())
+        leaves = self.env['resource.calendar.leaves'].search([
+            ('calendar_id', '=', resource_calendar_id),
+            ('resource_id', '=', False),
+            ('generate_hr_leaves', '=', True),
+            ('date_to', '>=', today_date_str)
+        ])
+
+        problem_name = []
+
+        for leave in leaves:
+            date_from = leave.date_from
+            date_to = leave.date_to
+            if isinstance(date_from, str):
+                date_from = fields.Datetime.from_string(date_from)
+            if isinstance(date_to, str):
+                date_to = fields.Datetime.from_string(date_to)
+            time_delta = date_to - date_from
+            number_of_days = math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
+            try:
+                request = self.env['hr.leave'].with_context(auto_leave_create_disable=True).create({
+                    'name': leave.name,
+                    'employee_id': employee_id,
+                    'holiday_status_id': leave.company_id.bank_leaves_type_id.id,
+                    'request_date_from': leave.date_from,
+                    'request_date_to': leave.date_to,
+                    'date_from': leave.date_from,
+                    'date_to': leave.date_to,
+                    'number_of_days': number_of_days,
+                    'calendar_leave_id': leave.id,
+                })
+                request.action_approve()
+            except:
+                problem_name.append('%(name)s (%(from)s - %(to)s)' %{'name': leave.name, 'from': leave.date_from, 'to': leave.date_to})
+                continue
+
+        if len(problem_name):
+            raise Warning(_('Conflict with leave(s):\n %(employee)s') % {'employee': '\n'.join(problem_name)})
+
+
+    # function to remove all mandatory leaves in the past
+    def remove_mandatory_leaves(self, resource_calendar_id, employee_id):
+        today_date_str = fields.Datetime.to_string(datetime.datetime.utcnow().date())
+        leaves = self.env['resource.calendar.leaves'].search([
+            ('calendar_id', '=', resource_calendar_id),
+            ('resource_id', '=', False),
+            ('generate_hr_leaves', '=', True),
+            ('date_from', '>=', today_date_str)
+        ])
+
+        for leave in leaves:
+            request_to_delete = self.env['hr.leave'].search([
+                ('calendar_leave_id', '=', leave.id),
+                ('employee_id', '=', employee_id)
+            ])
+            request_to_delete.action_refuse()
+            request_to_delete.action_draft()
+            request_to_delete.unlink()
+
+    @api.model
+    def create(self, values):
+        res = super(Employee, self).create(values)
+        self.add_mandatory_leaves(values.get('resource_calendar_id', 1), res.id)
+        return res
+
     def write(self, values):
+        old_resource_calendar_id = self.resource_calendar_id.id
         res = super(Employee, self).write(values)
         today_date = fields.Datetime.now()
         if 'parent_id' in values or 'department_id' in values:
@@ -197,8 +269,11 @@ class Employee(models.Model):
                 hr_vals['manager_id'] = values['parent_id']
             if values.get('department_id') is not None:
                 hr_vals['department_id'] = values['department_id']
-            holidays = self.env['hr.leave'].search(['|',('state', 'in', ['draft', 'confirm']),('date_from', '>', today_date), ('employee_id', 'in', self.ids)])
+            holidays = self.env['hr.leave'].search(['|', ('state', 'in', ['draft', 'confirm']), ('date_from', '>', today_date), ('employee_id', 'in', self.ids)])
             holidays.write(hr_vals)
             allocations = self.env['hr.leave.allocation'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
+        if 'resource_calendar_id' in values:
+            self.remove_mandatory_leaves(old_resource_calendar_id, self.id)
+            self.add_mandatory_leaves(values.get('resource_calendar_id', 1), self.id)
         return res
