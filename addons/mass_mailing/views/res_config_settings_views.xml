@@ -74,8 +74,6 @@
             <field name="context">{'module' : 'mass_mailing'}</field>
         </record>
 
-        <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
-            sequence="100"/>
         <menuitem id="menu_mass_mailing_global_settings" name="Settings"
-            parent="menu_mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration" groups="base.group_system"/>
+            parent="mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration" groups="base.group_system"/>
 </odoo>
