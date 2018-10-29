@@ -893,6 +893,7 @@ class ProcurementRule(models.Model):
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         cache = {}
+        po = self.env['purchase.order']
         suppliers = product_id.seller_ids\
             .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id))
         if not suppliers:
@@ -935,6 +936,7 @@ class ProcurementRule(models.Model):
         if not po_line:
             vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
             self.env['purchase.order.line'].sudo().create(vals)
+        return po
 
     def _get_purchase_schedule_date(self, values):
         """Return the datetime value to use as Schedule Date (``date_planned``) for the
