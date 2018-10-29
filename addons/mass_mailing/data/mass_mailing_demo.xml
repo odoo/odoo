@@ -210,49 +210,37 @@
 
         <!-- Generate some clicks -->
         <function model="link.tracker.click" name="add_click">
-            <!-- code, ip, country_code, stat_id -->
             <value model="link.tracker.code"
                 search="[('link_id.url', '=', 'http://www.example.com')]"
                 use="code"/>
-            <value eval="'100.01.02.03'"/>
-            <value eval="'BE'"/>
-            <value eval="ref('mass_mail_1_stat_0')"/>
+            <value eval="{'ip': '100.01.02.03', 'country_code': 'BE', 'mail_stat_id': ref('mass_mail_1_stat_0')}"/>
         </function>
         <function model="link.tracker.click" name="add_click">
-            <!-- code, ip, country_code, stat_id -->
             <value model="link.tracker.code"
                 search="[('link_id.url', '=', 'http://www.example.net/page/contactus')]"
                 use="code"/>
-            <value eval="'100.01.02.03'"/>
-            <value eval="'BE'"/>
-            <value eval="ref('mass_mail_1_stat_0')"/>
+            <value eval="{'ip': '100.01.02.03', 'country_code': 'BE', 'mail_stat_id': ref('mass_mail_1_stat_0')}"/>
         </function>
         <function model="link.tracker.click" name="add_click">
-            <!-- code, ip, country_code, stat_id -->
             <value model="link.tracker.code"
                 search="[('link_id.url', '=', 'http://www.example.com')]"
                 use="code"/>
-            <value eval="'100.01.02.04'"/>
-            <value eval="'BE'"/>
-            <value eval="ref('mass_mail_1_stat_1')"/>
+            <value eval="{'ip': '100.01.02.04', 'country_code': 'BE', 'mail_stat_id': ref('mass_mail_1_stat_1')}"/>
         </function>
         <function model="link.tracker.click" name="add_click">
-            <!-- code, ip, country_code, stat_id -->
             <value model="link.tracker.code"
                 search="[('link_id.url', '=', 'http://www.example.net/page/contactus')]"
                 use="code"/>
+            <value eval="{'ip': '100.01.02.04', 'country_code': 'BE', 'mail_stat_id': ref('mass_mail_1_stat_0')}"/>
             <value eval="'100.01.02.04'"/>
             <value eval="'BE'"/>
             <value eval="ref('mass_mail_1_stat_0')"/>
         </function>
         <function model="link.tracker.click" name="add_click">
-            <!-- code, ip, country_code, stat_id -->
             <value model="link.tracker.code"
                 search="[('link_id.url', '=', 'http://www.example.com')]"
                 use="code"/>
-            <value eval="'100.01.02.05'"/>
-            <value eval="'BE'"/>
-            <value eval="ref('mass_mail_1_stat_2')"/>
+            <value eval="{'ip': '100.01.02.05', 'country_code': 'BE', 'mail_stat_id': ref('mass_mail_1_stat_2')}"/>
         </function>
 
     </data>
