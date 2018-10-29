@@ -2,6 +2,7 @@ odoo.define('point_of_sale.DB', function (require) {
 "use strict";
 
 var core = require('web.core');
+var utils = require('web.utils');
 /* The PosDB holds reference to data that is either
  * - static: does not change between pos reloads
  * - persistent : must stay between reloads ( orders )
@@ -306,13 +307,13 @@ var PosDB = core.Class.extend({
         try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
             query = query.replace(/ /g,'.+');
-            var re = RegExp("([0-9]+):.*?"+query,"gi");
+            var re = RegExp("([0-9]+):.*?"+utils.unaccent(query),"gi");
         }catch(e){
             return [];
         }
         var results = [];
         for(var i = 0; i < this.limit; i++){
-            var r = re.exec(this.partner_search_string);
+            var r = re.exec(utils.unaccent(this.partner_search_string));
             if(r){
                 var id = Number(r[1]);
                 results.push(this.get_partner_by_id(id));
@@ -366,13 +367,13 @@ var PosDB = core.Class.extend({
         try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
             query = query.replace(/ /g,'.+');
-            var re = RegExp("([0-9]+):.*?"+query,"gi");
+            var re = RegExp("([0-9]+):.*?"+utils.unaccent(query),"gi");
         }catch(e){
             return [];
         }
         var results = [];
         for(var i = 0; i < this.limit; i++){
-            var r = re.exec(this.category_search_string[category_id]);
+            var r = re.exec(utils.unaccent(this.category_search_string[category_id]));
             if(r){
                 var id = Number(r[1]);
                 results.push(this.get_product_by_id(id));
