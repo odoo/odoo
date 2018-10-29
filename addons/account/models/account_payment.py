@@ -416,7 +416,7 @@ class account_payment(models.Model):
             total_residual_company_signed = sum(invoice.residual_company_signed for invoice in self.invoice_ids)
             total_payment_company_signed = self.currency_id.with_context(date=self.payment_date).compute(self.amount, self.company_id.currency_id)
             if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
-                amount_wo = total_payment_company_signed - total_residual_company_signed
+                amount_wo = total_payment_company_signed + total_residual_company_signed
             else:
                 amount_wo = total_residual_company_signed - total_payment_company_signed
             # Align the sign of the secondary currency writeoff amount with the sign of the writeoff
