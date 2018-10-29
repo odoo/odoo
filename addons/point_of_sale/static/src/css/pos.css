@@ -2152,6 +2152,19 @@ td {
     overflow: auto;
     height: 120px;
 }
+.pos .modal-dialog .popup-textinput{
+    display: flex;
+    flex-direction: column;
+}
+.pos .modal-dialog .popup-textinput .title,
+.pos .modal-dialog .popup-textinput .footer{
+    flex: none;
+}
+.pos .modal-dialog .popup-textinput textarea{
+    resize: none;
+    flex: auto;
+    margin: 0 20px 80px;
+}
 .pos .popup .title {
     background: rgba(255,255,255,0.5);
     margin: 0;
