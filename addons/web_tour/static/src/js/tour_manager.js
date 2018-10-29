@@ -276,13 +276,17 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             delete tip.widget;
         }
     },
+    _describeTip: function(tip) {
+        return tip.content ? tip.content + ' (trigger: ' + tip.trigger + ')' : tip.trigger;
+    },
     _consume_tip: function(tip, tour_name) {
         this._deactivate_tip(tip);
         this._to_next_step(tour_name);
 
         var is_running = (this.running_tour === tour_name);
         if (is_running) {
-            console.log(_.str.sprintf("Tour %s: step %s succeeded", tour_name, tip.trigger));
+            var stepDescription = this._describeTip(tip);
+            console.log(_.str.sprintf("Tour %s: step '%s' succeeded", tour_name, stepDescription));
         }
 
         if (this.active_tooltips[tour_name]) {
@@ -334,7 +338,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 _.each(this._log, function (log) {
                     console.log(log);
                 });
-                console.log(document.body.outerHTML);
+                console.log(document.body.parentElement.outerHTML);
                 console.error(error); // will be displayed as error info
                 console.log("error"); // phantomJS wait for message starting by error to stop
             } else {
@@ -357,7 +361,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _set_running_tour_timeout: function (tour_name, step) {
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
-            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, step.trigger));
+            var descr = this._describeTip(step);
+            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, descr));
         }).bind(this), (step.timeout || RUNNING_TOUR_TIMEOUT) + this.running_step_delay);
     },
     _stop_running_tour_timeout: function () {
