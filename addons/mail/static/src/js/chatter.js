@@ -102,6 +102,13 @@ var Chatter = Widget.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @param {Object} record
+     * @param {Object} mailFields
+     * @param {Object} options
+     * @param {string} [options.viewType=record.viewType] current viewType in
+     *   which the chatter is instantiated
+     */
     initMailFields: function (record, mailFields, options) {
         if (mailFields.mail_activity) {
             this.fields.activity = new Activity(this, mailFields.mail_activity, record, options);

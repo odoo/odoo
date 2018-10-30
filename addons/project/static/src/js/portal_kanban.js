@@ -1,6 +1,7 @@
 odoo.define('project.PortalKanban', function (require) {
 "use strict";
 
+// Instantiate a project kanban
 var KanbanView = require('web.KanbanView');
 var PortalWebclientView = require('project.PortalWebclientView');
 

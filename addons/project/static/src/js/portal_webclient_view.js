@@ -97,6 +97,12 @@ var PortalWebclientView = Widget.extend({
     start: function () {
         return this._super.apply(this, arguments);
     },
+    /**
+     * Return a deferred that resolves when the view is propery opened (at the end of
+     * the willStart deferreds chain).
+     * If a handler is passed as argument, it will be used as callback to the deferred.
+     * @param {Object} [handler]
+     */
     opened: function (handler) {
         return (handler)? this._opened.then(handler) : this._opened;
     },

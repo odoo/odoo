@@ -232,9 +232,10 @@ class CustomerPortal(CustomerPortal):
         """Render a Kanban view displaying a project's tasks.
         The project's ID is added to the page then retrieved by JS.
 
-        Attributes:
-            project_id (int): The ID of the project to view.
+        :param project_id: The ID of the project to view.
+        :type project_id: int
         """
+
         params = {
             'projectId': project_id,
             'context': request.env.context,
@@ -251,10 +252,12 @@ class CustomerPortal(CustomerPortal):
         The project's and task's IDs are added to the page then
         retrieved by JS.
 
-        Attributes:
-            project_id (int): The ID of the project to view.
-            task_id (int): The ID of the task to view.
+        :param project_id: The ID of the project to view.
+        :type project_id: int
+        :param task_id: The ID of the task to view.
+        :type task_id: int
         """
+
         params = {
             'projectId': project_id,
             'taskId': task_id,

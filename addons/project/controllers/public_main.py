@@ -13,6 +13,19 @@ class PublicAction(Action, PublicProject):
     @http.route('/embed/project/action/load', type='json', auth="public")
     @PublicProject.verify_and_dispatch('load_action')
     def public_load_action(self, **kw):
+        """Public interface for /web/action/load.
+        Check permissions, then call Action.load() as sudo
+        (or in the regular fashion if user is logged in and no access
+        is granted otherwise) in order to load an action.
+        
+        :param kw: Contains the method, the model and any other keyword
+                   arguments required by Action.load()
+                   + access_info (used then removed by @verify_and_dispatch):
+                   access token and document information (project_id, task_id)
+        :return: The result of Action.load()
+        :rtype: any
+        """
+
         return self._sudo_load_action(**kw)
 
 
@@ -21,20 +34,30 @@ class PublicDataSet(DataSet, PublicProject):
     @http.route('/embed/project/dataset/call', type='json', auth="public")
     @PublicProject.verify_and_dispatch('call')
     def public_call(self, operation, task_id, **kw):
-        """After checking permissions, call call() in order to call a given method
+        """Public interface for /web/dataset/call.
+        Check permissions, then call DataSet.call() as sudo
+        (or in the regular fashion if user is logged in and no access
+        is granted otherwise) in order to call a given method
         of a given model.
 
         call() is a shorthand for call_kw without keyword arguments: it passes
         an empty dict to _call_kw().
 
         Use within a project:
-        - Read a template (only used by colorpicker)
+        - Read a template (only used by Summernote)
 
-        :param operation: (str) 'read', 'write' or 'create' - injected by @verify_and_dispatch
+        :param operation: 'read', 'write' or 'create' - injected by @verify_and_dispatch
+        :type operation: str
+        :param task_id: The id of the task of which we operate - injected by @verify_and_dispatch
+        :type task_id: int
         :param kw: Contains the method, the model and any other keyword
-                       arguments required by the call() method of DataSet.
-        :return: (any) The result of Dataset.call
+                   arguments required by DataSet.call()
+                   + access_info (used then removed by @verify_and_dispatch):
+                   access token and document information (project_id, task_id)
+        :return: The result of Dataset.call()
+        :rtype: any
         """
+
         if operation == 'create':
             return self._sudo_call_kw_create(request.env[kw.pop('model')],
                                              kw.get('method'),
@@ -56,8 +79,11 @@ class PublicDataSet(DataSet, PublicProject):
                  '/embed/project/dataset/call_kw/<path:path>'], type='json', auth="public")
     @PublicProject.verify_and_dispatch('call_kw')
     def public_call_kw(self, operation, task_id, **kw):
-        """After checking permissions, call call_kw() in order to call a given method of a given model.
-        Most dataset CRUD operations go through this route.
+        """Public interface for /web/dataset/call_kw.
+        Check permissions, then call DataSet.call_kw() as sudo
+        (or in the regular fashion if user is logged in and no access
+        is granted otherwise) in order to call a given method
+        of a given model. Most dataset CRUD operations go through this route.
 
         Unexhaustive use within a project:
             (- K = on project view (kanban)
@@ -75,13 +101,19 @@ class PublicDataSet(DataSet, PublicProject):
         - KC    read_progress_bar: Get the data needed for all the kanban column progressbars. Fetched alongside read_group operation.
         - C     onchange
         - S     create: Create a record in project.task
-
-        :param operation: (str) 'read', 'write' or 'create' - injected by @verify_and_dispatch
+        
+        :param operation: 'read', 'write' or 'create' - injected by @verify_and_dispatch
+        :type operation: str
+        :param task_id: The id of the task of which we operate - injected by @verify_and_dispatch
+        :type task_id: int
         :param kw: Contains the method, the model and any other keyword
-                       arguments required by the call_kw() method of
-                       DataSet.
-        :return: (any) The result of Dataset.call_kw
+                   arguments required by the DataSet.call_kw()
+                   + access_info (used then removed by @verify_and_dispatch):
+                   access token and document information (project_id, task_id)
+        :return: The result of Dataset.call_kw()
+        :rtype: any
         """
+
         if operation == 'create':
             return self._sudo_call_kw_create(request.env[kw.pop('model')],
                                              kw.get('method'),
@@ -102,31 +134,47 @@ class PublicDataSet(DataSet, PublicProject):
     @http.route('/embed/project/dataset/resequence', type='json', auth="public")
     @PublicProject.verify_and_dispatch('resequence')
     def public_resequence(self, task_id, **kw):
-        """After checking permissions, call resequence() in order to re-sequence
-        a number of records in the model, by their ids.
-
+        """Public interface for /web/dataset/resequence.
+        Check permissions, then call BaseModel.resequence() as sudo
+        (or in the regular fashion if user is logged in and no access
+        is granted otherwise) in order to re-sequence a number of records
+        in the model, by their ids.
+        
         Use within a project:
         - Changing the order of tasks or stages
-
-        :param kw: Contains the ids and any other keyword arguments
-                       required by the call_button() method of DataSet.
-        :return: (any) The result of Dataset.resequence
+        
+        :param task_id: The id of the task of which we operate - injected by @verify_and_dispatch
+        :type task_id: int
+        :param kw: Contains the method, the model and any other keyword
+                   arguments required by the BaseModel.resequence()
+                   + access_info (used then removed by @verify_and_dispatch):
+                   access token and document information (project_id, task_id)
+        :return: The result of BaseModel.resequence()
+        :rtype: any
         """
+
         return self._sudo_resequence(task_id, request.env[kw.pop('model')], **kw)
 
     @http.route('/embed/project/dataset/search_read', type='json', auth="public")
     @PublicProject.verify_and_dispatch('search_read')
     def public_search_read(self, **kw):
-        """After checking permissions, call search_read() in order to perform a search()
-        followed by a read() (if needed) using the provided search criteria.
+        """Public interface for /web/dataset/search_read.
+        Check permissions, then call DataSet.do_search_read() as sudo
+        (or in the regular fashion if user is logged in and no access
+        is granted otherwise) in order to perform a search() followed
+        by a read() (if needed) using the provided search criteria.
 
         Use within a project:
-        - Get the recordsets data
+        - Get the recordset's data
 
-        :param kw: Contains the search criteria and any other keyword arguments required
-                       by the search_read() method of DataSet.
-        :return: (any) The result of Dataset.search_read
+        :param kw: Contains the search criteria and any other keyword
+                   arguments required by the DataSet.do_search_read()
+                   + access_info (used then removed by @verify_and_dispatch):
+                   access token and document information (project_id, task_id)
+        :return: The result of DataSet.do_search_read()
+        :rtype: any
         """
+
         return self._sudo_search_read(request.env[kw.pop('model')], **kw)
 
 
@@ -135,11 +183,17 @@ class PublicMailController(MailController, PublicProject):
     @http.route('/embed/project/mail/init_messaging', type='json', auth='public')
     @PublicProject.verify_and_dispatch('mail_init_messaging')
     def public_mail_init_messaging(self, **kw):
-            """After checking permissions, call mail_init_messaging() in order to retrieve
-            values required for the chatter initialization.
+        """Public interface for /mail/init_messaging.
+        Check permissions, then emulate MailController.mail_init_messaging()
+        as sudo (or in the regular fashion if user is logged in and no access
+        is granted otherwise) in order to retrieve values required for
+        the chatter initialization.
+        
+        :param kw: Contains access_info (used then removed by @verify_and_dispatch):
+                   access token and document information (project_id, task_id)
+                   and potentially a context key            
+        :return: The result of MailController.mail_init_messaging()
+        :rtype: dict
+        """
 
-            :param kw: (dict) contains access_info: access token and document information (project_id, task_id)
-                                           and potentially a context key
-            :return: (dict) The result of MailController.mail_init_messaging
-            """
-            return self._sudo_mail_init_messaging()
+        return self._sudo_mail_init_messaging()

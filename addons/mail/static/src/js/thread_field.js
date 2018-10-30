@@ -70,6 +70,10 @@ var ThreadField = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @param  {Object} [options]
+     * @return {Object} ThreadWidget
+     */
     createThreadWidget: function (options) {
         return new ThreadWidget(this, options || {});
     },

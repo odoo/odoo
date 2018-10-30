@@ -4,7 +4,15 @@ odoo.define('project.ThreadField', function (require) {
 var field_registry = require('web.field_registry');
 var ThreadField = require('mail.ThreadField');
 
+/**
+ * Adds custom options to thread widget upon starting the chatter.
+ */
 var ProjectThreadField = ThreadField.extend({
+    /**
+     * @override
+     * @param  {Object} [options]
+     * @return {Object} ThreadWidget
+     */
     createThreadWidget: function (options) {
         options = _.defaults({
             displayStars: false,

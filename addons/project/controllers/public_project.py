@@ -18,15 +18,21 @@ class PublicProject(http.Controller):
         """Public route to check the user's access token and access rights. Whichever is
         the highest of the two will take precedence.
 
-        :param access_token: (str) The access token passed in the URL
-        :param project_id: (int) The ID of the project (or task's project) to access
-        :param task_id: (int) The ID of the task to access
-        :param action: (str) (optional) The action for which to check the rights ('read' or 'edit')
-        :return: if action : (bool) True if the action is permitted
-                 else: (str) 'invalid' if no access granted
-                             'edit' if edit access granted
-                             'readonly' if readonly access granted
+        :param access_token: The access token passed in the URL
+        :type access_token: str
+        :param project_id: The ID of the project (or task's project) to access, defaults to None
+        :param project_id: int, optional
+        :param task_id: The ID of the task to access, defaults to None
+        :param task_id: int, optional
+        :param action: 'read' or 'edit': the action for which to check the rights, defaults to None
+        :param action: str, optional
+        :return: if action: True if the action is permitted
+                 else: 'invalid' if no access granted
+                       'edit' if edit access granted
+                       'readonly' if readonly access granted
+        :rtype: bool or str
         """
+
         levels = ['invalid', 'readonly', 'edit']
         user_rights = 0
         if self._is_logged_in():
@@ -50,9 +56,13 @@ class PublicProject(http.Controller):
     def chatter_track(operation):
         """Prepare values for chatter tracking, then call the decorated function, then track for chatter.
 
-        :param operation: (str) 'read', 'write' or 'create' (note: fields to track are defined in function
-                                of that operation type, via self._tracked_fields(operation)).
+        :param operation: 'read', 'write' or 'create' (note: fields to track are defined in function
+                          of that operation type, via self._tracked_fields(operation)).
+        :type operation: str
+        :return: The result of the decorated function
+        :rtype: any
         """
+
         def decorator(f):
             @functools.wraps(f)
             def response_wrap(self, *args, **kw):
@@ -83,6 +93,18 @@ class PublicProject(http.Controller):
         return decorator
     
     def verify_and_dispatch(method_to_call):
+        """Verify the user's permissions to perform the action requested, then
+        either call the decorated function, or the given method_to_call as the
+        user (fall back to the regular permission checks), or raise an AccessError.
+
+        
+        :param method_to_call: The method the user is resquesting permission to call
+        :type method_to_call: str
+        :raises AccessError: if the user is not logged in and access was denied
+        :return: The result of the decorated function or of the given method_to_call
+        :rtype: any
+        """
+
         def decorator(f):
             @functools.wraps(f)
             def response_wrap(self, *args, **kw):
@@ -141,6 +163,14 @@ class PublicProject(http.Controller):
     # PRIVATE METHODS
 
     def _check_operation(self, method):
+        """Get the method's operation type from the whitelist, if it's there.
+        
+        :param method: The name of the method for which we want to know the operation type
+        :type method: str
+        :return: The name of the operation type ('read', 'write', 'create') or None
+        :rtype: str or None
+        """
+
         wl = self._whitelist()
         for op_name in wl:
             op = wl.get(op_name)
@@ -152,14 +182,32 @@ class PublicProject(http.Controller):
         return
 
     def _check_whitelists(self, operation, model, fields, domain):
+        """Check if something is allowed by the whitelist.
+        1. Check if the operation is allowed of the given model (if any)
+        2. Check if the operation is allowed on the given fields (if any) of the given model (if any)
+        3. Check if the domain (if any) is legal
+        Return True if all conditions are met.
+        
+        :param operation: [description]
+        :type operation: str
+        :param model: [description]
+        :type model: str
+        :param fields: [description]
+        :type fields: list(str)
+        :param domain: [description]
+        :type domain: list(str, list(str, int))
+        :return: True if all conditions are met.
+        :rtype: bool
+        """
+
         if model:
             # 1. Check the model access (for that operation)
             if not self._is_whitelisted(operation, model=model):
-                return
+                return False
             # 2. Check the fields access (for that operation on that model)
             for field in fields:
                 if not self._is_whitelisted(operation, model=model, field=field):
-                    return
+                    return False
 
         # 3. Check the domain (for that operation on that model)
         for d in domain:
@@ -167,7 +215,7 @@ class PublicProject(http.Controller):
                 # d[0] is a field name
                 is_field_ok = self._is_whitelisted(operation, model=model, field=d[0])
                 if not is_field_ok:
-                    return
+                    return False
         
         return True
     
@@ -177,24 +225,36 @@ class PublicProject(http.Controller):
         Note: Access to a project implies access to its tasks but the inverse is not true. If we're trying to access
               a task, after unsuccessfully checking the task token we check the task token.
 
-        :param access_token: (str) The access token to check
-        :param project_id: (int) The ID of the project for which access is being requested
-        :param task_id: (int) Optional: The ID of the task for which access is being requested
-        :param action: (str) The action to perform on the project or task: 'read' or 'edit'
-        :return: (bool) True if requested access is granted
+        :param access_token: The access token to check
+        :type access_token: str
+        :param project_id: The ID of the project for which access is being requested, defaults to None
+        :param project_id: int, optional
+        :param task_id: The ID of the task for which access is being requested, defaults to None
+        :param task_id: int, optional
+        :param action: 'read' or 'edit': the action to perform on the project or task, defaults to 'read'
+        :param action: str, optional
+        :return: True if requested access is granted
+        :rtype: bool
         """
+
         res = self.__check_token_helper(access_token, 'project.task', task_id, action) if task_id else None
         return res or self.__check_token_helper(access_token, 'project.project', project_id, action)
 
     def __check_token_helper(self, access_token, model, document_id, action):
-        """Helper function to _public_project_check_token.
+        """Helper function to _public_project_check_token. Performs an individual token check.
 
-        :param access_token: (str) The access token to check
-        :param model: (str) The name of the model to which the requested document belongs
-        :param document_id: (str) The requested document's ID
-        :param action: (str) The action to perform on the project or task: 'read' or 'edit'
-        :return: (bool) True if requested access is granted
+        :param access_token: The access token to check
+        :type access_token: str
+        :param model: The name of the model to which the requested document belongs
+        :type model: str
+        :param document_id: The requested document's ID
+        :type document_id: str
+        :param action: The action to perform on the project or task: 'read' or 'edit'
+        :type action: str
+        :return: True if requested access is granted
+        :rtype: bool
         """
+
         if not access_token:
             return False
         rec_sudo = request.env[model].sudo().browse(document_id)
@@ -209,11 +269,28 @@ class PublicProject(http.Controller):
     def _is_logged_in(self):
         """Checks if the user is logged in.
 
-        :return: (bool) True if the user is logged in
+        :return: True if the user is logged in
+        :rtype: bool
         """
+
         return request.session.uid is not None
 
     def _is_whitelisted(self, operations, method=None, model=None, field=None):
+        """Check if any action is whitelisted. If so, get the operation name.
+        
+        :param operations: The operation type(s) to check. If several are given,
+                           the first one that is whitelisted returns its name.
+        :type operations: str or list(str)
+        :param method: The name of the method for which the user is requesting permission, defaults to None
+        :param method: str, optional
+        :param model: The name of the model for which the user is requesting permission, defaults to None
+        :param model: str, optional
+        :param field: The name of the field for which the user is requesting permission, defaults to None
+        :param field: str, optional
+        :return: The operation's name if the action is whitelisted, False otherwise
+        :rtype: str or bool
+        """
+
         # Can't have method AND field (makes no sense anyway)
         operations = [operations] if isinstance(operations, str) else operations
         whitelist = self._whitelist()
@@ -231,7 +308,9 @@ class PublicProject(http.Controller):
         return False
 
     def _sudo_call_kw(self, model, method_name, args, kw):
-        """Override api.call_kw to pass it the model as sudo."""
+        """Call api.call_kw as sudo:
+        Invoke the given method ``method_name`` on the recordset ``model``.
+        """
         # message_post should have the public user as author if not logged in
         if method_name == 'message_post' and not self._is_logged_in():
             kw['author_id'] = request.uid or None
@@ -239,16 +318,22 @@ class PublicProject(http.Controller):
 
     @chatter_track('create')
     def _sudo_call_kw_create(self, model, method_name, args, kw):
+        """Call _sudo_call_kw() in order to perform a 'create' operation."""
+
         return self._sudo_call_kw(model, method_name, args, kw)
     
     def _sudo_call_kw_read(self, model, method_name, args, kw):
+        """Call _sudo_call_kw() in order to perform a 'read' operation."""
         return self._sudo_call_kw(model, method_name, args, kw)
     
     @chatter_track('write')
     def _sudo_call_kw_write(self, task_id, model, method_name, args, kw):
+        """Call _sudo_call_kw() in order to perform a 'write' operation."""
         return self._sudo_call_kw(model, method_name, args, kw)
 
     def _sudo_load_action(self, **kw):
+        """Perform Action.load() as sudo."""
+
         action_id = kw.get('action_id')
         additional_context = kw.get('additional_context', None)
 
@@ -279,7 +364,7 @@ class PublicProject(http.Controller):
         return value
 
     def _sudo_mail_init_messaging(self):
-        """This is a copy-paste of MailController.mail_init_messaging with auth='public' and request made as superuser."""
+        """Perform MailController.mail_init_messaging() with auth='public' as sudo."""
         env = request.env(user=SUPERUSER_ID)
         values = {
             'needaction_inbox_counter': env['res.partner'].get_needaction_count(),
@@ -298,12 +383,14 @@ class PublicProject(http.Controller):
         return values
 
     def _sudo_read(self, model, **kw):
-        """Override models.read to pass it the model as sudo."""
+        """Call BaseModel.read() as sudo."""
         kwargs = {k: v for k, v in kw.items() if k in ['fields', 'load']}
         return model.sudo().read(**kwargs)
 
     def _sudo_read_group(self, model, **kw):
-        """Override models.read_group to pass it the model as sudo."""
+        """Call BaseModel.read_group() as sudo:
+        Get the list of records in list view grouped by the given ``groupby`` fields.
+        """
         domain = kw.get('domain', [])
         fields = kw.get('fields', [])
         groupby = kw.get('groupby', [])
@@ -311,7 +398,10 @@ class PublicProject(http.Controller):
         return model.sudo().read_group(domain, fields, groupby, **kwargs)
 
     def _sudo_read_progress_bar(self, model, **kw):
-        """Override models.read_progress_bar to pass it the model as sudo."""
+        """Call Base.read_progress_bar() as sudo:
+        Gets the data needed for all the kanban column progressbars.
+        These are fetched alongside read_group operation.
+        """
         domain = kw.get('domain', [])
         group_by = kw.get('group_by', '')
         progress_bar = kw.get('progress_bar', {})
@@ -319,16 +409,31 @@ class PublicProject(http.Controller):
 
     @chatter_track('write')
     def _sudo_resequence(self, model, **kw):
-        """Override BaseModel.resequence to pass it the model as sudo."""
+        """Call BaseModel.resequence() as sudo:
+        Re-sequences a number of records in the model, by their ids
+
+        The re-sequencing starts at the first model of ``ids``, the sequence
+        number is incremented by one after each record and starts at ``offset``"""
         ids = kw.get('ids', [])
-        return model.sudo().resequence(ids, offset=kw.get('offset', 0))
+        offset = kw.get('offset', 0)
+        return model.sudo().resequence(ids, offset=offset)
 
     def _sudo_search_read(self, model, **kw):
-        """Override models.search_read to pass it the model as sudo."""
+        """Call BaseModel.search_read() as sudo:
+        Performs a ``search()`` followed by a ``read()``.
+        """
         kwargs = {k: v for k, v in kw.items() if k in ['domain', 'fields', 'offset', 'limit', 'order']}
         return DataSet.do_search_read(self, model.sudo(), **kwargs)
 
     def _tracked_fields(self, operation):
+        """Get the list of fields tracked by the chatter for a given operation.
+        
+        :param operation: The operation for which to track.
+        :type operation: str
+        :return: The list of fields tracked by the chatter for the operation
+        :rtype: list(str)
+        """
+
         if operation == 'create':
             return ['project_id', 'name', 'kanban_stage', 'stage_id']
         if operation == 'read':
@@ -337,6 +442,22 @@ class PublicProject(http.Controller):
             return ['kanban_state_label', 'stage_id', 'priority']
 
     def _whitelist(self):
+        """Get the whitelist of fields and methods on models for operation types.
+
+        Structure:
+        {Operation-type: {
+            Model-name or 'all': {
+                'fields': [Field-names],
+                'methods': [Method-names],
+            }
+        }
+        'all' is for fields and methods that are not model-dependent.
+        Operation-type is 'create', 'read' or 'write'.
+        
+        :return: The whitelist of fields and methods on models for operation types
+        :rtype: dict
+        """
+
         # operation.model.list_name.values
         # operation.all.list_name.values show methods and fields that are ok across fields and methods
         # list_name is methods or fields

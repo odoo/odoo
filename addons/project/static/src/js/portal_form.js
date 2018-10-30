@@ -1,6 +1,7 @@
 odoo.define('project.PortalForm', function (require) {
 "use strict";
 
+// Instantiate a task form
 var FormView = require('web.FormView');
 var PortalWebclientView = require('project.PortalWebclientView');
 var rootWidget = require('root.widget');

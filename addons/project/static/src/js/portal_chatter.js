@@ -4,7 +4,18 @@ odoo.define('project.portalChatter', function (require) {
     var Chatter = require('mail.Chatter');
     var ProjectPortalThreadField = require('project.ThreadField');
     
+    /**
+     * Handle custom mail field 'portal_project_mail_thread' on initialization of the chatter.
+     */
     Chatter.include({
+        /**
+         * @override
+         * @param {Object} record 
+         * @param {Object} mailFields 
+         * @param {Object} options 
+         * @param {string} [options.viewType=record.viewType] current viewType in
+         *   which the chatter is instantiated
+         */
         initMailFields: function (record, mailFields, options) {
             this._super.apply(this, arguments);
             if (mailFields.portal_project_mail_thread) {

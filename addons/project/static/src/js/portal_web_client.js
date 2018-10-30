@@ -1,9 +1,3 @@
-/**
- * The purpose of this file is to inject a "backend view" into the portal.
- * Everything that requires direct access to the DOM and/or should be executed
- * on load is defined here.
- */
-
 odoo.define('web.web_client', function (require) {
     var WebClient = require('web.WebClient');
 
@@ -23,6 +17,16 @@ odoo.define('web.web_client', function (require) {
             this._super.apply(this, arguments);
         },
 
+        /**
+         * Call the 'service', using data from the 'event' that
+         * has triggered the service call.
+         *
+         * For the ajax service, the arguments are extended with
+         * the target so that it can call back the caller.
+         *
+         * @override
+         * @param  {OdooEvent} event
+         */
         _call_service: function (ev) {
             var self = this;
             if (ev.data.service === 'ajax' &&

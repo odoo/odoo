@@ -1,4 +1,8 @@
 /**
+ * The purpose of this file is to inject a "backend view" into the portal.
+ * Everything that requires direct access to the DOM and/or should be executed
+ * on load is defined here.
+ * 
  * In order to inject a "backend view" into the DOM, a <portal-project/> element
  * has to be present and contain t-att-data params. At the very least these params must
  * contain the viewType key (= 'kanban' or 'form'). The other keys depend on the viewType.
