@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.tests.common import TransactionCase
+import pytz
 
 
 class TestCalendar(TransactionCase):
@@ -292,3 +293,24 @@ class TestCalendar(TransactionCase):
 
         self.assertEqual(event.start, '2018-10-16 08:00:00')
         self.assertEqual(event.stop, '2018-10-18 18:00:00')
+
+    def test_recurring_around_dst(self):
+        m = self.CalendarEvent.create({
+            'name': "wheee",
+            'start': '2018-10-27 14:30:00',
+            'allday': False,
+            'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=4',
+            'duration': 2,
+            'stop': '2018-10-27 16:30:00',
+        })
+
+        start_recurring_dates = m.with_context({'tz': 'Europe/Brussels'})._get_recurrent_date_by_event()
+        self.assertEqual(len(start_recurring_dates), 4)
+
+        for d in start_recurring_dates:
+            self.assertEqual(d.tzinfo, pytz.UTC)
+            if d.day < 28:  # DST switch happens between 2018-10-27 and 2018-10-28
+                self.assertEqual(d.hour, 14)
+            else:
+                self.assertEqual(d.hour, 15)
+            self.assertEqual(d.minute, 30)
