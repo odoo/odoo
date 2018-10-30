@@ -609,13 +609,16 @@ class Meeting(models.Model):
             event_date = datetime.now()
 
         use_naive_datetime = self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule
-        if use_naive_datetime:
-            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
-        else:
+        if not use_naive_datetime:
             # Convert the event date to saved timezone (or context tz) as it'll
             # define the correct hour/day asked by the user to repeat for recurrence.
-            event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
-            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
+            event_date = event_date.astimezone(timezone)
+
+        # The start date is naive
+        # the timezone will be applied, if necessary, at the very end of the process
+        # to allow for DST timezone reevaluation
+        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
+
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
 
         # We handle a maximum of 50,000 meetings at a time, and clear the cache at each step to
@@ -629,12 +632,15 @@ class Meeting(models.Model):
                 if use_naive_datetime:
                     recurring_date = recurring_date.replace(tzinfo=None)
                 else:
-                    recurring_date = todate(meeting.recurrent_id_date)
+                    recurring_date = todate(meeting.recurrent_id_date).replace(tzinfo=None)
                 if date_field == "stop":
                     recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
             invalidate = True
-        return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1 if d.year < MAXYEAR]
+
+        def naive_tz_to_utc(d):
+            return timezone.localize(d).astimezone(pytz.UTC)
+        return [naive_tz_to_utc(d) if not use_naive_datetime else d for d in rset1 if d.year < MAXYEAR]
 
     @api.multi
     def _get_recurrency_end_date(self):
