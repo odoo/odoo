@@ -464,6 +464,32 @@ class TestPayment(AccountingTestCase):
         #check the invoice status
         self.assertEqual(invoice.state, 'paid')
 
+    def test_payment_and_writeoff_out_refund(self):
+        # Use case:
+        # Company is in EUR, create a credit note for 100 EUR and register payment of 90.
+        # Mark invoice as fully paid with a write_off
+        # Check that all the aml are correctly created.
+        invoice = self.create_invoice(amount=100, type='out_refund', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        # register payment on invoice
+        payment = self.payment_model.create({'payment_type': 'outbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 90,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.account_payable.id,
+            'journal_id': self.bank_journal_euro.id,
+            'invoice_ids': [(4, invoice.id, None)]
+            })
+        payment.post()
+        self.check_journal_items(payment.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 0.0, 'credit': 90.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': self.account_payable.id, 'debit': 0.0, 'credit': 10.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': self.account_receivable.id, 'debit': 100.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+        ])
+        self.assertEqual(invoice.state, 'paid')
+
     def test_payment_and_writeoff_in_other_currency_3(self):
         # Use case related in revision 20935462a0cabeb45480ce70114ff2f4e91eaf79
         # Invoice made in secondary currency for which the rate to the company currency
