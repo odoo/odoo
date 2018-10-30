@@ -260,9 +260,17 @@
         </record>
 
         <menuitem
-            id="hr_menu_contract_type"
-            action="action_hr_contract_type"
+            id="menu_human_resources_configuration_contract"
+            name="Contracts"
             parent="hr.menu_human_resources_configuration"
+            sequence="3"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="hr_menu_contract_type"
+            name="Types"
+            action="action_hr_contract_type"
+            parent="hr_contract.menu_human_resources_configuration_contract"
             sequence="3"
             groups="base.group_no_one"/>
 
