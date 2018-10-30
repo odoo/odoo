@@ -399,20 +399,7 @@ var StatementModel = BasicModel.extend({
             .then(function (accounts) {
                 self.accounts = _.object(_.pluck(accounts, 'id'), _.pluck(accounts, 'code'));
             });
-        self.taxes = {};
-        var def_taxes = this._rpc({
-                model: 'account.tax',
-                method: 'search_read',
-                fields: ['price_include', 'amount_type'],
-            })
-            .then(function (taxes) {
-                _.each(taxes, function(tax){
-                    self.taxes[tax.id] = {
-                        price_include: tax.price_include,
-                        amount_type: tax.amount_type,
-                    }
-                })
-            });
+        var def_taxes = self._loadTaxes();
         return $.when(def_statement, def_reconcileModel, def_account, def_taxes).then(function () {
             _.each(self.lines, function (line) {
                 line.reconcileModels = self.reconcileModels;
@@ -421,6 +408,23 @@ var StatementModel = BasicModel.extend({
             ids = ids.splice(0, self.defaultDisplayQty);
             self.pagerIndex = ids.length;
             return self._formatLine(self.statement.lines);
+        });
+    },
+
+    _loadTaxes: function(){
+        var self = this;
+        self.taxes = {};
+        return this._rpc({
+            model: 'account.tax',
+            method: 'search_read',
+            fields: ['price_include', 'amount_type'],
+        }).then(function (taxes) {
+            _.each(taxes, function(tax){
+                self.taxes[tax.id] = {
+                    price_include: tax.price_include,
+                    amount_type: tax.amount_type,
+                }
+            })
         });
     },
     /**
@@ -1275,7 +1279,9 @@ var ManualModel = StatementModel.extend({
                 self.reconcileModels = reconcileModels;
             });
 
-        return $.when(def_reconcileModel, def_account).then(function () {
+        var def_taxes = this._loadTaxes();
+
+        return $.when(def_reconcileModel, def_account, def_taxes).then(function () {
             switch(context.mode) {
                 case 'customers':
                 case 'suppliers':
