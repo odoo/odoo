@@ -24,7 +24,7 @@ class ChannelPartner(models.Model):
     _description = 'Listeners of a Channel'
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
-    _primary_email = ['partner_email']
+    _primary_email = 'partner_email'
 
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
     partner_email = fields.Char('Email', related='partner_id.email', readonly=False)

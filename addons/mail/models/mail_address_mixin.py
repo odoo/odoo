@@ -20,24 +20,20 @@ class MailAddressMixin(models.AbstractModel):
         """
     _name = 'mail.address.mixin'
     _description = 'Email address mixin'
-    _primary_email = ['email']
+    _primary_email = 'email'
 
     email_normalized = fields.Char(string='Normalized email address', compute="_compute_email_normalized", invisible=True,
                                   compute_sudo=True, store=True, help="""This field is used to search on email address,
                                   as the primary email field can contain more than strictly an email address.""")
 
-    @api.depends(lambda self: self._primary_email)
+    @api.depends(lambda self: [self._primary_email])
     def _compute_email_normalized(self):
         self._assert_primary_email()
-        [email_field] = self._primary_email
         for record in self:
-            record.email_normalized = tools.email_normalize(record[email_field])
+            record.email_normalized = tools.email_normalize(record[self._primary_email])
 
     def _assert_primary_email(self):
-        if not hasattr(self, "_primary_email") or \
-                not isinstance(self._primary_email, (list, tuple)) or \
-                not len(self._primary_email) == 1:
+        if not hasattr(self, "_primary_email") or not isinstance(self._primary_email, str):
             raise UserError(_('Invalid primary email field on model %s') % self._name)
-        field_name = self._primary_email[0]
-        if field_name not in self._fields or self._fields[field_name].type != 'char':
+        if self._primary_email not in self._fields or self._fields[self._primary_email].type != 'char':
             raise UserError(_('Invalid primary email field on model %s') % self._name)
