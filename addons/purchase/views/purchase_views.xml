@@ -175,7 +175,8 @@
                             <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
                         <group>
-                            <field name="date_order"/>
+                            <field name="date_order" attrs="{'invisible': [('state','=','purchase')]}"/>
+                            <field name="date_approve" attrs="{'invisible': [('state','!=','purchase')]}"/>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
@@ -374,7 +375,8 @@
                 <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" string="Purchase Order">
                     <field name="message_unread" invisible="1"/>
                     <field name="name" string="Reference"/>
-                    <field name="date_order" />
+                    <field name="date_order" invisible="not context.get('quotation_only', False)"/>
+                    <field name="date_approve" invisible="context.get('quotation_only', False)"/>
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)"/>
@@ -420,6 +422,7 @@
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
+            <field name="context">{'quotation_only': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a request for quotation
