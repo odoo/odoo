@@ -209,7 +209,9 @@ class SnailmailLetter(models.Model):
             return _('The country of the partner is not covered by Snailmail.')
         if error == 'MISSING_REQUIRED_FIELDS':
             return _('One or more required fields are empty.')
-        if error == 'SOMETHING_IS_WRONG':
+        if error == 'FORMAT_ERROR':
+            return _('The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists.')
+        else:
             return _('An unknown error happened. Please contact the support.')
         return error
 
