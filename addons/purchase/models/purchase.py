@@ -85,7 +85,7 @@ class PurchaseOrder(models.Model):
              "delivery order sent by your vendor.")
     date_order = fields.Datetime('Order Date', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,\
         help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
-    date_approve = fields.Date('Confirmation Date', readonly=1, index=True, copy=False)
+    date_approve = fields.Datetime('Confirmation Date', readonly=1, index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, tracking=True, help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
     dest_address_id = fields.Many2one('res.partner', string='Drop Ship Address', states=READONLY_STATES,
         help="Put an address if you want to deliver directly from the vendor to the customer. "
@@ -125,6 +125,7 @@ class PurchaseOrder(models.Model):
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product', readonly=False)
     user_id = fields.Many2one('res.users', string='Purchase Representative', index=True, tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.company.id)
+    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='Ratio between the purchase order currency and the company currency')
 
     def _compute_access_url(self):
         super(PurchaseOrder, self)._compute_access_url()
@@ -139,6 +140,11 @@ class PurchaseOrder(models.Model):
             domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
         purchase_order_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(purchase_order_ids).name_get()
+
+    @api.depends('date_order', 'currency_id', 'company_id', 'company_id.currency_id')
+    def _compute_currency_rate(self):
+        for order in self:
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
 
     @api.multi
     @api.depends('name', 'partner_ref')
