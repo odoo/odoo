@@ -30,7 +30,7 @@ class MailBlackList(models.Model):
         new_values = []
         all_emails = []
         for value in values:
-            email = self._normalize_email(value.get('email'))
+            email = tools.email_normalize(value.get('email'))
             if not email:
                 raise UserError(_('Invalid email address %r') % value['email'])
             if email in all_emails:
@@ -53,7 +53,7 @@ class MailBlackList(models.Model):
     @api.multi
     def write(self, values):
         if 'email' in values:
-            values['email'] = self._normalize_email(values['email'])
+            values['email'] = tools.email_normalize(values['email'])
         return super(MailBlackList, self).write(values)
 
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -63,7 +63,7 @@ class MailBlackList(models.Model):
             new_args = []
             for arg in args:
                 if isinstance(arg, (list, tuple)) and arg[0] == 'email' and isinstance(arg[2], tools.pycompat.text_type):
-                    normalized = self._normalize_email(arg[2])
+                    normalized = tools.email_normalize(arg[2])
                     if normalized:
                         new_args.append([arg[0], arg[1], normalized])
                     else:
@@ -75,7 +75,7 @@ class MailBlackList(models.Model):
         return super(MailBlackList, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     def _add(self, email):
-        normalized = self._normalize_email(email)
+        normalized = tools.email_normalize(email)
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', normalized)])
         if len(record) > 0:
             record.write({'active': True})
@@ -84,22 +84,13 @@ class MailBlackList(models.Model):
         return record
 
     def _remove(self, email):
-        normalized = self._normalize_email(email)
+        normalized = tools.email_normalize(email)
         record = self.env["mail.blacklist"].with_context(active_test=False).search([('email', '=', normalized)])
         if len(record) > 0:
             record.write({'active': False})
         else:
             record = record.create({'email': email, 'active': False})
         return record
-
-    def _normalize_email(self, email):
-        """ Sanitize and standardize email address entries: all emails should be
-        only real email extracted from strings (A <a@a> -> a@a)  and should be
-        lower case. """
-        emails = tools.email_split(email)
-        if not emails or len(emails) != 1:
-            return False
-        return emails[0].lower()
 
 
 class MailBlackListMixin(models.AbstractModel):
