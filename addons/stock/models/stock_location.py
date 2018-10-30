@@ -94,6 +94,13 @@ class Location(models.Model):
                     " Please unreserve the products first."
                 ))
         if 'active' in values:
+            if values['active'] == False:
+                for location in self:
+                    warehouses = self.env['stock.warehouse'].search([('active', '=', True), '|', ('lot_stock_id', '=', location.id), ('view_location_id', '=', location.id)])
+                    if warehouses:
+                        raise UserError(_("You cannot archive the location %s as it is"
+                        " used by your warehouse %s") % (location.display_name, warehouses[0].display_name))
+
             if not self.env.context.get('do_not_check_quant'):
                 children_location = self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', self.ids)])
                 internal_children_locations = children_location.filtered(lambda l: l.usage == 'internal')
