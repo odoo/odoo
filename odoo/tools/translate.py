@@ -1102,6 +1102,10 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             dic['lang'] = lang
             dic.update(pycompat.izip(fields, row))
 
+            # ignore empty value that may be set from base language
+            if not dic['value']:
+                return
+
             if use_pot_reference:
                 # discard the target from the POT targets.
                 src = dic['src']
