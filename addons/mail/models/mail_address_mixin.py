@@ -31,16 +31,7 @@ class MailAddressMixin(models.AbstractModel):
         self._assert_primary_email()
         [email_field] = self._primary_email
         for record in self:
-            record.email_normalized = self._normalize_email(record[email_field])
-
-    def _normalize_email(self, email):
-        """ Sanitize and standardize email address entries: all emails should be
-        only real email extracted from strings (A <a@a> -> a@a)  and should be
-        lower case. """
-        emails = tools.email_split(email)
-        if not emails or len(emails) != 1:
-            return False
-        return emails[0].lower()
+            record.email_normalized = tools.email_normalize(record[email_field])
 
     def _assert_primary_email(self):
         if not hasattr(self, "_primary_email") or \

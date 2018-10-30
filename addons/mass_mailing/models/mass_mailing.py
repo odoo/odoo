@@ -230,7 +230,7 @@ class MassMailingContact(models.Model):
     @api.depends('email')
     def _compute_is_email_valid(self):
         for record in self:
-            normalized = self._normalize_email(record.email)
+            normalized = tools.email_normalize(record.email)
             record.is_email_valid = normalized if not normalized else True
 
     @api.model
@@ -646,7 +646,7 @@ class MassMailing(models.Model):
     def update_opt_out(self, email, list_ids, value):
         if len(list_ids) > 0:
             model = self.env['mail.mass_mailing.contact'].with_context(active_test=False)
-            records = model.search([('email_normalized', '=', email)])
+            records = model.search([('email_normalized', '=', tools.email_normalize(email))])
             opt_out_records = self.env['mail.mass_mailing.list_contact_rel'].search([
                 ('contact_id', 'in', records.ids),
                 ('list_id', 'in', list_ids),
