@@ -3,26 +3,31 @@
 
 from odoo import models, fields
 
-class Child0(models.Model):
-    _name = 'delegation.child0'
-    _description = 'Delegation Child zero'
+class Screen(models.Model):
+    _name = 'delegation.screen'
+    _description = 'Screen'
 
-    field_0 = fields.Integer()
+    size = fields.Float(string='Screen Size in inches')
 
-class Child1(models.Model):
-    _name = 'delegation.child1'
-    _description = 'Delegation Child one'
+class Keyboard(models.Model):
+    _name = 'delegation.keyboard'
+    _description = 'Keyboard'
 
-    field_1 = fields.Integer()
+    layout = fields.Char(string='Layout')
 
-class Delegating(models.Model):
-    _name = 'delegation.parent'
-    _description = 'Delegation Parent'
+class Laptop(models.Model):
+    _name = 'delegation.laptop'
+    _description = 'Laptop'
 
     _inherits = {
-        'delegation.child0': 'child0_id',
-        'delegation.child1': 'child1_id',
+        'delegation.screen': 'screen_id',
+        'delegation.keyboard': 'keyboard_id',
     }
 
-    child0_id = fields.Many2one('delegation.child0', required=True, ondelete='cascade')
-    child1_id = fields.Many2one('delegation.child1', required=True, ondelete='cascade')
+    name = fields.Char(string='Name')
+    maker = fields.Char(string='Maker')
+
+    # a Laptop has a screen
+    screen_id = fields.Many2one('delegation.screen', required=True, ondelete="cascade")
+    # a Laptop has a keyboard
+    keyboard_id = fields.Many2one('delegation.keyboard', required=True, ondelete="cascade")
