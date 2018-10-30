@@ -4,7 +4,7 @@ import base64
 
 import werkzeug
 
-from odoo import _, exceptions, http
+from odoo import _, exceptions, http, tools
 from odoo.http import request
 from odoo.tools import consteq
 
@@ -39,7 +39,7 @@ class MassMailController(http.Controller):
                 # Unsubscribe directly + Let the user choose his subscriptions
                 mailing.update_opt_out(email, mailing.contact_list_ids.ids, True)
 
-                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email_normalized', '=', email)])
+                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email_normalized', '=', tools.email_normalize(email))])
                 subscription_list_ids = contacts.mapped('subscription_list_ids')
                 # In many user are found : if user is opt_out on the list with contact_id 1 but not with contact_id 2,
                 # assume that the user is not opt_out on both
@@ -115,7 +115,7 @@ class MassMailController(http.Controller):
         if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
             return 'unauthorized'
         if email:
-            record = request.env['mail.blacklist'].sudo().with_context(active_test=False).search([('email', '=', email)])
+            record = request.env['mail.blacklist'].sudo().with_context(active_test=False).search([('email', '=', tools.email_normalize(email))])
             if record['active']:
                 return True
             return False
@@ -152,7 +152,7 @@ class MassMailController(http.Controller):
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, token):
                 return 'unauthorized'
             model = request.env[mailing.mailing_model_real]
-            records = model.sudo().search([('email_normalized', '=', email)])
+            records = model.sudo().search([('email_normalized', '=', tools.email_normalize(email))])
             for record in records:
                 record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
             return bool(records)
