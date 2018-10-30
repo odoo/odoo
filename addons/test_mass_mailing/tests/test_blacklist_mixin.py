@@ -25,23 +25,15 @@ class TestBLMixin(common.MassMailingCase):
 
     @users('emp')
     def test_bl_mixin_primary_field_consistency(self):
-        MassMailTestBlacklist._primary_email = ['not_a_field']
+        MassMailTestBlacklist._primary_email = 'not_a_field'
         with self.assertRaises(UserError):
             self.env['mass.mail.test.bl'].search([('is_blacklisted', '=', False)])
 
-        MassMailTestBlacklist._primary_email = 'not_a_list'
+        MassMailTestBlacklist._primary_email = ['not_a_str']
         with self.assertRaises(UserError):
             self.env['mass.mail.test.bl'].search([('is_blacklisted', '=', False)])
 
         MassMailTestBlacklist._primary_email = 'email_from'
-        with self.assertRaises(UserError):
-            self.env['mass.mail.test.bl'].search([('is_blacklisted', '=', False)])
-
-        MassMailTestBlacklist._primary_email = ['email_from', 'name']
-        with self.assertRaises(UserError):
-            self.env['mass.mail.test.bl'].search([('is_blacklisted', '=', False)])
-
-        MassMailTestBlacklist._primary_email = ['email_from']
         self.env['mass.mail.test.bl'].search([('is_blacklisted', '=', False)])
 
     @users('emp')
