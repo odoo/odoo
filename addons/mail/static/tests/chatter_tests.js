@@ -616,10 +616,12 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
 QUnit.test('chatter: post a message disable the send button', function(assert) {
     assert.expect(3);
     var bus = new Bus();
+    var BusService = createBusService(bus);
     var form = createView({
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: [ChatManager, BusService],
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -634,22 +636,23 @@ QUnit.test('chatter: post a message disable the send button', function(assert) {
             if (args.method === 'message_get_suggested_recipients') {
                 return $.when({2: []});
             }
+            if (args.method === 'message_post') {
+                assert.ok(form.$('.o_composer_button_send').prop("disabled"),
+                    "Send button should be disabled when a message is being sent");
+                return $.when(57923);
+            }
+            if (args.method === 'message_format') {
+                return $.when([{
+                    author_id: ["42", "Me"],
+                    model: 'partner',
+                }]);
+            }
             return this._super(route, args);
         },
         intercepts: {
             get_messages: function (ev) {
                 ev.stopPropagation();
                 ev.data.callback($.when([]));
-            },
-            post_message: function (ev) {
-                ev.stopPropagation();
-                assert.ok(form.$('.o_composer_button_send').prop("disabled"),
-                    "Send button should be disabled when a message is being sent");
-                bus.trigger('new_message', {
-                    id: 0,
-                    model: ev.data.options.model,
-                    res_id: ev.data.options.res_id,
-                });
             },
             get_bus: function (ev) {
                 ev.stopPropagation();
