@@ -10,10 +10,14 @@ class StockScrap(models.Model):
     _order = 'id desc'
 
     def _get_default_scrap_location_id(self):
-        return self.env['stock.location'].search([('scrap_location', '=', True)], limit=1).id
+        return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.env.user.company_id.id, False])], limit=1).id
 
     def _get_default_location_id(self):
-        return self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+        company_user = self.env.user.company_id
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+        if warehouse:
+            return warehouse.lot_stock_id.id
+        return None
 
     name = fields.Char(
         'Reference',  default=lambda self: _('New'),
