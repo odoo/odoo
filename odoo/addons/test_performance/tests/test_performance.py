@@ -80,7 +80,7 @@ class TestPerformance(TransactionCase):
 
         rec1.invalidate_cache()
         with self.assertQueryCount(61):
-            rec1.write({'line_ids': [(1, line.id, {'value': 42}) for line in lines[1:]]})
+            rec1.write({'line_ids': [(1, line.id, {'value': 42 + line.id}) for line in lines[1:]]})
         self.assertEqual(rec1.line_ids, lines)
 
         # delete N lines: O(1) queries
@@ -166,6 +166,17 @@ class TestPerformance(TransactionCase):
         with self.assertQueryCount(7):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertEqual(rec2.line_ids, lines)
+
+    @mute_logger('odoo.models.unlink')
+    def test_write_base_one2many_with_constraint(self):
+        """ Write on one2many field with lines being deleted and created. """
+        rec = self.env['test_performance.base'].create({'name': 'Y'})
+        rec.write({'line_ids': [(0, 0, {'value': val}) for val in range(12)]})
+
+        # This write() will raise because of the unique index if the unlink() is
+        # not performed before the create()
+        rec.write({'line_ids': [(5,)] + [(0, 0, {'value': val}) for val in range(6)]})
+        self.assertEquals(len(rec.line_ids), 6)
 
     @mute_logger('odoo.models.unlink')
     @users('__system__', 'demo')
