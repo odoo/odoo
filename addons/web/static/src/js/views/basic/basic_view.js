@@ -109,6 +109,14 @@ var BasicView = AbstractView.extend({
                             }
                         }
                     }
+                    // Many2one: context is not the same between the different views
+                    // this means the result of a name_get could differ
+                    if (fieldType === 'many2one') {
+                        if (JSON.stringify(record.data[name].context) !==
+                                JSON.stringify(fieldInfo.context)) {
+                            fieldNames.push(name);
+                        }
+                    }
                 }
             });
 
