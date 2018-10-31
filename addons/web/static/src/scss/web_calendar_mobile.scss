@@ -1,0 +1,21 @@
+@include media-breakpoint-down(sm) {
+    .o_calendar_container {
+        padding: 0;
+    }
+
+    .o_control_panel {
+        .o_calendar_button_today {
+            float: right;
+            > .o_calendar_text {
+                margin-top: 3px;
+            }
+        }
+    }
+
+    .o_calendar_view {
+        .fc-day-header {
+            word-spacing: 1000px; // force line break in week mode
+        }
+    }
+
+}
