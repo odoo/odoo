@@ -501,7 +501,9 @@ var ChatManager =  AbstractService.extend({
         if ('ids' in options) {
             // get messages from their ids (chatter is the main use case)
             return this._fetchDocumentMessages(options.ids, options).then(function (result) {
-                self.markAsRead(options.ids);
+                if (options.shouldMarkAsRead) {
+                    self.markAsRead(options.ids);
+                }
                 return result;
             });
         }

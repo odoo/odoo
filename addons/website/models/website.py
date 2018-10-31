@@ -72,6 +72,11 @@ class Website(models.Model):
     homepage_id = fields.Many2one('website.page', string='Homepage')
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
 
+    @api.onchange('language_ids')
+    def _onchange_language_ids(self):
+        if self.language_ids and self.default_lang_id not in self.language_ids:
+            self.default_lang_id = self.language_ids[0]
+
     @api.multi
     def _compute_menu(self):
         Menu = self.env['website.menu']
