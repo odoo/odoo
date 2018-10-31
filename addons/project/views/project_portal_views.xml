@@ -151,21 +151,42 @@
         </field>
     </record>
 
-    <record id="portaledit_view_task_form" model="ir.ui.view">
-        <field name="name">Project Portal: Task Form View (edit)</field>
+    <record id="portal_task_view_form" model="ir.ui.view">
+        <field name="name">Project Portal: Task Form View (readonly)</field>
         <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_form2"/>
-        <field name="mode">primary</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_assign_to_me']" position="replace"/>
-            <xpath expr="//button[@name='toggle_active']" position="replace"/>
-            <xpath expr="//button[@name='%(portal.portal_share_action)d']" position="replace"/>
-            <xpath expr="//field[@name='message_follower_ids']" position="replace"/>
-            <xpath expr="//field[@name='activity_ids']" position="replace"/>
-            <xpath expr="//field[@name='message_ids']" position="attributes">
-                <attribute name="widget">portal_project_mail_thread</attribute>
-            </xpath>
+            <form class="o_form_project_tasks">
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}"/>
+                </header>
+                <sheet string="Task">
+                    <field name="kanban_state" widget="state_selection"/>
+                    <div class="oe_title">
+                        <h1 class="o_row">
+                            <field name="priority" widget="priority"/>
+                            <field name="name" class="o_task_name" placeholder="Task Title..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" domain="[('active', '=', True)]"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="description_page" string="Description">
+                            <field name="description" type="html"/>
+                            <div class="oe_clear"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="portal_project_mail_thread"/>
+                </div>
+            </form>            
         </field>
     </record>
 
