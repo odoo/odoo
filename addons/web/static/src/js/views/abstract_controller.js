@@ -421,38 +421,54 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * When a user clicks on an <a> link with type="action", we need to actually
      * do the action. This kind of links is used a lot in no-content helpers.
      *
-     * The <a> may have
-     * - a data-method and data-model attribute, in that case the corresponding
-     *   rpc will be called. If that rpc returns an action it will be executed.
-     * - a data-reload-on-close attribute, in that case the view will be
-     *   reloaded after the dialog has been closed.
+     * * if the link has both data-model and data-method attributes, the
+     *   corresponding method is called, chained to any action it would
+     *   return. An optional data-reload-on-close (set to a non-falsy value)
+     *   also causes th underlying view to be reloaded after the dialog is
+     *   closed.
+     * * if the link has a name attribute, invoke the action with that
+     *   identifier (see :class:`ActionManager.doAction` to not get the
+     *   details)
+     * * otherwise an *action descriptor* is built from the link's data-
+     *   attributes (model, res-id, views, domain and context)
      *
      * @private
-     * @param {OdooEvent} ev
+     * @param ev
      */
-    _onActionClicked: function (ev) {
+    _onActionClicked: function (ev) { // FIXME: maybe this should also work on <button> tags?
         var $target = $(ev.currentTarget);
         var self = this;
-        var model = $target.data('model');
-        var method = $target.data('method');
+        var data = $target.data();
 
-        if (method !== undefined && model !== undefined) {
+        if (data.method !== undefined && data.model !== undefined) {
             var options = {};
-            if ($target.data('reload-on-close')) {
+            if (data.reloadOnClose) {
                 options.on_close = function () {
                     self.trigger_up('reload');
                 };
             }
             this.dp.add(this._rpc({
-                model: model,
-                method: method,
+                model: data.model,
+                method: data.method,
             })).then(function (action) {
                 if (action !== undefined) {
                     self.do_action(action, options);
                 }
             });
-        } else {
+        } else if ($target.attr('name')) {
             this.do_action($target.attr('name'));
+        } else {
+            this.do_action({
+                name: $target.attr('title') || _.str.strip($target.text()),
+                type: 'ir.actions.act_window',
+                res_model: data.model || this.modelName,
+                res_id: data.resId,
+                target: 'current', // TODO: make customisable?
+                views: data.views || (data.resId ? [[false, 'form']] : [[false, 'list'], [false, 'form']]),
+                domain: data.domain || [],
+            }, {
+                additional_context: _.extend({}, data.context)
+            });
         }
     },
     /**
