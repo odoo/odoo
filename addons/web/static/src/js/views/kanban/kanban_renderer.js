@@ -321,27 +321,29 @@ var KanbanRenderer = BasicRenderer.extend({
             this.$el.sortable('destroy');
         }
         if (this.groupedByM2O) {
-            // Enable column sorting
-            this.$el.sortable({
-                axis: 'x',
-                items: '> .o_kanban_group',
-                handle: '.o_kanban_header_title',
-                cursor: 'move',
-                revert: 150,
-                delay: 100,
-                tolerance: 'pointer',
-                forcePlaceholderSize: true,
-                stop: function () {
-                    var ids = [];
-                    self.$('.o_kanban_group').each(function (index, u) {
-                        // Ignore 'Undefined' column
-                        if (_.isNumber($(u).data('id'))) {
-                            ids.push($(u).data('id'));
-                        }
-                    });
-                    self.trigger_up('resequence_columns', {ids: ids});
-                },
-            });
+            if (this.columnOptions.column_draggable) {
+                // Enable column sorting
+                this.$el.sortable({
+                    axis: 'x',
+                    items: '> .o_kanban_group',
+                    handle: '.o_kanban_header_title',
+                    cursor: 'move',
+                    revert: 150,
+                    delay: 100,
+                    tolerance: 'pointer',
+                    forcePlaceholderSize: true,
+                    stop: function () {
+                        var ids = [];
+                        self.$('.o_kanban_group').each(function (index, u) {
+                            // Ignore 'Undefined' column
+                            if (_.isNumber($(u).data('id'))) {
+                                ids.push($(u).data('id'));
+                            }
+                        });
+                        self.trigger_up('resequence_columns', {ids: ids});
+                    },
+                });
+            }
 
             // Enable column quickcreate
             if (this.createColumnEnabled) {

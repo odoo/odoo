@@ -60,6 +60,7 @@ var KanbanView = BasicView.extend({
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
             draggable: this.arch.attrs.draggable ? JSON.parse(this.arch.attrs.draggable) : true,
+            column_draggable: this.arch.attrs.column_draggable ? JSON.parse(this.arch.attrs.column_draggable) : true,
             archivable: this.arch.attrs.archivable ? JSON.parse(this.arch.attrs.archivable) : true,
             group_creatable: activeActions.group_create && !config.device.isMobile,
             quickCreateView: this.arch.attrs.quick_create_view || null,
