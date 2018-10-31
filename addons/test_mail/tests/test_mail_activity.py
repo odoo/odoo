@@ -39,8 +39,23 @@ class TestActivityRights(TestActivityCommon):
         activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
         activity2.write({'user_id': self.user_employee.id})
 
-    def test_activity_security_user_noaccess(self):
+    def test_activity_security_user_noaccess_automated(self):
+        def _employee_crash(*args, **kwargs):
+            """ If employee is test employee, consider he has no access on document """
+            recordset = args[0]
+            if recordset.env.uid == self.user_employee.id:
+                raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
+            return DEFAULT
 
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            activity = self.test_record.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_employee.id)
+
+            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
+            activity2.write({'user_id': self.user_employee.id})
+
+    def test_activity_security_user_noaccess_manual(self):
         def _employee_crash(*args, **kwargs):
             """ If employee is test employee, consider he has no access on document """
             recordset = args[0]
@@ -50,11 +65,18 @@ class TestActivityRights(TestActivityCommon):
 
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.UserError):
-                activity = self.test_record.activity_schedule(
-                    'test_mail.mail_act_test_todo',
-                    user_id=self.user_employee.id)
+                activity = self.env['mail.activity'].create({
+                    'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+                    'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                    'res_id': self.test_record.id,
+                    'user_id': self.user_employee.id,
+                })
 
-            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
+            activity2 = self.env['mail.activity'].create({
+                'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': self.test_record.id,
+            })
             with self.assertRaises(exceptions.UserError):
                 activity2.write({'user_id': self.user_employee.id})
 

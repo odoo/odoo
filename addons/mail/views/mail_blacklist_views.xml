@@ -27,7 +27,7 @@
                             <field name="email"/>
                         </group>
                         <group>
-                            <field name="create_date" readonly="1"  string="Creation Date"/>
+                            <field name="create_date" readonly="1"  string="Creation Date" attrs="{'invisible':[('create_date','=',False)]}"/>
                         </group>
                     </group>
                 </sheet>

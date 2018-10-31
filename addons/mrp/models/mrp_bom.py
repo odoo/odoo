@@ -68,17 +68,6 @@ class MrpBom(models.Model):
             for line in self.bom_line_ids:
                 line.attribute_value_ids = False
 
-    @api.multi
-    def write(self, values):
-        mos = self.env['mrp.production'].search_count([
-            ('bom_id', 'in', self.ids),
-            ('state', 'not in', ['done', 'cancel'])
-        ])
-        if mos and any(k not in ['code', 'sequence', 'pick_type_id', 'ready_to_produce'] for k in values.keys()):
-            raise ValidationError(_('This BoM is used in some Manufacturing Orders that are still open. You should rather archive this BoM and create a new one.'))
-        return super(MrpBom, self).write(values)
-
-
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_product_recursion(self):
         for bom in self:

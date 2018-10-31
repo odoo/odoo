@@ -158,7 +158,8 @@ class Digest(models.Model):
 
     def _compute_timeframes(self, company):
         now = datetime.utcnow()
-        tz_name = company.resource_calendar_id.tz
+        # TODO remove hasattr in >=saas-12.1
+        tz_name = hasattr(company, "resource_calendar_id") and company.resource_calendar_id.tz
         if tz_name:
             now = pytz.timezone(tz_name).localize(now)
         start_date = now.date()

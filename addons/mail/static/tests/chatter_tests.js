@@ -786,6 +786,104 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         });
 });
 
+QUnit.test('chatter: receive notif when document is open', function (assert) {
+    assert.expect(2);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {
+            partner_id: 3,
+        },
+    });
+
+    var thread = form.call('mail_service', 'getDocumentThread', 'partner', 2);
+    assert.strictEqual(thread.getUnreadCounter(), 0,
+        "document thread should have no unread messages initially");
+
+    // simulate receiving a needaction message on this document thread
+    var needactionMessageData = {
+        id: 5,
+        author_id: [42, "Someone"],
+        body: 'important message',
+        channel_ids: [],
+        res_id: 2,
+        model: 'partner',
+        needaction: true,
+        needaction_partner_ids: [3],
+    };
+    this.data['mail.message'].records.push(needactionMessageData);
+    var notification = [[false, 'mail.channel', 1], needactionMessageData];
+    form.call('bus_service', 'trigger', 'notification', [notification]);
+
+    assert.strictEqual(thread.getUnreadCounter(), 1,
+        "document thread should now have one unread message");
+
+    form.destroy();
+});
+
+QUnit.test('chatter: access document with some notifs', function (assert) {
+    assert.expect(3);
+
+    // simulate received needaction message on this document thread
+    var needactionMessageData = {
+        id: 5,
+        author_id: [42, "Someone"],
+        body: 'important message',
+        channel_ids: [],
+        res_id: 2,
+        model: 'partner',
+        needaction: true,
+        needaction_partner_ids: [3],
+    };
+    this.data['mail.message'].records.push(needactionMessageData);
+    this.data['partner'].records[0].message_ids = [5];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {
+            partner_id: 3,
+        },
+        mockRPC: function (route, args) {
+            if (args.method === 'set_message_done') {
+                assert.step('set_message_done');
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.verifySteps(['set_message_done']);
+
+    var thread = form.call('mail_service', 'getDocumentThread', 'partner', 2);
+    assert.strictEqual(thread.getUnreadCounter(), 0,
+        "document thread should have no unread messages (marked as read)");
+
+    form.destroy();
+});
+
 QUnit.test('chatter: post a message and switch in edit mode', function (assert) {
     assert.expect(5);
 

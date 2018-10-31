@@ -682,6 +682,7 @@ class Picking(models.Model):
     def do_unreserve(self):
         for picking in self:
             picking.move_lines._do_unreserve()
+            picking.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     @api.multi
     def button_validate(self):
