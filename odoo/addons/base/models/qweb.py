@@ -358,20 +358,21 @@ class QWeb(object):
             except Exception as e:
                 raise QWebException("load could not load template", name=template)
 
-        if document is not None:
-            if isinstance(document, etree._Element):
-                element = document
-                document = etree.tostring(document)
-            elif not document.strip().startswith('<') and os.path.exists(document):
-                element = etree.parse(document).getroot()
-            else:
-                element = etree.fromstring(document)
+        if document is None:
+            raise QWebException("Template not found", name=template)
 
-            for node in element:
-                if node.get('t-name') == str(template):
-                    return (node, document)
+        if isinstance(document, etree._Element):
+            element = document
+            document = etree.tostring(document)
+        elif not document.strip().startswith('<') and os.path.exists(document):
+            element = etree.parse(document).getroot()
+        else:
+            element = etree.fromstring(document)
 
-        raise QWebException("Template not found", name=template)
+        for node in element:
+            if node.get('t-name') == str(template):
+                return (node, document)
+        return (element, document)
 
     def load(self, template, options):
         """ Load a given template. """

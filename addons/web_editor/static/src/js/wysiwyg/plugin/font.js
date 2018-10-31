@@ -549,6 +549,9 @@ registry.addJob(function (wysiwyg) {
             context: options.context,
         },
     }).then(function (template) {
+        if (!/^<templates>/.test(template)) {
+            template = _.str.sprintf('<templates>%s</templates>', template);
+        }
         QWeb.add_template(template);
     });
 });
