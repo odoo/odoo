@@ -198,7 +198,7 @@ class account_abstract_payment(models.AbstractModel):
         total = 0.0
         groups = groupby(invoices, lambda i: i.currency_id)
         for payment_currency, payment_invoices in groups:
-            amount_total = sum(i.residual_signed for i in payment_invoices)
+            amount_total = sum([MAP_INVOICE_TYPE_PAYMENT_SIGN[i.type] * i.residual_signed for i in payment_invoices])
             if payment_currency == currency:
                 total += amount_total
             else:
