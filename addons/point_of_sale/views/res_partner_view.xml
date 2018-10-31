@@ -15,6 +15,12 @@
                         <field string="POS Sales" name="pos_order_count" widget="statinfo"/>
                     </button>
                 </button>
+                <xpath expr="//group[@name='purchase']" position="after">
+                    <group string="Point Of Sale" name="point_of_sale">
+                        <field name="barcode"/>
+                    </group>
+                </xpath>
+
             </field>
         </record>
         <record id="view_partner_pos_kanban" model="ir.ui.view">
