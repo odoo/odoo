@@ -12,6 +12,10 @@ odoo.define('project.portalBasicFields', function (require) {
      */
     var ReadOnlyPriorityWidget = PriorityWidget.extend({
         events: {},
+        _renderStar: function (tag, isFull, index, tip) {
+            return this._super.apply(this, arguments)
+                .removeAttr('href');
+        }
     });
 
     /**
