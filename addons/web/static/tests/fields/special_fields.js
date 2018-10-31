@@ -228,7 +228,6 @@ QUnit.module('special_fields', {
         this.data.partner.records[0].tz_offset = '+4800';
 
         var form = createView({
-            debug:true,
             View: FormView,
             model: 'partner',
             res_id: 1,
