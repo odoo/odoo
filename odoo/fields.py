@@ -2417,6 +2417,9 @@ class One2many(_RelationalMulti):
                 to_relink.update(dict.fromkeys(line_ids, False))
 
         def flush():
+            if to_delete:
+                comodel.browse(to_delete).unlink()
+                to_delete.clear()
             if to_create:
                 comodel.create(to_create)
                 to_create.clear()
@@ -2432,9 +2435,6 @@ class One2many(_RelationalMulti):
                     if lines:
                         comodel.browse(lines._ids).write({inverse: record_id})
                 to_relink.clear()
-            if to_delete:
-                comodel.browse(to_delete).unlink()
-                to_delete.clear()
 
         with model.env.norecompute():
             for records, commands in records_commands_list:
