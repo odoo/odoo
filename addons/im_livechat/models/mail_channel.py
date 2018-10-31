@@ -35,7 +35,11 @@ class MailChannel(models.Model):
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
+    livechat_operator_id = fields.Many2one('res.partner', string='Operator', help="""Operator for this specific channel""")
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
+
+    _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
+                         'Livechat Operator ID is required for a channel of type livechat.')]
 
     @api.multi
     def _channel_message_notifications(self, message):
@@ -62,15 +66,13 @@ class MailChannel(models.Model):
             :rtype : list(dict)
         """
         channel_infos = super(MailChannel, self).channel_info(extra_info)
-        # add the operator id
-        if self.env.context.get('im_livechat_operator_partner_id'):
-            partner_name = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id')).name_get()[0]
-            for channel_info in channel_infos:
-                channel_info['operator_pid'] = partner_name
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             # add the last message date
             if channel.channel_type == 'livechat':
+                # add the operator id
+                if channel.livechat_operator_id:
+                    channel_infos_dict[channel.id]['operator_pid'] = channel.livechat_operator_id.display_name
                 # add the anonymous or partner name
                 channel_infos_dict[channel.id]['correspondent_name'] = channel._channel_get_livechat_partner_name()
                 last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)

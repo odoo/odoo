@@ -28,19 +28,15 @@ class ImLivechatReportOperator(models.Model):
             CREATE OR REPLACE VIEW im_livechat_report_operator AS (
                 SELECT
                     row_number() OVER () AS id,
-                    P.id as partner_id,
+                    C.livechat_operator_id as partner_id,
                     L.id as livechat_channel_id,
                     count(C.id) as nbr_channel,
                     C.id as channel_id,
                     C.create_date as start_date,
                     EXTRACT('epoch' FROM (max((SELECT (max(M.create_date)) FROM mail_message M JOIN mail_message_mail_channel_rel R ON (R.mail_message_id = M.id) WHERE R.mail_channel_id = C.id))-C.create_date)) as duration,
-                    EXTRACT('epoch' from ((SELECT min(M.create_date) FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id=P.id AND R.mail_channel_id = C.id AND R.mail_message_id = M.id)-(SELECT min(M.create_date) FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id IS NULL AND R.mail_channel_id = C.id AND R.mail_message_id = M.id))) as time_to_answer
-                FROM im_livechat_channel_im_user O
-                    JOIN res_users U ON (O.user_id = U.id)
-                    JOIN res_partner P ON (U.partner_id = P.id)
-                    JOIN im_livechat_channel L ON (L.id = O.channel_id)
-                    JOIN mail_channel C ON (C.livechat_channel_id = L.id)
-                    JOIN mail_channel_partner MCP ON (MCP.partner_id = P.id AND MCP.channel_id = C.id)
-                GROUP BY P.id, L.id, C.id, C.create_date
+                    EXTRACT('epoch' from ((SELECT min(M.create_date) FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id=C.livechat_operator_id AND R.mail_channel_id = C.id AND R.mail_message_id = M.id)-(SELECT min(M.create_date) FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id IS NULL AND R.mail_channel_id = C.id AND R.mail_message_id = M.id))) as time_to_answer
+                FROM mail_channel C
+                    JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id and C.livechat_operator_id is not null)
+                GROUP BY C.livechat_operator_id, L.id, C.id, C.create_date
             )
         """)
