@@ -103,7 +103,7 @@ class AccountInvoice(models.Model):
     def _compute_residual(self):
         residual = 0.0
         residual_company_signed = 0.0
-        sign = self.type in ['in_invoice', 'out_refund'] and -1 or 1
+        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
             if line.account_id == self.account_id:
                 residual_company_signed += line.amount_residual
