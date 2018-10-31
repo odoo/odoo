@@ -77,6 +77,7 @@ class IrFieldsConverter(models.AbstractModel):
                     converted[field] = False
                     continue
                 try:
+                    # may have field_name:language_code, we support importing of translation, so split with colon
                     field_name = field.split(':')[0]
                     converted[field], ws = converters[field_name](value)
                     for w in ws:

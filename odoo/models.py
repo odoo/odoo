@@ -3166,6 +3166,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             will set the field ``foo`` to ``1`` and the field ``bar`` to
             ``"Qux"`` if those are valid (otherwise it will trigger an error).
 
+            field key may have field_name:language_code, this will add translation entry
+            in ir.translation with given value for that field, for that source field is needed::
+
+                [{'bar': "Qux", 'bar:fr_BE': "Qux in FR", ...}, ...]
+
         :raise AccessError: * if user has no write rights on the requested object
                             * if user tries to bypass access rules for write on the requested object
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
@@ -3461,6 +3466,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             For backward compatibility, ``vals_list`` may be a dictionary.
             It is treated as a singleton list ``[vals]``, and a single record
             is returned.
+
+            field key may have field_name:language_code, this will add translation entry
+            in ir.translation with given value for that field, for that source field is needed::
+
+                [{'field_name': field_value, 'field_name': field_value_translated, ...}, ...]
 
             see :meth:`~.write` for details
 
