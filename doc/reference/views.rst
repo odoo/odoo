@@ -1017,6 +1017,12 @@ attributes:
 ``archivable``
   whether records belonging to a column can be archived / restored if an
   ``active`` field is defined on the model. Default: true.
+``draggable``
+  whether records belonging to a column can be dragged into another column.
+  Default: true.
+``column_draggable``
+  whether columns (grouped by an M2O field) can be dragged to change their
+  sequence. Default: true.
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
