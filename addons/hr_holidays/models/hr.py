@@ -63,6 +63,10 @@ class Department(models.Model):
 class Employee(models.Model):
     _inherit = "hr.employee"
 
+    leave_manager_id = fields.Many2one(
+        'res.users', string='Leave Responsible',
+        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_team_leader').id)],
+        help="User responsible of leaves approval. Should be Team Leader or Department Manager.")
     remaining_leaves = fields.Float(
         compute='_compute_remaining_leaves', string='Remaining Legal Leaves',
         help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave request. '

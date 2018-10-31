@@ -31,7 +31,8 @@
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <filter string="My Department Leaves" name="department" domain="[('department_id.member_ids.user_id', '=', uid)]" help="My Department Leaves"/>
-                <filter string="My Team Leaves" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Leaves of Your Team Member"/>
+                <filter string="People I Manage" name="managed_people" domain="[('employee_id.parent_id.user_id', '=', uid)]" help="Leaves of people you are manager of"/>
+                <filter string="My Team Leaves" name="my_team_leaves" domain="[('employee_id.leave_manager_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_team_leader" help="Leaves of Your Team Members"/>
                 <separator/>
                 <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="hr_holidays.group_hr_holidays_manager"/>
                 <separator/>
@@ -380,18 +381,18 @@
         name="Managers"
         parent="menu_hr_holidays_root"
         sequence="4"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_team_leader"/>
     <menuitem
         id="hr_holidays_menu_manager_approve"
         name="To Approve"
         parent="menu_hr_holidays_approvals"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_team_leader"
         sequence="1"/>
     <menuitem
         id="hr_holidays_menu_manager_all"
         name="All"
         parent="menu_hr_holidays_approvals"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_team_leader"
         sequence="2"/>
     <menuitem
         id="hr_holidays_menu_manager_payroll"
@@ -536,14 +537,14 @@
         id="menu_open_department_leave_approve"
         name="Leaves"
         parent="hr_holidays_menu_manager_approve"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_team_leader"
         action="hr_leave_action_action_approve_department"
         sequence="1"/>
     <menuitem
         id="menu_open_employee_leave"
         name="Leaves"
         parent="hr_holidays_menu_manager_all"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_team_leader"
         action="hr_leave_action_all"
         sequence="1"/>
 
