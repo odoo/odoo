@@ -3606,11 +3606,12 @@ var BasicModel = AbstractModel.extend({
      */
     _postprocess: function (record, options) {
         var self = this;
+        var viewType = options && options.viewType || record.viewType;
         var defs = [];
 
         _.each(record.getFieldNames(options), function (name) {
             var field = record.fields[name];
-            var fieldInfo = record.fieldsInfo[record.viewType][name] || {};
+            var fieldInfo = record.fieldsInfo[viewType][name] || {};
             var options = fieldInfo.options || {};
             if (options.always_reload) {
                 if (record.fields[name].type === 'many2one' && record.data[name]) {
@@ -3619,7 +3620,7 @@ var BasicModel = AbstractModel.extend({
                             model: field.relation,
                             method: 'name_get',
                             args: [element.data.id],
-                            context: self._getContext(record, {fieldName: name}),
+                            context: self._getContext(record, {fieldName: name, viewType: viewType}),
                         })
                         .then(function (result) {
                             element.data.display_name = result[0][1];
