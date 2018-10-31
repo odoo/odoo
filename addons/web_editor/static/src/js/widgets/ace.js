@@ -594,7 +594,8 @@ var ViewEditor = Widget.extend({
             model: 'ir.ui.view',
             method: 'write',
             args: [[session.id], {arch: session.text}],
-            context: _.extend({}, weContext.get(), {lang: undefined}),
+        }, {
+            noContextKeys: 'lang',
         }).then(function () {
             self._toggleDirtyInfo(session.id, 'xml', false);
             def.resolve();
