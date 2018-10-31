@@ -199,10 +199,8 @@ class Import(models.TransientModel):
                 'required': bool(field.get('required')),
                 'fields': [],
                 'type': field['type'],
+                'translate': bool(field.get('translate')),
             }
-
-            if field.get('translate'):
-                field_value['translate'] = True
 
             if field['type'] in ('many2many', 'many2one'):
                 field_value['fields'] = [

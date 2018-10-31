@@ -410,6 +410,12 @@ class test_translate_string_field(ImporterCase):
         self.assertEqual(len(result['ids']), 2)
         self.assertFalse(result['messages'])
 
+    def test_imported_translation(self):
+        result = self.import_(['value', 'value:fr_BE'], [
+            ['shaktiman', 'gangadhar'],
+        ])
+        self.assertEqual(['gangadhar'], values(self.read(context={'lang': 'fr_BE'})))
+
     def test_without_source(self):
         result = self.import_(['value:fr_BE'], [
             ['shaktimaan'],
