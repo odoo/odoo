@@ -448,24 +448,24 @@ var KanbanRenderer = BasicRenderer.extend({
         // Deactivate the drag'n'drop if the groupedBy field:
         // - is a date or datetime since we group by month or
         // - is readonly (on the field attrs or in the view)
-        var draggable = true;
-        if (groupByFieldAttrs) {
-            if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
-                draggable = false;
-            } else if (groupByFieldAttrs.readonly !== undefined) {
-                draggable = !(groupByFieldAttrs.readonly);
+        if (this.columnOptions.draggable) {
+            if (groupByFieldAttrs) {
+                if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
+                    this.columnOptions.draggable = false;
+                } else if (groupByFieldAttrs.readonly !== undefined) {
+                    this.columnOptions.draggable = !(groupByFieldAttrs.readonly);
+                }
             }
-        }
-        if (groupByFieldInfo) {
-            if (draggable && groupByFieldInfo.readonly !== undefined) {
-                draggable = !(groupByFieldInfo.readonly);
+            if (groupByFieldInfo) {
+                if (this.columnOptions.draggable && groupByFieldInfo.readonly !== undefined) {
+                    this.columnOptions.draggable = !(groupByFieldInfo.readonly);
+                }
             }
         }
         this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
         var relation = this.groupedByM2O && groupByFieldAttrs.relation;
         var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
         this.columnOptions = _.extend(this.columnOptions, {
-            draggable: draggable,
             group_by_tooltip: groupByTooltip,
             groupedBy: groupByField,
             grouped_by_m2o: this.groupedByM2O,
