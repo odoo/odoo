@@ -225,7 +225,10 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         qty = 0.0
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            if move.picking_code == 'outgoing':
+                qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            elif move.picking_code == 'incoming':
+                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         return qty
 
     @api.multi
