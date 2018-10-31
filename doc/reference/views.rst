@@ -1017,9 +1017,9 @@ attributes:
 ``archivable``
   whether records belonging to a column can be archived / restored if an
   ``active`` field is defined on the model. Default: true.
-``draggable``
-  whether records belonging to a column can be dragged into another column.
-  Default: true.
+``record_draggable``
+  whether records belonging to a column can be dragged into a different column
+  or within their own column to change their sequence. Default: true.
 ``column_draggable``
   whether columns (grouped by an M2O field) can be dragged to change their
   sequence. Default: true.

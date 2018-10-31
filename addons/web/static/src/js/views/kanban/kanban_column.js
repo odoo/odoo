@@ -55,7 +55,10 @@ var KanbanColumn = Widget.extend({
         this.editable = options.editable;
         this.deletable = options.deletable;
         this.archivable = options.archivable;
-        this.draggable = options.draggable;
+        this.draggable = options.draggable && !config.device.isMobile;
+        // deactivate sortable in mobile mode.  It does not work anyway,
+        // and it breaks horizontal scrolling in kanban views.  Someday, we
+        // should find a way to use the touch events to make sortable work.
         this.KanbanRecord = options.KanbanRecord || KanbanRecord; // the KanbanRecord class to use
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
@@ -104,10 +107,7 @@ var KanbanColumn = Widget.extend({
         }
         this.$header.find('.o_kanban_header_title').tooltip();
 
-        if (!config.device.isMobile) {
-            // deactivate sortable in mobile mode.  It does not work anyway,
-            // and it breaks horizontal scrolling in kanban views.  Someday, we
-            // should find a way to use the touch events to make sortable work.
+        if (this.draggable) {
             this.$el.sortable({
                 connectWith: '.o_kanban_group',
                 containment: this.draggable ? false : 'parent',

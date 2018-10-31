@@ -59,8 +59,7 @@ var KanbanView = BasicView.extend({
         this.rendererParams.column_options = {
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
-            draggable: this.arch.attrs.draggable ? JSON.parse(this.arch.attrs.draggable) : true,
-            column_draggable: this.arch.attrs.column_draggable ? JSON.parse(this.arch.attrs.column_draggable) : true,
+            draggable: this.arch.attrs.column_draggable ? JSON.parse(this.arch.attrs.column_draggable) : true,
             archivable: this.arch.attrs.archivable ? JSON.parse(this.arch.attrs.archivable) : true,
             group_creatable: activeActions.group_create && !config.device.isMobile,
             quickCreateView: this.arch.attrs.quick_create_view || null,
@@ -70,6 +69,7 @@ var KanbanView = BasicView.extend({
             editable: activeActions.edit,
             deletable: activeActions.delete,
             read_only_mode: params.readOnlyMode,
+            draggable: this.arch.attrs.record_draggable ? JSON.parse(this.arch.attrs.record_draggable) : true,
         };
         this.rendererParams.quickCreateEnabled = this._isQuickCreateEnabled();
         var examples = this.arch.attrs.examples;
