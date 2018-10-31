@@ -53,8 +53,6 @@ class ImBus(models.Model):
                 "message": json_dump(message)
             }
             self.sudo().create(values)
-            if random.random() < 0.01:
-                self.gc()
         if channels:
             # We have to wait until the notifications are commited in database.
             # When calling `NOTIFY imbus`, some concurrent threads will be
