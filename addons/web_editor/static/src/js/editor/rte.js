@@ -576,7 +576,9 @@ var RTEWidget = Widget.extend({
                 this._getEscapedElement($el).prop('outerHTML'),
                 $el.data('oe-xpath') || null,
             ],
-            context: withLang ? context : _.extend({}, context, {lang: undefined}),
+            context: context,
+        }, withLang ? undefined : {
+            noContextKeys: 'lang',
         });
     },
 

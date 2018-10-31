@@ -44,7 +44,12 @@ var BodyManager = rootWidget.RootWidget.extend(ServiceProviderMixin, {
             var route = event.data.args[0];
             if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
                 var params = event.data.args[1];
+                var options = event.data.args[2];
                 params.kwargs.context = _.extend({}, weContext.get(), params.kwargs.context || {});
+                if (options) {
+                    params.kwargs.context = _.omit(params.kwargs.context, options.noContextKeys);
+                    event.data.args[2] = _.omit(options, 'noContextKeys');
+                }
                 params.kwargs.context = JSON.parse(JSON.stringify(params.kwargs.context));
             }
         }
