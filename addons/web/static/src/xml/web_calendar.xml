@@ -85,10 +85,12 @@
     </t>
 
     <t t-name="CalendarView.TodayButtonMobile">
-        <span class="fa-stack o_calendar_button_today">
-            <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today"></i>
-            <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
-        </span>
+        <button class="btn btn-sm btn-link">
+            <span class="fa-stack o_calendar_button_today">
+                <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today"/>
+                <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
+            </span>
+        </button>
     </t>
 
     <main t-name="CalendarView.quick_create" class="o_calendar_quick_create">
