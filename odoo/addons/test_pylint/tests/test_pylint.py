@@ -137,6 +137,7 @@ class TestPyLint(TransactionCase):
 
         import os
         _logger.info("Current working directory: %s", os.getcwd())
+        _logger.info("List dirs: %s", os.listdir(os.getcwd()))
 
         if LooseVersion(pylint_version) < required_pylint_version:
             self._skip_test('please upgrade pylint to >= %s' % required_pylint_version)
