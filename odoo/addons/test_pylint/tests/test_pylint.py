@@ -122,7 +122,20 @@ class TestPyLint(TransactionCase):
         required_pylint_version = LooseVersion('1.6.4')
         if sys.version_info >= (3, 6):
             required_pylint_version = LooseVersion('1.7.0')
-        if LooseVersion(getattr(pylint, '__version__', '0.0.1')) < required_pylint_version:
+        pylint_version = getattr(pylint, '__version__', '0.0.1')
+        _logger.info("pylint version used: %s", pylint_version)
+
+        import astroid
+        astroid_version = getattr(astroid.__pkginfo__, 'version', '0.0.1')
+        _logger.info("astroid version used: %s", astroid_version)
+
+        import subprocess
+        pylint_bin = tools.which('pylint')
+        process = subprocess.Popen([pylint_bin] + ["--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE,)
+        out, err = process.communicate()
+        _logger.info("pylint_bin version used: %s", out)
+
+        if LooseVersion(pylint_version) < required_pylint_version:
             self._skip_test('please upgrade pylint to >= %s' % required_pylint_version)
 
         paths = [tools.config['root_path']]
