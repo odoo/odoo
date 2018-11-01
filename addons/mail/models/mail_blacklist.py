@@ -32,8 +32,7 @@ class MailBlackList(models.Model):
         for value in values:
             email = self._sanitize_email(value.get('email'))
             if not email:
-                _logger.warning('Blacklist: invalid email value %s' % value['email'])
-                continue
+                raise UserError(_('Invalid email address %r') % value['email'])
             if email in all_emails:
                 continue
             all_emails.append(email)
