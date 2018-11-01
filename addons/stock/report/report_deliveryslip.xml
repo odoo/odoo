@@ -52,14 +52,14 @@
                     <table class="table table-condensed mt48" t-if="o.state!='done'">
                         <thead>
                             <tr>
-                                <th><strong>Product</strong></th>
-                                <th><strong>Quantity</strong></th>
+                                <th name="product"><strong>Product</strong></th>
+                                <th name="quantity"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
                             <tr t-foreach="lines" t-as="move">
-                                <td>
+                                <td name="product">
                                     <span t-field="move.product_id"/>
                                     <p t-if="o.picking_type_code == 'outgoing'">
                                         <span t-field="move.product_id.sudo().description_pickingout"/>
@@ -68,7 +68,7 @@
                                         <span t-field="move.product_id.sudo().description_pickingin"/>
                                     </p>
                                 </td>
-                                <td>
+                                <td name="quantity">
                                     <span t-field="move.product_uom_qty"/>
                                     <span t-field="move.product_uom"/>
                                 </td>
@@ -79,16 +79,16 @@
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_production_lot"/>
                         <thead>
                             <tr>
-                                <th><strong>Product</strong></th>
-                                <th name="lot_serial" t-if="has_serial_number">
-                                    Lot/Serial Number
-                                </th>
-                                <th class="text-center"><strong>Quantity</strong></th>
+                              <th name="product"><strong>Product</strong></th>
+                              <th name="lot_serial" t-if="has_serial_number">
+                                Lot/Serial Number
+                              </th>
+                              <th name="quantity" class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr t-foreach="o.move_line_ids" t-as="move_line">
-                                <td>
+                              <td name="product">
                                     <span t-field="move_line.product_id"/>
                                     <p t-if="o.picking_type_code == 'outgoing'">
                                         <span t-field="move_line.product_id.sudo().description_pickingout"/>
@@ -98,7 +98,7 @@
                                     </p>
                                 </td>
                                 <t t-if="has_serial_number">
-                                   <td>
+                                  <td name="lot_serial">
                                         <table width="100%">
                                             <tr>
                                                 <td>
@@ -108,7 +108,7 @@
                                                      </t>
                                                  </td>
                                                  <td name="lot_qty">
-                                                     <t t-if="move_line.product_qty"> 
+                                                     <t t-if="move_line.product_qty">
                                                         <span t-field="move_line.product_qty"/>
                                                     </t>
                                                 </td>
@@ -116,7 +116,7 @@
                                         </table>
                                   </td>
                                 </t>
-                                <td class="text-center">
+                                <td name="quantity" class="text-center">
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>
                                 </td>
