@@ -16,7 +16,7 @@
 # amrnegm <amrnegm.01@gmail.com>, 2016
 # Walid Baruni <baroni@osoul.ly>, 2016
 # Aboubakar Youssoufa <sasocda@gmail.com>, 2016
-# Walid Baruni <baruni@osoul.ly>, 2016
+# Osoul <baruni@osoul.ly>, 2016
 # Nan noa <anntesting123@yahoo.com>, 2016
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # morheb bek <morhebbek@gmail.com>, 2016
@@ -34,12 +34,13 @@
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2016
 # Abd El-Rahman Ali <abdelrahman.ali.242@gmail.com>, 2016
 # Hossam Esam <hossamesam17@gmail.com>, 2016
+# Amer Hazaa <eng.amer.it@gmail.com>, 2017
 # Hear Here <hearherebox@gmail.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
 # khalil qandil <khalilqandil@gmail.com>, 2017
 # Islam Eldeeb <islameldeb@gmail.com>, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
-# Abdulaziz Alayed <aalayed@kacst.edu.sa>, 2018
+# Abdulaziz Ayed <aalayed@kacst.edu.sa>, 2018
 # MOATAZ NAFIE <zizoom@outlook.com>, 2018
 msgid ""
 msgstr ""
@@ -2651,8 +2652,8 @@ msgid ""
 "Cannot refund invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
 msgstr ""
-"لا يمكن استرداد الفاتورة التي تم تسويتها بالفعل, الفاتورة يجب أن تكون بلا "
-"تسوية أولا. يمكنك استرداد هذه الفاتورة فقط."
+"لا يمكن استرداد مبلغ الفاتورة التي تم قد تسويتها بالفعل,  الفاتورة يجب أن "
+"تكون بلا تسوية لكي تتمكن انت من  استرداد هذه الفاتورة ."
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -11192,3 +11193,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "إحصاء"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""

@@ -6,7 +6,7 @@
 # Otgonbayar.A <gobi.mn@gmail.com>, 2017
 # Martin Trigaux, 2017
 # nasaaskii <nasaaskii@gmail.com>, 2017
-# Erdenebold Ts <erdenebold10@gmail.com>, 2017
+# Ubuntu Erka <erdenebold10@gmail.com>, 2017
 # Bayarkhuu Bataa, 2017
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 # Batsaihan Purevjav <batsaihan.p@gmail.com>, 2017
@@ -2463,7 +2463,7 @@ msgstr "Хориглох мессеж"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
 msgid "Bring Accounts Balance Forward"
-msgstr "Дансны балансыг урагш нь авчрах"
+msgstr "Дансны эхний үлдэгдлийг татах"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -11260,3 +11260,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Тоолох"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""

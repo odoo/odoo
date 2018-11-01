@@ -64,6 +64,15 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Mielieji,</p>\n"
+"<p>Labai džiaugiuosi galėdamas pranešti, kad  ${object.name}  prisijungs\n"
+"prie mūsų kaip ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Šiltai priimkite ir padėkite įsivažiuoti į darbo poziciją.</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -128,6 +137,8 @@ msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
 msgstr ""
+"Pridėkite stulpelius, apibūdinančius <b>interviu etapus</b>.<br/><i>pvz., "
+"Naujas &gt; Kvalifikuotas &gt; Pirmas interviu &gt; Įdarbintas</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -210,6 +221,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"Kandidatai ir jų prisegti CV yra automatiškai sukuriami tada, kai išsiunčiamas laiškas.\n"
+"Jei įdiegsite dokumentų valdymo modulius, visi gyvenimo aprašymai bus indeksuojami automatiškai,\n"
+"kad galėtumėte lengvai vykdyti paiešką jų turinyje."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -1227,7 +1241,7 @@ msgstr "Įdarbinimas atliktas"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_user_id
 msgid "Recruitment Responsible"
-msgstr ""
+msgstr "Atsakingas įdarbintojas"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -1257,7 +1271,7 @@ msgstr "Atmesta"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Vėl atidaryti kandidatavimą"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1296,7 +1310,7 @@ msgstr "Atlygis, kurio tikisi kandidatas"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected_extra
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr ""
+msgstr "Kandidato norimas atlygis, papildomi privalumai"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_prop
@@ -1306,12 +1320,12 @@ msgstr "Siūlytas atlyginimas"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed
 msgid "Salary Proposed by the Organisation"
-msgstr ""
+msgstr "Atlygis, siūlomas organizacijos"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr ""
+msgstr "Atlygis, siūlomas organizacijos, papildomi privalumai"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -1359,14 +1373,14 @@ msgstr "Šaltinio pavadinimas"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr ""
+msgstr "Kandidatų šaltinis"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr ""
+msgstr "Kandidatų šaltiniai"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -1377,6 +1391,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Konkretus darbas, kuris naudoja šį etapą. Kiti darbai šio etapo nenaudos."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1418,6 +1433,8 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
+"Kandidato etapas, kuriame jis buvo prieš dabartinė etapą. Naudojamas "
+"prarastų atvejų analizei."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -1457,7 +1474,7 @@ msgstr "Žymos"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_availability
 msgid "The date at which the applicant will be available to start working"
-msgstr ""
+msgstr "Data, nuo kurios kandidatas galės pradėti dirbti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
@@ -1473,7 +1490,7 @@ msgstr ""
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
 msgid "The name of the Degree of Recruitment must be unique!"
-msgstr ""
+msgstr "Įdarbinimo laipsnio pavadinimas turi būti unikalus!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_name
@@ -1503,6 +1520,8 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Šiais pseudonimais gali būti kiekvieno šaltinio el. paštas ar nuorodos. Kai "
+"kandidatas ateina per vieną iš jų, jūs žinosite, iš kur jis atėjo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1545,6 +1564,10 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Šis meniu leidžia jums atlikti paiešką gyvenimo aprašymuose\n"
+"ir motyvaciniuose laiškuose. \"Odoo\" automatiškai indeksuoja\n"
+" .PDF, .DOC, DOCX, .TXT failus, kad galėtumėte ieškoti raktažodžių\n"
+"šių failų turinyje."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1563,6 +1586,8 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Pabandykite nusiųsti laišką šiuo adresu, jis automatiškai sukurs "
+"kandidatūrą."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1597,7 +1622,7 @@ msgstr "Naudojamas šablonas"
 #: code:addons/hr_recruitment/static/src/js/tour.js:25
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
+msgstr "Naudokite svetainės kelią, kad <b>grįžtumėte į valdymo skydelį</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
@@ -1649,6 +1674,8 @@ msgstr ""
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
+"Turite šiam kandidatui nustatyti kandidatuojamą poziciją ir kontaktinį "
+"vardą."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job

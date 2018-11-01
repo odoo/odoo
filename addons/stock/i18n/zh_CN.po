@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# 珠海-杜哥 <liangjia@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
 # Martin Trigaux, 2017
@@ -12,14 +12,15 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
-# keecome <7017511@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
+# Ryan Kong <kongrui@inspur.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: keecome <7017511@qq.com>, 2018\n"
+"Last-Translator: Ryan Kong <kongrui@inspur.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -700,7 +701,7 @@ msgstr "使用供应商的开放天数日历调整前置时间(高级)"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr ""
+msgstr "添加一个内部备注,并在选择的操作表中打印"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -811,6 +812,9 @@ msgid ""
 "        products when confirming a sale order.\n"
 "            This installs the module procurement_jit."
 msgstr ""
+"能够在确认销售订单时候\n"
+"        让你自动的预留可用的产品.\n"
+"            以上功能需要安装此模块 procurement_jit."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_packaging
@@ -5131,12 +5135,12 @@ msgstr "内存SR5"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
 msgid "Rate picking backorders"
-msgstr ""
+msgstr "欠单比率"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_late
 msgid "Rate picking late"
-msgstr ""
+msgstr "延迟比率"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -5278,7 +5282,7 @@ msgstr "部分拣货后的剩余部分"
 msgid ""
 "Remaining quantity in default UoM according to moves matched with this "
 "operation."
-msgstr ""
+msgstr " 默认计量单位的剩余数量是和这次移动操作相匹配的。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_removal
@@ -6278,7 +6282,7 @@ msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
-msgstr ""
+msgstr "在此产品上您的计量单位%s的舍入 在此移动vs. %s 上不允许这些操作，或您没一次完成分拣调拨。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:126
@@ -6446,7 +6450,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_quality
 msgid "This module allows you to generate quality alerts and quality check"
-msgstr ""
+msgstr "此模块允许您生成质量警报和质量检查"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_adv_location
@@ -6628,6 +6632,13 @@ msgid ""
 "                - alert date.\n"
 "                This installs the module product_expiry."
 msgstr ""
+"在产品和序列号中追踪不同的日期.\n"
+"                    以下日期能够被追踪到:\n"
+"                    - 寿命终止日期\n"
+"                    - 食品包装上标明的日期\n"
+"                    - 下架日期\n"
+"                    - 警报日期.\n"
+"                    需要安装模块 product_expiry."
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
@@ -6842,6 +6853,10 @@ msgid ""
 "                    trigger a draft purchase order, a manufacturing order or\n"
 "                    a new task."
 msgstr ""
+"填充这里来运行该产品的补货申请\n"
+"                    根据产品的配置\n"
+"                    这个方法触发一个采购单草稿、生产订单或者\n"
+"                    新的任务."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence

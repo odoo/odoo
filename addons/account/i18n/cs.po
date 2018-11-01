@@ -17,7 +17,7 @@
 # Ondřej Janovský <ondrej.janovsky@alarex.cz>, 2016
 # Martin N <nedbalm@gmail.com>, 2017
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter, 2018
+# J. Podhorecky <j.podhorecky@volny.cz>, 2018
 # milda dvorak <milda.dvorak@optimal4.cz>, 2018
 msgid ""
 msgstr ""
@@ -1550,7 +1550,7 @@ msgstr "Účty"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_control_ids
 msgid "Accounts Allowed"
-msgstr ""
+msgstr "Povolené účty"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
@@ -3208,7 +3208,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "Náklady na Příjmy"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:393
@@ -4329,7 +4329,7 @@ msgstr "Únor"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_state_ids
 msgid "Federal States"
-msgstr ""
+msgstr "Federální státy"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
@@ -6075,7 +6075,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_currency_id
 msgid "Main currency of the company."
-msgstr ""
+msgstr "Hlavní měna společnosti."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
@@ -9351,6 +9351,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
+"Toto pole se používá pro zapsání dlužných a pohledávek. Můžete umístit "
+"termín pro platbu tohoto řádku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_partner_name
@@ -10882,4 +10884,12 @@ msgstr "wizard.multi.charts.accounts"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
 msgstr ""
