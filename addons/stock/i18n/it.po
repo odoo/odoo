@@ -10,6 +10,7 @@
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
 # Luca Tralli, 2016
+# Sergio Zanchetta <primes2h@gmail.com>, 2016
 # Davide Corio <enlightx@gmail.com>, 2016
 # Giovanni Casalini <casalini.g@gmail.com>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
@@ -325,8 +326,8 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"<strong>Dall'Inventario</strong>\n"
-"</span>"
+"                                        <strong>Dall'applicazione Magazzino</strong>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -491,7 +492,7 @@ msgstr "<strong>Destinazione</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Enjoy your Inventory management with Odoo!</strong>"
-msgstr "<strong>Gusta la tua gestione del Magazzino con Odoo!</strong>"
+msgstr "<strong>La gestione del magazzino è divertente con Odoo!</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -501,7 +502,7 @@ msgstr "<strong>Import dati</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Inventory</strong>"
-msgstr "<strong>Inventario</strong>"
+msgstr "<strong>Magazzino</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -1375,7 +1376,7 @@ msgstr "Clicca per scartare i prodotti."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Click to start an inventory."
-msgstr "Clicca per iniziare un inventario."
+msgstr "Fare clic per aprire un inventario."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_incoterms_code
@@ -3006,7 +3007,7 @@ msgstr "Domanda iniziale"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Initial Inventory"
-msgstr "Inventario iniziale"
+msgstr "Magazzino iniziale"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:93
@@ -3160,14 +3161,14 @@ msgstr "Inventario"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr "Rettifica Inventariale"
+msgstr "Rettifica di inventario"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Rettifiche Inventariali"
+msgstr "Rettifiche di inventario"
 
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
@@ -3203,12 +3204,12 @@ msgstr "Righe di Inventario"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
 msgid "Inventory Location"
-msgstr "Punto di Stoccaggio Inventario"
+msgstr "Ubicazione magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Location d'Inventario"
+msgstr "Ubicazioni magazzino"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -3218,23 +3219,23 @@ msgstr "Perdita di inventario"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Inventory Move"
-msgstr "Movimento inventario"
+msgstr "Movimento di magazzino"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Reference"
-msgstr "Riferimento inventario"
+msgstr "Riferimento di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Rotte di Magazzino"
+msgstr "Rotte di magazzino"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Inventory Settings"
-msgstr "Configurazioni di Inventario"
+msgstr "Configurazioni di magazzino"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -3249,12 +3250,12 @@ msgstr "Valorizzazione inventario"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_inventory_value
 msgid "Inventory Value"
-msgstr "Valore d'Inventario"
+msgstr "Valore di magazzino"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory adjustment"
-msgstr "Adeguamento dell’inventario"
+msgstr "Rettifica di inventario"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3262,8 +3263,8 @@ msgid ""
 "Inventory adjustments will be made by comparing the theoretical and the "
 "checked quantities."
 msgstr ""
-"Le rettifiche inventariali vengono effettuate comparando la quantità "
-"teoriche con quelle effettivamente in magazzino."
+"Le rettifiche di inventario vengono effettuate confrontando le quantità "
+"teoriche e quelle effettive."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_filter

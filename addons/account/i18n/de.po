@@ -21,7 +21,7 @@
 # Winfried Grieb <inactive+wigrieb@transifex.com>, 2016
 # Kontor Consulting <p.becker@kontor.consulting>, 2016
 # David Lehov <KHottend@gmx.de>, 2016
-# Malte Jansen <work@maltejansen.de>, 2016
+# brokemeister <work@maltejansen.de>, 2016
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2016
 # jonas <jonas.hillebrecht@bklynsoap.com>, 2016
 # aNj <anj2j@yahoo.de>, 2016
@@ -11398,3 +11398,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "-> Zähle"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""

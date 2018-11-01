@@ -6,18 +6,15 @@
 # Martin Trigaux, 2016
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
 # Paolo Valier, 2016
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
-# Simone Bernini <simone@aperturelabs.it>, 2016
+# Sergio Zanchetta <primes2h@gmail.com>, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
-# Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2016
-# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
 "PO-Revision-Date: 2016-09-19 12:36+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"Last-Translator: Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +44,8 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
 msgstr ""
+"Creare un'attività di questo progetto nella conferma dell'ordine di vendita."
+" Questa impostazione è necessaria per ogni azienda."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -56,7 +55,7 @@ msgstr "Dipendente"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr "Riga Ordine"
+msgstr "Riga ordine"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
@@ -77,7 +76,7 @@ msgstr "Tempo di avviso del prodotto"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
 msgid "Product Life Time"
-msgstr "Tempo di vita del prodotto"
+msgstr "Ciclo di vita del prodotto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
@@ -104,7 +103,7 @@ msgstr "Progetto"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr "Progetto collegato a questa vendita"
+msgstr "Progetto associato a questa vendita"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -116,7 +115,7 @@ msgstr "Ordine di vendita"
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 msgid "Sales Order Line"
-msgstr "Riga d'Ordine di Vendita"
+msgstr "Riga ordine di vendita"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -130,7 +129,8 @@ msgstr "Attività"
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
-"Task Creato (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+"Attività creata (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
@@ -141,7 +141,7 @@ msgstr "Attività"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr "I tasks collegati a questa vendita"
+msgstr "Le attività associate a questa vendita"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/procurement.py:84
@@ -150,8 +150,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
-"Questo task è stato creato da: <a href=# data-oe-model=sale.order data-oe-"
-"id=%d>%s</a> (%s)"
+"Questa attività è stata creata da: <a href=# data-oe-model=sale.order data-"
+"oe-id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -159,32 +159,34 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Ciò andrà a impostare l'unità di misura usata nei progetti e nelle attività.\n"
+"Se viene usato il foglio ore collegato ai progetti, non dimenticare di impostare i dipendenti con l'unità di misura corretta."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Costo su Timesheet"
+msgstr "Costo del foglio ore"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "UdM foglio ore"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr "Attività timesheet"
+msgstr "Attività del foglio ore"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "Attività timesheet associate a questa vendita"
+msgstr "Attività del foglio ore associate a questa vendita"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Timesheets"
-msgstr "Timesheet"
+msgstr "Fogli ore"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
@@ -192,8 +194,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
-"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di"
-" anticipo con cui un avviso dovrebbe essere notificato."
+"Quando viene fornito un nuovo numero di serie, questo corrisponde a quanti "
+"giorni in anticipo notificare un avviso."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
@@ -201,9 +203,9 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
-"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di"
-" anticipo con cui i beni possono diventare pericolosi e dovrebbero essere "
-"consumati."
+"Quando viene fornito un nuovo numero di serie, questo corrisponde ai giorni "
+"superati i quali la merce potrebbe diventare pericolosa e non dovrebbe "
+"essere consumata."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
@@ -211,8 +213,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
-"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di"
-" anticipo con cui i beni dovrebbero essere rimossi dal magazzino."
+"Quando viene fornito un nuovo numero di serie, questo corrisponde ai giorni "
+"superati i quali la merce dovrebbe essere rimossa dal magazzino."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
@@ -220,8 +222,9 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
-"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di"
-" anticipo con cui i beni cominciano a degradare, senza diventare pericolosi."
+"Quando viene fornito un nuovo numero di serie, questo corrisponde ai giorni "
+"superati i quali le merce comincia a deteriorare, senza ancora essere "
+"pericolosa."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:55
@@ -239,3 +242,5 @@ msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Impossibile eliminare un'attività relativa a un ordine di vendita, può solo "
+"essere archiviata."

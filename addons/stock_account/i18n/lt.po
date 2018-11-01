@@ -63,6 +63,8 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Nepavyko rasti produkto %s atsargų įėjimo sąskaitos. Prieš apdorodami šią "
+"operaciją, turite ją nustatyti produkto kategorijai arba vietai. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -72,6 +74,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Nepavyko rasti produkto %s atsargų išėjimo sąskaitos. Prieš apdorodami šią "
+"operaciją, turite ją nustatyti produkto kategorijai arba vietai. "
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -118,6 +122,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Konfigūracijos klaida. Norėdami apdoroti šią operaciją, produktui arba jo "
+"kategorijai nustatykite kainų skirtumo sąskaitą"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -140,7 +146,7 @@ msgstr "Savikainos metodas"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Partnerinė sąskaita"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -536,6 +542,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Naudojama realaus laiko atsargų vertinimui. Kai nustatyta virtualiai "
+"lokacijai (ne vidinio tipo), ši sąskaita bus naudojama produktų, perkeliamų "
+"iš išorinės lokacijos į šią lokaciją, vertinimui, vietoje to, kad būtų "
+"naudojama standartinė išeinančių atsargų sąskaita. Tai neturi jokio poveikio"
+" vidinėms lokacijoms."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -546,6 +557,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Naudojama realaus laiko atsargų vertinimui. Kai nustatyta virtualiai "
+"lokacijai (ne vidinio tipo), ši sąskaita bus naudojama produktų, perkeliamų "
+"iš šios lokacijos į vidinę lokaciją, vertinimui, vietoje to, kad būtų "
+"naudojama standartinė išeinančių atsargų sąskaita. Tai neturi jokio poveikio"
+" vidinėms lokacijoms."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
@@ -647,6 +663,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
 msgstr ""
+"Neturite savo produktų kategorijai nustatyto atsargų žurnalo, įsitikinkite, "
+"kad įdiegtas sąskaitų planas"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:111
@@ -656,6 +674,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Neturite savo produktų kategorijai nustatytos atsargų vertinimo sąskaitos. "
+"Privalote nustatyti ją prieš apdorojant šią operaciją."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

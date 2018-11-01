@@ -3,12 +3,12 @@
 # * hr_timesheet_attendance
 # 
 # Translators:
-# Simone Bernini <simone@aperturelabs.it>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Sergio Zanchetta <primes2h@gmail.com>, 2016
+# Martin Trigaux, 2016
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
+# Simone Bernini <simone@aperturelabs.it>, 2016
+# Paolo Valier, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
-# Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2016
 # Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
-msgstr "<span class=\"o_stat_text\">Timesheet</span>"
+msgstr "<span class=\"o_stat_text\">Foglio ore</span>"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,help:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
@@ -36,14 +36,14 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
-"Differenza in ore permessa tra le presenze registrate e le attività dichiarate sul singolo timesheet.\n"
-"Imposta a 0 se non vuoi nessun controllo."
+"Differenza ammessa, espressa in ore, tra ingresso/uscita e calcolo delle ore per singolo foglio.\n"
+"Impostare a 0 per disattivare il controllo."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_total_attendance
 msgid "Attendance"
-msgstr "Presenze"
+msgstr "Presenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_attendance
@@ -79,12 +79,12 @@ msgstr "Differenze"
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_display_name
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_display_name
 msgid "Display Name"
-msgstr "Nome Visualizzato"
+msgstr "Nome visualizzato"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 msgid "HR Timesheet/Attendance Report"
-msgstr "Report Timesheet/Presenze"
+msgstr "Resoconto foglio ore/presenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_id
@@ -110,7 +110,7 @@ msgstr "Periodo"
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr "Verifica che la differenza totale sul foglio sia inferiore a %.2f."
+msgstr "Verificare che la differenza totale nel foglio sia inferiore a %.2f."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_attendance_sheet_id
@@ -126,8 +126,8 @@ msgid ""
 "The timesheet cannot be validated as it contains an attendance record with "
 "no Check Out)."
 msgstr ""
-"Il timesheet non può essere validato poichè uno dei record presenze non ha "
-"uscita registrata)."
+"Il foglio ore non può essere confermato perché manca un'uscita in una "
+"registrazione presenza."
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
@@ -142,74 +142,74 @@ msgstr "Questa settimana"
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_sheet_sheet
 msgid "Timesheet"
-msgstr "Timesheet"
+msgstr "Foglio ore"
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheet / Attendance"
-msgstr "Timesheet / Presenze"
+msgstr "Foglio ore / Presenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Activities"
-msgstr "Attività timesheet"
+msgstr "Attività del foglio ore"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_res_company_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours)"
-msgstr "Differenza di tempo concessa nel Timesheet (in Ore)"
+msgstr "Differenza ammessa nel foglio ore (in ore)"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours) *"
-msgstr "Differenza permessa sul timesheet (Ore) *"
+msgstr "Differenza ammessa nel foglio ore (in ore) *"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
-msgstr "Orari di Lavoro da Contabilità"
+msgstr "Foglio ore per conto"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
-msgstr "Orari di Lavoro per Giorno"
+msgstr "Foglio ore per giorno"
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
 msgid "Timesheets"
-msgstr "Timesheet"
+msgstr "Fogli ore"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr "Timesheet per periodo"
+msgstr "Foglio ore per periodo"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_total_attendance
 msgid "Total Attendance"
-msgstr "Presenza Totali"
+msgstr "Totale presenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
 msgid "Total Attendances"
-msgstr "Presenze Totali"
+msgstr "Totale presenze"
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
 msgid "Total Difference"
-msgstr "Differenza Totale"
+msgstr "Totale differenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_total_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_total_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
 msgid "Total Timesheet"
-msgstr "Orari di Lavoro Totali"
+msgstr "Totale foglio ore"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_attendance
 msgid "Total attendance"
-msgstr "Totale presenze"
+msgstr "Totale presenza"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_difference
@@ -219,12 +219,12 @@ msgstr "Totale differenza"
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_timesheet
 msgid "Total timesheet"
-msgstr "Totale timesheet"
+msgstr "Totale foglio ore"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_user_id
 msgid "User id"
-msgstr "User id"
+msgstr "ID utente"
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:98
@@ -232,8 +232,8 @@ msgstr "User id"
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
 msgstr ""
-"Non puoi inserire nella presenza una data  fuori dall'intervallo dichiarato "
-"nel timesheet attivo"
+"Impossibile inserire una data di presenza al di fuori delle date correnti "
+"nel foglio ore."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:96
@@ -242,15 +242,14 @@ msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
 msgstr ""
-"Non puoi inserire una presenza in un timesheet inviato all'approvazione. "
-"Chiedi al responsabile di rimandarti indietro il timesheet prima di "
-"aggiungere la tua presenza."
+"Impossibile inserire una presenza in un foglio ore già inviato. Chiedere "
+"prima al responsabile di ripristinare il foglio ore."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:53
 #, python-format
 msgid "You cannot delete a timesheet that has attendance entries."
-msgstr "Non puoi eliminare un timesheet che ha delle presenze registrate"
+msgstr "Impossibile eliminare un foglio ore che contiene presenze registrate."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:113
@@ -258,14 +257,14 @@ msgstr "Non puoi eliminare un timesheet che ha delle presenze registrate"
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
 msgstr ""
-"Non puoi inserire una presenza in una data fuori dall'intervallo del "
-"timesheet attivo"
+"Impossibile inserire una data di presenza al di fuori delle date correnti "
+"del foglio ore."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:119
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr "Non è possibile modificare le righe di un timesheet confermato."
+msgstr "Impossibile modificare una registrazione in un foglio ore confermato."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
@@ -281,4 +280,4 @@ msgstr "project.config.settings"
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "timesheet attendance"
-msgstr "presenze timesheet"
+msgstr "presenza foglio ore"

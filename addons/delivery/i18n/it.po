@@ -20,13 +20,15 @@
 # Niccolò Lubello <nlubello@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# mymage <stefano.consolaro@mymage.it>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,7 +157,7 @@ msgstr "Azione Necessaria"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Operazione durante la validazione degli ordini di spedizione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -287,6 +289,8 @@ msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
 msgstr ""
+"Si può modificare durante l'aggiunta collo per correggere il peso della "
+"spedizione."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -392,6 +396,8 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
 msgstr ""
+"Creare un'attività di questo progetto nella conferma dell'ordine di vendita."
+" Questa impostazione è necessaria per ogni azienda."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
@@ -699,12 +705,12 @@ msgstr "Gratis se il totale dell'Ordine è maggiore di"
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "Ottieni valutazione"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Ottieni la valutazione e crea la spedizione"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -834,7 +840,7 @@ msgstr "In entrata"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Aggiungere altri vettori"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
@@ -978,7 +984,7 @@ msgstr "Margini Alla Data"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "Il margine non può essere inferiore al -100%"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
@@ -988,7 +994,7 @@ msgstr "Peso massimo"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Il peso massimo deve essere positivo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -998,7 +1004,7 @@ msgstr "Valore massimo"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "Massimo peso spedibile con questo imballo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1050,7 +1056,7 @@ msgstr "Nome"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "Nessuna integrazione vettore"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1135,14 +1141,14 @@ msgstr "Confezione"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "Codice imballo"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "Dettagli imballo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1473,6 +1479,7 @@ msgstr "Aggiungi il prezzo"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Impostare a Vero se le credenziali sono certificate per la produzione."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:147
@@ -1522,6 +1529,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
+"Codice standard per spedizione internazionale e dichiarazione del contenuto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1907,7 +1915,7 @@ msgstr "Peso * Volume"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr ""
+msgstr "Unità di misura del peso"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
@@ -1997,7 +2005,7 @@ msgstr "Larghezza"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "La larghezza deve essere positiva"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:187
@@ -2006,6 +2014,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"Stai usando diversi tipi di imballo nella stessa spedizione.\n"
+"Tipi di imballo: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:163

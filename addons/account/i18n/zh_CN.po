@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# 珠海-杜哥 <liangjia@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2016
 # Yaorong Li <55yaorong.li@gmail.com>, 2016
 # 老窦 北京 <2662059195@qq.com>, 2016
@@ -18,13 +18,14 @@
 # Rangy Chen <rangychen@163.com>, 2017
 # sunny sun <sunxiaoxia@inspur.com>, 2018
 # John Lin <linyinhuan@139.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: John Lin <linyinhuan@139.com>, 2018\n"
+"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10804,3 +10805,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ 个数"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr "只有当前期间的货币与公司的货币不同时，才应设置货币字段。将该字段留空以使用公司货币。"
