@@ -275,9 +275,9 @@ class TestPreview(TransactionCase):
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'translate': False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'translate': False, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'translate': False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -305,9 +305,9 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'translate': False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'translate': False, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'translate': False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -335,9 +335,9 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'translate': False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'translate': False, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'translate': False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -365,9 +365,9 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'translate': False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'translate': False, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'translate': False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
