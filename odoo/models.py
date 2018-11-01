@@ -3421,7 +3421,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     val = vals[name]
                     Translations._set_ids(tname, 'model', splitted_name[1], self.ids, val)
                 else:
-                    raise MissingError(_('Missing source value for the field %s') % splitted_name[0])
+                    raise UserError(_('Missing source value for the field %s') % splitted_name[0])
 
         # mark fields to recompute; do this before setting other fields, because
         # the latter can require the value of computed fields, e.g., a one2many
@@ -3712,7 +3712,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     val = data['stored'][name]
                     Translations._set_ids(tname, 'model', splitted_name[1], record.ids, val)
                 else:
-                    raise MissingError(_('Missing source value for the field %s') % splitted_name[0])
+                    raise UserError(_('Missing source value for the field %s') % splitted_name[0])
 
         return records
 

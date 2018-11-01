@@ -470,7 +470,7 @@ var DataImport = AbstractAction.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Open dialog to select language to import translate term
+     * Open dialog to select language to import translation terms
      *
      * @private
      * @param {Event} ev
