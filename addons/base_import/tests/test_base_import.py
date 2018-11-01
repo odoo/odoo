@@ -19,10 +19,10 @@ ID_FIELD = {
 }
 
 
-def make_field(name='value', string='Value', required=False, fields=[], field_type='id'):
+def make_field(name='value', string='Value', required=False, translate=False, fields=[], field_type='id'):
     return [
         ID_FIELD,
-        {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields, 'type': field_type},
+        {'id': name, 'name': name, 'string': string, 'required': required, 'translate': translate,'fields': fields, 'type': field_type},
     ]
 
 
@@ -69,12 +69,16 @@ class TestBasicFields(BaseImportCase):
         always... filtered out"""
         self.assertEqualFields(self.get_fields('char.stillreadonly'), [ID_FIELD])
 
+    def test_translated(self):
+        """ Required fields should be flagged (so they can be fill-required) """
+        self.assertEqualFields(self.get_fields('char.translated'), make_field(translate=True, field_type='char'))
+
     def test_m2o(self):
         """ M2O fields should allow import of themselves (name_get),
         their id and their xid"""
         self.assertEqualFields(self.get_fields('m2o'), make_field(field_type='many2one', fields=[
-            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
-            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
+            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'translate': False, 'fields': [], 'type': 'id'},
+            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'translate': False, 'fields': [], 'type': 'id'},
         ]))
 
     def test_m2o_required(self):
@@ -83,8 +87,8 @@ class TestBasicFields(BaseImportCase):
         is id-based)
         """
         self.assertEqualFields(self.get_fields('m2o.required'), make_field(field_type='many2one', required=True, fields=[
-            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': [], 'type': 'id'},
-            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': [], 'type': 'id'},
+            {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'translate': False, 'fields': [], 'type': 'id'},
+            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'translate': False, 'fields': [], 'type': 'id'},
         ]))
 
 
@@ -97,11 +101,11 @@ class TestO2M(BaseImportCase):
         self.assertEqualFields(self.get_fields('o2m'), make_field(field_type='one2many', fields=[
             ID_FIELD,
             # FIXME: should reverse field be ignored?
-            {'id': 'parent_id', 'name': 'parent_id', 'string': 'Parent', 'type': 'many2one', 'required': False, 'fields': [
-                {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
-                {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
+            {'id': 'parent_id', 'name': 'parent_id', 'string': 'Parent', 'type': 'many2one', 'required': False, 'translate': False, 'fields': [
+                {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'translate': False, 'fields': [], 'type': 'id'},
+                {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'translate': False, 'fields': [], 'type': 'id'},
             ]},
-            {'id': 'value', 'name': 'value', 'string': 'Value', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'value', 'name': 'value', 'string': 'Value', 'required': False, 'translate': False, 'fields': [], 'type': 'integer'},
         ]))
 
 

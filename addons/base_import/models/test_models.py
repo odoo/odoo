@@ -41,6 +41,12 @@ class CharStillreadonly(models.Model):
 
     value = fields.Char(readonly=True, states={'draft': [('readonly', True)]})
 
+class CharTrandlated(models.Model):
+    _name = name('char.translated')
+    _description = 'Tests : Base Import Model, Character translated'
+
+    value = fields.Char(translate=True)
+
 # TODO: complex field (m2m, o2m, m2o)
 class M2o(models.Model):
     _name = name('m2o')

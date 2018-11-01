@@ -197,9 +197,9 @@ class Import(models.TransientModel):
                 'string': field['string'],
                 # Y U NO ALWAYS HAS REQUIRED
                 'required': bool(field.get('required')),
+                'translate': bool(field.get('translate')),
                 'fields': [],
                 'type': field['type'],
-                'translate': bool(field.get('translate')),
             }
 
             if field['type'] in ('many2many', 'many2one'):
