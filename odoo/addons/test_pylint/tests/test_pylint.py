@@ -135,6 +135,9 @@ class TestPyLint(TransactionCase):
         out, err = process.communicate()
         _logger.info("pylint_bin version used: %s", out)
 
+        import os
+        _logger.info("Current working directory: %s", os.getcwd())
+
         if LooseVersion(pylint_version) < required_pylint_version:
             self._skip_test('please upgrade pylint to >= %s' % required_pylint_version)
 
