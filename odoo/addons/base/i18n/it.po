@@ -10,16 +10,16 @@
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016
+# Sergio Zanchetta <primes2h@gmail.com>, 2016
 # Daniele Faraglia <daniele.faraglia@gmail.com>, 2016
 # Giuseppe Castellani <giuseppecastellani@gmail.com>, 2016
-# Alex Siviero <dolanblu@gmail.com>, 2016
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2016
-# Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2016
 # Marius Marolla <mariusmarolla@entersys.it>, 2016
 # Giovanni Casalini <casalini.g@gmail.com>, 2016
 # Giovanni Perteghella <giovanni@perteghella.org>, 2016
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2017
 # Francesco Arillotta <frarillotta@gmail.com>, 2017
+# Alex Siviero <dolanblu@gmail.com>, 2017
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2017
 # David Minneci <david@numeko.it>, 2018
 # Cécile Collart <cco@odoo.com>, 2018
@@ -809,8 +809,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Durante la fatturazione dei timesheet, consente di fatturare tutti i timesheet\n"
-"        associati a un ordine cliente o solo i timesheet convalidati\n"
+"        Nella fatturazione dei fogli ore, consente di fatturare tutti quelli\n"
+"        associati a un ordine cliente o solo quelli convalidati\n"
 "    "
 
 #. module: base
@@ -891,7 +891,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    Modulo di collegamento tra il modulo di presenze e l'app timesheet.\n"
+"    Modulo che collega l'app \"Presenza\" e il modulo \"Foglio ore\".\n"
 "    "
 
 #. module: base
@@ -1321,6 +1321,10 @@ msgid ""
 "==================================================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Aggiunge all'interfaccia web il supporto foglio ore per i problemi.\n"
+"==================================================================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_portal_sale
@@ -4026,6 +4030,23 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"Registra e convalida fogli ore e presenze in modo semplice\n"
+"=========================================================\n"
+"\n"
+"Questa applicazione abilita una nuova schermata per gestire il foglio ore per periodo. Le registrazioni vengono effettuate giornalmente dai dipendenti. Al termine del periodo i dipendenti confermano i loro fogli, quindi il responsabile deve approvare le registrazioni del proprio gruppo. I periodi sono definiti nelle schede azienda ed è possibile impostarli per mese o settimana.\n"
+"\n"
+"Il processo completo di convalida è:\n"
+"---------------------------------------------\n"
+"* Foglio in bozza\n"
+"* Conferma del dipendente alla fine del periodo\n"
+"* Approvazione del responsabile progetto\n"
+"\n"
+"La conferma può essere così configurata nell'azienda:\n"
+"------------------------------------------------\n"
+"* Ampiezza del periodo (giorno, settimana, mese)\n"
+"* Differenza massima tra foglio ore e presenze\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report
@@ -5127,6 +5148,12 @@ msgid ""
 "Worklogs can be maintained to signify number of hours spent by users to handle an issue.\n"
 "                "
 msgstr ""
+"\n"
+"Questo modulo aggiunge il supporto foglio ore per gestire i problemi/errori di un progetto.\n"
+"=================================================================================\n"
+"\n"
+"È possibile conservare registri lavoro con le ore impiegate dagli utenti per gestire un problema.\n"
+"                "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_picking_wave
@@ -5451,15 +5478,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modello implementa un sistema di timesheet.\n"
-"==========================================\n"
+"Questo modulo implementa un sistema di fogli ore.\n"
+"===============================================\n"
 "\n"
-"Ogni dipendente può registrare e tracciare il tempo che dedica ai diversi progetti.\n"
+"Ciascun dipendente può definire e tenere traccia del tempo dedicato ai diversi progetti.\n"
 "\n"
-"Vengono forniti molti report sul tempo e la traccia dei dipendenti. \n"
+"Fornisce molti resoconti sul monitoraggio di tempi e dipendenti.\n"
 "\n"
-"È completamente integr. It allows you to set\n"
-"up a management by affair.\n"
+"È completamente integrato con il modulo di contabilità analitica. Consente di\n"
+"organizzare la gestione per lavoro.\n"
 "    "
 
 #. module: base
@@ -6597,7 +6624,7 @@ msgstr "Accesso"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Access Control"
-msgstr "Controllo accessi"
+msgstr "Controllo accesso"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_model_access
@@ -6606,23 +6633,23 @@ msgstr "Controllo accessi"
 #: model:ir.ui.view,arch_db:base.ir_access_view_tree
 #: model:ir.ui.view,arch_db:base.view_groups_form
 msgid "Access Controls"
-msgstr "Controlli Accesso"
+msgstr "Controlli accesso"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_access_act
 #: model:ir.ui.menu,name:base.menu_ir_access_act
 msgid "Access Controls List"
-msgstr "Lista Controllo Accessi"
+msgstr "Elenco controlli accesso"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
 msgid "Access Groups"
-msgstr "Gruppi d'accesso"
+msgstr "Gruppi accesso"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_menu_access
 msgid "Access Menu"
-msgstr "Menu Accesso"
+msgstr "Menù accesso"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -6635,13 +6662,13 @@ msgstr "Menu Accesso"
 #: model:ir.ui.view,arch_db:base.view_view_form
 #: model:res.groups,name:base.group_erp_manager
 msgid "Access Rights"
-msgstr "Autorizzazioni Accesso"
+msgstr "Diritti di accesso"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_groups_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Access Rules"
-msgstr "Regole Accesso"
+msgstr "Regole di accesso"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -6721,7 +6748,7 @@ msgstr "Contabilità"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_and_finance
 msgid "Accounting & Finance"
-msgstr "Contabilità & Finanza"
+msgstr "Contabilità e finanza"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
@@ -6736,7 +6763,7 @@ msgstr "Contabilità -MRP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
 msgid "Accounting Consistency Tests"
-msgstr "Test di Coerenza della Contabilità"
+msgstr "Test di coerenza della contabilità"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
@@ -7187,7 +7214,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Allowed Companies"
-msgstr "Aziende ammesse"
+msgstr "Aziende consentite"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_upgrade
@@ -7252,7 +7279,7 @@ msgstr "Contabilità analitica"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr "Contabilità analitica nel modulo Fabbricazione"
+msgstr "Contabilità analitica in produzione"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -7466,7 +7493,7 @@ msgstr "Gestione associazioni"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
 msgid "Associations: Members"
-msgstr "Associazioni: Membri"
+msgstr "Associazioni: membri"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:52
@@ -8343,7 +8370,7 @@ msgstr "Applicazioni Figlie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_child_ids
 msgid "Child Companies"
-msgstr "Aziende Figlie"
+msgstr "Aziende figlie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_field_parent
@@ -8594,7 +8621,7 @@ msgstr "Ente commerciale"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
 msgid "Common Drinks data for points of sale"
-msgstr ""
+msgstr "Dati su bevande comuni per il punto vendita"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
@@ -8761,7 +8788,7 @@ msgstr "Configurazione"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "Configuration Installer"
-msgstr "Programma di Installazione della Configurazione"
+msgstr "Installazione della configurazione"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
@@ -8798,7 +8825,7 @@ msgstr "Connetti il Client Web alle Periferiche Hardware"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Connection Information"
-msgstr "Informazioni Connessione"
+msgstr "Informazioni connessione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_encryption
@@ -9010,7 +9037,7 @@ msgstr "Raggruppamenti di Paesi"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_country_group_ids
 msgid "Country Groups"
-msgstr "Gruppi di Nazioni"
+msgstr "Gruppi di nazioni"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_name
@@ -9305,7 +9332,7 @@ msgstr "Fido Accordato"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercury
 msgid "Credit card support for Point Of Sale"
-msgstr "Supporto per carte di credito per il Punto Vendita"
+msgstr "Supporto per carte di credito nel punto vendita"
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -9378,7 +9405,7 @@ msgstr "Simbolo corrente, da usare per la stampa di importi."
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Current Company"
-msgstr "Azienda attuale"
+msgstr "Azienda corrente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate
@@ -9394,7 +9421,7 @@ msgstr "Finestra Corrente"
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Current Year with Century: %(year)s"
-msgstr "Anno attuale con il secolo: %(year)s"
+msgstr "Anno corrente con il secolo: %(year)s"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -10288,7 +10315,7 @@ msgstr "Errore ! Non puoi creare tag ricorsivi."
 #: code:addons/base/res/res_company.py:354
 #, python-format
 msgid "Error ! You cannot create recursive companies."
-msgstr "Errore! Non puoi creare aziende ricorsive."
+msgstr "Errore, non è possibile creare aziende ricorsive."
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:442
@@ -11204,12 +11231,12 @@ msgstr "Generale"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "General Information"
-msgstr "Informazioni Generali"
+msgstr "Informazioni generali"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "General Settings"
-msgstr "Impostazioni Generali"
+msgstr "Impostazioni generali"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
@@ -11395,7 +11422,7 @@ msgstr "Raggruppa per"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_full_name
 msgid "Group Name"
-msgstr "Nome Gruppo"
+msgstr "Nome gruppo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_group_id
@@ -11412,7 +11439,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_group_form
 msgid "Group name"
-msgstr "Nome Gruppo"
+msgstr "Nome gruppo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_groups
@@ -11651,8 +11678,8 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
-"Aiuta a gestire il tuo inventario e le principali operazioni di magazzino: "
-"ordini di consegna, ricevimenti, ecc."
+"Aiuta a migliorare la gestione di magazzino e le sue principali operazioni: "
+"ordini di consegna, ricezioni ecc."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing
@@ -11683,8 +11710,8 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
-"Aiuta a gestire i vostri progetti e le attività da monitorare, la "
-"generazione di pianificazioni, ecc ..."
+"Aiuta a migliorare la gestione dei progetti e delle attività da seguire, "
+"pianificare ecc..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_purchase_management
@@ -12578,27 +12605,27 @@ msgstr "Definizione vista non valida"
 #. module: base
 #: model:ir.module.category,name:base.module_category_warehouse_management
 msgid "Inventory"
-msgstr "Inventario"
+msgstr "Magazzino"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock
 msgid "Inventory Management"
-msgstr "Gestione dell'Inventario"
+msgstr "Gestione del magazzino"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr "Inventario, Logistica, Valutazione, Contabilità"
+msgstr "Magazzino, logistica, valutazione, contabilità"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock
 msgid "Inventory, Logistics, Warehousing"
-msgstr "Inventario, Logistica, Gestione del Magazzino"
+msgstr "Magazzino, logistica, giacenze"
 
 #. module: base
 #: selection:res.partner,type:0
 msgid "Invoice address"
-msgstr "Indirizzo Fatturazione"
+msgstr "Indirizzo fattura"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -12608,7 +12635,7 @@ msgstr "Fatturazione"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
-msgstr "Fatturazione & Pagamenti"
+msgstr "Fatturazione e pagamenti"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -12635,13 +12662,13 @@ msgstr "È un'azienda"
 #: model:ir.model.fields,field_description:base.field_res_partner_customer
 #: model:ir.model.fields,field_description:base.field_res_users_customer
 msgid "Is a Customer"
-msgstr "È un Cliente"
+msgstr "È un cliente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_supplier
 #: model:ir.model.fields,field_description:base.field_res_users_supplier
 msgid "Is a Vendor"
-msgstr "È un Fornitore"
+msgstr "È un fornitore"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_public
@@ -12781,7 +12808,7 @@ msgstr "Chiave"
 #. module: base
 #: sql_constraint:ir.config_parameter:0
 msgid "Key must be unique."
-msgstr "La Chiave deve essere unica."
+msgstr "La chiave deve essere unica."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_kind
@@ -13372,7 +13399,7 @@ msgstr "Programma Fedeltà"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_loyalty
 msgid "Loyalty Program for the Point of Sale "
-msgstr "Programma Fedeltà per il Punto Vendita"
+msgstr "Programma fedeltà per il punto vendita "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_lunch
@@ -13605,7 +13632,7 @@ msgstr "Il Many2one %s sul modello %s non esiste!"
 #: model:ir.ui.view,arch_db:base.view_model_relation_form
 #: model:ir.ui.view,arch_db:base.view_model_relation_list
 msgid "ManyToMany Relations"
-msgstr "Relazioni MoltiAMolti"
+msgstr "Relazioni molti a molti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_margin
@@ -13741,7 +13768,7 @@ msgstr "Menu"
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Menu Items"
-msgstr "Elementi del Menu"
+msgstr "Voci di menù"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_name
@@ -13762,7 +13789,7 @@ msgstr "Personalizzazione Menu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mercury
 msgid "Mercury Payment Services"
-msgstr "Servizio pagamento Mercury "
+msgstr "Servizi di pagamento Mercury"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_message
@@ -14155,12 +14182,12 @@ msgstr "Sig.ra"
 #: model:ir.ui.view,arch_db:base.view_users_form
 #: model:res.groups,name:base.group_multi_company
 msgid "Multi Companies"
-msgstr "Multi Aziende"
+msgstr "Multi azienda"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
-msgstr "Multi Valuta"
+msgstr "Multi valuta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
@@ -14475,7 +14502,7 @@ msgstr "Numero di Chiamate"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_companies_count
 msgid "Number of Companies"
-msgstr "Numero di Aziende"
+msgstr "Numero di aziende"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update_added
@@ -14688,7 +14715,7 @@ msgstr "Preventivo Online"
 #: code:addons/base/res/res_config.py:516
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr "Solo un amministratore può cambiare le impostazioni"
+msgstr "Solo gli amministratori possono cambiare le impostazioni"
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:56
@@ -15284,22 +15311,22 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr "Punto Vendita"
+msgstr "Punto vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_data_drinks
 msgid "Point of Sale Common Data Drinks"
-msgstr ""
+msgstr "Bevande comuni per il punto vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr "Sconti del Punto Vendita"
+msgstr "Sconti punto vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_reprint
 msgid "Point of Sale Receipt Reprinting"
-msgstr "Ristampa Ricevute Punto Vendita"
+msgstr "Ristampa ricevuta punto vendita"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -15542,12 +15569,12 @@ msgstr "Previsione di Progetto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating_project
 msgid "Project Rating"
-msgstr "Valutazione Progetto"
+msgstr "Valutazione progetto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
 msgid "Projects, Tasks"
-msgstr "Progetti, Attività"
+msgstr "Progetti, attività"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -16153,7 +16180,7 @@ msgstr "Ristorante"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr "Ampliamenti per i ristoranti per il Punto di Vendita"
+msgstr "Estensione ristorante per il punto vendita "
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
@@ -16406,7 +16433,7 @@ msgstr "Team di Vendita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr "Timesheet vendite"
+msgstr "Foglio ore per vendite"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_sale
@@ -16488,7 +16515,7 @@ msgstr "Azione Programmata"
 #: model:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
-msgstr "Azioni Programmate"
+msgstr "Azioni programmate"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_screen
@@ -16503,7 +16530,7 @@ msgstr "Ricerca"
 #. module: base
 #: model:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "Search Actions"
-msgstr "Azioni di Ricerca"
+msgstr "Azioni su ricerca"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -16619,7 +16646,7 @@ msgstr "Vendi i Tuoi Prodotti Online"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr "Vendita basata sui timesheet"
+msgstr "Vendite basate sui fogli ore"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -16750,7 +16777,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_search
 #: model:ir.ui.view,arch_db:base.view_server_action_tree
 msgid "Server Actions"
-msgstr "Azioni Server"
+msgstr "Azioni su server"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_11
@@ -16878,7 +16905,7 @@ msgstr "Argento"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr "Semplice sconto nel Punto Vendita"
+msgstr "Sconti semplici nel punto vendita "
 
 #. module: base
 #: model:res.country,name:base.sg
@@ -17443,7 +17470,7 @@ msgstr "Configurazione sistema completata"
 #: model:ir.ui.view,arch_db:base.view_ir_config_form
 #: model:ir.ui.view,arch_db:base.view_ir_config_list
 msgid "System Parameters"
-msgstr "Parametri di Sistema"
+msgstr "Parametri di sistema"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_ir_config_search
@@ -17565,18 +17592,18 @@ msgstr "Pagina del Team"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
 msgid "Technical"
-msgstr "Funzioni Tecniche"
+msgstr "Funzioni tecniche"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Technical Data"
-msgstr "Informazioni Tecniche"
+msgstr "Dati tecnici"
 
 #. module: base
 #: model:res.groups,name:base.group_no_one
 msgid "Technical Features"
-msgstr "Funzionalità tecniche"
+msgstr "Specifiche tecniche"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_name
@@ -17588,7 +17615,7 @@ msgstr "Nome Tecnico"
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
-msgstr "Configurazioni Tecniche"
+msgstr "Impostazioni tecniche"
 
 #. module: base
 #: code:addons/base/ir/ir_translation.py:746
@@ -18279,38 +18306,38 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_timesheet
 msgid "Timesheet in Website Portal"
-msgstr ""
+msgstr "Foglio ore nel portale web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
 msgid "Timesheet on Issues"
-msgstr "Timesheet su problematica"
+msgstr "Foglio ore su problematiche"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_issue_sheet
 msgid "Timesheet on Website Project Issue"
-msgstr ""
+msgstr "Foglio ore su problematica progetto nel sito web"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Timesheets"
-msgstr "Timesheet"
+msgstr "Fogli ore"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets / Attendances"
-msgstr ""
+msgstr "Fogli ore / Presenze"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
 msgid "Timesheets, Activities"
-msgstr ""
+msgstr "Fogli ore, attività"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr "Report sui Timesheet/sulle Presenze"
+msgstr "Comunicazione fogli ore/presenze"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_tz
@@ -18405,7 +18432,7 @@ msgstr "Strumenti"
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Touchscreen Interface for Shops"
-msgstr "Interfaccia Touchscreen per Negozi"
+msgstr "Interfaccia touchscreen per negozi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
@@ -19032,7 +19059,7 @@ msgstr "Utente"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_2
 msgid "User Interface"
-msgstr "Interfaccia Utente"
+msgstr "Interfaccia utente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user_user_login
@@ -19049,7 +19076,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_values_form_defaults
 #: model:ir.ui.view,arch_db:base.values_view_form_defaults
 msgid "User-defined Defaults"
-msgstr "Valori predefiniti per utente"
+msgstr "Predefinite per l'utente"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_ir_filters
@@ -19176,7 +19203,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Vehicle, leasing, insurances, costs"
-msgstr "Veicoli, Leasing, assicurazioni, costi"
+msgstr "Veicoli, leasing, assicurazioni, costi"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
@@ -19717,7 +19744,7 @@ msgstr "Grossista"
 #: model:ir.actions.act_window,name:base.ir_action_window
 #: model:ir.ui.menu,name:base.menu_ir_action_window
 msgid "Window Actions"
-msgstr "Azioni Finestra"
+msgstr "Azioni su finestra"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user_wizard_id
@@ -19908,8 +19935,8 @@ msgid ""
 "You can not change the company as the partner/user has multiple user linked "
 "with different companies."
 msgstr ""
-"Non è possibile modificare l'azienda se il partner/l'utente è utente di "
-"altre aziende."
+"Impossibile modificare l'azienda, diversi utenti del partner/utente sono "
+"collegati ad altre aziende."
 
 #. module: base
 #: sql_constraint:res.users:0

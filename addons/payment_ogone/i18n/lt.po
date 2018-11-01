@@ -38,17 +38,17 @@ msgstr "; užsakymų nerasta"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
 msgid "API User ID"
-msgstr ""
+msgstr "API Vartotojo ID"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_password
 msgid "API User Password"
-msgstr ""
+msgstr "API vartotojo slaptažodis"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_alias_usage
 msgid "Alias Usage"
-msgstr ""
+msgstr "Pseudonimo naudojimas"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
@@ -73,7 +73,7 @@ msgstr "Galiojimas"
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
 msgid "How to configure your Ogone account?"
-msgstr ""
+msgstr "Kaip konfigūruoti savo Ogone paskyrą?"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
@@ -81,6 +81,9 @@ msgid ""
 "If you want to use Ogone Aliases, this default Alias Usage will be presented"
 " to the customer as the reason you want to keep his payment data"
 msgstr ""
+"Jei norite naudoti Ogone pseudonimus, šis numatytasis pseudonimo naudojimas "
+"bus pristatomas klientui kaip priežastis, kodėl norite išsaugoti jo mokėjimo"
+" duomenis. "
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
@@ -96,13 +99,13 @@ msgstr "Pavadinimas"
 #: code:addons/payment_ogone/models/payment.py:248
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
+msgstr "Ogone: negalimas shasign, gauta %s, suskaičiuota %s, duomenims %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment.py:237
 #, python-format
 msgid "Ogone: received data for reference %s"
-msgstr ""
+msgstr "Ogone: numeriui %s gauti duomenys"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment.py:230
@@ -111,11 +114,13 @@ msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
 "(%s)"
 msgstr ""
+"Ogone: gauti duomenys su trūkstamu numeriu (%s), arba pay_id (%s), arba "
+"shasign (%s)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid
 msgid "PSPID"
-msgstr ""
+msgstr "PSPID"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
@@ -130,12 +135,12 @@ msgstr "Mokėjimo transakcija"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_in
 msgid "SHA Key IN"
-msgstr ""
+msgstr "SHA Key IN"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr ""
+msgstr "SHA Key OUT"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_token

@@ -127,6 +127,7 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
+"<span><i>Laukiama</i>... Užsakymas bus patvirtintas po mokėjimo.</span>"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -173,7 +174,7 @@ msgstr "Adresas"
 #: model:payment.acquirer,name:payment.payment_acquirer_adyen
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -215,13 +216,13 @@ msgstr "Authorize.Net"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr ""
+msgstr "Patvirtinta"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
@@ -364,7 +365,7 @@ msgstr "Atlikti"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "Atlikimo žinutė"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -410,7 +411,7 @@ msgstr "Mokesčiai"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "Palaikomas mokesčių skaičiavimas"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
@@ -425,12 +426,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Fiksuoti vietiniai mokėjimai"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Fiksuoti tarptautiniai mokymai"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -440,7 +441,7 @@ msgstr "Forma"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "Formos mygtuko šablonas"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -472,7 +473,7 @@ msgstr "Paveikslėlis"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
 msgid "Ingenico"
-msgstr ""
+msgstr "Ingenico"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -519,7 +520,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Let the customer decide"
-msgstr ""
+msgstr "Leiskite klientui nuspręsti"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -543,6 +544,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Vidutinio dydžio tikėjo paveikslėlis. Nuotraukos dydis automatiškai "
+"sumažinamas į 128x128px, kai nuotrauka viršija minėtą dydį. Naudokite šį "
+"lauką paprastose arba Kanban formose."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -553,36 +557,36 @@ msgstr "Pranešimas"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Žinutė, rodoma atlikus mokėjimo procesą."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Žinutė paaiškinanti ir padedanti mokėjimo procese."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
+msgstr "Žinutė, rodoma, jei mokėjimo proceso metu įvyko klaida."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr ""
+msgstr "Žinutė, rodoma, jei užsakymas yra atšaukiamas apmokėjimo metu."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr ""
+msgstr "Žinutė, rodoma, jei užsakymas yra sėkmingai atliktas po apmokėjimo."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr ""
+msgstr "Žinutė, rodoma, jei užsakymas po apmokėjimo yra laukimo būsenoje."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -622,7 +626,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:619
@@ -657,7 +661,7 @@ msgstr "Partnerio pavadinimas"
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
@@ -767,7 +771,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Neužpildyti būtini laukai"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
@@ -793,7 +797,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
 msgid "Saving Card Data supported"
-msgstr ""
+msgstr "Kortelės duomenų išsaugojimas palaikomas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -803,18 +807,18 @@ msgstr "Seka"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Serveris į serverį"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_short_name
 msgid "Short name"
-msgstr ""
+msgstr "Trumpasis pavadinimas"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
@@ -828,6 +832,9 @@ msgid ""
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
 msgstr ""
+"Šio tiekėjo mažo dydžio paveikslėlis. Automatiškai pakeičiamas į 64x64px "
+"paveikslėlį, išlaikant kraštinių santykį. Naudokite šitą laukelį visur, kur "
+"reikalingas mažas paveikslėlis."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -843,12 +850,12 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
 msgid "Template for method registration"
-msgstr ""
+msgstr "Būdo registravimo šablonas"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -864,7 +871,7 @@ msgstr "Padėkos žinutė"
 #: code:addons/payment/models/payment_acquirer.py:472
 #, python-format
 msgid "The payment transaction reference must be unique!"
-msgstr ""
+msgstr "Mokėjimo operacijos numeris turi būti unikalus!"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:42
@@ -909,22 +916,22 @@ msgstr "Tipas"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
 msgid "Validation Date"
-msgstr ""
+msgstr "Patvirtinimo data"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Kintantys vietiniai mokesčiai (procentais)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Kintantys tarptautiniai mokesčiai (procentais)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Matomas portale / svetainėje"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -947,48 +954,48 @@ msgstr ""
 msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "Paspaudę mokėjimo mygtuką būsite nukreipti į Adyen svetainę."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
 msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
-msgstr ""
+msgstr "Paspaudę mokėjimo mygtuką būsite nukreipti į Authorize svetainę."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
-msgstr ""
+msgstr "Paspaudę mokėjimo mygtuką būsite nukreipti į Buckaroo svetainę."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
-msgstr ""
+msgstr "Paspaudę mokėjimo mygtuką būsite nukreipti į Ingenico svetainę."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
 msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
-msgstr ""
+msgstr "Paspaudę mokėjimo mygtuką būsite nukreipti į PayUmoney svetainę."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
 msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "Paspaudę mokėjimo mygtuką būsite nukreipti į Paypal svetainę."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
-msgstr ""
+msgstr "Paspaudę mokėjimo mygtuką būsite nukreipti į Sips svetainę."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -1040,19 +1047,19 @@ msgstr "payment.token"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "numeris: operacijos numeris"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: operacijos URL paskelbimui formoje"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: operacijos reikšmės"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "vartotojas: esamo vartotojo naršymo įrašas"

@@ -49,7 +49,7 @@
 # Lamia Ishak <lamiaishak@hotmail.co.uk>, 2016
 # Hubert TETARD <htetard@apik-conseils.com>, 2016
 # Xavier Brochard <xavier@alternatif.org>, 2016
-# leemannd <denis.leemann@camptocamp.com>, 2016
+# Denis Leemann <denis.leemann@camptocamp.com>, 2016
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
 # Henri MARES <henri.mares@aliceadsl.fr>, 2017
@@ -11425,3 +11425,11 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Compter"
+
+#. module: account
+#: code:addons/account/models/account.py:309
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
