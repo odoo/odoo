@@ -105,11 +105,10 @@
             </field>
         </record>
 
-    <record id="project_timesheet_action_client_timesheet_plan" model="ir.actions.client">
+    <record id="project_timesheet_action_client_timesheet_plan" model="ir.actions.act_window">
         <field name="name">Overview</field>
-        <field name="tag">timesheet.plan</field>
         <field name="res_model">project.project</field>
-        <field name="params" eval="{}"/>
+        <field name="view_mode">qweb</field>
     </record>
 
 </odoo>
