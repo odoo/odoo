@@ -1891,6 +1891,15 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     if (!r) {
         return;
     }
+    // select content since container (that firefox selects) may be removed
+    if (r.so === 0) {
+        r.sc = dom.firstChild(r.sc);
+    }
+    if (dom.nodeLength(r.ec) >= r.eo) {
+        r.ec = dom.lastChild(r.ec);
+        r.eo = dom.nodeLength(r.ec);
+    }
+    r = range.create(r.sc, r.so, r.ec, r.eo);
     r.reRange().select();
 
     if (sTagName === "blockquote" || sTagName === "pre") {
