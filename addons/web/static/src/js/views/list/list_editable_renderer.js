@@ -902,7 +902,11 @@ ListRenderer.include({
                  }
                 break;
             case 'next_line':
-                this._moveToNextLine();
+                if (this.editable == 'top') {
+                    this._moveToPreviousLine();
+                } else {
+                    this._moveToNextLine();
+                }
                 break;
             case 'cancel':
                 // stop the original event (typically an ESCAPE keydown), to
