@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
 class TestReplenishWizard(TestStockCommon):
     def setUp(self):
         super(TestReplenishWizard, self).setUp()
-        self.vendor = self.env['res.partner'].search([('supplier', '=', True)], limit=1)
+        self.vendor = self.env['res.partner'].create(dict(name='The Replenisher', supplier=True))
         self.product1_price = 500
 
         # Create a supplier info witch the previous vendor

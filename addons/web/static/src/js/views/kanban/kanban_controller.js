@@ -273,7 +273,7 @@ var KanbanController = BasicController.extend({
     _onButtonNew: function () {
         var state = this.model.get(this.handle, {raw: true});
         var quickCreateEnabled = this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state);
-        if (this.on_create === 'quick_create' && quickCreateEnabled) {
+        if (this.on_create === 'quick_create' && quickCreateEnabled && state.data.length) {
             // Activate the quick create in the first column
             this.renderer.addQuickCreate();
         } else if (this.on_create && this.on_create !== 'quick_create') {

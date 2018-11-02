@@ -456,6 +456,7 @@ class TestPayment(AccountingTestCase):
         #check the invoice status
         self.assertEqual(invoice.state, 'paid')
 
+
     def test_payment_and_writeoff_in_other_currency_3(self):
         # Use case related in revision 20935462a0cabeb45480ce70114ff2f4e91eaf79
         # Invoice made in secondary currency for which the rate to the company currency

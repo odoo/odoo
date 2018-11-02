@@ -53,12 +53,11 @@ class ProductProduct(models.Model):
         if not boms_to_recompute:
             boms_to_recompute = []
         total = 0
-        quant_quantity = bom.product_uom_id._compute_quantity(bom.product_qty, bom.product_tmpl_id.uom_id)
         for opt in bom.routing_id.operation_ids:
             duration_expected = (
                 opt.workcenter_id.time_start +
                 opt.workcenter_id.time_stop +
-                quant_quantity * opt.time_cycle)
+                opt.time_cycle)
             total += (duration_expected / 60) * opt.workcenter_id.costs_hour
         for line in bom.bom_line_ids:
             if line._skip_bom_line(self):

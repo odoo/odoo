@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 
 from odoo import fields
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -417,3 +418,52 @@ class TestStockValuationWithCOA(AccountingTestCase):
         # check the anglo saxon entries
         price_diff_entry = self.env['account.move.line'].search([('account_id', '=', price_diff_account.id)])
         self.assertEqual(price_diff_entry.credit, 100)
+
+    def test_anglosaxon_valuation(self):
+        self.env.user.company_id.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+        price_diff_account = self.env['account.account'].create({
+            'name': 'price diff account',
+            'code': 'price diff account',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.product1.property_account_creditor_price_difference = price_diff_account
+
+        # Create PO
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receive the goods
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 1
+        receipt.button_validate()
+
+        # Create an invoice with a different price
+        invoice = self.env['account.invoice'].create({
+            'partner_id': order.partner_id.id,
+            'purchase_id': order.id,
+            'account_id': order.partner_id.property_account_payable_id.id,
+            'type': 'in_invoice',
+        })
+        invoice.purchase_order_change()
+        invoice.invoice_line_ids[0].price_unit = 15.0
+        invoice.action_invoice_open()
+
+        # Check what was posted in the price difference account
+        price_diff_aml = self.env['account.move.line'].search([('account_id','=',price_diff_account.id)])
+        self.assertEquals(len(price_diff_aml), 1, "Only one line should have been generated in the price difference account.")
+        self.assertAlmostEquals(price_diff_aml.debit, 5, "Price difference should be equal to 5 (15-10)")
+
+        # Check what was posted in stock input account
+        input_aml = self.env['account.move.line'].search([('account_id','=',self.stock_input_account.id)])
+        self.assertEquals(len(input_aml), 2, "Only two lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
+        self.assertAlmostEquals(sum(input_aml.mapped('debit')), 10, "Total debit value on stock input account should be equal to the original PO price of the product.")
+        self.assertAlmostEquals(sum(input_aml.mapped('credit')), 10, "Total credit value on stock input account should be equal to the original PO price of the product.")

@@ -123,7 +123,7 @@ class MrpUnbuild(models.Model):
             if produce_move.has_tracking != 'none':
                 original_move = self.mo_id.move_raw_ids.filtered(lambda move: move.product_id == produce_move.product_id)
                 needed_quantity = produce_move.product_qty
-                for move_lines in original_move.mapped('move_line_ids'):
+                for move_lines in original_move.mapped('move_line_ids').filtered(lambda ml: ml.lot_produced_id == self.lot_id):
                     # Iterate over all move_lines until we unbuilded the correct quantity.
                     taken_quantity = min(needed_quantity, move_lines.qty_done)
                     if taken_quantity:

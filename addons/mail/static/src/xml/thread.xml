@@ -351,6 +351,7 @@
                     </span>
                 </p>
                 <div class="o_thread_message_content">
+                    <t t-raw="message.getBody()"/>
                     <t t-if="message.hasTrackingValues()">
                         <t t-if="message.hasSubtypeDescription()">
                             <p><t t-esc="message.getSubtypeDescription()"/></p>
@@ -358,9 +359,6 @@
                         <t t-call="mail.widget.Thread.MessageTracking"/>
                     </t>
                     <p t-if="options.displaySubjectOnMessages and message.shouldDisplaySubject()" class="o_mail_subject">Subject: <t t-esc="message.getSubject()"/></p>
-                    <t t-if="!(message.hasTrackingValues())">
-                        <t t-raw="message.getBody()"/>
-                    </t>
                     <t t-if="message.hasAttachments()">
                         <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
                             <t t-foreach="message.getImageAttachments()" t-as="attachment">

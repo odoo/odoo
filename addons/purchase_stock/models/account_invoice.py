@@ -120,7 +120,7 @@ class AccountInvoice(models.Model):
                             # valuation difference, it means this difference is due to exchange rates,
                             # so we don't create anything, the exchange rate entries will
                             # be processed automatically by the rest of the code.
-                            diff_res.append({
+                            diff_line = {
                                 'type': 'src',
                                 'name': i_line.name[:64],
                                 'price_unit': inv.currency_id.round(price_unit_val_dif),
@@ -131,7 +131,11 @@ class AccountInvoice(models.Model):
                                 'uom_id': line['uom_id'],
                                 'account_analytic_id': line['account_analytic_id'],
                                 'tax_ids': tax_ids,
-                            })
+                            }
+                            # We update the original line accordingly
+                            line['price_unit'] = inv.currency_id.round(line['price_unit'] - diff_line['price_unit'])
+                            line['price'] = inv.currency_id.round(line['quantity'] * line['price_unit'])
+                            diff_res.append(diff_line)
             return diff_res
         return []
 
