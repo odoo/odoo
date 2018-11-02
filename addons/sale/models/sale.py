@@ -1144,7 +1144,10 @@ class SaleOrderLine(models.Model):
     untaxed_amount_to_invoice = fields.Monetary("Untaxed Amount To Invoice", compute='_compute_untaxed_amount_to_invoice', compute_sudo=True, store=True)
 
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
-    currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id'], store=True, string='Currency', readonly=True)
+    # stored computed/related fields that depend on non-stored computed/related fields are always get recomputed when needed.
+    # but in this situation is something to avoided, we have to restrict the dependencies of the field currency_id.
+    # a stored computed/related field should not depend on non-stored data
+    currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id.pricelist_id'], store=True, string='Currency', readonly=True)
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
