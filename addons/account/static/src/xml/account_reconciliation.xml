@@ -122,7 +122,7 @@
     <t t-jquery=".accounting_view thead tr" t-operation="replace">
         <tr>
             <td class="cell_action"><span class="toggle_match fa fa-cog" aria-label="Settings" role="img" title="Settings"></span></td>
-            <td colspan="3"><span/><span t-if="state.last_time_entries_checked">Last Reconciliation: <t t-esc="state.last_time_entries_checked"/></span></td>
+            <td colspan="3"><span/></td>
             <td colspan="2"><t t-esc="state.st_line.account_code"/></td>
             <td class="cell_info_popover"></td>
         </tr>

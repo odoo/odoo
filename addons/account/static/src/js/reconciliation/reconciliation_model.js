@@ -1400,20 +1400,6 @@ var ManualModel = StatementModel.extend({
                 }));
             });
             return $.when.apply($, defs).then(function() {
-                if (account_ids.length) {
-                    self._rpc({
-                            model: 'account.account',
-                            method: 'mark_as_reconciled',
-                            args: [account_ids],
-                        });
-                }
-                if (partner_ids.length) {
-                    self._rpc({
-                            model: 'res.partner',
-                            method: 'mark_as_reconciled',
-                            args: [partner_ids],
-                        });
-                }
                 return {reconciled: reconciled, updated: _.difference(handles, reconciled)};
             });
         });
