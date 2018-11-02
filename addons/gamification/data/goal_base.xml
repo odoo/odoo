@@ -113,7 +113,7 @@ Thank you,
                                         <tr><td style="padding:0 30px;">
                                             <table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
                                                 <tr>
-                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]
+                                                    % set top_goals = line['goals'][:3]
                                                     % for goal in top_goals:
                                                         <td align="center" style="width:32%;">
                                                             % if loop.index == 1:
