@@ -146,7 +146,7 @@ class AccountMove(models.Model):
                             if not journal.refund_sequence_id:
                                 raise UserError(_('Please define a sequence for the refunds'))
                             sequence = journal.refund_sequence_id
-                                                            
+
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -1200,6 +1200,8 @@ class AccountMoveLine(models.Model):
                         ctx = {}
                         if 'date' in vals:
                             ctx['date'] = vals['date']
+                        elif 'date_maturity' in vals:
+                            ctx['date'] = vals['date_maturity']
                         temp['currency_id'] = bank.currency_id.id
                         temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
                     tax_lines_vals.append(temp)
