@@ -341,6 +341,9 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
         order = request.website.sale_get_order()
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order()
         if order:
             from_currency = order.company_id.currency_id
             to_currency = order.pricelist_id.currency_id
@@ -370,7 +373,7 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
-        sale_order = request.website.sale_get_order(force_create=1)
+        sale_order = request.website.sale_get_order(force_create=True)
         if sale_order.state != 'draft':
             request.session['sale_order_id'] = None
             sale_order = request.website.sale_get_order(force_create=True)
