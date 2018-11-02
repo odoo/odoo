@@ -1010,17 +1010,17 @@ them (e.g. to change their default sort order):
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/extension.py
     :language: python
-    :lines: 5-
+    :lines: 7-
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: python
-    :lines: 8,13
+    :lines: 10,15
 
 will yield:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: text
-    :lines: 11
+    :lines: 13
 
 .. note:: it will also yield the various :ref:`automatic fields
           <reference/orm/model/automatic>` unless they've been disabled

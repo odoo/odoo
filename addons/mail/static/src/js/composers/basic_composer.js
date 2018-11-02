@@ -390,6 +390,7 @@ var BasicComposer = Widget.extend({
             return;
         }
 
+        this.$(".o_composer_button_send").prop("disabled", true);
         clearTimeout(this._cannedTimeout);
         var self = this;
         this._preprocessMessage().then(function (message) {

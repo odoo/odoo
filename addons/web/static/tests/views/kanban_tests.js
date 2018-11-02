@@ -4737,6 +4737,30 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick_create on grouped kanban without column', function (assert) {
+        assert.expect(1);
+        this.data.partner.records = [];
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create"><templates><t t-name="kanban-box">' +
+                    '<div>' +
+                    '<field name="name"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+            groupBy: ['product_id'],
+
+            intercepts: {
+                switch_view: function (event) {
+                    assert.ok(true, "switch_view was called instead of quick_create");
+                },
+            },
+        });
+        kanban.$buttons.find('.o-kanban-button-new').click();
+        kanban.destroy();
+    });
+
     QUnit.test('keyboard navigation on kanban basic rendering', function (assert) {
         assert.expect(3);
 
