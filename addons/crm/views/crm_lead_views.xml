@@ -385,6 +385,7 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Leads">
+                    <field name="name" filter_domain="['|','|','|',('partner_name', 'ilike', self),('email_from', 'ilike', self), ('contact_name', 'ilike', self), ('name', 'ilike', self)]"/>
                     <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
                     <field name="user_id"/>
                     <field name="team_id"/>
