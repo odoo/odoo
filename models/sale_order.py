@@ -346,8 +346,8 @@ class SaleOrder(models.Model):
         order.no_code_promo_program_ids -= programs_to_remove
         order.code_promo_program_id -= programs_to_remove
         order.applied_coupon_ids -= order.applied_coupon_ids.filtered(lambda coupon: coupon.program_id in programs_to_remove)
-        invalid_lines += order.order_line.filtered(lambda line: line.product_id.id in products_to_remove.ids)
-        order.write({'order_line': [(2, line.id, False) for line in invalid_lines]})
+        invalid_lines |= order.order_line.filtered(lambda line: line.product_id.id in products_to_remove.ids)
+        invalid_lines.unlink()
 
     def _get_applied_programs_with_rewards_on_current_order(self):
         # Need to add filter on current order. Indeed, it has always been calculating reward line even if on next order (which is useless and do calculation for nothing)
