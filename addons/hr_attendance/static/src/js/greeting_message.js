@@ -51,22 +51,7 @@ var GreetingMessage = AbstractAction.extend({
         this.attendance.check_in_time = this.attendance.check_in && this.attendance.check_in.format(this.format_time);
         this.attendance.check_out_time = this.attendance.check_out && this.attendance.check_out.format(this.format_time);
         this.employee_name = action.employee_name;
-    },
-
-    willStart: function() {
-        var self = this;
-        var def;
-        if (this.attendance && this.attendance.employee_id) {
-            def = this._rpc({
-                model: 'hr.employee',
-                method: 'read',
-                args: [this.attendance.employee_id[0], ['barcode']],
-             })
-            .then(function (employee) {
-                self.attendanceBarcode = employee[0].barcode;
-            });
-        }
-        return $.when(this._super.apply(this, arguments), def);
+        this.attendanceBarcode = action.barcode;
     },
 
     start: function() {
@@ -167,7 +152,10 @@ var GreetingMessage = AbstractAction.extend({
                         self.do_action(result.action);
                     } else if (result.warning) {
                         self.do_warn(result.warning);
+                        setTimeout( function() { self.do_action(self.next_action, {clear_breadcrumbs: true}); }, 5000);
                     }
+                }, function () {
+                    setTimeout( function() { self.do_action(self.next_action, {clear_breadcrumbs: true}); }, 5000);
                 });
         }
     },
