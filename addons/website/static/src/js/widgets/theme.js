@@ -557,13 +557,12 @@ var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @override
      */
     start: function () {
-        var def;
         if ((window.location.hash || '').indexOf('theme=true') > 0) {
             var tab = window.location.hash.match(/tab=(\d+)/);
-            def = this._openThemeCustomizeDialog(tab ? tab[1] : false);
+            this._openThemeCustomizeDialog(tab ? tab[1] : false);
             window.location.hash = '';
         }
-        return $.when(this._super.apply(this, arguments), def);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

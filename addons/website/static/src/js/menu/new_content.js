@@ -155,16 +155,20 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * Show the menu
      *
      * @private
+     * @returns Deferred
      */
     _showMenu: function () {
+        var def = $.Deferred();
         this.trigger_up('action_demand', {
             actionName: 'close_all_widgets',
+            onSuccess: def.resolve.bind(def),
         });
-
-        this.firstTab = true;
-        this.$newContentMenuChoices.removeClass('o_hidden');
-        $('body').addClass('o_new_content_open');
-        this.$('> a').focus();
+        return def.then((function () {
+            this.firstTab = true;
+            this.$newContentMenuChoices.removeClass('o_hidden');
+            $('body').addClass('o_new_content_open');
+            this.$('> a').focus();
+        }).bind(this));
     },
 
     //--------------------------------------------------------------------------
