@@ -530,7 +530,8 @@ class ChromeBrowser():
             '--user-data-dir': self.user_data_dir,
             '--disable-translate': '',
             '--window-size': '1366x768',
-            '--remote-debugging-port': str(self.devtools_port)
+            '--remote-debugging-port': str(self.devtools_port),
+            '--no-sandbox': '',
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]

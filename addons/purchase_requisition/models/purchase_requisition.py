@@ -44,7 +44,7 @@ class PurchaseRequisition(models.Model):
     _order = "id desc"
 
     def _get_picking_in(self):
-        pick_in = self.env.ref('stock.picking_type_in')
+        pick_in = self.env.ref('stock.picking_type_in', raise_if_not_found=False)
         company = self.env['res.company']._company_default_get('purchase.requisition')
         if not pick_in or pick_in.sudo().warehouse_id.company_id.id != company.id:
             pick_in = self.env['stock.picking.type'].search(

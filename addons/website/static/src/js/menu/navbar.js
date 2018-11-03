@@ -20,10 +20,35 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
         ready_to_save: '_onSave',
     }),
 
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this._widgetDefs = [$.Deferred()];
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self._widgetDefs[0].resolve();
+        });
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _attachComponent: function () {
+        var def = this._super.apply(this, arguments);
+        this._widgetDefs.push(def);
+        return def;
+    },
     /**
      * As the WebsiteNavbar instance is designed to be unique, the associated
      * registry has been instantiated outside of the class and is simply
@@ -44,30 +69,38 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
      * @returns {Deferred}
      */
     _handleAction: function (actionName, params, _i) {
-        var defs = [];
-        _.each(this._widgets, function (w) {
-            if (!w.handleAction) {
-                return;
-            }
+        var self = this;
+        return this._whenReadyForActions().then(function () {
+            var defs = [];
+            _.each(self._widgets, function (w) {
+                if (!w.handleAction) {
+                    return;
+                }
 
-            var def = w.handleAction(actionName, params);
-            if (def !== null) {
-                defs.push(def);
-            }
-        });
-        if (!defs.length) {
-            var self = this;
-            // Handle the case where all action-capable components are not
-            // instantiated yet (rare) -> retry some times to eventually abort
-            if (_i > 50) {
-                console.warn(_.str.sprintf("Action '%s' was not able to be handled.", actionName));
-                return $.Deferred().reject();
-            }
-            return concurrency.delay(100).then(function () {
-                return self._handleAction(actionName, params, (_i || 0) + 1);
+                var def = w.handleAction(actionName, params);
+                if (def !== null) {
+                    defs.push(def);
+                }
             });
-        }
-        return $.when.apply($, defs);
+            if (!defs.length) {
+                // Handle the case where all action-capable components are not
+                // instantiated yet (rare) -> retry some times to eventually abort
+                if (_i > 50) {
+                    console.warn(_.str.sprintf("Action '%s' was not able to be handled.", actionName));
+                    return $.Deferred().reject();
+                }
+                return concurrency.delay(100).then(function () {
+                    return self._handleAction(actionName, params, (_i || 0) + 1);
+                });
+            }
+            return $.when.apply($, defs);
+        });
+    },
+    /**
+     * @private
+     */
+    _whenReadyForActions: function () {
+        return $.when.apply($, this._widgetDefs);
     },
 
     //--------------------------------------------------------------------------

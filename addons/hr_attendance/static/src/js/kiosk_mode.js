@@ -47,7 +47,10 @@ var KioskMode = AbstractAction.extend({
                     self.do_action(result.action);
                 } else if (result.warning) {
                     self.do_warn(result.warning);
+                    core.bus.on('barcode_scanned', self, self._onBarcodeScanned);
                 }
+            }, function () {
+                core.bus.on('barcode_scanned', self, self._onBarcodeScanned);
             });
     },
 
