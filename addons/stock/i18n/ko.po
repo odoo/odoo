@@ -3,24 +3,25 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Linkup <link-up@naver.com>, 2017
-# Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # Mark Lee <odoos@soti.33mail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
 # Hwang, Geon Gu <under_09@naver.com>, 2018
 # 방상우 <mrroom@gmail.com>, 2018
 # 경민기 <moonend@gmail.com>, 2018
+# Martin Trigaux, 2018
 # Goh Gangtai <gangtai.goh@gmail.com>, 2018
+# 최재호 <hwangtog@gmail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2018
+# Linkup <link-up@naver.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Goh Gangtai <gangtai.goh@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:24+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:328
 #, python-format
 msgid " (%s reserved)"
-msgstr "(예약 %s)"
+msgstr "(%s예약됨)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:331
@@ -195,8 +196,7 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">판매 확�
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Find Incoming "
 "Shipments</span>"
-msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">도착 발송물 찾기</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">입고건 검색</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -229,7 +229,7 @@ msgstr "<span class=\"o_stat_text\">세부 정보</span>"
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Forecasted</span>"
-msgstr "<span class=\"o_stat_text\">예측 됨</span>"
+msgstr "<span class=\"o_stat_text\">예상됨</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -306,7 +306,7 @@ msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
 "                                        <strong> 수동으로 생성</strong><br/>\n"
-"                                        <span class=\"small\">100 제품인 경우 권장</span>\n"
+"                                        <span class=\"small\">100개이상의 제품인 경우 권장</span>\n"
 "                                    </span>"
 
 #. module: stock
@@ -415,7 +415,7 @@ msgid ""
 "            </strong>"
 msgstr ""
 "<strong>\n"
-"                완료된 이동 라인이 수정되었습니다.\n"
+"                완료된 이동 라인이 정정되었습니다.\n"
 "            </strong>"
 
 #. module: stock
@@ -428,7 +428,7 @@ msgstr "귀하의<strong><i>LOT 또는 시리얼 번호를 추적</i>활성화�
 msgid ""
 "<strong>Automated flows</strong>: from sale to delivery, and purchase to "
 "reception"
-msgstr "<strong>자동화 된 흐름</strong>:판매에서 배송, 입고를 위한 구매까지"
+msgstr "<strong>자동화된 플로우</strong>:판매에서 배송, 구매입고까지"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -474,7 +474,7 @@ msgstr "<strong>날짜</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Enjoy your Inventory management with Odoo!</strong>"
-msgstr "<strong>Odoo에서 재고 관리를 누리십시오!</strong>"
+msgstr "<strong>Odoo에서 재고 관리를 하세요!</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -579,7 +579,7 @@ msgstr "<strong>주문 (원산지)</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Package</strong>"
-msgstr "<strong>포장품</strong>"
+msgstr "<strong>포장</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -636,7 +636,7 @@ msgstr "<strong>초기 수요가 업데이트 되었습니다.</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Total Quantity</strong>"
-msgstr "<strong>전체수ㄹ</strong>"
+msgstr "<strong>전체수량</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -662,12 +662,12 @@ msgstr "포장"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "A classic purchase flow looks like the following:"
-msgstr "전형적인 구매 흐름은 다음과 같습니다:"
+msgstr "기본 구매 흐름은 다음과 같습니다:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "A classic sales flow looks like the following:"
-msgstr "전형적인 판매 흐름은 다음과 같습니다:"
+msgstr "기본 판매 흐름은 다음과 같습니다:"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:93
@@ -867,7 +867,7 @@ msgstr "창고에 적용 가능"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Applied On"
-msgstr "적용 된"
+msgstr "적용"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_incoterms_view_search
@@ -911,7 +911,7 @@ msgstr "지정 된 이동"
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "At a Specific Date"
-msgstr "특정 날짜에"
+msgstr "특정 날짜"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
@@ -953,18 +953,18 @@ msgstr "판매 가능 제품"
 #: model:ir.model.fields,field_description:stock.field_stock_move_backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_backorder_id
 msgid "Back Order of"
-msgstr "~의 백 오더"
+msgstr "~의 잔여주문"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Back Orders"
-msgstr "백 오더"
+msgstr "잔여주문"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_backorder_confirmation.py:20
 #, python-format
 msgid "Back order <em>%s</em> <b>cancelled</b>."
-msgstr "백 오더 <em>%s</em> <b>최소되었습니다</b>."
+msgstr "<em>%s</em>의 발주잔량이 <b>취소되었습니다</b>."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
@@ -1054,12 +1054,12 @@ msgstr "구매"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr "LOT으로"
+msgstr "Lot에 따라"
 
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr "고유 시리얼 번호 별"
+msgstr "시리얼 번호에 따라"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:644
@@ -1067,7 +1067,7 @@ msgstr "고유 시리얼 번호 별"
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
-msgstr "여기서 이 수량을 변경하면 새 수량을 완료 한 것으로 간주합니다. Odoo는 자동으로 백 오더를 생성하지 않습니다."
+msgstr "여기서 이 수량을 변경하면 새 수량을 완료 한 것으로 간주합니다. Odoo는 자동으로 주문잔량을 생성하지 않습니다."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1666,7 +1666,7 @@ msgstr "누적 수량"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_destination_location_id
 msgid "Current Destination Location"
-msgstr ""
+msgstr "현재 설정된 목적 공간(위치)"
 
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
@@ -1681,12 +1681,12 @@ msgstr "현재 선별"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_move_line_ids
 msgid "Current Picking Move Line"
-msgstr "현재 선별 이동 라인"
+msgstr "현재 선별 목록"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_source_location_id
 msgid "Current Source Location"
-msgstr ""
+msgstr "현재 출고 공간(위치)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -1982,7 +1982,7 @@ msgstr "배송 경로"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr "배송 전표"
+msgstr "거래명세서"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_move_type
@@ -2116,7 +2116,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 #: model:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Discard"
-msgstr "폐기"
+msgstr "작성취소"
 
 #. module: stock
 #: model:stock.location,name:stock.location_dispatch_zone
@@ -2221,7 +2221,7 @@ msgstr "임시 이동"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_EXW
 msgid "EX WORKS"
-msgstr ""
+msgstr "EXW"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2236,12 +2236,12 @@ msgstr "종료"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_ids
 msgid "Entire Package"
-msgstr ""
+msgstr "전체 포장품"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_detail_ids
 msgid "Entire Package Detail"
-msgstr ""
+msgstr "전체 포장품 세부항목"
 
 #. module: stock
 #. openerp-web
@@ -2274,12 +2274,12 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:453
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr "패키지 안의 모든 것이 같은 공간(위치)에 있어야 합니다"
+msgstr "포장품 내의 모든 것이 같은 공간(위치)에 있어야 합니다"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Excel template"
-msgstr "Excel 템플릿(서식)"
+msgstr "Excel 서식"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -2296,7 +2296,7 @@ msgstr "예상된 날짜"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_product_expiry
 msgid "Expiration Dates"
-msgstr "만료 날짜"
+msgstr "유통기한"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -2336,7 +2336,7 @@ msgstr "필터"
 #. module: stock
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Fixed"
-msgstr "고저"
+msgstr "고정"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
@@ -2365,7 +2365,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr "강제 제거 전략"
+msgstr "제거계획을 강제로 실행"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_virtual_available
@@ -2403,12 +2403,12 @@ msgstr "보낸 사람"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_from_loc
 msgid "From Loc"
-msgstr "Loc에서"
+msgstr "출고 공간(위치)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_reserved_availability
 msgid "From Supplier"
-msgstr "공급 업체에서"
+msgstr "공급 업체"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_complete_name
@@ -2424,7 +2424,7 @@ msgstr "향후 활동"
 #: code:addons/stock/models/product.py:332
 #, python-format
 msgid "Future Deliveries"
-msgstr "향후 배달"
+msgstr "향후 배송"
 
 #. module: stock
 #: code:addons/stock/models/product.py:337
@@ -2529,7 +2529,7 @@ msgstr "HDD SH-1"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_has_move_lines
 msgid "Has Move Lines"
-msgstr ""
+msgstr "재고 이동항목이 있음"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_line_exist
@@ -2549,7 +2549,7 @@ msgstr "스크랩 이동 있음"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_tracking
 msgid "Has Tracking"
-msgstr ""
+msgstr "추적이 가능"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posz
@@ -2631,13 +2631,13 @@ msgstr "ID"
 #: code:addons/stock/models/stock_inventory.py:421
 #, python-format
 msgid "INV:"
-msgstr "INV:"
+msgstr "청구서:"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:97
 #, python-format
 msgid "INV: %s"
-msgstr "INV : %s"
+msgstr "청구서 : %s"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
@@ -2840,12 +2840,12 @@ msgstr "즉시 이동"
 #: code:addons/stock/models/stock_picking.py:729
 #, python-format
 msgid "Immediate Transfer?"
-msgstr "즉시 이동?"
+msgstr "즉시 이동하겠습니까?"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "Immediate transfer?"
-msgstr "즉시 이동?"
+msgstr "즉시 이동하겠습니까?"
 
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
@@ -2860,7 +2860,7 @@ msgstr "왼쪽 상단의 버튼을 사용하여 가져 오기"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
 msgid "In Entire Package"
-msgstr ""
+msgstr "전체포장품"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2974,7 +2974,7 @@ msgstr "입력"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "입력 공간(위치)"
+msgstr "공간(위치) 입력"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:135
@@ -2992,7 +2992,7 @@ msgstr "회사 간 운송"
 #: model:ir.ui.view,arch_db:stock.view_location_search
 #: selection:stock.picking.type,code:0
 msgid "Internal"
-msgstr "내부의"
+msgstr "내부"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -3075,7 +3075,7 @@ msgstr "재고 소유자"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_package_id
 msgid "Inventoried Pack"
-msgstr "재고 조사 된 팩"
+msgstr "재고 조사 된 포장"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_product_id
@@ -3220,7 +3220,7 @@ msgstr "재고조사 범위"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_is_locked
 #: model:ir.model.fields,field_description:stock.field_stock_picking_is_locked
 msgid "Is Locked"
-msgstr "자김"
+msgstr "잠김"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_is_processed
@@ -3498,7 +3498,7 @@ msgstr "연결된 이동"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "List view of lines"
-msgstr ""
+msgstr "항목의 목록보기"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -3670,12 +3670,12 @@ msgstr "LOT/시리얼 번호"
 #: code:addons/stock/models/stock_warehouse.py:547
 #, python-format
 msgid "MTO"
-msgstr "MTO"
+msgstr "주문생산(MTO)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
 msgid "MTO rule"
-msgstr "MTO 규칙"
+msgstr "주문생산 규칙"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:479
@@ -3764,7 +3764,7 @@ msgstr "제조하다"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Manufacturing"
-msgstr "제조업"
+msgstr "제조"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
@@ -3774,12 +3774,12 @@ msgstr "제조 작업"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr "해야 할 활동"
+msgstr "해야 할 일로 표시"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Master Data"
-msgstr "마스터 데이터"
+msgstr "기초정보"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_max_qty
@@ -3863,7 +3863,7 @@ msgstr "다른 공간(위치)에서부터 이동"
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_move_line_ids
 msgid "Move Line"
-msgstr "라인 이동"
+msgstr "이동 명세"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_line_nosuggest_ids
@@ -3874,7 +3874,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 #: model:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Move Lines"
-msgstr "라인 이동"
+msgstr "이동 명세"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_procure_method
@@ -3956,7 +3956,7 @@ msgstr "신규"
 #: code:addons/stock/models/stock_picking.py:639
 #, python-format
 msgid "New Move:"
-msgstr "새로운 이동:"
+msgstr "신규 이동:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_new_quantity
@@ -4124,17 +4124,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "On Hand"
-msgstr "보관중(인)"
+msgstr "보유량"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "On Hand / Available Quantities"
-msgstr "보관중(인) / 사용 가능한 수량"
+msgstr "보유 / 사용 가능한 수량"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "On hand:"
-msgstr "보관중(인):"
+msgstr "보유:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4172,7 +4172,7 @@ msgstr "특정 소유자를 위한 하나의 제품"
 #: code:addons/stock/models/stock_inventory.py:114
 #, python-format
 msgid "One product only"
-msgstr "하나의 제품 만"
+msgstr "하나의 제품"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -4204,7 +4204,7 @@ msgstr "작업 유형은 보기, 리포트 등에서 선별을 표시하는 방�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr "반품을 위한 작업 유형"
+msgstr "반품 작업 유형"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4265,7 +4265,7 @@ msgstr "선택 사항: 체인을 연결할 때 이전 재고 이동"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Order Date"
-msgstr "주문 날짜"
+msgstr "주문일"
 
 #. module: stock
 #: model:stock.location,name:stock.location_order
@@ -4287,7 +4287,7 @@ msgstr "주문 처리 오늘 또는 오늘 예정"
 #: model:ir.ui.view,arch_db:stock.view_move_form
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Origin"
-msgstr "원점"
+msgstr "출발지"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
@@ -4445,12 +4445,12 @@ msgstr "포장품 이름"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_name
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Reference"
-msgstr "포장품 참조"
+msgstr "포장품 정보"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Reference:"
-msgstr ""
+msgstr "포장품 정보:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -4466,7 +4466,7 @@ msgstr "포장품 유형"
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr ""
+msgstr "포장품 유형:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4598,13 +4598,13 @@ msgstr "선별"
 #: code:addons/stock/models/stock_warehouse.py:439
 #, python-format
 msgid "Pick + Pack + Ship"
-msgstr "선별 + 포장 + 배소"
+msgstr "선별 + 포장 + 배송"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:438
 #, python-format
 msgid "Pick + Ship"
-msgstr "선별 + 배소"
+msgstr "선별 + 배송"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pick_type_id
@@ -4632,7 +4632,7 @@ msgstr "선별 목록"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Picking Moves"
-msgstr "선별 이동선"
+msgstr "선별 목록"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
@@ -4652,7 +4652,7 @@ msgstr "선별"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "이미 처리된 선별"
+msgstr "선별이 이미 처리되었습니다"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -4683,7 +4683,7 @@ msgstr "기획자"
 #: code:addons/stock/models/stock_picking.py:699
 #, python-format
 msgid "Please add some lines to move"
-msgstr "이동할 라인을 추가하십시오"
+msgstr "이동할 항목을 추가하십시오"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:868
@@ -4700,7 +4700,7 @@ msgstr "0이 아닌 수량을 하나 이상 지정하십시오."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Positive Stock"
-msgstr "긍정적인 재고"
+msgstr "양수(+) 재고"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
@@ -5020,23 +5020,23 @@ msgstr "푸쉬 규칙"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
 msgid "Pushed Flow"
-msgstr ""
+msgstr "푸쉬 흐름"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_putaway_id
 msgid "Put Away Method"
-msgstr "방법을 모으다"
+msgstr "자동 이동 방법"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_putaway
 #: model:ir.model.fields,field_description:stock.field_stock_location_putaway_strategy_id
 msgid "Put Away Strategy"
-msgstr "전략을 모으다"
+msgstr "자동 이동 방법"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Put in Pack"
-msgstr ""
+msgstr "포장에 넣습니다"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5082,7 +5082,7 @@ msgstr "품질 관리 공간(위치)"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_quant_ids
 msgid "Quant"
-msgstr "퀀트"
+msgstr "Quant"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_quantity
@@ -5107,7 +5107,7 @@ msgstr "수량 :"
 #: model:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Quantity Done"
-msgstr "수량 완료"
+msgstr "완료된 수량"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5201,7 +5201,7 @@ msgstr "이 이동을 위해 이미 예약 된 수량"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_quant_ids
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Quants"
-msgstr "양"
+msgstr "Quants"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:74
@@ -5335,13 +5335,13 @@ msgstr "부분적으로 처리 된 선별의 나머지 부분"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_removal
 msgid "Removal"
-msgstr "제거"
+msgstr "재고 삭제"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location_removal_strategy_id
 msgid "Removal Strategy"
-msgstr "전략 제거"
+msgstr "재고 삭제 방법"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:109
@@ -5644,7 +5644,7 @@ msgstr "스크랩"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Search Inventory"
-msgstr "재고 찾기"
+msgstr "재고 검색"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
@@ -5713,19 +5713,19 @@ msgstr "순서대로"
 #: code:addons/stock/models/stock_warehouse.py:719
 #, python-format
 msgid "Sequence internal"
-msgstr "내부 순서"
+msgstr "내부이동 번호"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:704
 #, python-format
 msgid "Sequence out"
-msgstr ""
+msgstr "출고번호"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:709
 #, python-format
 msgid "Sequence packing"
-msgstr "포장 순서"
+msgstr "포장 번호"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:714
@@ -5883,7 +5883,7 @@ msgstr "LOT 텍스트 표시"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr ""
+msgstr "할일로 표시된 것을 보여줍니다"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_operations
@@ -6051,7 +6051,7 @@ msgstr "재고 공간(위치)"
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_move_id
 msgid "Stock Move"
-msgstr "재고 이도"
+msgstr "재고 이동"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -6125,7 +6125,7 @@ msgstr "처리 된 재고 이동"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Stockable"
-msgstr "보관 가능한"
+msgstr "재고운영가능"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_multi_locations
@@ -6253,6 +6253,8 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
+"'수동작업'의 값은 현재의 작업 뒤에 새로운 재고이동을 생성합니다. 'Automatic No Step Added'을 사용하게 되면, "
+"공간(위치)는 처음 이동에서 대체됩니다."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6410,7 +6412,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sales Order and a Transfer Order is created"
-msgstr "견적이 판매 주문이되고 이동 지시가 작성됩니다"
+msgstr "견적서가 판매 주문으로 변경되고 출고 지시가 작성됩니다"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:283
@@ -6531,7 +6533,7 @@ msgstr "재고 이동에 적용될 작업 유형입니다"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
 msgid "This is the owner of the quant"
-msgstr "양의 소유자"
+msgstr "재고 명세의 소유자입니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_uom_qty
@@ -6570,7 +6572,7 @@ msgstr ""
 msgid ""
 "This note will show up  on internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
-msgstr "이 메모는 내부 인도명령서를 보여줍니다(예 : 창고에서 제품을 선택할 위치)."
+msgstr "이 메모는 내부 인도지시서를 보여줍니다(예 : 창고에서 제품을 선택할 위치)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6738,7 +6740,7 @@ msgstr "오늘"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
-msgstr "금일 활동"
+msgstr "오늘 활동"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_total_qty
@@ -6959,13 +6961,13 @@ msgstr "단위 범주"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Up/Down Traceability"
-msgstr "업/다운 추적"
+msgstr "정/역 추적"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
 msgid "Update Product Quantity"
-msgstr "제푸수량 업데이트"
+msgstr "제품수량 업데이트"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -7001,7 +7003,7 @@ msgstr "나만의 경로 및 풋어웨이 전략 사용"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
 msgid "Used to order the 'All Operations' kanban view"
-msgstr "'모든 작업' 칸반뷰를 정리하는 데 사용됩니다"
+msgstr "'모든 작업'의 칸반뷰를 정리하는 데 사용됩니다"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -7220,7 +7222,7 @@ msgstr "이 가이드가 Odoo 재고 구현에 도움이 되기를 바랍니다.
 #: code:addons/stock/models/barcode.py:11
 #, python-format
 msgid "Weighted Product"
-msgstr ""
+msgstr "중량이 있는 상품"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7744,23 +7746,23 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "e.g. Annual inventory"
-msgstr "예시. 연간 재고"
+msgstr "예. 연간 재고 조사"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr "예시. 구매"
+msgstr "예. 구매"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form_simple
 msgid "e.g. LOT/0001/20121"
-msgstr "예시. LOT/0001/20121"
+msgstr "예. LOT/0001/20121"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. PO0032"
-msgstr "예시. PO0032"
+msgstr "예. PO0032"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7796,7 +7798,7 @@ msgid ""
 "                        information."
 msgstr ""
 "자세한\n"
-"                        내용은."
+"                        내용."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7847,7 +7849,7 @@ msgstr "이동 주문을 볼 수 있는 판매 주문서"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_forecast
 msgid "report.stock.forecast"
-msgstr ""
+msgstr "report.stock.forecast"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -7857,37 +7859,37 @@ msgstr "res.config.settings"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
 msgid "stock.fixed.putaway.strat"
-msgstr ""
+msgstr "stock.fixed.putaway.strat"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_overprocessed_transfer
 msgid "stock.overprocessed.transfer"
-msgstr ""
+msgstr "stock.overprocessed.transfer"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "stock.return.picking.line"
-msgstr ""
+msgstr "stock.return.picking.line"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scrap
 msgid "stock.scrap"
-msgstr ""
+msgstr "stock.scrap"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_traceability_report
 msgid "stock.traceability.report"
-msgstr ""
+msgstr "stock.traceability.report"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "stock.warn.insufficient.qty"
-msgstr ""
+msgstr "stock.warn.insufficient.qty"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "stock.warn.insufficient.qty.scrap"
-msgstr ""
+msgstr "stock.warn.insufficient.qty.scrap"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7907,7 +7909,7 @@ msgstr "제품을 재고 공간(위치)로 이전 한 것으로 표시하기"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "via the"
-msgstr ""
+msgstr "via the"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7922,4 +7924,4 @@ msgstr "<i>유효성 검사</i> 버튼 사용"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
-msgstr "⇒ 수량을 0으로 설정하십시오"
+msgstr "⇒ 수량을 0으로 설정"
