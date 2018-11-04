@@ -3,28 +3,27 @@
 # * crm
 # 
 # Translators:
-# Bonny Useful <bonny.useful@gmail.com>, 2017
-# Febrasari Almania <febrasari.almania@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Deddy Ddr <deddy.ddr@gmail.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
-# Andhitia Rama <andhitia.r@gmail.com>, 2017
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
-# Edy Kend <edy@azmall.co.id>, 2017
-# Ngalim Siregar <ngalim.siregar@gmail.com>, 2017
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
-# Ryanto The <ry.the77@gmail.com>, 2017
+# Edy Kend <edy@azmall.co.id>, 2017
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
+# Febrasari Almania <febrasari.almania@gmail.com>, 2017
+# Andhitia Rama <andhitia.r@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Deddy Ddr <deddy.ddr@gmail.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
 # Gusti Rini <gustirini@gmail.com>, 2017
-# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2018
+# Ryanto The <ry.the77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-20 11:58+0000\n"
-"PO-Revision-Date: 2018-04-20 11:58+0000\n"
-"Last-Translator: Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2018\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,6 +134,105 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Log Masuk Otomatis</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Selamat!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Aplikasi Odoo CRM Anda sudah terpasang dan sudah berjalan.</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">Apa berikutnya?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Cobalah membuat prospek dengan mengirim email pada </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Telusuri peluang Anda di saluran penjualan dengan \"click and drag\" kartu-kartu dari satu kolom ke kolom yang lain</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Temukan </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">perencana CRM</span></a></span>\n"
+"                                <span> untuk mengaktifkan fitur tambahan</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Otomatis tetapkan prospek pada penjual Anda, </span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Jaga komunikasi dengan prospek pelanggan Anda dengan kampanye email yang efektif,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Dapatkan informasi berkualitas dari survei-survei,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Dapatkan laporan cerdas dan cermat dari dasbor,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Dan banyak lagi...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Perlu bantuan?</span>\n"
+"                                <span style=\"font-style:italic;\">Anda tidak sendirian</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Kami dengan senang hati akan membantu Anda. Hubungi kami melalui\n"
+"                                <a href=\"https://www.odoo.com/help\">formulir bantuan</a> jika Anda memiliki pertanyaan.\n"
+"                                Anda juga dapat menemukan bagaimana memanfaatkan sebaik-baiknya aplikasi Odoo CRM Anda dengan </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Dokumentasi Pengguna</span></a>\n"
+"                                </span><span> atau dengan </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">Dokumentasi API</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Nikmati pengalaman Anda menggunakan Odoo,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>Tim Odoo<br/>NB: Orang yang menyukai Odoo, lihat </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">apa yang mereka katakan.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -147,6 +245,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Halo ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Peluang <strong>${object.name}</strong> tidak ada aktifitas selama sekurang-kurangnya 5 hari terakhir.</p>\n"
+"%if object.description:\n"
+"<p>Berikut ini deskripsi dari peluang tersebut : </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Terima kasih!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -168,12 +273,12 @@ msgstr "(jika lead diaktifkan)"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "(you can change it here)"
-msgstr "(anda dapat mengubahnya disini)"
+msgstr "(anda dapat mengubahnya di sini)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", jika accounting atau purchase terpasang"
+msgstr ", jika akuntansi atau pembelian terpasang"
 
 #. module: crm
 #. openerp-web
@@ -183,6 +288,8 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
 msgstr ""
+"<b>Geser &amp; lepas peluang</b> antar kolom seiring dengan progres siklus "
+"penjualan Anda."
 
 #. module: crm
 #. openerp-web
@@ -191,11 +298,13 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
+"<b>Undang rekan kerja</b> melalui email.<br/><i>Masukkan satu email per "
+"baris.</i>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-envelope-o\"/> Ask Our Experts"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/> Tanyakan Pada Ahli Kami"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -211,6 +320,9 @@ msgid ""
 "attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
 " people - it's like cc-ing on emails.</p>"
 msgstr ""
+"<p><b>Kirim pesan</b> kepada prospek Anda dan dapatkan jawaban otomatis "
+"terlampir pada peluang ini.</p><p class=\"mb0\">Ketik <i>'@'</i> untuk "
+"menyebut orang, seperti memasukkan cc pada email.</p>"
 
 #. module: crm
 #. openerp-web
@@ -222,36 +334,41 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
+"<p>Anda akan dapat mengkustomisasi aktifitas follow up Anda. "
+"Misalnya:</p><ol><li>email perkenalan</li><li>telepon 10 hari "
+"kemudian</li><li>telepon lagi 3 hari kemudian, ...</li></ol><p "
+"class='mb0'><i>Pilih aktifitas standar Anda.</i></p>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Events"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Install Events"
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Pasang Acara"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Mailing"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Install Mailing"
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Pasang Penyuratan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Slides"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Install Slides"
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Pasang Slide"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Surveys"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Install Surveys"
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Pasang Survei"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Website Live Chat"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Install Website Live Chat"
+msgstr ""
+"<span class=\"fa fa-arrow-circle-o-down\"/> Pasang Chatting Live Situs Web"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install e-Commerce"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Install e-Commerce"
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Pasang e-Commerce"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -260,7 +377,7 @@ msgid ""
 "                        <strong>Tips:</strong>"
 msgstr ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                        <strong>Tip:</strong>"
+"                        <strong>Tips:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -273,6 +390,13 @@ msgid ""
 "                        We recommend to start with standard quotations\n"
 "                        and upgrade later."
 msgstr ""
+"<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
+"                        <strong>Catatan:</strong>\n"
+"                        Menggunakan template dapat meningkatkan kualitas\n"
+"                        penawaran Anda dan kemungkinan berhasilnya. Tetapi,\n"
+"                        membuat template tersebut memerlukan usaha yang besar.\n"
+"                        Kami menyarankan untuk memulai dengan penawaran standar\n"
+"                        dan mengubahnya nanti."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -283,7 +407,7 @@ msgid ""
 "                        the"
 msgstr ""
 "<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
-"                        <strong>Tip:</strong> Untuk para pengembang, anda dapat\n"
+"                        <strong>Tips:</strong> Untuk para pengembang, anda dapat\n"
 "menggunakan API kami untuk memuat data pada skrip: baca"
 
 #. module: crm
@@ -299,6 +423,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"label label-default text-center odoo_purple\">Lead</span>"
 msgstr ""
+"<span class=\"label label-default text-center odoo_purple\">Prospek</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -306,13 +431,14 @@ msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">Opportunity</span>"
 msgstr ""
+"<span class=\"label label-default text-center odoo_purple\">Peluang</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Quotation</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Kuotasi</span>"
+"<span class=\"label label-default text-center odoo_purple\">Penawaran</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -320,6 +446,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Pertemuan</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Pertemuan</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -336,7 +464,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-laptop\"></span>\n"
-"                                            <strong>Layar kustomisasi</strong>\n"
+"                                            <strong>Kustomisasi Tampilan</strong>\n"
 "                                        </span>"
 
 #. module: crm
@@ -349,7 +477,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-pencil-square-o\"></span>\n"
-"                                            <strong>Membuat laporan kustom</strong>\n"
+"                                            <strong>Membuat Laporan Kustom</strong>\n"
 "                                        </span>"
 
 #. module: crm
@@ -362,7 +490,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-sitemap\"></span>\n"
-"                                            <strong>Kustomisasi alur kerja</strong>\n"
+"                                            <strong>Kustomisasi Alur Kerja</strong>\n"
 "                                        </span>"
 
 #. module: crm
@@ -374,6 +502,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Impor berkas</strong><br/>\n"
+"                                        <span class=\"small\">Disarankan jika item &gt;50</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -399,6 +532,11 @@ msgid ""
 "                                        <span class=\"small\"/>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Subskripsi</strong><br/>\n"
+"                                        <span class=\"small\"/>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -411,7 +549,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong> Membuat manual</strong><br/>\n"
+"                                        <strong> Membuat secara manual</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 200 kontak</span>\n"
 "                                    </span>"
 
@@ -424,6 +562,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> Membuat secara manual</strong><br/>\n"
+"                                        <span class=\"small\">disarankan jika item &lt;50</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -434,6 +577,11 @@ msgid ""
 "                                        <span class=\"small\"/>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Penjualan lepas</strong><br/>\n"
+"                                        <span class=\"small\"/>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -453,6 +601,9 @@ msgid ""
 "                                        <strong>Specific Price per Audience</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Harga khusus tiap pelanggan</strong>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -461,6 +612,9 @@ msgid ""
 "                                        <strong>Unique Price (default)</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Harga Unik (standar)</strong>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -468,6 +622,8 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"\"/><strong> Exercise 1</strong></span>\n"
 "                                    <span>(Lead Manager)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span data-icon=\"\"/><strong> Latihan 1</strong></span>\n"
+"                                    <span>(Manajer Prospek)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -475,6 +631,8 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"\"/><strong> Exercise 3</strong></span>\n"
 "                                    <span>(Salesperson)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span data-icon=\"\"/><strong> Latihan 3</strong></span>\n"
+"                                    <span>(Penjual)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -482,6 +640,8 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"\"/><strong> Exercise 2</strong></span>\n"
 "                                    <span>(Sales Manager)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span data-icon=\"\"/><strong> Latihan 2</strong></span>\n"
+"                                    <span>(Manajer Penjualan)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -490,6 +650,9 @@ msgid ""
 "                                    We have special options for unlimited number of customizations!\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Hubungi kami untuk kustomisasi aplikasi Anda:</strong><br/>\n"
+"                                    Kami memiliki opsi spesial untuk jumlah kustomisasi tak terhingga!\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -497,6 +660,7 @@ msgid ""
 "<strong>Click on 'Reporting' in the main menu </strong>and browse "
 "statistics:"
 msgstr ""
+"<strong>Klik pada 'Laporan' di menu utama </strong>dan telusuri statistik:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -511,16 +675,21 @@ msgid ""
 "                        advice to customize screens to fit your sales process.\n"
 "                        <strong>Customizations are done by Odoo experts.</strong>"
 msgstr ""
+"<strong>Tiap bisnis berbeda.</strong> Odoo menyediakan\n"
+"                        kustomisasi tiap aplikasi dan biasanya lebih baik Anda\n"
+"                        mengkustomisasi tampilan agar sesuai dengan proses\n"
+"                        penjualan Anda.\n"
+"                        <strong>Kustomisasi dilakukan oleh ahli Odoo.</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Example: Negotiation stage</strong>"
-msgstr ""
+msgstr "<strong>Contoh: Tahap Negosiasi</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Example: Qualified stage</strong>"
-msgstr ""
+msgstr "<strong>Contoh: Tahap Kualifikasi</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -530,11 +699,15 @@ msgid ""
 "                                        Group Y Axis: Expected Closing Date\n"
 "                                        Filter: Won Opportunities"
 msgstr ""
+"<strong>Latihan: </strong>Coba analisa rata-rata waktu yang diperlukan untuk menutup transaksi.\n"
+"                                        Kelompokkan Sumbu X: Tanggal Pembuatan\n"
+"                                        Kelompokkan Sumbu Y: Perkiraan Tanggal Penutupan\n"
+"                                        Penyaring: Peluang yang Berhasil"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Exercise: </strong>Try to switch the kanban to graph view"
-msgstr ""
+msgstr "<strong>Latihan: </strong>Coba ganti tampilan kanban menjadi grafik"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -542,6 +715,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to get the number of leads per salesperson "
 "and by creation date"
 msgstr ""
+"<strong>Latihan:</strong> Coba analisa jumlah prospek tiap penjual dan "
+"diurutkan menurut tanggal pembuatan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -549,6 +724,8 @@ msgid ""
 "<strong>For complex imports</strong> (&gt;5000 items, product variants, "
 "pictures, etc.):"
 msgstr ""
+"<strong>Untuk impor yang kompleks</strong> (item &gt;5000, varian produk, "
+"gambar, dll.):"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -560,11 +737,17 @@ msgid ""
 "                                    After a few month, set the real success rate according to the stages, to have\n"
 "                                    accurate expected revenues by closing date."
 msgstr ""
+"<strong>Ramal omzet</strong><br/>\n"
+"                                    Anda dapat mengakses kematangan sebuah saluran penjualan dari kemampuannya untuk meramalkan omzet\n"
+"                                    untuk bulan depan atau tiga bulan ke depan. Latih tim Anda untuk dapat meramalkan secara efisien dengan memiliki\n"
+"                                    saluran peluang yang up-to-date.\n"
+"                                    Setelah beberapa bulan, tetapkan persentase keberhasilan sebenarnya menurut tahapnya, untuk membuat\n"
+"                                    ramalan omzet yang akurat pada tanggal penutupan."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Mass mailing</strong>"
-msgstr ""
+msgstr "<strong>Email massa</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -579,7 +762,7 @@ msgstr "<strong>Baru:</strong>"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Next actions:</strong>"
-msgstr ""
+msgstr "<strong>Tindakan berikutnya:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -587,6 +770,8 @@ msgid ""
 "<strong>Organize weekly sales meetings</strong><br/>\n"
 "                                    It's a great way to see where you can improve and keep track of the progress of your sales channel. Start the pipeline review by looking at the big picture; revenues and number of opportunities by stage, by expected closing date and by salespeople."
 msgstr ""
+"<strong>Adakan pertemuan marketing mingguan</strong><br/>\n"
+"                                    Ini adalah cara yang baik untuk melihat bagaimana meningkatkan dan menelusuri progres saluran penjualan. Mulai review saluran dengan melihat pada keseluruhan; omzet dan jumlah peluang pada tiap tahapnya, diurutkan menurut tanggal penutupan dan menurut penjual."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -604,11 +789,13 @@ msgid ""
 "<strong>Quote template</strong> <span class=\"small\">(packaged "
 "services)</span>"
 msgstr ""
+"<strong>Kutip template</strong> <span class=\"small\">(layanan "
+"dipaketkan)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr "<strong>Aksi yang direkomendasikan:</strong>"
+msgstr "<strong>Tindakan yang direkomendasikan:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -616,16 +803,18 @@ msgid ""
 "<strong>Review the top 5 opportunities</strong><br/>\n"
 "                                    Once the big picture is clear, focus on the best opportunities. Start from stages on the right (negotiation, proposal, etc) and review the biggest opportunities one by one with the team."
 msgstr ""
+"<strong>Tinjau peluang top 5 besar</strong><br/>\n"
+"                                    Begitu gambaran keseluruhan mulai jelas, fokus pada peluang yang terbaik. Dimulai dari tahapan sebelah kanan (negosiasi, proposal, dll) dan tinjau peluang terbesar satu per satu dengan tim Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Sales Stages</strong>"
-msgstr ""
+msgstr "<strong>Tahapan Penjualan</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Sales objectives</strong>:"
-msgstr ""
+msgstr "<strong>Target penjualan</strong>:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -633,6 +822,8 @@ msgid ""
 "<strong>Sales tools</strong><br/>\n"
 "                                Efficiently following up the pipeline will lead to great improvements. But to achieve excellence in your sales organization, you need  to provide your team with sales tools. For every stage of the opportunities pipeline, identify the blocking points and create  documents to train the team."
 msgstr ""
+"<strong>Alat penjualan</strong><br/>\n"
+"                                Follow up saluran dengan efisien akan meningkatkan kinerja. Tapi untuk mencapai keunggulan dalam organisasi penjualan Anda, Anda perlu menyediakan tim Anda dengan alat-alat penjualan. Untuk tiap tahapan dari saluran peluang, identifikasi masalah penghambat dan buat dokumen untuk melatih tim Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -645,16 +836,18 @@ msgid ""
 "<strong>Standard quotation</strong> <span class=\"small\">(products or "
 "services)</span>"
 msgstr ""
+"<strong>Penawaran standard</strong> <span class=\"small\">(produk atau "
+"jasa)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Subscriptions</strong>"
-msgstr ""
+msgstr "<strong>Subskripsi</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Survey</strong>"
-msgstr "<strong>Survey</strong>"
+msgstr "<strong>Survei</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -662,11 +855,13 @@ msgid ""
 "<strong>The customer</strong> understood his pain points and proposed the "
 "next step in the buying process"
 msgstr ""
+"<strong>Pelanggan</strong> memahami poin keterbatasannya dan mengusulkan "
+"tahap berikutnya dalam proses pembelian"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>The prospect</strong> started to discuss your offer"
-msgstr ""
+msgstr "<strong>Prospek</strong> mulai mendiskusikan penawaran Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -674,6 +869,8 @@ msgid ""
 "<strong>To boost your leads acquisition,</strong> you should have a look at "
 "our marketing apps:"
 msgstr ""
+"<strong>Untuk meningkatkan perolehan prospek Anda,</strong> Anda sebaiknya "
+"melihat aplikasi marketing kami:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -682,16 +879,20 @@ msgid ""
 "                                To build a strong sales training program, you can use the following\n"
 "                                apps of Odoo:"
 msgstr ""
+"<strong>Pelatihan</strong><br/>\n"
+"                                Untuk membuat program pelatihan penjual yang baik, Anda dapat menggunakan aplikasi Odoo\n"
+"                                berikut ini:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Website Live Chat</strong>"
-msgstr "<strong>Website Live Chat</strong>"
+msgstr "<strong>Chat Live Situs Web</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>You</strong> called the prospect for a follow up on your offer"
 msgstr ""
+"<strong>Anda</strong> menelepon prospek untuk follow up penawaran Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -699,6 +900,9 @@ msgid ""
 "<strong>You</strong> understand the customer's needs and pain points, and "
 "you have a fairly good idea of his budget to spend"
 msgstr ""
+"<strong>Anda</strong> mengerti kebutuhan pelanggan dan keterbatasannya, dan "
+"Anda memiliki perkiraan yang baik dari anggaran yang disediakan untuk "
+"dibelanjakan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -722,7 +926,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "A good pipeline should have between 5 and 7 stages"
-msgstr ""
+msgstr "Saluran yang baik seharusnya memiliki 5 sampai 7 tahap"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -731,12 +935,15 @@ msgid ""
 "                    be a goods, consumable or services. Choose how you want to\n"
 "                    create your products:"
 msgstr ""
+"Produk dalam Odoo adalah sesuatu yang Anda jual atau beli\n"
+"                        dalam rupa barang, perlengkapan, atau jasa.\n"
+"                        Pilih bagaimana Anda ingin membuat produk Anda:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "A sales manager will mostly use these two reports:"
 msgstr ""
-"Seorang sales manager akan sering menggunakan kedua laporan berikut ini:"
+"Seorang manajer penjualan akan sering menggunakan kedua laporan berikut ini:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_contact
@@ -751,12 +958,12 @@ msgstr "Dokumentasi API"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
-msgstr "Menerima email dari"
+msgstr "Menerima Email Dari"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Activate the 'Online Quotations' option in"
-msgstr ""
+msgstr "Aktifkan opsi 'Penawaran Online' pada"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_active
@@ -769,7 +976,7 @@ msgstr "Aktif"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
 msgid "Activities"
-msgstr "aktivitasnya"
+msgstr "Aktivitas"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -779,22 +986,22 @@ msgstr "aktivitasnya"
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Activities Analysis"
-msgstr ""
+msgstr "Analisa Aktivitas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_done
 msgid "Activities Done Target"
-msgstr ""
+msgstr "Target Aktivitas Selesai"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Activities Todo"
-msgstr ""
+msgstr "Aktivitas Todo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
 msgid "Activity State"
-msgstr ""
+msgstr "Status Aktivitas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_mail_activity_type_id
@@ -804,7 +1011,7 @@ msgstr "Jenis Aktivitas"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_menu_config_activity_types
 msgid "Activity Types"
-msgstr ""
+msgstr "Jenis Aktivitas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -814,7 +1021,7 @@ msgstr "Tambah Fitur"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before creating an opportunity"
-msgstr ""
+msgstr "Tambahkan tahap kualifikasi sebelum membuat peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -831,7 +1038,7 @@ msgstr "Alias"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias kontak keamanan"
+msgstr "Alias Kontak Keamanan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_name
@@ -855,6 +1062,9 @@ msgid ""
 "                        process will allow you to continuously improve your\n"
 "                        sales performance."
 msgstr ""
+"Menyelaraskan organisasi penjualan Anda dengan proses yang sistematis\n"
+"                        akan memperkenankan Anda untuk meningkatkan performa\n"
+"                        penjualan secara terus menerus."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:273
@@ -863,7 +1073,7 @@ msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
 "contacts with different emails."
 msgstr ""
-"Semua kontak harus memiliki email yang sama. Hanya Administrator dapat "
+"Semua kontak harus memiliki email yang sama. Hanya Administrator yang dapat "
 "menggabungkan kontak dengan email yang berbeda."
 
 #. module: crm
@@ -874,11 +1084,14 @@ msgid ""
 "                    create new opportunity. Update your business card, phone book, social media,...\n"
 "                    Send an email right now and see it here."
 msgstr ""
+"Semua email masuk ke %s akan otomatis\n"
+"                    membuat peluang baru. Perbaharui kartu nama Anda, buku telepon, media sosial,...\n"
+"                    Kirim email sekarang dan lihat email tersebut di sini."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_amount
 msgid "Amount of quotations to invoice"
-msgstr "Jumlah penawaran untuk ditagihkan"
+msgstr "Jumlah penawaran untuk difakturkan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -892,6 +1105,10 @@ msgid ""
 "efficiently forecast its future revenues. The pipeline review will allow you"
 " to identify sales inefficiencies or pick up on the best practices."
 msgstr ""
+"Analisa saluran menurut perkiraan tanggal penutup akan membantu tim Anda "
+"untuk secara efisien meramalkan omzet. Tinjauan saluran akan memperkenankan "
+"Anda untuk mengidentifikasi ketidakefektifan penjualan atau mempelajari "
+"penerapan terbaik."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_deduplicate
@@ -901,7 +1118,7 @@ msgstr "Menerapkan deduplikasi"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Apply multi-currencies"
-msgstr "Menerapkan multi mata uang"
+msgstr "Menerapkan beberapa mata uang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -917,41 +1134,38 @@ msgstr "Diarsipkan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts ?"
-msgstr ""
-"Apakah Anda yakin untuk melaksanakan penggabungan otomatis kontak Anda?"
+msgstr "Apakah Anda yakin untuk menggabungkan otomatis kontak Anda?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
-msgstr ""
-"Apakah Anda yakin untuk melaksanakan daftar otomatis penggabungan kontak "
-"Anda?"
+msgstr "Apakah Anda yakin untuk menggabungkan otomatis daftar kontak Anda?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Assign opportunities to"
-msgstr "Memberikan kesempatan untuk"
+msgstr "Serahkan peluang pada"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Assign these opportunities to"
-msgstr ""
+msgstr "Serahkan peluang-peluang ini pada"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Assign this opportunity to"
-msgstr ""
+msgstr "Serahkan peluang ini pada"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
 msgid "Assignation Date"
-msgstr "Penugasan tanggal"
+msgstr "Tanggal penyerahan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_open
 msgid "Assigned"
-msgstr "ditugaskan"
+msgstr "Ditugaskan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -960,16 +1174,19 @@ msgid ""
 "                        <br/>\n"
 "                        If not, our CRM experts are available to help you achieve your KPIs."
 msgstr ""
+"Pada akhir proses penerapan, harapan Anda seharusnya tercapai.\n"
+"                        <br/>\n"
+"                        Jika tidak, ahli CRM kami siap untuk membantu mencapai KPI Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Attach a qualification form to every house opportunity"
-msgstr ""
+msgstr "Lampirkan formulir kualifikasi untuk tiap peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Automatic Merge Wizard"
-msgstr "Penggabungan otomatis Wizard"
+msgstr "Wisaya Penggabungan Otomatis"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -989,33 +1206,33 @@ msgstr "B2C"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Basic, Premium"
-msgstr ""
+msgstr "Basic, Premium"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Better structure the sales process"
-msgstr ""
+msgstr "Atur struktur lebih baik untuk proses penjualan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Better visibility on team activities"
-msgstr ""
+msgstr "Atur tampilan lebih baik untuk aktivitas tim"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:381
 #, python-format
 msgid "Boom! Team record for the past 30 days."
-msgstr ""
+msgstr "Boom! Catatan tim untuk 30 hari terakhir."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Boost your online sales with sleek product pages."
-msgstr ""
+msgstr "Tingkatkan penjualan online Anda dengan halaman produk yang apik."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_bounce
 msgid "Bounce"
-msgstr "Bouncing"
+msgstr "Kembali"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_root
@@ -1031,19 +1248,19 @@ msgstr "Analisis Aktivitas CRM"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_opportunity_report
 msgid "CRM Opportunity Analysis"
-msgstr "CRM kesempatan analisis"
+msgstr "Analisis Peluang CRM"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
 msgid "Call for Demo"
-msgstr ""
+msgstr "Hubungi untuk Percobaan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Campaign"
-msgstr "Campaign"
+msgstr "Kampanye"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1057,22 +1274,22 @@ msgstr "Batal"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
 msgid "Cases by Sales Channel"
-msgstr ""
+msgstr "Kasus berdasarkan Tim Penjualan"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Category of lead"
-msgstr ""
+msgstr "Kategori prospek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_on_change
 msgid "Change Probability Automatically"
-msgstr "Mengubah probabilitas secara otomatis"
+msgstr "Mengubah Probabilitas Secara Otomatis"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Change the layout of a quotation"
-msgstr ""
+msgstr "Ubah susunan penawaran"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -1085,11 +1302,15 @@ msgid ""
 "Check this box to filter and qualify incoming requests as leads before "
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
+"Centang kotak ini untuk menyaring dan mengkualifiasi permintaan masuk "
+"sebagai prospek sebelum mengubahnya menjadi peluang dan menyerahkannya pada "
+"penjual."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_use_opportunities
 msgid "Check this box to manage a presales process with opportunities."
 msgstr ""
+"Centang kotak ini untuk mengelola proses sebelum penjualan dengan peluang."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_city
@@ -1106,8 +1327,8 @@ msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
 msgstr ""
-"Mengklasifikasikan dan menganalisis Anda memimpin kesempatan kategori "
-"seperti: pelatihan, Layanan"
+"Mengklasifikasikan dan menganalisis kategori prospek/peluang Anda seperti: "
+"Pelatihan, Layanan"
 
 #. module: crm
 #. openerp-web
@@ -1117,39 +1338,41 @@ msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
 msgstr ""
+"Klik di sini untuk<b>membuat peluang Anda yang pertama</b> dan tambahkan ke "
+"saluran Anda."
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:53
 #, python-format
 msgid "Click on an opportunity to zoom to it."
-msgstr ""
+msgstr "Klik pada peluang untuk memperbesar tampilannya."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:908
 #, python-format
 msgid "Click to add a new opportunity"
-msgstr ""
+msgstr "Klik untuk membuat peluang baru"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Click to create an opportunity related to this customer."
-msgstr ""
+msgstr "Klik untuk membuat peluang yang terkait dengan pelanggan ini."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Click to define a new lost reason."
-msgstr ""
+msgstr "Klik untuk membuat alasan gagal yang baru."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Click to define a new sales tag."
-msgstr ""
+msgstr "Klik untuk membuat tag penjualan baru."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr ""
+msgstr "Klik untuk membuat tahap baru pada saluran peluang Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1159,7 +1382,7 @@ msgstr "Tutup"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_closed
 msgid "Close Date"
-msgstr "Tanggal tutup"
+msgstr "Tanggal penutupan"
 
 #. module: crm
 #. openerp-web
@@ -1169,17 +1392,20 @@ msgid ""
 "Close opportunity if: \"pre-sales days * $500\" < \"expected revenue\" * "
 "probability"
 msgstr ""
+"Tutup peluang jika: \"pre-sales days * $500\" < \"expected revenue\" * "
+"probability"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
 msgid "Closed Date"
-msgstr ""
+msgstr "Tanggal penutupan"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:87
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Memimpin ditutup mati tidak dapat dikonversi menjadi peluang."
+msgstr ""
+"Prospek yang sudah ditutup/mati tidak dapat dikonversi menjadi peluang."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_color
@@ -1190,7 +1416,7 @@ msgstr "Indeks Warna"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Community &amp; Enterprise users:"
-msgstr ""
+msgstr "Pengguna Komunitas &amp; Enterprise:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_company_id
@@ -1210,7 +1436,7 @@ msgstr "Nama Perusahaan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Competition Matrix comparing prices"
-msgstr ""
+msgstr "Tabel perbandingan harga pesaing"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_config
@@ -1222,17 +1448,17 @@ msgstr "Konfigurasi"
 #: code:addons/crm/static/src/js/tour.js:70
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Opsi konfigurasi tersedia pada aplikasi Pengaturan."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Configure the stages of your sales pipeline"
-msgstr ""
+msgstr "Konfigurasi tahapan saluran penjualan Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Configure your pricelists"
-msgstr ""
+msgstr "Konfigurasi daftar harga Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1242,12 +1468,12 @@ msgstr "Selamat, Anda sudah selesai!"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor7
 msgid "Consulting"
-msgstr "Consulting"
+msgstr "Konsultasi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers, Retailers"
-msgstr ""
+msgstr "Pemakai, Toko"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1257,29 +1483,29 @@ msgstr "Kontak"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr "Kontak Informasi"
+msgstr "Informasi Kontak"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
 msgid "Contact Name"
-msgstr "Nama kontak"
+msgstr "Nama Kontak"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Contact Us"
-msgstr "Hubungi Kami:"
+msgstr "Hubungi Kami"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_partner_ids
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Contacts"
-msgstr "Daftar kontak"
+msgstr "Kontak"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_name
 msgid "Conversion Action"
-msgstr "Tindakan konversi"
+msgstr "Tindakan Konversi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_conversion
@@ -1291,29 +1517,29 @@ msgstr "Tanggal Konversi"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr ""
+msgstr "Tanggal Konversi dari Prospek Menjadi Peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Conversion Options"
-msgstr "Pilihan konversi"
+msgstr "Opsi Konversi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Convert to Opportunities"
-msgstr "Mengkonversi peluang"
+msgstr "Konversi Menjadi Peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Convert to Opportunity"
-msgstr "Mengkonversi ke kesempatan"
+msgstr "Konversi Menjadi Peluang"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
 msgid "Convert to opportunities"
-msgstr "Mengkonversi peluang"
+msgstr "Konversi menjadi peluang"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1080
@@ -1322,12 +1548,12 @@ msgstr "Mengkonversi peluang"
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #, python-format
 msgid "Convert to opportunity"
-msgstr "Mengkonversi ke kesempatan"
+msgstr "Konversi menjadi peluang"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Jumlah email kembali untuk kontak ini"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_country_id
@@ -1344,12 +1570,12 @@ msgstr "Negara"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create"
-msgstr "Membuat"
+msgstr "Buat"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create & Edit"
-msgstr ""
+msgstr "Buat & Ubah"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1359,48 +1585,49 @@ msgstr "Buat Pelanggan"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_create_date
 msgid "Create Date"
-msgstr "Tanggal dibuat"
+msgstr "Tanggal Dibuat"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Create Opportunity"
-msgstr "Menciptakan peluang"
+msgstr "Buat Peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Vendors"
-msgstr "Tambah Vendor"
+msgstr "Buat Pemasok"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:30
 #, python-format
 msgid "Create a Proof of Concept with consultants"
-msgstr ""
+msgstr "Buat Proof of Concept dengan konsultan"
 
 #. module: crm
 #: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
-msgstr "Membuat pelanggan baru"
+msgstr "Buat pelanggan baru"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create an Opportunity"
-msgstr ""
+msgstr "Buat Peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create and combine rules:<br/>"
-msgstr ""
+msgstr "Buat dan kombinasi aturan:<br/>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Create sleek and attractive event pages. Sell online and organize on site."
 msgstr ""
+"Buat halaman acara yang apik dan menarik. Jual online dan kelola di situs."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_tag_action
@@ -1410,27 +1637,31 @@ msgid ""
 "                Such categories could for instance reflect your product\n"
 "                structure or the different types of sales you do."
 msgstr ""
+"Buat tag khusus yang sesuai dengan aktivitas perusahaan Anda\n"
+"                untuk mengklasifikasikan dan menganalisa prospek dan peluang Anda dengan lebih baik.\n"
+"                Kategori tersebut misalnya dapat merefleksikan struktur produk\n"
+"                Anda atau beberapa tipe penjualan yang Anda lakukan."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create the three firsts opportunities"
-msgstr ""
+msgstr "Buat tiga peluang pertama"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create your product items"
-msgstr ""
+msgstr "Buat produk Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create your templates of offers"
-msgstr ""
+msgstr "Buat template penawaran Anda"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_author_id
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Created By"
-msgstr ""
+msgstr "Dibuat oleh"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_create_uid
@@ -1471,12 +1702,12 @@ msgstr "Tanggal Pembuatan"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Creation Month"
-msgstr "Penciptaan bulan"
+msgstr "Bulan Pembuatan"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 msgid "Crm: My Pipeline"
-msgstr ""
+msgstr "Crm: Saluranku"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_currency
@@ -1486,12 +1717,12 @@ msgstr "Mata Uang"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Current"
-msgstr "Arus"
+msgstr "Terbaru"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_current_line_id
 msgid "Current Line"
-msgstr "Baris saat ini"
+msgstr "Baris Terbaru"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1135
@@ -1512,18 +1743,18 @@ msgstr "Pelanggan"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_web_clearbit
 msgid "Customer Autocomplete"
-msgstr ""
+msgstr "Lengkapi Otomatis Pelanggan"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1126
 #, python-format
 msgid "Customer Email"
-msgstr "Email Supporter"
+msgstr "Email Pelanggan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_name
 msgid "Customer Name"
-msgstr "Nama Supporter"
+msgstr "Nama Pelanggan"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_crm
@@ -1536,7 +1767,7 @@ msgstr "Pelanggan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Customizations"
-msgstr ""
+msgstr "Kustomisasi"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:121
@@ -1545,6 +1776,8 @@ msgid ""
 "Dashboard graph content cannot be Pipeline if the sales channel doesn't use "
 "it. (Pipeline is unchecked.)"
 msgstr ""
+"Grafik dasbor tidak bisa berupa saluran, jika saluran penjualan tidak "
+"menggunakannya. (Saluran tidak dicentang.)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1554,42 +1787,42 @@ msgstr "Tanggal"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_open
 msgid "Days to Assign"
-msgstr "Menetapkan ke"
+msgstr "Hari untuk Diserahkan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_close
 msgid "Days to Close"
-msgstr "Hari untuk menutup"
+msgstr "Hari untuk ditutup"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
 msgid "Deduplicate Contacts"
-msgstr "Deduplicate kontak"
+msgstr "Deduplicate Kontak"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Deduplicate the other Contacts"
-msgstr "Deduplicate kontak lainnya"
+msgstr "Deduplicate Kontak Lainnya"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_crm_alias_prefix
 msgid "Default Alias Name for Leads"
-msgstr "Default nama Alias untuk memimpin"
+msgstr "Nama Alias Standar Untuk Prospek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_defaults
 msgid "Default Values"
-msgstr "Nilai default"
+msgstr "Nilai Standar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_open
 msgid "Delay to Assign"
-msgstr "Penundaan untuk menetapkan"
+msgstr "Penundaan Untuk Ditetapkan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_close
 msgid "Delay to Close"
-msgstr "Penundaan untuk menutup"
+msgstr "Penundaan Untuk Ditutup"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1601,7 +1834,7 @@ msgstr "Hapus"
 #: code:addons/crm/static/src/js/web_planner_crm.js:27
 #, python-format
 msgid "Demonstration"
-msgstr ""
+msgstr "Demonstrasi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1609,26 +1842,29 @@ msgid ""
 "Depending on how complex your business is, it may take between 6 months and 18 months for a new\n"
 "                                    sales channel to efficiently forecasts future revenues."
 msgstr ""
+"Bergantung pada seberapa kompleks bisnis Anda, ini dapat memerlukan waktu 6 sampai 18 bulan untuk saluran penjualan\n"
+"                                    yang baru untuk secara efisien meramalkan omzet."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Deployment"
-msgstr "Penyebaran"
+msgstr "Penerapan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Describe the lead..."
-msgstr "Menggambarkan memimpin..."
+msgstr "Deskripsikan prospek..."
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor5
 msgid "Design"
-msgstr "Design"
+msgstr "Desain"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Design efficient email campaigns. Send, convert and track performance."
 msgstr ""
+"Desain kampanye email yang efisien. Kirim, konversi, dan telusuri performa."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_dst_partner_id
@@ -1660,7 +1896,7 @@ msgstr "Nama Tampilan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Display your brochures, product sheets, showcases etc."
-msgstr ""
+msgstr "Tampilkan brosur Anda, lembar produk, dll."
 
 #. module: crm
 #: selection:crm.lead.convert2task,action:0
@@ -1668,12 +1904,12 @@ msgstr ""
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
-msgstr "Tidak menghubungkan ke pelanggan"
+msgstr "Tidak hubungkan ke pelanggan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Don't forget to change this address on:"
-msgstr ""
+msgstr "Jangan lupa mengganti alamat ini pada:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1684,6 +1920,7 @@ msgstr "Jangan ragu untuk"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Don't use stages to qualify opportunities, use tags instead"
 msgstr ""
+"Jangan gunakan tahapan untuk kualifikasi peluang, sebaiknya gunakan tag."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1696,6 +1933,8 @@ msgid ""
 "Each product has only one price.\n"
 "                                        <br/>"
 msgstr ""
+"Tiap produk hanya memiliki satu harga.\n"
+"                                        <br/>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1728,6 +1967,11 @@ msgid ""
 "Incoming emails can be automatically assigned to specific sales channels. To"
 " do so, set an email alias on the sales channel."
 msgstr ""
+"Email yang diterima di alamat tersebut membuat prospek baru yang tidak "
+"diterapkan ke saluran penjualan manapun. Hal ini dapat dikerjakan ketika "
+"mengkonversinya ke peluang. Email yang masuk  dapat secara otomatis "
+"diterapkan ke saluran penjualan tertentu. Untuk melakukan hal tersebut, "
+"tetapkan email alias pada saluran penjualan."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1738,6 +1982,8 @@ msgstr "Akhir"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Engage directly with your website visitors to convert them into leads."
 msgstr ""
+"Bersentuhan langsung dengan pengunjung website untuk mengubahnya menjadi "
+"prospek."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_requirements
@@ -1745,11 +1991,13 @@ msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
 "customer). It will appear as a tooltip over the stage's name."
 msgstr ""
+"Masukkan di sini persyaratan internal untuk tahapan ini (mis: Penawaran ke "
+"pelanggan). Akan muncul sebagai contoh di nama tahapan."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_date_deadline
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr "Perkiraan tanggal di mana kesempatan akan menang."
+msgstr "Perkiraan tanggal di mana peluang akan berhasil."
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -1762,6 +2010,8 @@ msgid ""
 "Every salesperson can analyze their own pipe by clicking on the 'switch view"
 " to graph' icon."
 msgstr ""
+"Tiap penjual dapat menganalisa saluran mereka sendiri dengan mengklik pada "
+"ikon 'ganti tampilan menjadi grafik'."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1769,6 +2019,8 @@ msgid ""
 "Every stage should be a step forward in the buyer's decision-making, not a "
 "task to carry out"
 msgstr ""
+"Tiap tahapan harus selangkah lebih maju dari keputusan pelanggan, bukan "
+"tugas yang akan dilaksanakan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1783,74 +2035,74 @@ msgstr "Contoh:"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Excel template"
-msgstr "Excel template"
+msgstr "Template Excel"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Exclude Opt Out"
-msgstr ""
+msgstr "Buat Pengecualian Opt Out"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Exclude contacts having"
-msgstr "Mengecualikan kontak memiliki"
+msgstr "Buat pengecualian untuk kontak yang memiliki"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Existing Tools"
-msgstr ""
+msgstr "Alat yang Ada"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Expected Closing"
-msgstr "Diharapkan penutupan"
+msgstr "Perkiraan Penutupan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing Date"
-msgstr ""
+msgstr "Perkiraan Tanggal Penutupan"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Day"
-msgstr ""
+msgstr "Perkiraan Hari Penutupan"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Month"
-msgstr ""
+msgstr "Perkiraan Bulan Penutupan"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Week"
-msgstr ""
+msgstr "Perkiraan Minggu Penutupan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_planned_revenue
 msgid "Expected Revenue"
-msgstr "Diharapkan pendapatan"
+msgstr "Perkiraan Omzet"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_expected_revenue
 msgid "Expected Revenue by Team"
-msgstr ""
+msgstr "Perkiraan Omzet berdasarkan Tim"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected Revenues"
-msgstr "Diharapkan pendapatan"
+msgstr "Perkiraan Omzet"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_dashboard_graph_period_pipeline
 msgid "Expected to Close"
-msgstr ""
+msgstr "Diperkirakan akan Ditutup"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Expiration Closing Month"
-msgstr "Berakhirnya penutupan bulan"
+msgstr "Berakhirnya Bulan Penutupan"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_legend_priority
@@ -1859,24 +2111,24 @@ msgid ""
 "stages or issues that are in this stage."
 msgstr ""
 "Penjelasan teks untuk membantu pengguna menggunakan mekanisme bintang dan "
-"prioritas pada tahap atau isu-isu yang pada tahap ini."
+"prioritas pada tahap atau isu-isu yang ada pada tahap ini."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Extended Filters"
-msgstr "Penyaring tambahan"
+msgstr "Penyaring Tambahan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Extra Info"
-msgstr "Info tambahan"
+msgstr "Info Tambahan"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:31
 #, python-format
 msgid "Final Proposal sent"
-msgstr ""
+msgstr "Proposal Final Dikirim"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -1886,12 +2138,12 @@ msgstr "Selesai"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
-msgstr ""
+msgstr "Tertutup pada Saluran"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
 msgid "Follow-up Quote"
-msgstr ""
+msgstr "Kutipan Follow up"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1899,6 +2151,8 @@ msgid ""
 "For every deal, review the next action, the expected closing, the pain "
 "points, the expected revenues, the buying process, etc."
 msgstr ""
+"Untuk setiap transaksi, tinjau setiap tindakan, perkiraan penutupan, poin "
+"keterbatasan, ramalan omzet, proses pembelian, dll."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:263
@@ -1907,26 +2161,27 @@ msgid ""
 "For safety reasons, you cannot merge more than 3 contacts together. You can "
 "re-open the wizard several times if needed."
 msgstr ""
-"Untuk alasan keamanan, Anda tidak dapat menggabungkan lebih dari 3 kontak "
-"bersama-sama. Anda dapat kembali membuka wizard beberapa kali jika "
-"diperlukan."
+"Untuk alasan keamanan, Anda tidak dapat menggabungkan lebih dari 3 kontak. "
+"Anda dapat membuka kembali wisaya beberapa kali jika diperlukan."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "For the Odoo Team,<br/>\n"
 "                          Fabien Pinckaers, Founder"
-msgstr "Untuk tim Odoo,<br/>Fabien Pinckaers, pendiri"
+msgstr ""
+"Untuk Tim Odoo,<br/>\n"
+"                          Fabien Pinckaers, Pendiri"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "Force assignation"
-msgstr "Kekuatan penugasan"
+msgstr "Paksa penyerahan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Format phone numbers based on national conventions"
-msgstr ""
+msgstr "Format nomor telepon berdasarkan pada konvensi nasional"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:588
@@ -1937,30 +2192,32 @@ msgstr "Dari %s: %s"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Future Activities"
-msgstr "Aktifitas Akan Datang"
+msgstr "Aktivitas Akan Datang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Future Activities (7 days)"
-msgstr ""
+msgstr "Aktivitas Akan Datang (7 hari)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Future Activities (All)"
-msgstr ""
+msgstr "Aktifitas Akan Datang (Semua)"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:30
 #, python-format
 msgid "GAP analysis with customer"
-msgstr ""
+msgstr "Analisis GAP dengan pelanggan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Gain high quality insight from surveys, a great way to engage with prospects"
 msgstr ""
+"Dapatkan informasi berkualitas dari hasil survei, cara yang baik untuk "
+"bersentuhan langsung dengan prospek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1973,22 +2230,24 @@ msgid ""
 "Generate unassigned leads from incoming emails. Leads coming from\n"
 "                                    that email will be assigned manually."
 msgstr ""
+"Buat prospek belum diserahkan dari email masuk. Prospek dari\n"
+"                                    email tersebut akan diserahkan secara manual."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
 msgid "Get Lost Reason"
-msgstr ""
+msgstr "Alasan Gagal"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_email_cc
 msgid "Global CC"
-msgstr "Global CC"
+msgstr "CC Global"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:379
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
-msgstr ""
+msgstr "Go, go, go! Selamat atas transaksi pertama Anda."
 
 #. module: crm
 #. openerp-web
@@ -1998,6 +2257,9 @@ msgid ""
 "Good job! Your completed the tour of the CRM. You can continue with the "
 "<b>implementation guide</b> to help you setup the CRM in your company."
 msgstr ""
+"Bagus! Anda telah menyelesaikan tur CRM. Anda dapat melanjutkan dengan "
+"<b>petunjuk implementasi</b> untuk membantu Anda mengatur CRM di perusahaan "
+"Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2005,6 +2267,8 @@ msgid ""
 "Great pipelines have stages <strong>aligned with the buyer's buying "
 "process</strong>, not your selling process:"
 msgstr ""
+"Saluran yang baik memiliki tahapan yang <strong>diselaraskan dengan proses "
+"pembelian pelanggan</strong>, bukan pada proses penjualan:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2012,47 +2276,47 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Group By"
-msgstr "Dikelompokkan berdasarkan"
+msgstr "Kelompokkan Berdasarkan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_dashboard_graph_group_pipeline
 msgid "Group by"
-msgstr "Dikelompokkan oleh"
+msgstr "Kelompokkan Berdasarkan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_number_group
 msgid "Group of Contacts"
-msgstr "Grup kontak"
+msgstr "Grup Kontak"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Grow leads acquisition"
-msgstr ""
+msgstr "Tingkatkan perolehan prospek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Grow revenues"
-msgstr ""
+msgstr "Tingkatkan omzet"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Handle partner binding or generation in CRM wizards."
-msgstr "Menangani mitra mengikat atau generasi di CRM penyihir."
+msgstr "Tangani pengikat rekanan atau pembuatan di wisaya CRM."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Happy Selling!<br/>- The Odoo Team"
-msgstr ""
+msgstr "Selamat Menjual!<br/>- Tim Odoo"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Have clear forecasts on sales"
-msgstr ""
+msgstr "Buat ramalan jelas pada penjualan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Have fun deploying your sales strategy,"
-msgstr ""
+msgstr "Selamat menikmati terapkan strategi penjualan Anda,"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2060,11 +2324,13 @@ msgid ""
 "Here are a few examples of documents you should provide to your sales "
 "channel based on the sales stage:"
 msgstr ""
+"Berikut ini beberapa contoh dokumen yang sebaiknya Anda sediakan untuk "
+"saluran penjualan Anda berdasarkan tahapan penjualan:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Here are some of the <strong>customizations available</strong>:"
-msgstr ""
+msgstr "Berikut ini beberapa <strong>kustomisasi yang tersedia</strong>:"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_action_activities
@@ -2072,6 +2338,8 @@ msgid ""
 "Here is the list of your next activities. Those are linked to your opportunities.\n"
 "                   To set a next activity, go on an opportunity and add one. It will then appear in this list."
 msgstr ""
+"Berikut ini daftar aktivitas berikutnya. Aktivitas tersebut terhubung dengan peluang Anda.\n"
+"                   Untuk mengatur aktivitas selanjutnya, buka tampilan peluang dan tambahkan aktivitas. Aktivitas tersebut kemudian akan tampil pada daftar."
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -2081,7 +2349,7 @@ msgstr "Tinggi"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_dashboard_graph_group_pipeline
 msgid "How this channel's dashboard graph will group the results."
-msgstr ""
+msgstr "Bagaimana grafik dasbor saluran akan mengelompokkan hasilnya."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_id
@@ -2106,8 +2374,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID dari catatan orang tua memegang alias (contoh: proyek memegang tugas "
-"penciptaan alias)"
+"ID dari catatan induk alias (contoh: proyek yang menahan pembuatan alias "
+"tugas)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_aggr_ids
@@ -2121,14 +2389,15 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the leads when performing mass mailing."
 msgstr ""
-"Jika keluar dicentang, kontak ini telah menolak untuk menerima email untuk "
-"Misa mailing dan pemasaran kampanye. Filter 'Tersedia untuk Misa Mailing' "
-"memungkinkan pengguna untuk menyaring mengarah saat melakukan Misa mailing."
+"Jika opt-out dicentang, kontak ini telah menolak untuk menerima email untuk "
+"email massal dan kampanye pemasaran. Filter 'Bersedia untuk Email Massal' "
+"memungkinkan pengguna untuk menyaring prospek saat melakukan email massal."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "If unchecked, this will leave the salesman of duplicated opportunities"
-msgstr "Jika dicentang, ini akan meninggalkan salesman digandakan peluang"
+msgstr ""
+"Jika tidak dicentang, penjual peluang yang digandakan tidak akan diubah"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2137,6 +2406,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales channels."
 msgstr ""
+"Jika Anda mengikuti langkah sebelumnya, Anda telah menyediakan\n"
+"                        fondasi untuk proses yang dapat meningkatkan kemampuan\n"
+"                        saluran penjualan Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2144,6 +2416,8 @@ msgid ""
 "If you have less than 200 contacts, we recommend you\n"
 "                                        to create them manually."
 msgstr ""
+"Jika Anda memiliki kurang dari 200 kontak, sebaiknya Anda\n"
+"                                        membuat mereka secara manual."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2151,6 +2425,8 @@ msgid ""
 "If you sell subscriptions (whether it's invoiced annually or monthly), "
 "activate the"
 msgstr ""
+"Jika Anda menjual dengan sistem subskripsi (difakturkan bulanan atau "
+"tahunan), aktifkan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2160,7 +2436,7 @@ msgstr "Jika Anda ingin melakukannya sendiri:"
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
 msgid "Import & Synchronize"
-msgstr ""
+msgstr "Impor dan Sinkronisasi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2170,17 +2446,17 @@ msgstr "Impor menggunakan tombol kiri atas di"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Improve average revenue per salesperson"
-msgstr ""
+msgstr "Tingkatkan rata-rata omzet tiap penjual"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "In Odoo, there are 3 different ways to manage your prices.<br/>"
-msgstr ""
+msgstr "Di Odoo, ada 3 cara yang berbeda untuk mengelola harga Anda.<br/>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 msgid "Include archived"
-msgstr ""
+msgstr "Termasuk yang diarsipkan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2197,7 +2473,7 @@ msgstr "Informasi"
 #: code:addons/crm/static/src/js/web_planner_crm.js:22
 #, python-format
 msgid "Initial Contact"
-msgstr ""
+msgstr "Kontak Awal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -2208,22 +2484,22 @@ msgstr "Catatan Internal"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Invoice Analysis"
-msgstr "Analis Tagihan"
+msgstr "Analisis Faktur"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_is_company
 msgid "Is Company"
-msgstr "Adalah perusahaan"
+msgstr "Apakah Perusahaan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
 msgid "Job Position"
-msgstr "Posisi"
+msgstr "Posisi Jabatan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "Jurnal item terkait ke kontak"
+msgstr "Artikel jurnal terkait dengan kontak"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2233,7 +2509,7 @@ msgstr "KPI"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_last
 msgid "Last Action"
-msgstr "Aksi terakhir"
+msgstr "Tindakan Terakhir"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard___last_update
@@ -2250,7 +2526,7 @@ msgstr "Aksi terakhir"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
 msgid "Last Modified on"
-msgstr "Terakhir diubah pada"
+msgstr "Terakhir Diubah Pada"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2262,7 +2538,7 @@ msgstr "Bulan Lalu"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Update tahap terakhir"
+msgstr "Perbarui Tahap Terakhir"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_write_uid
@@ -2277,7 +2553,7 @@ msgstr "Update tahap terakhir"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_write_uid
 #: model:ir.model.fields,field_description:crm.field_crm_stage_write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui Oleh"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_write_date
@@ -2291,13 +2567,13 @@ msgstr "Terakhir diperbarui oleh"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_write_date
 #: model:ir.model.fields,field_description:crm.field_crm_stage_write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui Pada"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Late Activities"
-msgstr "Aktifitas terakhir"
+msgstr "Aktivitas Terakhir"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:882
@@ -2309,18 +2585,18 @@ msgstr "Aktifitas terakhir"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #, python-format
 msgid "Lead"
-msgstr "Arahans"
+msgstr "Prospek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Lead / Customer"
-msgstr "Arahan / pelanggan"
+msgstr "Prospek / Pelanggan"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
-msgstr "Membuat Arahan"
+msgstr "Membuat Prospek"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_tag_action
@@ -2328,27 +2604,27 @@ msgstr "Membuat Arahan"
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
-msgstr ""
+msgstr "Tag Prospek"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Lead To Opportunity Partner"
-msgstr "Mengarah ke kesempatan mitra"
+msgstr "Prospek ke Peluang Rekanan"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead created"
-msgstr "Membuat Arahan"
+msgstr "Prospek dibuat"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Arahan/ kesempatan"
+msgstr "Prospek/Peluang"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Lead/Opportunity Mass Mail"
-msgstr "Arahan/ kesempatan Mass Mail"
+msgstr "Prospek/Peluang Email Massal"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_lead
@@ -2362,12 +2638,12 @@ msgstr "Arahan/ kesempatan Mass Mail"
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Leads"
-msgstr "Arahan"
+msgstr "Prospek"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "Arahan /peluang"
+msgstr "Prospek & Peluang"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2376,7 +2652,7 @@ msgstr "Arahan /peluang"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot_lead
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Leads Analysis"
-msgstr "Arahan analisis"
+msgstr "Analisa Prospek"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
@@ -2385,41 +2661,42 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"Arahan analisis memungkinkan Anda untuk memeriksa CRM berbeda informasi "
-"seperti pengobatan penundaan atau jumlah mengarah per negara terkait. Anda "
-"dapat mengurutkan analisa mengarah Anda oleh kelompok yang berbeda untuk "
-"mendapatkan analisis berkurai akurat."
+"Analisis prospek memungkinkan Anda untuk memeriksa informasi yang terkait "
+"dengan CRM berbeda seperti penundaan tindakan atau jumlah prospek tiap "
+"status. Anda dapat mengurutkan analisa prospek Anda berdasarkan kelompok "
+"berbeda untuk mendapatkan analisis akurat."
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_salesperson
 msgid "Leads By Salespersons"
-msgstr ""
+msgstr "Prospek Berdasarkan Penjual"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Leads Form"
-msgstr "Arahan Formulir"
+msgstr "Formulir Prospek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
 msgid "Leads Generation"
-msgstr "Arahan generasi"
+msgstr "Pembuatan Prospek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Leads by Source"
-msgstr ""
+msgstr "Prospek Berdasarkan Sumber"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
-msgstr "Arahan yang ditugaskan pada saya"
+msgstr "Prospek yang diserahkan pada saya"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that did not ask not to be included in mass mailing campaigns"
 msgstr ""
-"Arahan yang tidak meminta untuk tidak dimasukkan dalam kampanye surat massal"
+"Prospek yang tidak meminta untuk tidak dimasukkan dalam kampanye email "
+"massal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2427,18 +2704,18 @@ msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
 msgstr ""
-"Arahan yang dipilih yang memiliki duplikat. Jika daftar kosong, itu berarti "
-"bahwa tidak duplikat ditemukan"
+"Prospek yang dipilih yang memiliki duplikat. Jika daftar kosong, itu berarti"
+" bahwa duplikat tidak ditemukan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads with existing duplicates (for information)"
-msgstr "Arahan dengan duplikat yang ada (untuk informasi)"
+msgstr "Prospek dengan duplikat yang ada (untuk informasi)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity_opportunity_ids
 msgid "Leads/Opportunities"
-msgstr "Arahan /peluang"
+msgstr "Prospek/Peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2448,30 +2725,30 @@ msgstr "Lisensi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_line_ids
 msgid "Lines"
-msgstr "Jalur"
+msgstr "Baris"
 
 #. module: crm
 #: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
-msgstr "Link ke pelanggan yang ada"
+msgstr "Link ke pelanggan yang sudah ada"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_partner_id
 msgid "Linked partner (optional). Usually created when converting the lead."
 msgstr ""
-"Terkait mitra (opsional). Biasanya dibuat ketika mengkonversi memimpin."
+"Rekanan terkait (pilihan). Biasanya dibuat ketika mengkonversi prospek."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "List of possible pain points by segment/profile"
-msgstr ""
+msgstr "Daftar poin keterbatasan yang memungkinkan berdasarkan segmen/profil"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Look up company information (name, logo, etc.)"
-msgstr ""
+msgstr "Lihat informasi perusahaan (nama, logo, dll.)"
 
 #. module: crm
 #. openerp-web
@@ -2482,7 +2759,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Lost"
-msgstr "Lost"
+msgstr "Gagal"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -2493,13 +2770,13 @@ msgstr "Lost"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
-msgstr ""
+msgstr "Alasan Gagal"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr ""
+msgstr "Alasan Gagal"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -2509,42 +2786,42 @@ msgstr "Rendah"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
 msgid "Make Quote"
-msgstr ""
+msgstr "Buat Kutipan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_generate_lead_from_alias
 msgid "Manual Assignation of Emails"
-msgstr ""
+msgstr "Penerapan Email secara Manual"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manually Assignation of Incoming Emails"
-msgstr ""
+msgstr "Penerapan Email Masuk secara Manual"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
 msgid "Mark All Activities as Done"
-msgstr ""
+msgstr "Tandai Semua Aktivitas sebagai Selesai"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_late_activities_done
 msgid "Mark Late Activities as Done"
-msgstr ""
+msgstr "Tandai Aktivitas Terlambat sebagai Selesai"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
-msgstr "Mark Hilang"
+msgstr "Gagal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Won"
-msgstr "Mark Won"
+msgstr "Berhasil"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 msgid "Mark as lost"
-msgstr ""
+msgstr "Tandai sebagai gagal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2554,25 +2831,25 @@ msgstr "Pemasaran"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Mass Lead To Opportunity Partner"
-msgstr "Timbal massa Untuk Peluang Rekanan"
+msgstr "Prospek Massal ke Peluang Rekanan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_maximum_group
 msgid "Maximum of Group of Contacts"
-msgstr "Maksimum Kelompok Kontak"
+msgstr "Kelompok Kontak Maksimum "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Medium"
+msgstr "Media"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:924
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
-msgstr "Pertemuan dijadwalkan pada '%s' <br> Subyek:%s <br> Durasi: jam%s (s)"
+msgstr "Pertemuan dijadwalkan pada '%s' <br> Subjek:%s <br> Durasi: %s jam"
 
 #. module: crm
 #. openerp-web
@@ -2580,6 +2857,7 @@ msgstr "Pertemuan dijadwalkan pada '%s' <br> Subyek:%s <br> Durasi: jam%s (s)"
 #, python-format
 msgid "Meeting with a demo. Set Fields: expected revenue, closing date"
 msgstr ""
+"Pertemuan dengan pendemo. Atur Kolom: omzet ramalan, tanggal penutupan"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2593,17 +2871,17 @@ msgstr "Pertemuan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge"
-msgstr "Menggabungkan"
+msgstr "Gabung"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically"
-msgstr "Menggabungkan secara otomatis"
+msgstr "Gabung secara otomatis"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically all process"
-msgstr "Menggabungkan secara otomatis semua proses"
+msgstr "Gabung semua proses secara otomatis"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -2613,7 +2891,7 @@ msgstr "Gabungkan Kontak"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge Leads/Opportunities"
-msgstr "Gabung Memimpin / Peluang"
+msgstr "Gabung Prospek/Peluang"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_merge
@@ -2624,7 +2902,7 @@ msgstr "Gabungkan Kontak Terpilih"
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
 msgid "Merge leads/opportunities"
-msgstr "Gabung lead / peluang"
+msgstr "Gabung prospek/peluang"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -2634,53 +2912,54 @@ msgstr "Gabung peluang"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge the following contacts"
-msgstr "Menggabungkan kontak berikut"
+msgstr "Gabungkan kontak berikut"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge with Manual Check"
-msgstr "Gabung dengan Pedoman Periksa"
+msgstr "Gabung dengan Periksa Manual"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Merge with existing leads/opportunities of each partner"
-msgstr "Bergabung dengan lead yang ada / peluang masing-masing pasangan"
+msgstr ""
+"Gabung dengan prospek/peluang  yang sudah ada dari masing-masing rekanan"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 msgid "Merge with existing opportunities"
-msgstr "Bergabung dengan peluang yang ada"
+msgstr "Gabung dengan peluang yang sudah ada"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:528
 #, python-format
 msgid "Merged lead"
-msgstr "Memimpin gabungan"
+msgstr "Prospek digabung"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:559
 #, python-format
 msgid "Merged leads"
-msgstr "Lead digabung"
+msgstr "Prospek digabung"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:559
 #, python-format
 msgid "Merged opportunities"
-msgstr "Peluang merger"
+msgstr "Peluang digabung"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:528
 #, python-format
 msgid "Merged opportunity"
-msgstr "Peluang merger"
+msgstr "Peluang digabung"
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:295
 #, python-format
 msgid "Merged with the following partners:"
-msgstr "Bergabung dengan mitra berikut:"
+msgstr "Gabung dengan rekanan berikut:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_min_id
@@ -2690,7 +2969,7 @@ msgstr "MinID"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Misc"
-msgstr "Lain-Lain."
+msgstr "Lain-Lain"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_mobile
@@ -2705,18 +2984,18 @@ msgstr "Bulan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
-msgstr ""
+msgstr "Surat motivasi dari manajemen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Activities"
-msgstr "Aktifitas Ku"
+msgstr "Aktivitasku"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr "Arahanku"
+msgstr "Prospekku"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2726,7 +3005,7 @@ msgstr "Peluangku"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
-msgstr ""
+msgstr "Saluranku"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -2740,7 +3019,7 @@ msgstr "Nama"
 #: code:addons/crm/static/src/js/web_planner_crm.js:27
 #, python-format
 msgid "Needs assessment"
-msgstr ""
+msgstr "Butuh penafsiran"
 
 #. module: crm
 #. openerp-web
@@ -2763,14 +3042,14 @@ msgstr "Baru"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
-msgstr ""
+msgstr "Peluang Baru"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:16
 #, python-format
 msgid "New propspect assigned to the right salesperson"
-msgstr ""
+msgstr "Prospect baru yang diserahkan kepada penjual yang tepat"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -2781,12 +3060,12 @@ msgstr "Aktivitas Berikutnya"
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity is planned"
-msgstr ""
+msgstr "Aktivitas berikutnya telah direncanakan"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity late"
-msgstr ""
+msgstr "Aktivitas berikutnya terlambat"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1146
@@ -2797,7 +3076,7 @@ msgstr "Tidak ada subjek"
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "No next activity planned"
-msgstr ""
+msgstr "Tidak ada aktivitas terjadwal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2813,12 +3092,12 @@ msgstr "Normal"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
 msgid "Not enough stock"
-msgstr ""
+msgstr "Stok tidak cukup"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Note: To use those features, you need to install the"
-msgstr ""
+msgstr "Catatan: Untuk menggunakan fitur tersebut, Anda harus memasang"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_description
@@ -2828,12 +3107,12 @@ msgstr "Catatan"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_close
 msgid "Number of Days to close the case"
-msgstr "Jumlah Hari untuk menutup kasus ini"
+msgstr "Jumlah Hari hingga penutupan kasus ini"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_open
 msgid "Number of Days to open the case"
-msgstr "Jumlah Hari untuk membuka kasus ini"
+msgstr "Jumlah Hari hingga pembukaan kasus ini"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2843,12 +3122,12 @@ msgstr "Jumlah Ruangan"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_count
 msgid "Number of open opportunities"
-msgstr ""
+msgstr "Jumlah peluang terbuka"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Odoo Default"
-msgstr ""
+msgstr "Standar Odoo"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -2858,6 +3137,8 @@ msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
 "                    up potential sales and better forecast your future revenues."
 msgstr ""
+"Odoo membantu Anda untuk memonitor saluran penjualan Anda untuk\n"
+"                    mengikuti potensi penjualan dan meramalkan omzet dengan lebih baik."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2865,6 +3146,9 @@ msgid ""
 "Odoo is the world's only software to have a full integration of Marketing "
 "Apps for your sales channel: insight sales, point of sale, ecommerce."
 msgstr ""
+"Odoo adalah satu-satunya perangkat lunak di dunia yang terintegrasi secara "
+"penuh antara aplikasi Marketing untuk saluran penjualan Anda: ide penjualan,"
+" pos, ecommerce."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2873,6 +3157,10 @@ msgid ""
 "                        Tell us how you sell and we will tell you what\n"
 "                        configuration will best fit your quotation process."
 msgstr ""
+"Odoo akan membantu Anda membuat penawaran yang profesional dan kontrak hanya dalam beberapa menit.\n"
+"                        Beritahu kamu bagaimana Anda menjual dan kami akan\n"
+"                        memberitahu Anda konfigurasi seperti apa yang paling sesuai\n"
+"                        untuk proses penawaran Anda."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
@@ -2881,6 +3169,8 @@ msgid ""
 "Once qualified, the lead can be converted into a business\n"
 "                    opportunity and/or a new customer in your address book."
 msgstr ""
+"Setelah kualifikasi, prospek dapat dikonversi menjadi peluang\n"
+"                    dan/atau pelanggan baru di buku kontak Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2890,11 +3180,15 @@ msgid ""
 "weekly sales meeting with the team during which you will do a pipeline "
 "review."
 msgstr ""
+"Setelah Anda menerapkan CRM, inilah saatnya meningkatkan omzet Anda. Dimulai"
+" dari mengatur pendekatan peningkatan secara terus-menerus. Kami menyarankan"
+" Anda untuk mengadakan pertemuan marketing mingguan dengan tim di mana Anda "
+"akan melakukan tinjauan saluran."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Online users: we do it for you!"
-msgstr ""
+msgstr "Pengguna online: kami melakukannya untuk Anda!"
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:287
@@ -2904,19 +3198,19 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
-"Hanya kontak tujuan mungkin berhubungan dengan Journal Produk yang ada. "
-"Silakan meminta Administrator jika Anda perlu untuk menggabungkan beberapa "
-"kontak terkait Journal Produk yang ada."
+"Hanya kontak tujuan yang mungkin terkait dengan Artikel Jurnal yang sudah "
+"ada. Silakan meminta Administrator jika Anda perlu menggabungkan beberapa "
+"kontak yang terkait dengan Artikel Jurnal yang sudah ada."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunities"
-msgstr ""
+msgstr "Peluang Terbuka"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunity"
-msgstr ""
+msgstr "Peluang Terbuka"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -2942,7 +3236,7 @@ msgstr "Peluang"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Opportunities Analysis"
-msgstr "Peluang Analisis"
+msgstr "Analisis Peluang"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
@@ -2953,26 +3247,31 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
+"Analisis Peluang memberi Anda akses cepat ke peluang Anda dengan informasi "
+"seperti ramalan omzet, biaya terencana, deadline terlewati atau jumlah "
+"interaksi tiap peluang. Laporan ini terutama digunakan oleh manajer "
+"penjualan untuk melakukan peninjauan berkala dengan tim dari saluran "
+"penjualan."
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
 msgid "Opportunities Cohort"
-msgstr "Peluang Cohort"
+msgstr "Pengikut Peluang"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
 msgid "Opportunities Won Per Team"
-msgstr "Peluang Won Per Team"
+msgstr "Peluang yang Berhasil Tiap Tim"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Opportunities pipeline"
-msgstr ""
+msgstr "Saluran peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunities that are assigned to me"
-msgstr "Peluang yang ditugaskan kepada saya"
+msgstr "Peluang yang diserahkan kepada saya"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:427
@@ -2995,33 +3294,33 @@ msgstr "Peluang"
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr "Peluang hilang"
+msgstr "Peluang Gagal"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr "Peluang Tahap Berubah"
+msgstr "Tahap Peluang yang Diubah"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Opportunity Title"
-msgstr ""
+msgstr "Judul Peluang"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr "Peluang Menang"
+msgstr "Peluang yang Berhasil"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
 msgid "Opportunity lost"
-msgstr "Peluang hilang"
+msgstr "Peluang yang gagal"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
-msgstr "Peluang menang"
+msgstr "Peluang yang berhasil"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_opt_out
@@ -3031,7 +3330,7 @@ msgstr "Opt-Out"
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Option"
-msgstr "Pilihan"
+msgstr "Opsi"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_force_thread_id
@@ -3040,9 +3339,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Opsional ID thread (catatan) yang semua pesan masuk akan dilampirkan, bahkan"
-" jika mereka tidak menjawab untuk itu. Jika diatur, hal ini akan "
-"menonaktifkan penciptaan catatan baru sepenuhnya."
+"ID Opsional dari berkas (catatan) di mana semua pesan masuk akan "
+"dilampirkan, bahkan jika mereka tidak menjawabnya. Jika diatur, hal ini akan"
+" menonaktifkan pembuatan catatan baru sepenuhnya."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -3057,12 +3356,12 @@ msgstr "Lainnya"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
-msgstr ""
+msgstr "Peluang yang Terlambat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
 msgid "Overpassed Deadline"
-msgstr "Tenggat waktu overpassed"
+msgstr "Deadline yang Terlewati"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_user_id
@@ -3074,29 +3373,29 @@ msgstr "Pemilik"
 #: code:addons/crm/static/src/js/web_planner_crm.js:27
 #, python-format
 msgid "POC Sold"
-msgstr ""
+msgstr "POC Dijual"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:31
 #, python-format
 msgid "POC demonstration to the customer"
-msgstr ""
+msgstr "POC demonstrasi ke pelanggan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_parent_id
 msgid "Parent Company"
-msgstr "Perusahaan utama"
+msgstr "Perusahaan Induk"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_parent_model_id
 msgid "Parent Model"
-msgstr "Model orangtua"
+msgstr "Model Induk"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Orangtua catatan Thread ID"
+msgstr "Catatan Induk ID Berkas"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_parent_model_id
@@ -3105,8 +3404,8 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Model induk memegang alias. Model memegang referensi alias ini tidak selalu "
-"berarti model yang diberikan oleh alias_model_id (contoh: proyek "
+"Model induk dengan alias. Model yang memiliki referensi alias ini tidak "
+"selalu berarti model yang diberikan oleh alias_model_id (contoh: proyek "
 "(parent_model) dan tugas (model))"
 
 #. module: crm
@@ -3118,17 +3417,17 @@ msgstr "Rekanan"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_address_email
 msgid "Partner Contact Email"
-msgstr "Email mitra Hubungi"
+msgstr "Email Kontak Rekanan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_address_name
 msgid "Partner Contact Name"
-msgstr "Partner Nama Kontak"
+msgstr "Nama Kontak Rekanan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_partner_id
 msgid "Partner/Customer"
-msgstr "Patner/Pelanggan"
+msgstr "Rekanan/Pelanggan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -3143,19 +3442,19 @@ msgstr "Telepon"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_crm_phone_validation
 msgid "Phone Formatting"
-msgstr ""
+msgstr "Format Telepon"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:23
 #, python-format
 msgid "Phone call with following questions: ..."
-msgstr ""
+msgstr "Panggilan telepon dengan pertanyaan berikut: ..."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Phone scripts"
-msgstr "Naskah Telpon"
+msgstr "Naskah telpon"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:165
@@ -3176,7 +3475,7 @@ msgstr "Saluran"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
-msgstr "Analis Saluran"
+msgstr "Analisis Saluran"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -3187,6 +3486,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the\n"
 "teams of the sales pipeline."
 msgstr ""
+"Analisis Peluang memberi Anda akses cepat ke\n"
+"peluang Anda dengan informasi seperti ramalan omzet, biaya terencana,\n"
+"deadline terlewati atau jumlah interaksi tiap peluang. Laporan ini terutama\n"
+"digunakan oleh manajer penjualan untuk melakukan peninjauan berkala\n"
+"dengan tim dari saluran penjualan."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_graph
@@ -3197,17 +3501,23 @@ msgid ""
 "mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the sales channel."
 msgstr ""
+"Analisis Peluang memberi Anda akses cepat ke\n"
+"peluang Anda dengan informasi seperti ramalan omzet, biaya terencana,\n"
+"deadline terlewati atau jumlah interaksi tiap peluang. Laporan ini terutama\n"
+"digunakan oleh manajer penjualan untuk melakukan peninjauan berkala\n"
+"dengan tim dari saluran penjualan."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:231
 #, python-format
 msgid "Pipeline: Expected Revenue"
-msgstr ""
+msgstr "Saluran: Ramalan Omzet"
 
 #. module: crm
 #: model:web.planner,tooltip_planner:crm.planner_crm
 msgid "Plan your sales strategy: objectives, leads, KPIs, and much more!"
 msgstr ""
+"Rencanakan strategi penjualan Anda: tujuan, prospek, KPI, dan banyak lagi!"
 
 #. module: crm
 #: model:ir.model,name:crm.model_web_planner
@@ -3221,8 +3531,8 @@ msgid ""
 "Please select more than one element (lead or opportunity) from the list "
 "view."
 msgstr ""
-"Silakan pilih lebih dari satu elemen (lead atau peluang) dari tampilan "
-"daftar."
+"Silakan pilih lebih dari satu elemen (prospek atau peluang) dari daftar "
+"tampilan."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_contact
@@ -3232,11 +3542,15 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Kebijakan untuk mengirimkan pesan di dokumen menggunakan mailgateway.\n"
+"- semua orang: setiap orang dapat mengirim\n"
+"- rekanan: hanya rekanan yang diijinkan\n"
+"- pengikut: hanya pengikut dokumen terkait\n"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Pricing &amp; Discounts"
-msgstr ""
+msgstr "Harga &amp; Diskon"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
@@ -3247,7 +3561,7 @@ msgstr "Prioritas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_legend_priority
 msgid "Priority Management Explanation"
-msgstr "Penjelasan manajemen prioritas"
+msgstr "Penjelasan Manajemen Prioritas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_probability
@@ -3259,12 +3573,12 @@ msgstr "Probabilitas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_probability
 msgid "Probability (%)"
-msgstr "Peluang"
+msgstr "Peluang (%)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_expected_revenue
 msgid "Probable Turnover"
-msgstr ""
+msgstr "Kemungkinan Omzet"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor1
@@ -3276,7 +3590,7 @@ msgstr "Produk"
 #: code:addons/crm/static/src/js/web_planner_crm.js:22
 #, python-format
 msgid "Product Demonstration"
-msgstr ""
+msgstr "Demonstrasi Produk"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3305,6 +3619,7 @@ msgstr "Proposisi"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Qualification form (you can use the survey app for this)"
 msgstr ""
+"Formulir kualifikasi (Anda dapat menggunakan aplikasi survei untuk ini)"
 
 #. module: crm
 #. openerp-web
@@ -3314,14 +3629,14 @@ msgstr ""
 #: model:crm.stage,name:crm.stage_lead2
 #, python-format
 msgid "Qualified"
-msgstr ""
+msgstr "Terkualifikasi"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:14
 #, python-format
 msgid "Qualified Sponsor"
-msgstr ""
+msgstr "Sponsor Terkualifikasi"
 
 #. module: crm
 #. openerp-web
@@ -3335,19 +3650,19 @@ msgstr "Penawaran terkirim"
 #: code:addons/crm/static/src/js/web_planner_crm.js:19
 #, python-format
 msgid "Quotation sent to customer"
-msgstr ""
+msgstr "Penawaran yang dikirim ke pelanggan"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:20
 #, python-format
 msgid "Quotation signed by the customer"
-msgstr ""
+msgstr "Penawaran yang ditandatangani oleh pelanggan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Read the documentation about pricing &amp; discounts"
-msgstr ""
+msgstr "Baca dokumentasi tentang harga &amp; diskon"
 
 #. module: crm
 #. openerp-web
@@ -3357,21 +3672,23 @@ msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under "
 "<b>CRM</b> app."
 msgstr ""
+"Siap untuk meningkatkan penjualan Anda? <b>Saluran</b> Anda dapat dilihat di"
+" sini, pada aplikasi <b>CRM</b>."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Reason for loosing leads"
-msgstr ""
+msgstr "Alasan kegagalan prospek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Catatan Thread ID"
+msgstr "Catatan ID Berkas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_referred
 msgid "Referred By"
-msgstr "Dengan mengacu"
+msgstr "Dirujuk Oleh"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_action
@@ -3379,7 +3696,7 @@ msgstr "Dengan mengacu"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_convert2task_action
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_action
 msgid "Related Customer"
-msgstr "Pelanggan terkait"
+msgstr "Pelanggan Terkait"
 
 #. module: crm
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
@@ -3387,12 +3704,14 @@ msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and "
 "object.partner_id.name or object.contact_name}"
 msgstr ""
+"Pengingat: Prospek ${object.name} from ${object.partner_id != False and "
+"object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_report
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Reporting"
-msgstr "pelaporan."
+msgstr "Laporan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
@@ -3408,12 +3727,12 @@ msgstr "Pulihkan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Revenue by Salesperson"
-msgstr ""
+msgstr "Penjualan berdasarkan Penjual"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sale Flow"
-msgstr ""
+msgstr "Alur Penjualan"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
@@ -3439,27 +3758,27 @@ msgstr "Saluran Penjualan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Forecasts (month+1)"
-msgstr ""
+msgstr "Perkiraan Penjualan (bulan+1)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Management module."
-msgstr ""
+msgstr "Modul Manajemen Penjualan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Settings"
-msgstr ""
+msgstr "Pengaturan Penjualan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Tools"
-msgstr ""
+msgstr "Alat Penjualan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_user_ids
 msgid "Salesmen"
-msgstr "Salesman"
+msgstr "Penjual"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
@@ -3479,18 +3798,20 @@ msgstr "Penjual"
 msgid ""
 "Save filters or add any report to your dashboard with the Favorites menu."
 msgstr ""
+"Simpan penyaring atau tambahkan laporan apapun ke dasbor Anda dengan menu "
+"Favorit"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:40
 #, python-format
 msgid "Schedule an activity by clicking here"
-msgstr ""
+msgstr "Jadwalkan aktivitas dengan mengklik di sini"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Search Leads"
-msgstr "Cari Memimpin"
+msgstr "Cari Prospek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -3501,12 +3822,12 @@ msgstr "Cari Peluang"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Search duplicates based on duplicated data in"
-msgstr "Cari duplikat berdasarkan data digandakan dalam"
+msgstr "Cari duplikat berdasarkan data yang digandakan pada"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Select Leads/Opportunities"
-msgstr "Pilih Arahan / Peluang"
+msgstr "Pilih Prospek/Peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -3516,15 +3837,15 @@ msgid ""
 "                            Odoo will propose you to merge only those having\n"
 "                            all these fields in common. (not one of the fields)."
 msgstr ""
-"Pilih daftar bidang digunakan untuk mencari catatan digandakan. Jika Anda "
-"memilih beberapa bidang, Odoo akan mengusulkan Anda untuk menggabungkan "
-"hanya mereka yang memiliki semua bidang yang sama. (bukan salah satu "
-"bidang)."
+"Pilih daftar bidang yang digunakan untuk mencari catatan duplikat. Jika Anda\n"
+"                            memilih beberapa bidang, Odoo akan mengusulkan Anda\n"
+"                            untuk menggabungkan hanya mereka yang memiliki semua\n"
+"                            bidang yang sama. (bukan salah satu bidang)."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Select your pricing preference and allow discounts"
-msgstr ""
+msgstr "Pilih preferensi harga Anda dan ijinkan diskon"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -3534,11 +3855,15 @@ msgid ""
 "                                will be redirected to the destination contact.\n"
 "                                You can remove contacts from this list to avoid merging them."
 msgstr ""
+"Kontak yang dipilih akan digabungkan.\n"
+"                                Semua dokumen terkait ke salah satu kontak ini\n"
+"                                akan diarahkan ke tujuan kontak.\n"
+"                                Anda dapat menghapus kontak dari daftar ini untuk menghindari menggabungkannya."
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Selection"
-msgstr "Pemilihan"
+msgstr "Seleksi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3546,16 +3871,18 @@ msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
 "20 days"
 msgstr ""
+"Kirim email ke semua peluang dalam tahapan \"Kualifikasi\" selama lebih dari"
+" 20 hari"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
-msgstr "Urutan"
+msgstr "Penomoran"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor3
 msgid "Services"
-msgstr "Layanan"
+msgstr "Jasa"
 
 #. module: crm
 #. openerp-web
@@ -3564,11 +3891,13 @@ msgstr "Layanan"
 #, python-format
 msgid "Set fields: Expected Revenue, Expected Closing Date, Next Action"
 msgstr ""
+"Atur kolom: Ramalan Omzet, Perkiraan Tanggal Penutupan, Tindakan Berikutnya"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Set the sales manager as a follower of every opportunity above $20k"
 msgstr ""
+"Atur manajer penjualan sebagai pengikut setiap peluang di atas $20 ribu"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_on_change
@@ -3576,8 +3905,7 @@ msgid ""
 "Setting this stage will change the probability automatically on the "
 "opportunity."
 msgstr ""
-"Setting panggung ini akan mengubah probabilitas secara otomatis pada "
-"kesempatan."
+"Atur tahapan ini akan mengubah probabilitas secara otomatis pada peluang."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3587,6 +3915,11 @@ msgid ""
 "                      Odoo CRM to transform how your salespeople work.\n"
 "                      That's the purpose of this guide."
 msgstr ""
+"Pengaturan saluran penjualan Anda hanya langkah pertama. Untuk\n"
+"                      mencapai peningkatan signifikan, kami akan membantu Anda\n"
+"                      untuk memanfaatkan  CRM odoo sebaik-baiknya untuk\n"
+"                      mengubah bagaimana penjualan Anda bekerja. itulah alasan\n"
+"                      panduan ini dibuat"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
@@ -3597,7 +3930,7 @@ msgstr "Pengaturan"
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr ""
+msgstr "Tampilkan Menu Prospek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3605,11 +3938,15 @@ msgid ""
 "Show advanced filters and options by clicking on the magnifying glass icon "
 "next to the search bar."
 msgstr ""
+"Tampilkan penyaring kompleks dan opsi dengan mengklik pada ikon kaca "
+"pembesar di samping kolom pencarian."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
+"Tampilkan semua peluang di mana tanggal tindakan berikutnya adalah sebelum "
+"hari ini"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3617,28 +3954,30 @@ msgid ""
 "Show all opportunities with a deadline for which the next action date is "
 "before today"
 msgstr ""
+"Tampilkan semua peluang di mana deadline tanggal tindakan berikutnya adalah "
+"sebelum hari ini"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Tampilkan semua dokumen dengan aksi berikut sebelum hari ini"
+msgstr "Tampilkan semua dokumen dengan tindakan berikut sebelum hari ini"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only lead"
-msgstr "Tampilkan hanya memimpin"
+msgstr "Tampilkan hanya prospek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
-msgstr "Tampilkan hanya kesempatan"
+msgstr "Tampilkan hanya peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Skip these contacts"
-msgstr "Loncat kontak ini"
+msgstr "Lewati kontak ini"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3653,7 +3992,7 @@ msgstr "Perangkat lunak"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Solution Selling"
-msgstr ""
+msgstr "Penjualan Solusi"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -3661,6 +4000,8 @@ msgid ""
 "Some examples of lost reasons: \"We don't have people/skill\", \"Price too "
 "high\""
 msgstr ""
+"Beberapa contoh alasan gagal: \"Kita tidak memiliki SDA/keahlian\", "
+"\"Harganya terlalu tinggi\""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_source_id
@@ -3675,6 +4016,8 @@ msgid ""
 "Specific team that uses this stage. Other teams will not be able to see or "
 "use this stage."
 msgstr ""
+"Tim khusus yang menggunakan tahapan ini. Tim lain tidak akan dapat melihat "
+"atau menggunakan tahap ini."
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
@@ -3691,7 +4034,7 @@ msgstr "Tahap"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "tahap berubah"
+msgstr "Tahap yang diubah"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_stage_name
@@ -3702,12 +4045,12 @@ msgstr "Nama Tahap"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lead_stage_search
 msgid "Stage Search"
-msgstr "Tahap Pencarian"
+msgstr "Pencarian Tahap"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Perubahan tahap"
+msgstr "Tahap yang diubah"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
@@ -3719,7 +4062,7 @@ msgstr "Tahap kasus"
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 #: model:ir.ui.view,arch_db:crm.crm_stage_tree
 msgid "Stages"
-msgstr "Tahapan"
+msgstr "Tahap"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
@@ -3727,6 +4070,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
+"Tahap memungkinkan penjual untuk dengan mudah melacak bagaimana\n"
+"            posisi peluang tertentu di siklus penjualan."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -3734,7 +4079,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "State"
-msgstr "Pernyataan"
+msgstr "Status"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street
@@ -3751,12 +4096,12 @@ msgstr "Jalan ke-2..."
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Street..."
-msgstr "APA nomor jalan Maksud?"
+msgstr "Jalan..."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street2
 msgid "Street2"
-msgstr "Jalan nomor 2"
+msgstr "Jalan ke-2"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -3771,7 +4116,7 @@ msgstr "Manajemen Subskripsi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_subtype_id
 msgid "Subtype"
-msgstr "Subjenis"
+msgstr "Subtipe"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_subject
@@ -3785,12 +4130,15 @@ msgid ""
 "                        between good and great salespeople! Setup a pipeline\n"
 "                        that is in line with your sales cycle."
 msgstr ""
+"Organisasi sistemik adalah pembeda antara penjual yang baik dan luar\n"
+"                         biasa! Atur saluran yang sejalan dengan siklus\n"
+"                         penjualan Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Tag"
-msgstr "Tanda"
+msgstr "Tag"
 
 #. module: crm
 #: sql_constraint:crm.lead.tag:0
@@ -3815,26 +4163,26 @@ msgstr "Aktivitas Tim"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of emails"
-msgstr "Contoh email"
+msgstr "Template email"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of quotations (use Odoo Online Proposals for this)"
-msgstr ""
+msgstr "Template penawaran (gunakan Proposal Odoo Online untuk ini)"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:14
 #, python-format
 msgid "Territory"
-msgstr ""
+msgstr "Teritorial"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:19
 #, python-format
 msgid "The customer came back to you to discuss your quotation"
-msgstr ""
+msgstr "Pelanggan datang kembali kepada Anda untuk mendiskusikan penawaran"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -3842,11 +4190,13 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
+"Alamat email yang terkait dengan saluran ini. Email yang baru diterima "
+"secara otomatis akan membuat prospek baru untuk saluran ini."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "The first stage is usually \"New\" and the last one is \"Won\""
-msgstr ""
+msgstr "Tahap pertama biasanya adalah \"Baru\" dan yang terakhir adalah \"Berhasil\""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_model_id
@@ -3855,9 +4205,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (Odoo dokumen jenis) yang alias ini sesuai. Email masuk yang tidak "
-"menjawab catatan yang ada akan menyebabkan pembentukan rekor baru model ini "
-"(misalnya tugas proyek)"
+"Model (Jenis Dokumen Odoo) di mana alias ini dikaitkan. Email masuk yang "
+"tidak menjawab catatan yang sudah ada akan menyebabkan pembuatan rekor baru "
+"model ini (misalnya tugas proyek)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_name
@@ -3865,8 +4215,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Nama email alias, misalnya 'pekerjaan' jika Anda ingin menangkap email "
-"untuk<jobs@example.odoo.com></jobs@example.odoo.com>"
+"Nama email alias, misalnya 'pekerjaan' jika Anda ingin menangkap email untuk"
+" <jobs@example.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_partner_name
@@ -3874,8 +4224,8 @@ msgid ""
 "The name of the future partner company that will be created while converting"
 " the lead into opportunity"
 msgstr ""
-"Nama perusahaan mitra masa depan yang akan dibuat saat mengkonversi memimpin"
-" menjadi peluang"
+"Nama perusahaan rekanan yang akan datang akan dibuat saat mengkonversi "
+"prospek menjadi peluang"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_user_id
@@ -3886,20 +4236,20 @@ msgid ""
 "system user is found for that address."
 msgstr ""
 "Pemilik catatan yang dibuat setelah menerima email pada alias ini. Jika "
-"bidang ini belum menetapkan sistem akan berusaha untuk menemukan pemilik "
-"tepat berdasarkan pengirim (dari) alamat, atau akan menggunakan "
-"Administrator account jika tidak ada sistem pengguna yang ditemukan untuk "
-"alamat tersebut."
+"kolom ini belum ditetapkan, sistem akan berusaha untuk menemukan pemilik "
+"yang tepat berdasarkan pengirim (dari) alamat, atau akan menggunakan akun "
+"Administrator jika tidak ada pengguna sistem yang ditemukan untuk alamat "
+"tersebut."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "The point of contact <strong>for all your prospects</strong>"
-msgstr ""
+msgstr "Titik kontak <strong>untuk semua prospek Anda</strong>"
 
 #. module: crm
 #: sql_constraint:crm.lead:0
 msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr "Probabilitas menutup kesepakatan harus antara 0% dan 100%!"
+msgstr "Probabilitas menutup transaksi harus antara 0% dan 100%!"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3908,11 +4258,14 @@ msgid ""
 "                        <strong>methodical organization</strong>, <strong>trainings</strong> and\n"
 "                        <strong>good sales tools</strong>."
 msgstr ""
+"Tiga prinsip utama untuk membuat tim marketing adalah\n"
+"                        <strong>organisasi metodis</strong>, <strong>pelatihan</strong> dan\n"
+"                        <strong>alat penjualan yang baik</strong>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_dashboard_graph_period_pipeline
 msgid "The time period this channel's dashboard graph will consider."
-msgstr ""
+msgstr "Waktu periode grafik dasbor saluran ini akan dipertimbangkan."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3920,6 +4273,8 @@ msgid ""
 "The whole process may take a few hours. But it's worth doing\n"
 "                      it."
 msgstr ""
+"Seluruh proses dapat memakan waktu beberapa jam. Tetapi layak untuk dilakukan\n"
+"                      it."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3934,11 +4289,20 @@ msgid ""
 "\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
 msgstr ""
+"Ada beberapa cara perusahaan Anda untuk membuat prospek dengan CRM Odoo.\n"
+"                        Salah satunya menggunakan alamat email perusahaan Anda sebagai pemicu\n"
+"                        untuk membuat prospek baru pada sistem. Di Odoo, setiap saluran penjualan Anda\n"
+"                        terhubung dengan alamat emailnya sendiri darimana prospek dapat menjangkau mereka.\n"
+"                        Misalnya, jika alamat email pribadi tim Anda adalah\n"
+"                        direct@mycompany.example.com, setiap email yang dikirim ketika prospek baru\n"
+"                        menghubungi Anda akan otomatis membuat peluang baru untuk saluran penjualan tersebut.\n"
+"\n"
+"                        Itu adalah cara termudah untuk mengintegrasikan Odoo dengan aplikasi pihak ketiga."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "There is no more contacts to merge for this request..."
-msgstr "Tidak ada lagi kontak untuk menggabungkan untuk permintaan ini ..."
+msgstr "Tidak ada lagi kontak yang dapat digabungkan untuk permintaan ini..."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_email_cc
@@ -3947,15 +4311,14 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
-"Email ini akan di tambahkan ke kolom CC dari semua email masuk dan keluar "
-"sebagai arsip sebelum di kirim. Alamat email yang banyak akan dipisahkan "
-"dengan koma."
+"Email ini akan ditambahkan ke kolom CC dari semua email masuk dan keluar "
+"untuk catatan ini sebelum dikirim. Pisahkan alamat email dengan koma."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "This Month"
-msgstr "Bulan"
+msgstr "Bulan Ini"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3963,11 +4326,13 @@ msgid ""
 "This email address has been preconfigured as the default\n"
 "                                    for your sales department.<br/>"
 msgstr ""
+"Alamat email ini telah dikonfigurasikan sebagai standar\n"
+"                                    untuk departemen penjualan.<br/>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "This is the default configuration, there is nothing to setup."
-msgstr ""
+msgstr "Ini adalah konfigurasi standar, tidak ada yang perlu diatur."
 
 #. module: crm
 #. openerp-web
@@ -3976,6 +4341,8 @@ msgstr ""
 msgid ""
 "This opportunity has <b>no activity planned</b>. <i>Click to check them.</i>"
 msgstr ""
+"Peluang ini tidak memiliki <b>aktivitas yang direncanakan</b>. <i>Klik untuk"
+" memeriksa.</i>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -3983,13 +4350,13 @@ msgid ""
 "This percentage depicts the default/average probability of the Case for this"
 " stage to be a success"
 msgstr ""
-"Persentase ini menggambarkan default / probabilitas rata-rata Case untuk "
-"tahap ini untuk menjadi sukses"
+"Persentase ini menggambarkan standar/probabilitas rata-rata kasus ini untuk "
+"tahap ini menjadi berhasil"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This report analyses the source of your leads."
-msgstr ""
+msgstr "Laporan ini menganalisis sumber prospek Anda."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold
@@ -3997,8 +4364,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Tahap ini dilipat di tampilan kanban ketika tidak ada catatan dalam tahap "
-"itu untuk menampilkan."
+"Tahap ini disembunyikan pada tampilan kanban ketika tidak ada catatan dalam "
+"tahap itu untuk ditampilkan."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1052
@@ -4009,12 +4376,12 @@ msgstr "Target tidak ada."
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Time to Close a Deal"
-msgstr "Saatnya untuk Menutup Kesepakatan"
+msgstr "Saatnya untuk Menutup Transaksi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Time to Qualify a Lead"
-msgstr "Waktu untuk memenuhi syarat memimpin"
+msgstr "Saatnya Mengkualifikasi Prospek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_title
@@ -4030,6 +4397,9 @@ msgid ""
 "applied to it. This is settable in the pricelist configuration if you allow "
 "discounts."
 msgstr ""
+"Untuk merangsang pelanggan Anda, tunjukkan kepada mereka harga publik dan "
+"diskon yang diterapkan untuk harga itu. Ini dapat diatur dalam konfigurasi "
+"daftar harga jika Anda mengijinkan diskon."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4040,17 +4410,17 @@ msgstr "Aktivitas Hari ini"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_1
 msgid "Too expensive"
-msgstr ""
+msgstr "Terlalu mahal"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_total_revenue
 msgid "Total Revenue"
-msgstr "Pendapatan total"
+msgstr "Pendapatan Total"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
-msgstr "pelacakan"
+msgstr "Pelacakan"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor6
@@ -4069,29 +4439,29 @@ msgstr "Tipe"
 #: model:ir.model.fields,help:crm.field_crm_lead_type
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Jenis ini digunakan untuk Memimpin dan Peluang terpisah"
+msgstr "Tipe digunakan untuk memisahkan Prospek dan Peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "USD, EUR, GBP"
-msgstr ""
+msgstr "USD, EUR, GBP"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unassigned"
-msgstr "Tak dikegiatankan"
+msgstr "Tak diserah-tugaskan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Lead"
-msgstr ""
+msgstr "Prospek tak diserah-tugaskan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_unassigned_leads_count
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Leads"
-msgstr ""
+msgstr "Prospek tak diserah-tugaskan"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:211
@@ -4119,12 +4489,12 @@ msgstr "Pesan yang belum dibaca"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date
 msgid "Update Date"
-msgstr "Pembaharuan Tanggal"
+msgstr "Tanggal Pembaharuan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Upsell more to existing customers"
-msgstr ""
+msgstr "Jual lebih kepada pelanggan yang sudah ada"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4134,12 +4504,12 @@ msgstr "Gunakan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Use an External Email Server"
-msgstr ""
+msgstr "Gunakan Server Email Eksternal"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner.mass,action:0
 msgid "Use existing partner or create"
-msgstr "Gunakan mitra yang ada atau membuat"
+msgstr "Gunakan rekanan yang sudah ada atau membuat"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
@@ -4150,11 +4520,15 @@ msgid ""
 "                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
+"Gunakan prospek jika Anda memerlukan tahap kualifikasi sebelum membuat\n"
+"                    peluang atau pelanggan. Dapat berupa kartu nama yang Anda terima,\n"
+"                    formulir kontak yang diisi dari situs web Anda, atau berkas yang tidak memenuhi\n"
+"                    syarat prospek impor Anda, dll."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Use lost reasons to explain why an opportunity is lost."
-msgstr ""
+msgstr "Gunakan alasan gagal untuk menjelaskan kenapa peluang ini gagal."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -4162,11 +4536,15 @@ msgid ""
 "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
 msgstr ""
+"Gunakan peluang untuk melacak saluran penjualan Anda, follow up\n"
+"               potensi penjualan dan ramalkan penjualan Anda dengan lebih baik."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Use our import templates to get your catalog ready in no time!"
 msgstr ""
+"Gunakan template impor kami untuk menyiapkan katalog Anda dalam waktu "
+"singkat!"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4176,6 +4554,10 @@ msgid ""
 "                                            annual support contract, monthly\n"
 "                                            subscription to a service, etc."
 msgstr ""
+"Gunakan subskripsi untuk penagihan berkala.\n"
+"                                            Contoh subskripsi:\n"
+"                                            kontrak bantuan tahunan, bulanan\n"
+"                                            subskripsi jasa, dll."
 
 #. module: crm
 #. openerp-web
@@ -4183,23 +4565,24 @@ msgstr ""
 #, python-format
 msgid "Use the <b>implementation guide</b> to setup the CRM in your company."
 msgstr ""
+"Gunakan <b>panduan implementasi</b> untuk mengatur CRM di perusahaan Anda."
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:65
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
-msgstr ""
+msgstr "Gunakan remah roti <b>kembali ke saluran penjualan Anda</b>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_user_login
 msgid "Used to log into the system"
-msgstr "Digunakan untuk masuk ke sistem"
+msgstr "Digunakan untuk log masuk ke sistem"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_sequence
 msgid "Used to order stages. Lower is better."
-msgstr "Digunakan untuk memesan tahap. Lebih rendah lebih baik."
+msgstr "Digunakan untuk mengurutkan tahap. Lebih rendah lebih baik."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_user_id
@@ -4224,17 +4607,17 @@ msgstr "Pengguna"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_vat
 msgid "VAT"
-msgstr "VAT"
+msgstr "PPN"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "VIP letter to potential sponsors"
-msgstr ""
+msgstr "Surat VIP untuk sponsor potensial"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Very High"
-msgstr "Sangat keras"
+msgstr "Sangat Tinggi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4242,17 +4625,21 @@ msgid ""
 "We are here to help you. If you get stuck, do not hesitate to\n"
 "                      reach our"
 msgstr ""
+"Kami di sini untuk membantu Anda. Jika Anda terhambat, jangan ragu\n"
+"                      untuk menghubungi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "We can add fields related to your business on any screen, for example"
 msgstr ""
+"Kami dapat menambahkan kolom yang berhubungan dengan bisnis Anda pada "
+"tampilan manapun, sebagai contoh"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "We can automate steps in your workflow, for example:"
 msgstr ""
-"We dapat mengotomatisasi langkah-langkah dalam alur kerja Anda, misalnya:"
+"Kami dapat mengotomatisasi langkah-langkah dalam alur kerja Anda, misalnya:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4262,8 +4649,9 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
-"Kami dapat menangani proses impor seluruh untuk Anda: cukup kirim Odoo "
-"proyek manajer file CSV yang berisi semua data Anda."
+"Kami dapat menangani seluruh proses impor untuk Anda:\n"
+"                                       cukup kirim proyek manajer Odoo file CSV yang\n"
+"                                       berisi semua data Anda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4271,6 +4659,8 @@ msgid ""
 "We can implement custom reports for you based on your Word templates, for "
 "example:"
 msgstr ""
+"Kami dapat mengimplementasikan laporan kustom untuk Anda berdasarkan "
+"template Word, sebagai contoh:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4279,16 +4669,21 @@ msgid ""
 "                      is not just a tool, we want it to have a major impact on your\n"
 "                      sales performance. That's our mission, and we are serious about it."
 msgstr ""
+"Kami mendesain Odoo untuk membantu menumbuhkan bisnis Anda. CRM Odoo\n"
+"                      bukan hanya alat, kami ingin CRM Odoo memiliki dampak besar\n"
+"                      terhadap performa penjualan Anda. Itu adalah misi kami, dan kami serius menjalaninya."
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
 msgid "We don't have people/skills"
-msgstr ""
+msgstr "Kita tidak memiliki SDA/keahlian"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "We hope this process helped you bring your sales vision to life."
 msgstr ""
+"Kami harap proses ini membantu Anda mewujudkan visi penjualan Anda ke dunia "
+"nyata."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website
@@ -4298,7 +4693,7 @@ msgstr "Situs Web"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website
 msgid "Website of the contact"
-msgstr ""
+msgstr "Situs web kontak"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4316,12 +4711,14 @@ msgid ""
 "What <strong>kind of proposals</strong> do you usually send to your "
 "customers ?"
 msgstr ""
+"Seperti apa <strong>jenis proposal</strong> yang biasanya Anda kirim ke "
+"pelanggan Anda?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "What are the main KPIs you need to track for your the sales activities?"
-msgstr ""
+msgstr "Apa KPI utama yang perlu Anda lacak untuk saluran penjualan Anda?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4330,6 +4727,9 @@ msgid ""
 "                        dealing with? Being clear on your expectations is the first step\n"
 "                        of a successful implementation."
 msgstr ""
+"Apa objektif penjualan Anda? Perubahan apa yang Anda\n"
+"                        hadapi? Memperjelas ekspektasi Anda adalah langkah pertama\n"
+"                        dari implementasi yang sukses."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4338,6 +4738,10 @@ msgid ""
 "you with a list of matching contacts or companies.When selecting one item, "
 "the partner name, logo and website get automatically set."
 msgstr ""
+"Ketika mengisi buku alamat Anda, Odoo bergantung pada Clearbit API untuk "
+"menyediakan Anda dengan daftar kontak atau perusahaan yang cocok. Ketika "
+"memilih salah satu item, nama rekanan, logo, dan situs web akan otomatis "
+"diatur."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_team_id
@@ -4345,31 +4749,32 @@ msgid ""
 "When sending mails, the default email address is taken from the sales "
 "channel."
 msgstr ""
+"Saat mengirim email, alamat email standar diambil dari saluran penjualan."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Win / Loss Ratio"
-msgstr "Rasio Menang / Kalah"
+msgstr "Rasio Berhasil/Gagal"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Month"
-msgstr ""
+msgstr "Dalam Sebulan"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Week"
-msgstr ""
+msgstr "Dalam Seminggu"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Year"
-msgstr ""
+msgstr "Dalam Setahun"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_wizard_id
 msgid "Wizard"
-msgstr "Wizard"
+msgstr "Wisaya"
 
 #. module: crm
 #. openerp-web
@@ -4386,23 +4791,23 @@ msgstr "Wizard"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Won"
-msgstr "Menang"
+msgstr "Berhasil"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_country
 msgid "Won By Country"
-msgstr ""
+msgstr "Keberhasilan Berdasarkan Negara"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_won
 msgid "Won in Opportunities Target"
-msgstr ""
+msgstr "Keberhasilan di Target Peluang"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:383
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
-msgstr ""
+msgstr "Ya! Transaksi 7 hari terakhir dari tim."
 
 #. module: crm
 #. openerp-web
@@ -4412,12 +4817,14 @@ msgid ""
 "You are in discussion with the decision maker and HE agreed on his pain "
 "points"
 msgstr ""
+"Anda berdiskusi dengan para pembuat keputusan dan dia setuju pada poin "
+"keterbatasannya"
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:270
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
+msgstr "Anda tidak dapat menggabungkan kontak dengan salah satu induknya."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4427,6 +4834,10 @@ msgid ""
 "                            identify why they were lost and use this information to generate statistics. Here are\n"
 "                            some examples of tags to create: no budget, competition, no pain found, etc."
 msgstr ""
+"Anda tidak perlu meninjau peluang yang gagal pada setiap pertemuan marketing, tapi pertemuan ini\n"
+"                           adalah kebiasaan yang bagus dilakukan setidaknya sekali sebulan. Tanya tim Anda untuk mengatur tag pada peluang untuk\n"
+"                           mengidentifikasi kenapa peluang tersebut gagal dan gunakan informasi ini untuk membuat statistik. Berikut ini\n"
+"                           beberapa contoh tag yang dibuat: tidak ada anggaran, kompetisi, tidak ada poin keterbatasan, dll."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:362
@@ -4438,13 +4849,13 @@ msgstr "Anda harus menentukan filter untuk pilihan Anda"
 #: code:addons/crm/models/crm_lead.py:385
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
-msgstr ""
+msgstr "Anda baru saja mengalahkan rekor pribadi Anda dalam 30 hari terakhir"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:387
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
-msgstr ""
+msgstr "Anda baru saja mengalahkan rekor pribadi Anda dalam 7 hari terakhir"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4453,6 +4864,9 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
+"Anda dapat merencanakan pertemuan dan membuat log aktivitas dari\n"
+"                   peluang, mengkonversi mereka ke penawaran, melampirkan\n"
+"                   dokumen terkait, melacak diskusi, dan masih banyak lagi."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -4461,6 +4875,9 @@ msgid ""
 "                opportunities, convert them into quotations, attach related\n"
 "                documents, track all discussions, and much more."
 msgstr ""
+"Anda dapat merencanakan pertemuan dan membuat log aktivitas dari\n"
+"                peluang, mengkonversi mereka ke penawaran, melampirkan\n"
+"                dokumen terkait, melacak diskusi, dan masih banyak lagi."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities
@@ -4470,11 +4887,14 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
+"Anda dapat merencanakan pertemuan dan panggilan telepon dari\n"
+"                  peluang, mengkonversi mereka ke penawaran, melampirkan\n"
+"                  dokumen terkait, melacak diskusi, dan masih banyak lagi."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your Expectations"
-msgstr "Ekspetasi Anda"
+msgstr "Ekspektasi Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4489,7 +4909,7 @@ msgstr "LinkedIn atau halaman media sosial Anda"
 #. module: crm
 #: model:mail.template,subject:crm.mail_template_data_module_install_crm
 msgid "Your Odoo CRM application is running smoothly."
-msgstr ""
+msgstr "Aplikasi Odoo CRM Anda berjalan lancar."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4499,12 +4919,12 @@ msgstr "Kartu nama Anda"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your document templates"
-msgstr "Contoh Dokumen Anda"
+msgstr "Template Dokumen Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your website"
-msgstr "Website Anda"
+msgstr "Situs Web Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -4515,12 +4935,12 @@ msgstr "Kode Pos"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_zip
 msgid "Zip"
-msgstr "KodePos"
+msgstr "Kode Pos"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "additional 10% during summer sales"
-msgstr ""
+msgstr "tambahan 10% selama penjualan musim panas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4530,7 +4950,7 @@ msgstr "aplikasi."
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "as an exercise"
-msgstr "sebagai sebuah latihan"
+msgstr "sebagai latihan"
 
 #. module: crm
 #: model:ir.model,name:crm.model_base_partner_merge_automatic_wizard
@@ -4550,29 +4970,29 @@ msgstr "lihat dokumentasi"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "e.g. 15% discount when buying more than 3 t-shirts"
-msgstr ""
+msgstr "mis. diskon 15% ketika membeli 3 t-shirt"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "e.g. Customer Deal"
-msgstr ""
+msgstr "mis. Transaksi Pelanggan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. Product Pricing"
-msgstr "misal. Harga Produk"
+msgstr "mis. Harga Produk"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. www.odoo.com"
-msgstr "misalnya: www.odoo.com"
+msgstr "mis: www.odoo.com"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:912
 #, python-format
 msgid "opportunities"
-msgstr "Peluang"
+msgstr "peluang"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4587,17 +5007,17 @@ msgstr "res.config.settings"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "send us an email"
-msgstr "Kirim email"
+msgstr "kirim email kepada kami"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "support team"
-msgstr "tim support"
+msgstr "tim bantuan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "survey"
-msgstr "survey"
+msgstr "survei"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4607,17 +5027,18 @@ msgstr "daftar pelanggan"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "to create internal challenge for your salesmen"
-msgstr ""
+msgstr "buat tantangan internal untuk penjual Anda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "to create tests and certifications."
-msgstr ""
+msgstr "buat tes dan sertifikasi."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "to describe<br/> your experience or to suggest improvements!"
-msgstr "untuk menceritakan<br/> pengalaman Anda atau menyarakan perbaikan!"
+msgstr ""
+"untuk mendeskripsikan<br/> pengalaman Anda atau menyarankan perbaikan!"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4625,6 +5046,8 @@ msgid ""
 "to organize all your documents like: customer presentations, product sheets,"
 " comparisons with competitors, pain points sheets, training materials, etc."
 msgstr ""
+"mengelola semua dokumen Anda, seperti: presentasi pelanggan, lembar produk, "
+"perbandingan dengan saingan, lembar poin keterbatasan, bahan pelatihan, dll."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4632,19 +5055,21 @@ msgid ""
 "to setup your own domain\n"
 "                                 name (e.g. sales@yourcompany.com)"
 msgstr ""
+"untuk mengatur nama domain Anda sendiri\n"
+"                                 (mis. sales@yourcompany.com)"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:918
 #, python-format
 msgid "unknown"
-msgstr "tak dikenal"
+msgstr "tak diketahui"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "use Odoo API to import through scripts"
-msgstr ""
+msgstr "gunakan API Odoo untuk mengimpor melalui skrip"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
-msgstr "dengan kinerja anda diatas"
+msgstr "dengan kinerja anda di atas"
