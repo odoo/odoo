@@ -2,17 +2,12 @@
 # This file contains the translation of the following modules:
 # * account_check_printing
 # 
-# Translators:
-# krnkris, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
-# Martin Trigaux, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Martin Trigaux, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,13 +19,18 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:58
 #, python-format
 msgid " : Check Number Sequence"
-msgstr " : Csekk szám sorrendje"
+msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:71
+#: code:addons/account_check_printing/models/account_payment.py:63
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
-msgstr "Egy csekk feljegyzés nem lehet hosszabb 60 karakternél."
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -43,25 +43,23 @@ msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
 msgstr ""
-"a létrehozott csekkek margóinak igazítása a printer beállításoknak "
-"megflelően."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_amount_in_words
 msgid "Amount in Words"
-msgstr "Összeg szavakkal"
+msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
-msgstr "Mégse"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr "Csekk elrendezése"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -73,17 +71,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_number
 msgid "Check Number"
-msgstr "Csekk szám"
+msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr "Csekk nyomtatás"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
 msgid "Check Printing Payment Method Selected"
-msgstr "Csekk fizetési mód  nyomtatás kiválasztva"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
@@ -93,7 +91,7 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
 msgid "Check Sequence"
-msgstr "Csekk sorrend"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
@@ -107,44 +105,42 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
 msgstr ""
-"Válassza ezt a lehetőséget  ha az előre kinyomtatott csekkjei nincsenek "
-"sorszámozva."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr "Nyomtatásra váró csekk"
+msgstr ""
 
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "Csekkek"
+msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 msgid "Checks To Print"
-msgstr "Nyomtatásra váró csekkek"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "Csekkek sorszámozási sorrendje"
+msgstr ""
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:97
 #, python-format
 msgid "Checks to Print"
-msgstr "Nyomtatásra váró csekkek"
+msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Checks to print"
-msgstr "Nyomtatásra váró csekkek"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_company
 msgid "Companies"
-msgstr "Vállalatok"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
@@ -152,83 +148,81 @@ msgid "Company Country code"
 msgstr ""
 
 #. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:91
+#: code:addons/account_check_printing/models/account_payment.py:84
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
 msgstr ""
-"Több csekk egyszeri kötegelt nyomtatásához a csekkeknek azonos banki "
-"naplóhoz kell tartozniuk."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
-msgstr "Napló"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Manual Numbering"
-msgstr "Kézi sorszámozás"
-
-#. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_bank_journal_form_inherited_check_printing
-msgid "Manual Numbering of check"
-msgstr "Csekk kézi sorszámozása"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr "Több-oldalas csekk szelvény"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
 msgid "Next Check Number"
-msgstr "Következő csekk száma"
+msgstr ""
 
 #. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "None"
-msgstr "Egyik sem"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_number
@@ -237,46 +231,41 @@ msgid ""
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
 msgstr ""
-"Csekk szám ami az ide vonatkozó kifizetéshez tartozik. Ha az előre "
-"nyomtatott csekk még nem sorszámozott, a sorszámozást kezelheti a napló "
-"beállítási oldalon."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr "Vevői befizetések"
+msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:88
+#: code:addons/account_check_printing/models/account_payment.py:81
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Csekkel történő kifizetéshez a kifizetés módjának 'Csekk' kell legyen, és "
-"még nem szabad lekönyveltetnek lennie"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr "Kérem adja meg az első, elő-nyomtatásra szánt csekk számát."
+msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Print"
-msgstr "Nyomtatás"
+msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Print Check"
-msgstr "Csekk nyomtatása"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
-msgstr "Csekkek nyomtatása"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
@@ -285,17 +274,17 @@ msgid "Print Date Label"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:101
+#: code:addons/account_check_printing/models/account_payment.py:94
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "Előre számozott csekkek nyomtatása"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_register_payments
-msgid "Register payments on multiple invoices"
-msgstr " Több számlára történt befizetések rögzítése"
+msgid "Register Payments"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -309,13 +298,11 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Válassza a csekk papírral megegyező formátumot, melyre a csekket nyomtatni fogja.\n"
-"A nyomtatási tulajdonság kikapcsolásához válassza az 'Nincs' -et."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "A következő nyomtatandó csekk sorszáma."
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -323,8 +310,6 @@ msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
 msgstr ""
-"Műszaki tulajdonság annak ismertetésére, hogy a csekk nyomtatás   fizetési "
-"módként került beállításra."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
@@ -332,8 +317,6 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"Kétbetűs ISO országkód.\n"
-"Ezt a mezőt a gyors kereséshez használhatja."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:26
@@ -342,8 +325,6 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
-"Az utolsó csekkszám ez volt %s. Annak elkerülésére, hogy a bank ne elfogadja"
-" a csekket, csak nagyobb számot haználhat."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -352,10 +333,6 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
-"A kiválasztott napló a csekkszámok nyomtatására használja. Ha az előre "
-"nyomtatott csekkek papírja már tartalmaz számokat, vagy ha a jelenlegi "
-"számozás nem megfelelő, Akkor azt megváltoztathatja a napló beállításai "
-"oldalán."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -364,8 +341,6 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
-"Ez az opció lehetővé teszi a csekk részletek (szelvény) kinyomtatását több "
-"oldalra, ha nem fér rá egyre."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -380,15 +355,14 @@ msgstr ""
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
 msgstr ""
-"Ez lehetővé teszi a kifizetéseken rögzíteni az idevonatkozó csekk számait."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr "Jelöletlen elküldve"
+msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:123
+#: code:addons/account_check_printing/models/account_payment.py:116
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "
@@ -409,13 +383,3 @@ msgstr ""
 #: selection:res.company,account_check_printing_layout:0
 msgid "check on top"
 msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"

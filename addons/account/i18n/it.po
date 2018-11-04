@@ -3,37 +3,38 @@
 # * account
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Davide Corio <enlightx@gmail.com>, 2018
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# Paolo Valier, 2018
-# David Minneci <david@numeko.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
-# Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
-# Luigi Di Naro <gigidn@gmail.com>, 2018
 # Christian <chris@effeci.info>, 2018
 # Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
 # Daniele Faraglia <daniele.faraglia@gmail.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
-# maiolif <maiolif@mgftools.com>, 2018
 # p_amoruso <p.amoruso@elvenstudio.it>, 2018
-# Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018
-# Cécile Collart <cco@odoo.com>, 2018
-# Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
+# Davide Corio <enlightx@gmail.com>, 2018
+# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
-# efraimbiffi <eab@odoo.com>, 2018
+# Luigi Di Naro <gigidn@gmail.com>, 2018
+# Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018
+# Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
+# maiolif <maiolif@mgftools.com>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
+# Cécile Collart <cco@odoo.com>, 2018
+# Simone Bernini <simone@aperturelabs.it>, 2018
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Federico Castellano <castellano.federico@outlook.com>, 2018
+# David Minneci <david@numeko.it>, 2018
+# Paolo Valier, 2018
+# efraimbiffi <eab@odoo.com>, 2018
+# Martin Trigaux, 2018
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Federico Castellano <castellano.federico@outlook.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,11 +51,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * Lo stato «Bozza» viene usato per impostare nuove fatture da confermare in seguito.\n"
-" * Lo stato «Aperto»  identifica fatture alle quali è stato assegnato un numero ma che non sono ancora state pagate.\n"
+" * Lo stato «Bozza» viene usato in presenza di una nuova fattura non ancora confermata.\n"
+" * Lo stato «Aperta» si usa quando alla fattura creata viene assegnato un numero. Lo stato permane finché non viene pagata.\n"
 " * Lo stato «In pagamento» è usato quando i pagamenti sono stati registrati in un libro contabile per l'intero ammontare della fattura, ma alcune registrazioni non sono ancora state riconciliate con la banca.\n"
-" * Lo stato «Pagato» è impostato automaticamente dopo il pagamento della fattura, a prescindere dalla riconciliazione delle relative registrazioni contabili.\n"
-" * Lo stato «Annullato» viene usato dopo l'annullamento di una fattura."
+" * Lo stato «Pagata» è impostato automaticamente dopo il pagamento della fattura, a prescindere dalla riconciliazione delle relative registrazioni contabili.\n"
+" * Lo stato «Annullata» viene usato dopo l'annullamento di una fattura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -384,7 +385,7 @@ msgid ""
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
 "<span class=\"o_form_label\">Le registrazioni contabili selezionate saranno "
-"tutte convalidate e generate. Non sarà più possibile modificarle.</span>"
+"tutte confermate e generate. Non sarà più possibile modificarle.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -449,7 +450,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
-msgstr "<span name=\"button_import_placeholder\"/>Rendiconti"
+msgstr "<span name=\"button_import_placeholder\"/> Estratti conto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -749,15 +750,16 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"Un estratto conto bancario e' il riepilogo di tutte le operazioni\n"
-"\t\tavvenute in un periodo di tempo in un conto bancario\n"
-"\t\tgeneralmente si riceve periodicamente dalla banca."
+"Un estratto conto bancario è un riepilogo di tutte le transazioni\n"
+"                finanziarie avvenute in un determinato periodo di tempo su un\n"
+"                conto bancario. La banca dovrebbe inviarlo periodicamente."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
 msgstr ""
-"Una riga di rendiconto è una transazione finanziaria su un conto bancario"
+"Una riga di estratto conto è una transazione finanziaria su un conto "
+"bancario"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -809,14 +811,14 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:530
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "Una delle righe selezionate e' gia' stata selezionata."
+msgstr "Una riga di movimento selezionata è già stata riconciliata."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:538
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
 msgstr ""
-"Una delle righe dell'estratto conto e' gia' stata riconciliata con un "
+"Una riga di estratto conto selezionata è già stata riconciliata con un "
 "movimento contabile."
 
 #. module: account
@@ -1003,7 +1005,7 @@ msgstr "Origine"
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_graph_date
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_graph_date_cash_basis
 msgid "Account Statistics"
-msgstr "Statistiche"
+msgstr "Statistiche conto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
@@ -1116,7 +1118,7 @@ msgstr "Conto su prodotto"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr ""
+msgstr "Report di conto co righe di pagamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
@@ -1218,7 +1220,7 @@ msgstr "Scritture contabili"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Overview"
-msgstr ""
+msgstr "Panoramica della contabilità"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1257,7 +1259,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_payment__message_needaction
 msgid "Action Needed"
-msgstr "Azione Necessaria"
+msgstr "Necessaria azione"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -1294,7 +1296,7 @@ msgstr "Attività"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_state
 msgid "Activity State"
-msgstr "Stato delle Attività"
+msgstr "Stato attività"
 
 #. module: account
 #. openerp-web
@@ -1613,7 +1615,7 @@ msgstr "Importo totale (tasse escluse)"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_currency
 msgid "Amount Currency"
-msgstr "Importo valuta"
+msgstr "Valuta importo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__amount_rounding
@@ -2037,7 +2039,7 @@ msgstr "Auto-rilevazione"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__auto_reconcile
 msgid "Auto-validate"
-msgstr "Convalidare automaticamente"
+msgstr "Confermare automaticamente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2121,7 +2123,8 @@ msgstr "Stato Patrimoniale"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
-msgstr "Totale saldo apertura e movimenti"
+msgstr ""
+"Saldo calcolato in base al saldo di apertura e alle righe delle transazioni"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -2238,7 +2241,7 @@ msgstr "Estratto conto bancario"
 #: code:addons/account/models/account_bank_statement.py:591
 #, python-format
 msgid "Bank Statement %s"
-msgstr "Rendiconto bancario %s"
+msgstr "Estratto conto bancario %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
@@ -2413,7 +2416,7 @@ msgstr "Fatture da pagare"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Fatture da validare"
+msgstr "Fatture da confermare"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
@@ -2948,8 +2951,8 @@ msgid ""
 "Click to <b>validate your invoice.</b> A reference will be assigned to this "
 "invoice and you will not be able to modify it anymore."
 msgstr ""
-"Clicca per <b>validare la fattura.</b>  Una numero di referenza sarà "
-"assegnato a questa fattura e non potrà essere più modificata. "
+"Fare clic per <b>confermare la fattura.</b> Verrà assegnato un numero alla "
+"fattura e non sarà più possibile modificarla."
 
 #. module: account
 #. openerp-web
@@ -4789,7 +4792,7 @@ msgstr "Followers (Partner)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_ids
 msgid "For Incoming Payments"
-msgstr "Pagamenti in entrata"
+msgstr "Per pagamenti in entrata"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_ids
@@ -5435,7 +5438,7 @@ msgstr "Importazione estratti conto in QIF"
 #: selection:account.invoice,state:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In Payment"
-msgstr "In Pagamenti"
+msgstr "In pagamento"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:345
@@ -5766,7 +5769,7 @@ msgstr "La fattura va annullata per poterla riportare in bozza."
 #: code:addons/account/models/account_invoice.py:893
 #, python-format
 msgid "Invoice must be in draft state in order to validate it."
-msgstr "La fattura dev'essere in bozza per poter essere resa definitiva"
+msgstr "Per essere confermata, la fattura deve trovarsi nello stato «Bozza»."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:920
@@ -5797,7 +5800,7 @@ msgstr "Fattura Inviata & Stampata"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "Fattura validata"
+msgstr "Fattura confermata"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -5865,7 +5868,7 @@ msgstr "Crediti per saldi fatture"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr "Fattura da Confermare"
+msgstr "Fatture da confermare"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
@@ -7396,7 +7399,7 @@ msgstr ""
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Open"
-msgstr "Aperto"
+msgstr "Aperta"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:274
@@ -7626,7 +7629,7 @@ msgstr "Pacchetto"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
-msgstr "Pagato"
+msgstr "Pagata"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:545
@@ -10411,7 +10414,7 @@ msgid ""
 "The field Vendor is required, please complete it to validate the Vendor "
 "Bill."
 msgstr ""
-"Il campo fornitore è obbligatorio, compilarlo per validare la fattura."
+"Il campo fornitore è obbligatorio, compilarlo per confermare la fattura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -11045,8 +11048,8 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
 msgstr ""
-"Questo wizard validera' tutte le operazioni selezionate. Una volta validate "
-"non si potranno piu' aggiornare."
+"Questa procedura confermerà tutte le registrazioni contabili selezionate. "
+"Non sarà più possibile effettuare aggiornamenti."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -11489,9 +11492,10 @@ msgid ""
 "                                with the current invoice. A new draft invoice will be created\n"
 "                                so that you can edit it."
 msgstr ""
-"Usare questa opzione per annullare una fattura e crearne una nuova\n"
-"\t\tVerra' creata, validata e riconciliata la nota di credito con questa\n"
-"\t\tfattura. Verra' creata una nuova fattura in bozza, modificabile."
+"Usare questa opzione per annullare una fattura e crearne una nuova.\n"
+"                                Verrà generata una nota di credito confermata e riconciliata con\n"
+"                                la fattura attuale, quindi verrà creata una nuova fattura in\n"
+"                                bozza da modificare."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -11574,12 +11578,12 @@ msgstr "IVA richiesta"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr "Validare"
+msgstr "Conferma"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "Validazione movimento contabile"
+msgstr "Conferma movimenti contabili"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__auto_reconcile
@@ -11588,12 +11592,14 @@ msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
 msgstr ""
+"Conferma automaticamente la riga di estratto conto (riconciliazione basata "
+"su regole personali)."
 
 #. module: account
 #: selection:account.bank.statement,state:0
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr "Validato"
+msgstr "Confermata"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
@@ -11620,20 +11626,20 @@ msgstr "Fornitore"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Bill"
-msgstr "Fattura di acquisto"
+msgstr "Fattura fornitore"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:489
 #, python-format
 msgid "Vendor Bill - %s"
-msgstr "Fattura di acquisto - %s"
+msgstr "Fattura fornitore - %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:410
 #: model:ir.actions.act_window,name:account.action_vendor_bill_template
 #, python-format
 msgid "Vendor Bills"
-msgstr "Fatture di acquisto"
+msgstr "Fatture fornitore"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -11659,7 +11665,7 @@ msgstr "Nota di credito fornitore"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__vendor_display_name
 msgid "Vendor Display Name"
-msgstr ""
+msgstr "Nome fornitore visualizzato"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:774
@@ -11677,7 +11683,7 @@ msgstr "Termini di pagamento fornitore"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Vendor Payments"
-msgstr ""
+msgstr "Pagamenti fornitore"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -11694,7 +11700,7 @@ msgstr "Imposte fornitore"
 #: model:ir.ui.menu,name:account.menu_finance_payables
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Vendors"
-msgstr "Fornitore"
+msgstr "Fornitori"
 
 #. module: account
 #. openerp-web
@@ -11739,7 +11745,7 @@ msgstr "Avvisi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_warning_account
 msgid "Warnings in Invoices"
-msgstr ""
+msgstr "Avvisi nelle fatture"
 
 #. module: account
 #: code:addons/account/models/company.py:518
@@ -11808,7 +11814,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__amount_currency
 #: model:ir.model.fields,field_description:account.field_account_print_journal__amount_currency
 msgid "With Currency"
-msgstr "Con valuta."
+msgstr "Con valuta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -11897,9 +11903,9 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"Puoi definire la comunicazione predefinita che apparirà sulle fatture del "
-"cliente, una volta convalidate, par aiutare il cliente a riferirsi a una "
-"fattura al momento del pagamento."
+"Qui è possibile inserire la comunicazione predefinita che comparirà nelle "
+"fatture dopo la conferma, per fornire al cliente un riferimento a una "
+"specifica fattura al momento del pagamento."
 
 #. module: account
 #: code:addons/account/models/account_move.py:370
@@ -11966,7 +11972,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:583
 #, python-format
 msgid "You cannot delete a payment that is already posted."
-msgstr "Non è possibile eliminare un pagamento già registrato."
+msgstr "Impossibile eliminare un pagamento già registrato."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:729
@@ -11976,9 +11982,9 @@ msgid ""
 "number). You can set it back to \"Draft\" state and modify its content, then"
 " re-confirm it."
 msgstr ""
-"Non si puo' eliminare una fattura dopo che e' stata validata ed ha ricevuto "
-"un numero. Si puo' riportarla a bozza e modificarne il contenuto, e poi "
-"riconfermarla."
+"Impossibile eliminare una fattura che è stata confermata (ricevendo un "
+"numero). Reimpostarla allo stato \"Bozza\" e modificarne il contenuto, "
+"quindi riconfermarla."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:727
@@ -12153,8 +12159,8 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead."
 msgstr ""
-"Non puoi validare una fattura con un importo totale negativo. Devi invece "
-"creare una nota di credito."
+"Impossibile confermare una fattura con un importo totale negativo. Creare "
+"invece una nota di credito."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -12240,10 +12246,10 @@ msgid ""
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
 msgstr ""
-"Si potra' modificare e validare questa\n"
-"\t\tnota di credito direttamente o tenerla\n"
-"\t\tin bozza, in attesa dell'emissione da parte\n"
-"\t\tdel fornitore/cliente."
+"Sarà possibile modificare e confermare\n"
+"                                direttamente questa nota di credito o\n"
+"                                tenerla in bozza, in attesa che il documento venga\n"
+"                                emesso dal fornitore/cliente."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

@@ -3,21 +3,22 @@
 # * mrp
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
 # Melroy van den Berg <webmaster1989@gmail.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -384,6 +385,8 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
+"Een demontageorder wordt gebruikt om een gereed product in zijn componenten "
+"op te splitsen."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attribute_value_ids
@@ -536,6 +539,8 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
+"Stuklijsten staan u toe om een lijst van rauwe materialen te\n"
+"definiëren die gebruikt wordt om een afgewerkt product te maken; door een productieorder of een pak van producten."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -615,12 +620,12 @@ msgstr "Stuklijststructuur"
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr "Stuklijststructuur & kost"
+msgstr "Stuklijststructuur & kosten"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Structure &amp; Cost"
-msgstr "Stuklijststructuur &amp; kost"
+msgstr "Stuklijststructuur &amp; kosten"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -980,6 +985,8 @@ msgstr "Definieert de planning van de resource"
 msgid ""
 "Defines when a Manufacturing Order is considered as ready to be started"
 msgstr ""
+"Definieert wanneer een productieorder wordt beschouwd als klaar om te worden"
+" gestart"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
@@ -1085,7 +1092,7 @@ msgstr "Lade kast zwart"
 #: model:product.product,description:mrp.product_product_drawer_drawer
 #: model:product.template,description:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer on casters for great usability."
-msgstr ""
+msgstr "Lade op wieltjes voor grote bruikbaarheid."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
@@ -1117,7 +1124,7 @@ msgstr "Tijdsduur per eenheid"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Effective Date"
-msgstr "Boek datum"
+msgstr "Geboekte datum"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_finished
@@ -1667,6 +1674,7 @@ msgstr "Te late activiteiten"
 #: model:product.template,description:mrp.product_product_wood_ply_product_template
 msgid "Layers that are stick together to assemble wood panels."
 msgstr ""
+"Lagen die aan elkaar blijven plakken om houten panelen samen te stellen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:492
@@ -2709,7 +2717,7 @@ msgstr "Productiviteit"
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_loss
 msgid "Productivity Losses"
-msgstr "Productiviteit verliezen"
+msgstr "Productiviteitsverliezen"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_template_action
@@ -3300,7 +3308,7 @@ msgstr "Voorraad na productie locatie"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Voorraad regel rapportage"
+msgstr "Voorraadregel rapportage"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:200
@@ -3508,7 +3516,7 @@ msgstr ""
 #: code:addons/mrp/wizard/mrp_product_produce.py:56
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
-msgstr ""
+msgstr "De productieorder voor  '%s' heeft geen hoeveelheid gespecificeerd."
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -3611,7 +3619,7 @@ msgstr "Tijd"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_efficiency
 msgid "Time Efficiency"
-msgstr "Tijdsefficiëntie"
+msgstr "Tijdefficiëntie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_ids
@@ -3684,7 +3692,7 @@ msgstr "Te doen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
-msgstr "Te lanceren"
+msgstr "Te starten"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -3772,7 +3780,7 @@ msgstr "Traceability rapport"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_tracking
 #: model:ir.model.fields,field_description:mrp.field_stock_move__needs_lots
 msgid "Tracking"
-msgstr "Volgen"
+msgstr "Traceren"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__type
@@ -3799,7 +3807,7 @@ msgstr "Uit elkaar halen"
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr "Uit elkaar haal orders"
+msgstr "Demontageorders"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:77
@@ -3812,7 +3820,7 @@ msgstr "De demontage hoeveelheid kan alleen maar positief zijn,"
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Uit elkaar haal orders"
+msgstr "Demontageorders"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -4008,7 +4016,7 @@ msgstr "Magazijn"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr ""
+msgstr "Meld onvoldoende demontage hoeveelheid"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:95 code:addons/mrp/models/mrp_bom.py:290
@@ -4021,7 +4029,7 @@ msgstr "Waarschuwing"
 #: model:product.product,name:mrp.product_product_wood_wear
 #: model:product.template,name:mrp.product_product_wood_wear_product_template
 msgid "Wear Layer"
-msgstr ""
+msgstr "Draag laag"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
@@ -4061,7 +4069,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "When components for 1st operation are available"
-msgstr ""
+msgstr "Wanneer de componenten beschikbaar zijn voor de eerste bewerking"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
