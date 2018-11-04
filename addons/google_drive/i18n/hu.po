@@ -2,17 +2,12 @@
 # This file contains the translation of the following modules:
 # * google_drive
 # 
-# Translators:
-# krnkris, 2016
-# Martin Trigaux, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,13 +25,6 @@ msgid ""
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
-"<b>Egy új szűrő létrehozásához:</b><br/>\n"
-"                                - Menjen a szűrni kívánt Odoo dokumentumhoz. Például, menjen Lehetőségek és keressen rá az \n"
-"Értékesítési osztályra.<br/>\n"
-"                                - Ebben a \"Keresés\" nézetben, válassza a \"Jelenlegi szűrő mentése\", írja be a nevet (Pl.: Értékesítési osztály)<br/>\n"
-"                                - Ha kiválasztja \"Megosztás az összes felhasználóval\", kapcsolja a google dokumentumhoz a \"Tovább\" lehetőségnél előtűnik az összes felhasználó lehetőségeként az Értékesítési osztály.<br/>\n"
-"                                - Ha nem választja ki a \"Megosztás az összes felhasználóval\", akkor a google dokumentum kapcsolója a \"Tovább\" lehetőségnél nem lesz látható az összes felhasználó lehetőségeként az Értékesítési osztály.<br/>\n"
-"                                - Ha nincs szűrő részletezve, a google dokumentum kapcsolója a \"Tovább\" lehetőségnél látható lesz az össze felhasználó részére az összes lehetőséggel."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
@@ -56,7 +44,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__active
 msgid "Active"
-msgstr "Aktív"
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -72,7 +60,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
 msgid "Authorization Code"
-msgstr "Engedélyezési kód"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
@@ -80,57 +68,65 @@ msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
 msgstr ""
-"Válassza ki, mire nevezi el az új google drive-ot, a google oldalon. Pl. "
-"gdoc_%(field_name)s"
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:161
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr "Lehetséges, hogy egyszerre csak egy Google drive-ot tud létrehozni."
+msgstr ""
+
+#. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
 msgid "Filter"
-msgstr "Szűrő"
+msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:61
 #: code:addons/google_drive/models/google_drive.py:82
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "Menjen a beállítások panelhez"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
 msgid "Google Client"
-msgstr "Google kliens "
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr "Google Drive beállítás"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name_template
 msgid "Google Drive Name Pattern"
-msgstr "Google Drive Név minta"
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
@@ -143,32 +139,31 @@ msgstr ""
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
-"Google Drive még nincs beállítva. Kérem keresse meg a rendszergazáját."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr "Google Drive sablon beállítás"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr ""
 
 #. module: google_drive
 #: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -179,33 +174,27 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
-"Kapcsolja a saját google drive sablonjait bármely Odoo rendszer adatbázis "
-"bejegyzéséhez. Ha tényleg egyéni dokumentumot akar kitöltetni a "
-"munkatársaival, pl. Táblázatkezelő használata a termékek minőségének "
-"ellenőrzésére vagy mindegyik külföldi szállítmány  szállítóleveleinek nyomon"
-" követése, ... nagyon könnyen elvégezhető, csatolja az Odoo rendszerhez és "
-"használja fel a munkavállalóival való együttműködéshez."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
 msgid "Model"
-msgstr "Modell"
+msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:203
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr "Kérem adjon meg egy érvényes Google Dokumentum URL elérési utat."
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
 msgid "Related Model"
-msgstr "Ide vonatkozó modell"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
 msgid "Resource Id"
-msgstr "Forrás ID"
+msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:81
@@ -214,49 +203,41 @@ msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
 msgstr ""
-"Valami rosszul sikerült a jelölés létrehozásakor. Kérje meg újra az "
-"engedélyezési kódot."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
 msgid "Template Name"
-msgstr "Sablonnév"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_template_url
 msgid "Template URL"
-msgstr "Sablon URL elérési útja"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
 msgid "Templates"
-msgstr "Sablonok"
+msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:99
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr "A Google sablon nem található. Lehet, hogy törlésre került."
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
 msgid "The URL to generate the authorization code from Google"
 msgstr ""
-"A Google által létrehozott URL elérési út az engedélyezési kód "
-"létrehozásához"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Deco_Addict_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
-"                                'Agrolait_SO0001_Sales'."
+"                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
-"A mellékelt dokumentum neve tartalmazhat állandó vagy változtatható adatot. A Google Drive-on a dokumentumok közti     \n"
-"                                megkülönböztetéshez, használjon állandó szavakat és mezőket. Például, a feljebb lévő példában, ha azt írta Agrolait_%(name)s_Sales\n"
-"                                a Google Drive név mezőbe, akkor a dokumentum neve a Google Drive tárolóban és az Odoo rendszer mellékletében ez lesz\n"
-"                                'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:135
@@ -265,13 +246,11 @@ msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
 msgstr ""
-"Az 'olvasó' engedély a 'bárkinek az eléréssel' nem lett a dokumentumon "
-"hozzáfűzve"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
-msgstr "URL elérési út"
+msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:60
@@ -280,17 +259,9 @@ msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
 msgstr ""
-"Nem állított a be a Google-től létrehozott 'Engedélyezési kód'-ot, Kérem "
-"hozza létre és állítsa be ."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
-"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-
-#. module: google_drive
-#: model:ir.model,name:google_drive.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

@@ -2,16 +2,12 @@
 # This file contains the translation of the following modules:
 # * website_form
 # 
-# Translators:
-# krnkris, 2016
-# Martin Trigaux, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Martin Trigaux, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,14 +20,14 @@ msgstr ""
 #: code:addons/website_form/static/src/js/website_form.js:230
 #, python-format
 msgid "'%s' is not a correct date"
-msgstr "'%s' nem érvényes dátum"
+msgstr ""
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/js/website_form.js:225
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr "'%s' em érvényes dátum időpont"
+msgstr ""
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:229
@@ -62,6 +58,11 @@ msgid "Blacklisted in web forms"
 msgstr ""
 
 #. module: website_form
+#: model:ir.model,name:website_form.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website_form
 #: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Custom infos"
@@ -73,9 +74,11 @@ msgid "Enable the form builder feature for this model."
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
-#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
-msgid "Enable writing metadata on form submit."
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:21
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: website_form
@@ -86,7 +89,7 @@ msgstr ""
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
 msgid "Fields"
-msgstr "Mezők"
+msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
@@ -109,7 +112,7 @@ msgstr ""
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
 msgid "Models"
-msgstr "Modellek"
+msgstr ""
 
 #. module: website_form
 #. openerp-web
@@ -128,6 +131,19 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
+msgid "Success"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
+msgid "Technical data on contact form"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:7
+#, python-format
 msgid "The form has been sent successfully."
 msgstr ""
 
@@ -139,15 +155,10 @@ msgstr ""
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
 msgid "Website"
-msgstr "Weboldal"
-
-#. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
-#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
-msgid "Write metadata"
 msgstr ""
 
 #. module: website_form
-#: model:ir.model,name:website_form.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
+msgid "You can choose to log technical data like IP, User Agent ,..."
+msgstr ""

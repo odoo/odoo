@@ -3,22 +3,24 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Collex100, 2018
-# Sergey Vilizhanin, 2018
 # Viktor Pogrebniak <vp@aifil.ru>, 2018
-# Максим Дронь <dronmax@gmail.com>, 2018
 # Gennady Marchenko <gennadym@gmail.com>, 2018
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 # Max Belyanin <maxbelyanin@gmail.com>, 2018
+# Collex100, 2018
+# Martin Trigaux, 2018
+# Максим Дронь <dronmax@gmail.com>, 2018
+# Sergey Vilizhanin, 2018
 # Denis Baranov <baranov@itlibertas.com>, 2018
+# Yaroslav Panychev <walkmanyd@yandex.ru>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Yaroslav Panychev <walkmanyd@yandex.ru>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +37,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Статус «Проект» используется, когда пользователь составляет новый и неподтвержденный Cчёт-фактура.\n"
+" * Статус «Открыт» используется, когда пользователь создает Cчёт-фактуру, генерируется номер Cчёт-фактуры. Он остается в открытом состоянии до тех пор, пока пользователь не оплатит счет.\n"
+" * Статус «В оплате» используется, когда платежи были зарегистрированы для всего счета-фактуры в журнале, настроенном на запись записей только при сверке банковских счетов, и некоторые из них еще не были согласованы с линией выписки по счету.\n"
+" * Статус «Оплачено» устанавливается автоматически при оплате счета. Его связанные записи в журнале могут быть или не быть согласованы.\n"
+" * Статус «Отменен» используется, когда пользователь отменяет счет-фактуру."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -56,6 +63,7 @@ msgstr "${object.company_id.name|safe} Счёт (№ ${object.number or 'n/a' })
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Квитанция об оплате (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/account.py:937
@@ -77,7 +85,7 @@ msgstr "%s (копия)"
 #: code:addons/account/models/account.py:688
 #, python-format
 msgid "%s Sequence"
-msgstr ""
+msgstr "%s Последовательность"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -160,6 +168,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Уважаемый ${object.partner_id.name}<br/><br/>\n"
+"       Спасибо за оплату.\n"
+"        Вот ваш платеж <strong>${(object.name or '').replace('/','-')}</strong> на сумму\n"
+"        <strong>${format_amount(object.amount, object.currency_id)}</strong> от ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Не стесняйтесь обращаться к нам, если у вас есть какие-либо вопросы..\n"
+"        <br/><br/>\n"
+"        С наилучшими пожеланиями,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
