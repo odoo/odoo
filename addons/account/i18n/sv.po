@@ -3,34 +3,35 @@
 # * account
 # 
 # Translators:
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
-# Martin Trigaux, 2017
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
-# lasch a <bmail440@gmail.com>, 2017
-# lynnliuying <lynn.liu1971@gmail.com>, 2017
 # Jan-Eric Lindh <jelindh@gmail.com>, 2017
-# Haojun Zou <apollo_zhj@msn.com>, 2017
-# Leif Persson <leifpz54@gmail.com>, 2017
-# Egils Verkstad <egils@riseup.net>, 2017
-# Johan Bergquist <johan.bergquist@netip.se>, 2017
-# Jonathan S <jonathan.c.strom@gmail.com>, 2017
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2017
-# Patrik Lermon <patrik.lermon@gmail.com>, 2017
-# Daniel Forslund <daniel.forslund@gmail.com>, 2017
-# Kim Asplund <kim.asplund@gmail.com>, 2017
 # Robert Frykelius <robert.frykelius@linserv.se>, 2017
+# Daniel Forslund <daniel.forslund@gmail.com>, 2017
 # Zou Haojun <haojunzou84@gmail.com>, 2017
 # Frida E, 2017
+# lasch a <bmail440@gmail.com>, 2017
+# Egils Verkstad <egils@riseup.net>, 2017
+# Leif Persson <leifpz54@gmail.com>, 2017
+# Jonathan S <jonathan.c.strom@gmail.com>, 2017
+# Johan Bergquist <johan.bergquist@netip.se>, 2017
+# Kim Asplund <kim.asplund@gmail.com>, 2017
+# lynnliuying <lynn.liu1971@gmail.com>, 2017
+# Patrik Lermon <patrik.lermon@gmail.com>, 2017
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Haojun Zou <apollo_zhj@msn.com>, 2017
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
 # Peter Wickenberg <peter@wickenberg.nu>, 2018
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2822,7 +2823,7 @@ msgstr "Kontant"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_cash_account_code_prefix
 msgid "Cash Accounts Prefix"
-msgstr ""
+msgstr "Kontantkontoprefix"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_tax_exigibility
@@ -4012,12 +4013,12 @@ msgstr "Datum"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "Dagar efter faktureringens månadsskifte (Netto MS)"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the invoice date"
-msgstr ""
+msgstr "Dagar efter fakturadatum"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6544,7 +6545,7 @@ msgstr "Lås-datum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "Lås-datum för andra än ekonomi"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7020,6 +7021,8 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
+"Inga användare, inklusive ekonomi-personal, kan ändra bokföringen före och "
+"inklusive detta datum. Använd detta för att exempelvis låsa bokföringsåret."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -7278,6 +7281,9 @@ msgid ""
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
 msgstr ""
+"Endast användare med rättighetern 'Controller' kan korrigera bokföringen "
+"till och med detta datum. Använd för periodlåstning inuti ett öppet "
+"bokföringsår."
 
 #. module: account
 #. openerp-web
@@ -9882,6 +9888,8 @@ msgid ""
 "The last line's computation type should be \"Balance\" to ensure that the "
 "whole amount will be allocated."
 msgstr ""
+"Sista regeln bör vara \"Saldo\" för att säkerställa att hela beloppet "
+"hanteras."
 
 #. module: account
 #: code:addons/account/models/company.py:94
@@ -10769,12 +10777,12 @@ msgstr "Använd"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_use_anglo_saxon
 msgid "Use Anglo-Saxon Accounting"
-msgstr ""
+msgstr "Använd anglo-saxisk bokföring"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_use_anglo_saxon
 msgid "Use Anglo-Saxon accounting"
-msgstr ""
+msgstr "Använd anglo-saxisk bokföring"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_exigibility
@@ -10794,7 +10802,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_anglo_saxon_accounting
 msgid "Use anglo-saxon accounting"
-msgstr ""
+msgstr "Använd anglo-saxisk bokföring"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_batch_deposit
@@ -11231,6 +11239,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
+"Du kan inte lägga till/ändra transaktioner före och till och med detta "
+"låsdatum %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:211
@@ -11239,6 +11249,9 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
+"Du kan inte lägga till/ändra transaktioner före och till och med detta "
+"låsdatum %s. Check the company settings or ask someone with the 'Adviser' "
+"role"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1196
