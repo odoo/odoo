@@ -538,8 +538,6 @@ class AccountJournal(models.Model):
     @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
     def _check_currency(self):
         if self.currency_id:
-            if self.currency_id == self.company_id.currency_id:
-                raise ValidationError(_("Currency field should only be set if the journal's currency is different from the company's. Leave the field blank to use company currency."))
             if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency_id.id:
                 raise ValidationError(_('The currency of the journal should be the same than the default credit account.'))
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency_id.id:
