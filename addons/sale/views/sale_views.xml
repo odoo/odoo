@@ -610,7 +610,7 @@
                         will not be searched as often, and if they need to be searched it's usually in the context of products
                         and then they can be searched from the page listing the sale order lines related to a product (from the product itself).
                     -->
-                    <field name="order_line" string="Product" filter_domain="[('order_line.product_id.name', 'ilike', self)]"/>
+                    <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
                     <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
