@@ -174,6 +174,14 @@ class MigrationManager(object):
                     mod = fp = fp2 = None
                     try:
                         fp = tools.file_open(pyfile)
+                        # @opengstfix : Obviously, dynamic import of migration
+                        # Python module works even if they are relative but
+                        # breaks debugger. Forcing it to be absolute seems to
+                        # resolve this and we can YET debug migration module!!
+                        # hurraaaay!!
+                        # Here, we just change the relative path by the
+                        # absolute path just previously resolved.
+                        pyfile = fp.name
 
                         # imp.load_source need a real file object, so we create
                         # one from the file-like object we get from file_open
