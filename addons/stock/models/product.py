@@ -160,12 +160,12 @@ class Product(models.Model):
                 qty_available = quants_res.get(product.id, 0.0) - moves_in_res_past.get(product.id, 0.0) + moves_out_res_past.get(product.id, 0.0)
             else:
                 qty_available = quants_res.get(product.id, 0.0)
-            res[product.id]['qty_available'] = float_round(qty_available, precision_rounding=product.uom_id.rounding)
-            res[product.id]['incoming_qty'] = float_round(moves_in_res.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
-            res[product.id]['outgoing_qty'] = float_round(moves_out_res.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
+            res[product.id]['qty_available'] = float_round(qty_available, precision_rounding=product.product_tmpl_id.uom_id.rounding)
+            res[product.id]['incoming_qty'] = float_round(moves_in_res.get(product.id, 0.0), precision_rounding=product.product_tmpl_id.uom_id.rounding)
+            res[product.id]['outgoing_qty'] = float_round(moves_out_res.get(product.id, 0.0), precision_rounding=product.product_tmpl_id.uom_id.rounding)
             res[product.id]['virtual_available'] = float_round(
                 qty_available + res[product.id]['incoming_qty'] - res[product.id]['outgoing_qty'],
-                precision_rounding=product.uom_id.rounding)
+                precision_rounding=product.product_tmpl_id.uom_id.rounding)
 
         return res
 
