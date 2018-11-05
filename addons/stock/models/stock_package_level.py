@@ -27,7 +27,7 @@ class StockPackageLevel(models.Model):
     ],string='State', compute='_compute_state')
     is_fresh_package = fields.Boolean(compute='_compute_fresh_pack')
 
-    picking_source_location = fields.Many2one('stock.location', related='picking_id.location_id', readonly=False)
+    picking_type_code = fields.Selection(related='picking_id.picking_type_code')
     show_lots_m2o = fields.Boolean(compute='_compute_show_lot')
     show_lots_text = fields.Boolean(compute='_compute_show_lot')
 
@@ -182,3 +182,20 @@ class StockPackageLevel(models.Model):
                 pl.location_id = pl.move_line_ids[0].location_id
             else:
                 pl.location_id = pl.picking_id.location_id
+
+    def action_show_package_details(self):
+        self.ensure_one()
+        view = self.env.ref('stock.package_level_form_view')
+
+        return {
+            'name': _('Package Content'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.package_level',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'res_id': self.id,
+            'flags': {'mode': 'readonly'},
+        }
