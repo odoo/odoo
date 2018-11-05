@@ -3452,6 +3452,52 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('add a new record on the first page of a X2many list with a second page', function (assert) {
+        assert.expect(2);
+
+        this.data.turtle.fields.partner_ids.type = 'one2many';
+        this.data.turtle.records[0].partner_ids = [1];
+        // we need a second page, so we set two records and only display one per page
+        this.data.partner.records[0].turtles = [1, 2];
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.display_name = obj.display_name + 1;
+                obj.turtles.splice(0, 0, [5]);
+                obj.turtles = obj.turtles.slice();
+        }};
+        this.data.turtle.onchanges = {
+            display_name: function (obj) {obj.turtle_foo = obj.display_name + 1;},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom" limit="1">' +
+                            '<field name="display_name"/>' +
+                            '<field name="turtle_foo" required="True"/>' +
+                        '</tree>' +
+                    '</field>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        var $cell = form.$('.o_selected_row input[name=display_name]');
+        $cell.val("vitruvius").trigger('change');
+        assert.strictEqual($('.o_field_char[name=display_name]').first().val(), "first record11",
+            "Two onchanges should have been applied on partner.");
+        assert.strictEqual($('.o_field_char[name=turtle_foo]').val(), "vitruvius1",
+            "One onchange should have been applied to the newly added turtle record.");
+
+        form.destroy();
+    });
+
     QUnit.test('onchange for embedded one2many in a one2many updated by server', function (assert) {
         // here we test that after an onchange, the embedded one2many field has
         // been updated by a new list of ids by the server response, to this new

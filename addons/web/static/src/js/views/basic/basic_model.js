@@ -3401,23 +3401,33 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var isValid = true;
         var element = this.localData[id];
+        var currentPage = self._applyX2ManyOperations(element).data;
         _.each(element._changes, function (command) {
             if (command.operation === 'DELETE' ||
                     command.operation === 'FORGET' ||
                     command.operation === 'REMOVE_ALL') {
                 return;
             }
-            var recordData = self.get(command.id, {raw: true}).data;
-            var record = self.localData[command.id];
-            _.each(element.getFieldNames(), function (fieldName) {
-                var field = element.fields[fieldName];
-                var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
-                var rawModifiers = fieldInfo.modifiers || {};
-                var modifiers = self._evalModifiers(record, rawModifiers);
-                if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
-                    isValid = false;
-                }
-            });
+            var recordID = command.id;
+            // To update a record, we must be on the page where it is displayed
+            // (Trying to change the page triggers the validation of the current's page records)
+            // if the record is not on the page, we skip its validation
+            // because it may have not been fetched (except for its id/sequence)
+            // thus trying to validate such records could crash,
+            // if there are unknown fields to evaluate.
+            if (currentPage.indexOf(recordID) > -1) {
+                var recordData = self.get(recordID, {raw: true}).data;
+                var record = self.localData[recordID];
+                _.each(element.getFieldNames(), function (fieldName) {
+                    var field = element.fields[fieldName];
+                    var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
+                    var rawModifiers = fieldInfo.modifiers || {};
+                    var modifiers = self._evalModifiers(record, rawModifiers);
+                    if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
+                        isValid = false;
+                    }
+                });
+            }
         });
         return isValid;
     },
