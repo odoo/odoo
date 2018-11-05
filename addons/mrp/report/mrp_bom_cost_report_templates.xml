@@ -33,7 +33,7 @@
                             <tbody>
                                 <tr t-foreach="line['lines']" t-as="bom_line">
                                     <td colspan="3">
-                                        <span t-att-res-id="bom_line['product_id'].id" res-model="product.product" view-type="form" t-esc="bom_line['product_id'].name"/>
+                                        <span t-att-res-id="bom_line['product_id'].id" res-model="product.product" view-type="form" t-esc="bom_line['product_id'].display_name"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="bom_line['product_uom_qty']"/> <span t-esc="bom_line['product_uom'].name" groups="product.group_uom"/>
