@@ -1417,7 +1417,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-   QUnit.test('export data in excel with comparison', function (assert) {
+    QUnit.test('export data in excel with comparison', function (assert) {
         assert.expect(10);
 
         this.data.partner.records[0].date = '2016-12-15';
@@ -1571,6 +1571,148 @@ QUnit.module('Views', {
 
         unpatchDate();
         actionManager.destroy();
+    });
+
+    QUnit.module('Sort in comparison mode', {
+        beforeEach: function () {
+            this.data.partner.records[0].date = '2016-12-15';
+            this.data.partner.records[1].date = '2016-12-17';
+            this.data.partner.records[2].date = '2016-11-22';
+            this.data.partner.records[3].date = '2016-11-03';
+
+            this.data.partner.fields.company_type = {string: "Company Type", type: "selection", selection: [["company", "Company"], ["individual", "individual"]], searchable: true, store: true, sortable: true};
+
+            this.data.partner.records[0].company_type = 'company';
+            this.data.partner.records[1].company_type = 'individual';
+            this.data.partner.records[2].company_type = 'company';
+            this.data.partner.records[3].company_type = 'individual';
+
+
+            this.unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+            this.actualResult = function () {
+                var actualResult = $('.o_pivot .o_pivot_cell_value div').map(function() {
+                    return $( this ).text();
+                }).get().join();
+                return actualResult;
+            };
+
+            // create an action manager to test the interactions with the search view
+            this.actionManager = createActionManager({
+                data: this.data,
+                archs: {
+                    'partner,false,pivot': '<pivot>' +
+                            '<field name="date" interval="day" type="row"/>' +
+                            '<field name="company_type" type="col"/>' +
+                            '<field name="foo" type="measure"/>' +
+                      '</pivot>',
+                    'partner,false,search': '<search></search>',
+                },
+                debug: 1,
+            });
+
+            this.actionManager.doAction({
+                res_model: 'partner',
+                type: 'ir.actions.act_window',
+                views: [[false, 'pivot']],
+                flags: {
+                    pivot: {
+                        additionalMeasures: ['product_id'],
+                    }
+                }
+            });
+
+            // open time range menu
+            testUtils.dom.click($('.o_control_panel .o_time_range_menu_button'));
+            // select 'Today' as range
+            testUtils.fields.editInput($('.o_control_panel .o_time_range_selector'), 'this_month');
+            // check checkbox 'Compare To'
+            testUtils.dom.click($('.o_control_panel .o_time_range_menu .o_comparison_checkbox'));
+            // Click on 'Apply' button
+            testUtils.dom.click($('.o_control_panel .o_time_range_menu .o_apply_range'));
+            // We are in comparison mode
+        },
+        afterEach: function () {
+            this.unpatchDate();
+            this.actionManager.destroy();
+        },
+    }, function () {
+        QUnit.test('when clicking on measure, sort by "This Month" (period of interest)', function (assert) {
+            assert.expect(1);
+
+            // click on 'Foo' in column Total/Company
+            testUtils.dom.click($('.o_pivot_measure_row').eq(0));
+            var results = [
+                "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
+                "12", "0",  "100%",                       "12", "0" , "100%",
+                                       "1", "0", "100%",  "1" , "0",  "100%",
+                "0",  "17", "-100%",                      "0",  "17", "-100%",
+                                       "0", "2", "-100%", "0" , "2" , "-100%"
+            ];
+            assert.strictEqual(this.actualResult(), results.join());
+        });
+
+        QUnit.test(
+            'click on a period of interest header sort according to the appropriate column ' +
+            'first in ascending order then in descending order',
+            function (assert) {
+            assert.expect(2);
+
+            // click on 'This Month' in column Total/Individual/Foo
+            testUtils.dom.click($('.o_pivot_measure_row').eq(6));
+            var results = [
+                "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
+                                       "1", "0", "100%",  "1" , "0",  "100%",
+                "12", "0",  "100%",                       "12", "0" , "100%",
+                "0",  "17", "-100%",                      "0",  "17", "-100%",
+                                       "0", "2", "-100%", "0" , "2" , "-100%"
+            ];
+            var actualResult = $('.o_pivot .o_pivot_cell_value div').text();
+            assert.strictEqual(actualResult, results.join(''));
+
+            // click once again on 'This Month' in column Total/Individual/Foo
+            testUtils.dom.click($('.o_pivot_measure_row').eq(6));
+            results = [
+                "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
+                "12", "0",  "100%",                       "12", "0" , "100%",
+                "0",  "17", "-100%",                      "0",  "17", "-100%",
+                                       "0", "2", "-100%", "0" , "2" , "-100%",
+                                       "1", "0", "100%",  "1" , "0",  "100%"
+            ];
+            assert.strictEqual(this.actualResult(), results.join());
+        });
+
+        QUnit.test('click on a period of comparison header sort according to appropriate column',
+            function (assert) {
+            assert.expect(1);
+
+            // click on 'Previous Period' in column Total/Individual/Foo
+            testUtils.dom.click($('.o_pivot_measure_row').eq(7));
+            var results = [
+                "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
+                                       "0", "2", "-100%", "0" , "2" , "-100%",
+                "12", "0",  "100%",                       "12", "0" , "100%",
+                                       "1", "0", "100%",  "1" , "0",  "100%",
+                "0",  "17", "-100%",                      "0",  "17", "-100%"
+            ];
+            assert.strictEqual(this.actualResult(), results.join());
+        });
+
+        QUnit.test('click on a variation header sort according to appropriate column',
+            function (assert) {
+            assert.expect(1);
+
+            // click on 'Variation' in column Total/Individual/Foo
+            testUtils.dom.click($('.o_pivot_measure_row').eq(11));
+            var results = [
+                "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
+                "12", "0",  "100%",                       "12", "0" , "100%",
+                                       "1", "0", "100%",  "1" , "0",  "100%",
+                "0",  "17", "-100%",                      "0",  "17", "-100%",
+                                       "0", "2", "-100%", "0" , "2" , "-100%"
+            ];
+            assert.strictEqual(this.actualResult(), results.join());
+        });
     });
 });
 });
