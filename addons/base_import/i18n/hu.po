@@ -2,17 +2,12 @@
 # This file contains the translation of the following modules:
 # * base_import
 # 
-# Translators:
-# Martin Trigaux, 2016
-# krnkris, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,66 +17,111 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:155
+#: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
-msgid " Import Template for Customers"
+msgid "%d records were successfully imported"
 msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:542
+#: code:addons/base_import/static/src/js/import_action.js:647
 #, python-format
 msgid "(%d more)"
-msgstr "(%d több)"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:316
+#: code:addons/base_import/static/src/js/import_action.js:378
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"Egy önálló oszlop található a fájlban, Ez sokszor azt jelenti, hogy a fájl "
-"elválasztó hibás"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:103
+#: code:addons/base_import/static/src/js/import_action.js:582
+#, python-format
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base
+msgid "Base"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_import
+msgid "Base Import"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_mapping
+msgid "Base Import Mapping"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:102
 #, python-format
 msgid "Cancel"
-msgstr "Mégse"
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:597
+#: code:addons/base_import/models/base_import.py:693
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr "%s oszlop hibás értékeket tartalmaz (érték: %s)"
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:630
+#: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "%s oszlop hibás értékeket tartalmaz. Hiba ebben a sorban: %d: %s"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
+msgid "Column Name"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:183
-#: code:addons/base_import/static/src/js/import_action.js:194
-#: code:addons/base_import/static/src/js/import_action.js:201
-#: code:addons/base_import/static/src/js/import_action.js:213
+#: code:addons/base_import/static/src/js/import_action.js:211
+#: code:addons/base_import/static/src/js/import_action.js:228
 #, python-format
 msgid "Comma"
-msgstr "Vessző"
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:825
+#, python-format
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:108
+#, python-format
+msgid "Create if doesn't exist"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__create_uid
@@ -90,16 +130,19 @@ msgstr "Vessző"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__create_date
@@ -108,51 +151,70 @@ msgstr "Készítette"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:145
-#: code:addons/base_import/models/base_import.py:150
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:107
+#, python-format
+msgid ""
+"Creates new records if they can't be found (instead of failing to import). "
+"Note that the value in the column will be used as the new record's 'name', "
+"and assumes this is sufficient to create the record."
+msgstr ""
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:207
+#: code:addons/base_import/models/base_import.py:212
 #, python-format
 msgid "Database ID"
-msgstr "Adatbázis ID azonosító"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:55
+#: code:addons/base_import/static/src/js/import_action.js:83
 #, python-format
 msgid "Date Format:"
-msgstr "Dátum formátum:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:56
+#: code:addons/base_import/static/src/js/import_action.js:84
 #, python-format
 msgid "Datetime Format:"
-msgstr "Dátum és idő formátum:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:58
+#: code:addons/base_import/static/src/js/import_action.js:88
 #, python-format
 msgid "Decimal Separator:"
-msgstr "Tizedes elválasztó:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:76
+#: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Defer parent/child computation"
 msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__display_name
@@ -161,120 +223,152 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:361
+#: code:addons/base_import/static/src/js/import_action.js:445
 #, python-format
 msgid "Don't import"
-msgstr "Ne importálja"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:202
-#: code:addons/base_import/static/src/js/import_action.js:220
+#: code:addons/base_import/static/src/js/import_action.js:229
 #, python-format
 msgid "Dot"
-msgstr "Pont"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:50
+#: code:addons/base_import/static/src/xml/base_import.xml:87
+#, python-format
+msgid "Download"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
+msgid "Dt"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:78
 #, python-format
 msgid "Encoding:"
-msgstr "Kódolás:"
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:632
+#: code:addons/base_import/models/base_import.py:790
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "Hiba dátum feldolgozásakor [%s:L%d]: %s"
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:227
+#: code:addons/base_import/models/base_import.py:289
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr "Hibás cellákat talált az XLS/XLSX fájlok olvasás közben: %s"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:519
+#: code:addons/base_import/static/src/js/import_action.js:624
 #, python-format
 msgid "Everything seems valid."
-msgstr "Úgy néz ki mindegyik érvényes."
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:110
-#: code:addons/base_import/models/base_import.py:144
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:82
+#, python-format
+msgid "Excel files are recommended as fields formatting is automatic."
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:169
+#: code:addons/base_import/models/base_import.py:206
 #, python-format
 msgid "External ID"
-msgstr "Külső ID azonosító"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
+msgid "Field Name"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
-msgstr "Fájl"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
-msgstr "Fájl neve"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr "Fájl típus"
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:808
+#: code:addons/base_import/models/base_import.py:814
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
 msgstr ""
-"Az importálandó és/vagy ellenőrizni kívánt fájl, nyers bináris (nem base64)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:129
+#: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
-msgid "For CSV files, the issue could be an incorrect encoding."
-msgstr "CSV fájlok, egy nem megfelelő kódolás lehet az ok"
+msgid "For CSV files, you may need to select the correct separator."
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:566
+#: code:addons/base_import/static/src/xml/base_import.xml:13
+#, python-format
+msgid "Formatting Options…"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:671
 #, python-format
 msgid "Get all possible values"
-msgstr "Kapja meg az összes lehetséges értéket"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:11
-#, python-format
-msgid "Help"
-msgstr "Súgó"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:553
+#: code:addons/base_import/static/src/js/import_action.js:658
 #, python-format
 msgid "Here are the possible values:"
-msgstr "Ezek a lehetséges értékek:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:130
+#: code:addons/base_import/static/src/xml/base_import.xml:138
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "Itt van a fájlnak az eleje, melyiket nem tudtuk importálni:"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__id
@@ -283,11 +377,11 @@ msgstr "Itt van a fájlnak az eleje, melyiket nem tudtuk importálni:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:87
+#: code:addons/base_import/static/src/xml/base_import.xml:67
 #, python-format
 msgid ""
 "If the file contains\n"
@@ -295,28 +389,20 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
-"Ha a fájl tartalmazza\n"
-"                az oszlop neveket, Odoo rendszer megpróbálhatja automatikusan észlelni a \n"
-"                oszlophoz tartozó mezőket. Ez megkönnyíti az importálásokat\n"
-"                főként ha a fájl sok oszloppal rendelkezik."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:65
+#: code:addons/base_import/static/src/xml/base_import.xml:45
 #, python-format
 msgid ""
 "If the model uses openchatter, history tracking                             "
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
-"Ha a modell nyíl-tüzenőt használ, történet követés"
-"                             be fog állítani feliratkozásokat és "
-"értesítéseket küld ki                             az importálás alatt, ami "
-"lassúbb importot eredményez."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:74
+#: code:addons/base_import/static/src/xml/base_import.xml:54
 #, python-format
 msgid ""
 "If the model uses parent/child relations, computing the                     "
@@ -326,34 +412,61 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:102
-#: code:addons/base_import/static/src/xml/base_import.xml:161
+#: code:addons/base_import/static/src/xml/base_import.xml:98
+#: code:addons/base_import/static/src/xml/base_import.xml:169
 #, python-format
 msgid "Import"
-msgstr "Import"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:111
+#: code:addons/base_import/static/src/xml/base_import.xml:91
+#, python-format
+msgid "Import FAQ"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:140
 #, python-format
 msgid "Import a File"
-msgstr "Egy fájl importálása"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:128
+#: code:addons/base_import/static/src/js/import_action.js:612
+#, python-format
+msgid "Import completed"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:136
 #, python-format
 msgid "Import preview failed due to:"
-msgstr "Import előnézet ezért nem sikerült:"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:579
+#, python-format
+msgid ""
+"Import timed out. Please retry. If you still encounter this issue, the file "
+"may be too big for the system's configuration, try to split it (import less "
+"records per file)."
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex____last_update
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required____last_update
@@ -362,16 +475,19 @@ msgstr "Import előnézet ezért nem sikerült:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__write_uid
@@ -380,16 +496,19 @@ msgstr "Utoljára frissítve ekkor"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__write_date
@@ -398,179 +517,265 @@ msgstr "Utoljára frissítette"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:19
+#: code:addons/base_import/static/src/xml/base_import.xml:101
 #, python-format
 msgid "Load File"
-msgstr "Fájl betöltés"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:61
+#: code:addons/base_import/static/src/js/import_action.js:364
+#, python-format
+msgid "Load New File"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:41
 #, python-format
 msgid "Map your columns to import"
-msgstr "Képezze le az oszlopokat importáláshoz"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr "Modell"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
 msgid "Name"
-msgstr "Név"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:15
+#: code:addons/base_import/static/src/xml/base_import.xml:85
 #, python-format
-msgid "No file chosen..."
-msgstr "Nem lett fájl kiválasztva..."
+msgid "Need Help?"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:426
+#: code:addons/base_import/static/src/js/import_action.js:231
+#, python-format
+msgid "No Separator"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:513
 #, python-format
 msgid "Normal Fields"
-msgstr "Normál mezők"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:35
-#, python-format
-msgid "Options…"
-msgstr "Lehetőségek..."
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
 msgid "Other Variable"
-msgstr "Másik változó"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
 msgid "Parent"
-msgstr "Szülő"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:427
+#: code:addons/base_import/static/src/js/import_action.js:514
 #, python-format
 msgid "Relation Fields"
-msgstr "Relációs mezők"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:24
-#, python-format
-msgid "Reload File"
-msgstr "Fájl újratöltés"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:11
-#, python-format
-msgid "Select a CSV or Excel file to import."
-msgstr "Válasszon egy CSV vagy Excell fájlt az importáláshoz"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:184
-#, python-format
-msgid "Semicolon"
-msgstr "Pontosvessző"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:51
-#, python-format
-msgid "Separator:"
-msgstr "Elválasztó:"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:86
-#, python-format
-msgid "Show fields of relation fields (advanced)"
-msgstr "Mutassa az összes idevonatkozó mezőt (haladó)"
-
-#. module: base_import
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
-msgid "Some Value"
-msgstr "Néhány érték"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:186
-#, python-format
-msgid "Space"
-msgstr "Szóköz"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:185
-#, python-format
-msgid "Tab"
-msgstr "Tabulátor"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:100
 #, python-format
-msgid "Test Import"
-msgstr "Import teszt"
+msgid "Reload File"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
+msgid "Res Model"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:52
+#: code:addons/base_import/static/src/xml/base_import.xml:79
+#, python-format
+msgid "Select a CSV or Excel file to import."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:212
+#, python-format
+msgid "Semicolon"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:79
+#, python-format
+msgid "Separator:"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:66
+#, python-format
+msgid "Show fields of relation fields (advanced)"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
+msgid "Some Value"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:214
+#, python-format
+msgid "Space"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:213
+#, python-format
+msgid "Tab"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:99
+#, python-format
+msgid "Test Import"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_preview
+msgid "Tests : Base Import Model Preview"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char
+msgid "Tests : Base Import Model, Character"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
+msgid "Tests : Base Import Model, Character No readonly"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
+msgid "Tests : Base Import Model, Character readonly"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_required
+msgid "Tests : Base Import Model, Character required"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_states
+msgid "Tests : Base Import Model, Character states"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
+msgid "Tests : Base Import Model, Character still readonly"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o
+msgid "Tests : Base Import Model, Many to One"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
+msgid "Tests : Base Import Model, Many to One related"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
+msgid "Tests : Base Import Model, Many to One required"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
+msgid "Tests : Base Import Model, Many to One required related"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_o2m
+msgid "Tests : Base Import Model, One to Many"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
+msgid "Tests : Base Import Model, One to Many child"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_complex
+msgid "Tests: Base Import Model Complex"
+msgstr ""
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_float
+msgid "Tests: Base Import Model Float"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:80
 #, python-format
 msgid "Text Delimiter:"
-msgstr "Szöveg elválasztó:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:82
+#: code:addons/base_import/static/src/xml/base_import.xml:62
 #, python-format
 msgid ""
 "The first row\n"
 "                 contains the label of the column"
 msgstr ""
-"A fájl első oszlopa\n"
-"                tartalmazza az oszlop feliratát"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:57
+#: code:addons/base_import/static/src/js/import_action.js:87
 #, python-format
 msgid "Thousands Separator:"
-msgstr "Ezres elválasztó:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:67
+#: code:addons/base_import/static/src/xml/base_import.xml:47
 #, python-format
 msgid "Track history during import"
-msgstr "Nyomonkövetés történet az importálás alatt"
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:192
+#: code:addons/base_import/models/base_import.py:254
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"Nem tudja betölteni a \"{extension}\" fájlt: Python modul szükséges "
-"\"{modname}\""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:193
+#: code:addons/base_import/models/base_import.py:255
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Nem támogatott fűjlforműtum \"{}\", import csak a következőket támogatja "
-"CSV, ODS, XLS and XLSX"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_res_users
+msgid "Users"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__value
@@ -579,6 +784,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__value
@@ -586,94 +792,37 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__value
 msgid "Value"
-msgstr "Érték"
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:534
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
+msgid "Value2"
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:760
+#, python-format
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:631
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "Legalább egy mezőt be kell állítania az importáláshoz"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:536
+#: code:addons/base_import/static/src/js/import_action.js:641
 #, python-format
 msgid "at row %d"
-msgstr "Ebben a sorban %d"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_import
-msgid "base_import.import"
-msgstr "base_import.import"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char
-msgid "base_import.tests.models.char"
-msgstr "base_import.tests.models.char"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
-msgid "base_import.tests.models.char.noreadonly"
-msgstr "base_import.tests.models.char.noreadonly"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
-msgid "base_import.tests.models.char.readonly"
-msgstr "base_import.tests.models.char.readonly"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_required
-msgid "base_import.tests.models.char.required"
-msgstr "base_import.tests.models.char.required"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_states
-msgid "base_import.tests.models.char.states"
-msgstr "base_import.tests.models.char.states"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
-msgid "base_import.tests.models.char.stillreadonly"
-msgstr "base_import.tests.models.char.stillreadonly"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o
-msgid "base_import.tests.models.m2o"
-msgstr "base_import.tests.models.m2o"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
-msgid "base_import.tests.models.m2o.related"
-msgstr "base_import.tests.models.m2o.related"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
-msgid "base_import.tests.models.m2o.required"
-msgstr "base_import.tests.models.m2o.required"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
-msgid "base_import.tests.models.m2o.required.related"
-msgstr "base_import.tests.models.m2o.required.related"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_o2m
-msgid "base_import.tests.models.o2m"
-msgstr "base_import.tests.models.o2m"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
-msgid "base_import.tests.models.o2m.child"
-msgstr "base_import.tests.models.o2m.child"
-
-#. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_preview
-msgid "base_import.tests.models.preview"
-msgstr "base_import.tests.models.preview"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:538
+#: code:addons/base_import/static/src/js/import_action.js:643
 #, python-format
 msgid "between rows %d and %d"
-msgstr "oszlopok közt %d és %d"
+msgstr ""

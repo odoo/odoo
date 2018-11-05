@@ -2,17 +2,12 @@
 # This file contains the translation of the following modules:
 # * account_test
 # 
-# Translators:
-# Martin Trigaux, 2016
-# krnkris, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,37 +21,43 @@ msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
 msgstr ""
-"<br/>\n"
-"                        <strong>Leírás:</strong>"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
-msgstr "<strong>Név:</strong>"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
+msgid "Account Test Report"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_accounting_assert_test
+msgid "Accounting Assert Test"
+msgstr ""
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Könyvelési tesztek"
+msgstr ""
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr "Könyvelési teszt be"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
 msgid "Active"
-msgstr "Aktív"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
-"Ellenőrizze, hogy a mozgás tételsorok mérlege egyeztetettek és ugyanazzal a "
-"dátummal és időszakkal rendelkeznek"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -64,14 +65,11 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
-"Olyan banki kivonatok ellenőrzése, ahol a Záró egyenleg = Nyitó egyenleg + a"
-" kivonat tételsorainak összege"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
-"Ellenőrzi, hogy a fizetett/egyeztetett számlák nem 'nyitott' állapotúak"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -79,9 +77,6 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
-"Ellenörzi, hogy az egyeztetett számla mozgások, melyek Fizetendő/Tartozás és"
-" Bevételi/Követelés számlákat határoznak meg, egyeztetendő számlákhoz "
-"tartonak"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -89,20 +84,16 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
 msgstr ""
-"Ellenőrzi, hogy az Értékesítéshez/Beszerzéshez tartozó egyeztetendő számlák "
-"tartalmaznak a Fizetendő/Tartozás és Bevételi/Követelés számlákhoz tartozó "
-"tételeket"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
 msgstr ""
-"Ellenőrzi az egyenleget: Tartozás/Terhelés összeg = Jóváír/Követel összeg"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr "Kód súgó"
+msgstr ""
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
@@ -128,23 +119,6 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"A kód mindíg egy `eredmény` változóként legyen beállítva a teszte eredménye szerint, ami lehet egy lista vagy egy szótár. Ha az `eredmény` egy üres lista, az azt jelenti, hogy a teszt sikerrel járt. Egyéb esetben megpróbálja lefordítani és kinyomtatni az `eredmény` tartaláat.\n"
-"\n"
-"Ha a teszjánek az eredménye egy szótár, akkor a `column_order` váltózót beállíthatja, hogy milyen sorrendben szeretné kinyomtatni az `eredmény` tartalmát.\n"
-"\n"
-"Ha igényli, akkor a következő változókat is használhatja a kódjában:\n"
-"    * cr: kurzor az adatbázisra\n"
-"    * uid: a jelenlegi felhasználó ID azonosítója\n"
-"\n"
-"Bármely esetben, a kódnak legális python kifejezésnek kell lennie megfelelő azonosítással (ha szükséges).\n"
-"\n"
-"Példa: \n"
-"    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -154,129 +128,115 @@ msgstr ""
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr ""
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Description"
-msgstr "Leírás"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr ""
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
-msgstr "Kifejezés"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr ""
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
-msgstr "Python kód"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
-msgstr "Python kód"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
 msgid "Sequence"
-msgstr "Sorszám"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr "Teszt 1: Összesítő, általános egyenleg"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr "Teszt 3: Költségvetési tételsorok mozgása"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
-"Teszt 5.1 : Fizetendő/Tartozás és Bevételi/Követelés könyvelési számla sorok"
-"  az egyeztetett számlákon"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
 msgstr ""
-"Teszt 5.2 : Leegyezetett számlák és Fizetendő/Tartozás; Bevételi/Követelés "
-"számlák"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr "Teszt 6 : Számlák állapota"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr "Test 7 : Záró egyenleg a bankkivonatokon"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
 msgid "Test Description"
-msgstr "Teszt leírása"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__name
 msgid "Test Name"
-msgstr "Teszt név"
+msgstr ""
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_tree
 msgid "Tests"
-msgstr "Teszts"
+msgstr ""
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:52
+#: code:addons/account_test/report/report_account_test.py:53
 #, python-format
 msgid "The test was passed successfully"
-msgstr "A teszt sikeressen lefutott"
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_accounting_assert_test
-msgid "accounting.assert.test"
-msgstr "accounting.assert.test"
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
-msgid "report.account_test.report_accounttest"
-msgstr "report.account_test.report_accounttest"
+msgstr ""

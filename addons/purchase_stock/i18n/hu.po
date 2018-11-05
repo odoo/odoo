@@ -2,18 +2,12 @@
 # This file contains the translation of the following modules:
 # * purchase_stock
 # 
-# Translators:
-# Martin Trigaux, 2018
-# krnkris, 2018
-# gezza <geza.nagy@oregional.hu>, 2018
-# Kovács Tibor <kovika@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,35 +16,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:123
-#, python-format
-msgid " Buy"
-msgstr " Vétel"
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
+msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_procurement_rule__action
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
 msgid "Action"
-msgstr "Akció"
+msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:118
-#: selection:procurement.rule,action:0
+#: code:addons/purchase_stock/models/stock.py:127
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
+#: selection:stock.rule,action:0
 #, python-format
 msgid "Buy"
-msgstr "Vásárlás"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_pull_id
 msgid "Buy rule"
-msgstr "Vásárlási szabály"
+msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:120
-#, python-format
-msgid ""
-"Can't find any Buy route. Please create a route with the 'Buy' action for "
-"your receipts operation types."
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "Buy to Resupply"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: purchase_stock
@@ -61,22 +57,19 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
 msgid "Deliver To"
-msgstr "Szállítás ide"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+"of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
-"A telepített moduloktól függően, lehetővé teszi a termék útvonalának "
-"meghatásozását: akár vásárolt, gyártott, MTO (Gyártás rendelésre) / MTS "
-"(Gyártás értékesítésre), ..."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr "Célállomás hely típus"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
@@ -86,7 +79,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "Közvetlen szállítás /áru gyártótól közvetlenül vásárlóhoz/"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -101,17 +94,17 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.ui.menu,name:purchase_stock.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr "Beérkező termékek"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
-msgstr "Beérkező szállítmányok"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
 msgid "Incoterm"
-msgstr "Nemzetközi Kereskedelmi Feltételek"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
@@ -119,13 +112,11 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Nemzetközi üzleti feltételek, olyan előredefiniált üzleti feltételek, "
-"melyeket nemzetközi ügyleteknél használnak."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_invoice
 msgid "Invoice"
-msgstr "Számla"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -140,7 +131,12 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Logistics"
-msgstr "Logisztika"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -148,9 +144,9 @@ msgid "Manual actions may be needed."
 msgstr ""
 
 #. module: purchase_stock
-#: selection:procurement.rule,action:0
+#: selection:stock.rule,action:0
 msgid "Manufacture"
-msgstr "Gyártás"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -163,12 +159,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Minimum készlet szabály"
-
-#. module: purchase_stock
-#: selection:procurement.rule,action:0
-msgid "Move From Another Location"
-msgstr "Másik helyről mozgatás"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -193,59 +184,71 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
-msgstr "Beszerzési Csoport"
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Beszerzési szabály"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
 msgid "Product Template"
-msgstr "Terméksablon"
+msgstr ""
+
+#. module: purchase_stock
+#: selection:stock.rule,action:0
+msgid "Pull & Push"
+msgstr ""
+
+#. module: purchase_stock
+#: selection:stock.rule,action:0
+msgid "Pull From"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
 msgid "Purchase Order"
-msgstr "Beszerzési megrendelés"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr "Beszállítói megrendelés sor"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_ids
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
-msgstr "Szállítói megrendelések"
-
-#. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
-msgid "Purchase to resupply this warehouse"
-msgstr "Beszerzés ennek a raktárépüetnek az újra ellátásához"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
-msgid "Purchases Orders"
-msgstr "Szállítói megrendelések"
+msgid "Purchase Report"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
+msgid "Purchase order count"
+msgstr ""
+
+#. module: purchase_stock
+#: selection:stock.rule,action:0
+msgid "Push To"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Bevétel"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
-msgstr "Termékek átvétele"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
 msgid "Receptions"
-msgstr "Bevételezések"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -255,17 +258,17 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
 msgid "Reservation"
-msgstr "Foglalás"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Visszáruzás"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
 msgid "Routes"
-msgstr "Útvonalak"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -275,22 +278,30 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Készletmozgás"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "Készletmozgások"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
 msgstr ""
-"Technikai mező a Közvetlen szállítás Címének megjelenítésére szokták "
-"használni"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:261
+#: code:addons/purchase_stock/models/purchase.py:265
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -298,7 +309,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/procurement.py:22
+#: code:addons/purchase_stock/models/stock_rule.py:38
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -323,7 +334,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Átvitel"
+msgstr ""
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:95
@@ -332,22 +343,28 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
-"Nem lehet a %s beszerzési megrendelést törölni, mivel már beérkezett egy pár"
-" tétel."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
 msgid "Warehouse"
-msgstr "Raktár"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "Ha beszerezte a terméket, ehhez a raktárépülethez szállíthatja"
+msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:253
+#: code:addons/purchase_stock/models/stock_rule.py:20
+#, python-format
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need."
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:257
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
@@ -355,27 +372,22 @@ msgid ""
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:182
+#: code:addons/purchase_stock/models/purchase.py:186
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr "Hozzá kell rendelnie egy Beszálítót ehhez a partnerhez %s"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "nap"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "of"
-msgstr "ebből"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
 msgstr ""
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

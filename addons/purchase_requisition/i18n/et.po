@@ -2,19 +2,12 @@
 # This file contains the translation of the following modules:
 # * purchase_requisition
 # 
-# Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Rivo Zängov <eraser@eraser.ee>, 2017
-# Wanradt Koell <wanradt@gmail.com>, 2017
-# Gert Valdek <gert@airobot.ee>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Gert Valdek <gert@airobot.ee>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,23 +71,28 @@ msgid "<strong>Vendor </strong>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
 msgid "Agreement Deadline"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
 msgid "Agreement Reference"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_exclusive
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10513
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__type_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__name
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
 msgstr ""
@@ -105,19 +103,39 @@ msgid "Agreement Types"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_account_analytic_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__account_analytic_id
 msgid "Analytic Account"
-msgstr "Analüütiline konto"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
+#: selection:purchase.requisition,state_blanket_order:0
 msgid "Bid Selection"
 msgstr ""
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
+msgid "Blanket order"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:purchase.requisition.type,name:purchase_requisition.type_multi
+msgid "Call for Tender"
 msgstr ""
 
 #. module: purchase_requisition
@@ -128,41 +146,49 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
-msgid "Cancel Call"
+msgid "Cancel"
 msgstr ""
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
+#: selection:purchase.requisition,state_blanket_order:0
 msgid "Cancelled"
-msgstr "Tühistatud"
+msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:82
+#: code:addons/purchase_requisition/models/purchase_requisition.py:116
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
-msgid "Click to start a new purchase agreement."
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Close"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_company_id
+#: selection:purchase.requisition,state:0
+#: selection:purchase.requisition,state_blanket_order:0
+msgid "Closed"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__company_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__company_id
 msgid "Company"
-msgstr "Ettevõte"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr "Kinnita"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
+#: selection:purchase.requisition,state_blanket_order:0
 msgid "Confirmed"
-msgstr "Kinnitatud"
+msgstr ""
 
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
@@ -170,18 +196,33 @@ msgid "Create a draft purchase order"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_create_uid
-msgid "Created by"
-msgstr "Loonud"
+#: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_product_template__purchase_requisition
+msgid ""
+"Create a draft purchase order: Based on your product configuration, the "
+"system will create a draft purchase order.Propose a call for tender : If the"
+" 'purchase_requisition' module is installed and this option is selected, the"
+" system will create a draft call for tender."
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_create_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
+msgid "Currency"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -189,21 +230,21 @@ msgid "Data for new quotations"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_schedule_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__schedule_date
 msgid "Delivery Date"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_description
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__description
 msgid "Description"
-msgstr "Kirjeldus"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_display_name
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_display_name
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__display_name
 msgid "Display Name"
-msgstr "Näidatav nimi"
+msgstr ""
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -212,31 +253,45 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
-#: selection:purchase.requisition,state:0
 msgid "Done"
-msgstr "Valmis"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_move_dest_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__move_dest_id
 msgid "Downstream Move"
 msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
+#: selection:purchase.requisition,state_blanket_order:0
 msgid "Draft"
-msgstr "Mustand"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "End Month"
+msgid "End Date"
 msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
+msgid "Followers (Partners)"
 msgstr ""
 
 #. module: purchase_requisition
@@ -250,14 +305,29 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
-msgstr "Rühmitamine"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -274,34 +344,59 @@ msgid "In negotiation"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition___last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line___last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type___last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line____last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type____last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_write_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_write_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__write_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendatud"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_write_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_write_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__write_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__write_date
 msgid "Last Updated on"
-msgstr "Viimati uuendatud"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
-msgstr "Read"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
+msgid "Messages"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "My Agreements"
 msgstr ""
 
 #. module: purchase_requisition
@@ -312,63 +407,95 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr "Uus hinnapakkumine"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
 msgid "Number of Orders"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,state:0
+#: selection:purchase.requisition,state_blanket_order:0
+msgid "Ongoing"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__picking_type_id
 msgid "Operation Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__qty_ordered
 msgid "Ordered Quantities"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_ordering_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__ordering_date
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_product_product_purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_product_template_purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_template__purchase_requisition
 msgid "Procurement"
-msgstr "Hankimine"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Hankimise reeglid"
+#: model:ir.model,name:purchase_requisition.model_procurement_group
+msgid "Procurement Group"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_id
+#: model:ir.model,name:purchase_requisition.model_product_product
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
 msgid "Product"
-msgstr "Toode"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_template
 msgid "Product Template"
-msgstr "Toote mall"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_uom_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
 msgid "Product Unit of Measure"
-msgstr "Toote mõõtühik"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Products"
-msgstr "Tooted"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_ids
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__line_ids
 msgid "Products to Purchase"
 msgstr ""
 
@@ -378,14 +505,9 @@ msgid "Propose a call for tenders"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
-msgid "Purchase Agreement Type"
 msgstr ""
 
 #. module: purchase_requisition
@@ -408,21 +530,27 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "Ostutellimus"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Ostukorralduse rida"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__purchase_ids
 msgid "Purchase Orders"
-msgstr "Ostukorraldused"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Purchase Representative"
 msgstr ""
 
 #. module: purchase_requisition
@@ -432,12 +560,13 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_line_id
 msgid "Purchase Requisition Line"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:purchase.requisition.type,name:purchase_requisition.type_multi
-msgid "Purchase Tender"
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
+msgid "Purchase Requisition Type"
 msgstr ""
 
 #. module: purchase_requisition
@@ -446,14 +575,16 @@ msgid "Purchase orders"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__is_quantity_copy
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__quantity_copy
 msgid "Quantities"
-msgstr "Kogused"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_qty
 msgid "Quantity"
-msgstr "Kogus"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -468,7 +599,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr "Hinnapäring"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -486,20 +617,24 @@ msgid "Requisition"
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
+msgid "Requisition Line"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
+msgid "Requistion Line"
+msgstr ""
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
-msgstr "Lähtesta mustandiks"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_user_id
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Responsible"
-msgstr "Vastutav"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_schedule_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
 msgid "Scheduled Date"
-msgstr "Planeeritud kuupäev"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -517,7 +652,7 @@ msgid "Select only one RFQ (exclusive)"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type_exclusive
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid ""
 "Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
 "\n"
@@ -525,9 +660,9 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
 msgid "Sequence"
-msgstr "Järjestus"
+msgstr ""
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -537,28 +672,66 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Source"
-msgstr "Allikas"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_origin
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
 msgid "Source Document"
-msgstr "Alusdokument"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_state
+#: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid "Start a new purchase agreement"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
+msgid "State Blanket Order"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Status"
-msgstr "Olek"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
+msgid "Supplier Info"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Terms and Conditions"
-msgstr "Tingimused"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/models/purchase_requisition.py:95
+#, python-format
+msgid ""
+"There is already an open blanket order for this supplier. We suggest you to "
+"use to complete this open blanket order instead of creating a new one."
 msgstr ""
 
 #. module: purchase_requisition
@@ -572,9 +745,19 @@ msgid "Unassigned  Requisition"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
 msgid "Unit Price"
-msgstr "Ühiku hind"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -589,26 +772,62 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr "Valideeri"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
-msgid "Vendor"
-msgstr "Tarnija"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
-msgid "Warehouse"
-msgstr "Ladu"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:88
-#, python-format
-msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:105
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id
+msgid "Vendor"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__warehouse_id
+msgid "Warehouse"
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/models/purchase_requisition.py:94
+#, python-format
+msgid "Warning for %s"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/models/purchase_requisition.py:178
+#, python-format
+msgid "You can only delete draft requisitions."
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/models/purchase_requisition.py:123
+#, python-format
+msgid "You cannot confirm agreement '%s' because there is no product line."
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/models/purchase_requisition.py:127
+#: code:addons/purchase_requisition/models/purchase_requisition.py:220
+#: code:addons/purchase_requisition/models/purchase_requisition.py:228
+#, python-format
+msgid "You cannot confirm the blanket order without price."
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/models/purchase_requisition.py:129
+#, python-format
+msgid "You cannot confirm the blanket order without quantity."
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/models/purchase_requisition.py:156
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "

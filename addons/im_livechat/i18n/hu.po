@@ -2,18 +2,12 @@
 # This file contains the translation of the following modules:
 # * im_livechat
 # 
-# Translators:
-# Martin Trigaux, 2016
-# krnkris, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,20 +16,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "# Messages"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
 msgid "# of Sessions"
-msgstr "# folyamatok közül"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "# of speakers"
-msgstr "# hangszórók száma"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
-msgstr "% Boldog"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
@@ -44,9 +43,6 @@ msgid ""
 "* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
-"* 'Gomb megjelenítése' a csevegés gomb egyszerű megjelenítése az oldalakon.\n"
-"* 'Auto felugró' a gomb megjelenítéséhez, és a párbeszéd ablak automatikus megnyitásához.\n"
-"* 'Gomb eltüntetése' a csevegés gomb oldalakról történő eltüntetéséhez."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -57,78 +53,88 @@ msgid ""
 "country, GeoIP must be installed on your server, otherwise, the countries of"
 " the rule will not be taken into account.</span>"
 msgstr ""
-"<span>Határozzon meg szabályokat az élő támogatási csatornához. Alkalmazhat "
-"egy műveletet (támogatás kikapcsolása, automatikus támogatás aktiválás, vagy"
-" csak a gombot tegye elérhetővé) a megadott URL-hez, és országonként.<br/>Az"
-" országok azonosításához, telepíteni kell a szerverre a GeoIP -t, egyébként,"
-" az országokra vonatkozó szabályt figyelmen kívül hagyja.</span>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
 msgid "Action"
-msgstr "Művelet"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+msgid "Anonymous"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__anonymous_name
 msgid "Anonymous Name"
-msgstr "Ismeretlen neve"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__are_you_inside
 msgid "Are you inside the matrix?"
-msgstr "A mátrixon belül van?"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:52
+#: code:addons/im_livechat/static/src/js/im_livechat.js:60
 #, python-format
 msgid "Ask something ..."
-msgstr "Kérdezz valamit..."
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Attendees"
-msgstr "Résztvevők"
+msgstr ""
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Auto popup"
-msgstr "Automatikus felugró"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Auto popup timer"
-msgstr "Automatikus felugrás időzítő"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+msgid "Avatar"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__duration
 msgid "Average duration"
-msgstr "Átlag időtartam"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Average message"
-msgstr "Általános üzenet"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__time_to_answer
 msgid "Average time to give the first answer to the visitor"
-msgstr "A látogató részére adott első válaszig eltelt idő általában"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:13
 #, python-format
 msgid "Bad"
-msgstr "Rossz"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
 #: model:ir.ui.menu,name:im_livechat.canned_responses
 msgid "Canned Responses"
-msgstr "Bedobozolt válaszok"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
@@ -138,96 +144,78 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
-"Dobozolt  válaszok lehetővé teszik előre megírt válaszok beillesztését\n"
-"                az üzeneteibe beírva a <i>:gyorsbillentyű</i>. A gyorsbillentyű\n"
-"                kiváltódik az üzenetével, így tovább szerkesztheti azt\n"
-"                elküldés előtt."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__livechat_channel_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 #: selection:mail.channel,channel_type:0
 msgid "Channel"
-msgstr "Csatorna"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_name
 msgid "Channel Name"
-msgstr "Csatorna neve"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "Channel Rule"
-msgstr "Csatorna szabály"
+msgstr ""
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Channel Rules"
-msgstr "Csatorna szabályok"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__channel_type
 msgid "Channel Type"
-msgstr "Csatorna típus"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.support_channels
 msgid "Channels"
-msgstr "Csatornák"
+msgstr ""
 
 #. module: im_livechat
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr "Társalgási megbeszélés"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
 msgid "Chat Input Placeholder"
-msgstr "Csatorna beviteli szóköz"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:54
+#: code:addons/im_livechat/static/src/js/im_livechat.js:62
 #, python-format
 msgid "Chat with one of our collaborators"
-msgstr "Társalogjon az egyik munkatársunkkal"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__technical_name
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Code"
-msgstr "Kód"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
 msgid "Configuration"
-msgstr "Beállítások"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__channel_id
 msgid "Conversation"
-msgstr "Párbeszéd"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/copy_clipboard.js:32
-#, python-format
-msgid "Copied !"
-msgstr ""
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:6
-#: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:12
-#, python-format
-msgid "Copy Text"
 msgstr ""
 
 #. module: im_livechat
@@ -235,18 +223,11 @@ msgstr ""
 msgid ""
 "Copy and paste this code into your website, within the &lt;head&gt; tag:"
 msgstr ""
-"Másolja és illessze be ezt a kódot a weboldalához, ezek közé &lt;head&gt; "
-"címke:"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
 msgid "Country"
-msgstr "Ország"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__create_date
-msgid "Create Date"
-msgstr "Létrehozás dátuma"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
@@ -262,18 +243,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Creation Date"
-msgstr "Létrehozva"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -284,19 +266,18 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Creation date (hour)"
-msgstr "Létrehozás dátuma (óra)"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
 #: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
 msgid "Customer Ratings"
-msgstr "Vásárlói értékelések"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text
 msgid "Default text displayed on the Livechat Support Button"
 msgstr ""
-"Az élő csevegés támogatás gombjának alapértelmezetten kijelzett szövegmezeje"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -310,21 +291,18 @@ msgid ""
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
 msgstr ""
-"Késeletetés (másodpercekben) a párbeszéd ablak automatikus megnyitásához. "
-"Megjegyzés : Az  'Automatikus felugró' műveletet kell kiválasztani, "
-"egyébként ezt a paramétert nem veszi figyelembe."
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:7
 #, python-format
 msgid "Did we correctly answer your question ?"
-msgstr "Megfelelő választ adtunk a kérdésére?"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel
 msgid "Discussion channel"
-msgstr "Hozzászólási csatorna"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__display_name
@@ -332,18 +310,18 @@ msgstr "Hozzászólási csatorna"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr ""
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Display the button"
-msgstr "Gomb kijelzése"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__duration
 msgid "Duration of the conversation (in seconds)"
-msgstr "Párbeszéd időtartama (másodpercekben)"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -351,15 +329,18 @@ msgid ""
 "Each channel has it's own URL that you can send by email to\n"
 "                your customers in order to start chatting with you."
 msgstr ""
-"Mindegyik csatornának meg van a maga URL címe, melyet elküldhet \n"
-"                a vásárlóknak, ahhoz, hogy csevegést tudjanak indítani."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Empty Sessions"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:19
 #, python-format
 msgid "Explain your note"
-msgstr "Magyarázza meg a megjegyzését"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -368,10 +349,6 @@ msgid ""
 " Then go to Website Admin &gt; Configuration &gt; Settings and select the "
 "Website Live Chat Channel you want to add on your website."
 msgstr ""
-"Az Odoo CMS-el elkészített weboldalon, kérem telepítse a website_livechat "
-"modult. Ezután menjen a Weboldal Admin &gt; Beállítások &gt; Beállításokhoz "
-"és válassza ki a Weboldal Élő társalgási csatornát, melyet hozzá szeretne "
-"adni a weboldalához."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -379,58 +356,61 @@ msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
-"Megadott előírás egy találati szabály megtalálásához. Ha 2 szabály érvényes "
-"a megadott url/országra, az alacsonyabb sorrendű kerül kiválasztásra."
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:11
 #, python-format
 msgid "Good"
-msgstr "Jó"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Group By..."
-msgstr "Csoportosítás..."
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Happy face"
+msgstr ""
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Hide the button"
-msgstr "Rejtsd el a gombot"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "History"
-msgstr "Előzmények"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
 msgid "Hour of start Date of session"
-msgstr "Szakasz elkezdési dátum idejének órája "
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:55
+#: code:addons/im_livechat/static/src/js/im_livechat.js:63
 #, python-format
 msgid "How may I help you?"
-msgstr "Miben segíthetek?"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "How to use the Website Live Chat widget?"
-msgstr "Hogyan használja az Élő társalgási eszköztárat?"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:16
 #, python-format
 msgid "I don't want to rate this conversation"
-msgstr "Nem szeretném ezt a megbeszélést osztályozni"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__id
@@ -438,33 +418,28 @@ msgstr "Nem szeretném ezt a megbeszélést osztályozni"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image
 msgid "Image"
-msgstr "Kép"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Join"
-msgstr "Csatlakozás"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Join Channel"
-msgstr "Belépés Csatornára"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Last 24h"
-msgstr "Utolsó 24ó"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
-msgid "Last 7 days"
-msgstr "Utóbbi 7 nap"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel____last_update
@@ -472,35 +447,29 @@ msgstr "Utóbbi 7 nap"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel____last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-msgid "Last Week"
-msgstr "Utolsó hét"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
-msgstr "Távollét"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
-msgstr "Csatorna elhagyása"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel_partner
@@ -510,13 +479,12 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
 msgid "Live Chat"
-msgstr "Élő társalgás"
+msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_res_users__group_im_livechat_user
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
 msgid "Live Support"
-msgstr "Élő támogatás"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
@@ -524,18 +492,28 @@ msgstr "Élő támogatás"
 #: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:21
 #, python-format
 msgid "Livechat"
-msgstr "Élő társalgás"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
 #: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
-msgstr "Élő társalgási csatorna"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
+msgid "Livechat Channel Rules"
+msgstr ""
 
 #. module: im_livechat
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
-msgstr "Élő társalgás"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
@@ -545,22 +523,17 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
-"Élő társalgást támogató csatorna statisztikák lehetővé teszik a vállalata "
-"élő társalgási szakaszai teljesítményének  könnyű visszaellenőrzését és "
-"statisztika készítését. Elhalasztott szakaszok információinak, hallgató "
-"információk, szakasz időszakának kibontása, stb."
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
-msgid "Livechat Support Report"
-msgstr "Élő társalgás támogatási jelentés"
+msgid "Livechat Support Operator Report"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_operator_action
 msgid "Livechat Support Report Channel"
-msgstr "Élő társalgás támogatási jelentés csatorna"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
@@ -568,22 +541,22 @@ msgstr "Élő társalgás támogatási jelentés csatorna"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
 msgid "Livechat Support Statistics"
-msgstr "Élő társalgás támogatási statisztikák"
+msgstr ""
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
 msgid "Manager"
-msgstr "Igazgató"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
 msgid "Matching order"
-msgstr "Egyező sorrend"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image_medium
 msgid "Medium"
-msgstr "Közepes"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__image_medium
@@ -592,19 +565,21 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
-"Közepes méretű fotó a csoportról. Automatikusa át lesz méretezve 128x128px "
-"képpé, az arányok megtartásával. Használja ezt a mezőt az osztályozott "
-"nézetban és egyes kanban nézetekben."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Missed sessions"
-msgstr " Lekésett értékesítési folyamatok"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__name
 msgid "Name"
-msgstr "Név"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Neutral face"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
@@ -619,35 +594,34 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:157
+#: code:addons/im_livechat/static/src/js/im_livechat.js:226
 #, python-format
 msgid ""
 "None of our collaborators seems to be available, please try again later."
 msgstr ""
-"Úgy látszik, a munkatársak nem elérhetőek, kérem próbálkozzon meg későb."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__nbr_channel
 msgid "Number of conversation"
-msgstr "Párbeszéd száma"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "Number of different speakers"
-msgstr "Különböző hangfalak száma"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Number of message in the conversation"
-msgstr "Üzenetek száma a párbeszédben"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:12
 #, python-format
 msgid "OK"
-msgstr "Ok"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -655,29 +629,26 @@ msgstr "Ok"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Operator"
-msgstr "Operátor"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
 msgid "Operator Analysis"
-msgstr "Operátorok elemzés"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Operators"
-msgstr "Operátorok"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid ""
 "Operators\n"
 "                                            <br/>\n"
-"                                            <i class=\"fa fa-comments\"/>"
+"                                            <i class=\"fa fa-comments\" role=\"img\" aria-label=\"Comments\" title=\"Comments\"/>"
 msgstr ""
-"Operatorok\n"
-"                                            <br/>\n"
-"                                            <i class=\"fa fa-comments\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -685,26 +656,23 @@ msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
 msgstr ""
-"Operátorok, melyek nem aktívak az Odoo rendszerben több mint 30 perce, "
-"kijelentkezőként veszi tekintetbe."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Options"
-msgstr "Lehetőségek"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 msgid "Percentage of happy ratings over the past 7 days"
-msgstr "Jó szavazatok százaléka az elmult 7 napban"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_ids
-#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
-msgstr "Értékelés"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_feedback
@@ -719,16 +687,16 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_value
 msgid "Rating Last Value"
-msgstr "Utolsó érték értékelése"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_count
 msgid "Rating count"
-msgstr "Érték számolás"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:354
+#: code:addons/im_livechat/static/src/js/im_livechat.js:420
 #, python-format
 msgid "Rating: %s"
 msgstr ""
@@ -756,41 +724,45 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__rating_last_feedback
 msgid "Reason of the rating"
-msgstr "Értékelés oka"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
 msgstr ""
-"Általános kifejezés a weboldalhoz, melyen a szabályt alkalmazni fogják."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
 msgid "Report"
-msgstr "Kimutatás"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
 msgid "Rules"
-msgstr "Szabályok"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Sad face"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
 msgid "Script (external)"
-msgstr "Szkript (kölső)"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Search history"
-msgstr "Keresési előzmények"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Search report"
-msgstr "Keresési jelentés"
+msgstr ""
 
 #. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:107
@@ -802,17 +774,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Session Date"
-msgstr "Értékesítési folyamat dátuma"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 msgid "Session Form"
-msgstr "Értékesítési folyamat űrlapja"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
 msgid "Session Statistics"
-msgstr "Értékesítési folyamatok statisztikái"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action_from_livechat_channel
@@ -820,12 +792,12 @@ msgstr "Értékesítési folyamatok statisztikái"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Sessions"
-msgstr "Értékesítési folyamatok"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.session_history
 msgid "Sessions History"
-msgstr "Folyamat előzmények"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__image_small
@@ -834,26 +806,29 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Kis mérető fotó a csoportról. Automatikusan át lesz méretezve 64x64px képpé,"
-" az arány megtartása mellett. Használja ezt a mezőt bárhol ahol kisméretű "
-"képet szeretne."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Start Date"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__start_date
 msgid "Start Date of session"
-msgstr "Szakasz elkezdési dátuma"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__start_date
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__start_date
 msgid "Start date of the conversation"
-msgstr "Párbeszéd elkezdési dátuma"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text
 msgid "Text of the Button"
-msgstr "A nyomógomb felirata"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__input_placeholder
@@ -863,12 +838,12 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
-msgstr "A szabály csatornája"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__name
 msgid "The name of the channel"
-msgstr "A csatorna neve"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__country_ids
@@ -879,20 +854,16 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
-"A szabály csak erre az országokra szól.Például: ha kiválasztja a 'Belgium' "
-"és 'USA' és beállítja a 'Gomb elrejtése' szabályt, ez a 2 ország nem látja "
-"majd a csevegés gombot a meghatározott URL oldalon. Ennek a tulajdonságnak a"
-" működéséhez telepíteni kell a szerverre a GeoIP -t."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
 msgid "The user will be able to delete support channels."
-msgstr "A felhasználó képes lesz támogatási csoportokat törölni."
+msgstr ""
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_user
 msgid "The user will be able to join support channels."
-msgstr "A felhasználó képes lesz támogatási csoportokhoz hozzá kapcsolódni."
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
@@ -905,7 +876,6 @@ msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
 msgstr ""
-"Ez a mező a képet tárolja amit a csoporthoz használ, limitálva 1024x1024px."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__default_message
@@ -913,28 +883,26 @@ msgid ""
 "This is an automated 'welcome' message that your visitor will see when they "
 "initiate a new conversation."
 msgstr ""
-"Ez egy automatikus 'üdvözöljük' üzenet, melyet a látogatója fog látni, mikor"
-" meghívják az új párbeszédre."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image_small
 msgid "Thumbnail"
-msgstr "Hüvelykujj"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__time_to_answer
 msgid "Time to answer"
-msgstr "Idő a válaszadásig"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Treated sessions"
-msgstr "Feldolgozott folyamatok"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
-msgstr "URL Regex"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__web_page
@@ -942,53 +910,50 @@ msgid ""
 "URL to a static page where you client can discuss with the operator of the "
 "channel."
 msgstr ""
-"Egy statisztikai oldal URL elérése ahol a csatorna operátorához hozzászólhat"
-" az ügyfél."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
 msgid "UUID"
-msgstr "UUID"
-
-#. module: im_livechat
-#: model:res.groups,name:im_livechat.im_livechat_group_user
-msgid "User"
-msgstr "Felhasználó"
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_res_users__group_im_livechat_user
-msgid ""
-"User: The user will be able to join support channels.\n"
-"Manager: The user will be able to delete support channels."
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_res_users
-msgid "Users"
-msgstr "Felhasználók"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model:res.groups,name:im_livechat.im_livechat_group_user
+msgid "User"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:37
-#: code:addons/im_livechat/static/src/js/im_livechat.js:53
+#: code:addons/im_livechat/static/src/js/im_livechat.js:61
 #, python-format
 msgid "Visitor"
-msgstr "Látogató"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
 msgid "Web Page"
-msgstr "Weboldal"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr "Élő társalgás a honlapon"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__default_message
 msgid "Welcome Message"
-msgstr "Üdvözlőüzenet"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Widget"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "With Messages"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -997,9 +962,6 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
-"Létrehozhat csatornákat mindegyik honlaphoz, melyen az élő \n"
-"                társalgás kis ablakot integrálni szeretné, lehetővé téve a \n"
-"                weboldal látogatóinak az élő beszélgetést az operátorokkal."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
@@ -1009,26 +971,19 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
-msgstr "pl. Hello, tudunk valamiben segíteni?"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
-msgstr "pl. AzÖnWeboldala.com"
-
-#. module: im_livechat
-#: model:ir.model,name:im_livechat.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
-"vagy másolja ezt az URL elérési útvonalat és küldje el email-ben a "
-"vásárlóinak vagy beszállítóinak:"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
-msgstr "másodpercek"
+msgstr ""

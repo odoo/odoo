@@ -3,43 +3,45 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Carlos Lopez <celm1990@hotmail.com>, 2018
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2018
-# Massiel Acuna <mac@odoo.com>, 2018
-# Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2018
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# Cristian Salamea <ovnicraft@gmail.com>, 2018
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
-# José Vicente <txusev@gmail.com>, 2018
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2018
 # Antonio Trueba, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Miguel Orueta <mo@landoo.es>, 2018
 # oihane <oihanecruce@gmail.com>, 2018
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Miguel Orueta <mo@landoo.es>, 2018
 # e2f_es_ t7 <e2f_es_t7@outlook.com>, 2018
 # Angel Moya - PESOL <angel.moya@pesol.es>, 2018
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
 # Cristina Martín Rodríguez <cristina.marrod@gmail.com>, 2018
-# Miquel Torner <miq@odoo.com>, 2018
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2018
 # Rubi Navarro <ren@odoo.com>, 2018
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2018
-# Cristopher Cravioto <ccr@odoo.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Miquel Torner <miq@odoo.com>, 2018
 # Jimmy Ramos <jimmybanegas93@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Carlos Lopez <celm1990@hotmail.com>, 2018
+# Cristian Salamea <ovnicraft@gmail.com>, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 # Gustavo Valverde, 2018
-# fr33co <fr33codev@gmail.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Cristopher Cravioto <ccr@odoo.com>, 2018
+# Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2018
 # Harald Panten <harald.panten@qubiq.es>, 2018
 # Lucas Weigandt <lucasweigandt@gmail.com>, 2018
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2018
+# fr33co <fr33codev@gmail.com>, 2018
+# Massiel Acuna <mac@odoo.com>, 2018
+# Daniel Blanco <daniel@blancomartin.com.ar>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Rick Hunter <rick.hunter.ec@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Daniel Blanco <daniel@blancomartin.com.ar>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -785,6 +787,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
+"Entradas de diario no se pueden contabilizar manualmente cuando se generan "
+"en un diario que esta configurado para contabilizar entradas sólo cuando los"
+" pagos se reconcilian con un extracto bancario. Aquellos serán "
+"contabilizados automáticamente después de realizar la conciliación bancaria."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -865,6 +871,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
+"Cuenta %s (%s) no permite conciliación. Primero cambia la configuración de "
+"esta cuenta para permitirlo. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -986,7 +994,7 @@ msgstr "Cuenta a cobrar"
 #. module: account
 #: model:ir.model,name:account.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "Widget de reconciliación de cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1103,6 +1111,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"Nombre del titular de la cuenta, en caso de que sea diferente al nombre del "
+"titular de la cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -1154,6 +1164,9 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"Cuenta que se establecerá en las líneas de asientos contables en el diario "
+"con base en efectivo y que se utilizarán para realizar un seguimiento del "
+"monto del impuesto base imponible."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1366,6 +1379,9 @@ msgid ""
 " with their mobile banking application. EPC QR codes are used by many "
 "European banks to process SEPA payments."
 msgstr ""
+"Agregue un código QR de EPC a sus facturas para que sus clientes puedan "
+"pagar al instante con su aplicación de banca móvil. Los códigos QR EPC son "
+"utilizados por muchos bancos europeos para procesar los pagos SEPA."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1890,13 +1906,14 @@ msgstr "Aplicar automáticamente esta posición fiscal"
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
-msgstr "Aplicar solo si el país del envío o la factura coincide con el grupo"
+msgstr ""
+"Aplicar solo si el país del envío o de la factura coincide con el grupo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_id
 msgid "Apply only if delivery or invoicing country match."
-msgstr "Aplicar solo si el pais del envío o la factura coincide"
+msgstr "Aplicar solo si el pais del envío o de la factura coincide"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
@@ -4891,7 +4908,7 @@ msgstr "Declaraciones genéricas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr "Recibe advertencias cuando factura clientes específicos"
+msgstr "Recibe advertencias cuando se le facture clientes específicos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10236,6 +10253,9 @@ msgid ""
 "                                                                                                       This is useful if you install accounting after having used invoicing for some time and\n"
 "                                                                                                       don't want to reconcile all the past payments with bank statements."
 msgstr ""
+"El asistente de conciliación bancaria no solicitará conciliar pagos más antiguos que este fecha.\n"
+"Este es útil si Ud. instala contabilidad después de haber usado facturación por algún tiempo y\n"
+"no quiere conciliar los pagos antiguos con los extractos bancarios."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_bank_reconciliation_start
@@ -10244,6 +10264,9 @@ msgid ""
 "               This is useful if you install accounting after having used invoicing for some time and\n"
 "               don't want to reconcile all the past payments with bank statements."
 msgstr ""
+"El asistente de conciliación bancaria no solicitará conciliar pagos más antiguos que este fecha.\n"
+"Este es útil si Ud. instala contabilidad después de haber usado facturación por algún tiempo y\n"
+"no quiere conciliar los pagos antiguos con los extractos bancarios."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id

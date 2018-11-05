@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,7 +150,7 @@ msgid ""
 " challenge."
 msgstr ""
 "<br/>Ніхто не спромігся досягти всіх цілей, жоден значок не присуджується за"
-" цей виклик."
+" це випробування."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:655
@@ -401,8 +403,8 @@ msgid ""
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
 "Значок - це символ, наданий користувачеві як знак нагороди.\n"
-"Це може бути заслужено автоматично, коли деякі умови задовольняються або вводяться вручну користувачами.\n"
-"Деякі значки складніші, ніж інші, для отримання певних умов."
+"Він може бути заслуженим автоматично, коли деякі умови задовольняються або вводяться вручну користувачами.\n"
+"Деякі значки складніші, ніж інші, для отримання при певних умовах."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -411,7 +413,7 @@ msgid ""
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
 "Визначення цілі - це технічна модель цілі, яка визначає умову для досягнення мети.\n"
-"Дати, значення для охоплення або користувачі визначаються в екземплярі цілі."
+"Дати, значення для охоплення або користувачі визначаються в цільових випадках."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
@@ -421,7 +423,7 @@ msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
-"Мета вважається завершеною, коли поточне значення порівнюється з цінністю "
+"Мета вважається завершеною, коли поточне значення порівнюється зі значенням "
 "для досягнення"
 
 #. module: gamification
@@ -431,7 +433,7 @@ msgid ""
 "                Goals can be created automatically by using challenges."
 msgstr ""
 "Мета цілі визначається користувачем і визначенням цілі.\n"
-"Цілі можна створювати автоматично за допомогою проблем."
+"Цілі можна створювати автоматично за допомогою випробувань."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -447,7 +449,7 @@ msgstr "Дія"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Дія необхідна"
+msgstr "Необхідна дія"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
@@ -561,8 +563,9 @@ msgid ""
 "manually closed."
 msgstr ""
 "Значки надаються після завершення завдання. Це або наприкінці періоду роботи"
-" (наприклад, наприкінці місяця для щомісячного виклику), на дату завершення "
-"виклику (якщо не встановлено періодичність) або коли виклик закрито вручну."
+" (наприклад, наприкінці місяця для щомісячного випробування), на дату "
+"завершення випробування (якщо не встановлено періодичність) або коли "
+"випробування закрито вручну."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -695,12 +698,12 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
 msgid "Create a new challenge"
-msgstr ""
+msgstr "Створити нове випробування"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
 msgid "Create a new goal"
-msgstr ""
+msgstr "Створити нову ціль"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -852,7 +855,7 @@ msgid ""
 msgstr ""
 "Домен для фільтрації записів. Загальне правило, не залежно від користувача, "
 "наприклад [('state', '=', 'done')]. Вираз може містити посилання на "
-"\"user\", який є записом перегляду поточного користувача, якщо не в "
+"\"користувача\", який є записом перегляду поточного користувача, якщо не в "
 "пакетному режимі."
 
 #. module: gamification
@@ -893,7 +896,7 @@ msgstr "Всі"
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Exclusive (done or not-done)"
-msgstr "Ексклюзивний (виконаний або невиконаний)"
+msgstr "Виключний (виконаний або невиконаний)"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -966,7 +969,7 @@ msgstr "Повний суфікс"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Геміфікація значка"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
@@ -996,12 +999,12 @@ msgstr "Інструменти геміфікації"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "Геміфікація користувацького значка"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr ""
+msgstr "Помічник геміфікації користувацького значка"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
@@ -1013,7 +1016,7 @@ msgstr "Загальна мета геміфікації для завдання
 #: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
 #: model:ir.cron,name:gamification.ir_cron_check_challenge
 msgid "Gamification: Goal Challenge Check"
-msgstr "Гаміфікація: Перевірка цілі"
+msgstr "Геміфікація: Перевірка цілі завдання"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1883,7 +1886,7 @@ msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
 msgstr ""
-"День, коли новий виклик буде автоматично закритий. Якщо періодичність не "
+"День, коли нове завдання буде автоматично закрите. Якщо періодичність не "
 "встановлена, використовуватиме цю дату як дату закінчення мети."
 
 #. module: gamification
@@ -1892,7 +1895,7 @@ msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr ""
-"День, коли буде автоматично запущений новий виклик. Якщо періодичність не "
+"День, коли буде автоматично запущений нове завдання. Якщо періодичність не "
 "встановлена, використовуватиме цю дату як дату початку мети."
 
 #. module: gamification
@@ -2194,7 +2197,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
 msgid "With your brilliant ideas, you are an inspiration to others."
-msgstr "З вашими блискучими ідеями ви натхненні іншим."
+msgstr "З вашими блискучими ідеями ви надихаєте інших."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -2240,7 +2243,7 @@ msgstr "У вас немає необхідних значків."
 #: code:addons/gamification/models/badge.py:214
 #, python-format
 msgid "You have already sent this badge too many time this month."
-msgstr "Ви вже надсилали цей значок занадто багато разів у цьому місяці."
+msgstr "Ви надсилали цей значок занадто багато разів у цьому місяці."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
@@ -2280,7 +2283,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr "e.g. user.partner_id.id"
+msgstr "напр. user.partner_id.id"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
