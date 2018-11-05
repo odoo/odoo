@@ -151,7 +151,7 @@ class AccountMove(models.Model):
                             if not journal.refund_sequence_id:
                                 raise UserError(_('Please define a sequence for the refunds'))
                             sequence = journal.refund_sequence_id
-                                                            
+
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -254,7 +254,7 @@ class AccountMove(models.Model):
             aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
             aml.remove_move_reconcile()
             #reconcile together the reconciliable and the liquidity aml and their newly created counterpart
-            for account in [x.account_id for x in aml]:
+            for account in set([x.account_id for x in aml]):
                 to_rec = aml.filtered(lambda y: y.account_id == account)
                 to_rec |= reversed_move.line_ids.filtered(lambda y: y.account_id == account)
                 to_rec.reconcile()
@@ -1222,6 +1222,8 @@ class AccountMoveLine(models.Model):
                         ctx = {}
                         if 'date' in vals:
                             ctx['date'] = vals['date']
+                        elif 'date_maturity' in vals:
+                            ctx['date'] = vals['date_maturity']
                         temp['currency_id'] = bank.currency_id.id
                         temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
                     tax_lines_vals.append(temp)
