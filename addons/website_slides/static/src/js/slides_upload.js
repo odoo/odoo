@@ -1,11 +1,9 @@
 odoo.define('website_slides.upload', function (require) {
-"use strict";
+'use strict';
 
 var sAnimations = require('website.content.snippets.animation');
-var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var slides = require('website_slides.slides');
 
 var _t = core._t;
 
@@ -28,22 +26,22 @@ var SlideDialog = Widget.extend({
      * @param {Object} el
      * @param {number} channel_id
      */
-    init: function (el, channel_id) {
-        this._super(el, channel_id);
-        this.channel_id = parseInt(channel_id, 10);
+    init: function (el, channelID) {
+        this._super(el, channelID);
+        this.channel_id = parseInt(channelID, 10);
         this.file = {};
-        this.index_content = "";
+        this.index_content = '';
     },
     /**
      * @override
-     * @param {Object} parent
      */
-    start: function (parent) {
+    start: function () {
         this.$el.modal({
             backdrop: 'static'
         });
         this._setCategoryId();
         this._setTagIds();
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -54,12 +52,12 @@ var SlideDialog = Widget.extend({
      * @private
      * @param {string} file_name
      */
-    _checkUniqueSlide: function (file_name) {
+    _checkUniqueSlide: function (fileName) {
         var self = this;
         return this._rpc({
             model: 'slide.slide',
             method: 'search_count',
-            args: [[['channel_id', '=', self.channel_id], ['name', '=', file_name]]],
+            args: [[['channel_id', '=', self.channel_id], ['name', '=', fileName]]],
         });
     },
     /**
@@ -89,7 +87,7 @@ var SlideDialog = Widget.extend({
      * resolved data should be array of object with id and name. eg. [{'id': id, 'name': 'text'}, ...]
      * @returns {Object} select2 wrapper object
     */
-    _select2Wrapper: function (tag, multi, fetch_fnc) {
+    _select2Wrapper: function (tag, multi, fetchFNC) {
         return {
             width: '100%',
             placeholder: tag,
@@ -97,7 +95,7 @@ var SlideDialog = Widget.extend({
             formatNoMatches: false,
             multiple: multi,
             selection_data: false,
-            fetch_rpc_fnc : fetch_fnc,
+            fetch_rpc_fnc: fetchFNC,
             formatSelection: function (data) {
                 if (data.tag) {
                     data.text = data.tag;
@@ -105,8 +103,8 @@ var SlideDialog = Widget.extend({
                 return data.text;
             },
             createSearchChoice: function (term, data) {
-                var added_tags = $(this.opts.element).select2('data');
-                if (_.filter(_.union(added_tags, data), function (tag) {
+                var addedTags = $(this.opts.element).select2('data');
+                if (_.filter(_.union(addedTags, data), function (tag) {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
                     return {
@@ -122,7 +120,7 @@ var SlideDialog = Widget.extend({
                     tags = {results: []};
                 _.each(data, function (obj) {
                     if (that.matcher(query.term, obj.name)) {
-                        tags.results.push({id: obj.id, text: obj.name });
+                        tags.results.push({id: obj.id, text: obj.name});
                     }
                 });
                 query.callback(tags);
@@ -147,7 +145,7 @@ var SlideDialog = Widget.extend({
      * @private
      */
     _setCategoryId: function () {
-        var self =  this;
+        var self = this;
         $('#category_id').select2(this._select2Wrapper(_t('Category'), false,
             function () {
                 return this._rpc({
@@ -209,12 +207,12 @@ var SlideDialog = Widget.extend({
     // TODO: Remove this part, as now SVG support in image resize tools is included
     //Python PIL does not support SVG, so converting SVG to PNG
     _svgToPng: function () {
-        var img = this.$el.find("img#slide-image")[0];
-        var canvas = document.createElement("canvas");
+        var img = this.$el.find('img#slide-image')[0];
+        var canvas = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
-        canvas.getContext("2d").drawImage(img, 0, 0);
-        return canvas.toDataURL("image/png").split(',')[1];
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        return canvas.toDataURL('image/png').split(',')[1];
     },
     /**
      * Values and save
@@ -283,7 +281,10 @@ var SlideDialog = Widget.extend({
             }
             this.$('.oe_slides_upload_loading').show();
             this.$('.modal-footer, .modal-body').hide();
-            ajax.jsonRpc("/slides/add_slide", 'call', values).then(function (data) {
+            this._rpc({
+                route: '/slides/add_slide',
+                params: values,
+            }).then(function (data) {
                 if (data.error) {
                     self._displayAlert(data.error);
                     self.$('.oe_slides_upload_loading').hide();
@@ -299,20 +300,20 @@ var SlideDialog = Widget.extend({
      * @override
      */
     _cancel: function () {
-        this.trigger("cancel");
+        this.trigger('cancel');
     },
     /**
      * @override
      * @param {Object} ev
      */
     _slideUpload: function (ev) {
-        var self = this,
-            file = ev.target.files[0],
-            is_image = /^image\/.*/.test(file.type),
-            loaded = false;
+        var self = this;
+        var file = ev.target.files[0];
+        var isImage = /^image\/.*/.test(file.type);
+        var loaded = false;
         this.file.name = file.name;
         this.file.type = file.type;
-        if (!(is_image || this.file.type === 'application/pdf')) {
+        if (!(isImage || this.file.type === 'application/pdf')) {
             this._displayAlert(_t("Invalid file type. Please select pdf or image file"));
             this._resetFile();
             return;
@@ -328,8 +329,8 @@ var SlideDialog = Widget.extend({
         BinaryReader.readAsDataURL(file);
         BinaryReader.onloadend = function (upload) {
             var buffer = upload.target.result;
-            if (is_image) {
-                self.$("#slide-image").attr("src", buffer);
+            if (isImage) {
+                self.$('#slide-image').attr('src', buffer);
             }
             buffer = buffer.split(',')[1];
             self.file.data = buffer;
@@ -360,8 +361,8 @@ var SlideDialog = Widget.extend({
                             canvasContext: context,
                             viewport: viewport
                         }).then(function () {
-                            var image_data = self.$('#data_canvas')[0].toDataURL();
-                            self.$("#slide-image").attr("src", image_data);
+                            var imageData = self.$('#data_canvas')[0].toDataURL();
+                            self.$('#slide-image').attr('src', imageData);
                             if (loaded) {
                                 self.$('.save').button('reset');
                             }
@@ -371,20 +372,20 @@ var SlideDialog = Widget.extend({
                     });
                     var maxPages = pdf.pdfInfo.numPages;
                     var page, j;
-                    self.index_content = "";
+                    self.index_content = '';
                     for (j = 1; j <= maxPages; j += 1) {
                         page = pdf.getPage(j);
-                        page.then(function (page_obj) {
-                            var page_number = page_obj.pageIndex + 1;
-                            page_obj.getTextContent().then(function (data) {
-                                var page_content = '';
+                        page.then(function (pageObj) {
+                            var pageNumber = pageObj.pageIndex + 1;
+                            pageObj.getTextContent().then(function (data) {
+                                var pageContent = '';
                                 _.each(data.items, function (obj) {
-                                    page_content = page_content + obj.str + " ";
+                                    pageContent = pageContent + obj.str + ' ';
                                 });
                                 // page_content may contain null characters
-                                page_content = page_content.replace(/\0/g, "");
-                                self.index_content = self.index_content + page_number + ". " + page_content + '\n';
-                                if (maxPages === page_number) {
+                                pageContent = pageContent.replace(/\0/g, '');
+                                self.index_content = self.index_content + pageNumber + '. ' + pageContent + '\n';
+                                if (maxPages === pageNumber) {
                                     if (loaded) {
                                         self.$('.save').button('reset');
                                     }
@@ -398,17 +399,17 @@ var SlideDialog = Widget.extend({
         }
 
         var input = file.name;
-        var input_val = input.substr(0, input.lastIndexOf('.')) || input;
-        this._checkUniqueSlide(input_val).then(function (exist) {
+        var inputVal = input.substr(0, input.lastIndexOf('.')) || input;
+        this._checkUniqueSlide(inputVal).then(function (exist) {
             if (exist) {
                 var message = _t("Channel contains the given title, please change before Save or Publish.");
                 self._displayAlert(message);
             }
-            self.$('#name').val(input_val);
+            self.$('#name').val(inputVal);
         });
     },
     /**
-     * @override
+     * @private
      * @param {Object} ev
      */
     _slideUrl: function (ev) {
@@ -420,12 +421,15 @@ var SlideDialog = Widget.extend({
         this.$('.alert-warning').remove();
         this.is_valid_url = false;
         this.$('.save').button('loading');
-        ajax.jsonRpc('/slides/dialog_preview/', 'call', value).then(function (data) {
+        this._rpc({
+            route: '/slides/dialog_preview/',
+            params: value,
+        }).then(function (data) {
             self.$('.save').button('reset');
             if (data.error) {
                 self._displayAlert(data.error);
             } else {
-                self.$("#slide-image").attr("src", data.url_src);
+                self.$('#slide-image').attr('src', data.url_src);
                 self.$('#name').val(data.title);
                 self.$('#description').val(data.description);
                 self.is_valid_url = true;
@@ -439,18 +443,26 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
     selector: '.oe_slide_js_upload',
     xmlDependencies: ['/website_slides/static/src/xml/website_slides.xml'],
     read_events: {
-        'click .oe_slide_js_upload': '_bindEventButton',
+        'click': '_onUploadClick',
     },
 
     /**
      * @override
-     * @param {Object} parent
      */
-    start: function (parent) {
+    start: function () {
         // Automatically open the upload dialog if requested from query string
         if ($.deparam.querystring().enable_slide_upload !== undefined) {
-            $('.oe_slide_js_upload').click();
+            this._openDialog(this.$el.attr('channel_id'));
         }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _openDialog: function (channelID) {
+        new SlideDialog(this, channelID).appendTo(document.body);
     },
 
     //--------------------------------------------------------------------------
@@ -458,13 +470,11 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @override
+     * @private
+     * @param {Event} ev
      */
-    _bindEventButton: function () {
-        var channel_id = $(this).attr('channel_id');
-        slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
+    _onUploadClick: function (ev) {
+        this._openDialog($(ev.currentTarget).attr('channel_id'));
     },
-
 });
-
 });

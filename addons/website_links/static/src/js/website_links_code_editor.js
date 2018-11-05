@@ -1,16 +1,18 @@
 odoo.define('website_links.code_editor', function (require) {
 'use strict';
 
+var core = require('web.core');
 var sAnimations = require('website.content.snippets.animation');
-var ajax = require('web.ajax');
+
+var _t = core._t;
 
 sAnimations.registry.websiteLinksCodeEditor = sAnimations.Class.extend({
-    selector: '.o_website_links_edit_code',
+    selector: '#wrapwrap:has(.o_website_links_edit_code)',
     read_events: {
-        'click .o_website_links_edit_code': '_onEdit',
-        'click .o_website_links_cancel_edit': '_onCancel',
-        'submit #edit-code-form': '_onEditCodeForm',
-        'click .o_website_links_ok_edit': '_onEditCodeForm'
+        'click .o_website_links_edit_code': '_onEditCodeClick',
+        'click .o_website_links_cancel_edit': '_onCancelEditClick',
+        'submit #edit-code-form': '_onEditCodeFormSubmit',
+        'click .o_website_links_ok_edit': '_onEditCodeFormSubmit',
     },
 
     //--------------------------------------------------------------------------
@@ -19,9 +21,9 @@ sAnimations.registry.websiteLinksCodeEditor = sAnimations.Class.extend({
 
     /**
      * @private
-     * @param {String} new_code
+     * @param {String} newCode
      */
-    _showNewCode: function (new_code) {
+    _showNewCode: function (newCode) {
         $('.o_website_links_code_error').html('');
         $('.o_website_links_code_error').hide();
 
@@ -29,10 +31,10 @@ sAnimations.registry.websiteLinksCodeEditor = sAnimations.Class.extend({
 
         // Show new code
         var host = $('#short-url-host').html();
-        $('#o_website_links_code').html(new_code);
+        $('#o_website_links_code').html(newCode);
 
         // Update button copy to clipboard
-        $('.copy-to-clipboard').attr('data-clipboard-text', host + new_code);
+        $('.copy-to-clipboard').attr('data-clipboard-text', host + newCode);
 
         // Show action again
         $('.o_website_links_edit_code').show();
@@ -41,32 +43,39 @@ sAnimations.registry.websiteLinksCodeEditor = sAnimations.Class.extend({
     },
     /**
      * @private
+     * @returns {Deferred}
      */
     _submitCode: function () {
-        var init_code = $('#edit-code-form #init_code').val();
-        var new_code = $('#edit-code-form #new_code').val();
+        var initCode = $('#edit-code-form #init_code').val();
+        var newCode = $('#edit-code-form #new_code').val();
         var self = this;
 
-        if (new_code === '') {
-            self.$('.o_website_links_code_error').html("The code cannot be left empty");
+        if (newCode === '') {
+            self.$('.o_website_links_code_error').html(_t("The code cannot be left empty"));
             self.$('.o_website_links_code_error').show();
             return;
         }
 
-        this._showNewCode(new_code);
+        this._showNewCode(newCode);
 
-        if (init_code === new_code) {
-            this._showNewCode(new_code);
+        if (initCode === newCode) {
+            this._showNewCode(newCode);
         } else {
-            ajax.jsonRpc('/website_links/add_code', 'call', {'init_code':init_code, 'new_code':new_code})
-                .then(function (result) {
-                    self._showNewCode(result[0].code);
-                })
-                .fail(function () {
-                    $('.o_website_links_code_error').show();
-                    $('.o_website_links_code_error').html("This code is already taken");
-                });
+            return this._rpc({
+                route: '/website_links/add_code',
+                params: {
+                    init_code: initCode,
+                    new_code: newCode,
+                },
+            }).then(function (result) {
+                self._showNewCode(result[0].code);
+            }, function () {
+                $('.o_website_links_code_error').show();
+                $('.o_website_links_code_error').html(_t("This code is already taken"));
+            });
         }
+
+        return $.when();
     },
 
     //--------------------------------------------------------------------------
@@ -74,41 +83,39 @@ sAnimations.registry.websiteLinksCodeEditor = sAnimations.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @override
+     * @private
      */
-    _onEdit: function () {
-        var init_code = $('#o_website_links_code').html();
-        $('#o_website_links_code').html("<form style='display:inline;' id='edit-code-form'><input type='hidden' id='init_code' value='" + init_code + "'/><input type='text' id='new_code' value='" + init_code + "'/></form>");
+    _onEditCodeClick: function () {
+        var initCode = $('#o_website_links_code').html();
+        $('#o_website_links_code').html('<form style="display:inline;" id="edit-code-form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>');
         $('.o_website_links_edit_code').hide();
         $('.copy-to-clipboard').hide();
         $('.o_website_links_edit_tools').show();
     },
     /**
-     * @override
-     * @param {Object} e
+     * @private
+     * @param {Event} ev
      */
-    _onCancel: function (e) {
-        e.preventDefault();
+    _onCancelEditClick: function (ev) {
+        ev.preventDefault();
         $('.o_website_links_edit_code').show();
         $('.copy-to-clipboard').show();
         $('.o_website_links_edit_tools').hide();
         $('.o_website_links_code_error').hide();
 
-        var old_code = $('#edit-code-form #init_code').val();
-        $('#o_website_links_code').html(old_code);
+        var oldCode = $('#edit-code-form #init_code').val();
+        $('#o_website_links_code').html(oldCode);
 
         $('#code-error').remove();
         $('#o_website_links_code form').remove();
     },
     /**
-     * @override
-     * @param {Object} e
+     * @private
+     * @param {Event} ev
      */
-    _onEditCodeForm: function (e) {
-        e.preventDefault();
+    _onEditCodeFormSubmit: function (ev) {
+        ev.preventDefault();
         this._submitCode();
     },
-
 });
-
 });
