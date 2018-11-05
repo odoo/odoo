@@ -254,7 +254,7 @@ class AccountMove(models.Model):
             aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
             aml.remove_move_reconcile()
             #reconcile together the reconciliable and the liquidity aml and their newly created counterpart
-            for account in [x.account_id for x in aml]:
+            for account in set([x.account_id for x in aml]):
                 to_rec = aml.filtered(lambda y: y.account_id == account)
                 to_rec |= reversed_move.line_ids.filtered(lambda y: y.account_id == account)
                 to_rec.reconcile()
