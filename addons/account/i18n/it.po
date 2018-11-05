@@ -3,33 +3,34 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Alessandro Camilli <alessandrocamilli@openforce.it>, 2017
-# Sergio Zanchetta <primes2h@gmail.com>, 2017
-# Paolo Valier, 2017
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # Alberto Carollo <baba75@gmail.com>, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
+# Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
+# maiolif <maiolif@mgftools.com>, 2018
+# Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
 # Davide Corio <enlightx@gmail.com>, 2018
-# maiolif <maiolif@mgftools.com>, 2018
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Giuliano Lotta <giuliano.lotta@gmail.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Daniele Faraglia <daniele.faraglia@gmail.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
+# Martin Trigaux, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: efraimbiffi <eab@odoo.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,10 +46,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * Lo stato 'Bozza' è usato per impostare fatture da confermare in seguito.\n"
-" * Lo stato 'Aperto' identifica fatture con importo da Incassare per intero o in parte.\n"
-" * Lo stato 'Pagato' indica fatture con importo completamente incassato.\n"
-" * Lo stato 'Annullato' indica fatture cancellate."
+" * Lo stato «Bozza» viene usato in presenza di una nuova fattura non ancora confermata.\n"
+" * Lo stato «Aperta» si usa quando alla fattura creata viene assegnato un numero. Lo stato permane finché non viene pagata.\n"
+" * Lo stato «Pagata» è impostato automaticamente dopo il pagamento della fattura, a prescindere dalla riconciliazione delle relative registrazioni contabili.\n"
+" * Lo stato «Annullata» viene usato dopo l'annullamento di una fattura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -941,8 +942,8 @@ msgid ""
 "<strong>Or generate payment orders</strong><br/>\n"
 "                                        Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear)."
 msgstr ""
-"<strong>o generare ordini di pagamento</strong><br/>\n"
-"                                        creare un ordine di pagamento e selezionare le fatture da pagare come righe di registrazione (appariranno solo i documenti validati)."
+"<strong>O generare ordini di pagamento</strong><br/>\n"
+"                                        Creare un ordine di pagamento e selezionare le fatture da pagare come righe di registrazione (compariranno solo le confermate)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1131,8 +1132,8 @@ msgid ""
 "<strong>Validate the bill</strong><br/> after encoding the products and "
 "taxes."
 msgstr ""
-"<strong>validare la fattura</strong><br/> dopo aver confermato prodotto ed "
-"imposte"
+"<strong>Confermare la fattura</strong><br/> dopo aver indicato i prodotti e "
+"le imposte."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -1972,8 +1973,8 @@ msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
 msgstr ""
-"Tutte le scritture selezionate saranno validate e rese definitive. Non si "
-"potranno modificare in futuro."
+"Le registrazioni contabili selezionate saranno tutte confermate e generate. "
+"Non sarà più possibile modificarle."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:240
@@ -5927,7 +5928,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:775
 #, python-format
 msgid "Invoice must be in draft state in order to validate it."
-msgstr "La fattura dev'essere in bozza per poter essere resa definitiva"
+msgstr "Per essere confermata, la fattura deve trovarsi nello stato «Bozza»."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:795
@@ -5953,7 +5954,7 @@ msgstr "Fattura pagata"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "Fattura validata"
+msgstr "Fattura confermata"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -6015,7 +6016,7 @@ msgstr "Crediti per saldi fatture"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to validate"
-msgstr "Fatture da validare"
+msgstr "Fatture da confermare"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -6028,7 +6029,7 @@ msgstr "Fatture senza pagamento"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Contabilità"
+msgstr "Fatturazione"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_is_unaffected_earnings_line
@@ -10804,8 +10805,8 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
 msgstr ""
-"Questo wizard validera' tutte le operazioni selezionate. Una volta validate "
-"non si potranno piu' aggiornare."
+"Questa procedura confermerà tutte le registrazioni contabili selezionate. "
+"Non sarà più possibile effettuare aggiornamenti."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -11271,9 +11272,10 @@ msgid ""
 "                                with the current invoice. A new draft invoice will be created\n"
 "                                so that you can edit it."
 msgstr ""
-"Usare questa opzione per annullare una fattura e crearne una nuova\n"
-"\t\tVerra' creata, validata e riconciliata la nota di credito con questa\n"
-"\t\tfattura. Verra' creata una nuova fattura in bozza, modificabile."
+"Usare questa opzione per annullare una fattura e crearne una nuova.\n"
+"                                Verrà generata una nota di credito confermata e riconciliata con\n"
+"                                la fattura attuale, quindi verrà creata una nuova fattura in\n"
+"                                bozza da modificare."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -11363,12 +11365,12 @@ msgstr "IVA:"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr "Validare"
+msgstr "Conferma"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "Validazione movimento contabile"
+msgstr "Conferma movimenti contabili"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11380,7 +11382,7 @@ msgstr ""
 #: selection:account.bank.statement,state:0
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr "Validato"
+msgstr "Confermata"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value_amount
@@ -11484,7 +11486,7 @@ msgstr "Imposte fornitore"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_supplier
 msgid "Vendors"
-msgstr "Fornitore"
+msgstr "Fornitori"
 
 #. module: account
 #: selection:account.financial.report,type:0
@@ -11791,9 +11793,9 @@ msgid ""
 "number). You can set it back to \"Draft\" state and modify its content, then"
 " re-confirm it."
 msgstr ""
-"Non si puo' eliminare una fattura dopo che e' stata validata ed ha ricevuto "
-"un numero. Si puo' riportarla a bozza e modificarne il contenuto, e poi "
-"riconfermarla."
+"Impossibile eliminare una fattura che è stata confermata (ricevendo un "
+"numero). Reimpostarla allo stato \"Bozza\" e modificarne il contenuto, "
+"quindi riconfermarla."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:611
@@ -11936,8 +11938,8 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead."
 msgstr ""
-"Non puoi validare una fattura con un importo totale negativo. Devi invece "
-"creare una nota di credito."
+"Impossibile confermare una fattura con un importo totale negativo. Creare "
+"invece una nota di credito."
 
 #. module: account
 #. openerp-web
@@ -12044,10 +12046,10 @@ msgid ""
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
 msgstr ""
-"Si potra' modificare e validare questa\n"
-"\t\tnota di credito direttamente o tenerla\n"
-"\t\tin bozza, in attesa dell'emissione da parte\n"
-"\t\tdel fornitore/cliente."
+"Sarà possibile modificare e confermare\n"
+"                                direttamente questa nota di credito o\n"
+"                                tenerla in bozza, in attesa che il documento venga\n"
+"                                emesso dal fornitore/cliente."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
