@@ -205,6 +205,7 @@
 </table>
 </td></tr>
 <!-- FOOTER BY -->
+% if object.company_id
 <tr><td align="center" style="min-width: 590px;">
     <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
       <tr><td style="text-align: center; font-size: 14px;">
@@ -216,6 +217,7 @@
       </td></tr>
     </table>
 </td></tr>
+% endif
 </table>
             </field>
             <field name="lang">${object.partner_id.lang}</field>
@@ -399,6 +401,7 @@
 </table>
 </td></tr>
 <!-- FOOTER BY -->
+% if object.company_id
 <tr><td align="center" style="min-width: 590px;">
     <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
       <tr><td style="text-align: center; font-size: 14px;">
@@ -410,6 +413,7 @@
       </td></tr>
     </table>
 </td></tr>
+% endif
 </table>
             </field>
             <field name="lang">${object.partner_id.lang}</field>
