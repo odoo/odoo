@@ -381,6 +381,7 @@ class ProductProduct(models.Model):
             partner_ids = [partner_id, self.env['res.partner'].browse(partner_id).commercial_partner_id.id]
         else:
             partner_ids = []
+        company_id = self.env.context.get('company_id')
 
         # all user don't have access to seller and partner
         # check access and use superuser
@@ -399,6 +400,11 @@ class ProductProduct(models.Model):
                 sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
                 if not sellers:
                     sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
+                # Filter out sellers based on the company. This is done afterwards for a better
+                # code readability. At this point, only a few sellers should remain, so it should
+                # not be a performance issue.
+                if company_id:
+                    sellers = [x for x in sellers if x.company_id.id in [company_id, False]]
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (
