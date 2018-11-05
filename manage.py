@@ -128,11 +128,26 @@ def migrate_subcommand(args):
         """, (latest_version, 'installed', module))
 
 
+def password_reset_subcommand(args):
+    user_obj = pool.get('res.users')
+
+    # Note: login is supposed to be unique (by default at least!).
+    user_ids = user_obj.search(cr, SUPERUSER_ID, [('login', '=', args.login)])
+    if user_ids:
+        # On update, base_crypt module field callback is executed if enabled (NOT for creation).
+        user_obj.write(cr, SUPERUSER_ID, user_ids, {'password': args.new_password})
+        logger.info('The user {} has its password updated'.format(args.login))
+    else:
+        logger.warning('No user match for login {}'.format(args.login))
+
+
 COMMAND_SHELL = 'shell'
 COMMAND_MIGRATE = 'migrate'
+COMMAND_PASSWORD_RESET = 'password_reset'
 COMMANDS = [
     COMMAND_SHELL,
     COMMAND_MIGRATE,
+    COMMAND_PASSWORD_RESET,
 ]
 
 MIGRATE_STAGE_PRE = 'pre'
@@ -155,6 +170,7 @@ parser_migrate = subparsers.add_parser(
     COMMAND_MIGRATE,
     help='Alternative way to update modules. Better for debugging ONLY (no thread).',
 )
+parser_migrate.set_defaults(func=migrate_subcommand)
 parser_migrate.add_argument('module')
 parser_migrate.add_argument(
     'version',
@@ -172,7 +188,11 @@ parser_migrate.add_argument(
         MIGRATE_STAGE_DEFAULT,
     ),
 )
-parser_migrate.set_defaults(func=migrate_subcommand)
+
+parser_pass_reset = subparsers.add_parser(COMMAND_PASSWORD_RESET, help='Reset the password of the given user (by filtering on (unique) login).')
+parser_pass_reset.set_defaults(func=password_reset_subcommand)
+parser_pass_reset.add_argument('--login', required=True)
+parser_pass_reset.add_argument('--new-password', required=True)
 
 if __name__ == "__main__":
     args = parser.parse_args()
