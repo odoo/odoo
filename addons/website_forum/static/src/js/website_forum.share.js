@@ -1,19 +1,23 @@
 odoo.define('website_forum.share', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
 var core = require('web.core');
+var sAnimations = require('website.content.snippets.animation');
+
 var qweb = core.qweb;
 
+// FIXME There is no reason to inherit from socialShare here
 var ForumShare = sAnimations.registry.socialShare.extend({
+    selector: '',
     xmlDependencies: sAnimations.registry.socialShare.prototype.xmlDependencies
         .concat(['/website_forum/static/src/xml/website_forum_share_templates.xml']),
+    read_events: {},
 
     /**
      * @override
      * @param {Object} parent
-     * @param {Boolean} editableMode
-     * @param {String} targetType
+     * @param {boolean} editableMode
+     * @param {string} targetType
      */
     init: function (parent, editableMode, targetType) {
         this._super.apply(this, arguments);
@@ -21,9 +25,8 @@ var ForumShare = sAnimations.registry.socialShare.extend({
     },
     /**
      * @override
-     * @param {Object} parent
      */
-    start: function (parent) {
+    start: function () {
         var def = this._super.apply(this, arguments);
         this._onMouseEnter();
         return def;
@@ -64,31 +67,31 @@ var ForumShare = sAnimations.registry.socialShare.extend({
             },
         });
     },
-
 });
 
 sAnimations.registry.websiteForumShare = sAnimations.Class.extend({
-    selector: '.website_forum',
+    selector: '#wrapwrap:has(.website_forum)',
     read_events: {
-        'click :not(.karma_required).oe_social_share_call': '_onBody'
+        'click :not(.karma_required).oe_social_share_call': '_onShareCallClick',
     },
 
     /**
      * @override
-     * @param {Object} parent
      */
-    start: function (parent) {
+    start: function () {
         // Retrieve stored social data
         if (sessionStorage.getItem('social_share')) {
             var socialData = JSON.parse(sessionStorage.getItem('social_share'));
-            (new ForumShare(null, false, socialData.targetType)).attachTo($(document.body));
+            (new ForumShare(this, false, socialData.targetType)).attachTo($(document.body));
             sessionStorage.removeItem('social_share');
         }
         // Display an alert if post has no reply and is older than 10 days
         var $questionContainer = $('.oe_js_bump');
         if ($questionContainer.length) {
-            new ForumShare(null, false, 'social-alert').attachTo($questionContainer);
+            new ForumShare(this, false, 'social-alert').attachTo($questionContainer);
         }
+
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -96,16 +99,14 @@ sAnimations.registry.websiteForumShare = sAnimations.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Store social share data to display modal on next page
+     * Stores social share data to display modal on next page.
      *
-     * @override
+     * @private
      */
-    _onBody: function () {
+    _onShareCallClick: function (ev) {
         sessionStorage.setItem('social_share', JSON.stringify({
-            targetType: $(this).data('social-target-type'),
+            targetType: $(ev.currentTarget).data('social-target-type'),
         }));
     },
-
 });
-
 });
