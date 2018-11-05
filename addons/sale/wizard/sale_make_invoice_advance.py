@@ -162,7 +162,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 for line in order.order_line:
                     analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
                 so_line = sale_line_obj.create({
-                    'name': _('Advance: %s') % (time.strftime('%m %Y'),),
+                    'name': _('Down Payment: %s') % (time.strftime('%m %Y'),),
                     'price_unit': amount,
                     'product_uom_qty': 0.0,
                     'order_id': order.id,
