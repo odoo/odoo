@@ -11,16 +11,9 @@ class AccountInvoiceSend(models.TransientModel):
 
     partner_id = fields.Many2one('res.partner', compute='_get_partner', string='Partner')
     snailmail_is_letter = fields.Boolean('Send by Post', help='Allows to send the document by snail mail (coventional posting delivery service)', default=lambda self: self.env.user.company_id.invoice_is_snailmail)
-    snailmail_cost = fields.Float(string='Credits', compute='_snailmail_estimate', store=True, readonly=True)
+    snailmail_cost = fields.Float(string='Stamp(s)', compute='_snailmail_estimate', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', compute='_get_invoice_currency', string="Currency")
     letter_ids = fields.Many2many('snailmail.letter', 'snailmail_letter_account_invoice_send_rel', ondelete='cascade')
-
-    @api.multi
-    @api.onchange('invoice_ids')
-    def _get_invoice_currency(self):
-        for wizard in self:
-            if wizard.invoice_ids:
-                wizard.currency_id = wizard.invoice_ids.mapped('currency_id')[0].id
 
     @api.multi
     @api.onchange('invoice_ids')
