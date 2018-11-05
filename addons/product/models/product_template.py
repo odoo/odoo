@@ -95,12 +95,14 @@ class ProductTemplate(models.Model):
     uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
-        help="Default unit of measure used for all stock operations.")
+        help="Default unit of measure used for all stock operations.",
+        domain="(type == 'service' and [('measure_type', 'in', ['time', 'unit', False])]) or []")
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_po_id = fields.Many2one(
         'uom.uom', 'Purchase Unit of Measure',
         default=_get_default_uom_id, required=True,
-        help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
+        help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.",
+        domain="(type == 'service' and [('measure_type', 'in', ['time', 'unit', False])]) or []")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('product.template'), index=1)
