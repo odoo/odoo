@@ -44,7 +44,7 @@ class PurchaseRequisition(models.Model):
     _order = "id desc"
 
     def _get_picking_in(self):
-        pick_in = self.env.ref('stock.picking_type_in')
+        pick_in = self.env.ref('stock.picking_type_in', raise_if_not_found=False)
         company = self.env['res.company']._company_default_get('purchase.requisition')
         if not pick_in or pick_in.sudo().warehouse_id.company_id.id != company.id:
             pick_in = self.env['stock.picking.type'].search(
@@ -231,8 +231,8 @@ class PurchaseRequisitionLine(models.Model):
         return res
 
     def unlink(self):
-        if self.requisition_id.state not in ['draft', 'cancel', 'done']:
-            self.supplier_info_ids.unlink()
+        to_unlink = self.filtered(lambda r: r.requisition_id.state not in ['draft', 'cancel', 'done'])
+        to_unlink.mapped('supplier_info_ids').unlink()
         return super(PurchaseRequisitionLine, self).unlink()
 
     def create_supplier_info(self):
@@ -316,7 +316,7 @@ class PurchaseOrder(models.Model):
 
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id
-        self.payment_term_id = payment_term.id,
+        self.payment_term_id = payment_term.id
         self.company_id = requisition.company_id.id
         self.currency_id = requisition.currency_id.id
         if not self.origin or requisition.name not in self.origin.split(', '):

@@ -72,6 +72,14 @@ def set_limit_memory_hard():
         soft, hard = resource.getrlimit(rlimit)
         resource.setrlimit(rlimit, (config['limit_memory_hard'], hard))
 
+def empty_pipe(fd):
+    try:
+        while os.read(fd, 1):
+            pass
+    except OSError as e:
+        if e.errno not in [errno.EAGAIN]:
+            raise
+
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
 #----------------------------------------------------------
@@ -100,6 +108,9 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
     def setup(self):
+        # timeout to avoid chrome headless preconnect during tests
+        if config['test_enable'] or config['test_file']:
+            self.timeout = 5
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
         me = threading.currentThread()
@@ -669,13 +680,7 @@ class PreforkServer(CommonServer):
             for fd in ready[0]:
                 if fd in fds:
                     fds[fd].watchdog_time = time.time()
-                try:
-                    # empty pipe
-                    while os.read(fd, 1):
-                        pass
-                except OSError as e:
-                    if e.errno not in [errno.EAGAIN]:
-                        raise
+                empty_pipe(fd)
         except select.error as e:
             if e.args[0] not in [errno.EINTR]:
                 raise
@@ -766,6 +771,7 @@ class Worker(object):
         self.watchdog_time = time.time()
         self.watchdog_pipe = multi.pipe_new()
         self.eintr_pipe = multi.pipe_new()
+        self.wakeup_fd_r, self.wakeup_fd_w = self.eintr_pipe
         # Can be set to None if no watchdog is desired.
         self.watchdog_timeout = multi.timeout
         self.ppid = os.getpid()
@@ -789,8 +795,9 @@ class Worker(object):
 
     def sleep(self):
         try:
-            wakeup_fd = self.eintr_pipe[0]
-            select.select([self.multi.socket, wakeup_fd], [], [], self.multi.beat)
+            select.select([self.multi.socket, self.wakeup_fd_r], [], [], self.multi.beat)
+            # clear wakeup pipe if we were interrupted
+            empty_pipe(self.wakeup_fd_r)
         except select.error as e:
             if e.args[0] not in [errno.EINTR]:
                 raise
@@ -842,7 +849,7 @@ class Worker(object):
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, signal.SIG_DFL)
         signal.signal(signal.SIGCHLD, signal.SIG_DFL)
-        signal.set_wakeup_fd(self.eintr_pipe[1])
+        signal.set_wakeup_fd(self.wakeup_fd_w)
 
     def stop(self):
         pass
@@ -914,8 +921,9 @@ class WorkerCron(Worker):
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
             try:
-                wakeup_fd = self.eintr_pipe[0]
-                select.select([wakeup_fd], [], [], interval)
+                select.select([self.wakeup_fd_r], [], [], interval)
+                # clear wakeup pipe if we were interrupted
+                empty_pipe(self.wakeup_fd_r)
             except select.error as e:
                 if e.args[0] != errno.EINTR:
                     raise

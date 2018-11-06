@@ -607,13 +607,16 @@ class Meeting(models.Model):
             event_date = datetime.datetime.now()
 
         use_naive_datetime = self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule
-        if use_naive_datetime:
-            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
-        else:
+        if not use_naive_datetime:
             # Convert the event date to saved timezone (or context tz) as it'll
             # define the correct hour/day asked by the user to repeat for recurrence.
-            event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
-            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
+            event_date = event_date.astimezone(timezone)
+
+        # The start date is naive
+        # the timezone will be applied, if necessary, at the very end of the process
+        # to allow for DST timezone reevaluation
+        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
+
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
 
         # We handle a maximum of 50,000 meetings at a time, and clear the cache at each step to
@@ -629,12 +632,15 @@ class Meeting(models.Model):
                 else:
                     if not recurring_date.tzinfo:
                         recurring_date = pytz.UTC.localize(recurring_date)
-                    recurring_date = recurring_date.astimezone(timezone)
+                    recurring_date = recurring_date.astimezone(timezone).replace(tzinfo=None)
                 if date_field == "stop":
                     recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
             invalidate = True
-        return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1 if d.year < MAXYEAR]
+
+        def naive_tz_to_utc(d):
+            return timezone.localize(d).astimezone(pytz.UTC)
+        return [naive_tz_to_utc(d) if not use_naive_datetime else d for d in rset1 if d.year < MAXYEAR]
 
     @api.multi
     def _get_recurrency_end_date(self):
@@ -893,17 +899,17 @@ class Meeting(models.Model):
     def _inverse_dates(self):
         for meeting in self:
             if meeting.allday:
-                tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
 
+                # Convention break:
+                # stop and start are NOT in UTC in allday event
+                # in this case, they actually represent a date
+                # i.e. Christmas is on 25/12 for everyone
+                # even if people don't celebrate it simultaneously
                 enddate = fields.Datetime.from_string(meeting.stop_date)
-                enddate = tz.localize(enddate)
                 enddate = enddate.replace(hour=18)
-                enddate = enddate.astimezone(pytz.utc)
 
                 startdate = fields.Datetime.from_string(meeting.start_date)
-                startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
-                startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
-                startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
+                startdate = startdate.replace(hour=8)  # Set 8 AM
 
                 meeting.write({
                     'start': startdate.replace(tzinfo=None),

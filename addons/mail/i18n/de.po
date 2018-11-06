@@ -3,21 +3,23 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Jan Meyer, 2018
 # Tina Rittmüller <tr@ife.de>, 2018
 # darenkster <inactive+darenkster@transifex.com>, 2018
+# Martin Trigaux, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
 # Ralf Hilgenstock <rh@dialoge.info>, 2018
 # Anja Funk <anja.funk@afimage.de>, 2018
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
+# m sc <michael.schuett.lwl@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:20+0000\n"
+"Last-Translator: m sc <michael.schuett.lwl@gmail.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -565,7 +567,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__add_sign
 #: model:ir.model.fields,field_description:mail.field_mail_message__add_sign
 msgid "Add Sign"
-msgstr ""
+msgstr "Unterschreiben"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__user_signature
@@ -2631,6 +2633,12 @@ msgstr "Nur interne"
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Invalid email address"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_blacklist.py:35
+#, python-format
+msgid "Invalid email address %r"
 msgstr ""
 
 #. module: mail

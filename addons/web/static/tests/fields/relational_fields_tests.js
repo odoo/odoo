@@ -380,6 +380,93 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('show_address works in a view embedded in a view of another type', function (assert) {
+        assert.expect(1);
+
+        this.data.turtle.records[1].turtle_trululu = 2;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="turtles"/>' +
+                 '</form>',
+            res_id: 1,
+            archs: {
+                "turtle,false,form": '<form string="T">' +
+                        '<field name="display_name"/>' +
+                        '<field name="turtle_trululu" context="{\'show_address\': 1}" options="{\'always_reload\': True}"/>' +
+                    '</form>',
+                "turtle,false,list": '<tree editable="bottom">' +
+                        '<field name="display_name"/>' +
+                    '</tree>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    return this._super(route, args).then(function (result) {
+                        if (args.model === 'partner' && args.kwargs.context.show_address) {
+                            result[0][1] += '\nrue morgue\nparis 75013';
+                        }
+                        return result;
+                    });
+                }
+                return this._super(route, args);
+            },
+        });
+        // click the turtle field, opens a modal with the turtle form view
+        form.$('.o_data_row:first td.o_data_cell').click();
+
+        assert.strictEqual($('[name="turtle_trululu"]').text(), "second recordrue morgueparis 75013",
+                           "The partner's address should be displayed");
+        form.destroy();
+    });
+
+    QUnit.test('many2one data is reloaded if there is a context to take into account', function (assert) {
+        assert.expect(1);
+
+        this.data.turtle.records[1].turtle_trululu = 2;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="turtles"/>' +
+                 '</form>',
+            res_id: 1,
+            archs: {
+                "turtle,false,form": '<form string="T">' +
+                        '<field name="display_name"/>' +
+                        '<field name="turtle_trululu" context="{\'show_address\': 1}" options="{\'always_reload\': True}"/>' +
+                    '</form>',
+                "turtle,false,list": '<tree editable="bottom">' +
+                        '<field name="display_name"/>' +
+                        '<field name="turtle_trululu"/>' +
+                    '</tree>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    return this._super(route, args).then(function (result) {
+                        if (args.model === 'partner' && args.kwargs.context.show_address) {
+                            result[0][1] += '\nrue morgue\nparis 75013';
+                        }
+                        return result;
+                    });
+                }
+                return this._super(route, args);
+            },
+        });
+        // click the turtle field, opens a modal with the turtle form view
+        form.$('.o_data_row:first').click();
+
+        assert.strictEqual($('.modal [name=turtle_trululu]').text(), "second recordrue morgueparis 75013",
+                           "The partner's address should be displayed");
+        form.destroy();
+    });
+
     QUnit.test('many2ones in form views with search more', function (assert) {
         assert.expect(3);
         this.data.partner.records.push({
@@ -13498,6 +13585,53 @@ QUnit.module('relational_fields', {
         form.$('.o_field_boolean[name="bar"] input').click();
         assert.strictEqual(form.$('th').length, 1,
             "should be 1 column after the value change");
+        form.destroy();
+    });
+
+    QUnit.test('one2many column visiblity depends on onchange of parent field', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[0].bar = false;
+
+        this.data.partner.onchanges.p = function (obj) {
+            // set bar to true when line is added
+            if (obj.p.length > 1 && obj.p[1][2].foo === 'New line') {
+                obj.bar = true;
+            }
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form>' +
+                    '<field name="bar"/>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="foo"/>' +
+                            '<field name="int_field" attrs="{\'column_invisible\': [(\'parent.bar\', \'=\', False)]}"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // bar is false so there should be 1 column
+        assert.strictEqual(form.$('th').length, 1,
+            "should be only 1 column ('foo') in the one2many");
+        assert.strictEqual(form.$('.o_list_view .o_data_row').length, 1, "should contain one row");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // add a new o2m record
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_one2many input:first').focus();
+        form.$('.o_field_one2many input:first').val('New line').trigger('input');
+        form.$el.click(); // click outside to save a line
+
+        assert.strictEqual(form.$('th').length, 2, "should be 2 columns('foo' + 'int_field')");
+
         form.destroy();
     });
 

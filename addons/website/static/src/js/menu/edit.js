@@ -37,7 +37,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         // If we auto start the editor, do not show a welcome message
         if (this._editorAutoStart) {
-            return $.when(def, this._startEditMode());
+            this._startEditMode();
+            return def;
         }
 
         // Check that the page is empty
@@ -51,8 +52,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
         $wrap.empty().append(this.$welcomeMessage);
 
-        setTimeout(function(){
-            if($('.o_tooltip.o_animated').length) {
+        setTimeout(function () {
+            if ($('.o_tooltip.o_animated').length) {
                 $('.o_tooltip_container').addClass('show');
             }
         }, 1000); // ugly hack to wait that tooltip is loaded

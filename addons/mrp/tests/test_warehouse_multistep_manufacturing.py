@@ -86,6 +86,41 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(len(self.warehouse.pbm_route_id.rule_ids), 3)
         self.assertEqual(self.warehouse.manufacture_pull_id.location_id.id, self.warehouse.sam_loc_id.id)
 
+    def test_manufacturing_3_steps(self):
+        """ Test MO/picking before manufacturing/picking after manufacturing
+        components and move_orig/move_dest. Ensure that everything is created
+        correctly.
+        """
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.finished_product
+        production_form.picking_type_id = self.warehouse.manu_type_id
+        production = production_form.save()
+
+        move_raw_ids = production.move_raw_ids
+        self.assertEqual(len(move_raw_ids), 1)
+        self.assertEqual(move_raw_ids.product_id, self.raw_product)
+        self.assertEqual(move_raw_ids.picking_type_id, self.warehouse.manu_type_id)
+        pbm_move = move_raw_ids.move_orig_ids
+        self.assertEqual(len(pbm_move), 1)
+        self.assertEqual(pbm_move.location_id, self.warehouse.lot_stock_id)
+        self.assertEqual(pbm_move.location_dest_id, self.warehouse.pbm_loc_id)
+        self.assertEqual(pbm_move.picking_type_id, self.warehouse.pbm_type_id)
+        self.assertFalse(pbm_move.move_orig_ids)
+
+        move_finished_ids = production.move_finished_ids
+        self.assertEqual(len(move_finished_ids), 1)
+        self.assertEqual(move_finished_ids.product_id, self.finished_product)
+        self.assertEqual(move_finished_ids.picking_type_id, self.warehouse.manu_type_id)
+        sam_move = move_finished_ids.move_dest_ids
+        self.assertEqual(len(sam_move), 1)
+        self.assertEqual(sam_move.location_id, self.warehouse.sam_loc_id)
+        self.assertEqual(sam_move.location_dest_id, self.warehouse.lot_stock_id)
+        self.assertEqual(sam_move.picking_type_id, self.warehouse.sam_type_id)
+        self.assertFalse(sam_move.move_dest_ids)
+
     def test_manufacturing_flow(self):
         """ Simulate a pick pack ship delivery combined with a picking before
         manufacturing and store after manufacturing. Also ensure that the MO and

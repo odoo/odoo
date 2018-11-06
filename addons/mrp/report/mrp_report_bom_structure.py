@@ -139,17 +139,18 @@ class ReportBomStructure(models.AbstractModel):
                 continue
             price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line_quantity
             if line.child_bom_id:
-                factor = float_round(line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty, precision_rounding=1, rounding_method='UP')
+                factor = line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
                 sub_total = self._get_price(line.child_bom_id, factor)
             else:
                 sub_total = price
+            sub_total = self.env.user.company_id.currency_id.round(sub_total)
             components.append({
                 'prod_id': line.product_id.id,
                 'prod_name': line.product_id.display_name,
                 'code': line.child_bom_id and self._get_bom_reference(line.child_bom_id) or '',
                 'prod_qty': line_quantity,
                 'prod_uom': line.product_uom_id.name,
-                'prod_cost': price,
+                'prod_cost': self.env.user.company_id.currency_id.round(price),
                 'parent_id': bom.id,
                 'line_id': line.id,
                 'level': level or 0,
@@ -175,14 +176,21 @@ class ReportBomStructure(models.AbstractModel):
                 'operation': operation,
                 'name': operation.name + ' - ' + operation.workcenter_id.name,
                 'duration_expected': duration_expected,
-                'total': float_round(total, precision_rounding=self.env.user.company_id.currency_id.rounding),
+                'total': self.env.user.company_id.currency_id.round(total),
             })
         return operations
 
     def _get_price(self, bom, factor):
         price = 0
         if bom.routing_id:
-            operations = self._get_operation_line(bom.routing_id, factor, 0)
+            # routing are defined on a BoM and don't have a concept of quantity.
+            # It means that the operation time are defined for the quantity on
+            # the BoM (the user produces a batch of products). E.g the user
+            # product a batch of 10 units with a 5 minutes operation, the time
+            # will be the 5 for a quantity between 1-10, then doubled for
+            # 11-20,...
+            operation_cycle = float_round(factor, precision_rounding=1, rounding_method='UP')
+            operations = self._get_operation_line(bom.routing_id, operation_cycle, 0)
             price += sum([op['total'] for op in operations])
 
         for line in bom.bom_line_ids:
@@ -192,7 +200,8 @@ class ReportBomStructure(models.AbstractModel):
                 price += sub_price
             else:
                 prod_qty = line.product_qty * factor
-                price += (line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * prod_qty)
+                not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * prod_qty
+                price += self.env.user.company_id.currency_id.round(not_rounded_price)
         return price
 
     def _get_pdf_line(self, bom_id, product_id=False, qty=1, child_bom_ids=[], unfolded=False):

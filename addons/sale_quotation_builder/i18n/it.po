@@ -37,6 +37,9 @@ msgid ""
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is put on the quote."
 msgstr ""
+":\n"
+"                                questo contenuto apparirà nel preventivo solo se\n"
+"                                questo prodotto è inserito nel preventivo."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -45,6 +48,9 @@ msgid ""
 "                                        this content will appear on the quotation only if this\n"
 "                                        product is used in the quote."
 msgstr ""
+":\n"
+"                                questo contenuto apparirà nel preventivo solo se\n"
+"                                questo prodotto è utilizzato nel preventivo."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -53,6 +59,9 @@ msgid ""
 "                                    will appear on all quotations using this\n"
 "                                    template."
 msgstr ""
+"<strong>Intestazione del Template:</strong> questo contenuto\n"
+"                                    apparirà su tutti i preventivi che fanno uso\n"
+"                                    di questo template."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -66,6 +75,9 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
+"Come azienda leader nel settore dei servizi professionali,\n"
+"                                sappiamo che il successo è legato \n"
+"                                al nostro impegno per offrire servizi di qualità. "
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -107,6 +119,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"La modifica di un preventivo dalla \"panoramica\" di quest'ultimo\n"
+"                        aggiorna solo il preventivo del cliente. Se si aggiorna il modello\n"
+"                        di preventivo (dal menu Configurazione), tutti gli altri preventivi\n"
+"                        useranno questo modello modificato."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -145,6 +161,9 @@ msgid ""
 "                                stand on; we build it with a relentless\n"
 "                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"La qualità dei nostri prodotti è particolarmente\n"
+"                                importante per noi; ci concentriamo\n"
+"                                sui materiali, le performance e il know-how."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -155,7 +174,7 @@ msgstr "Prodotto:"
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_description
 msgid "Quotation Description"
-msgstr ""
+msgstr "Descrizione del preventivo"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
@@ -203,7 +222,7 @@ msgstr "Termini & Condizioni"
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
-msgstr ""
+msgstr "La descrizione del preventivo (non usata su eCommerce)"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
@@ -221,6 +240,8 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"Questo è un <strong>template di preventivo</strong>. Dovresti personalizzarlo secondo le tue necessità utilizzando l'applicazione <i>Vendite</i>\n"
+"                                tramite il menu: Configurazione / Template di preventivo"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -229,6 +250,9 @@ msgid ""
 "                                    <i>Heading 2</i> will be used to generate the\n"
 "                                    table of content automatically."
 msgstr ""
+"I titoli con gli stili <i>Titolo 1</i> e\n"
+"<i>Titolo 2</i> saranno utilizzati per generare\n"
+"il sommario automaticamente."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -237,6 +261,9 @@ msgid ""
 "                                set at a fair price so that you will be\n"
 "                                happy to buy them."
 msgstr ""
+"Ci assicuriamo sempre che i nostri prodotti\n"
+"                                siano fissati ad un prezzo equo, in modo che tu sia\n"
+"                                felici di acquistarli."
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__website_description
@@ -258,3 +285,8 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"Puoi <strong>configurare una descrizione per prodotto</strong>. Odoo creerà\n"
+"                        automaticamente un preventivo utilizzando le descrizioni\n"
+"                        di tutti i prodotti della proposta. Il sommario\n"
+"                        a sinistra viene generato automaticamente con gli stili\n"
+"                        utilizzati nella descrizione (titolo 1, titolo 2,...)"

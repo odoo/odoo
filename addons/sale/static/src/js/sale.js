@@ -39,6 +39,8 @@ KanbanRecord.include({
                     .done(function() {
                         self.trigger_up('kanban_record_update', {id: self.id});
                     });
+                // TODO: previous lines can be refactored as follows (in master)
+                // self.trigger_up('kanban_record_update', {invoiced_target: value});
             }
         });
     },

@@ -462,7 +462,7 @@ class MrpProduction(models.Model):
     @api.multi
     def _adjust_procure_method(self):
         try:
-            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', 'Make To Order')
+            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Make To Order'))
         except:
             mto_route = False
         for move in self.move_raw_ids:

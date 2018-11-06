@@ -133,15 +133,22 @@ class AccountInvoice(models.Model):
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
 
     def split_total_amount(self):
-       """ Splits the total amount of this invoice in two parts, using the dot as
-       a separator, and taking two precision digits (always displayed).
-       These two parts are returned as the two elements of a tuple, as strings
-       to print in the report.
+        """ Splits the total amount of this invoice in two parts, using the dot as
+        a separator, and taking two precision digits (always displayed).
+        These two parts are returned as the two elements of a tuple, as strings
+        to print in the report.
 
-       This function is needed on the model, as it must be called in the report
-       template, which cannot reference static functions
-       """
-       return float_split_str(self.amount_total, 2)
+        This function is needed on the model, as it must be called in the report
+        template, which cannot reference static functions
+        """
+        return float_split_str(self.amount_total, 2)
+
+    def display_swiss_qr_code(self):
+        """ Trigger the print of the Swiss QR code in the invoice report or not
+        """
+        self.ensure_one()
+        qr_parameter = self.env['ir.config_parameter'].sudo().get_param('l10n_ch.print_qrcode')
+        return self.partner_id.country_id.code == 'CH' and qr_parameter
 
     def isr_print(self):
         """ Triggered by the 'Print ISR' button.

@@ -51,7 +51,7 @@ def _toledo8217StatusParse(status):
 ScaleProtocol = namedtuple(
     'ScaleProtocol',
     "name baudrate bytesize stopbits parity timeout writeTimeout weightRegexp statusRegexp "
-    "statusParse commandTerminator commandDelay weightDelay newWeightDelay "
+    "statusParse commandTerminator commandDelay weightDelay newWeightDelay disable "
     "weightCommand zeroCommand tareCommand clearCommand emptyAnswerValid autoResetWeight")
 
 # 8217 Mettler-Toledo (Weight-only) Protocol, as described in the scale's Service Manual.

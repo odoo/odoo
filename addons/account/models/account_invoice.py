@@ -381,16 +381,23 @@ class AccountInvoice(models.Model):
     def _get_vendor_display_info(self):
         for invoice in self:
             vendor_display_name = invoice.partner_id.name
-            if not vendor_display_name and invoice.source_email:
-                vendor_display_name = _('From: ') + invoice.source_email
+            invoice.invoice_icon = ''
+            if not vendor_display_name:
+                if invoice.source_email:
+                    vendor_display_name = _('From: ') + invoice.source_email
+                    invoice.invoice_icon = '@'
+                else:
+                    vendor_display_name = ('Created by: ') + invoice.create_uid.name
+                    invoice.invoice_icon = '#'
             invoice.vendor_display_name = vendor_display_name
-            invoice.invoice_icon = invoice.source_email and '@' or ''
 
     @api.multi
     def _get_computed_reference(self):
         self.ensure_one()
         if self.company_id.invoice_reference_type == 'invoice_number':
-            identification_number = int(re.match('.*?([0-9]+)$', self.number).group(1))
+            seq_suffix = self.journal_id.sequence_id.suffix or ''
+            regex_number = '.*?([0-9]+)%s$' % seq_suffix
+            identification_number = int(re.match(regex_number, self.number).group(1))
             prefix = self.number
         else:
             #self.company_id.invoice_reference_type == 'partner'
@@ -1749,14 +1756,14 @@ class AccountInvoiceLine(models.Model):
         result = {}
         if not self.uom_id:
             self.price_unit = 0.0
-        else:
+
+        if self.product_id and self.uom_id:
             if self.invoice_id.type in ('in_invoice', 'in_refund'):
                 price_unit = self.product_id.standard_price
             else:
                 price_unit = self.product_id.lst_price
             self.price_unit = self.product_id.uom_id._compute_price(price_unit, self.uom_id)
 
-        if self.product_id and self.uom_id:
             if self.product_id.uom_id.category_id.id != self.uom_id.category_id.id:
                 warning = {
                     'title': _('Warning!'),

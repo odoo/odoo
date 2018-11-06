@@ -31,9 +31,9 @@ class WebsiteSaleDigital(CustomerPortal):
     ], type='http', auth='public', website=True)
     def portal_order_page(self, order_id=None, **post):
         response = super(WebsiteSaleDigital, self).portal_order_page(order_id=order_id, **post)
-        if not 'order' in response.qcontext:
+        if not 'sale_order' in response.qcontext:
             return response
-        order = response.qcontext['order']
+        order = response.qcontext['sale_order']
         invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
         products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
 

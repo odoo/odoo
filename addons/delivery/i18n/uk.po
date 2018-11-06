@@ -3,15 +3,16 @@
 # * delivery
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
+# Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -178,7 +179,7 @@ msgstr "Умова"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -276,7 +277,7 @@ msgstr "Упаковки доставки"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
-msgstr "Доставка упаковки"
+msgstr "Пакування доставки"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -327,7 +328,7 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"Кожен носій (наприклад, UPS) може мати кілька способів доставки (наприклад,\n"
+"Кожен перевізник (наприклад, UPS) може мати кілька способів доставки (наприклад,\n"
 "UPS Express, UPS Standard) із набором правил ціноутворення\n"
 "до кожного методу."
 
@@ -341,7 +342,7 @@ msgstr "Середовище"
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr "Помилка. Цей метод доставки недоступний для цієї адреси."
+msgstr "Помилка: цей метод доставки недоступний для цієї адреси."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -448,7 +449,7 @@ msgstr "Рівень інтеграції"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "Рахунок доставки на доставці"
+msgstr "Виставити рахунок на доставку"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -499,7 +500,7 @@ msgstr "Маржа"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr "Маржа не може бути нижчою, ніж-100%"
+msgstr "Маржа не може бути нижчою, ніж -100%"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -519,7 +520,7 @@ msgstr "Максимальна вага повинна бути позитивн
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
-msgstr "Макс. значення"
+msgstr "Максимальне значення"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
@@ -609,7 +610,7 @@ msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
 msgstr ""
-"Будь ласка, використовуйте \"Перевірте ціну\", щоб обчислити ціну доставки "
+"Будь ласка, використовуйте \"Перевірити ціну\", щоб обчислити ціну доставки "
 "за цією комерційною пропозицією."
 
 #. module: delivery
@@ -776,14 +777,14 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Ці методи дозволяють автоматично розрахувати вартість доставки\n"
-"відповідно до ваших налаштувань; на замовлення клієнта (на підставі\n"
-"комерційної пропозиції або рахунку-фактури (на підставі замовлень на доставку)."
+"відповідно до ваших налаштувань; на замовленні на продаж (на підставі\n"
+"комерційної пропозиції) або рахунку-фактури (на підставі замовлень на доставку)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
-"Цей метод доставки буде використано під час виставлення рахунків-фактур "
+"Цей метод доставки буде використано під час виставлення рахунків-фактур з "
 "комплектування."
 
 #. module: delivery
@@ -834,7 +835,7 @@ msgstr "Одиниця виміру для ваги"
 #: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Unit(s)"
-msgstr "шт"
+msgstr "Штука(и)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
@@ -929,8 +930,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Спосіб доставки не має перенаправлення на веб-сайті постачальника кур'єру, "
-"щоб відслідковувати це замовлення."
+"Спосіб доставки не має перенаправлення на веб-сайті постачальника, щоб "
+"відслідковувати це замовлення."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from

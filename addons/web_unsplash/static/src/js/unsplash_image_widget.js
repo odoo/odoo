@@ -17,7 +17,7 @@ ImageWidget.include({
         'input input.unsplash_search': '_onChangeUnsplashSearch',
         'dblclick .unsplash_img_container [data-imgid]': '_onUnsplashImgDblClick',
         'click .unsplash_img_container [data-imgid]': '_onUnsplashImgClick',
-        'click button.access_key': '_onSetAccessKey',
+        'click button.save_unsplash': '_onSaveUnsplash',
     }),
     /**
      * @override
@@ -84,7 +84,7 @@ ImageWidget.include({
             route: '/web_unsplash/attachment/add',
             params: {
                 unsplashurls: self._unsplash.selectedImages,
-                res_model : self.options.res_model || "ir.ui.view",
+                res_model : self.options.res_model,
                 res_id: self.options.res_id,
             }
         }).then(function (images) {
@@ -93,7 +93,7 @@ ImageWidget.include({
             }
 
             _.each(images, function (image) {
-                image.src = _.str.sprintf('/web/image/%s', image.id);
+                image.src = image.url;
                 image.isDocument = !(/gif|jpe|jpg|png/.test(image.mimetype));
             });
             self.images = images;
@@ -130,7 +130,7 @@ ImageWidget.include({
         if (!this._unsplash.query) {
             return this._super.apply(this, arguments);
         }
-        this.unsplashAPI.getImages(self._unsplash.query, this.IMAGES_PER_PAGE, this.page).then(function (res) {
+        this.unsplashAPI.getImages(this._unsplash.query, this.IMAGES_PER_PAGE, this.page).then(function (res) {
             self._unsplash.isMaxed = res.isMaxed;
             var rows = _(res.images).chain()
                 .groupBy(function (a, index) { return Math.floor(index / self.IMAGES_PER_ROW); })
@@ -161,19 +161,29 @@ ImageWidget.include({
     /**
      * @private
      */
-    _onSetAccessKey: function () {
+    _onSaveUnsplash: function () {
         var self = this;
         var key = this.$('#accessKeyInput').val().trim();
-        if (key) {
-            this._rpc({
-                route: '/web_unsplash/set_client_id',
-                params: {
-                    'key': key,
-                },
-            }).then(function () {
-                self.unsplashAPI.clientId = key;
-                self._renderImages();
-            });
+        var appId = this.$('#appIdInput').val().trim();
+
+        this.$('#accessKeyInput').toggleClass('is-invalid', !key);
+        this.$('#appIdInput').toggleClass('is-invalid', !appId);
+
+        if (key && appId) {
+            var params = {
+                'key': key,
+                'appId': appId,
+            };
+
+            if (!this.$el.find('.is-invalid').length) {
+                this._rpc({
+                    route: '/web_unsplash/save_unsplash',
+                    params: params,
+                }).then(function () {
+                    self.unsplashAPI.clientId = key;
+                    self._renderImages();
+                });
+            }
         }
     },
     /**

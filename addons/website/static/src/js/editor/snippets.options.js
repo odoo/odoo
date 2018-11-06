@@ -271,6 +271,7 @@ options.registry.carousel = options.Class.extend({
      * @override
      */
     _setActive: function () {
+        this._super.apply(this, arguments);
         this.$el.find('[data-interval]').removeClass('active')
             .filter('[data-interval=' + this.$target.attr('data-interval') + ']').addClass('active');
     },

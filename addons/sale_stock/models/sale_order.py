@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
         for order in self:
             dates_list = []
             confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state == 'sale' else fields.Datetime.now())
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel'):
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
             if dates_list:
@@ -415,7 +415,7 @@ class SaleOrderLine(models.Model):
         else:
             mto_route = False
             try:
-                mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', 'Make To Order')
+                mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Make To Order'))
             except UserError:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 pass

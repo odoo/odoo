@@ -423,7 +423,7 @@ class AccountMove(models.Model):
             aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
             aml.remove_move_reconcile()
             #reconcile together the reconcilable (or the liquidity aml) and their newly created counterpart
-            for account in list(set([x.account_id for x in aml])):
+            for account in set([x.account_id for x in aml]):
                 to_rec = aml.filtered(lambda y: y.account_id == account)
                 to_rec |= reversed_move.line_ids.filtered(lambda y: y.account_id == account)
                 #reconciliation will be full, so speed up the computation by using skip_full_reconcile_check in the context
@@ -701,7 +701,7 @@ class AccountMoveLine(models.Model):
             unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
             record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
 
-    @api.onchange('amount_currency', 'currency_id')
+    @api.onchange('amount_currency', 'currency_id', 'account_id')
     def _onchange_amount_currency(self):
         '''Recompute the debit/credit based on amount_currency/currency_id and date.
         However, date is a related field on account.move. Then, this onchange will not be triggered
@@ -709,9 +709,10 @@ class AccountMoveLine(models.Model):
         To fix this problem, see _onchange_date method on account.move.
         '''
         for line in self:
+            company_currency_id = line.account_id.company_id.currency_id
             amount = line.amount_currency
-            if line.currency_id and line.currency_id != line.company_currency_id:
-                amount = line.currency_id._convert(amount, line.company_currency_id, line.company_id, line.date or fields.Date.today())
+            if line.currency_id and company_currency_id and line.currency_id != company_currency_id:
+                amount = line.currency_id._convert(amount, company_currency_id, line.company_id, line.date or fields.Date.today())
                 line.debit = amount > 0 and amount or 0.0
                 line.credit = amount < 0 and -amount or 0.0
 
@@ -1072,10 +1073,8 @@ class AccountMoveLine(models.Model):
             # the provided values were not already multi-currency
             if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
-                ctx = {}
-                if 'date' in vals:
-                    ctx['date'] = vals['date']
-                vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, vals.get('date', fields.Date.today()))
+                date = vals.get('date') or vals.get('date_maturity') or fields.Date.today()
+                vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, date)
 
             #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
             #the 'tax_ids' is a cash based tax.

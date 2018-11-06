@@ -95,14 +95,14 @@ class Website(models.Model):
                 website = len(self) == 1 and self or self.search([], limit=1)
         isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
-        order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
+        last_order_pl = partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
                                                    request and request.session.get('website_sale_current_pl') or None,
                                                    website.pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
-                                                   order_pl=order_pl and order_pl.id or None)
+                                                   order_pl=last_order_pl and last_order_pl.id or None)
         return self.env['product.pricelist'].browse(pricelists)
 
     def is_pricelist_available(self, pl_id):
@@ -132,9 +132,8 @@ class Website(models.Model):
                 pl = None
                 request.session.pop('website_sale_current_pl')
         if not pl:
-            # If the user has a saved cart, it take the pricelist of this cart, except if
-            # the order is no longer draft (It has already been confirmed, or cancelled, ...)
-            pl = partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
+            # If the user has a saved cart, it take the pricelist of this last unconfirmed cart
+            pl = partner.last_website_so_id.pricelist_id
             if not pl:
                 # The pricelist of the user set on its partner form.
                 # If the user is not signed in, it's the public user pricelist
@@ -205,8 +204,8 @@ class Website(models.Model):
         if not sale_order_id:
             last_order = partner.last_website_so_id
             available_pricelists = self.get_pricelist_available()
-            # Do not reload the cart of this user last visit if the cart is no longer draft or uses a pricelist no longer available.
-            sale_order_id = last_order.state == 'draft' and last_order.pricelist_id in available_pricelists and last_order.id
+            # Do not reload the cart of this user last visit if the cart uses a pricelist no longer available.
+            sale_order_id = last_order.pricelist_id in available_pricelists and last_order.id
 
         pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist().id
 
@@ -242,9 +241,6 @@ class Website(models.Model):
                     sale_order.onchange_partner_shipping_id()
 
             request.session['sale_order_id'] = sale_order.id
-
-            if request.website.partner_id.id != partner.id and partner.last_website_so_id.id != sale_order.id:
-                partner.write({'last_website_so_id': sale_order.id})
 
         if sale_order:
             # case when user emptied the cart

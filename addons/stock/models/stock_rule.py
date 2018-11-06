@@ -81,7 +81,8 @@ class StockRule(models.Model):
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
         """ Ensure that the rule's company is the same than the route's company. """
-        self.company_id = self.route_id.company_id
+        if self.route_id.company_id:
+            self.company_id = self.route_id.company_id
         if self.picking_type_id.warehouse_id.company_id != self.route_id.company_id:
             self.picking_type_id = False
         domain = {'company_id': self.route_id.company_id and [('id', '=', self.route_id.company_id.id)] or []}
@@ -361,8 +362,10 @@ class ProcurementGroup(models.Model):
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
         # Search all confirmed stock_moves and try to assign them
-        confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed'), ('product_uom_qty', '!=', 0.0)], limit=None, order='priority desc, date_expected asc')
-        for moves_chunk in split_every(100, confirmed_moves.ids):
+        moves_to_assign = self.env['stock.move'].search([
+            ('state', 'in', ['confirmed', 'partially_available']), ('product_uom_qty', '!=', 0.0)
+        ], limit=None, order='priority desc, date_expected asc')
+        for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:
                 self._cr.commit()

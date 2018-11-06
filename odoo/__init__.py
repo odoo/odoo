@@ -63,7 +63,6 @@ if hasattr(time, 'tzset'):
 #----------------------------------------------------------
 # The hard-coded super-user id (a.k.a. administrator, or root user).
 SUPERUSER_ID = 1
-ADMINUSER_ID = 2
 
 
 def registry(database_name=None):

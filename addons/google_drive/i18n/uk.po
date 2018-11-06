@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +31,7 @@ msgid ""
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 "<b>Щоб створити новий фільтр:</b><br/>\n"
-"- Перейдіть в документ Odoo, для якого Вам потрібен фільтр. Наприклад,  перейдіть в Нагоди та шукайте Відділ продажів.<br/>\n"
+"- Перейдіть в документ Odoo, для якого вам потрібен фільтр. Наприклад, перейдіть в Нагоди та знайдіть Відділ продажів.<br/>\n"
 "- В цьому \"Пошуці\", виберіть опцію \"Зберегти поточний фільтр\", введіть назву (напр. відділ продажів)<br/>\n"
 "- Якщо виберете \"Поділитися з усіма\", прив'язка Google документа в меню \"Ще\" - буде відкрита для всіх користувачів у нагодах відділу продажів.<br/>\n"
 "- Якщо не виберете \"Поділитися з усіма\", прив'язка Google документа в меню \"Ще\" - буде закритою для інших користувачів у нагодах відділу продажів.<br/>\n"
@@ -58,13 +60,14 @@ msgstr "Активно"
 #. module: google_drive
 #: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Add a new template"
-msgstr ""
+msgstr "Додати новий шаблон"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:42
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
 msgstr ""
+"Принаймні один ключ не може бути знайдено у шаблоні під назвою Google Диска."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
@@ -83,7 +86,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
@@ -259,6 +262,10 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
+"Назва доданого документа може використовувати фіксовані або змінні дані. Щоб розрізняти документи\n"
+"                                 Google Диск, використовуйте фіксовані слова та поля. Наприклад, у прикладі вище, якщо ви написали Deco_Addict_%(name)s_Sales\n"
+"                               в полі назви Google Диску буде називатися документ на вашому Google Диску і вкладці Odoo\n"
+"                                'Deco_Addict_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:135
@@ -266,7 +273,9 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr "Дозвіл \"читання\" для \"всі, в кого є лінк\" не було вказано в документі"
+msgstr ""
+"Дозвіл \"читання\" для \"всі, в кого є посилання\" не було вказано в "
+"документі"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri

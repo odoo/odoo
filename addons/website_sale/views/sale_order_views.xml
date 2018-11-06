@@ -24,6 +24,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="mode">primary</field> 
+        <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -86,6 +87,7 @@
     <record id="view_sales_order_filter_ecommerce_abondand" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.abondand.view</field>
         <field name="model">sale.order</field>
+        <field name="priority">32</field>
         <field name="arch" type="xml">
             <search string="Search Abandoned Sales Orders">
                 <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
@@ -265,7 +267,7 @@
             <field name="partner_id" position="attributes">
                 <attribute name="context">{'display_website': True}</attribute>
             </field>
-            <field name="origin" position="after">
+            <field name="company_id" position="after">
                 <field name="website_id" groups="website.group_multi_website"/>
             </field>
         </field>

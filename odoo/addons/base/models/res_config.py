@@ -387,8 +387,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     def copy(self, values):
         raise UserError(_("Cannot duplicate configuration!"), "")
 
-    # TODO: Find replacement for 'onchange' attribute in view with dynamic
-    # api.onchange(...) and migrate the onchange_module(...) accordingly.
     @api.model
     def fields_view_get(self, view_id=None, view_type='form',
                         toolbar=False, submenu=False):
@@ -410,9 +408,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                     modifiers = json.loads(node.get("modifiers"))
                     modifiers['readonly'] = True
                     node.set("modifiers", json.dumps(modifiers))
-                if 'on_change' not in node.attrib:
-                    node.set("on_change",
-                    "onchange_module(%s, '%s')" % (field, field))
 
         ret_val['arch'] = etree.tostring(doc, encoding='unicode')
         return ret_val
@@ -435,6 +430,16 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 }
             }
         return {}
+
+    def _register_hook(self):
+        """ Add an onchange method for each module field. """
+        def make_method(name):
+            return lambda self: self.onchange_module(self[name], name)
+
+        for name in self._fields:
+            if name.startswith('module_'):
+                method = make_method(name)
+                self._onchange_methods[name].append(method)
 
     @api.model
     def _get_classified_fields(self):

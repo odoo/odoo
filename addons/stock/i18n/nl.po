@@ -3,21 +3,22 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Cas Vissers <casvissers@brahoo.nl>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2018
-# Thomas Pot <thomas@open2bizz.nl>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
+# Thomas Pot <thomas@open2bizz.nl>, 2018
+# Martin Trigaux, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +93,7 @@ msgstr "%s: Lever product van %s"
 #: code:addons/stock/models/res_company.py:24
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: Tussen locatie"
+msgstr "%s: Tussenlocatie"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -135,7 +136,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid ", max:"
-msgstr ""
+msgstr ", max:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -162,6 +163,8 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
+"<br>Er is een behoefte gecreëerd in <b>%s</b>en er wordt een regel "
+"geactiveerd om deze te vervullen."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -211,7 +214,7 @@ msgstr "<span><strong>Afleveradres:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr "<span><strong>Leverancier adres</strong></span>"
+msgstr "<span><strong>Leveranciersadres</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -298,7 +301,7 @@ msgstr "<strong>Verpakking</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Product(s) tracked: </strong>"
-msgstr ""
+msgstr "<strong>Product(en) traceren: </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -352,7 +355,7 @@ msgstr "<strong>Totale hoeveelheid</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products ?</strong>"
-msgstr ""
+msgstr "<strong>Waar wilt u de producten naar toe versturen?</strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:123
@@ -440,6 +443,12 @@ msgid "Add a new route"
 msgstr "Voeg een nieuwe route toe"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid ""
+"Add an internal note that will be printed on the Picking Operations sheet"
+msgstr "Voeg een interne notitie toe die niet geprint wordt op de paklijst"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
 msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
@@ -479,7 +488,7 @@ msgstr "Adres"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__partner_address_id
 msgid "Address where goods should be delivered. Optional."
-msgstr ""
+msgstr "Adres waar de goederen moeten worden geleverd. optioneel."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -545,6 +554,8 @@ msgstr "Alle retour mutaties"
 msgid ""
 "Allows to suggest the exact location (shelf) where to store the product."
 msgstr ""
+"Sta toe om de exacte locatie (plank) voor te stellen waar het product moet "
+"worden bewaard."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -577,6 +588,8 @@ msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
 "routes."
 msgstr ""
+"Pas specifieke route (s) toe voor de aanvulling in plaats van de "
+"standaardroutes van het product."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
@@ -615,7 +628,7 @@ msgstr "Eigenaar toewijzen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr "Mutaties toewijzen"
+msgstr "Toegewezen mutaties"
 
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
@@ -758,7 +771,7 @@ msgstr "Op partijen"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr "Op unieke serienummer"
+msgstr "Op uniek serienummer"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:644
@@ -798,7 +811,7 @@ msgstr ""
 #: model:product.product,name:stock.product_cable_management_box
 #: model:product.template,name:stock.product_cable_management_box_product_template
 msgid "Cable Management Box"
-msgstr ""
+msgstr "Kabelbeheer Box"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -815,7 +828,7 @@ msgstr "Kan geen klant of leverancier locatie vinden."
 #: code:addons/stock/models/stock_warehouse.py:256
 #, python-format
 msgid "Can't find any generic route %s."
-msgstr ""
+msgstr "Kan geen algemene route vinden %s."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
@@ -936,7 +949,7 @@ msgstr "kies een datum om de voorraad van die datum op te halen"
 #: code:addons/stock/models/stock_picking.py:998
 #, python-format
 msgid "Choose destination location"
-msgstr ""
+msgstr "Kies bestemmingslocatie"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__compute_at_date
@@ -1166,6 +1179,8 @@ msgid ""
 "Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.\n"
 "             Take from Stock: The products will be taken from the available stock."
 msgstr ""
+"Verwerving creëren: er wordt een inkoop gecreëerd op de bronlocatie en het systeem zal proberen een regel te vinden om het op te lossen. De beschikbare voorraad wordt genegeerd.\n"
+"              Uit voorraad nemen: de producten worden uit de beschikbare voorraad genomen."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1174,6 +1189,9 @@ msgid ""
 "                        products later. Do not create a backorder if you will not\n"
 "                        process the remaining products."
 msgstr ""
+"Maak een backorders als u verwacht om de producten\n"
+"later te verwerken. Maak geen backorder aan als u niet de\n"
+"overige producten verwerkt."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -1380,8 +1398,8 @@ msgstr "Klanten"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "DHL connector"
+msgid "DHL USA"
+msgstr "DHL USA"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__date
@@ -1494,6 +1512,8 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or draft manufacturing orders to resupply your stock."
 msgstr ""
+"Definieer een minimale voorraadregel, zodat Odoo automatisch aanvragen voor "
+"offertes of productieorders creëert om uw voorraad te aan te vullen."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -1552,7 +1572,7 @@ msgstr "Werkuren"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Deliver goods directly (1 step)"
-msgstr ""
+msgstr "Lever goederen direct (1 stap)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:526
@@ -1617,6 +1637,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Levertijd, in dagen. Het is het aantal dagen, beloofd aan de klant, tussen "
+"de bevestiging van de verkooporder en de levering."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
@@ -1708,7 +1730,7 @@ msgstr "Bestemming verpakking:"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
 msgid "Destination location"
-msgstr ""
+msgstr "Bestemmingslocatie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -1838,13 +1860,13 @@ msgstr "Concept-goederenstromen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Easypost Connector"
+msgid "Easypost"
+msgstr "Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Effective Date"
-msgstr "Boek datum"
+msgstr "Geboekte datum"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_template__tracking
@@ -1911,13 +1933,13 @@ msgstr "FIFO, LIFO..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
-msgid "FedEx Connector"
-msgstr "FedEx connector"
+msgid "FedEx"
+msgstr "FedEx"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
-msgstr ""
+msgstr "Gefilterde locatie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -1947,7 +1969,7 @@ msgstr "Vaste verwervingsgroep"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
 msgid "Fixed Putaway Strategy on Location"
-msgstr ""
+msgstr "Vaste wegzetregel per locatie"
 
 #. module: stock
 #. openerp-web
@@ -2040,7 +2062,7 @@ msgstr "Toekomstige leveringen"
 #: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Future P&L"
-msgstr "Virtueel verschillen"
+msgstr "Toekomstige W&V"
 
 #. module: stock
 #: code:addons/stock/models/product.py:348
@@ -2147,6 +2169,9 @@ msgid ""
 "                purchase order or picking order they come from. You will find\n"
 "                the list of all products you are waiting for."
 msgstr ""
+"Hier kunt u afzonderlijke producten ontvangen, van welke \n"
+"                 inkooporder of picking ze ook vandaan komen. U zult de lijst\n"
+"                 met alle producten waarop u wacht vinden."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
@@ -2194,13 +2219,13 @@ msgstr "ID"
 #: code:addons/stock/models/stock_inventory.py:431
 #, python-format
 msgid "INV:"
-msgstr "TEL:"
+msgstr "TELLING:"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
 msgid "INV: %s"
-msgstr "TEL: %s"
+msgstr "TELLING: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -2265,6 +2290,8 @@ msgid ""
 "If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
 "If the inventory adjustment is validated, date at which the inventory adjustment has been validated."
 msgstr ""
+"Als de voorraadtelling is niet bevestigd, is dit de datum waarop de theoretische hoeveelheden zijn gecontroleerd.\n"
+"Als de voorraadtelling is bevestigd, is dit de datum waarop de voorraadaanpassing is gevalideerd."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2417,7 +2444,7 @@ msgstr "Inkomende producten"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__in_date
 msgid "Incoming Date"
-msgstr "Ontvangst datum"
+msgstr "Ontvangstdatum"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_steps
@@ -2440,7 +2467,7 @@ msgstr "Ontvangst"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "Ontvangst locatie"
+msgstr "Ontvangstlocatie"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:138
@@ -2518,7 +2545,7 @@ msgstr "Ongeldige rechter operand %s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__location_id
 msgid "Inventoried Location"
-msgstr "Getelde locatie"
+msgstr "Te tellen locatie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__lot_id
@@ -2548,7 +2575,7 @@ msgstr "Voorraden"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventories Date"
-msgstr "Voorraad datum"
+msgstr "Voorraaddatum"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -2578,7 +2605,7 @@ msgstr "Voorraadtellingen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__date
 msgid "Inventory Date"
-msgstr "Voorraad datum"
+msgstr "Voorraaddatum"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
@@ -2589,7 +2616,7 @@ msgstr "Voorraad details"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "Voorraad regel"
+msgstr "Voorraadregel"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_line_tree
@@ -2605,7 +2632,7 @@ msgstr "Voorraadverschillen locatie"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Voorraad locaties"
+msgstr "Voorraadlocaties"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -2615,7 +2642,7 @@ msgstr "Voorraadverlies"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
 msgid "Inventory Overview"
-msgstr ""
+msgstr "Voorraad overzicht"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -2632,7 +2659,7 @@ msgstr "Voorraadtelling referentie"
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Inventory Report"
-msgstr "Voorraad rapportage"
+msgstr "Voorraadrapportage"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -2691,7 +2718,7 @@ msgstr "Is een retour locatie?"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
 msgid "Is a Scrap Location?"
-msgstr "Is afkeur locatie?"
+msgstr "Is afkeurlocatie?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -2739,7 +2766,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "LN/SN:"
-msgstr ""
+msgstr "PT/SN:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__last_done_picking
@@ -2882,7 +2909,7 @@ msgstr "Te late activiteiten"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Late verplaatsingen"
+msgstr "Te late verplaatsingen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
@@ -2907,7 +2934,7 @@ msgstr "Laat dit veld leeg als u deze route wilt delen met alle bedrijven"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Legend"
-msgstr ""
+msgstr "Legenda"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__company_id
@@ -3023,7 +3050,7 @@ msgstr "Partij/Serie #"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial :"
-msgstr "Partij/Serie:"
+msgstr "Partij/Serienummer:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__prod_lot_id
@@ -3041,7 +3068,7 @@ msgstr "Partijnummer"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_lot_label
 msgid "Lot/Serial Number (PDF)"
-msgstr ""
+msgstr "Partij/Serienummer (PDF)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_tree
@@ -3051,7 +3078,7 @@ msgstr "Partij/Serienummer voorraad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
 msgid "Lot/Serial Number Name"
-msgstr ""
+msgstr "Partij/Serienummer naam"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
@@ -3061,7 +3088,7 @@ msgstr "Partijen & serienummers"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots &amp; Serial numbers will appear on the delivery slip"
-msgstr ""
+msgstr "Partij- &amp; Serienummers worden afgedrukt op de pakbon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -3071,7 +3098,7 @@ msgstr "Partijen zichtbaar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Lots or serial numbers were not provided to tracked products"
-msgstr ""
+msgstr "Partij- of serienummer was niet ingegeven voor getraceerde producten"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -3085,7 +3112,7 @@ msgstr "Partij/Serienummer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
 msgid "MTO rule"
-msgstr "Maak op orderregel"
+msgstr "Maak op order regel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_main_attachment_id
@@ -3094,7 +3121,10 @@ msgid "Main Attachment"
 msgstr "Hoofd bijlage"
 
 #. module: stock
+#: code:addons/stock/models/stock_warehouse.py:288
+#: code:addons/stock/models/stock_warehouse.py:629
 #: model:stock.location.route,name:stock.route_warehouse0_mto
+#, python-format
 msgid "Make To Order"
 msgstr "Maak op order"
 
@@ -3210,7 +3240,7 @@ msgstr "Methode"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__propagation_minimum_delta
 msgid "Minimum Delta for Propagation"
-msgstr ""
+msgstr "Minimale delta voor doorzetten"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__propagation_minimum_delta
@@ -3324,6 +3354,9 @@ msgid ""
 " If none is given, the moves generated by stock rules will be grouped into "
 "one big picking."
 msgstr ""
+"Mutaties welke worden aangemaakt door deze aanvulregel worden geplaatst in "
+"deze verwervingsgroep. Indien niets is ingevoerd, worden de mutaties, "
+"gegenereerd door de voorraadregels, gegroepeerd in één grote levering."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -3451,6 +3484,8 @@ msgid ""
 "No procurement rule found in location \"%s\" for product \"%s\".\n"
 " Check routes configuration."
 msgstr ""
+"Geen verwervingsregel gevonden in locatie \"%s\" voor product \"%s\".\n"
+" Controleer uw route instellingen."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:59
@@ -3459,12 +3494,14 @@ msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)."
 msgstr ""
+"Er zijn geen producten retour te nemen (alleen regels die verwerkt zijn en "
+"nog niet volledig retour genomen zijn kunnen retour genomen worden)."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:172
 #, python-format
 msgid "No source location defined on stock rule: %s!"
-msgstr ""
+msgstr "Geen bronlocatie gedefinieerd op voorraadregel: %s!"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -3475,6 +3512,11 @@ msgstr "Normaal"
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
 msgid "Not urgent"
 msgstr "Niet urgent"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Note"
+msgstr "Notitie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__note
@@ -3551,6 +3593,9 @@ msgid ""
 "                the vendor or the purchase order reference. Then you can confirm\n"
 "                all products received using the buttons on the right of each line."
 msgstr ""
+"Nadat u een bestelling hebt ontvangen, kunt u filteren op basis van de naam van\n"
+"de leverancier of de referentie van de bestelling. Vervolgens kunt u \n"
+"alle producten bevestigen voor ontvangst met behulp van de knoppen aan de rechterkant van elke regel."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:121
@@ -3610,7 +3655,7 @@ msgstr "Bewerkingsoorten"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
 msgid "Operation type (PDF)"
-msgstr ""
+msgstr "Bewerkingssoort (PDF)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids
@@ -3712,7 +3757,7 @@ msgstr "Uitgaand"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
 msgid "Outgoing Shipments"
-msgstr "Uitgaande ontvangsten"
+msgstr "Uitgaande leveringen"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:446
@@ -3779,7 +3824,7 @@ msgstr "Eigenaar van de aantallen"
 #: code:addons/stock/models/product.py:340
 #, python-format
 msgid "P&L Qty"
-msgstr "Werkelijke verschillen"
+msgstr "Winst&Verlies hoeveelheid"
 
 #. module: stock
 #. openerp-web
@@ -3804,6 +3849,7 @@ msgstr "Type van verpakking"
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
 msgstr ""
+"Verpakken goederen, verstuur naar verzendlocatie en dan leveren (3 stappen)"
 
 #. module: stock
 #: selection:barcode.rule,type:0
@@ -3826,7 +3872,7 @@ msgstr "Verpakkingsbarcode (PDF)"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Content"
-msgstr ""
+msgstr "Barcode met inhoud afdrukken"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -3843,7 +3889,7 @@ msgstr "Verpakkingsniveau"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids_details
 msgid "Package Level Ids Details"
-msgstr ""
+msgstr "Verpakkingsniveau Ids details"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -3956,7 +4002,7 @@ msgstr "Relatie adres"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Physical Inventories by Date"
-msgstr ""
+msgstr "Aanwezige voorraad op datum"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:751
@@ -4051,7 +4097,7 @@ msgstr "Geplande verplaatsing"
 #: code:addons/stock/models/stock_picking.py:690
 #, python-format
 msgid "Please add some items to move."
-msgstr ""
+msgstr "Voeg een aantal items toe om te verplaatsen."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:132
@@ -4082,7 +4128,7 @@ msgstr "Voorkeursroute"
 #. module: stock
 #: selection:barcode.rule,type:0
 msgid "Priced Product"
-msgstr "Prijs Product"
+msgstr "Prijs product"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4244,13 +4290,13 @@ msgstr "Product verpakkingen"
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
 msgid "Product Replenish"
-msgstr ""
+msgstr "Product heraanvullen"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Product Routes Report"
-msgstr ""
+msgstr "Product route rapport"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4408,7 +4454,7 @@ msgstr "Wegzetten"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Putaway:"
-msgstr ""
+msgstr "Wegzetten:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -4463,7 +4509,7 @@ msgstr "Hoeveelheid:"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Quantity Done"
-msgstr "Hoeveelheid gedaan"
+msgstr "Hoeveelheid gereed"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -4628,24 +4674,26 @@ msgstr ""
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods in input, then quality and then stock (3 steps)"
 msgstr ""
+"Ontvang goederen in ontvangstlocatie, ga dan naar kwaliteitscontrole en dan "
+"naar de voorraad (3 stappen)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:524
 #, python-format
 msgid "Receive in 1 step (stock)"
-msgstr ""
+msgstr "Ontvangen in stap (voorraad)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:524
 #, python-format
 msgid "Receive in 2 steps (input + stock)"
-msgstr ""
+msgstr "Ontvangen in 2 stappen (ontvangst + voorraad)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:525
 #, python-format
 msgid "Receive in 3 steps (input + quality + stock)"
-msgstr ""
+msgstr "Ontvangen in 3 stappen (ontvangst + kwaliteitscontrole + voorraad)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:327
@@ -4746,7 +4794,7 @@ msgstr "Aanvullen min hoeveelheid"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr "Aanvulopdracht regels"
+msgstr "Aanvulopdrachtregels"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
@@ -4840,12 +4888,12 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Resupply"
-msgstr ""
+msgstr "Bevoorraad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr ""
+msgstr "Bevoorraad van"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
@@ -4876,7 +4924,7 @@ msgstr "Retour boeken"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Retour pickingregel"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:103
@@ -4928,6 +4976,8 @@ msgid ""
 "Routes will be created automatically to resupply this warehouse from the "
 "warehouses ticked"
 msgstr ""
+"Routes worden automatisch aangemaakt om dit magazijn te bevoorraden van de "
+"aangevinkte magazijnen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_route_ids
@@ -4941,7 +4991,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
-msgstr ""
+msgstr "Regel bericht"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_rules_form
@@ -4987,7 +5037,7 @@ msgstr "Geplande datum voor het verwerken van deze mutatie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Scheduled or processing date"
-msgstr ""
+msgstr "Geplande of datum van verwerken"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -5045,7 +5095,7 @@ msgid ""
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
 "Door een product af te keuren wordt deze verwijderd uit de voorraad. Het product wordt\n"
-"opgenomen in de afkeur locatie, welke kan worden gebruikt voor rapportages."
+"opgenomen in de afkeurlocatie, welke kan worden gebruikt voor rapportages."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5104,6 +5154,7 @@ msgstr "Verkoop en koop producten in verschillende maateenheden"
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Send goods in output and then deliver (2 steps)"
 msgstr ""
+"Verzend goederen naar verzendlocatie en lever dan aan klant (2 stappen)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__sequence
@@ -5215,7 +5266,7 @@ msgstr "Schap (Y)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Shipments"
-msgstr "ontvangsten"
+msgstr "Ontvangsten"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5262,7 +5313,7 @@ msgstr "Toon gedetailleerde bewerkingen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_m2o
 msgid "Show Lots M2O"
-msgstr ""
+msgstr "Geen partijen weer m2o"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_text
@@ -5288,7 +5339,7 @@ msgstr "Toon gereserveerd"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__show_resupply
 msgid "Show Resupply"
-msgstr ""
+msgstr "Bevoorraad weergeven"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_validate
@@ -5304,6 +5355,8 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
 msgid "Show the routes that apply on selected warehouses."
 msgstr ""
+"Geef de routes weer welke van toepassing zijn op de geselecteerde "
+"magazijnen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__string_availability_info
@@ -5318,6 +5371,8 @@ msgid ""
 "Some products of the inventory adjustment are tracked. Are you sure you "
 "don't want to specify a serial or lot number for them?"
 msgstr ""
+"Sommige producten van de voorraadtelling worden getraceerd. Weet u zeker dat"
+" u geen partij- of serienummer wilt ingeven?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -5443,7 +5498,7 @@ msgstr "Voorraad"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_forecast
 msgid "Stock Forecast Report"
-msgstr ""
+msgstr "Voorraadprognose rapport"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -5515,17 +5570,17 @@ msgstr " Beschikbare voorraad"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Stock Operation"
-msgstr "Voorraad bewerking"
+msgstr "Voorraadbewerking"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr ""
+msgstr "Voorraadverpakking bestemming"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr ""
+msgstr "Stock verpakkingsniveau"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
@@ -5553,27 +5608,27 @@ msgstr "Voorraadregel"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_rules_report
 msgid "Stock Rules Report"
-msgstr ""
+msgstr "Voorraadregels rapport"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Voorraadroutes rapport"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
 msgid "Stock Track Confirmation"
-msgstr ""
+msgstr "Voorraad traceer bevestiging"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_line
 msgid "Stock Track Line"
-msgstr ""
+msgstr "Voorraad traceerlijn"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
 msgid "Stock moves not in package"
-msgstr ""
+msgstr "Voorraadmutaties niet in verpakking"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -5593,12 +5648,12 @@ msgstr "Voorraadmutaties welke zijn verwerkt"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Voorraad regel rapportage"
+msgstr "Voorraadregel rapportage"
 
 #. module: stock
 #: selection:product.template,type:0
 msgid "Storable Product"
-msgstr ""
+msgstr "Voorraadproduct"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -5655,7 +5710,7 @@ msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
 msgstr ""
-"Technisch veld welke wordt gebruikt voor herbevoorradingsroutes tussen "
+"Technisch veld welke wordt gebruikt voor bevoorradingsroutes tussen "
 "magazijnen, welke behoren bij dit bedrijf"
 
 #. module: stock
@@ -5774,6 +5829,8 @@ msgid ""
 "The expected date of the created transfer will be computed based on this "
 "delay."
 msgstr ""
+"De verwachte datum van de aangemaakte verplaatsing wordt berekend op basis "
+"van deze vertraging."
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -5831,6 +5888,10 @@ msgid ""
 "                                   rounding precision of your unit of "
 "measure."
 msgstr ""
+"De hoeveelheid gedaan voor het product %s\"\" voldoet niet aan de "
+"afrondingsprecisie gedefinieerd op de maateenheid \"%s\". Wijzig de "
+"hoeveelheid die u hebt gedaan of de afrondingsnauwkeurigheid van uw "
+"maateenheid."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:284
@@ -5849,6 +5910,8 @@ msgid ""
 "The rules defined per product will be applied before the rules defined per "
 "product category."
 msgstr ""
+"De regels die per product worden gedefinieerd, worden toegepast voordat de "
+"regels per productcategorie worden gedefinieerd."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:160
@@ -5856,36 +5919,42 @@ msgstr ""
 msgid ""
 "The selected inventory options are not coherent, the package doesn't exist."
 msgstr ""
+"De geselecteerde voorraad opties zijn niet eenduidig, de verpakking bestaat "
+"niet."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:156
 #, python-format
 msgid "The selected lot number doesn't exist."
-msgstr ""
+msgstr "De geselecteerde partij bestaat niet."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:158
 #, python-format
 msgid "The selected owner doesn't have the proprietary of that product."
-msgstr ""
+msgstr "De geselecteerde eigenaar is niet de eigenaar van dat product."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:154
 #, python-format
 msgid "The selected product doesn't belong to that owner.."
-msgstr ""
+msgstr "Het geselecteerde product behoord niet toe aan deze eigenaar."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
 msgid ""
 "The stock location used as destination when sending goods to this contact."
 msgstr ""
+"De stock locatie gebruikt als bestemming wanneer u goederen verzend naar "
+"deze klant."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
 msgid ""
 "The stock location used as source when receiving goods from this contact."
 msgstr ""
+"De voorraadlocatie gebruikt als bronbestemming wanneer u goederen ontvangt "
+"van deze contact."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_id
@@ -5895,7 +5964,7 @@ msgstr "De voorraad bewerking waar de verpakking is aangemaakt"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__rule_id
 msgid "The stock rule that created this stock move"
-msgstr ""
+msgstr "De voorraadregel welke deze mutatie heeft aangemaakt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -5903,6 +5972,8 @@ msgid ""
 "The stock will be reserved for operations waiting for availability and the "
 "reordering rules will be triggered."
 msgstr ""
+"De voorraad wordt gereserveerd voor bewerkingen die wachten op "
+"beschikbaarheid en de aanvulregels zullen worden geactiveerd."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -6016,7 +6087,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:74
 #, python-format
 msgid "This lot %s is incompatible with this product %s"
-msgstr ""
+msgstr "Deze partij %s is incompatibel met dit product %s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -6039,6 +6110,8 @@ msgid ""
 "This note will show up on internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
+"Deze notitie wordt getoond op de interne verplaatsingen (bv. waar het "
+"product zich in het magazijn bevind)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6046,6 +6119,8 @@ msgid ""
 "This note will show up on receipt orders (e.g. where to store the product in"
 " the warehouse)."
 msgstr ""
+"Deze opmerking wordt getoond op het ontvangstbewijs (bv. waar producten "
+"opgeslagen worden in het magazijn)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -6092,6 +6167,8 @@ msgid ""
 "This user will be responsible of the next activities related to logistic "
 "operations for this product."
 msgstr ""
+"Deze gebruiker is verantwoordelijk voor de volgende activiteiten met "
+"betrekking tot logistieke activiteiten voor dit product."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_dest_id
@@ -6101,7 +6178,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 msgid "To"
-msgstr "Aan"
+msgstr "Naar"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -6113,7 +6190,7 @@ msgstr "Te doen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Process"
-msgstr "Te Verwerken"
+msgstr "Te verwerken"
 
 #. module: stock
 #: selection:stock.picking,activity_state:0
@@ -6175,23 +6252,23 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr "Traceer product locatie in uw magazijn"
+msgstr "Beheer productlocaties in uw magazijn"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:173
 #, python-format
 msgid "Tracked Products in Inventory Adjustment"
-msgstr ""
+msgstr "Getraceerde producten in voorraadtelling"
 
 #. module: stock
 #: selection:stock.track.line,tracking:0
 msgid "Tracked by lot"
-msgstr ""
+msgstr "Traceren per partij"
 
 #. module: stock
 #: selection:stock.track.line,tracking:0
 msgid "Tracked by serial number"
-msgstr ""
+msgstr "Traceren per serienummer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_template__tracking
@@ -6205,7 +6282,7 @@ msgstr "Tracering"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__tracking_line_ids
 msgid "Tracking Line"
-msgstr ""
+msgstr "Traceerregel"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
@@ -6216,12 +6293,12 @@ msgstr "Overplaatsing"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_partner_id
 msgid "Transfer Destination Address"
-msgstr "Bestemming adres overplaatsen"
+msgstr "Bestemmingsadres overplaatsing"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_overprocessed_transfer
 msgid "Transfer Over Processed Stock"
-msgstr ""
+msgstr "Verplaats te veel verwerkte voorraad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_id
@@ -6238,18 +6315,18 @@ msgstr "Verplaatsingen"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr "Tussen locatie"
+msgstr "Tussenlocatie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Transit Locations"
-msgstr "Tussen locaties"
+msgstr "Tussenlocaties"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 #: selection:stock.rule,procure_method:0
 msgid "Trigger Another Rule"
-msgstr ""
+msgstr "Trigger een andere regel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -6266,13 +6343,13 @@ msgstr "Soort bewerking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
-msgid "UPS Connector"
-msgstr "UPS connector"
+msgid "UPS"
+msgstr "UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
-msgid "USPS Connector"
-msgstr "USPS connector"
+msgid "USPS"
+msgstr "USPS"
 
 #. module: stock
 #. openerp-web
@@ -6437,6 +6514,9 @@ msgid ""
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
+"Gebruik deze assistent om je voorraad aan te vullen.\n"
+"                 Afhankelijk van uw productconfiguratie kan het starten van een aanvulling leiden tot een offerteaanvraag,\n"
+"                 een productieorder of een verplaatsing."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6571,7 +6651,7 @@ msgstr "Magazijninstellingen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
 msgid "Warehouse Count"
-msgstr ""
+msgstr "Aantal magazijnen"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -6602,12 +6682,12 @@ msgstr "Magazijnen"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr ""
+msgstr "Meld onvoldoende hoeveelheid"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr ""
+msgstr "Meld onvoldoende afkeur hoeveelheid"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:129
@@ -6708,6 +6788,8 @@ msgid ""
 "When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them "
 "in <b>%s</b>."
 msgstr ""
+"Wanneer producten nodig zijn in <b>%s</b>, <br/> <b>%s</b> worden deze "
+"aangemaakt om te worden verzonden in <b>%s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -6747,6 +6829,8 @@ msgid ""
 "When ticked, if the move is splitted or cancelled, the next move will be "
 "too."
 msgstr ""
+"Indien aangevinkt wordt de volgende mutatie, bij het splitsen of annuleren "
+"van deze mutate ook gesplitst."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
@@ -6767,6 +6851,9 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"Het is niet toegestaan om het product gekoppeld aan een serienummer of "
+"partijnummer te wijzigen als er al een voorraad met dat nummer is "
+"aangemaakt. Dit zou leiden tot inconsistenties in uw voorraad."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:36
@@ -6776,6 +6863,9 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New"
 " Lots/Serial Numbers\"."
 msgstr ""
+"Het is niet toegestaan om een partij- of serienummer met dit type bewerking "
+"te maken. Om dit te wijzigen, gaat u naar het bewerkingstype en vinkt u het "
+"vakje \"Nieuwe partijnummers / serienummers maken\" aan."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -6783,6 +6873,8 @@ msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
 msgstr ""
+"U probeert producten welke naar verschillende locaties gaan te stoppen in "
+"dezelfde verpakking."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:668
@@ -6794,6 +6886,11 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
+"U gebruikt een maateenheid kleiner dan die u gebruikt om uw product op te "
+"slaan. Dit kan leiden tot afrondingsproblemen bij gereserveerde "
+"hoeveelheden. U moet de kleinere meeteenheid gebruiken die mogelijk is om uw"
+" voorraad te waarderen of de afrondingsprecisie wijzigen in een kleinere "
+"waarde (bijvoorbeeld: 0,00001)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -6803,6 +6900,10 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
+"U kan hier de hoofd productieroutes definiëren die door uw\n"
+"magazijn lopen en die de flow van uw producten definiëren.  Deze\n"
+"productieroutes kunnen toegewezen worden aan een product, een productcategorie of vastgesteld worden op\n"
+"verwerving of verkooporder."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6835,13 +6936,13 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:147
 #, python-format
 msgid "You can not enter negative quantities."
-msgstr ""
+msgstr "U mag geen negatieve waardes ingeven."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:426
 #, python-format
 msgid "You can only adjust storable products."
-msgstr ""
+msgstr "U kan alleen voorraadproducten wijzigen."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1149
@@ -6871,6 +6972,9 @@ msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
 msgstr ""
+"Het is niet mogelijk het locatietype te wijzigen of zijn doel als "
+"afkeurlocatie te wijzigen, omdat er producten zijn gereserveerd in deze "
+"locatie. U dient eerst de reservering ongedaan te maken."
 
 #. module: stock
 #: code:addons/stock/models/product.py:647
@@ -6879,6 +6983,9 @@ msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"U kunt de verhouding van deze maateenheid niet wijzigen, omdat sommige "
+"producten met deze maateenheid al zijn verplaatst of momenteel zijn "
+"gereserveerd."
 
 #. module: stock
 #: code:addons/stock/models/product.py:536
@@ -6888,6 +6995,9 @@ msgid ""
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
 msgstr ""
+"U kunt de maateenheid niet wijzigen, aangezien er al voorraadmutaties zijn "
+"voor dit product. Als u de maateenheid wilt wijzigen, moet u dit product "
+"archiveren en een nieuwe aanmaken."
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:76
@@ -6911,6 +7021,10 @@ msgid ""
 "Please first validate the first inventory adjustment before creating another"
 " one."
 msgstr ""
+"U kunt niet twee voorraadaanpassingen in de staat 'In uitvoering' hebben met"
+" hetzelfde product (%s), dezelfde locatie, dezelfde verpakking, dezelfde "
+"eigenaar en dezelfde partij. Voer eerst de eerste voorraadtelling uit "
+"voordat u een nieuwe maakt."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1134
@@ -6919,6 +7033,8 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr ""
+"U kunt niet dezelfde verpakkingsinhoud meer dan één keer in dezelfde "
+"verplaatsing verplaatsen of dezelfde verpakking op twee locaties splitsen."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:339
@@ -6927,6 +7043,8 @@ msgid ""
 "You cannot perform the move because the unit of measure has a different "
 "category as the product unit of measure."
 msgstr ""
+"U kunt de verplaatsing niet uitvoeren omdat de maateenheid een andere "
+"categorie heeft als de maateenheid van het product."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:186
@@ -6951,6 +7069,8 @@ msgstr ""
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
 msgstr ""
+"Het is niet mogelijk een voorraadmutatie te splitsen welke in de 'Gereed' "
+"fase is."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:86
@@ -6967,6 +7087,8 @@ msgstr ""
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
+"Het is niet mogelijk om van een voorraadmutatie de reservering ongedaan te "
+"maken welke in de 'Gereed' fase is."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:122
@@ -6986,6 +7108,9 @@ msgid ""
 "You cannot validate a transfer if no quantites are reserved nor done. To "
 "force the transfer, switch in edit more and encode the done quantities."
 msgstr ""
+"U kunt een verplaatsing niet bevestigen als er geen hoeveelheden zijn "
+"gereserveerd of gereed zijn. Om de verplaatsing te forceren, gaat u naar de "
+"bewerk mode en voert u de de voltooide hoeveelheden in."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:112
@@ -6993,6 +7118,7 @@ msgstr ""
 msgid ""
 "You have manually created product lines, please delete them to proceed."
 msgstr ""
+"U heeft handmatig productregels aangemaakt. Verwijder deze om door te gaan."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
@@ -7000,6 +7126,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
+"U heeft geen hoeveelheden ingesteld op <i>Verwerkt</i>, wanneer u klikt op <i>Toepassen</i>, dan \n"
+"zal Odoo alle hoeveelheden welke <i>gereserveerd </i>zijn verwerken."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -7031,6 +7159,7 @@ msgstr ""
 msgid ""
 "You have to define a groupby and sorted method and pass them as arguments."
 msgstr ""
+"U dient een groepeer op, een sorteer methode en argumenten te definiëren."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:911
@@ -7039,6 +7168,8 @@ msgid ""
 "You have to select a product unit of measure that is in the same category "
 "than the default unit of measure of the product"
 msgstr ""
+"U dient een product maateenheid te selecteren in dezelfde categorie als de "
+"standaard maateenheid van het product."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:109
@@ -7050,13 +7181,13 @@ msgstr "U moet een naam instellen voor deze locatie."
 #: code:addons/stock/wizard/stock_picking_return.py:47
 #, python-format
 msgid "You may only return Done pickings."
-msgstr ""
+msgstr "U kunt alleen leveringen die gereed zijn retourneren."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:38
 #, python-format
 msgid "You may only return one picking at a time."
-msgstr ""
+msgstr "U kunt maar één picking tegelijk retourneren."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:22
@@ -7069,6 +7200,7 @@ msgstr "U moet een magazijn aanmaken voor het bedrijf: %s."
 #, python-format
 msgid "You must first set the quantity you will put in the pack."
 msgstr ""
+"U dient eerst de hoeveelheid in te geven welke u in de verpakking wilt doen."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:406
@@ -7091,7 +7223,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "]<br/>min:"
-msgstr ""
+msgstr "]<br/>min:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7107,8 +7239,8 @@ msgstr "_Annuleren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "bPost connector"
+msgid "bpost"
+msgstr "bpost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -7157,7 +7289,7 @@ msgstr "kg"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "manually to trigger the reordering rules right now."
-msgstr ""
+msgstr "om nu direct handmatig de aanvulopdrachtregels uit te voeren."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking

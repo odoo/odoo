@@ -14,8 +14,9 @@ class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(CustomerPortal, self)._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
-        values['purchase_count'] = request.env['purchase.order'].search_count([])
+        values['purchase_count'] = request.env['purchase.order'].search_count([
+            ('state', 'in', ['purchase', 'done', 'cancel'])
+        ])
         return values
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
