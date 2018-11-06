@@ -14,7 +14,9 @@
 
         > li {
             .o-text-overflow(@max-width: 90%);
-
+            @media (max-width: @screen-xs-max) {
+                padding-top: 3px;
+            }
             > a {
                 cursor: pointer;
             }
