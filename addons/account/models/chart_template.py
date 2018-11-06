@@ -381,13 +381,20 @@ class AccountChartTemplate(models.Model):
         :param company_id: company to generate journals for.
         :returns: True
         """
-        JournalObj = self.env['account.journal']
-        for vals_journal in self._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict):
-            journal = JournalObj.create(vals_journal)
-            if vals_journal['type'] == 'general' and vals_journal['code'] == _('EXCH'):
-                company.write({'currency_exchange_journal_id': journal.id})
-            if vals_journal['type'] == 'general' and vals_journal['code'] == _('CABA'):
-                company.write({'tax_cash_basis_journal_id': journal.id})
+        journals_vals = self._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict)
+        journals = self.env['account.journal'].create(journals_vals)
+
+        company_update_vals = {}
+
+        exchange_journal = journals.filtered(lambda j: j.type == 'general' and j.code == _('EXCH'))
+        if exchange_journal:
+            company_update_vals['currency_exchange_journal_id'] = exchange_journal[0].id
+        cash_basis_journal = journals.filtered(lambda j: j.type == 'general' and j.code == _('CABA'))
+        if cash_basis_journal:
+            company_update_vals['tax_cash_basis_journal_id'] = cash_basis_journal[0].id
+
+        if company_update_vals:
+            company.write(company_update_vals)
         return True
 
     @api.multi
@@ -636,16 +643,32 @@ class AccountChartTemplate(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        company_id = company.id
         account_tmpl_obj = self.env['account.account.template']
         acc_template = account_tmpl_obj.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
+        xml_refs = self.env['ir.model.data'].search([
+            ('model', '=', 'account.account.template'), ('res_id', 'in', acc_template.ids)])
+        templ_id_to_ref_id_map = dict((xml_ref.res_id, xml_ref) for xml_ref in xml_refs)
+
+        code_to_template_map = {}
+
+        # Create the 'account.account' records with their 'ir.model.data' xml references.
+        accounts_vals = []
         for account_template in acc_template:
+            xml_ref = templ_id_to_ref_id_map[account_template.id]
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
-                code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+                code_acc = str(code_acc) + (str('0' * (code_digits - code_main)))
             vals = self._get_account_vals(company, account_template, code_acc, tax_template_ref)
-            new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
-            acc_template_ref[account_template.id] = new_account
+            code_to_template_map[vals['code']] = account_template.id
+            accounts_vals.append({
+                'xml_id': '%s.%s_%s' % (xml_ref.module, company_id, xml_ref.name),
+                'values': vals,
+                'noupdate': True,
+            })
+        for account in self.env['account.account']._load_records(accounts_vals):
+            acc_template_ref[code_to_template_map[account.code]] = account.id
         return acc_template_ref
 
     def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
