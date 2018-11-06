@@ -26,6 +26,19 @@ class TestBankStatementReconciliation(AccountingTestCase):
         self.assertEqual(prop[0]['id'], rcv_mv_line.id)
 
     def test_full_reconcile(self):
+        self._reconcile_invoice_with_statement(False)
+
+    def test_post_at_bank_rec_full_reconcile(self):
+        """ Test the full reconciliation of a bank statement directly with an invoice.
+        """
+        self._reconcile_invoice_with_statement(True)
+
+    def _reconcile_invoice_with_statement(self, post_at_bank_rec):
+        """ Tests the reconciliation of an invoice with a bank statement, using
+        the provided 'post at bank reconciliation' value for the bank journal
+        where to generate the statement.
+        """
+        self.bs_model.with_context(journal_type='bank')._default_journal().post_at_bank_reconciliation = post_at_bank_rec
         rcv_mv_line = self.create_invoice(100)
         st_line = self.create_statement_line(100)
         # reconcile
@@ -47,6 +60,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
         self.assertTrue(rcv_mv_line.reconciled)
         self.assertTrue(counterpart_mv_line.reconciled)
         self.assertEqual(counterpart_mv_line.matched_credit_ids, rcv_mv_line.matched_debit_ids)
+        self.assertEqual(rcv_mv_line.invoice_id.state, 'paid', "The related invoice's state should now be 'paid'")
 
     def test_reconcile_with_write_off(self):
         pass
