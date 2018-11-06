@@ -125,7 +125,7 @@ QUnit.module('Views', {
     };
 
     QUnit.test('simple calendar rendering', function (assert) {
-        assert.expect(24);
+        assert.expect(25);
         var done = assert.async();
 
         this.data.event.records.push({
@@ -191,9 +191,10 @@ QUnit.module('Views', {
             assert.ok($typeFilter.length, "should display 'user' filter");
             assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'user'");
 
-            // filters which has no value should show with string "Undefined" and should show at the last
+            // filters which has no value should show with string "Undefined", should not have any user image and should show at the last
             assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last').data('value'), false, "filters having false value should be displayed at last in filter items");
             assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last span').text(), "Undefined", "filters having false value should display 'Undefined' string");
+            assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last label img').length, 0, "filters having false value should not have any user image");
 
             var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
             assert.ok($attendeesFilter.length, "should display 'attendees' filter");
