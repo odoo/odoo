@@ -44,6 +44,13 @@ class StockMove(models.Model):
                 values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
                 subtype_id=self.env.ref('mail.mt_note').id)
 
+    def _prepare_procurement_values(self):
+        """ Transfert the Sale Line from the stock move in the procurement value, so we can track procurement origin. """
+        values = super(StockMove, self)._prepare_procurement_values()
+        if self.sale_line_id:
+            values['sale_line_id'] = self.sale_line_id.id
+        return values
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
