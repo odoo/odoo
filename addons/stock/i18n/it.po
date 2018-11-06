@@ -3,36 +3,37 @@
 # * stock
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
+# Cécile Collart <cco@odoo.com>, 2018
+# Manuela Feliciani <mfeliciani@alice.it>, 2018
+# Alessandro Forte <a.forte1010@gmail.com>, 2018
+# maiolif <maiolif@mgftools.com>, 2018
+# Giovanni Perteghella <giovanni@perteghella.org>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
+# Christian <chris@effeci.info>, 2018
+# Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
+# Alberto Carollo <baba75@gmail.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Davide Corio <enlightx@gmail.com>, 2018
+# Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
+# Mirto Bonan <mbo@odoo.com>, 2018
+# Martin Trigaux, 2018
 # Paolo Valier, 2018
-# Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
-# Cécile Collart <cco@odoo.com>, 2018
-# Manuela Feliciani <mfeliciani@alice.it>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Davide Corio <enlightx@gmail.com>, 2018
-# Giovanni Perteghella <giovanni@perteghella.org>, 2018
-# Alessandro Forte <a.forte1010@gmail.com>, 2018
-# maiolif <maiolif@mgftools.com>, 2018
-# Christian <chris@effeci.info>, 2018
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
-# Alberto Carollo <baba75@gmail.com>, 2018
-# Mirto Bonan <mbo@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Mirto Bonan <mbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -369,7 +370,7 @@ msgstr "<strong>Quantità Totale</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products ?</strong>"
-msgstr ""
+msgstr "<strong>Dove vuoi inviare i prodotti?</strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:123
@@ -455,6 +456,14 @@ msgstr "Aggiungi una nuova ubicazione"
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
 msgid "Add a new route"
 msgstr "Aggiungi una nuova rotta"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid ""
+"Add an internal note that will be printed on the Picking Operations sheet"
+msgstr ""
+"Aggiungi una nota interna che verrà stampata sul foglio Operazioni di "
+"prelievo."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -823,7 +832,7 @@ msgstr ""
 #: model:product.product,name:stock.product_cable_management_box
 #: model:product.template,name:stock.product_cable_management_box_product_template
 msgid "Cable Management Box"
-msgstr ""
+msgstr "Box di gestione dei cavi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -963,7 +972,7 @@ msgstr "Scegli una data per ottenere l’inventario in quella data"
 #: code:addons/stock/models/stock_picking.py:998
 #, python-format
 msgid "Choose destination location"
-msgstr ""
+msgstr "Scegli l'ubicazione di destinazione"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__compute_at_date
@@ -1418,8 +1427,8 @@ msgstr "Clienti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "Connettore DHL"
+msgid "DHL USA"
+msgstr "DHL Stati Uniti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__date
@@ -1658,6 +1667,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Termine di consegna, in giorni. Si tratta del numero di giorni, promesso al "
+"cliente, tra la conferma dell'ordine di vendita e la consegna. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
@@ -1665,6 +1676,8 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
+"A seconda dei moduli installati, ciò consentirà di definire il percorso del "
+"prodotto: se sarà acquistato, prodotto, prodotto su ordine, ecc."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
@@ -1746,7 +1759,7 @@ msgstr "Pacchetto di destinazione :"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
 msgid "Destination location"
-msgstr ""
+msgstr "Ubicazione di destinazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -1875,8 +1888,8 @@ msgstr "Sposta Bozza"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Connettore Easypost"
+msgid "Easypost"
+msgstr "Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1891,6 +1904,7 @@ msgstr "Data effettiva"
 #: model:ir.model.fields,help:stock.field_stock_scrap__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
+"Garantisci la tracciabilità di un prodotto stoccabile nel tuo magazzino."
 
 #. module: stock
 #. openerp-web
@@ -1947,8 +1961,8 @@ msgstr "FIFO, LIFO …"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
-msgid "FedEx Connector"
-msgstr "Connettore FedEx"
+msgid "FedEx"
+msgstr "FedEx"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -1983,7 +1997,7 @@ msgstr "Gruppo di Approvvigionamento Fissato"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
 msgid "Fixed Putaway Strategy on Location"
-msgstr ""
+msgstr "strategie di riassetto delle ubicazioni fissate"
 
 #. module: stock
 #. openerp-web
@@ -2772,7 +2786,7 @@ msgstr "Specifica le merci da consegnare parzialmente o tutte in una volta"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "LN/SN:"
-msgstr ""
+msgstr "Numero di lotto/di serie:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__last_done_picking
@@ -3128,7 +3142,10 @@ msgid "Main Attachment"
 msgstr "Allegato principale"
 
 #. module: stock
+#: code:addons/stock/models/stock_warehouse.py:288
+#: code:addons/stock/models/stock_warehouse.py:629
 #: model:stock.location.route,name:stock.route_warehouse0_mto
+#, python-format
 msgid "Make To Order"
 msgstr "Produci su Ordine"
 
@@ -3244,7 +3261,7 @@ msgstr "Metodo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__propagation_minimum_delta
 msgid "Minimum Delta for Propagation"
-msgstr ""
+msgstr "Delta minimo per la propagazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__propagation_minimum_delta
@@ -3519,6 +3536,11 @@ msgid "Not urgent"
 msgstr "Non Urgente"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Note"
+msgstr "Nota"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__note
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3655,7 +3677,7 @@ msgstr "Tipi di operazione"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
 msgid "Operation type (PDF)"
-msgstr ""
+msgstr "Tipo di operazione (PDF)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids
@@ -4286,7 +4308,7 @@ msgstr "Movimenti Prodotto"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Movimenti del prodotto (riga movimenti magazzino)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
@@ -4297,13 +4319,13 @@ msgstr "Confezionamenti dei prodotti"
 #. module: stock
 #: model:ir.model,name:stock.model_product_replenish
 msgid "Product Replenish"
-msgstr ""
+msgstr "Rifornimento del prodotto"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Product Routes Report"
-msgstr ""
+msgstr "Report delle rotte del prodotto"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4317,7 +4339,7 @@ msgstr "Modello prodotto"
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_tmpl_id
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Modello del prodotto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_template__type
@@ -4398,7 +4420,7 @@ msgstr "Propagare annullare e dividere"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "Propagation"
-msgstr ""
+msgstr "Propagazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_propagation_option
@@ -4675,12 +4697,12 @@ msgstr "Ricevi i beni direttamente (1 passo)"
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods in input and then stock (2 steps)"
-msgstr ""
+msgstr "Ricevi la merce in ingresso e poi immagazzinala (2 fasi)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods in input, then quality and then stock (3 steps)"
-msgstr ""
+msgstr "Ricevi la merce, verifichi la qualità e poi immagazzinala (3 fasi)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:524
@@ -5157,7 +5179,7 @@ msgstr "Comprare e vendere prodotti in diverse unità di misura "
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Send goods in output and then deliver (2 steps)"
-msgstr ""
+msgstr "Invia la merce in uscita e poi consegna (2 passi)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__sequence
@@ -5317,7 +5339,7 @@ msgstr "Mostra Operazioni dettagliate"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_m2o
 msgid "Show Lots M2O"
-msgstr ""
+msgstr "Mostra i lotti M2O"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_text
@@ -5614,7 +5636,7 @@ msgstr "Report delle regole dello stock"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Report delle regole dello stock"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
@@ -5650,7 +5672,7 @@ msgstr "Movimenti di magazzini processati"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Report della regola dello stock"
 
 #. module: stock
 #: selection:product.template,type:0
@@ -5956,12 +5978,15 @@ msgstr "Il prodotto selezionato non appartiene a quel proprietario."
 msgid ""
 "The stock location used as destination when sending goods to this contact."
 msgstr ""
+"L'ubicazione di stoccaggio usata come destinazione per l'invio della merce a"
+" questo contatto. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
 msgid ""
 "The stock location used as source when receiving goods from this contact."
 msgstr ""
+"L'ubicazione di stoccaggio usata per ricevere la merce da questo contatto. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_id
@@ -6289,7 +6314,7 @@ msgstr "Traccia"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__tracking_line_ids
 msgid "Tracking Line"
-msgstr ""
+msgstr "Linea di tracciamento"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
@@ -6350,13 +6375,13 @@ msgstr "Tipo di Operazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
-msgid "UPS Connector"
-msgstr "Connettore UPS"
+msgid "UPS"
+msgstr "UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
-msgid "USPS Connector"
-msgstr "Connettore USPS"
+msgid "USPS"
+msgstr "USPS"
 
 #. module: stock
 #. openerp-web
@@ -6658,7 +6683,7 @@ msgstr "Configurazione Magazzino"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
 msgid "Warehouse Count"
-msgstr ""
+msgstr "Numero di magazzini"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -6689,12 +6714,12 @@ msgstr "Magazzini"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr ""
+msgstr "Avviso quantità insufficiente"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr ""
+msgstr "Avviso quantità di scarti insufficiente"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:129
@@ -6882,6 +6907,8 @@ msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
 msgstr ""
+"Stai cercando di mettere nello stesso pacchetto prodotti che vanno in "
+"ubicazioni diverse"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:668
@@ -6961,7 +6988,7 @@ msgstr "Puoi cancellare solo i movimenti in bozza"
 #: code:addons/stock/models/stock_move_line.py:140
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
-msgstr ""
+msgstr "Puoi trattare solo 1,0 %s dei prodotti con un numero di serie unico."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1014
@@ -6978,6 +7005,9 @@ msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
 msgstr ""
+"Non è possibile modificare il tipo di ubicazione o il suo utilizzo come "
+"luogo di rottamazione in quanto ci sono prodotti riservati in questa "
+"ubicazione. Cancella la prenotazione dei prodotti prima. "
 
 #. module: stock
 #: code:addons/stock/models/product.py:647
@@ -7128,6 +7158,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
+"Non hai ancora registrato le quantità <i>effettuate</i> cliccando su <i>Applica</i>\n"
+"                        Odoo tratterà tutte le quantità <i>prenotate</i>."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -7237,8 +7269,8 @@ msgstr "_Annulla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "Connettore bpost"
+msgid "bpost"
+msgstr "bpost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -7248,7 +7280,7 @@ msgstr "giorni"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "days to be propagated"
-msgstr ""
+msgstr "giorni per essere propagati"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -7297,7 +7329,7 @@ msgstr "di"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "Trattato al posto di"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form

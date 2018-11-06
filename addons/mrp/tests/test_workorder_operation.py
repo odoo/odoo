@@ -124,7 +124,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.env['stock.move'].search([('product_id', '=', product_bolt.id)])._do_unreserve()
         product_bolt.type = 'product'
 
-        bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk")).copy()
+        bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk"))
         bom.routing_id = self.ref('mrp.mrp_routing_1')
 
         bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_sheet).operation_id = bom.routing_id.operation_ids[0]

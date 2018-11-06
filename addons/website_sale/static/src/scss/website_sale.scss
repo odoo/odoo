@@ -32,16 +32,15 @@
         word-wrap: break-word;
     }
 
-    .td-qty {
-        width: 130px;
-        @include media-breakpoint-down(md) {
-            width: 60px
-        }
-    }
-
     @include media-breakpoint-down(sm) {
         .td-img {
             display: none;
+        }
+    }
+
+    .toggle_summary_div {
+        @include media-breakpoint-up(xl) {
+            max-width: 400px;
         }
     }
 }
@@ -457,7 +456,7 @@ div#payment_method {
 
 .oe_overlay_options {
     .dropdown {
-        ul[name="size"] {
+        div[name="size"] {
             table {
                 margin-left: 20px;
             }
@@ -569,6 +568,8 @@ ul.wizard {
 }
 /* Collapse category */
 #o_shop_collapse_category li {
+    width: 100%;
+
     a {
         display: inline-block;
         width: 80%;

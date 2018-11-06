@@ -178,11 +178,162 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"\n"
+"<table style=\"width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;\">\n"
+"    <tr>\n"
+"        <td align=\"center\" valign=\"top\" style=\"border-collapse: collapse; padding: 0\">\n"
+"            % set company, user = ctx['company'], ctx['user']\n"
+"            % set data = object.compute_kpis(company, user)\n"
+"            % set tips = object.compute_tips(company, user)\n"
+"            % set kpi_actions = object.compute_kpis_actions(company, user)\n"
+"            % set kpis = data.yesterday.keys()\n"
+"            <table style=\"width: 100%; max-width: 600px; border-spacing: 0; border: 1px solid #e7e7e7; border-bottom: none; color: #6e7172; line-height: 23px; text-align: left;\">\n"
+"                <tr>\n"
+"                    <td style=\"border-collapse: collapse; padding: 10px 40px; text-align: left;\">\n"
+"                        <strong style=\"margin-left: -22px; color: #000000; font-size: 22px; line-height: 32px;\">${company.name} at a glance</strong>\n"
+"                        <div style=\"color: #000000; font-size: 15px; margin-left:-22px;\">${datetime.date.today().strftime('%B %d, %Y')}</div>\n"
+"                    </td>\n"
+"                    <td style=\"text-align: right; padding: 10px 40px\">\n"
+"                        <img style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" src=\"/logo.png?company=${company.id}\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align: center;\">\n"
+"                    <hr width=\"95%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 14px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"            % for kpi in kpis:\n"
+"                <table style=\"border-spacing: 0; width: 100%; max-width: 600px;\">\n"
+"                    <tr>\n"
+"                        <td style=\"border-collapse: collapse; background-color: #ffffff; border-left: 1px solid #e7e7e7; border-right: 1px solid #e7e7e7; line-height: 21px; padding: 0 20px 10px 20px; text-align: left;\"><br/>\n"
+"                            <span style=\"color: #3d466e; font-size: 18px; font-weight: 500; line-height: 23px;\">${object.fields_get()[kpi]['string']}</span>\n"
+"                            %if kpi in kpi_actions:\n"
+"                                <span style=\"float: right;\">\n"
+"                                    <a href=\"/web#action=${kpi_actions[kpi]}\">Bekijk meer</a>\n"
+"                                </span>\n"
+"                            %endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td style=\"border-collapse: collapse; margin: 0; padding:0;\">\n"
+"                            <table style=\"width: 100%; border-spacing: 0; background-color: #f9f9f9; border: 1px solid #e7e7e7; border-top: none;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"border-collapse: collapse; margin: 0; padding: 0; display: block; border-top: 2px solid #56b3b5;\">\n"
+"                                        <table style=\"width: 100%; max-width: 199px; border-spacing: 0;\">\n"
+"                                            <tr>\n"
+"                                                <td style=\"border-collapse: collapse; padding: 20px; text-align: center;\">\n"
+"                                                    <span style=\"color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;\">${data['yesterday'][kpi][kpi]}</span><br/>\n"
+"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Gisteren</span>\n"
+"                                                    % if data['yesterday'][kpi]['margin'] != 0.0:\n"
+"                                                        <span style=\"color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">\n"
+"                                                            % if data['yesterday'][kpi]['margin'] > 0.0:\n"
+"                                                                <span style=\"color: #0bbc22;\">▲</span>${\"%.2f\" % data['yesterday'][kpi]['margin']} %\n"
+"                                                            % endif\n"
+"                                                            % if data['yesterday'][kpi]['margin'] < 0.0:\n"
+"                                                                <span style=\"color: #ff0000;\">▼</span>${\"%.2f\" % data['yesterday'][kpi]['margin']} %\n"
+"                                                            % endif\n"
+"                                                        </span>\n"
+"                                                    % endif\n"
+"                                                </td>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                    <td style=\"border-collapse: collapse; margin: 0; padding: 0; border-top: 2px solid #9a5b82;\">\n"
+"                                        <table style=\"width: 100%; max-width: 199px; border-spacing: 0; margin: 0; padding: 0;\">\n"
+"                                            <tr>\n"
+"                                                <td style=\"border-collapse: collapse; padding: 20px; text-align: center;\">\n"
+"                                                    <span style=\"color: #9a5b82; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;\">${data['lastweek'][kpi][kpi]}</span><br/>\n"
+"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Laatste 7 dagen</span>\n"
+"                                                    % if data['lastweek'][kpi]['margin'] != 0.0:\n"
+"                                                        <span style=\"color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">\n"
+"                                                            % if data['lastweek'][kpi]['margin'] > 0.0:\n"
+"                                                                <span style=\"color: #0bbc22;\">▲</span>${\"%.2f\" % data['lastweek'][kpi]['margin']} %\n"
+"                                                            % endif\n"
+"                                                            % if data['lastweek'][kpi]['margin'] < 0.0:\n"
+"                                                                <span style=\"color: #ff0000;\">▼</span>${\"%.2f\" % data['lastweek'][kpi]['margin']} %\n"
+"                                                            %endif\n"
+"                                                        </span>\n"
+"                                                    %endif\n"
+"                                                </td>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                    <td style=\"border-collapse: collapse; margin: 0; padding: 0; border-top: 2px solid #56b3b5;\">\n"
+"                                        <table style=\"width: 100%; max-width: 199px; border-spacing: 0; margin: 0; padding: 0;\">\n"
+"                                            <tr>\n"
+"                                                <td style=\"border-collapse: collapse; margin: 0; padding: 20; text-align: center;\">\n"
+"                                                    <span style=\"color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px\">${data['lastmonth'][kpi][kpi]}</span><br/>\n"
+"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Laatste 30 dagen</span>\n"
+"                                                    % if data['lastmonth'][kpi]['margin'] != 0.0:\n"
+"                                                        <span style=\"color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">\n"
+"                                                             % if data['lastmonth'][kpi]['margin'] > 0.0:\n"
+"                                                                <span style=\"color: #0bbc22;\">▲</span>${\"%.2f\" % data['lastmonth'][kpi]['margin']} %\n"
+"                                                            % endif\n"
+"                                                            % if data['lastmonth'][kpi]['margin'] < 0.0:\n"
+"                                                                <span style=\"color: #ff0000;\">▼</span>${\"%.2f\" % data['lastmonth'][kpi]['margin']} %\n"
+"                                                            %endif\n"
+"                                                        </span>\n"
+"                                                    %endif\n"
+"                                                </td>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            % endfor\n"
+"            % if tips:\n"
+"                <table style=\"width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;\">\n"
+"                    <tr>\n"
+"                        <td style=\"border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0px 20px;\"><br/>\n"
+"                            <div style=\"color: #3d466e; line-height: 23px;\">${ctx['tip_description']|safe}</div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            % endif\n"
+"            <table style=\"width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;\">\n"
+"                <tr>\n"
+"                    <td style=\"border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0 20px 10px 20px; text-align: center;\"><br/>\n"
+"                        <div style=\"color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;\">Run uw bedrijf overal vandaan met Odoo Mobile.</div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td>\n"
+"                        <div style=\"text-align: center;\"><a href=\"https://play.google.com/store/apps/details?id=com.odoo.mobile\" target=\"_blank\"><img src=\"/digest/static/src/img/google_play.png\" style=\"display: inline-block; height: 30px; margin-left: auto; margin-right: 12px;\"/></a><a href=\"https://itunes.apple.com/us/app/odoo/id1272543640\" target=\"_blank\"><img src=\"/digest/static/src/img/app_store.png\" style=\"display: inline-block; height: 30px; margin-left: 12px; margin-right: auto;\"/></a>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"            <table style=\"margin-top: 5px; border: 1px solid #e7e7e7; font-size: 15px; width: 100%; max-width: 600px;\">\n"
+"                <tr>\n"
+"                    <td style=\"border-collapse: collapse; margin: 0; padding: 10px 20px;\">\n"
+"                        % if ctx['user'].has_group('base.group_system'): \n"
+"                            <div style=\"margin-top: 20px;\"> \n"
+"                                Wilt u deze e-mail aanpassen?\n"
+"                                <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #875A7B;\">Kies de statistieken die belangrijk voor u zijn</a>\n"
+"                            </div>\n"
+"                            <br />\n"
+"                        % endif\n"
+"                        <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"                            <strong>\n"
+"                                Verzonden door\n"
+"                                <a href=\"https://www.odoo.com\" style=\"text-decoration: none; color: #875A7B;\">Odoo</a> - <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #888888;\">Uitschrijven</a>\n"
+"                            </strong>\n"
+"                        </p>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid "${', '.join(users.mapped('name'))} signed up. Say hello in the"
 msgstr ""
+"${', '.join(users.mapped('name'))} heeft zich aangemeld, Zeg hallo in de"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
@@ -191,12 +342,17 @@ msgid ""
 "    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
 "    <strong style=\"font-size: 16px;\">Did you know...?</strong>"
 msgstr ""
+"% set users = object.env['res.users'].search([], limit=10, order='id desc')\n"
+"    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
+"    <strong style=\"font-size: 16px;\">Wist u dat...?</strong>"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
 msgid ""
 "<strong style=\"font-size: 16px;\">Get things done with activities</strong>"
 msgstr ""
+"<strong style=\"font-size: 16px;\">Krijg dingen gedaan met "
+"activiteiten</strong>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -212,6 +368,8 @@ msgstr "Geactiveerd"
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
 msgstr ""
+"Voeg nieuwe gebruikers toe als ontvanger van een periodieke e-mail met "
+"belangrijke statistieken"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -236,7 +394,7 @@ msgstr "Configuratie instellingen"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr ""
+msgstr "Samenvatting e-mails instellen"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected
@@ -249,6 +407,8 @@ msgid ""
 "Create or edit the mail template: you may get computed KPI's value using "
 "these fields:"
 msgstr ""
+"Maak of bewerk het e-mailsjabloon: mogelijk krijgt u de KPI-waarde van de "
+"computer met behulp van deze velden:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
@@ -286,7 +446,7 @@ msgstr "Verbruik"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Digest Email"
-msgstr ""
+msgstr "Samenvatting e-mail"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_digest_action
@@ -296,7 +456,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
-msgstr ""
+msgstr "Samenvatting e-mails"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
@@ -343,7 +503,7 @@ msgstr "ID"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "In order to build your customized digest, follow these steps:"
-msgstr ""
+msgstr "Voer de volgende stappen uit om uw aangepaste samenvatting te maken:"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
@@ -364,12 +524,12 @@ msgstr "KPIs"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr ""
+msgstr "KPI E-mail bericht totale waarde"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
 msgid "Kpi Res Users Connected Value"
-msgstr ""
+msgstr "KPI aangesloten gebruikerswaarde"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest____last_update
@@ -410,6 +570,8 @@ msgid ""
 "New users are automatically added as recipient of the following digest "
 "email."
 msgstr ""
+"Nieuwe gebruikers worden automatisch toegevoegd als ontvanger van de "
+"volgende samenvattingsmail."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
@@ -472,6 +634,8 @@ msgstr "Uitschrijven"
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
 msgstr ""
+"Wordt gebruikt om de samenvatting-tip in e-mailsjabloon basis op order weer "
+"te geven"
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -533,6 +697,9 @@ msgid ""
 "                                                <code>kpi_myfield</code>\n"
 "                                                and display it in the KPI's tab;"
 msgstr ""
+"maak een ja/nee veld aan, genaamd\n"
+"                                                <code>kpi_myfield</code>\n"
+"                                                en geef deze weer in de KPI tab;"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -541,6 +708,9 @@ msgid ""
 "                                                <code>kpi_myfield_value</code>\n"
 "                                                that will compute your customized KPI."
 msgstr ""
+"maak dan een berekend veld aan genaamd\n"
+"                                                <code> kpi_myfield_value</code>\n"
+"                                                 deze zal uw aangepaste KPI berekenen."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -549,3 +719,6 @@ msgid ""
 "                                                <code>digest</code>\n"
 "                                                object:"
 msgstr ""
+"u dient 2 velden aan te maken op het\n"
+"                                                <code>samenvatting</code>\n"
+"                                                object:"

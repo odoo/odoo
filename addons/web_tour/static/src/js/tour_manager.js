@@ -173,15 +173,28 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             }
             this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
         } else {
-            _.each(this.active_tooltips, this._check_for_tooltip.bind(this));
+            for (var tourName in this.active_tooltips) {
+                var tip = this.active_tooltips[tourName];
+                var activated = this._check_for_tooltip(tip, tourName);
+                if (activated) {
+                    break;
+                }
+            }
         }
     },
+    /**
+     *  Check (and activate or update) a help tooltip for a tour.
+     *
+     * @param {Object} tip
+     * @param {string} tour_name
+     * @returns {boolean} true if a tip was found and activated/updated
+     */
     _check_for_tooltip: function (tip, tour_name) {
 
-        if ($('.blockUI').length) {
+        if ($('body').hasClass('o_ui_blocked')) {
             this._deactivate_tip(tip);
             this._log.push("blockUI is preventing the tip to be consumed");
-            return;
+            return false;
         }
 
         var $trigger;
@@ -193,7 +206,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var $visible_trigger = get_first_visible_element($trigger);
 
         var extra_trigger = true;
-        var $extra_trigger = undefined;
+        var $extra_trigger;
         if (tip.extra_trigger) {
             $extra_trigger = get_jquery_element_from_selector(tip.extra_trigger);
             extra_trigger = get_first_visible_element($extra_trigger).length;
@@ -236,6 +249,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 }
             }
         }
+        return !!triggered;
     },
     _activate_tip: function(tip, tour_name, $anchor) {
         var tour = this.tours[tour_name];

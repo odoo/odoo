@@ -1,14 +1,33 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mass_mailing.tests import common
-from odoo.tests.common import users, warmup
+from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.tests.common import TransactionCase, users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
+class TestMassMailPerformanceBase(TransactionCase):
+
+    def setUp(self):
+        super(TestMassMailPerformanceBase, self).setUp()
+
+        self.user_employee = mail_new_test_user(
+            self.env, login='emp',
+            groups='base.group_user',
+            name='Ernest Employee', notification_type='inbox')
+
+        self.user_marketing = mail_new_test_user(
+            self.env, login='marketing',
+            groups='base.group_user,mass_mailing.group_mass_mailing_user',
+            name='Martial Marketing', signature='--\nMartial')
+
+        # patch registry to simulate a ready environment
+        self.patch(self.env.registry, 'ready', True)
+
+
 @tagged('mail_performance')
-class TestMassMailPerformance(common.MassMailingCase):
+class TestMassMailPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
         super(TestMassMailPerformance, self).setUp()
@@ -20,7 +39,7 @@ class TestMassMailPerformance(common.MassMailingCase):
 
     @users('__system__', 'marketing')
     @warmup
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_send_mailing(self):
         mailing = self.env['mail.mass_mailing'].create({
             'name': 'Test',
@@ -38,7 +57,7 @@ class TestMassMailPerformance(common.MassMailingCase):
 
 
 @tagged('mail_performance')
-class TestMassMailBlPerformance(common.MassMailingCase):
+class TestMassMailBlPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
         """ In this setup we prepare 20 blacklist entries. We therefore add
@@ -57,7 +76,7 @@ class TestMassMailBlPerformance(common.MassMailingCase):
 
     @users('__system__', 'marketing')
     @warmup
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_send_mailing_w_bl(self):
         mailing = self.env['mail.mass_mailing'].create({
             'name': 'Test',

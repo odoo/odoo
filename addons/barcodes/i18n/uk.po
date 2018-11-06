@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,29 +108,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "Номенклатура штрихкодів"
+msgstr "Номенклатура штрих-кодів"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Номенклатура штрихкодів"
+msgstr "Номенклатура штрих-кодів"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
 msgid "Barcode Pattern"
-msgstr "Шаблон штрихкоду"
+msgstr "Шаблон штрих-коду"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr "Правило штрихкоду"
+msgstr "Правило штрих-коду"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Barcode Scanned"
-msgstr "Штрихкод проскановано"
+msgstr "Штрих-код проскановано"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -235,7 +237,7 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Маршрутизація HTTP"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
@@ -299,9 +301,9 @@ msgid ""
 "                                zeroes."
 msgstr ""
 "Шаблон також може визначати як числові значення, такі як вага чи ціна, можуть\n"
-"бути зашиті у штрихкод. Вони вказуються як <code>{NNN}</code>, де N\n"
+"бути зашиті у штрих-код. Вони вказуються як <code>{NNN}</code>, де N\n"
 "визначають місце і кількість цифр. Числа з комою також підтримуються, якщо\n"
-"вказати числа після коми літерами D, наприклад, <code>{NNNDD}</code>. В цьому випадку, штрихкод у відповідних записах <i>повинен</i> вказувати ці числа, як нулі."
+"вказати числа після коми літерами D, наприклад, <code>{NNNDD}</code>. В цьому випадку, штрих-код у відповідних записах <i>повинен</i> вказувати ці числа, як нулі."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -345,17 +347,17 @@ msgstr "Столи"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr "Відповідний шаблон штрихкоду"
+msgstr "Відповідний шаблон штрих-коду"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
-msgstr "Список правил штрихкоду"
+msgstr "Список правил штрих-коду"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr "Відповідний шаблон буде призначено як псевдонім для цього штрихкоду."
+msgstr "Відповідний шаблон буде призначено як псевдонім для цього штрих-коду."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:198
@@ -363,7 +365,7 @@ msgstr "Відповідний шаблон буде призначено як �
 #: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid "There is a syntax error in the barcode pattern "
-msgstr "У шаблоні штрихкоду виявлено синтаксичну помилку"
+msgstr "У шаблоні штрих-коду виявлено синтаксичну помилку"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -371,8 +373,7 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
-"Дане правило діятиме тільки якщо штрих-код закодовано точно зазначеним "
-"кодуванням"
+"Це правило діятиме, якщо штрих-код закодовано точно зазначеним кодуванням"
 
 #. module: barcodes
 #. openerp-web
@@ -387,7 +388,7 @@ msgstr "Для зміни цього документу, спочатку зап
 #, python-format
 msgid "To set the quantity please scan a barcode first."
 msgstr ""
-"Для встановлення кількості, будь ласка, спочатку відскануйте штрихкод."
+"Для встановлення кількості, будь ласка, спочатку відскануйте штрих-код."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -402,7 +403,7 @@ msgid ""
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
 "UPC коди можна конвертувати у EAN дописуючи нулі спочатку. Це налаштування "
-"вказує, чи конвертувати автоматично UPC/EAN штрихкоди в тому чи іншому "
+"вказує, чи конвертувати автоматично UPC/EAN штрих-коди в тому чи іншому "
 "напрямку під час пошуку правила для відповідного кодування."
 
 #. module: barcodes
@@ -436,7 +437,7 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
-msgstr "Значення останнього відсканованого штрихкоду."
+msgstr "Значення останнього відсканованого штрих-коду."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0

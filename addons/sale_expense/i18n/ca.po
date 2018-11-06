@@ -3,14 +3,14 @@
 # * sale_expense
 # 
 # Translators:
-# Quim - eccit <quim@eccit.com>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,9 +19,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
+msgid "# of Expenses"
+msgstr ""
+
+#. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid "<strong style=\"font-size: 16px;\">Submit expenses by email</strong>"
+msgstr ""
+
+#. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid "Activate Expense Emails"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Línia analítica"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -29,11 +44,29 @@ msgid "Expense"
 msgstr ""
 
 #. module: sale_expense
+#: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
+#: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
+msgid "Expenses"
+msgstr "Despeses"
+
+#. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
 msgid "Invoicing"
+msgstr "Facturació"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_sale_order
+msgid "Quotation"
 msgstr ""
 
 #. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sale_order_id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 msgid "Sale Order"
+msgstr ""
+
+#. module: sale_expense
+#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
+msgid ""
+"Take a snapshot of your expenses and submit your expenses by email.<br>"
 msgstr ""

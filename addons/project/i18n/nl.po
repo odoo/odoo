@@ -3,21 +3,22 @@
 # * project
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Jean-Paul Ladage <j.ladage@zestsoftware.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
-# Wynand Tastenhoye <wta@odoo.com>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
+# Wynand Tastenhoye <wta@odoo.com>, 2018
+# Martin Trigaux, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -723,7 +724,7 @@ msgstr "Klik op deze knop om de taak te wijzigen."
 #: model:ir.model.fields,field_description:project.field_project_tags__color
 #: model:ir.model.fields,field_description:project.field_project_task__color
 msgid "Color Index"
-msgstr "Kleur index"
+msgstr "Kleurindex"
 
 #. module: project
 #. openerp-web
@@ -940,6 +941,10 @@ msgid ""
 "feedback is accepted %s and which feedback is moved to the \"Refused\" "
 "column."
 msgstr ""
+"Klanten stellen feedback per e-mail voor; Odoo maakt taken automatisch aan "
+"en u kunt rechtstreeks communiceren over de taak. Uw managers bepalen welke "
+"feedback wordt geaccepteerd %s en welke feedback wordt verplaatst naar de "
+"kolom 'Geweigerd'."
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -1184,6 +1189,10 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"Vul uw inbox eenvoudig met de e-mail gateway. Bekijk uw Postvak IN "
+"regelmatig en plan taken door ze naar andere kolommen te verplaatsen. Elke "
+"dag bekijkt u de kolom \"Deze week\" om belangrijke taken naar \"Vandaag\" "
+"te verplaatsen. Elke maandag bekijkt u de kolom 'Deze maand'."
 
 #. module: project
 #. openerp-web
@@ -1806,6 +1815,8 @@ msgid ""
 "New tasks can be generated from incoming emails. You just need to set email "
 "aliases on your projects.<br>"
 msgstr ""
+"Nieuwe taken kunnen worden gegenereerd door inkomende e-mails. U hoeft "
+"alleen e-mail aliassen in te stellen voor uw projecten. <br>"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:41
@@ -1849,7 +1860,7 @@ msgstr "Nog geen klantenbeoordelingen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "No project rating published for now."
-msgstr ""
+msgstr "Geen projectbeoordeling gepubliceerd voor nu."
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -1935,6 +1946,8 @@ msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br>\n"
 "                    You can track progress, discuss on tasks, attach documents, etc."
 msgstr ""
+"Met Odoo's projectbeheer kunt u de pijplijn van uw taken efficiënt beheren. <br>\n"
+"                     U kunt de voortgang bijhouden, discussiëren over taken, documenten bijvoegen, enz."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
@@ -1955,6 +1968,9 @@ msgid ""
 "developers know they can pull it. If you work in sprints, use %s to mark "
 "tasks of the current sprint."
 msgstr ""
+"Nadat een taak is opgegeven, stelt u %s deze in de kolom Specificaties in, "
+"zodat ontwikkelaars weten dat ze eraan kunnen starten. Als je in sprints "
+"werkt, gebruik %s om je aken van de huidige sprint te markeren."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -2527,7 +2543,7 @@ msgstr "Instellingen"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share"
-msgstr "Deel"
+msgstr "Delen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -2762,12 +2778,13 @@ msgstr "Taak geblokkeerd"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "Taak in bewerking. Klik op blokkeer of zet op gereed."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"Taak in geblokkeerd. Klik om blokkering ongedaan te maken of zet op gereed."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -2873,6 +2890,9 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Het project kan niet worden gedeeld met de ontvanger (s) omdat de privacy "
+"van het project te beperkt is. Stel de privacy in op 'Zichtbaar door klanten"
+" te volgen' om het voor de ontvanger (s) toegankelijk te maken."
 
 #. module: project
 #: code:addons/project/models/project.py:571
@@ -2882,6 +2902,9 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Het project kan niet worden gedeeld met de ontvanger (s) omdat de privacy "
+"van het project te beperkt is. Stel de privacy in 'Zichtbaar door klanten' "
+"om voor de ontvanger (s) toegankelijk te maken."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2957,7 +2980,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
-msgstr ""
+msgstr "Deze stap is gedaan. Klik op blokkeer of zet op gereed."
 
 #. module: project
 #. openerp-web
@@ -2965,6 +2988,8 @@ msgstr ""
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
 msgstr ""
+"Dit maakt een nieuw project aan en verwijst ons door naar de fases van dit "
+"project."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3006,6 +3031,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"Om dingen voor elkaar te krijgen, gebruikt u activiteiten en status voor taken. <br>\n"
+"                     Chat in realtime of per e-mail om efficiënt samen te werken."
 
 #. module: project
 #. openerp-web

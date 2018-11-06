@@ -2,18 +2,12 @@
 # This file contains the translation of the following modules:
 # * website_crm
 # 
-# Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Egon Raamat <egon@avalah.ee>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Egon Raamat <egon@avalah.ee>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +16,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks_page
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
-msgstr ""
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
 msgstr ""
 
 #. module: website_crm
@@ -43,7 +29,12 @@ msgstr ""
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Communication"
-msgstr "Kontakt"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -56,44 +47,36 @@ msgid "Contact Us"
 msgstr ""
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_team_id
-msgid "Default Sales Channel"
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
+msgid "Default Sales Team"
 msgstr ""
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
-msgid "Default Sales Channels"
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Team for new leads created through the Contact Us form."
 msgstr ""
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Teams"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
 msgstr ""
 
 #. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
-msgid ""
-"Default sales channel for new leads created through the Contact Us form."
-msgstr ""
-
-#. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Email"
-msgstr "E-post"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "If you have an emergency, do not hesitate to contact us by phone:"
 msgstr ""
 
 #. module: website_crm
@@ -113,37 +96,47 @@ msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Sales Channel"
+msgid ""
+"Please set a Sales Team for the website. Otherwise you can't follow related "
+"events."
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "Sales Team"
 msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Salesperson"
-msgstr "Müügimees"
+msgstr ""
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Send"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Subject"
-msgstr "Teema"
+msgstr ""
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks_page
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_crm.contactus_thanks
 msgid "Thanks!"
 msgstr ""
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks_page
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
 msgid "Website"
-msgstr "Veebisait"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -158,7 +151,7 @@ msgstr ""
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Your Name"
-msgstr "Sinu nimi"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
@@ -166,9 +159,8 @@ msgid "Your Question"
 msgstr ""
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks_page
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_crm.contactus_thanks
 msgid "Your message has been sent successfully."
 msgstr ""
 
@@ -176,8 +168,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "page"
 msgstr ""
-
-#. module: website_crm
-#: model:ir.model,name:website_crm.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

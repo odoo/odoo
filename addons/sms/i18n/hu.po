@@ -2,18 +2,12 @@
 # This file contains the translation of the following modules:
 # * sms
 # 
-# Translators:
-# krnkris, 2017
-# gezza <geza.nagy@oregional.hu>, 2017
-# Martin Trigaux, 2017
-# Ákos Nagy <akos.nagy@oregional.hu>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,41 +16,48 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/js/sms_widget.js:93
+#, python-format
+msgid "%s chars, fits in %s SMS (%s) "
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_partner
 msgid "Contact"
-msgstr "Kapcsolat"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_api__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr "E-mail összafűzés"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_api__id
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr ""
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:53
@@ -68,25 +69,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_api____last_update
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms____last_update
 msgid "Last Modified on"
-msgstr "Utoljára módosítva"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__message
 msgid "Message"
-msgstr "Üzenet"
+msgstr ""
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:81
+#: code:addons/sms/wizard/send_sms.py:82
 #, python-format
 msgid "Missing mobile number for %s."
 msgstr ""
@@ -100,7 +101,19 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
 msgid "Recipients"
-msgstr "Címzettek"
+msgstr ""
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_api
+msgid "SMS API"
+msgstr ""
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/xml/sms_widget.xml:4
+#, python-format
+msgid "SMS Pricing"
+msgstr ""
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:48
@@ -111,25 +124,17 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send"
-msgstr "Küldés"
+msgstr ""
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.model,name:sms.model_sms_send_sms
+#: model_terms:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
-msgstr ""
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_api
-msgid "sms.api"
-msgstr ""
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_send_sms
-msgid "sms.send_sms"
 msgstr ""

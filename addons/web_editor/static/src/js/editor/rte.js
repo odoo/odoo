@@ -576,7 +576,9 @@ var RTEWidget = Widget.extend({
                 this._getEscapedElement($el).prop('outerHTML'),
                 $el.data('oe-xpath') || null,
             ],
-            context: withLang ? context : _.extend({}, context, {lang: undefined}),
+            context: context,
+        }, withLang ? undefined : {
+            noContextKeys: 'lang',
         });
     },
 
@@ -608,6 +610,14 @@ var RTEWidget = Widget.extend({
         if (!$editable.length || $.summernote.core.dom.isContentEditableFalse($target)) {
             return;
         }
+
+        // Removes strange _moz_abspos attribute when it appears. Cannot
+        // find another solution which works in all cases. A grabber still
+        // appears at the same time which I did not manage to remove.
+        // TODO find a complete and better solution
+        _.defer(function () {
+            $editable.find('[_moz_abspos]').removeAttr('_moz_abspos');
+        });
 
         if ($target.is('a')) {
             /**

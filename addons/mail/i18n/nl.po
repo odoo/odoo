@@ -3,21 +3,22 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # Wynand Tastenhoye <wta@odoo.com>, 2018
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
+# Martin Trigaux, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:20+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgstr "%d Berichten"
 #: code:addons/mail/static/src/js/activity.js:89
 #, python-format
 msgid "%d days overdue"
-msgstr "%d dagen over tijd"
+msgstr "%d dagen te laat"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:249
@@ -908,12 +909,12 @@ msgstr "Auto-verwijder"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
 msgid "Auto Schedule Next Activity"
-msgstr ""
+msgstr "Automatisch volgende activiteit plannen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Auto Subscribe Groups"
-msgstr ""
+msgstr "Automatisch inschrijven voor groepen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_ids
@@ -1328,7 +1329,7 @@ msgstr "Gefeliciteerd, uw inbox is leeg!"
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Connection failed (outgoing mail server problem)"
-msgstr ""
+msgstr "Connectie mislukt (uitgaande e-mailserver probleem)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -1815,7 +1816,7 @@ msgstr "Vervaldatum in"
 #: code:addons/mail/static/src/js/activity.js:95
 #, python-format
 msgid "Due in %d days"
-msgstr "Te betalen in %d dagen"
+msgstr "Te doen over %d dagen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range_type
@@ -2636,6 +2637,12 @@ msgid "Invalid email address"
 msgstr "Foutief e-mailadres"
 
 #. module: mail
+#: code:addons/mail/models/mail_blacklist.py:35
+#, python-format
+msgid "Invalid email address %r"
+msgstr "Foutief e-mailadres %r"
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:88
 #, python-format
 msgid ""
@@ -2650,7 +2657,7 @@ msgstr ""
 #: code:addons/mail/models/mail_blacklist.py:129
 #, python-format
 msgid "Invalid primary email field on model %s"
-msgstr ""
+msgstr "Foutief primair e-mailadres op model %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1968
@@ -3042,7 +3049,7 @@ msgstr "E-mail blacklist"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_mixin
 msgid "Mail Blacklist mixin"
-msgstr ""
+msgstr "Mail blacklist mixin"
 
 #. module: mail
 #. openerp-web
@@ -3174,7 +3181,7 @@ msgstr "Markeer als gereed"
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
 msgid "Mass Mail Blacklist"
-msgstr ""
+msgstr "Bulkmailing blacklist"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__image_medium
@@ -4164,7 +4171,7 @@ msgstr "Wachtend op moderatie"
 #: code:addons/mail/static/src/xml/thread.xml:139
 #, python-format
 msgid "Pending moderation messages appear here."
-msgstr ""
+msgstr "Berichten in wacht verschijnen hier."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__moderation_notify
@@ -4232,12 +4239,12 @@ msgstr "Vul de volledige klantinformatie in"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr "Gelieve ons in de plaats te contacteren door middel van"
+msgstr "U dient ons in de plaats te contacteren door middel van"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "Please find below the guidelines of the"
-msgstr ""
+msgstr "Vind hieronder de handleiding voor de"
 
 #. module: mail
 #. openerp-web
@@ -5003,7 +5010,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Status gebaseerd op activiteiten\n"
-"Over tijd: Datum is al gepasseerd\n"
+"Te laat: Datum is al gepasseerd\n"
 "Vandaag: Activiteit datum is vandaag\n"
 "Gepland: Toekomstige activiteiten."
 
@@ -5813,7 +5820,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/discuss.js:394
 #, python-format
 msgid "You are going to discard 1 message. Do you confirm the action?"
-msgstr ""
+msgstr "U gaat één bericht verwerpen. Bevestigd u de actie?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form

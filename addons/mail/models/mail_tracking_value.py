@@ -9,6 +9,7 @@ from odoo import api, fields, models, tools
 class MailTracking(models.Model):
     _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
+    _rec_name = 'field'
     _order = 'track_sequence asc'
 
     # TDE CLEANME: why not a m2o to ir model field ?

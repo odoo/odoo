@@ -21,7 +21,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if self._count() == 1:
             sale_obj = self.env['sale.order']
             order = sale_obj.browse(self._context.get('active_ids'))[0]
-            if order.order_line.filtered(lambda dp: dp.is_downpayment) and order.invoice_ids.filtered(lambda invoice: invoice.state != 'cancel'):
+            if order.order_line.filtered(lambda dp: dp.is_downpayment) and order.invoice_ids.filtered(lambda invoice: invoice.state != 'cancel') or order.order_line.filtered(lambda l: l.qty_to_invoice < 0):
                 return 'all'
             else:
                 return 'delivered'

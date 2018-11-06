@@ -120,6 +120,7 @@ QUnit.module('HR Attendance', {
                     employee_id: [barcode],
                 },
                 next_action: "hr_attendance.hr_attendance_action_kiosk_mode",
+                barcode: barcode,
             }
             var clientAction = new GreetingMessage(null, action);
             testUtils.addMockEnvironment(clientAction, {

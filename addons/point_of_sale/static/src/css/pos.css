@@ -2147,12 +2147,41 @@ td {
     font-family: 'Lato';
     font-family: Lato;
 }
+
+.pos .modal-dialog .popup-textinput{
+    display: flex;
+    flex-direction: column;
+}
+
+.pos .modal-dialog .popup-textinput .title,
+.pos .modal-dialog .popup-textinput .footer{
+    flex: none;
+}
+
+.pos .modal-dialog .popup-textinput textarea{
+    resize: none;
+    flex: auto;
+    margin: 0 20px 80px;
+}
 .pos .modal-dialog .popup-confirm{
     height: 250px;
 }
 .pos .popup-confirm .body {
     overflow: auto;
     height: 120px;
+}
+.pos .modal-dialog .popup-textinput{
+    display: flex;
+    flex-direction: column;
+}
+.pos .modal-dialog .popup-textinput .title,
+.pos .modal-dialog .popup-textinput .footer{
+    flex: none;
+}
+.pos .modal-dialog .popup-textinput textarea{
+    resize: none;
+    flex: auto;
+    margin: 0 20px 80px;
 }
 .pos .popup .title {
     background: rgba(255,255,255,0.5);

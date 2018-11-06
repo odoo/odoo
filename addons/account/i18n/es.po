@@ -3,39 +3,45 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Carlos Lopez <celm1990@hotmail.com>, 2018
-# Massiel Acuna <mac@odoo.com>, 2018
-# Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2018
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# Cristian Salamea <ovnicraft@gmail.com>, 2018
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
-# José Vicente <txusev@gmail.com>, 2018
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2018
 # Antonio Trueba, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Miguel Orueta <mo@landoo.es>, 2018
 # oihane <oihanecruce@gmail.com>, 2018
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Miguel Orueta <mo@landoo.es>, 2018
 # e2f_es_ t7 <e2f_es_t7@outlook.com>, 2018
 # Angel Moya - PESOL <angel.moya@pesol.es>, 2018
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
 # Cristina Martín Rodríguez <cristina.marrod@gmail.com>, 2018
-# Miquel Torner <miq@odoo.com>, 2018
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2018
 # Rubi Navarro <ren@odoo.com>, 2018
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2018
-# Cristopher Cravioto <ccr@odoo.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Miquel Torner <miq@odoo.com>, 2018
 # Jimmy Ramos <jimmybanegas93@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Carlos Lopez <celm1990@hotmail.com>, 2018
+# Cristian Salamea <ovnicraft@gmail.com>, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 # Gustavo Valverde, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Cristopher Cravioto <ccr@odoo.com>, 2018
+# Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2018
+# Harald Panten <harald.panten@qubiq.es>, 2018
+# Lucas Weigandt <lucasweigandt@gmail.com>, 2018
+# Rick Hunter <rick.hunter.ec@gmail.com>, 2018
 # fr33co <fr33codev@gmail.com>, 2018
+# Massiel Acuna <mac@odoo.com>, 2018
+# Daniel Blanco <daniel@blancomartin.com.ar>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: fr33co <fr33codev@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Daniel Blanco <daniel@blancomartin.com.ar>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,6 +189,16 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data>Estimado ${object.partner_id.name},</p>\n"
+"<p>Gracias por tu pago.<br/> Aquí está tu recibo de pago <strong>${(object.name or '').replace('/','-')}</strong> por un monto de <strong>${format_amount(object.amount, object.currency_id)}</strong> efectuado por ${object.company_id.name}.</p>\n"
+"<p>Si tienes alguna pregunta, no dudes en contactarnos.</p>\n"
+"<p>Cordiales saludos,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -216,6 +232,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Estimado ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Aquí está \n"
+"        % if object.number:\n"
+"            invoice <strong>${object.number}</strong>\n"
+"        % else:\n"
+"            invoice\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        from ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            This invoice is already paid.\n"
+"        % else:\n"
+"            Please remit payment at your earliest convenience.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Si tienes alguna pregunta, no dudes en contactarnos.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -311,6 +355,11 @@ msgid ""
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}\">Bill </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}\">Credit Note </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}\">Factura borrador</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('sequence_number_next_prefix','=',False)]}\">- Primer Número:</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_refund')]}\">Nota de Crédito Borrador</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}\">Factura </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}\">Nota de Crédito </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -338,6 +387,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Se validarán y publicarán todas las entradas de"
+" diario seleccionadas. No podrá modificarlas a posteriori.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -351,7 +402,7 @@ msgstr "Impuestos por defecto"
 msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr "Localización Fiscal"
+msgstr "Posición Fiscal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -383,6 +434,8 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Sólo se proponen diarios que aún no estén "
+"vinculados a una cuenta bancaria</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -539,6 +592,8 @@ msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
 msgstr ""
+"<strong class=\"text-center\">Escanéame con tu aplicación "
+"bancaria.</strong><br/><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -546,11 +601,13 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\">Las informaciones del código QR SEPA no están "
+"configuradas correctamente..</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Your Contact</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Contacto</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -730,6 +787,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
+"Entradas de diario no se pueden contabilizar manualmente cuando se generan "
+"en un diario que esta configurado para contabilizar entradas sólo cuando los"
+" pagos se reconcilian con un extracto bancario. Aquellos serán "
+"contabilizados automáticamente después de realizar la conciliación bancaria."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -777,7 +838,7 @@ msgstr "Una advertencia puede ser configurada en una ficha de entidad(Cuenta)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Alerta de acceso"
 
 #. module: account
 #. openerp-web
@@ -810,6 +871,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
+"Cuenta %s (%s) no permite conciliación. Primero cambia la configuración de "
+"esta cuenta para permitirlo. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -931,7 +994,7 @@ msgstr "Cuenta a cobrar"
 #. module: account
 #: model:ir.model,name:account.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "Widget de reconciliación de cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1048,6 +1111,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"Nombre del titular de la cuenta, en caso de que sea diferente al nombre del "
+"titular de la cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -1099,6 +1164,9 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"Cuenta que se establecerá en las líneas de asientos contables en el diario "
+"con base en efectivo y que se utilizarán para realizar un seguimiento del "
+"monto del impuesto base imponible."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1183,12 +1251,12 @@ msgstr "Mapeo de cuentas"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Asignación de cuentas de Posición Fiscal"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr ""
+msgstr "Asignación de cuentas de Posición Fiscal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_needaction
@@ -1285,7 +1353,7 @@ msgstr "Agregar nota"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR code to your invoices"
-msgstr ""
+msgstr "Agregue un código QR de pago a sus facturas"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -1311,6 +1379,9 @@ msgid ""
 " with their mobile banking application. EPC QR codes are used by many "
 "European banks to process SEPA payments."
 msgstr ""
+"Agregue un código QR de EPC a sus facturas para que sus clientes puedan "
+"pagar al instante con su aplicación de banca móvil. Los códigos QR EPC son "
+"utilizados por muchos bancos europeos para procesar los pagos SEPA."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1835,13 +1906,14 @@ msgstr "Aplicar automáticamente esta posición fiscal"
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
-msgstr "Aplicar solo si el país del envío o la factura coincide con el grupo"
+msgstr ""
+"Aplicar solo si el país del envío o de la factura coincide con el grupo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_id
 msgid "Apply only if delivery or invoicing country match."
-msgstr "Aplicar solo si el pais del envío o la factura coincide"
+msgstr "Aplicar solo si el pais del envío o de la factura coincide"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
@@ -4836,7 +4908,7 @@ msgstr "Declaraciones genéricas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr "Recibe advertencias cuando factura clientes específicos"
+msgstr "Recibe advertencias cuando se le facture clientes específicos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7433,7 +7505,7 @@ msgstr "Creador de Impuesto"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
 msgid "Other Income"
-msgstr "Otro impuesto"
+msgstr "Otro ingreso"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -8237,7 +8309,7 @@ msgstr "Compra"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Representante del Proveedor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10181,6 +10253,9 @@ msgid ""
 "                                                                                                       This is useful if you install accounting after having used invoicing for some time and\n"
 "                                                                                                       don't want to reconcile all the past payments with bank statements."
 msgstr ""
+"El asistente de conciliación bancaria no solicitará conciliar pagos más antiguos que este fecha.\n"
+"Este es útil si Ud. instala contabilidad después de haber usado facturación por algún tiempo y\n"
+"no quiere conciliar los pagos antiguos con los extractos bancarios."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_bank_reconciliation_start
@@ -10189,6 +10264,9 @@ msgid ""
 "               This is useful if you install accounting after having used invoicing for some time and\n"
 "               don't want to reconcile all the past payments with bank statements."
 msgstr ""
+"El asistente de conciliación bancaria no solicitará conciliar pagos más antiguos que este fecha.\n"
+"Este es útil si Ud. instala contabilidad después de haber usado facturación por algún tiempo y\n"
+"no quiere conciliar los pagos antiguos con los extractos bancarios."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -12159,17 +12237,17 @@ msgstr ""
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "day(s) after the invoice date"
-msgstr ""
+msgstr "Día(s) tras la fecha factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g BE15001559627230"
-msgstr ""
+msgstr "Por ejemplo: BE15001559627230"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g Bank of America"
-msgstr ""
+msgstr "Por ejemplo: Banco de America"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -12220,12 +12298,12 @@ msgstr ""
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "of the current month"
-msgstr ""
+msgstr "De este mes"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "of the following month"
-msgstr ""
+msgstr "Del mes siguiente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -12242,7 +12320,7 @@ msgstr "pagos pendientes"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:169
 #, python-format
 msgid "reconciliation models"
-msgstr ""
+msgstr "Modelos de conciliación"
 
 #. module: account
 #. openerp-web
