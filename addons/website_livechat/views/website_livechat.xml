@@ -147,11 +147,24 @@
                             <t t-foreach="team" t-as="user">
                                 <div class="media mt-3">
                                     <t t-if="user.image_small">
-                                        <img t-att-src="user.image_small and image_data_uri(user.image_small) or '/web/static/src/img/placeholder.png'"
-                                            class="rounded" style="padding-right: 8px;" t-att-alt="user.name"/>
+                                        <t t-if="user.livechat_username">
+                                            <img t-att-src="user.image_small and image_data_uri(user.image_small) or '/web/static/src/img/placeholder.png'"
+                                            class="rounded o_livechat_operator_avatar" t-att-alt="user.livechat_username"/>
+                                        </t>
+                                        <t t-else="">
+                                            <img t-att-src="user.image_small and image_data_uri(user.image_small) or '/web/static/src/img/placeholder.png'"
+                                            class="rounded o_livechat_operator_avatar" t-att-alt="user.name"/>
+                                        </t>
                                     </t>
                                     <div class="media-body">
-                                        <h5><t t-esc="user.name"/></h5>
+                                        <h5>
+                                            <t t-if="user.livechat_username">
+                                                <t t-esc="user.livechat_username"/>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-esc="user.name"/>
+                                            </t>
+                                        </h5>
                                         <div class="col-lg-12">
                                             <div class="row">
                                                 <div class="col-lg-4 pl-0 pr-0">

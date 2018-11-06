@@ -162,7 +162,7 @@ class ImLivechatChannel(models.Model):
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
-            'name': ', '.join([self.env['res.users'].browse(user_id).name if user_id else anonymous_name, operator.name]),
+            'name': ', '.join([self.env['res.users'].browse(user_id).name if user_id else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
             'email_send': False,
         })
