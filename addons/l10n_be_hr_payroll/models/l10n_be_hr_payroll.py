@@ -24,7 +24,7 @@ class HrContract(models.Model):
     final_yearly_costs = fields.Monetary(compute='_compute_final_yearly_costs',
         readonly=False, store=True,
         string="Employee Budget",
-        track_visibility="onchange",
+        tracking=True,
         help="Total yearly cost of the employee for the employer.")
     monthly_yearly_costs = fields.Monetary(compute='_compute_monthly_yearly_costs', string='Monthly Equivalent Cost', readonly=True,
         help="Total monthly cost of the employee for the employer.")
@@ -41,41 +41,41 @@ class HrContract(models.Model):
 
     # Advantages
     commission_on_target = fields.Monetary(string="Commission on Target",
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly gross amount that the employee receives if the target is reached.")
     fuel_card = fields.Monetary(string="Fuel Card",
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly amount the employee receives on his fuel card.")
     internet = fields.Monetary(string="Internet",
-        track_visibility="onchange",
+        tracking=True,
         help="The employee's internet subcription will be paid up to this amount.")
     representation_fees = fields.Monetary(string="Representation Fees",
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly net amount the employee receives to cover his representation fees.")
     mobile = fields.Monetary(string="Mobile",
-        track_visibility="onchange",
+        tracking=True,
         help="The employee's mobile subscription will be paid up to this amount.")
     mobile_plus = fields.Monetary(string="International Communication",
-        track_visibility="onchange",
+        tracking=True,
         help="The employee's mobile subscription for international communication will be paid up to this amount.")
     meal_voucher_amount = fields.Monetary(string="Meal Vouchers",
-        track_visibility="onchange",
+        tracking=True,
         help="Amount the employee receives in the form of meal vouchers per worked day.")
     holidays = fields.Float(string='Legal Leaves',
         help="Number of days of paid leaves the employee gets per year.")
     holidays_editable = fields.Boolean(string="Editable Leaves", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
     wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', inverse='_inverse_wage_with_holidays',
-        track_visibility='onchange', string="Wage update with holidays retenues")
+        tracking=True, string="Wage update with holidays retenues")
     additional_net_amount = fields.Monetary(string="Net Supplements",
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly net amount the employee receives.")
     retained_net_amount = fields.Monetary(sting="Net Retained",
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly net amount that is retained on the employee's salary.")
     eco_checks = fields.Monetary("Eco Vouchers",
         help="Yearly amount the employee receives in the form of eco vouchers.")
-    ip = fields.Boolean(default=False, track_visibility="onchange")
+    ip = fields.Boolean(default=False, tracking=True)
     ip_wage_rate = fields.Float(string="IP percentage", help="Should be between 0 and 100 %")
 
     @api.constrains('ip_wage_rate')

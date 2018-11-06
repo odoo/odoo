@@ -199,7 +199,7 @@ class Picking(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
     ], string='Status', compute='_compute_state',
-        copy=False, index=True, readonly=True, store=True, track_visibility='onchange',
+        copy=False, index=True, readonly=True, store=True, tracking=True,
         help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
              " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
              " * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
@@ -215,16 +215,16 @@ class Picking(models.Model):
         PROCUREMENT_PRIORITIES, string='Priority',
         compute='_compute_priority', inverse='_set_priority', store=True,
         # default='1', required=True,  # TDE: required, depending on moves ? strange
-        index=True, track_visibility='onchange',
+        index=True, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
     scheduled_date = fields.Datetime(
         'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
-        index=True, track_visibility='onchange',
+        index=True, tracking=True,
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
     date = fields.Datetime(
         'Creation Date',
-        default=fields.Datetime.now, index=True, track_visibility='onchange',
+        default=fields.Datetime.now, index=True, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Creation Date, usually the time of the order")
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")

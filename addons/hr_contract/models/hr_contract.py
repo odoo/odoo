@@ -80,7 +80,7 @@ class Contract(models.Model):
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id.id)
-    wage = fields.Monetary('Wage', digits=(16, 2), required=True, track_visibility="onchange", help="Employee's monthly gross wage.")
+    wage = fields.Monetary('Wage', digits=(16, 2), required=True, tracking=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
     state = fields.Selection([
@@ -90,7 +90,7 @@ class Contract(models.Model):
         ('close', 'Expired'),
         ('cancel', 'Cancelled')
     ], string='Status', group_expand='_expand_states',
-       track_visibility='onchange', help='Status of the contract', default='draft')
+       tracking=True, help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)

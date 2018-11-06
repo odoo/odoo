@@ -61,9 +61,9 @@ class PurchaseRequisition(models.Model):
     order_count = fields.Integer(compute='_compute_orders_number', string='Number of Orders')
     vendor_id = fields.Many2one('res.partner', string="Vendor")
     type_id = fields.Many2one('purchase.requisition.type', string="Agreement Type", required=True, default=_get_type_id)
-    ordering_date = fields.Date(string="Ordering Date", track_visibility='onchange')
-    date_end = fields.Datetime(string='Agreement Deadline', track_visibility='onchange')
-    schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received", track_visibility='onchange')
+    ordering_date = fields.Date(string="Ordering Date", tracking=True)
+    date_end = fields.Datetime(string='Agreement Deadline', tracking=True)
+    schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received", tracking=True)
     user_id = fields.Many2one('res.users', string='Purchase Representative', default= lambda self: self.env.user)
     description = fields.Text()
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('purchase.requisition'))
@@ -71,7 +71,7 @@ class PurchaseRequisition(models.Model):
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     state = fields.Selection(PURCHASE_REQUISITION_STATES,
-                              'Status', track_visibility='onchange', required=True,
+                              'Status', tracking=True, required=True,
                               copy=False, default='draft')
     state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)

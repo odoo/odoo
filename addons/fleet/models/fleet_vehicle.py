@@ -18,14 +18,14 @@ class FleetVehicle(models.Model):
         return state and state.id or False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
-    active = fields.Boolean('Active', default=True, track_visibility="onchange")
+    active = fields.Boolean('Active', default=True, tracking=True)
     company_id = fields.Many2one('res.company', 'Company')
-    license_plate = fields.Char(track_visibility="onchange",
+    license_plate = fields.Char(tracking=True,
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
-    driver_id = fields.Many2one('res.partner', 'Driver', track_visibility="onchange", help='Driver of the vehicle', copy=False)
+    driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver of the vehicle', copy=False)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
-        track_visibility="onchange", required=True, help='Model of the vehicle')
+        tracking=True, required=True, help='Model of the vehicle')
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignation Logs')
     log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
@@ -42,7 +42,7 @@ class FleetVehicle(models.Model):
     color = fields.Char(help='Color of the vehicle')
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_stage_ids',
-        track_visibility="onchange",
+        tracking=True,
         help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer('Seats Number', help='Number of seats of the vehicle')
