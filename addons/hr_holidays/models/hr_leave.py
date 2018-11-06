@@ -104,7 +104,7 @@ class HolidaysRequest(models.Model):
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
-        ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
+        ], string='Status', readonly=True, tracking=True, copy=False, default='confirm',
         help="The status is set to 'To Submit', when a leave request is created." +
         "\nThe status is 'To Approve', when leave request is confirmed by user." +
         "\nThe status is 'Refused', when leave request is refused by manager." +
@@ -122,7 +122,7 @@ class HolidaysRequest(models.Model):
     # HR data
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
     manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
     department_id = fields.Many2one(
         'hr.department', string='Department', readonly=True,
@@ -132,13 +132,13 @@ class HolidaysRequest(models.Model):
     date_from = fields.Datetime(
         'Start Date', readonly=True, index=True, copy=False, required=True,
         default=fields.Datetime.now,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
     date_to = fields.Datetime(
         'End Date', readonly=True, copy=False, required=True,
         default=fields.Datetime.now,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
     number_of_days = fields.Float(
-        'Duration (Days)', copy=False, readonly=True, track_visibility='onchange',
+        'Duration (Days)', copy=False, readonly=True, tracking=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='Number of days of the leave request according to your working schedule.')
     number_of_days_display = fields.Float(

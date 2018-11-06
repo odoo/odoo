@@ -765,7 +765,7 @@ class Meeting(models.Model):
                     event.is_highlighted = True
 
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
-    state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
+    state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, tracking=True, default='draft')
 
     is_attendee = fields.Boolean('Attendee', compute='_compute_attendee')
     attendee_status = fields.Selection(Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
@@ -775,14 +775,14 @@ class Meeting(models.Model):
     stop = fields.Datetime('Stop', required=True, help="Stop date of an event, without time for full days events")
 
     allday = fields.Boolean('All Day', states={'done': [('readonly', True)]}, default=False)
-    start_date = fields.Date('Start Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
-    start_datetime = fields.Datetime('Start DateTime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
-    stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
-    stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')  # old date_deadline
+    start_date = fields.Date('Start Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)
+    start_datetime = fields.Datetime('Start DateTime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)
+    stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)
+    stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, tracking=True)  # old date_deadline
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})
     description = fields.Text('Description', states={'done': [('readonly', True)]})
     privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
-    location = fields.Char('Location', states={'done': [('readonly', True)]}, track_visibility='onchange', help="Location of Event")
+    location = fields.Char('Location', states={'done': [('readonly', True)]}, tracking=True, help="Location of Event")
     show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}, default='busy')
 
     # linked document

@@ -17,8 +17,8 @@ class MailBlackList(models.Model):
     _rec_name = 'email'
 
     email = fields.Char(string='Email Address', required=True, index=True, help='This field is case insensitive.',
-                        track_visibility=True)
-    active = fields.Boolean(default=True, track_visibility=True)
+                        tracking=True)
+    active = fields.Boolean(default=True, tracking=True)
 
     _sql_constraints = [
         ('unique_email', 'unique (email)', 'Email address already exists!')

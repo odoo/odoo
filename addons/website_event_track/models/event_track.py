@@ -57,7 +57,7 @@ class Track(models.Model):
 
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
-    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Speaker')
     partner_name = fields.Char('Speaker Name')
     partner_email = fields.Char('Speaker Email')
@@ -68,12 +68,12 @@ class Track(models.Model):
         'event.track.stage', string='Stage', ondelete='restrict',
         index=True, copy=False, default=_get_default_stage_id,
         group_expand='_read_group_stage_ids',
-        required=True, track_visibility='onchange')
+        required=True, tracking=True)
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
-        copy=False, default='normal', required=True, track_visibility='onchange',
+        copy=False, default='normal', required=True, tracking=True,
         help="A track's kanban state indicates special situations affecting it:\n"
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"

@@ -24,8 +24,8 @@ class MailTestStandard(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
-    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange')
-    umbrella_id = fields.Many2one('mail.test', track_visibility='onchange')
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
+    umbrella_id = fields.Many2one('mail.test', tracking=True)
 
 
 class MailTestActivity(models.Model):
@@ -57,13 +57,13 @@ class MailTestFull(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char()
-    email_from = fields.Char(track_visibility='always')
+    email_from = fields.Char(tracking=True)
     count = fields.Integer(default=1)
     datetime = fields.Datetime(default=fields.Datetime.now)
     mail_template = fields.Many2one('mail.template', 'Template')
-    customer_id = fields.Many2one('res.partner', 'Customer', track_visibility='onchange', track_sequence=2)
-    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', track_sequence=1)
-    umbrella_id = fields.Many2one('mail.test', track_visibility='onchange')
+    customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
+    umbrella_id = fields.Many2one('mail.test', tracking=True)
 
     def _track_template(self, tracking):
         res = super(MailTestFull, self)._track_template(tracking)
@@ -116,7 +116,7 @@ class MailModel(models.Model):
     name = fields.Char()
     value = fields.Integer()
     value_pc = fields.Float(compute="_value_pc", store=True)
-    track = fields.Char(default='test', track_visibility="onchange")
+    track = fields.Char(default='test', tracking=True)
     partner_id = fields.Many2one('res.partner', string='Customer')
 
     @api.depends('value')

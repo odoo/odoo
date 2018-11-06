@@ -6,8 +6,8 @@ from odoo import api, fields, models, tools
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
-    employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', track_visibility='onchange')
-    department_id = fields.Many2one('hr.department', string='Assigned to Department', track_visibility='onchange')
+    employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', tracking=True)
+    department_id = fields.Many2one('hr.department', string='Assigned to Department', tracking=True)
     equipment_assign_to = fields.Selection(
         [('department', 'Department'), ('employee', 'Employee'), ('other', 'Other')],
         string='Used By',

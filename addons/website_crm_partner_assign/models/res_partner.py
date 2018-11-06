@@ -36,11 +36,11 @@ class ResPartnerActivation(models.Model):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    partner_weight = fields.Integer('Level Weight', default=0, track_visibility='onchange',
+    partner_weight = fields.Integer('Level Weight', default=0, tracking=True,
         help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.")
-    grade_id = fields.Many2one('res.partner.grade', 'Level', track_visibility='onchange')
+    grade_id = fields.Many2one('res.partner.grade', 'Level', tracking=True)
     grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)
-    activation = fields.Many2one('res.partner.activation', 'Activation', index=True, track_visibility='onchange')
+    activation = fields.Many2one('res.partner.activation', 'Activation', index=True, tracking=True)
     date_partnership = fields.Date('Partnership Date')
     date_review = fields.Date('Latest Partner Review')
     date_review_next = fields.Date('Next Partner Review')

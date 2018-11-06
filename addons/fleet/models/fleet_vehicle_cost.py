@@ -115,10 +115,10 @@ class FleetVehicleLogContract(models.Model):
         ('closed', 'Closed')
         ], 'Status', default='open', readonly=True,
         help='Choose whether the contract is still valid or not',
-        track_visibility="onchange",
+        tracking=True,
         copy=False)
     notes = fields.Text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
-    cost_generated = fields.Float('Recurring Cost Amount', track_visibility="onchange",
+    cost_generated = fields.Float('Recurring Cost Amount', tracking=True,
         help="Costs paid at regular intervals, depending on the cost frequency. "
         "If the cost frequency is set to unique, the cost will be logged at the start date")
     cost_frequency = fields.Selection([

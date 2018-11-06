@@ -22,7 +22,7 @@ class Event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.multi.mixin']
 
-    is_published = fields.Boolean(track_visibility='onchange')
+    is_published = fields.Boolean(tracking=True)
 
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
 

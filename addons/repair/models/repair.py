@@ -61,7 +61,7 @@ class Repair(models.Model):
         ('2binvoiced', 'To be Invoiced'),
         ('invoice_except', 'Invoice Exception'),
         ('done', 'Repaired')], string='Status',
-        copy=False, default='draft', readonly=True, track_visibility='onchange',
+        copy=False, default='draft', readonly=True, tracking=True,
         help="* The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order.\n"
              "* The \'Confirmed\' status is used when a user confirms the repair order.\n"
              "* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
@@ -96,10 +96,10 @@ class Repair(models.Model):
         help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.')
     invoice_id = fields.Many2one(
         'account.invoice', 'Invoice',
-        copy=False, readonly=True, track_visibility="onchange")
+        copy=False, readonly=True, tracking=True)
     move_id = fields.Many2one(
         'stock.move', 'Move',
-        copy=False, readonly=True, track_visibility="onchange",
+        copy=False, readonly=True, tracking=True,
         help="Move created by the repair order")
     fees_lines = fields.One2many(
         'repair.fee', 'repair_id', 'Operations',
