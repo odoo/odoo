@@ -47,7 +47,10 @@ class MailChannel(models.Model):
             clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
             should be added to the notification, since the user cannot be listining to the channel.
         """
-        notifications = super(MailChannel, self)._channel_message_notifications(message)
+        livechat_channels = self.filtered(lambda x: x.channel_type == 'livechat')
+        other_channels = self.filtered(lambda x: x.channel_type != 'livechat')
+        notifications = super(MailChannel, livechat_channels)._channel_message_notifications(message.with_context(im_livechat_use_username=True)) + \
+                        super(MailChannel, other_channels)._channel_message_notifications(message)
         for channel in self:
             # add uuid for private livechat channels to allow anonymous to listen
             if channel.channel_type == 'livechat' and channel.public == 'private':
@@ -58,6 +61,12 @@ class MailChannel(models.Model):
                 unpinned_channel_partner.write({'is_pinned': True})
                 notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
         return notifications
+
+    @api.multi
+    def channel_fetch_message(self, last_id=False, limit=20):
+        """ Override to add the context of the livechat username."""
+        channel = self.with_context(im_livechat_use_username=True) if self.channel_type == 'livechat' else self
+        return super(MailChannel, channel).channel_fetch_message(last_id=last_id, limit=limit)
 
     @api.multi
     def channel_info(self, extra_info=False):
@@ -71,7 +80,7 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat':
                 # add the operator id
                 if channel.livechat_operator_id:
-                    channel_infos_dict[channel.id]['operator_pid'] = channel.livechat_operator_id.display_name
+                    channel_infos_dict[channel.id]['operator_pid'] = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
                 # add the anonymous or partner name
                 channel_infos_dict[channel.id]['correspondent_name'] = channel._channel_get_livechat_partner_name()
                 last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)
