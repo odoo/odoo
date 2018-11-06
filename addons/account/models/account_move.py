@@ -406,7 +406,7 @@ class AccountMove(models.Model):
             aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
             aml.remove_move_reconcile()
             #reconcile together the reconcilable (or the liquidity aml) and their newly created counterpart
-            for account in list(set([x.account_id for x in aml])):
+            for account in set([x.account_id for x in aml]):
                 to_rec = aml.filtered(lambda y: y.account_id == account)
                 to_rec |= reversed_move.line_ids.filtered(lambda y: y.account_id == account)
                 #reconciliation will be full, so speed up the computation by using skip_full_reconcile_check in the context
@@ -1061,10 +1061,8 @@ class AccountMoveLine(models.Model):
         # the provided values were not already multi-currency
         if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
             vals['currency_id'] = account.currency_id.id
-            ctx = {}
-            if 'date' in vals:
-                ctx['date'] = vals['date']
-            vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, vals.get('date', fields.Date.today()))
+            date = vals.get('date') or vals.get('date_maturity') or fields.Date.today()
+            vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, date)
 
         if not ok:
             raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
