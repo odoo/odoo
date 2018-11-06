@@ -617,7 +617,7 @@ class PurchaseOrderLine(models.Model):
     date_planned = fields.Datetime(string='Scheduled Date', required=True, index=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
-    product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
+    product_id = fields.Many2one('product.product', string='Product', domain=lambda self: [('company_id', '=', self.env.user.company_id.id), ('purchase_ok', '=', True)], change_default=True, required=True)
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
 
