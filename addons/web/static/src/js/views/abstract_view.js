@@ -162,6 +162,11 @@ var AbstractView = Class.extend({
             this.controllerParams.withControlPanel = params.withControlPanel;
         }
 
+        var groupBy = params.groupBy;
+        if (typeof groupBy === 'string') {
+            groupBy = [groupBy];
+        }
+
         this.loadParams = {
             context: params.context,
             count: params.count || ((this.controllerParams.ids !== undefined) &&
@@ -172,7 +177,7 @@ var AbstractView = Class.extend({
             comparisonTimeRange: comparisonTimeRange,
             comparisonTimeRangeDescription: comparisonTimeRangeDescription,
             compare: compare,
-            groupedBy: params.groupBy,
+            groupedBy: groupBy,
             modelName: params.modelName,
             res_id: params.currentId,
             res_ids: params.ids,
