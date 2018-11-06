@@ -4813,12 +4813,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 recs = field.convert_to_record(null, recs)
         return recs
 
-    def filtered(self, func, limit=None):
+    def filtered(self, func, limit=None, count=False):
         """ Select the records in ``self`` such that ``func(rec)`` is true, and
             return them as a recordset.
 
             :param func: a function or a dot-separated sequence of field names
-            :param limit: limit the number of result
+            :param int limit: maximum number of records to return (default: all)
+            :param bool count: if True, only counts and returns the number of matching records (default: False)
         """
         if isinstance(func, pycompat.string_types):
             name = func
@@ -4833,6 +4834,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     result.append(rec.id)
                     if len(result) >= limit:
                         break
+        if count:
+            return len(result)
         return self.browse(result)
 
     def sorted(self, key=None, reverse=False):
