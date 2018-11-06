@@ -547,7 +547,8 @@ class MailThread(models.AbstractModel):
         """
         tracked_fields = []
         for name, field in self._fields.items():
-            if getattr(field, 'track_visibility', False):
+            tracking = getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
+            if tracking:
                 tracked_fields.append(name)
 
         if tracked_fields:
@@ -611,8 +612,11 @@ class MailThread(models.AbstractModel):
             new_value = getattr(self, col_name)
 
             if new_value != initial_value and (new_value or initial_value):  # because browse null != False
-                track_sequence = getattr(self._fields[col_name], 'track_sequence', 100)
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, track_sequence)
+                tracking_sequence = getattr(self._fields[col_name], 'tracking',
+                                            getattr(self._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
+                if tracking_sequence is True:
+                    tracking_sequence = 100
+                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence)
                 if tracking:
                     tracking_value_ids.append([0, 0, tracking])
 
@@ -2308,7 +2312,7 @@ class MailThread(models.AbstractModel):
         """
         fnames = []
         for name, field in self._fields.items():
-            if name == 'user_id' and updated_values.get(name) and getattr(field, 'track_visibility', False):
+            if name == 'user_id' and updated_values.get(name) and (getattr(field, 'track_visibility', False) or getattr(field, 'tracking', False)):
                 if field.comodel_name == 'res.users':
                     fnames.append(name)
 
