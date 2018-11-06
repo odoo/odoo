@@ -26,6 +26,7 @@ var stock_report_generic = AbstractAction.extend(ControlPanelMixin, {
         this.given_context.ttype = action.context.ttype || false;
         this.given_context.auto_unfold = action.context.auto_unfold || false;
         this.given_context.lot_name = action.context.lot_name || false;
+        this.given_context.searchQty = action.context.searchQty || 1.0;
         return this._super.apply(this, arguments);
     },
     willStart: function() {
