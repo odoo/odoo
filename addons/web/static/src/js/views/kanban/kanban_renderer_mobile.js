@@ -107,28 +107,28 @@ KanbanRenderer.include({
                 // update the columns and tabs positions (optionally with an animation)
                 var updateFunc = animate ? 'animate' : 'css';
                 self.$('.o_kanban_mobile_tab').removeClass('o_current');
+                var scrollToLeft = 0;
                 _.each(self.widgets, function (column, index) {
                     var columnID = column.id || column.db_id;
                     var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
                     var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
                     if (index === moveToIndex - 1) {
                         $column[updateFunc]({left: '-100%'});
-                        $tab[updateFunc]({left: '0%'});
+                        var offsetColumnWidth = moveToIndex === self.widgets.length - 1 ? $tab.width() : $tab.width() * 0.75;
+                        scrollToLeft += offsetColumnWidth;
                     } else if (index === moveToIndex + 1) {
                         $column[updateFunc]({left: '100%'});
-                        $tab[updateFunc]({left: '100%'});
                     } else if (index === moveToIndex) {
                         $column[updateFunc]({left: '0%'});
-                        $tab[updateFunc]({left: '50%'});
                         $tab.addClass('o_current');
                     } else if (index < moveToIndex) {
                         $column.css({left: '-100%'});
-                        $tab[updateFunc]({left: '-100%'});
+                        scrollToLeft += $tab.width();
                     } else if (index > moveToIndex) {
                         $column.css({left: '100%'});
-                        $tab[updateFunc]({left: '200%'});
                     }
                 });
+                self.$('.o_kanban_mobile_tabs').scrollLeft(scrollToLeft);
                 def.resolve();
             },
         });

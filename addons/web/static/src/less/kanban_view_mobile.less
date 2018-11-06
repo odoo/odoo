@@ -10,10 +10,11 @@
             height: @o-kanban-mobile-tabs-height;
             position: relative;
             background-color: #5E5E5E;
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
 
             .o_kanban_mobile_tab {
-                .o-position-absolute(@left: 100%);
-                .o-transform(translateX(-50%));
                 height: @o-kanban-mobile-tabs-height;
                 padding: 10px;
                 font-size: 14px;
