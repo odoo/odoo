@@ -8,7 +8,7 @@
             <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks"
                     examples="project" quick_create="false"
                     group_create="false" group_delete="false" group_edit="false"
-                    archivable="false" draggable="false" column_draggable="false">
+                    archivable="false" record_draggable="false" column_draggable="false">
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
@@ -101,7 +101,7 @@
                 <attribute name="quick_create">true</attribute>
                 <attribute name="on_create">quick_create</attribute>
                 <attribute name="quick_create_view">project.portaledit_quick_create_task_form</attribute>
-                <attribute name="draggable">true</attribute>
+                <attribute name="record_draggable">true</attribute>
                 <attribute name="column_draggable">true</attribute>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">

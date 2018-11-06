@@ -450,17 +450,18 @@ var KanbanRenderer = BasicRenderer.extend({
         // Deactivate the drag'n'drop if the groupedBy field:
         // - is a date or datetime since we group by month or
         // - is readonly (on the field attrs or in the view)
-        if (this.recordOptions.draggable) {
+        var draggable = this.columnOptions.draggable;
+        if (draggable) {
             if (groupByFieldAttrs) {
                 if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
-                    this.recordOptions.draggable = false;
+                    draggable = false;
                 } else if (groupByFieldAttrs.readonly !== undefined) {
-                    this.recordOptions.draggable = !(groupByFieldAttrs.readonly);
+                    draggable = !(groupByFieldAttrs.readonly);
                 }
             }
             if (groupByFieldInfo) {
-                if (this.recordOptions.draggable && groupByFieldInfo.readonly !== undefined) {
-                    this.recordOptions.draggable = !(groupByFieldInfo.readonly);
+                if (groupByFieldInfo.readonly !== undefined) {
+                    draggable = !(groupByFieldInfo.readonly);
                 }
             }
         }
@@ -468,6 +469,7 @@ var KanbanRenderer = BasicRenderer.extend({
         var relation = this.groupedByM2O && groupByFieldAttrs.relation;
         var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
         this.columnOptions = _.extend(this.columnOptions, {
+            draggable: draggable,
             group_by_tooltip: groupByTooltip,
             groupedBy: groupByField,
             grouped_by_m2o: this.groupedByM2O,
