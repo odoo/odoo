@@ -66,7 +66,7 @@ class SendSMS(models.TransientModel):
         model = self.env[active_model]
 
         records = self._get_records(model)
-        if getattr(records, '_get_default_sms_recipients'):
+        if getattr(records, '_get_default_sms_recipients') and not self.env.context.get('default_recipients'):
             partners = records._get_default_sms_recipients()
             phone_numbers = []
             no_phone_partners = []
