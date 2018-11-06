@@ -97,7 +97,7 @@ class EventEvent(models.Model):
     user_id = fields.Many2one(
         'res.users', string='Responsible',
         default=lambda self: self.env.user,
-        track_visibility="onchange",
+        tracking=True,
         readonly=False, states={'done': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
@@ -105,7 +105,7 @@ class EventEvent(models.Model):
         required=False, readonly=False, states={'done': [('readonly', True)]})
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer',
-        track_visibility="onchange",
+        tracking=True,
         default=lambda self: self.env.user.company_id.partner_id)
     event_type_id = fields.Many2one(
         'event.type', string='Category',
@@ -149,10 +149,10 @@ class EventEvent(models.Model):
     date_tz = fields.Selection('_tz_get', string='Timezone', required=True, default=lambda self: self.env.user.tz or 'UTC')
     date_begin = fields.Datetime(
         string='Start Date', required=True,
-        track_visibility='onchange', states={'done': [('readonly', True)]})
+        tracking=True, states={'done': [('readonly', True)]})
     date_end = fields.Datetime(
         string='End Date', required=True,
-        track_visibility='onchange', states={'done': [('readonly', True)]})
+        tracking=True, states={'done': [('readonly', True)]})
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
 
@@ -167,7 +167,7 @@ class EventEvent(models.Model):
         'res.partner', string='Location',
         default=lambda self: self.env.user.company_id.partner_id,
         readonly=False, states={'done': [('readonly', True)]},
-        track_visibility="onchange")
+        tracking=True)
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True, readonly=False)
     twitter_hashtag = fields.Char('Twitter Hashtag')
     description = fields.Html(
@@ -389,7 +389,7 @@ class EventRegistration(models.Model):
     state = fields.Selection([
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('open', 'Confirmed'), ('done', 'Attended')],
-        string='Status', default='draft', readonly=True, copy=False, track_visibility='onchange')
+        string='Status', default='draft', readonly=True, copy=False, tracking=True)
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Attendee Name', index=True)

@@ -13,7 +13,7 @@ class FleetVehicle(models.Model):
 
     co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee", store=True)
     total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost', store=True,
-        string="Total Cost (Depreciated)", track_visibility="onchange",
+        string="Total Cost (Depreciated)", tracking=True,
         help="This includes all the depreciated costs and the CO2 fee")
     total_cost = fields.Float(compute='_compute_total_cost', string="Total Cost", help="This include all the costs and the CO2 fee")
     fuel_type = fields.Selection(required=True, default='diesel')
@@ -131,7 +131,7 @@ class FleetVehicle(models.Model):
 class FleetVehicleLogContract(models.Model):
     _inherit = 'fleet.vehicle.log.contract'
 
-    recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)", track_visibility="onchange")
+    recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)", tracking=True)
 
 
 class FleetVehicleModel(models.Model):

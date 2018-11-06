@@ -28,7 +28,7 @@ class MrpWorkorder(models.Model):
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        index=True, ondelete='cascade', required=True, track_visibility='onchange',
+        index=True, ondelete='cascade', required=True, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     product_id = fields.Many2one(
         'product.product', 'Product',
