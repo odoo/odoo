@@ -4813,16 +4813,27 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 recs = field.convert_to_record(null, recs)
         return recs
 
-    def filtered(self, func):
+    def filtered(self, func, limit=None):
         """ Select the records in ``self`` such that ``func(rec)`` is true, and
             return them as a recordset.
 
             :param func: a function or a dot-separated sequence of field names
+            :param limit: limit the number of result
         """
         if isinstance(func, pycompat.string_types):
             name = func
             func = lambda rec: any(rec.mapped(name))
-        return self.browse([rec.id for rec in self if func(rec)])
+
+        result = []
+        if limit is None:
+            result = [rec.id for rec in self if func(rec)]
+        else:
+            for rec in self:
+                if func(rec):
+                    result.append(rec.id)
+                    if len(result) >= limit:
+                        break
+        return self.browse(result)
 
     def sorted(self, key=None, reverse=False):
         """ Return the recordset ``self`` ordered by ``key``.
