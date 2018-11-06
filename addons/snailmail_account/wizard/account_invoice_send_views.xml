@@ -9,14 +9,16 @@
                 <xpath expr="//div[@name='option_email']" position='before'>
                     <div name="option_letter">
                         <field name="letter_ids" invisible="1"/>
-                        <field name="currency_id" invisible="1"/>
                         <div name="option" class="text-left d-inline-block">
                             <field name="snailmail_is_letter" />
                             <b><label for="snailmail_is_letter"/></b>
                         </div>
                         <div class="text-left d-inline-block mr8" name='cost' attrs="{'invisible': [('snailmail_is_letter','=', False)]}">
                             <b>(
-                                <field name="snailmail_cost" class="mr4" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <span>
+                                    <field name="snailmail_cost" options="{'digits':[0,0]}" class="mr4"/>
+                                    <label for="snailmail_cost" class="mr4"/>
+                                </span>
                                 <i class="fa fa-info-circle" role="img" aria-label="Warning" title="
                                 The letter will be sent using the IAP service from Odoo.&#10;Make sure you have enough credits on your account or proceed to a recharge.&#10;The price is estimated based on 1 page per document.
                                 "/>

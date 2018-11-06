@@ -610,7 +610,7 @@
                         will not be searched as often, and if they need to be searched it's usually in the context of products
                         and then they can be searched from the page listing the sale order lines related to a product (from the product itself).
                     -->
-                    <field name="order_line" string="Product" filter_domain="[('order_line.product_id.name', 'ilike', self)]"/>
+                    <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
                     <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
@@ -641,7 +641,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
                     <separator/>
-                    <filter string="My Quotations" name="my_quotation" domain="[('state','=','draft'), ('user_id','=',uid)]"/>
+                    <filter string="My Quotations" name="my_quotation" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Quotations" name="draft" domain="[('state','in',('draft', 'sent'))]"/>
                     <filter string="Sales Orders" name="sales" domain="[('state','in',('sale','done'))]"/>

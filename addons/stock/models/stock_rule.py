@@ -81,7 +81,8 @@ class StockRule(models.Model):
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
         """ Ensure that the rule's company is the same than the route's company. """
-        self.company_id = self.route_id.company_id
+        if self.route_id.company_id:
+            self.company_id = self.route_id.company_id
         if self.picking_type_id.warehouse_id.company_id != self.route_id.company_id:
             self.picking_type_id = False
         domain = {'company_id': self.route_id.company_id and [('id', '=', self.route_id.company_id.id)] or []}

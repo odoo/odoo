@@ -10,7 +10,7 @@ base.ready().then(function () {
         // get image id from URL (`/unsplash/xYdf5feoI.jpg` -> `xYdf5feoI`)
         unsplash_images.push(img.src.split('/unsplash/')[1].split('.')[0]);
     });
-    if (unsplash_images) {
+    if (unsplash_images.length) {
         ajax.jsonRpc('/web_unsplash/get_app_id', 'call').then(function (appID) {
             if (appID) {
                 var unsplash_view_url = 'https://views.unsplash.com/v';

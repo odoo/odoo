@@ -390,7 +390,7 @@ class Message(models.Model):
             for notification in message.notification_ids.filtered(filter_notification):
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.email_status))
 
-            main_attachment = message.model and message.res_id and getattr(self.env[message.model].browse(message.res_id), 'message_main_attachment_id')
+            main_attachment = message.model and message.res_id and self.env[message.model].search([('id', '=',message.res_id)]) and getattr(self.env[message.model].browse(message.res_id), 'message_main_attachment_id')
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
