@@ -220,15 +220,14 @@ class SaleCouponProgram(models.Model):
         or  Buy 1 coke + get 1 coke free then check 2 cokes are on cart or not
         """
         order_lines = order.order_line.filtered(lambda line: line.product_id) - order._get_reward_lines()
-        products_qties = dict.fromkeys([product for product in order_lines.mapped('product_id')], 0)
+        products = order_lines.mapped('product_id')
+        products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
             products_qties[line.product_id] += line.product_uom_qty
         valid_programs = self.filtered(lambda program: not program.rule_products_domain)
         for program in self - valid_programs:
-            ordered_rule_products_qty = sum(
-                qty for product, qty in products_qties.items()
-                if program._is_valid_product(product)
-            )
+            valid_products = program._get_valid_products(products)
+            ordered_rule_products_qty = sum(products_qties[product] for product in valid_products)
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
             if program._is_valid_product(program.reward_product_id) and program.reward_type == 'product':
                 line = order.order_line.filtered(lambda line: line.product_id == program.reward_product_id)
@@ -279,8 +278,15 @@ class SaleCouponProgram(models.Model):
             return True
 
     def _is_valid_product(self, product):
+        # NOTE: if you override this method, think of also overriding _get_valid_products
         if self.rule_products_domain:
             domain = safe_eval(self.rule_products_domain) + [('id', '=', product.id)]
             return bool(self.env['product.product'].search_count(domain))
         else:
             return True
+
+    def _get_valid_products(self, products):
+        if self.rule_products_domain:
+            domain = safe_eval(self.rule_products_domain) + [('id', 'in', products.ids)]
+            return self.env['product.product'].search(domain)
+        return products
