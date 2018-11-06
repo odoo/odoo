@@ -59,6 +59,7 @@ class HolidaysAllocation(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
+    manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # duration
     number_of_days = fields.Float(
@@ -257,6 +258,7 @@ class HolidaysAllocation(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_employee(self):
+        self.manager_id = self.employee_id and self.employee_id.parent_id
         if self.holiday_type == 'employee':
             self.department_id = self.employee_id.department_id
 
@@ -336,6 +338,8 @@ class HolidaysAllocation(models.Model):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
         holiday = super(HolidaysAllocation, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
+        if 'employee_id' in values:
+            holiday._onchange_employee()
         holiday.activity_update()
         return holiday
 
@@ -346,6 +350,8 @@ class HolidaysAllocation(models.Model):
             self._check_approval_update(values['state'])
         result = super(HolidaysAllocation, self).write(values)
         self.add_follower(employee_id)
+        if 'employee_id' in values:
+            self._onchange_employee()
         return result
 
     @api.multi
