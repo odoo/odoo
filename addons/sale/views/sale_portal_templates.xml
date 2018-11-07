@@ -296,6 +296,7 @@
                     <t t-if="sale_order.transaction_ids">
                         <t t-call="payment.payment_confirmation_status">
                             <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>
+                            <t t-set="reference" t-value="sale_order.reference"/>
                         </t>
                     </t>
 
@@ -373,6 +374,7 @@
                     <t t-if="sale_order.transaction_ids">
                         <t t-call="payment.payment_confirmation_status">
                             <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>
+                            <t t-set="reference" t-value="sale_order.reference"/>
                         </t>
                     </t>
                 </div>
