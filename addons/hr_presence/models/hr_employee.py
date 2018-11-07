@@ -100,6 +100,16 @@ class ResCompany(models.Model):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
         self.write({'hr_presence_state': 'present'})
 
+    def action_open_leave_request(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "hr.leave",
+            "views": [[False, "form"]],
+            "view_mode": 'form',
+            "context": {'default_employee_id': self.id},
+        }
+
     def action_send_sms(self):
         self.ensure_one()
         if not self.env.user.has_group('hr.group_hr_manager'):
