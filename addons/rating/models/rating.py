@@ -30,7 +30,7 @@ class Rating(models.Model):
         self.res_name = name and name[0][1] or ('%s/%s') % (self.res_model, self.res_id)
 
     @api.model
-    def new_access_token(self):
+    def _default_access_token(self):
         return uuid.uuid4().hex
 
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
@@ -52,7 +52,7 @@ class Rating(models.Model):
         ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
-    access_token = fields.Char('Security Token', default=new_access_token, help="Access token to set the rating of the value")
+    access_token = fields.Char('Security Token', default=_default_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
 
     @api.depends('parent_res_model', 'parent_res_id')
@@ -106,8 +106,8 @@ class Rating(models.Model):
             'parent_res_model_id': False,
             'parent_res_id': False,
         }
-        if hasattr(current_record, 'rating_get_parent'):
-            current_record_parent = current_record.rating_get_parent()
+        if hasattr(current_record, '_rating_get_parent_field_name'):
+            current_record_parent = current_record._rating_get_parent_field_name()
             if current_record_parent:
                 parent_res_model = getattr(current_record, current_record_parent)
                 data['parent_res_model_id'] = self.env['ir.model']._get(parent_res_model._name).id
@@ -119,7 +119,7 @@ class Rating(models.Model):
         for record in self:
             record.write({
                 'rating': 0,
-                'access_token': record.new_access_token(),
+                'access_token': record._default_access_token(),
                 'feedback': False,
                 'consumed': False,
             })
@@ -208,8 +208,8 @@ class RatingMixin(models.AbstractModel):
                 if record._rec_name in values:  # set the res_name of ratings to be recomputed
                     res_name_field = self.env['rating.rating']._fields['res_name']
                     record.rating_ids._recompute_todo(res_name_field)
-                if record.rating_get_parent() in values:
-                    record.rating_ids.write({'parent_res_id': record[record.rating_get_parent()].id})
+                if record._rating_get_parent_field_name() in values:
+                    record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
         if self.env.recompute and self._context.get('recompute', True):  # trigger the recomputation of all field marked as "to recompute"
             self.recompute()
@@ -223,7 +223,7 @@ class RatingMixin(models.AbstractModel):
         self.env['rating.rating'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', record_ids)]).unlink()
         return result
 
-    def rating_get_parent(self):
+    def _rating_get_parent_field_name(self):
         """Return the parent relation field name
            Should return a Many2One"""
         return None
