@@ -372,6 +372,7 @@
                 <kanban class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list">
                     <field name="name"/>
                     <field name="contact_nbr"/>
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -391,6 +392,11 @@
                                             <div class="dropdown-menu" role="menu">
                                                 <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
                                                 <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                                <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
+                                                    <t t-if="record.active.raw_value">Archive</t>
+                                                    <t t-if="!record.active.raw_value">Restore</t>
+                                                </a>
+                                                <ul class="oe_kanban_colorpicker" data-field="color"/>
                                             </div>
                                         </div>
                                     </div>
@@ -422,7 +428,7 @@
                 Create a new mailing list
               </p><p>
                 No need of importing your mailing lists, you can easily
-                send emails to any contact saved in other Odoo apps.
+                send emails<br/> to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
@@ -591,7 +597,7 @@
                             </div>
                             <label for="mailing_model_id" string="Recipients"/>
                             <div>
-                                <field name="mailing_model_id" widget="selection"/>
+                                <field name="mailing_model_id" widget="selection" required="1"/>
                                 <field name="mailing_model_name" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
                                 <field name="mailing_domain" widget="domain"
@@ -665,6 +671,7 @@
                     <field name='expected'/>
                     <field name='failed'/>
                     <field name='sent_date'/>
+                    <field name='active'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
@@ -677,6 +684,10 @@
                                         <t t-if="widget.deletable">
                                             <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                         </t>
+                                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
+                                            <t t-if="record.active.raw_value">Archive</t>
+                                            <t t-if="!record.active.raw_value">Restore</t>
+                                        </a>
                                     </div>
                                 </div>
                                  <div class="oe_kanban_content">
@@ -758,7 +769,7 @@
                 Create a new mailing
               </p><p>
                 No need of importing your mailing lists, you can easily
-                send emails to any contact saved in other Odoo apps.
+                send emails<br/> to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
@@ -780,7 +791,7 @@
                 Create a new mailing
               </p><p>
                 No need of importing your mailing lists, you can easily
-                send emails to any contact saved in other Odoo apps.
+                send emails<br/> to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
@@ -802,7 +813,7 @@
                 Create a new mailing
               </p><p>
                 No need of importing your mailing lists, you can easily
-                send emails to any contact saved in other Odoo apps.
+                send emails<br/> to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
@@ -825,7 +836,7 @@
                 Create a new mailing
               </p><p>
                 No need of importing your mailing lists, you can easily
-                send emails to any contact saved in other Odoo apps.
+                send emails<br/> to any contact saved in other Odoo apps.
               </p>
             </field>
         </record>
