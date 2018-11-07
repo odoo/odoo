@@ -34,9 +34,9 @@ class TestWarehouse(TestStockCommon):
         self.assertIn(inventory.name, inventory.move_ids.name)
         self.assertEqual(inventory.move_ids.product_qty, 15.0)
         self.assertEqual(inventory.move_ids.location_id, self.warehouse_1.lot_stock_id)
-        self.assertEqual(inventory.move_ids.location_dest_id, self.env.ref('stock.location_inventory'))  # Inventory loss
+        self.assertEqual(inventory.move_ids.location_dest_id, self.product_1.property_stock_inventory)  # Inventory loss
         self.assertEqual(inventory.move_ids.state, 'done')
-        quants = self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.location_inventory'))
+        quants = self.env['stock.quant']._gather(self.product_1, self.product_1.property_stock_inventory)
         self.assertEqual(len(quants), 1)  # One quant created for inventory loss
 
         # Check quantity of product in various locations: current, its parent, brother and other
@@ -176,7 +176,7 @@ class TestWarehouse(TestStockCommon):
         productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
         stock_location = self.env.ref('stock.stock_location_stock')
         customer_location = self.env.ref('stock.stock_location_customers')
-        location_loss = self.env.ref('stock.location_inventory')
+        location_loss = productA.property_stock_inventory
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
