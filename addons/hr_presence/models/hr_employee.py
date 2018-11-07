@@ -95,6 +95,11 @@ class ResCompany(models.Model):
             "context": {'search_default_group_hr_presence_state': 1},
         }
 
+    def action_set_present(self):
+        if not self.env.user.has_group('hr.group_hr_manager'):
+            raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
+        self.write({'hr_presence_state': 'present'})
+
     def action_send_sms(self):
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
