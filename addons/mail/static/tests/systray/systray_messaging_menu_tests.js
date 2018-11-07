@@ -427,5 +427,101 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
     messagingMenu.destroy();
 });
 
+QUnit.test('preview of inbox message not linked to document + mark as read', function (assert) {
+    assert.expect(17);
+
+    this.data.initMessaging = {
+        needaction_inbox_counter: 2,
+    };
+
+    var needactionMessages = [{
+        author_id: [1, "Demo"],
+        body: "<p>*Message1*</p>",
+        id: 689,
+        needaction: true,
+        needaction_partner_ids: [44],
+    }, {
+        author_id: [1, "Demo"],
+        body: "<p>*Message2*</p>",
+        id: 690,
+        needaction: true,
+        needaction_partner_ids: [44],
+    }];
+    this.data['mail.message'].records =
+        this.data['mail.message'].records.concat(needactionMessages);
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: {
+            partner_id: 44,
+        },
+        mockRPC: function (route, args) {
+            if (args.method === 'set_message_done') {
+                assert.step({
+                    method: 'set_message_done',
+                    messageIDs: args.args[0],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '2',
+        "should display a counter of 2 on the messaging menu icon");
+
+    messagingMenu.$('.dropdown-toggle').click();
+
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 2,
+        "should display two previews");
+
+    var $preview1 = messagingMenu.$('.o_mail_preview').eq(0);
+    var $preview2 = messagingMenu.$('.o_mail_preview').eq(1);
+
+    assert.strictEqual($preview1.data('preview-id'),
+        "mailbox_inbox",
+        "1st preview should be from the mailbox inbox");
+    assert.strictEqual($preview2.data('preview-id'),
+        "mailbox_inbox",
+        "2nd preview should also be from the mailbox inbox");
+    assert.ok($preview1.hasClass('o_preview_unread'),
+        "1st preview should be marked as unread");
+    assert.ok($preview2.hasClass('o_preview_unread'),
+        "2nd preview should also be marked as unread");
+    assert.strictEqual($preview1.find('.o_last_message_preview').text().replace(/\s/g, ''),
+        "Demo:*Message1*", "should correctly display the 1st preview");
+    assert.strictEqual($preview2.find('.o_last_message_preview').text().replace(/\s/g, ''),
+        "Demo:*Message2*", "should correctly display the 2nd preview");
+
+    $preview1.find('.o_mail_preview_mark_as_read').click();
+    assert.verifySteps([{
+            method: 'set_message_done',
+            messageIDs: [689],
+        }], "should mark 1st preview as read");
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
+        "should display a counter of 1 on the messaging menu icon after marking one preview as read");
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+        "should display a single preview remaining");
+    assert.strictEqual(messagingMenu.$('.o_mail_preview .o_last_message_preview').text().replace(/\s/g, ''),
+        "Demo:*Message2*", "preview 2 should be the remaining one");
+
+    $preview2 = messagingMenu.$('.o_mail_preview');
+    $preview2.find('.o_mail_preview_mark_as_read').click();
+    assert.verifySteps([{
+        method: 'set_message_done',
+        messageIDs: [689],
+    }, {
+        method: 'set_message_done',
+        messageIDs: [690],
+    }], "should mark 2nd preview as read");
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
+        "should display a counter of 0 on the messaging menu icon after marking both previews as read");
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 0,
+        "should display no preview remaining");
+
+    messagingMenu.destroy();
+});
+
 });
 });

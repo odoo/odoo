@@ -304,19 +304,11 @@ var MessagingMenu = Widget.extend({
         var thread;
         var $preview = $(ev.currentTarget).closest('.o_mail_preview');
         var previewID = $preview.data('preview-id');
-        var documentModel = $preview.data('document-model');
         if (previewID === 'mailbox_inbox') {
-            var documentID = $preview.data('document-id');
-            var inbox = this.call('mail_service', 'getMailbox', 'inbox');
-            var messages = inbox.getMessages({
-                documentModel: documentModel,
-                documentID: documentID,
-            });
-            var messageIDs = _.map(messages, function (message) {
-                return message.getID();
-            });
+            var messageIDs = [].concat($preview.data('message-ids'));
             this.call('mail_service', 'markMessagesAsRead', messageIDs);
         } else if (previewID === 'mail_failure') {
+            var documentModel = $preview.data('document-model');
             var unreadCounter = $preview.data('unread-counter');
             this.do_action('mail.mail_resend_cancel_action', {
                 additional_context: {
