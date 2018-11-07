@@ -284,12 +284,12 @@ var ThreadWidget = Widget.extend({
     /**
      * Scrolls the thread to a given message
      *
-     * @param {integer} options.messageID the ID of the message to scroll to
+     * @param {integer} options.msgID the ID of the message to scroll to
      * @param {integer} [options.duration]
      * @param {boolean} [options.onlyIfNecessary]
      */
     scrollToMessage: function (options) {
-        var $target = this.$('.o_thread_message[data-message-id="' + options.messageID + '"]');
+        var $target = this.$('.o_thread_message[data-message-id="' + options.msgID + '"]');
         if (options.onlyIfNecessary) {
             var delta = $target.parent().height() - $target.height();
             var offset = delta < 0 ?
