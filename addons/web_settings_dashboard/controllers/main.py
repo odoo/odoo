@@ -58,6 +58,7 @@ class WebSettingsDashboard(http.Controller):
         # initialized with demo=True or it has been force-activated by the `Load demo data` button
         # in the settings dashboard.
         demo_active = bool(request.env['ir.module.module'].search_count([('demo', '=', True)]))
+        can_load_demo_data = request._cr.dbname.startswith(('edu-', 'training-', 'pstest-', 'demo-'))
 
         return {
             'apps': {
@@ -75,6 +76,7 @@ class WebSettingsDashboard(http.Controller):
                 'expiration_date': expiration_date,
                 'debug': request.debug,
                 'demo_active': demo_active,
+                'can_load_demo_data': can_load_demo_data,
             },
             'company': {
                 'company_id': request.env.user.company_id.id,

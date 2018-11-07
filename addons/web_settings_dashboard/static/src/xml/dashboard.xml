@@ -107,6 +107,7 @@
             <t t-set="server_version" t-value="widget.data.server_version"/>
             <t t-set="debug" t-value="widget.data.debug"/>
             <t t-set="demo_active" t-value="widget.data.demo_active"/>
+            <t t-set="can_load_demo_data" t-value="widget.data.can_load_demo_data"/>
             <div class="text-center">
                 <div class="user-heading">
                     <h3>
@@ -129,7 +130,7 @@
             <br t-if="debug != 'assets'"/>
             <a t-if="debug != false" class="oe_activate_debug_mode float-right" href="/web" >Deactivate the developer mode</a>
             <br t-if="debug != false"/>
-            <a t-if="(debug) and !(demo_active)" class="oe_activate_debug_mode float-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
+            <a t-if="(debug) and !(demo_active) and (can_load_demo_data)" class="oe_activate_debug_mode float-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
         </div>
     </t>
 
