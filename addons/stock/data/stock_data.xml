@@ -39,12 +39,6 @@
             <field name="company_id"></field>
         </record>
 
-        <record id="location_inventory" model="stock.location">
-            <field name="name">Inventory adjustment</field>
-            <field name="location_id" ref="stock_location_locations_virtual"/>
-            <field name="usage">inventory</field>
-            <field name="company_id"></field>
-        </record>
         <record id="location_procurement" model="stock.location">
             <field name="name">Procurements</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
@@ -102,11 +96,6 @@
             <field name="name">property_stock_customer</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
-        </record>
-        <record forcecreate="True" id="property_stock_inventory" model="ir.property">
-            <field name="name">property_stock_inventory</field>
-            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_inventory')]"/>
-            <field eval="'stock.location,'+str(location_inventory)" name="value"/>
         </record>
         <record forcecreate="True" id="property_stock_production" model="ir.property">
             <field name="name">property_stock_production</field>
@@ -179,6 +168,9 @@
         <!-- create the transit location for each company existing -->
         <function model="res.company" name="create_transit_location">
             <value model="res.company" eval="obj().search([('internal_transit_location_id', '=', False)]).ids"/>
+        </function>
+        <function model="res.company" name="create_missing_inventory_loss_location">
+            <value model="res.company" eval="obj()"/>
         </function>
     </data>
 </odoo>
