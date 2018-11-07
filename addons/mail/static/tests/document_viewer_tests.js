@@ -19,16 +19,16 @@ var createViewer = function (params) {
     var viewer = new DocumentViewer(parent, params.attachments, params.attachmentID);
 
     var mockRPC = function (route) {
-        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1') {
+        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1?model%3Dir.attachment') {
             return $.when();
         }
         if (route === 'https://www.youtube.com/embed/FYqW0Gdwbzk') {
             return $.when();
         }
-        if (route === '/web/content/4') {
+        if (route === '/web/content/4?model%3Dir.attachment') {
             return $.when();
         }
-        if (route === '/web/image/6?unique=1&signature=999') {
+        if (route === '/web/image/6?unique=1&signature=999&model=ir.attachment') {
             return $.when();
         }
     };
@@ -100,38 +100,6 @@ QUnit.module('DocumentViewer', {
         viewer.destroy();
     });
 
-    QUnit.test('Document Viewer PDF', function (assert) {
-        assert.expect(6);
-
-        var viewer = createViewer({
-            attachmentID: 1,
-            attachments: this.attachments,
-            mockRPC: function (route, args) {
-                if (args.method === 'split_pdf') {
-                    assert.deepEqual(args.args, [1, "", false], "should have the right arguments");
-                    return $.when();
-                }
-                return this._super.apply(this, arguments);
-            },
-            intercepts: {
-                document_viewer_attachment_changed: function () {
-                    assert.ok(true, "should trigger document_viewer_attachment_changed event");
-                }
-            },
-        });
-
-        assert.containsOnce(viewer, '.o_page_number_input',
-            "pdf should have a page input");
-        assert.containsOnce(viewer, '.o_remainder_input',
-            "pdf should have a remainder checkbox");
-        assert.containsOnce(viewer, '.o_split_btn',
-            "pdf should have a split button");
-
-        testUtils.dom.click(viewer.$('.o_split_btn'));
-
-        assert.ok(viewer.isDestroyed(), 'viewer should be destroyed');
-    });
-
     QUnit.test('Document Viewer Youtube', function (assert) {
         assert.expect(3);
 
@@ -165,7 +133,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('text.html')").length, 1,
             "the viewer be on the right attachment");
-        assert.containsOnce(viewer, 'iframe[data-src="/web/content/4"]',
+        assert.containsOnce(viewer, 'iframe[data-src="/web/content/4?model%3Dir.attachment"]',
             "there should be an iframe with the right src");
 
         viewer.destroy();
@@ -197,7 +165,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('image.jpg')").length, 1,
             "the viewer be on the right attachment");
-        assert.containsOnce(viewer, 'img[data-src="/web/image/6?unique=1&signature=999"]',
+        assert.containsOnce(viewer, 'img[data-src="/web/image/6?unique=1&signature=999&model=ir.attachment"]',
             "there should be a video player");
 
         viewer.destroy();
