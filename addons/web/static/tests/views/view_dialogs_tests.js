@@ -17,6 +17,7 @@ QUnit.module('Views', {
                     foo: {string: "Foo", type: 'char'},
                     bar: {string: "Bar", type: "boolean"},
                     instrument: {string: 'Instruments', type: 'many2one', relation: 'instrument'},
+                    badassery: {string: 'level', type: 'many2many', relation: 'badassery', domain: [['level', '=', 'Awsome']]},
                 },
                 records: [
                     {id: 1, foo: 'blip', display_name: 'blipblip', bar: true},
@@ -35,6 +36,7 @@ QUnit.module('Views', {
             badassery: {
                 fields: {
                     level: {string: 'level', type: "char"},
+                    instrument: {string: 'instrument', type: 'many2many', relation: 'instrument'},
                 },
                 records: [
                     {id: 1, level: 'Awsome'},
@@ -417,6 +419,83 @@ QUnit.module('Views', {
         });
 
         form.$('.o_field_widget[name="instrument"] button.o_external_button').click();
+        form.destroy();
+    });
+
+    QUnit.test('SelectCreate dialog and subview with _view_ref contexts', function (assert) {
+        assert.expect(8);
+
+        this.data.instrument.records = [{id: 1, name: 'Tromblon', badassery: [1]}];
+        this.data.partner.records[0].instrument = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                     '<field name="name"/>' +
+                     '<field name="badassery" context="{\'tree_view_ref\': \'some_tree_view\'}"/>' +
+                  '</form>',
+            res_id: 1,
+            archs: {
+                'badassery,false,list': '<tree>'+
+                                                '<field name="level"/>'+
+                                            '</tree>',
+                'badassery,false,search': '<search>'+
+                                                '<field name="level"/>'+
+                                            '</search>',
+                'badassery,false,form': '<form>'+
+                                                '<field name="level"/>'+
+                                                '<field name="instrument" context="{\'tree_view_ref\': \'some_other_tree_view\'}" />' +
+                                            '</form>',
+                'instrument,false,list': '<tree>'+
+                                            '<field name="name"/>'+
+                                        '</tree>',
+                'instrument,false,search': '<search>'+
+                                            '<field name="name"/>'+
+                                        '</search>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+
+            mockRPC: function(route, args) {
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+
+            interceptsPropagate: {
+                load_views: function (ev) {
+                    var evaluatedContext = ev.data.context.eval();
+                    if (ev.data.modelName === 'badassery') {
+                        assert.deepEqual(evaluatedContext, {tree_view_ref: 'some_tree_view'},
+                            'The correct _view_ref should have been sent to the server, first time');
+                    }
+                    if (ev.data.modelName === 'instrument') {
+                        assert.deepEqual(evaluatedContext, {tree_view_ref: 'some_other_tree_view'},
+                            'The correct _view_ref should have been sent to the server for the subview');
+                    }
+                },
+            },
+        });
+
+        form.$('.o_field_widget[name="badassery"] .o_field_x2many_list_row_add a').click();
+
+        var $modals = $('.modal-dialog');
+        assert.equal($modals.length, 1, 'One modal present');
+
+        $modals.find('.modal-footer button').eq(1).click(); // click on the create button
+
+        $modals = $('.modal-dialog');
+        assert.equal($modals.length, 2, 'Two modals present');
+
+        var $instrumentM2M = $modals.find('.o_field_widget[name="instrument"]');
+        assert.equal($instrumentM2M.length, 1, 'One m2m in the modals');
+
+        $instrumentM2M.find('.o_field_x2many_list_row_add a').click();
+
         form.destroy();
     });
 
