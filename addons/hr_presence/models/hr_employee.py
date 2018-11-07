@@ -101,6 +101,7 @@ class ResCompany(models.Model):
         self.write({'hr_presence_state': 'present'})
 
     def action_send_sms(self):
+        self.ensure_one()
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
         if not self.mobile_phone:
@@ -113,7 +114,7 @@ Do not hesitate to contact your manager or the human resource department.""")
             "res_model": "sms.send_sms",
             "view_mode": 'form',
             "context": {
-                'active_id': self.env.context.get('active_id'),
+                'active_id': self.id,
                 'default_message': body,
                 'default_recipients': self.mobile_phone,
             },
@@ -122,22 +123,23 @@ Do not hesitate to contact your manager or the human resource department.""")
         }
 
     def action_send_mail(self):
+        self.ensure_one()
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-        employee = self.env['hr.employee'].sudo().browse(self.env.context.get('active_id'))
-        if not employee.work_email:
+        if not self.work_email:
             raise UserError(_("There is no professional email address for this employee."))
         template = self.env.ref('hr_presence.mail_template_presence', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
         ctx = dict(
-            default_model='hr.employee',
-            default_res_id=employee.id,
+            default_model="hr.employee",
+            default_res_id=self.id,
             default_use_template=bool(template),
             default_template_id=template.id,
             default_composition_mode='comment',
+            default_is_log=True,
             custom_layout='mail.mail_notification_light',
             email_from=self.env.user.email,
-            email_to=employee.work_email,
+            email_to=self.work_email,
         )
         return {
             'name': _('Compose Email'),
