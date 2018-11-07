@@ -363,12 +363,22 @@ class Users(models.Model):
         for user in self:
             user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
 
+    def _get_user_rules(self):
+        self.ensure_one()
+        models = self.groups_id.model_access.model_id
+        global_rules = self.env['ir.rule'].search([('global', '=', True),
+                                                   ('model_id', 'in', models.ids)])
+        return self.groups_id.rule_groups | global_rules
+
     @api.depends('groups_id')
     def _compute_accesses_count(self):
         for user in self:
             groups = user.groups_id
-            user.accesses_count = len(groups.model_access)
-            user.rules_count = len(groups.rule_groups)
+            rules = user._get_user_rules()
+            accesses = groups.model_access
+
+            user.accesses_count = len(accesses)
+            user.rules_count = len(rules)
             user.groups_count = len(groups)
 
     @api.onchange('login')
@@ -761,7 +771,7 @@ class Users(models.Model):
             'res_model': 'ir.rule',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.groups_id.rule_groups.ids)],
+            'domain': [('id', 'in', self._get_user_rules().ids)],
             'target': 'current',
         }
 
