@@ -3,7 +3,6 @@
 # ir_http modular http routing
 #----------------------------------------------------------
 import base64
-import datetime
 import hashlib
 import logging
 import mimetypes
@@ -23,7 +22,6 @@ from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request, STATIC_CACHE, content_disposition
 from odoo.tools import pycompat, consteq
 from odoo.tools.mimetypes import guess_mimetype
-from ast import literal_eval
 from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
@@ -260,6 +258,13 @@ class IrHttp(models.AbstractModel):
         """
         return False
 
+    @classmethod
+    def _get_special_models(cls):
+        """
+        :return: the set of models that have to pass through several specific fields checks:
+        used for the 'url' and the 'access_token' fields.
+        """
+        return {'ir.attachment'}
 
     @classmethod
     def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
@@ -290,6 +295,7 @@ class IrHttp(models.AbstractModel):
         :returns: (status, headers, content)
         """
         env = env or request.env
+        attachment_models = cls._get_special_models()
         # get object and content
         obj = None
         if xmlid:
@@ -301,7 +307,7 @@ class IrHttp(models.AbstractModel):
             return (404, [], None)
 
         # access token grant access
-        if model == 'ir.attachment' and access_token:
+        if model in attachment_models and access_token:
             obj = obj.sudo()
             if access_mode:
                 if not cls._check_access_mode(env, id, access_mode, model, access_token=access_token,
@@ -320,7 +326,7 @@ class IrHttp(models.AbstractModel):
 
         # attachment by url check
         module_resource_path = None
-        if model == 'ir.attachment' and obj.type == 'url' and obj.url:
+        if model in attachment_models and obj.type == 'url' and obj.url:
             url_match = re.match("^/(\w+)/(.+)$", obj.url)
             if url_match:
                 module = url_match.group(1)
