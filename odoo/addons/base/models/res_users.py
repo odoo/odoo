@@ -1096,7 +1096,7 @@ class UsersView(models.Model):
         """ return `values` without reified group fields """
         add, rem = [], []
         values1 = {}
-
+        group_system = self.env.ref('base.group_system')
         for key, val in values.items():
             if is_boolean_group(key):
                 (add if val else rem).append(get_boolean_group(key))
@@ -1104,6 +1104,14 @@ class UsersView(models.Model):
                 rem += get_selection_groups(key)
                 if val:
                     add.append(val)
+                    if val == group_system.id:
+                        # Don't remove that has to be added anyway
+
+                        # This fixes problem when user with "Administration:
+                        # Access Rights" is trying to update himself to
+                        # "Administration: Settings" -- without line below odoo
+                        # says "You must have Administration: Access Rights"
+                        [rem.remove(g.id) for g in group_system.implied_ids] 
             else:
                 values1[key] = val
 
