@@ -315,9 +315,6 @@ class AccountChartTemplate(models.Model):
                 'sequence': 10
             })
 
-        if company.country_id.code in self.get_countries_posting_at_bank_rec():
-            bank_journals.write({'post_at_bank_rec': True})
-
         return bank_journals
 
     def get_countries_posting_at_bank_rec(self):

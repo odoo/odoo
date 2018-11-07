@@ -1106,6 +1106,13 @@ var FieldX2Many = AbstractField.extend({
         }
         return def.then(function () {
             self.pager.updateState({ size: self.value.count });
+            var newEval = self._evalColumnInvisibleFields();
+            if (!_.isEqual(self.currentColInvisibleFields, newEval)) {
+                self.currentColInvisibleFields = newEval;
+                self.renderer.updateState(self.value, {
+                    columnInvisibleFields: self.currentColInvisibleFields,
+                });
+            }
         });
     },
     /**
