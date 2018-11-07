@@ -1230,12 +1230,13 @@ class IrModelAccess(models.Model):
                 'create': _("Sorry, you are not allowed to create this kind of document."),
                 'unlink': _("Sorry, you are not allowed to delete this document."),
             }
+            model_name = '%s (%s)' % (self.env[model]._description, model)
             if groups:
-                msg_tail = _("Only users with the following access level are currently allowed to do that") + ":\n%s\n\n(" + _("Document model") + ": %s)"
-                msg_params = (groups, model)
+                msg_tail = _("Only users with the following access level are currently allowed to do that") + ":\n%s\n\n(" + _("Document type") + ": %s)"
+                msg_params = (groups, model_name)
             else:
-                msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document model") + ": %s)"
-                msg_params = (model,)
+                msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document type") + ": %s)"
+                msg_params = (model_name,)
             _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
             msg = '%s %s' % (msg_heads[mode], msg_tail)
             raise AccessError(msg % msg_params)
