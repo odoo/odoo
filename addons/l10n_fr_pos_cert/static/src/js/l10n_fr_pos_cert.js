@@ -50,7 +50,7 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
             if (setting === 'no_print'){
                 return '';
             }
-            if (hash){
+            if (hash && ['fail', 'not_saved'].indexOf(hash) === -1){
                 return _t('Certification Number: ') + hash.substring(0, 10) + '...' + hash.substring(hash.length - 10);
             }
             return _t("Because of a network problem, this ticket could not be certified.");
@@ -168,18 +168,21 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
                             if (result.pos_reference.indexOf(current_order.uid) > 0) {
                                 hash = result.l10n_fr_hash;
                                 current_order.set_hash(hash, setting);
-                                return server_ids;
+                                return;
                             }
                         });
                         certification_deferred.resolve(hash);
                         return server_ids;
                     }).fail(function (error, event){
+                        current_order.set_hash('fail', setting);
                         certification_deferred.reject();
                         return server_ids;
                     });
                 }
+                current_order.set_hash('fail', setting);
                 certification_deferred.reject();
             }, function error() {
+                current_order.set_hash('not_saved', setting);
                 certification_deferred.reject();
             });
         },
