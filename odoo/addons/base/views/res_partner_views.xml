@@ -449,15 +449,15 @@
                 <search string="Search Partner">
                    <field name="name"
                        filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
-                   <field name="parent_id" domain="[('is_company','=',1)]" operator="child_of"/>
+                   <field name="parent_id" domain="[('is_company','=',True)]" operator="child_of"/>
                    <filter name="filter_my_partners" help="My Contacts"
                            domain="[('user_id','=',uid)]"/>
                    <separator/>
-                   <filter string="Individuals" name="type_person" domain="[('is_company','=',0)]"/>
-                   <filter string="Companies" name="type_company" domain="[('is_company','=',1)]"/>
+                   <filter string="Individuals" name="type_person" domain="[('is_company','=',False)]"/>
+                   <filter string="Companies" name="type_company" domain="[('is_company','=',True)]"/>
                    <separator/>
-                   <filter string="Customers" name="customer" domain="[('customer','=',1), ('parent_id', '=', False)]"/>
-                   <filter string="Vendors" name="supplier" domain="[('supplier','=',1), ('parent_id', '=', False)]"/>
+                   <filter string="Customers" name="customer" domain="[('customer','=',True), ('parent_id', '=', False)]"/>
+                   <filter string="Vendors" name="supplier" domain="[('supplier','=',True), ('parent_id', '=', False)]"/>
                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                    <separator/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
