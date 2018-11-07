@@ -66,9 +66,36 @@
 @function luma($color) {
     @return ((red($color) * .299) + (green($color) * .587) + (blue($color) * .114)) / 255 * 100%;
 }
-@function o-get-most-contrast($color, $c1, $c2) {
-    $luma: luma($color);
-    @return if(abs($luma - luma($c1)) > abs($luma - luma($c2)), $c1, $c2);
+//
+// Given two colors, returns the one which has the most constrast with another
+// given color. Careful: if you want to find the text color which will suit the
+// most on a given background color, you should use the 'color-yiq' function.
+//
+@function o-get-most-contrast($color, $c1, $c2, $background: #FFFFFF, $threshold: false, $cross-mix: true) {
+    $background: if($background == null, #FFFFFF, $background);
+
+    $real-color: mix(rgba($color, 1.0), $background, percentage(alpha($color)));
+    $luma: luma($real-color);
+
+    $cross-color: if($cross-mix, $real-color, $background);
+
+    $real-c1: mix(rgba($c1, 1.0), $cross-color, percentage(alpha($c1)));
+    $luma-c1: luma($real-c1);
+
+    $real-c2: mix(rgba($c2, 1.0), $cross-color, percentage(alpha($c2)));
+    $luma-c2: luma($real-c2);
+
+    $-dark: if($luma-c1 <= $luma-c2, $c1, $c2);
+    $-light: if($luma-c1 > $luma-c2, $c1, $c2);
+
+    @if $threshold == false {
+        // Automatic threshold: give a really small preference to light results
+        // as bootstrap does by default (mainly by compatibility at the moment
+        // this code is written)
+        $threshold: ($luma-c1 + $luma-c2) * 0.515; // 150 / 145.63 * 0.5 would be the BS value
+    }
+
+    @return if($luma > $threshold, $-dark, $-light);
 }
 
 // ------------------------------------------------------------------
