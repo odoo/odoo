@@ -3,7 +3,7 @@
     <data noupdate="1">
         <record id="mail_template_presence" model="mail.template">
             <field name="name">Presence: Contact Employee</field>
-            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="model_id" ref="hr.model_hr_employee"/>
             <field name="subject">Unexpected Absence</field>
             <field name="email_from">${ctx['email_from'] or ''}</field>
             <field name="email_to">${ctx['email_to'] or ''}</field>
