@@ -146,8 +146,8 @@ QUnit.test('messaging menu widget: messaging menu with 1 record', function (asse
     messagingMenu.destroy();
 });
 
-QUnit.test('messaging menu widget: no crash when clicking on inbox notification not associated to a document', function (assert) {
-    assert.expect(3);
+QUnit.test('messaging menu widget: open inbox for needaction not linked to any document', function (assert) {
+    assert.expect(4);
 
     var messagingMenu = new MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {
@@ -155,17 +155,6 @@ QUnit.test('messaging menu widget: no crash when clicking on inbox notification 
         data: this.data,
         session: {
             partner_id: 1,
-        },
-        intercepts: {
-            /**
-             * Simulate action 'mail.action_discuss' successfully performed.
-             *
-             * @param {OdooEvent} ev
-             * @param {function} ev.data.on_success called when success action performed
-             */
-            do_action: function (ev) {
-                ev.data.on_success();
-            },
         },
     });
     messagingMenu.appendTo($('#qunit-fixture'));
@@ -195,12 +184,18 @@ QUnit.test('messaging menu widget: no crash when clicking on inbox notification 
     assert.strictEqual($firstChannelPreview.data('preview-id'),
         'mailbox_inbox',
         "should be a preview from channel inbox");
-    try {
-        $firstChannelPreview.click();
-        assert.ok(true, "should not have crashed when clicking on needaction preview message");
-    } finally {
-        messagingMenu.destroy();
-    }
+
+    testUtils.intercept(messagingMenu, 'do_action', function (ev) {
+        if (ev.data.action === 'mail.action_discuss') {
+            assert.step('do_action:' + ev.data.action + ':' + ev.data.options.active_id);
+        }
+    }, true);
+    $firstChannelPreview.click();
+    assert.verifySteps(
+        ['do_action:mail.action_discuss:mailbox_inbox'],
+        "should open Discuss with Inbox");
+
+    messagingMenu.destroy();
 });
 
 QUnit.test("messaging menu widget: mark as read on thread preview", function ( assert ) {
