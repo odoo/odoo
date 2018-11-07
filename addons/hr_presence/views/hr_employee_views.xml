@@ -24,7 +24,7 @@
                     <div class="oe_kanban_bottom_left">
                         <field name="hr_presence_state" invisible="1"/>
                         <button name="action_set_present" type="object" class="btn btn-primary btn-sm mt8 fa fa-check" title="Set as present" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}"> </button>
-                        <button name="%(hr_holidays.hr_leave_action_all)d" type="action" class="btn btn-primary btn-sm mt8" context="{'default_employee_id': active_id}">Leaves</button>
+                        <button name="action_open_leave_request" type="object" class="btn btn-primary btn-sm mt8">Leaves</button>
                         <button name="action_send_sms" type="object" class="btn btn-primary btn-sm mt8">SMS</button>
                         <button name="action_send_mail" type="object" class="btn btn-primary btn-sm mt8">Mail</button>
                     </div>
