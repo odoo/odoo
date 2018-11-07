@@ -282,7 +282,11 @@ var MessagingMenu = Widget.extend({
             // e.g. needaction message of channel
             var documentID = $target.data('document-id');
             var documentModel = $target.data('document-model');
-            this._openDocument(documentModel, documentID);
+            if (!documentModel) {
+                this._openDiscuss('mailbox_inbox');
+            } else {
+                this._openDocument(documentModel, documentID);
+            }
         } else {
             // preview of thread
             this.call('mail_service', 'openThread', previewID);
