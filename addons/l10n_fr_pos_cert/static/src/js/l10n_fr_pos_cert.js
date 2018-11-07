@@ -153,6 +153,9 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
                 current_order.set_hash(false, setting);
             }
 
+            // Store the current order, in case we need to reprint
+            this.set('latestOrder', current_order);
+
             return PosModelParent._save_to_server.apply(this, arguments).then(function(server_ids) {
                 if (server_ids.length) {
                     // Try to get hash of saved orders, if required
@@ -243,7 +246,7 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
         },
 
         _print_receipt_certification: function(receipt){
-            if (this.pos.get_order().get('hash')) {
+            if (this.pos.get('latestOrder').get('hash')) {
                 return $.when();
             }
             return this.pos._getCertificationDeferred();
