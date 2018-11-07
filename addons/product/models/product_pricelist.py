@@ -151,8 +151,10 @@ class Pricelist(models.Model):
             'AND (item.pricelist_id = %s) '
             'AND (item.date_start IS NULL OR item.date_start<=%s) '
             'AND (item.date_end IS NULL OR item.date_end>=%s)'
-            'ORDER BY item.applied_on, item.min_quantity desc, categ.complete_name desc',
+            'ORDER BY item.applied_on, item.min_quantity desc, categ.complete_name desc, item.id desc',
             (prod_tmpl_ids, prod_ids, categ_ids, self.id, date, date))
+        # NOTE: if you change `order by` on that query, make sure it matches
+        # _order from model to avoid inconstencies and undeterministic issues.
 
         item_ids = [x[0] for x in self._cr.fetchall()]
         items = self.env['product.pricelist.item'].browse(item_ids)
@@ -360,7 +362,10 @@ class ResCountryGroup(models.Model):
 class PricelistItem(models.Model):
     _name = "product.pricelist.item"
     _description = "Pricelist Item"
-    _order = "applied_on, min_quantity desc, categ_id desc, id"
+    _order = "applied_on, min_quantity desc, categ_id desc, id desc"
+    # NOTE: if you change _order on this model, make sure it matches the SQL
+    # query built in _compute_price_rule() above in this file to avoid
+    # inconstencies and undeterministic issues.
 
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', ondelete='cascade',
