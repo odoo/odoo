@@ -23,12 +23,6 @@ import sys
 import unicodedata
 from collections import defaultdict
 
-PY3 = sys.version_info >= (3,0)
-
-if PY3:
-    unichr = chr
-    xrange = range
-    unicode = str
 
 token = {
         'BooleanLiteral': 1,
@@ -221,7 +215,7 @@ LS = u'\u2028'
 PS = u'\u2029'
 
 U_CATEGORIES = defaultdict(list)
-for c in map(unichr, range(sys.maxunicode + 1)):
+for c in map(chr, range(sys.maxunicode + 1)):
     U_CATEGORIES[unicodedata.category(c)].append(c)
 UNICODE_LETTER = set(U_CATEGORIES['Lu']+U_CATEGORIES['Ll']+
                      U_CATEGORIES['Lt']+U_CATEGORIES['Lm']+
@@ -242,33 +236,33 @@ WHITE_SPACE = set((0x20, 0x09, 0x0B, 0x0C, 0xA0, 0x1680,
 LINE_TERMINATORS = set((0x0A, 0x0D, 0x2028, 0x2029))
 
 def isIdentifierStart(ch):
-    return (ch if isinstance(ch, unicode) else unichr(ch))  in IDENTIFIER_START
+    return (ch if isinstance(ch, str) else chr(ch))  in IDENTIFIER_START
 
 def isIdentifierPart(ch):
-    return (ch if isinstance(ch, unicode) else unichr(ch))  in IDENTIFIER_PART
+    return (ch if isinstance(ch, str) else chr(ch))  in IDENTIFIER_PART
 
 def isWhiteSpace(ch):
-    return (ord(ch) if isinstance(ch, unicode) else ch) in WHITE_SPACE
+    return (ord(ch) if isinstance(ch, str) else ch) in WHITE_SPACE
 
 def isLineTerminator(ch):
-    return (ord(ch) if isinstance(ch, unicode) else ch)  in LINE_TERMINATORS
+    return (ord(ch) if isinstance(ch, str) else ch)  in LINE_TERMINATORS
 
 OCTAL = set(('0', '1', '2', '3', '4', '5', '6', '7'))
 DEC = set(('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'))
 HEX = set('0123456789abcdefABCDEF')
-HEX_CONV = dict(('0123456789abcdef'[n],n) for n in xrange(16))
+HEX_CONV = dict(('0123456789abcdef'[n],n) for n in range(16))
 for i,e in enumerate('ABCDEF', 10):
     HEX_CONV[e] = i
 
 
 def isDecimalDigit(ch):
-    return (ch if isinstance(ch, unicode) else unichr(ch)) in DEC
+    return (ch if isinstance(ch, str) else chr(ch)) in DEC
 
 def isHexDigit(ch):
-    return (ch if isinstance(ch, unicode) else unichr(ch))  in HEX
+    return (ch if isinstance(ch, str) else chr(ch))  in HEX
 
 def isOctalDigit(ch):
-    return (ch if isinstance(ch, unicode) else unichr(ch))  in OCTAL
+    return (ch if isinstance(ch, str) else chr(ch))  in OCTAL
 
 def isFutureReservedWord(w):
     return w in ('enum', 'export', 'import', 'super')

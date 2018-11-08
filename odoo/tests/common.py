@@ -354,10 +354,9 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         doc = self._testMethodDoc
         return doc and ' '.join(l.strip() for l in doc.splitlines() if not l.isspace()) or None
 
-    if not pycompat.PY2:
-        # turns out this thing may not be quite as useful as we thought...
-        def assertItemsEqual(self, a, b, msg=None):
-            self.assertCountEqual(a, b, msg=None)
+    # turns out this thing may not be quite as useful as we thought...
+    def assertItemsEqual(self, a, b, msg=None):
+        self.assertCountEqual(a, b, msg=None)
 
 
 class TransactionCase(BaseCase):
