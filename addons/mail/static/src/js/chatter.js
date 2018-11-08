@@ -129,6 +129,18 @@ var Chatter = Widget.extend(chat_mixin, {
             this.composer.clear_composer();
         }
     },
+    /**
+     * @private
+     */
+    _disableComposer: function () {
+        this.$(".o_composer_button_send").prop('disabled', true);
+    },
+    /**
+     * @private
+     */
+    _enableComposer: function () {
+        this.$(".o_composer_button_send").prop('disabled', false);
+    },
     _openComposer: function (options) {
         var self = this;
         var old_composer = this.composer;
@@ -156,11 +168,14 @@ var Chatter = Widget.extend(chat_mixin, {
                 self.composer.focus();
             }
             self.composer.on('post_message', self, function (message) {
+                self._disableComposer();
                 self.fields.thread.postMessage(message).then(function () {
                     self._closeComposer(true);
                     if (self.postRefresh === 'always' || (self.postRefresh === 'recipients' && message.partner_ids.length)) {
                         self.trigger_up('reload');
                     }
+                }).fail(function () {
+                    self._enableComposer();
                 });
             });
             self.composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
