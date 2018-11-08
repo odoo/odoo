@@ -51,12 +51,11 @@ class TestMrpByProduct(common.TransactionCase):
         # Create production order for product A
         # -------------------------------------
 
-        mnf_product_a = self.env['mrp.production'].create({
-                        'product_id': self.product_a.id,
-                        'product_qty': 2.0,
-                        'product_uom_id': self.uom_unit_id,
-                        'bom_id': bom_product_a.id,
-                    })
+        mnf_product_a_form = Form(self.env['mrp.production'])
+        mnf_product_a_form.product_id = self.product_a
+        mnf_product_a_form.bom_id = bom_product_a
+        mnf_product_a_form.product_qty = 2.0
+        mnf_product_a = mnf_product_a_form.save()
         mnf_product_a.action_confirm()
 
         # I compute the data of production order

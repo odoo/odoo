@@ -53,14 +53,13 @@ class TestTraceability(TestMrpCommon):
                     (0, 0, {'product_id': consumed_serial.id, 'product_qty': 1}),
                 ],
             })
-            
-            mo = self.env['mrp.production'].create({
-                'name': 'MO %s' % finished_product.tracking,
-                'product_id': finished_product.id,
-                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                'product_qty': 1,
-                'bom_id': bom.id,
-            })
+
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = finished_product
+            mo_form.bom_id = bom
+            mo_form.product_uom_id = self.env.ref('uom.product_uom_unit')
+            mo_form.product_qty = 1
+            mo = mo_form.save()
             mo.action_confirm()
             mo.action_assign()
 
