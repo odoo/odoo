@@ -94,6 +94,17 @@ class ServerActions(models.Model):
             return False
 
         records = self.env[action.model_id.model].browse(self._context.get('active_ids', self._context.get('active_id')))
+
+        old_values = action._context.get('old_values')
+        if old_values:
+            field_names = list(old_values[records[0].id])
+            field = records._fields[field_names[0]]
+            # Pick an arbitrary field; if it is marked to be recomputed,
+            # it means we are in an extraneous write triggered by the recompute.
+            # In this case, we should not create a new activity.
+            if records._recompute_check(field):
+                return False
+
         vals = {
             'summary': action.activity_summary or '',
             'note': action.activity_note or '',
