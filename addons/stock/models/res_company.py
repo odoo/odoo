@@ -50,6 +50,23 @@ class Company(models.Model):
                 'value': 'stock.location,%d' % inventory_loss_location.id,
             })
 
+    def _create_production_location(self):
+        parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
+        production_product_template_field = self.env['ir.model.fields'].search([('model','=','product.template'),('name','=','property_stock_production')])
+        for company in self:
+            production_location = self.env['stock.location'].create({
+                'name': '%s: Production' % company.name,
+                'usage': 'production',
+                'location_id': parent_location.id,
+                'company_id': company.id,
+            })
+            self.env['ir.property'].create({
+                'name': 'property_stock_inventory_%s' % company.name,
+                'fields_id': production_product_template_field.id,
+                'company_id': company.id,
+                'value': 'stock.location,%d' % production_location.id,
+            })
+
     @api.model
     def create_missing_warehouse(self):
         """ This hook is used to add a warehouse on existing companies
@@ -76,10 +93,20 @@ class Company(models.Model):
             company._create_inventory_loss_location()
 
     @api.model
+    def create_missing_production_location(self):
+        company_ids  = self.env['res.company'].search([])
+        production_product_template_field = self.env['ir.model.fields'].search([('model','=','product.template'),('name','=','property_stock_production')])
+        companies_having_property = self.env['ir.property'].search([('fields_id', '=', production_product_template_field.id)]).mapped('company_id')
+        company_without_property = company_ids - companies_having_property
+        for company in company_without_property:
+            company._create_production_location()
+
+    @api.model
     def create(self, vals):
         company = super(Company, self).create(vals)
 
         company.create_transit_location()
         company.sudo()._create_inventory_loss_location()
+        company.sudo()._create_production_location()
         self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id, 'partner_id': company.partner_id.id})
         return company

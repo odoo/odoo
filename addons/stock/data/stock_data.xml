@@ -45,12 +45,6 @@
             <field name="usage">procurement</field>
             <field name="company_id"></field>
         </record>
-        <record id="location_production" model="stock.location">
-            <field name="name">Production</field>
-            <field name="location_id" ref="stock_location_locations_virtual"/>
-            <field name="usage">production</field>
-            <field name="company_id"></field>
-        </record>
         <record id="stock_location_suppliers" model="stock.location">
             <field name="name">Vendors</field>
             <field name="location_id" ref="stock_location_locations_partner"/>
@@ -96,11 +90,6 @@
             <field name="name">property_stock_customer</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
-        </record>
-        <record forcecreate="True" id="property_stock_production" model="ir.property">
-            <field name="name">property_stock_production</field>
-            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_production')]"/>
-            <field eval="'stock.location,'+str(location_production)" name="value"/>
         </record>
 
 
@@ -173,6 +162,9 @@
             <value model="res.company" eval="obj()"/>
         </function>
         <function model="res.company" name="create_missing_inventory_loss_location">
+            <value model="res.company" eval="obj()"/>
+        </function>
+        <function model="res.company" name="create_missing_production_location">
             <value model="res.company" eval="obj()"/>
         </function>
     </data>

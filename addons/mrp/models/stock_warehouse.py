@@ -59,9 +59,7 @@ class StockWarehouse(models.Model):
 
     @api.model
     def _get_production_location(self):
-        location = self.env.ref('stock.location_production', raise_if_not_found=False)
-        if not location:
-            location = self.env['stock.location'].search([('usage', '=', 'production')], limit=1)
+        location = self.env['stock.location'].with_context(force_company=self.company_id.id).search([('usage', '=', 'production'), ('company_id', '=', self.company_id.id)], limit=1)
         if not location:
             raise UserError(_('Can\'t find any production location.'))
         return location
