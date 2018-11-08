@@ -7,7 +7,7 @@
                     <group>
                         <field name="create_date" />
                         <field name="dbname" />
-                        <field name="logging_type" />
+                        <field name="type" />
                         <field name="name" />
                         <field name="level" />
                         <field name="path" />
@@ -25,7 +25,7 @@
                     <field name="create_date" />
                     <field name="create_uid" />
                     <field name="dbname" />
-                    <field name="logging_type" />
+                    <field name="type" />
                     <field name="name" />
                     <field name="level" />
                     <field name="path" />
@@ -39,14 +39,14 @@
             <field name="arch" type="xml">
                 <search string="Logs">
                     <field name="dbname" />
-                    <field name="logging_type" />
+                    <field name="type" />
                     <field name="name" />
                     <field name="level" />
                     <field name="message" />
                     <group expand="0" string="Group By">
                         <filter string="Database" name="database" domain="[]" context="{'group_by': 'dbname'}" />
                         <filter string="Level" name="group_by_level" domain="[]" context="{'group_by': 'level'}" />
-                        <filter string="Type" name="group_by_type" domain="[]" context="{'group_by': 'logging_type'}" />
+                        <filter string="Type" name="group_by_type" domain="[]" context="{'group_by': 'type'}" />
                         <filter string="Creation Date" name="group_by_month" domain="[]" context="{'group_by': 'create_date'}" />
                     </group>
                 </search>

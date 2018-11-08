@@ -174,7 +174,7 @@ class DeliveryCarrier(models.Model):
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     IrLogging = env['ir.logging']
                     IrLogging.sudo().create({'name': 'delivery.carrier',
-                              'logging_type': 'server',
+                              'type': 'server',
                               'dbname': db_name,
                               'level': 'DEBUG',
                               'message': xml_string,

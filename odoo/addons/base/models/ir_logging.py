@@ -10,7 +10,7 @@ class IrLogging(models.Model):
     create_date = fields.Datetime(readonly=True)
     create_uid = fields.Integer(string='Uid', readonly=True)  # Integer not m2o is intentionnal
     name = fields.Char(required=True)
-    logging_type = fields.Selection([('client', 'Client'), ('server', 'Server')], string='Type', required=True, index=True, oldname='type')
+    type = fields.Selection([('client', 'Client'), ('server', 'Server')], required=True, index=True)
     dbname = fields.Char(string='Database Name', index=True)
     level = fields.Char(index=True)
     message = fields.Text(required=True)
