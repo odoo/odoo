@@ -1,5 +1,5 @@
 import models
-from openerp import api, SUPERUSER_ID
+from odoo import api, SUPERUSER_ID
 from ..l10n_fr_certification.models.res_company import UNALTERABLE_COUNTRIES
 
 

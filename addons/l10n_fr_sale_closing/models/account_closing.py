@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 
-from openerp import models, api, fields
-from openerp.fields import Datetime as FieldDateTime
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import models, api, fields
+from odoo.fields import Datetime as FieldDateTime
+from odoo.tools.translate import _
+from odoo.exceptions import UserError
 
 
 class AccountClosing(models.Model):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp.tests.common import TransactionCase
-from openerp.exceptions import UserError
+from odoo.tests.common import TransactionCase
+from odoo.exceptions import UserError
 
 
 class TestStockScrap(TransactionCase):

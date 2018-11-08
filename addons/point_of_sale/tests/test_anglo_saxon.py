@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import openerp
+import odoo
 import time
-from openerp import fields
+from odoo import fields
 
-from openerp.tests import common
+from odoo.tests import common
 
 
 class TestAngloSaxonCommon(common.TransactionCase):

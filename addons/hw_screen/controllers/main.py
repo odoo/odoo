@@ -4,7 +4,7 @@
 from odoo import http
 from odoo.tools import config
 from odoo.addons.web.controllers import main as web
-from openerp.addons.hw_posbox_homepage.controllers import main as homepage
+from odoo.addons.hw_posbox_homepage.controllers import main as homepage
 
 import logging
 import netifaces as ni

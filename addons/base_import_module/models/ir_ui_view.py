@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from operator import itemgetter
-from openerp import api, models
+from odoo import api, models
 
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
