@@ -13,5 +13,5 @@ class ReportStockRule(models.AbstractModel):
         """
         res = super(ReportStockRule, self)._get_rule_loc(rule, product_id)
         if rule.action == 'manufacture':
-            res['source'] = product_id.property_stock_production or self.env.ref('stock.location_production')
+            res['source'] = product_id.property_stock_production
         return res
