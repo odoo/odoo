@@ -12,7 +12,7 @@ class sale_order(models.Model):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the online quote if exists. """
         self.ensure_one()
-        if self.state in ['draft', 'cancel']:
+        if self.state in ['draft', 'cancel'] or not self.env.user.share:
             return super(sale_order, self).get_access_action()
         return {
             'type': 'ir.actions.act_url',
