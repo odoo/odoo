@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat, ormcache
+from odoo.tools import ormcache
 
 TYPE2FIELD = {
     'char': 'value_text',
@@ -82,7 +82,7 @@ class Property(models.Model):
         if field == 'value_reference':
             if isinstance(value, models.BaseModel):
                 value = '%s,%d' % (value._name, value.id)
-            elif isinstance(value, pycompat.integer_types):
+            elif isinstance(value, int):
                 field_id = values.get('fields_id')
                 if not field_id:
                     if not prop:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools import pycompat, float_is_zero
+from odoo.tools import float_is_zero
 from .test_sale_common import TestCommonSaleNoChart
 
 
@@ -138,7 +138,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         invoice.action_invoice_open()
 
         # Check discount appeared on both SO lines and invoice lines
-        for line, inv_line in pycompat.izip(self.sale_order.order_line, invoice.invoice_line_ids):
+        for line, inv_line in zip(self.sale_order.order_line, invoice.invoice_line_ids):
             self.assertEquals(line.discount, inv_line.discount, 'Discount on lines of order and invoice should be same')
 
     def test_invoice_refund(self):

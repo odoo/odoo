@@ -5,7 +5,7 @@ from collections import defaultdict
 import json
 
 from odoo.tests.common import TransactionCase, users, warmup
-from odoo.tools import pycompat, mute_logger
+from odoo.tools import mute_logger
 
 
 class TestPerformance(TransactionCase):
@@ -399,7 +399,7 @@ class TestPerformance(TransactionCase):
             model.invalidate_cache()
             result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
             self.assertEqual(len(result), len(expected))
-            for res, exp in pycompat.izip(result, expected):
+            for res, exp in zip(result, expected):
                 self.assertEqual(res['__domain'], exp['__domain'])
                 self.assertEqual(res['partner_id'][0], exp['partner_id'][0])
                 self.assertEqual(res['partner_id_count'], exp['partner_id_count'])

@@ -16,7 +16,7 @@ from lxml import etree
 
 import odoo
 from odoo.loglevels import ustr
-from odoo.tools import pycompat, misc
+from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
 
@@ -224,7 +224,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
-        assert isinstance(cleaned, pycompat.text_type)
+        assert isinstance(cleaned, str)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
         cleaned = cleaned.replace(u'%24', u'$')
         cleaned = cleaned.replace(u'%7B', u'{')
@@ -238,7 +238,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         # html considerations so real html content match database value
         cleaned.replace(u'\xa0', u'&nbsp;')
     except etree.ParserError as e:
-        if u'empty' in pycompat.text_type(e):
+        if 'empty' in str(e):
             return u""
         if not silent:
             raise

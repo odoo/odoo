@@ -5,8 +5,6 @@ from odoo import api, models
 
 from odoo.addons.calendar.models.calendar import get_real_ids
 
-from odoo.tools import pycompat
-
 
 class Message(models.Model):
 
@@ -18,7 +16,7 @@ class Message(models.Model):
         args = list(args)
         for index in range(len(args)):
             if args[index][0] == "res_id":
-                if isinstance(args[index][2], pycompat.string_types):
+                if isinstance(args[index][2], str):
                     args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
                 elif isinstance(args[index][2], list):
                     args[index] = (args[index][0], args[index][1], [get_real_ids(x) for x in args[index][2]])

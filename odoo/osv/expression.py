@@ -403,7 +403,7 @@ def normalize_leaf(element):
 
 def is_operator(element):
     """ Test whether an object is a valid domain operator. """
-    return isinstance(element, pycompat.string_types) and element in DOMAIN_OPERATORS
+    return isinstance(element, str) and element in DOMAIN_OPERATORS
 
 
 def is_leaf(element, internal=False):
@@ -424,7 +424,7 @@ def is_leaf(element, internal=False):
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
-        and ((isinstance(element[0], pycompat.string_types) and element[0])
+        and ((isinstance(element[0], str) and element[0])
              or tuple(element) in (TRUE_LEAF, FALSE_LEAF))
 
 
@@ -723,11 +723,11 @@ class expression(object):
                         return the list of related ids
             """
             names = []
-            if isinstance(value, pycompat.string_types):
+            if isinstance(value, str):
                 names = [value]
-            elif value and isinstance(value, (tuple, list)) and all(isinstance(item, pycompat.string_types) for item in value):
+            elif value and isinstance(value, (tuple, list)) and all(isinstance(item, str) for item in value):
                 names = value
-            elif isinstance(value, pycompat.integer_types):
+            elif isinstance(value, int):
                 if not value:
                     # given this nonsensical domain, it is generally cheaper to
                     # interpret False as [], so that "X child_of False" will
@@ -955,7 +955,7 @@ class expression(object):
 
                 if right is not False:
                     # determine ids2 in comodel
-                    if isinstance(right, pycompat.string_types):
+                    if isinstance(right, str):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
                         ids2 = [x[0] for x in comodel.name_search(right, domain or [], op2, limit=None)]
@@ -1012,7 +1012,7 @@ class expression(object):
 
                 elif right is not False:
                     # determine ids2 in comodel
-                    if isinstance(right, pycompat.string_types):
+                    if isinstance(right, str):
                         domain = field.domain
                         if callable(domain):
                             domain = domain(model)
@@ -1064,8 +1064,8 @@ class expression(object):
                             res_ids.append(False)  # TODO this should not be appended if False was in 'right'
                         return left, 'in', res_ids
                     # resolve string-based m2o criterion into IDs
-                    if isinstance(right, pycompat.string_types) or \
-                            right and isinstance(right, (tuple, list)) and all(isinstance(item, pycompat.string_types) for item in right):
+                    if isinstance(right, str) or \
+                            right and isinstance(right, (tuple, list)) and all(isinstance(item, str) for item in right):
                         push(create_substitution_leaf(leaf, _get_expression(comodel, left, right, operator), model))
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
@@ -1097,7 +1097,7 @@ class expression(object):
 
             else:
                 if field.type == 'datetime' and right:
-                    if isinstance(right, pycompat.string_types) and len(right) == 10:
+                    if isinstance(right, str) and len(right) == 10:
                         if operator in ('>', '<='):
                             right += ' 23:59:59'
                         else:
@@ -1267,7 +1267,7 @@ class expression(object):
             query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(format))
 
             if need_wildcard:
-                native_str = pycompat.to_native(right)
+                native_str = pycompat.to_text(right)
                 if not native_str:
                     query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
                 params = ['%%%s%%' % native_str]

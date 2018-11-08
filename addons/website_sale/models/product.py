@@ -3,7 +3,6 @@
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 
-from odoo.tools import pycompat
 from odoo.tools.translate import html_translate
 from odoo.tools import float_is_zero
 
@@ -137,7 +136,7 @@ class ProductTemplate(models.Model):
         # This makes sure that every template below has a corresponding product in the zipped result.
         self = self.filtered('product_variant_id')
         # use mapped who returns a recordset with only itself to prefetch (and don't prefetch every product_variant_ids)
-        for template, product in pycompat.izip(self, self.mapped('product_variant_id')):
+        for template, product in zip(self, self.mapped('product_variant_id')):
             template.website_price = product.website_price
             template.website_public_price = product.website_public_price
             template.website_price_difference = product.website_price_difference
@@ -204,7 +203,7 @@ class Product(models.Model):
 
         ret = self.env.user.has_group('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
 
-        for p, p2 in pycompat.izip(self, self2):
+        for p, p2 in zip(self, self2):
             taxes = partner.property_account_position_id.map_tax(p.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), p, partner)
             p.website_price = taxes.compute_all(p2.price, pricelist.currency_id, quantity=qty, product=p2, partner=partner)[ret]
             price_without_pricelist = taxes.compute_all(p.list_price, pricelist.currency_id)[ret]

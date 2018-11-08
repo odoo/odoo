@@ -277,11 +277,11 @@ actual arch.
     @api.depends('arch')
     def _compute_arch_base(self):
         # 'arch_base' is the same as 'arch' without translation
-        for view, view_wo_lang in pycompat.izip(self, self.with_context(lang=None)):
+        for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view.arch_base = view_wo_lang.arch
 
     def _inverse_arch_base(self):
-        for view, view_wo_lang in pycompat.izip(self, self.with_context(lang=None)):
+        for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
     @api.depends('write_date')
@@ -293,7 +293,7 @@ actual arch.
             view.model_data_id = data['id']
 
     def _search_model_data_id(self, operator, value):
-        name = 'name' if isinstance(value, pycompat.string_types) else 'id'
+        name = 'name' if isinstance(value, str) else 'id'
         domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
         data = self.env['ir.model.data'].sudo().search(domain)
         return [('id', 'in', data.mapped('res_id'))]
@@ -1030,7 +1030,7 @@ actual arch.
                 if editable and not node.get('domain'):
                     domain = field._description_domain(self.env)
                     # process the field's domain as if it was in the view
-                    if isinstance(domain, pycompat.string_types):
+                    if isinstance(domain, str):
                         process_expr(domain, get, 'domain', domain)
                 # retrieve subfields of 'parent'
                 model = self.env[field.comodel_name]
@@ -1175,7 +1175,7 @@ actual arch.
         view ID or an XML ID. Note that this method may be overridden for other
         kinds of template values.
         """
-        if isinstance(template, pycompat.integer_types):
+        if isinstance(template, int):
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
@@ -1277,7 +1277,7 @@ actual arch.
 
     @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
-        assert isinstance(self.id, pycompat.integer_types)
+        assert isinstance(self.id, int)
 
         qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})

@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import pycompat
 
 
 def selection_fn(model):
@@ -51,7 +50,7 @@ for name, field in MODELS:
 
         @api.model
         def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-            if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
+            if isinstance(name, str) and name.split(':')[0] == self._name:
                 record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
                 return self.browse(record_ids).name_get()
             else:
@@ -73,7 +72,7 @@ class One2ManyChild(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
+        if isinstance(name, str) and name.split(':')[0] == self._name:
             record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
             return self.browse(record_ids).name_get()
         else:
@@ -132,7 +131,7 @@ class Many2ManyChild(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
+        if isinstance(name, str) and name.split(':')[0] == self._name:
             record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
             return self.browse(record_ids).name_get()
         else:

@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import pycompat
 
 
 class UtmMixin(models.AbstractModel):
@@ -34,7 +33,7 @@ class UtmMixin(models.AbstractModel):
                     # ir_http dispatch saves the url params in a cookie
                     value = request.httprequest.cookies.get(cookie_name)
                 # if we receive a string for a many2one, we search/create the id
-                if field.type == 'many2one' and isinstance(value, pycompat.string_types) and value:
+                if field.type == 'many2one' and isinstance(value, str) and value:
                     Model = self.env[field.comodel_name]
                     records = Model.search([('name', '=', value)], limit=1)
                     if not records:

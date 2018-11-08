@@ -14,7 +14,6 @@ from lxml import etree, html
 
 from odoo.http import request
 from odoo import http, tools
-from odoo.tools import pycompat
 from odoo.modules.module import get_resource_path, get_module_path
 
 logger = logging.getLogger(__name__)
@@ -40,7 +39,7 @@ class Web_Editor(http.Controller):
             debug=request.debug)
 
         for k in kwargs:
-            if isinstance(kwargs[k], pycompat.string_types) and kwargs[k].isdigit():
+            if isinstance(kwargs[k], str) and kwargs[k].isdigit():
                 kwargs[k] = int(kwargs[k])
 
         trans = dict(
@@ -205,7 +204,7 @@ class Web_Editor(http.Controller):
                 uploads += attachments.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
             except Exception as e:
                 logger.exception("Failed to upload image to attachment")
-                message = pycompat.text_type(e)
+                message = str(e)
 
         return """<script type='text/javascript'>
             window.attachments = %s;

@@ -6,7 +6,6 @@ import collections
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import pycompat
 
 import werkzeug.urls
 
@@ -108,7 +107,7 @@ class ResPartnerBank(models.Model):
             if args[pos][0] == 'acc_number':
                 op = args[pos][1]
                 value = args[pos][2]
-                if not isinstance(value, pycompat.string_types) and isinstance(value, collections.Iterable):
+                if not isinstance(value, str) and isinstance(value, collections.Iterable):
                     value = [sanitize_account_number(i) for i in value]
                 else:
                     value = sanitize_account_number(value)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields, tools, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, pycompat, float_repr
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
 from odoo.tests.common import Form
 
 from datetime import datetime
@@ -249,7 +249,7 @@ class AccountInvoice(models.Model):
                         # ['file.xml', {'/Type': '/Filespec', '/F': 'file.xml', '/EF': {'/F': IndirectObject(22, 0)}}]
                         embedded_files = reader.trailer['/Root']['/Names']['/EmbeddedFiles']['/Names']
                         # '[::2]' because it's a list [fn_1, content_1, fn_2, content_2, ..., fn_n, content_2]
-                        for filename_obj, content_obj in list(pycompat.izip(embedded_files, embedded_files[1:]))[::2]:
+                        for filename_obj, content_obj in list(zip(embedded_files, embedded_files[1:]))[::2]:
                             content = content_obj.getObject()['/EF']['/F'].getData()
 
                             if filename_obj == 'factur-x.xml':

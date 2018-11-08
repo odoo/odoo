@@ -4,7 +4,6 @@
 import base64
 
 from odoo import api, models
-from odoo.tools import pycompat
 
 
 class MailTemplate(models.Model):
@@ -21,7 +20,7 @@ class MailTemplate(models.Model):
         rslt = super(MailTemplate, self).generate_email(res_ids, fields)
 
         multi_mode = True
-        if isinstance(res_ids, pycompat.integer_types):
+        if isinstance(res_ids, int):
             res_ids = [res_ids]
             multi_mode = False
 

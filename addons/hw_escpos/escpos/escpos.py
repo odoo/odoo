@@ -13,7 +13,6 @@ from hashlib import md5
 from PIL import Image
 from xml.etree import ElementTree as ET
 
-from odoo.tools import pycompat
 
 try:
     import jcconv
@@ -30,7 +29,7 @@ from .exceptions import *
 
 def utfstr(stuff):
     """ converts stuff to string and does without failing if stuff is a utf8 string """
-    if isinstance(stuff,pycompat.string_types):
+    if isinstance(stuff, str):
         return stuff
     else:
         return str(stuff)

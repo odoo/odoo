@@ -62,7 +62,7 @@ class MailBlackList(models.Model):
         if args:
             new_args = []
             for arg in args:
-                if isinstance(arg, (list, tuple)) and arg[0] == 'email' and isinstance(arg[2], tools.pycompat.text_type):
+                if isinstance(arg, (list, tuple)) and arg[0] == 'email' and isinstance(arg[2], str):
                     normalized = tools.email_normalize(arg[2])
                     if normalized:
                         new_args.append([arg[0], arg[1], normalized])

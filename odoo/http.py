@@ -518,7 +518,7 @@ def route(route=None, **kw):
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
 
-            if isinstance(response, (bytes, pycompat.text_type)):
+            if isinstance(response, (bytes, str)):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
@@ -1330,7 +1330,7 @@ class Root(object):
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
                         manifest_data = open(manifest_path, 'rb').read()
-                        manifest = ast.literal_eval(pycompat.to_native(manifest_data))
+                        manifest = ast.literal_eval(pycompat.to_text(manifest_data))
                         if not manifest.get('installable', True):
                             continue
                         manifest['addons_path'] = addons_path
@@ -1405,7 +1405,7 @@ class Root(object):
                 else:
                     raise
 
-        if isinstance(result, (bytes, pycompat.text_type)):
+        if isinstance(result, (bytes, str)):
             response = Response(result, mimetype='text/html')
         else:
             response = result
@@ -1579,7 +1579,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     :param cache_timeout: the timeout in seconds for the headers.
     """
-    if isinstance(filepath_or_fp, pycompat.string_types):
+    if isinstance(filepath_or_fp, str):
         if not filename:
             filename = os.path.basename(filepath_or_fp)
         file = open(filepath_or_fp, 'rb')
@@ -1629,7 +1629,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             mtime,
             size,
             adler32(
-                filename.encode('utf-8') if isinstance(filename, pycompat.text_type)
+                filename.encode('utf-8') if isinstance(filename, str)
                 else filename
             ) & 0xffffffff
         ))

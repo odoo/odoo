@@ -13,7 +13,6 @@ from odoo.modules.module import get_resource_path
 import odoo.release as release
 import odoo.tools as tools
 from odoo.tools.parse_version import parse_version
-from odoo.tools import pycompat
 
 if pycompat.PY2:
     import imp

@@ -281,7 +281,7 @@ def flatten(list):
     """
     r = []
     for e in list:
-        if isinstance(e, (bytes, pycompat.text_type)) or not isinstance(e, collections.Iterable):
+        if isinstance(e, (bytes, str)) or not isinstance(e, collections.Iterable):
             r.append(e)
         else:
             r.extend(flatten(e))
@@ -304,7 +304,7 @@ def reverse_enumerate(l):
       File "<stdin>", line 1, in <module>
     StopIteration
     """
-    return pycompat.izip(range(len(l)-1, -1, -1), reversed(l))
+    return zip(range(len(l)-1, -1, -1), reversed(l))
 
 def partition(pred, elems):
     """ Return a pair equivalent to:
@@ -468,7 +468,7 @@ def human_size(sz):
     if not sz:
         return False
     units = ('bytes', 'Kb', 'Mb', 'Gb')
-    if isinstance(sz,pycompat.string_types):
+    if isinstance(sz, str):
         sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
@@ -814,7 +814,7 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
-            assert isinstance(logger, pycompat.string_types),\
+            assert isinstance(logger, str),\
                 "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
@@ -1148,7 +1148,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
                 if not digits and digits is not 0:
                     digits = DEFAULT_DIGITS
 
-    if isinstance(value, pycompat.string_types) and not value:
+    if isinstance(value, str) and not value:
         return ''
 
     lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
@@ -1178,7 +1178,7 @@ def format_date(env, value, lang_code=False, date_format=False):
     '''
     if not value:
         return ''
-    if isinstance(value, pycompat.string_types):
+    if isinstance(value, str):
         if len(value) < DATE_LENGTH:
             return ''
         if len(value) > DATE_LENGTH:
@@ -1198,7 +1198,7 @@ def format_date(env, value, lang_code=False, date_format=False):
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
         known length only, because length difference is optimized. """
-    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in pycompat.izip(str1, str2)) == 0
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 

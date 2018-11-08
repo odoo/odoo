@@ -1486,7 +1486,7 @@ class AccountInvoice(models.Model):
             :param date: payment date, defaults to fields.Date.context_today(self)
             :param writeoff_acc: account in which to create a writeoff if pay_amount < self.residual, so that the invoice is fully paid
         """
-        if isinstance(pay_journal, pycompat.integer_types):
+        if isinstance(pay_journal, int):
             pay_journal = self.env['account.journal'].browse([pay_journal])
         assert len(self) == 1, "Can only pay one invoice at a time."
 

@@ -6,7 +6,6 @@ import pstats
 from cProfile import Profile
 
 from odoo.tests import common
-from odoo.tools import pycompat
 
 
 class CreatorCase(common.TransactionCase):
@@ -88,7 +87,7 @@ class test_integer_field(CreatorCase):
     def test_huge(self):
         self.assertEqual(
             self.export(2**31-1),
-            [[pycompat.text_type(2**31-1)]])
+            [[str(2**31-1)]])
 
 
 class test_float_field(CreatorCase):
@@ -338,7 +337,7 @@ class test_m2o(CreatorCase):
         record = self.env['export.integer'].create({'value': 42})
         self.assertEqual(
             self.export(record.id, fields=['value/.id', 'value/value']),
-            [[pycompat.text_type(record.id), u'42']])
+            [[str(record.id), '42']])
 
     def test_external_id(self):
         record = self.env['export.integer'].create({'value': 42})
@@ -537,9 +536,9 @@ class test_o2m_multiple(CreatorCase):
         """
         fields = ['const', 'child1/value', 'child2/value']
         child1 = [(0, False, {'value': v, 'str': 'record%.02d' % index})
-                  for index, v in pycompat.izip(itertools.count(), [4, 42, 36, 4, 13])]
+                  for index, v in zip(itertools.count(), [4, 42, 36, 4, 13])]
         child2 = [(0, False, {'value': v, 'str': 'record%.02d' % index})
-                  for index, v in pycompat.izip(itertools.count(10), [8, 12, 8, 55, 33, 13])]
+                  for index, v in zip(itertools.count(10), [8, 12, 8, 55, 33, 13])]
 
         self.assertEqual(
             self.export(child1=child1, child2=False, fields=fields),

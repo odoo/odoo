@@ -10,7 +10,6 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -215,7 +214,7 @@ class SurveyInvite(models.TransientModel):
             if wizard.public != 'email_private':
                 return None
             else:
-                token = pycompat.text_type(uuid.uuid4())
+                token = str(uuid.uuid4())
                 # create response with token
                 survey_user_input = SurveyUserInput.create({
                     'survey_id': wizard.survey_id.id,
