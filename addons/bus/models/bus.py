@@ -117,8 +117,7 @@ class ImDispatch(object):
         # it will handle a longpolling request
         if not odoo.evented:
             current = threading.current_thread()
-            current._Thread__daemonic = True # PY2
-            current._daemonic = True         # PY3
+            current._daemonic = True
             # rename the thread to avoid tests waiting for a longpolling
             current.setName("openerp.longpolling.request.%s" % current.ident)
 

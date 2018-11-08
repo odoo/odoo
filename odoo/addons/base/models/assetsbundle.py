@@ -17,7 +17,7 @@ from datetime import datetime
 from subprocess import Popen, PIPE
 from collections import OrderedDict
 from odoo import fields, tools, SUPERUSER_ID
-from odoo.tools.pycompat import string_types, to_text
+from odoo.tools.pycompat import to_text
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from .qweb import escape
@@ -120,7 +120,7 @@ class AssetsBundle(object):
         for tagName, attributes, content in nodes:
             html = u"<%s " % tagName
             for name, value in attributes.items():
-                if value or isinstance(value, string_types):
+                if value or isinstance(value, str):
                     html += u' %s="%s"' % (name, escape(to_text(value)))
             if content is None:
                 html += u'/>'
@@ -602,7 +602,7 @@ class WebAsset(object):
         tagName, attributes, content = self.to_node()
         html = u"<%s " % tagName
         for name, value in attributes.items():
-            if value or isinstance(value, string_types):
+            if value or isinstance(value, str):
                 html += u' %s="%s"' % (name, escape(to_text(value)))
         if content is None:
             html += u'/>'

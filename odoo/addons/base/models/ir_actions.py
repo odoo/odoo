@@ -5,7 +5,7 @@ import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.tools.safe_eval import safe_eval, test_python_expr
-from odoo.tools import pycompat, wrap_module
+from odoo.tools import wrap_module
 from odoo.http import request
 
 import base64
@@ -774,7 +774,7 @@ class IrActionsActClient(models.Model):
     @api.depends('params_store')
     def _compute_params(self):
         self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
-        for record, record_bin in pycompat.izip(self, self_bin):
+        for record, record_bin in zip(self, self_bin):
             record.params = record_bin.params_store and safe_eval(record_bin.params_store, {'uid': self._uid})
 
     def _inverse_params(self):

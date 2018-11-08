@@ -7,7 +7,6 @@ from lxml import etree, html
 
 from odoo.exceptions import AccessError
 from odoo import api, fields, models
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -117,7 +116,7 @@ class IrUiView(models.Model):
             return False
         if len(arch1) != len(arch2):
             return False
-        return all(self._are_archs_equal(arch1, arch2) for arch1, arch2 in pycompat.izip(arch1, arch2))
+        return all(self._are_archs_equal(arch1, arch2) for arch1, arch2 in zip(arch1, arch2))
 
     @api.multi
     def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
@@ -201,9 +200,9 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, pycompat.string_types):
+        if isinstance(view_id, str):
             return self.search([('key', '=', view_id)]) or self.env.ref(view_id)
-        elif isinstance(view_id, pycompat.integer_types):
+        elif isinstance(view_id, int):
             return self.browse(view_id)
         # assume it's already a view object (WTF?)
         return view_id

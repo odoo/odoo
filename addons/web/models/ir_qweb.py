@@ -32,7 +32,7 @@ class Image(models.AbstractModel):
 
         aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
         aclasses += options.get('class', '').split()
-        classes = ' '.join(pycompat.imap(escape, aclasses))
+        classes = ' '.join(map(escape, aclasses))
 
         max_size = None
         if options.get('resize'):

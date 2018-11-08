@@ -35,18 +35,6 @@ unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
 
-# in Python 2, arguments (within the ast.arguments structure) are expressions
-# (since they can be tuples), generally
-# ast.Name(id: identifyer, ctx=ast.Param()), whereas in Python 3 they are
-# ast.arg(arg: identifier, annotation: expr?) provide a toplevel arg()
-# function which matches ast.arg producing the relevant ast.Name in Python 2.
-arg = getattr(ast, 'arg', lambda arg, annotation: ast.Name(id=arg, ctx=ast.Param()))
-# also Python 3's arguments has grown *2* new mandatory arguments, kwonlyargs
-# and kw_defaults for keyword-only arguments and their default values (if any)
-# so add a shim for *that* based on the signature of Python 3 I guess?
-arguments = ast.arguments
-if pycompat.PY2:
-    arguments = lambda args, vararg, kwonlyargs, kw_defaults, kwarg, defaults: ast.arguments(args=args, vararg=vararg, kwarg=kwarg, defaults=defaults)
 ####################################
 ###          qweb tools          ###
 ####################################
@@ -98,7 +86,7 @@ class Contextifier(ast.NodeTransformer):
         if args.kwarg: names.append(args.kwarg)
         # remap defaults in case there's any
         return ast.copy_location(ast.Lambda(
-            args=arguments(
+            args=ast.arguments(
                 args=args.args,
                 defaults=[self.visit(default) for default in args.defaults],
                 vararg=args.vararg,
@@ -190,7 +178,7 @@ def foreach_iterator(base_ctx, enum, name):
     if isinstance(enum, Mapping):
         enum = enum.items()
     else:
-        enum = pycompat.izip(*tee(enum))
+        enum = zip(*tee(enum))
     value_key = '%s_value' % name
     index_key = '%s_index' % name
     first_key = '%s_first' % name
@@ -526,11 +514,10 @@ class QWeb(object):
         Define:
         * escape
         * to_text (empty string for a None or False, otherwise unicode string)
-        * string_types (replacement for basestring)
         """
         return ast.parse(dedent("""
             from collections import OrderedDict
-            from odoo.tools.pycompat import to_text, string_types
+            from odoo.tools.pycompat import to_text
             from odoo.addons.base.models.qweb import escape, foreach_iterator
             """))
 
@@ -547,12 +534,12 @@ class QWeb(object):
         # def $name(self, append, values, options, log)
         fn = ast.FunctionDef(
             name=name,
-            args=arguments(args=[
-                arg(arg='self', annotation=None),
-                arg(arg='append', annotation=None),
-                arg(arg='values', annotation=None),
-                arg(arg='options', annotation=None),
-                arg(arg='log', annotation=None),
+            args=ast.arguments(args=[
+                ast.arg(arg='self', annotation=None),
+                ast.arg(arg='append', annotation=None),
+                ast.arg(arg='values', annotation=None),
+                ast.arg(arg='options', annotation=None),
+                ast.arg(arg='log', annotation=None),
             ], defaults=[], vararg=None, kwarg=None, kwonlyargs=[], kw_defaults=[]),
             body=body or [ast.Return()],
             decorator_list=[])
@@ -743,7 +730,7 @@ class QWeb(object):
                                 func=ast.Name(id='isinstance', ctx=ast.Load()),
                                 args=[
                                     ast.Name(id='value', ctx=ast.Load()),
-                                    ast.Name(id='string_types', ctx=ast.Load())
+                                    ast.Name(id='str', ctx=ast.Load())
                                 ],
                                 keywords=[],
                                 starargs=None, kwargs=None
@@ -1508,7 +1495,7 @@ class QWeb(object):
                 keys = []
                 values = []
                 for key, value in options['nsmap'].items():
-                    if isinstance(key, pycompat.string_types):
+                    if isinstance(key, str):
                         keys.append(ast.Str(s=key))
                     elif key is None:
                         keys.append(ast.Name(id='None', ctx=ast.Load()))
@@ -1646,7 +1633,7 @@ class QWeb(object):
         for m in _FORMAT_REGEX.finditer(f):
             literal = f[base_idx:m.start()]
             if literal:
-                elts.append(ast.Str(literal if isinstance(literal, pycompat.text_type) else literal.decode('utf-8')))
+                elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
 
             expr = m.group(1) or m.group(2)
             elts.append(self._compile_strexpr(expr))
@@ -1654,7 +1641,7 @@ class QWeb(object):
         # string past last regex match
         literal = f[base_idx:]
         if literal:
-            elts.append(ast.Str(literal if isinstance(literal, pycompat.text_type) else literal.decode('utf-8')))
+            elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
 
         return reduce(lambda acc, it: ast.BinOp(
             left=acc,

@@ -3,7 +3,6 @@ from datetime import datetime
 import babel.dates
 import pytz
 
-from odoo.tools import pycompat
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from odoo import _, api, fields, models
 

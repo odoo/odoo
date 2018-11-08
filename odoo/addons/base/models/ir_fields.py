@@ -8,7 +8,7 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, _
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
 def only_ref_fields(record):
@@ -39,9 +39,9 @@ class IrFieldsConverter(models.AbstractModel):
     @api.model
     def _format_import_error(self, error_type, error_msg, error_params=(), error_args=None):
         # sanitize error params for later formatting by the import system
-        sanitize = lambda p: p.replace('%', '%%') if isinstance(p, pycompat.string_types) else p
+        sanitize = lambda p: p.replace('%', '%%') if isinstance(p, str) else p
         if error_params:
-            if isinstance(error_params, pycompat.string_types):
+            if isinstance(error_params, str):
                 error_params = sanitize(error_params)
             elif isinstance(error_params, dict):
                 error_params = {k: sanitize(v) for k, v in error_params.items()}
@@ -79,7 +79,7 @@ class IrFieldsConverter(models.AbstractModel):
                 try:
                     converted[field], ws = converters[field](value)
                     for w in ws:
-                        if isinstance(w, pycompat.string_types):
+                        if isinstance(w, str):
                             # wrap warning string in an ImportWarning for
                             # uniform handling
                             w = ImportWarning(w)
@@ -270,14 +270,14 @@ class IrFieldsConverter(models.AbstractModel):
         for item, label in selection:
             label = ustr(label)
             labels = [label] + self._get_translations(('selection', 'model', 'code'), label)
-            if value == pycompat.text_type(item) or value in labels:
+            if value == str(item) or value in labels:
                 return item, []
 
         raise self._format_import_error(
             ValueError,
             _(u"Value '%s' not found in selection field '%%(field)s'"),
             value,
-            {'moreinfo': [_label or pycompat.text_type(item) for item, _label in selection if _label or item]}
+            {'moreinfo': [_label or str(item) for item, _label in selection if _label or item]}
         )
 
     @api.model

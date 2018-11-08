@@ -12,7 +12,7 @@ from odoo import api, http, registry, SUPERUSER_ID, _
 from odoo.addons.web.controllers.main import binary_content
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import consteq, pycompat
+from odoo.tools import consteq
 
 _logger = logging.getLogger(__name__)
 
@@ -192,7 +192,7 @@ class MailController(http.Controller):
                 model, res_id = message.model, message.res_id
         # ==============================================================================================
 
-        if res_id and isinstance(res_id, pycompat.string_types):
+        if res_id and isinstance(res_id, str):
             res_id = int(res_id)
         return self._redirect_to_record(model, res_id, access_token, **kwargs)
 

@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, pycompat
+from odoo.tools import float_is_zero
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import ValidationError
 

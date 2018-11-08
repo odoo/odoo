@@ -234,7 +234,7 @@ class DateTimeConverter(models.AbstractModel):
         lang = self.user_lang()
         locale = babel.Locale.parse(lang.code)
 
-        if isinstance(value, pycompat.string_types):
+        if isinstance(value, str):
             value = fields.Datetime.from_string(value)
 
         value = fields.Datetime.context_timestamp(self, value)
@@ -572,7 +572,7 @@ class RelativeDatetimeConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         locale = babel.Locale.parse(self.user_lang().code)
 
-        if isinstance(value, pycompat.string_types):
+        if isinstance(value, str):
             value = fields.Datetime.from_string(value)
 
         # value should be a naive datetime in UTC. So is fields.Datetime.now()

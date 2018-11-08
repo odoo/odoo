@@ -1490,7 +1490,7 @@ class CSVExport(ExportFormat, http.Controller):
             row = []
             for d in data:
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
-                if isinstance(d, pycompat.string_types) and d.startswith(('=', '-', '+')):
+                if isinstance(d, str) and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
                 row.append(pycompat.to_text(d))
@@ -1533,7 +1533,7 @@ class ExcelExport(ExportFormat, http.Controller):
             for cell_index, cell_value in enumerate(row):
                 cell_style = base_style
 
-                if isinstance(cell_value, bytes) and not isinstance(cell_value, pycompat.string_types):
+                if isinstance(cell_value, bytes) and not isinstance(cell_value, str):
                     # because xls uses raw export, we can get a bytes object
                     # here. xlwt does not support bytes values in Python 3 ->
                     # assume this is base64 and decode to a string, if this
@@ -1543,7 +1543,7 @@ class ExcelExport(ExportFormat, http.Controller):
                     except UnicodeDecodeError:
                         raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % fields[cell_index])
 
-                if isinstance(cell_value, pycompat.string_types):
+                if isinstance(cell_value, str):
                     cell_value = re.sub("\r", " ", pycompat.to_text(cell_value))
                     # Excel supports a maximum of 32767 characters in each cell:
                     cell_value = cell_value[:32767]

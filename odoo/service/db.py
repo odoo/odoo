@@ -25,7 +25,6 @@ import odoo.sql_db
 import odoo.tools
 from odoo.sql_db import db_connect
 from odoo.release import version_info
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -259,7 +258,7 @@ def exp_restore(db_name, data, copy=False):
 
 @check_db_management_enabled
 def restore_db(db, dump_file, copy=False):
-    assert isinstance(db, pycompat.string_types)
+    assert isinstance(db, str)
     if exp_db_exist(db):
         _logger.info('RESTORE DB: %s already exists', db)
         raise Exception("Database already exists")

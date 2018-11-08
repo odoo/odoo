@@ -13,7 +13,6 @@ from odoo import api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
-from odoo.tools import pycompat
 from odoo.http import request
 from odoo.osv import expression
 from odoo.osv.expression import FALSE_DOMAIN
@@ -509,7 +508,7 @@ class Website(models.Model):
     @api.model
     def get_template(self, template):
         View = self.env['ir.ui.view']
-        if isinstance(template, pycompat.integer_types):
+        if isinstance(template, int):
             view_id = template
         else:
             if '.' not in template:
@@ -1187,7 +1186,7 @@ class Menu(models.Model):
         for menu in data['data']:
             mid = menu['id']
             # new menu are prefixed by new-
-            if isinstance(mid, pycompat.string_types):
+            if isinstance(mid, str):
                 new_menu = self.create({'name': menu['name'], 'website_id': website_id})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:

@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, float_is_zero, pycompat
+from odoo.tools import float_compare, float_round, float_is_zero
 
 import logging
 _logger = logging.getLogger(__name__)

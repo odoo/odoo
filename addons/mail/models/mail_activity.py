@@ -9,7 +9,6 @@ import pytz
 
 from odoo import api, exceptions, fields, models, _
 
-from odoo.tools import pycompat
 from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
@@ -657,7 +656,7 @@ class MailActivityMixin(models.AbstractModel):
             return False
 
         render_context = render_context or dict()
-        if isinstance(views_or_xmlid, pycompat.string_types):
+        if isinstance(views_or_xmlid, str):
             views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
         else:
             views = views_or_xmlid

@@ -130,7 +130,7 @@ csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 # FIXME: holy shit this whole thing needs to be cleaned up hard it's a mess
 def encode(s):
-    assert isinstance(s, pycompat.text_type)
+    assert isinstance(s, str)
     return s
 
 # which elements are translated inline
@@ -651,8 +651,8 @@ class PoFile(object):
             u"msgid %s\n"
             u"msgstr %s\n\n"
         ) % (
-            quote(pycompat.text_type(source)), 
-            quote(pycompat.text_type(trad))
+            quote(str(source)), 
+            quote(str(trad))
         )
         self.buffer.write(msg)
 
@@ -1100,7 +1100,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             dic = dict.fromkeys(('type', 'name', 'res_id', 'src', 'value',
                                  'comments', 'imd_model', 'imd_name', 'module'))
             dic['lang'] = lang
-            dic.update(pycompat.izip(fields, row))
+            dic.update(zip(fields, row))
 
             # ignore empty value that may be set from base language
             if not dic['value']:
@@ -1124,8 +1124,8 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if not res_id and dic['type'] != 'code':
                 return
 
-            if isinstance(res_id, pycompat.integer_types) or \
-                    (isinstance(res_id, pycompat.string_types) and res_id.isdigit()):
+            if isinstance(res_id, int) or \
+                    (isinstance(res_id, str) and res_id.isdigit()):
                 dic['res_id'] = int(res_id)
                 if module_name:
                     dic['module'] = module_name

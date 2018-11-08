@@ -21,7 +21,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition, pycompat, collections
+from odoo.tools import partition, collections
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +110,7 @@ class Groups(models.Model):
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
-        for group, group1 in pycompat.izip(self, self.sudo()):
+        for group, group1 in zip(self, self.sudo()):
             if group1.category_id:
                 group.full_name = '%s / %s' % (group1.category_id.name, group1.name)
             else:
@@ -124,7 +124,7 @@ class Groups(models.Model):
                 return expression.AND(domains)
             else:
                 return expression.OR(domains)
-        if isinstance(operand, pycompat.string_types):
+        if isinstance(operand, str):
             lst = False
             operand = [operand]
         where = []
@@ -421,7 +421,7 @@ class Users(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        groupby_fields = set([groupby] if isinstance(groupby, pycompat.string_types) else groupby)
+        groupby_fields = set([groupby] if isinstance(groupby, str) else groupby)
         if groupby_fields.intersection(USER_PRIVATE_FIELDS):
             raise AccessError(_("Invalid 'group by' parameter"))
         return super(Users, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
@@ -910,7 +910,7 @@ class GroupsImplied(models.Model):
     def create(self, vals_list):
         user_ids_list = [vals.pop('users', None) for vals in vals_list]
         groups = super(GroupsImplied, self).create(vals_list)
-        for group, user_ids in pycompat.izip(groups, user_ids_list):
+        for group, user_ids in zip(groups, user_ids_list):
             if user_ids:
                 # delegate addition of users to add implied groups
                 group.write({'users': user_ids})
@@ -922,7 +922,7 @@ class GroupsImplied(models.Model):
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
-                vals = {'users': list(pycompat.izip(repeat(4), group.with_context(active_test=False).users.ids))}
+                vals = {'users': list(zip(repeat(4), group.with_context(active_test=False).users.ids))}
                 super(GroupsImplied, group.trans_implied_ids).write(vals)
         return res
 
@@ -1164,8 +1164,8 @@ class UsersView(models.Model):
         if 'groups_id' not in values and (add or rem):
             # remove group ids in `rem` and add group ids in `add`
             values1['groups_id'] = list(itertools.chain(
-                pycompat.izip(repeat(3), rem),
-                pycompat.izip(repeat(4), add)
+                zip(repeat(3), rem),
+                zip(repeat(4), add)
             ))
 
         return values1

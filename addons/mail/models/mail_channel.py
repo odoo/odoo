@@ -11,7 +11,7 @@ from uuid import uuid4
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import ormcache, pycompat
+from odoo.tools import ormcache
 from odoo.tools.safe_eval import safe_eval
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
@@ -357,7 +357,7 @@ class Channel(models.Model):
         email = ''
         if self.moderation and message_type in ['email', 'comment']:
             author_id = kwargs.get('author_id')
-            if author_id and isinstance(author_id, pycompat.integer_types):
+            if author_id and isinstance(author_id, int):
                 email = self.env['res.partner'].browse([author_id]).email
             elif author_id:
                 email = author_id.email

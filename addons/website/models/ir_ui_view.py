@@ -10,7 +10,6 @@ from odoo import tools
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.http import request
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -167,7 +166,7 @@ class View(models.Model):
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, pycompat.string_types):
+        if isinstance(view_id, str):
             if 'website_id' in self._context:
                 domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
                 order = 'website_id'
@@ -179,7 +178,7 @@ class View(models.Model):
                 return views.filter_duplicate()
             else:
                 return self.env.ref(view_id)
-        elif isinstance(view_id, pycompat.integer_types):
+        elif isinstance(view_id, int):
             return self.browse(view_id)
 
         # assume it's already a view object (WTF?)
@@ -216,7 +215,7 @@ class View(models.Model):
     @api.model
     @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
-        if 'website_id' in self._context and not isinstance(xml_id, pycompat.integer_types):
+        if 'website_id' in self._context and not isinstance(xml_id, int):
             current_website = self.env['website'].browse(self._context.get('website_id'))
             domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
 
