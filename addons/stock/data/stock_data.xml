@@ -169,6 +169,9 @@
         <function model="res.company" name="create_transit_location">
             <value model="res.company" eval="obj().search([('internal_transit_location_id', '=', False)]).ids"/>
         </function>
+        <function model="res.company" name="create_missing_warehouse">
+            <value model="res.company" eval="obj()"/>
+        </function>
         <function model="res.company" name="create_missing_inventory_loss_location">
             <value model="res.company" eval="obj()"/>
         </function>
