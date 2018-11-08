@@ -51,6 +51,22 @@ class Company(models.Model):
             })
 
     @api.model
+    def create_missing_warehouse(self):
+        """ This hook is used to add a warehouse on existing companies
+        when module stock is installed.
+        """
+        company_ids  = self.env['res.company'].search([])
+        company_with_warehouse = self.env['stock.warehouse'].search([]).mapped('company_id')
+        company_without_warehouse = company_ids - company_with_warehouse
+        for company in company_without_warehouse:
+            self.env['stock.warehouse'].create({
+                'name': company.name,
+                'code': company.name[:5],
+                'company_id': company.id,
+                'partner_id': company.partner_id.id,
+            })
+
+    @api.model
     def create_missing_inventory_loss_location(self):
         company_ids  = self.env['res.company'].search([])
         inventory_loss_product_template_field = self.env['ir.model.fields'].search([('model','=','product.template'),('name','=','property_stock_inventory')])
@@ -65,7 +81,5 @@ class Company(models.Model):
 
         company.create_transit_location()
         company.sudo()._create_inventory_loss_location()
-        # mutli-company rules prevents creating warehouse and sub-locations
-        self.env['stock.warehouse'].check_access_rights('create')
         self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id, 'partner_id': company.partner_id.id})
         return company
