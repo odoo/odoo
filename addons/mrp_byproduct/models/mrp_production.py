@@ -38,11 +38,11 @@ class MrpProduction(models.Model):
             move._action_confirm()
 
     @api.multi
-    def _generate_moves(self):
+    def _generate_finished_moves(self):
         """ Generates moves and work orders
         @return: Newly generated picking Id.
         """
-        res = super(MrpProduction, self)._generate_moves()
+        res = super(MrpProduction, self)._generate_finished_moves()
         for production in self.filtered(lambda production: production.bom_id):
             for sub_product in production.bom_id.sub_products:
                 production._create_byproduct_move(sub_product)
