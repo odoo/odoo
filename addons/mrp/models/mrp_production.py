@@ -52,7 +52,7 @@ class MrpProduction(models.Model):
         domain=[('type', 'in', ['product', 'consu'])],
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
         'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
@@ -130,7 +130,7 @@ class MrpProduction(models.Model):
 
     move_raw_ids = fields.One2many(
         'stock.move', 'raw_material_production_id', 'Raw Materials', oldname='move_lines',
-        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        copy=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_finished_ids = fields.One2many(
         'stock.move', 'production_id', 'Finished Products',
@@ -371,9 +371,33 @@ class MrpProduction(models.Model):
         self.product_qty = self.bom_id.product_qty
         self.product_uom_id = self.bom_id.product_uom_id.id
 
+    @api.onchange('date_planned_start')
+    def _onchange_date_planned_start(self):
+        self.move_raw_ids.update({
+            'date': self.date_planned_start,
+            'date_expected': self.date_planned_start,
+        })
+
+    @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
+    def _onchange_move_raw(self):
+        self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
+        if self.bom_id and self.product_qty > 0:
+            moves_raw_values = self._get_moves_raw_values()
+            for move_raw_values in moves_raw_values:
+                self.move_raw_ids += self.env['stock.move'].new(move_raw_values)
+
+    @api.onchange('location_src_id', 'move_raw_ids', 'routing_id')
+    def _onchange_location(self):
+        source_location = self._get_raw_location()
+        self.move_raw_ids.update({
+            'warehouse_id': source_location.get_warehouse().id,
+            'location_id': source_location.id,
+        })
+
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
         location = self.env.ref('stock.stock_location_stock')
+        self.move_raw_ids.update({'picking_type_id': self.picking_type_id})
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
@@ -389,11 +413,6 @@ class MrpProduction(models.Model):
         for production in self:
             if 'move_raw_ids' in vals and production.state != 'draft':
                 production.move_raw_ids.filtered(lambda m: m.state == 'draft')._action_confirm()
-            # TODO: maybe use update wizard instead
-            if any(field in vals for field in ('bom_id', 'product_qty')) and production.state == 'draft':
-                production.move_raw_ids.filtered(lambda m: m.bom_line_id).unlink()
-                production.move_finished_ids.unlink()
-                production._generate_moves()
         return res
 
     @api.model
@@ -407,9 +426,7 @@ class MrpProduction(models.Model):
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
-        production = super(MrpProduction, self).create(values)
-        production._generate_moves()
-        return production
+        return super(MrpProduction, self).create(values)
 
     @api.multi
     def unlink(self):
@@ -420,15 +437,6 @@ class MrpProduction(models.Model):
     def action_toggle_is_locked(self):
         self.ensure_one()
         self.is_locked = not self.is_locked
-        return True
-
-    @api.multi
-    def _generate_moves(self):
-        for production in self:
-            production._generate_finished_moves()
-            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
-            boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
-            production._generate_raw_moves(lines)
         return True
 
     def _generate_finished_moves(self):
@@ -452,14 +460,16 @@ class MrpProduction(models.Model):
         })
         return move
 
-    def _generate_raw_moves(self, exploded_lines):
+    def _get_moves_raw_values(self):
         self.ensure_one()
-        moves = self.env['stock.move']
-        for bom_line, line_data in exploded_lines:
-            moves += self._generate_raw_move(bom_line, line_data)
+        moves = []
+        factor = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id) / self.bom_id.product_qty
+        boms, lines = self.bom_id.explode(self.product_id, factor, picking_type=self.bom_id.picking_type_id)
+        for bom_line, line_data in lines:
+            moves.append(self._get_move_raw_values(bom_line, line_data))
         return moves
 
-    def _generate_raw_move(self, bom_line, line_data):
+    def _get_move_raw_values(self, bom_line, line_data):
         quantity = line_data['qty']
         # alt_op needed for the case when you explode phantom bom and all the lines will be consumed in the operation given by the parent bom line
         alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
@@ -486,11 +496,12 @@ class MrpProduction(models.Model):
             'price_unit': bom_line.product_id.standard_price,
             'procure_method': 'make_to_stock',
             'origin': self.name,
+            'state': 'draft',
             'warehouse_id': source_location.get_warehouse().id,
             'group_id': self.procurement_group_id.id,
             'propagate': self.propagate,
         }
-        return self.env['stock.move'].create(data)
+        return data
 
     def _get_raw_location(self):
         if self.routing_id:
@@ -537,7 +548,8 @@ class MrpProduction(models.Model):
                 move[0].unlink()
             return move[0], old_qty, quantity
         else:
-            move = self._generate_raw_move(bom_line, line_data)
+            move_values = self._get_move_raw_values(bom_line, line_data)
+            move = self.env['stock.move'].create(move_values)
             return move, 0, quantity
 
     def _get_ready_to_produce_state(self):
@@ -567,9 +579,9 @@ class MrpProduction(models.Model):
                     'group_id': production.procurement_group_id.id,
                     'unit_factor': move_raw.product_uom_qty / production.product_qty
                 })
+            production._generate_finished_moves()
             production._adjust_procure_method()
-            production.move_raw_ids._action_confirm()
-            production.move_finished_ids._action_confirm()
+            (production.move_raw_ids | production.move_finished_ids)._action_confirm()
         return True
 
     @api.multi

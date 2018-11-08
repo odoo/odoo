@@ -3,6 +3,7 @@
 
 from . import common
 from odoo.exceptions import except_orm
+from odoo.tests import Form
 
 
 class TestWarehouse(common.TestMrpCommon):
@@ -74,13 +75,12 @@ class TestWarehouse(common.TestMrpCommon):
         stock_inv_product_4.action_validate()
 
         #Create Manufacturing order.
-        production_3 = self.env['mrp.production'].create({
-            'name': 'MO-Test003',
-            'product_id': self.product_6.id,
-            'product_qty': 12,
-            'bom_id': self.bom_3.id,
-            'product_uom_id': self.product_6.uom_id.id,
-        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = self.bom_3
+        production_form.product_qty = 12
+        production_form.product_uom_id = self.product_6.uom_id
+        production_3 = production_form.save()
         production_3.action_confirm()
         production_3.action_assign()
 

@@ -157,6 +157,10 @@
             <field name="bom_id" ref="mrp_bom_manufacture"/>
         </record>
 
+        <function model="stock.move" name="create">
+            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_1')._get_moves_raw_values()"/>
+        </function>
+
         <!-- Table -->
 
         <record id="product_product_computer_desk" model="product.product">
@@ -335,6 +339,10 @@
             <field name="product_qty">1</field>
             <field name="bom_id" ref="mrp_bom_desk"/>
         </record>
+
+        <function model="stock.move" name="create">
+            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_3')._get_moves_raw_values()"/>
+        </function>
 
         <record id="mrp_bom_table_top" model="mrp.bom">
             <field name="product_tmpl_id" ref="product_product_computer_desk_head_product_template"/>
@@ -612,6 +620,9 @@
             <field name="bom_id" ref="mrp_bom_laptop_cust"/>
         </record>
 
+        <function model="stock.move" name="create">
+            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_raw_values()"/>
+        </function>
 
         <!-- Run Scheduler -->
         <function model="procurement.group" name="run_scheduler"/>

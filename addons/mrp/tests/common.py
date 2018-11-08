@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo.tests import Form
 from odoo.addons.stock.tests import common2
 
 
@@ -37,13 +38,11 @@ class TestMrpCommon(common2.TestStockCommon):
                 (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
                 (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
             ]})
-        mo = self.env['mrp.production'].create({
-            'name': 'MO 1',
-            'product_id': product_to_build.id,
-            'product_uom_id': product_to_build.uom_id.id,
-            'product_qty': qty_final,
-            'bom_id': bom_1.id,
-        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_to_build
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = qty_final
+        mo = mo_form.save()
         mo.action_confirm()
         return mo, bom_1, product_to_build, product_to_use_1, product_to_use_2
 

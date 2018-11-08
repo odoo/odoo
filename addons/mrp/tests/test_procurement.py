@@ -26,13 +26,12 @@ class TestProcurement(TestMrpCommon):
         #    Product2 12 Unit
         # -----------------------
 
-        production_product_6 = self.env['mrp.production'].create({
-            'name': 'MO/Test-00002',
-            'product_id': self.product_6.id,
-            'product_qty': 24,
-            'bom_id': self.bom_3.id,
-            'product_uom_id': self.product_6.uom_id.id,
-        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = self.bom_3
+        production_form.product_qty = 24
+        production_form.product_uom_id = self.product_6.uom_id
+        production_product_6 = production_form.save()
         production_product_6.action_confirm()
         production_product_6.action_assign()
 
@@ -128,11 +127,9 @@ class TestProcurement(TestMrpCommon):
 
         # create MO, but check it raises error as components are in make to order and not everyone has
         with self.assertRaises(UserError):
-            production_product_4 = self.env['mrp.production'].create({
-                'name': 'MO/Test-00002',
-                'product_id': self.product_4.id,
-                'product_qty': 1,
-                'bom_id': self.bom_1.id,
-                'product_uom_id': self.product_4.uom_id.id,
-            })
+            production_form = Form(self.env['mrp.production'])
+            production_form.product_id = self.product_4
+            production_form.product_uom_id = self.product_4.uom_id
+            production_form.product_qty = 1
+            production_product_4 = production_form.save()
             production_product_4.action_confirm()
