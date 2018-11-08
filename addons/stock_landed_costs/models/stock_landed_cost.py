@@ -309,13 +309,14 @@ class AdjustmentLines(models.Model):
         debit_account_id = accounts.get('stock_valuation') and accounts['stock_valuation'].id or False
         already_out_account_id = accounts['stock_output'].id
         credit_account_id = self.cost_line_id.account_id.id or cost_product.property_account_expense_id.id or cost_product.categ_id.property_account_expense_categ_id.id
+        product_expense_account_id = accounts.get('expense').id or False
 
         if not credit_account_id:
             raise UserError(_('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
 
-        return self._create_account_move_line(move, credit_account_id, debit_account_id, qty_out, already_out_account_id)
+        return self._create_account_move_line(move, credit_account_id, debit_account_id, qty_out, already_out_account_id, product_expense_account_id)
 
-    def _create_account_move_line(self, move, credit_account_id, debit_account_id, qty_out, already_out_account_id):
+    def _create_account_move_line(self, move, credit_account_id, debit_account_id, qty_out, already_out_account_id, product_expense_account_id):
         """
         Generate the account.move.line values to track the landed cost.
         Afterwards, for the goods that are already out of stock, we should create the out moves
@@ -366,7 +367,7 @@ class AdjustmentLines(models.Model):
                 debit_line = dict(base_line,
                                   name=(self.name + ": " + str(qty_out) + _(' already out')),
                                   quantity=0,
-                                  account_id=credit_account_id)
+                                  account_id=product_expense_account_id)
                 credit_line = dict(base_line,
                                    name=(self.name + ": " + str(qty_out) + _(' already out')),
                                    quantity=0,
