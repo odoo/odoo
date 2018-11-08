@@ -816,7 +816,8 @@ class PurchaseOrderLine(models.Model):
             date=self.order_id.date_order and self.order_id.date_order[:10],
             uom_id=self.product_uom)
 
-        if seller or not self.date_planned:
+        if not self.date_planned and seller:
+            # Recompute the date_planned only if it was not already set
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         if not seller:
