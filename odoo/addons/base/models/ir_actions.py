@@ -507,7 +507,7 @@ class IrActionsServer(models.Model):
         def log(message, level="info"):
             with self.pool.cursor() as cr:
                 cr.execute("""
-                    INSERT INTO ir_logging(create_date, create_uid, logging_type, dbname, name, level, message, path, line, func)
+                    INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
                     VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
