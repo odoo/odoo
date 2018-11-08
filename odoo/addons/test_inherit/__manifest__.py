@@ -7,6 +7,8 @@
     'depends': ['base'],
     'data': [
         'ir.model.access.csv',
+    ],
+    'demo': [
         'demo_data.xml',
     ],
     'installable': True,
