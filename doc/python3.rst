@@ -62,16 +62,6 @@ features whereas:
 * Python 3.2 made ``range`` views more list-like (backported to 2.7)and
   reintroduced ``callable``
 
-.. warning::
-
-    While Python 3 adds plenty of great features (keyword-only parameters,
-    generator delegation, pathlib, ...), you must *not* use them in Odoo
-    until Python 2 support is dropped
-
-.. note::
-
-    In the *very rare* cases where you *need* to differentiate between
-    Python 2 and Python 3, use the :data:`odoo.tools.pycompat.PY2` flag.
 
 Semantics changes
 =================

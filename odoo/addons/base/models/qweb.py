@@ -78,10 +78,7 @@ class Contextifier(ast.NodeTransformer):
     def visit_Lambda(self, node):
         args = node.args
         # assume we don't have any tuple parameter, just names
-        if pycompat.PY2:
-            names = [arg.id for arg in args.args]
-        else:
-            names = [arg.arg for arg in args.args]
+        names = [arg.arg for arg in args.args]
         if args.vararg: names.append(args.vararg)
         if args.kwarg: names.append(args.kwarg)
         # remap defaults in case there's any
