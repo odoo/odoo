@@ -282,7 +282,7 @@ class IrModel(models.Model):
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = pycompat.to_native(model_data['model'])
+            _name = pycompat.to_text(model_data['model'])
             _description = model_data['name']
             _module = False
             _custom = True
@@ -1152,7 +1152,7 @@ class IrModelAccess(models.Model):
         else:
             model_name = model
 
-        if isinstance(group_ids, pycompat.integer_types):
+        if isinstance(group_ids, int):
             group_ids = [group_ids]
 
         query = """ SELECT 1 FROM ir_model_access a
@@ -1190,7 +1190,7 @@ class IrModelAccess(models.Model):
             # User root have all accesses
             return True
 
-        assert isinstance(model, pycompat.string_types), 'Not a model name: %s' % (model,)
+        assert isinstance(model, str), 'Not a model name: %s' % (model,)
         assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
         # TransientModel records have no access rights, only an implicit access rule

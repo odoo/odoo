@@ -16,7 +16,7 @@ import odoo
 
 from odoo import http, models, fields, _
 from odoo.http import request
-from odoo.tools import pycompat, OrderedSet
+from odoo.tools import OrderedSet
 from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
 from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -410,7 +410,7 @@ class Website(Home):
         action = action_id = None
 
         # find the action_id: either an xml_id, the path, or an ID
-        if isinstance(path_or_xml_id_or_id, pycompat.string_types) and '.' in path_or_xml_id_or_id:
+        if isinstance(path_or_xml_id_or_id, str) and '.' in path_or_xml_id_or_id:
             action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False)
         if not action:
             action = ServerActions.search([('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], limit=1)

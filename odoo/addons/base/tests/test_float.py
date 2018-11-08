@@ -4,7 +4,7 @@
 from math import log10
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split_str, pycompat
+from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split_str
 
 
 class TestFloatPrecision(TransactionCase):
@@ -111,7 +111,7 @@ class TestFloatPrecision(TransactionCase):
         # Note: max precision for double floats is 53 bits of precision or
         # 17 significant decimal digits
         for magnitude in range(7):
-            for frac, exp, prec in pycompat.izip(fractions, expecteds, precisions):
+            for frac, exp, prec in zip(fractions, expecteds, precisions):
                 for sign in [-1,1]:
                     for x in range(0, 10000, 97):
                         n = x * 10 ** magnitude

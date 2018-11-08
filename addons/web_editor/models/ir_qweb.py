@@ -223,7 +223,7 @@ class DateTime(models.AbstractModel):
         attrs = super(DateTime, self).attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             value = record[field_name]
-            if isinstance(value, pycompat.string_types):
+            if isinstance(value, str):
                 value = fields.Datetime.from_string(value)
             if value:
                 # convert from UTC (server timezone) to user timezone

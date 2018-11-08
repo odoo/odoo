@@ -9,7 +9,6 @@ from odoo.addons import decimal_precision as dp
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, RedirectWarning, except_orm
-from odoo.tools import pycompat
 from odoo.exceptions import UserError
 
 
@@ -182,11 +181,11 @@ class ProductTemplate(models.Model):
             quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, pycompat.string_types):
+            if isinstance(pricelist_id_or_name, str):
                 pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_data:
                     pricelist = self.env['product.pricelist'].browse(pricelist_data[0][0])
-            elif isinstance(pricelist_id_or_name, pycompat.integer_types):
+            elif isinstance(pricelist_id_or_name, int):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
             if pricelist:
@@ -340,7 +339,7 @@ class ProductTemplate(models.Model):
             templates.with_context(create_from_tmpl=True).create_variant_ids()
 
         # This is needed to set given values to first variant after creation
-        for template, vals in pycompat.izip(templates, vals_list):
+        for template, vals in zip(templates, vals_list):
             related_vals = {}
             if vals.get('barcode'):
                 related_vals['barcode'] = vals['barcode']

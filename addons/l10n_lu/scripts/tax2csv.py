@@ -26,7 +26,7 @@ class LuxTaxGenerator:
         yield keys
         for i in range(1, self.sheet_tax_codes.nrows):
             row = (c.value for c in self.sheet_tax_codes.row(i))
-            d = OrderedDict(pycompat.izip(keys, row))
+            d = OrderedDict(zip(keys, row))
             d['sign'] = int(d['sign'])
             d['sequence'] = int(d['sequence'])
             yield d
@@ -36,14 +36,14 @@ class LuxTaxGenerator:
         yield keys
         for i in range(1, self.sheet_taxes.nrows):
             row = (c.value for c in self.sheet_taxes.row(i))
-            yield OrderedDict(pycompat.izip(keys, row))
+            yield OrderedDict(zip(keys, row))
 
     def iter_fiscal_pos_map(self):
         keys = [c.value for c in self.sheet_fiscal_pos_map.row(0)]
         yield keys
         for i in range(1, self.sheet_fiscal_pos_map.nrows):
             row = (c.value for c in self.sheet_fiscal_pos_map.row(i))
-            yield OrderedDict(pycompat.izip(keys, row))
+            yield OrderedDict(zip(keys, row))
 
     def tax_codes_to_csv(self):
         writer = pycompat.csv_writer(open('account.tax.code.template-%s.csv' %

@@ -277,7 +277,7 @@ class MailThread(models.AbstractModel):
                 thread._message_log(body=_('%s created') % doc_name)
 
         # auto_subscribe: take values and defaults into account
-        for thread, values in pycompat.izip(threads, vals_list):
+        for thread, values in zip(threads, vals_list):
             create_values = dict(values)
             for key, val in self._context.items():
                 if key.startswith('default_') and key[8:] not in create_values:
@@ -290,7 +290,7 @@ class MailThread(models.AbstractModel):
                 track_threads = threads.with_context(lang=self.env.user.lang)
             else:
                 track_threads = threads
-            for thread, values in pycompat.izip(track_threads, vals_list):
+            for thread, values in zip(track_threads, vals_list):
                 tracked_fields = thread._get_tracked_fields(list(values))
                 if tracked_fields:
                     initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
@@ -578,7 +578,7 @@ class MailThread(models.AbstractModel):
         for field_name, (template, post_kwargs) in templates.items():
             if not template:
                 continue
-            if isinstance(template, pycompat.string_types):
+            if isinstance(template, str):
                 self.message_post_with_view(template, **post_kwargs)
             else:
                 self.message_post_with_template(template.id, **post_kwargs)
@@ -1388,15 +1388,9 @@ class MailThread(models.AbstractModel):
         # convert it to utf-8 for transport between the mailgate script and here.
         if isinstance(message, xmlrpclib.Binary):
             message = bytes(message.data)
-        # message_from_string parses from a *native string*, except apparently
-        # sometimes message is ISO-8859-1 binary data or some shit and the
-        # straightforward version (pycompat.to_native) won't work right ->
-        # always encode message to bytes then use the relevant method
-        # depending on ~python version
-        if isinstance(message, pycompat.text_type):
+        if isinstance(message, str):
             message = message.encode('utf-8')
-        extract = getattr(email, 'message_from_bytes', email.message_from_string)
-        msg_txt = extract(message)
+        msg_txt = email.message_from_bytes(message)
 
         # parse the message, verify we are not in a loop by checking message_id is not duplicated
         msg = self.message_parse(msg_txt, save_original=save_original)
@@ -1510,8 +1504,7 @@ class MailThread(models.AbstractModel):
         for node in to_remove:
             node.getparent().remove(node)
         if postprocessed:
-            body = etree.tostring(root, pretty_print=False, encoding='UTF-8')
-            body = pycompat.to_native(body)
+            body = etree.tostring(root, pretty_print=False, encoding='unicode')
         return body, attachments
 
     def _message_extract_payload(self, message, save_original=False):
@@ -1623,7 +1616,7 @@ class MailThread(models.AbstractModel):
         }
         if not isinstance(message, Message):
             # message_from_string works on a native str
-            message = pycompat.to_native(message)
+            message = pycompat.to_text(message)
             message = email.message_from_string(message)
 
         message_id = message['message-id']
@@ -1883,7 +1876,7 @@ class MailThread(models.AbstractModel):
                 cid = info and info.get('cid')
             else:
                 continue
-            if isinstance(content, pycompat.text_type):
+            if isinstance(content, str):
                 content = content.encode('utf-8')
             elif content is None:
                 continue
@@ -1977,7 +1970,7 @@ class MailThread(models.AbstractModel):
                 partner_ids.add(partner_id[1])
             if isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
                 partner_ids |= set(partner_id[2])
-            elif isinstance(partner_id, pycompat.integer_types):
+            elif isinstance(partner_id, int):
                 partner_ids.add(partner_id)
             else:
                 pass  # we do not manage anything else
@@ -2097,7 +2090,7 @@ class MailThread(models.AbstractModel):
             values['slug'] = slug
         except ImportError:
             values['slug'] = lambda self: self.id
-        if isinstance(views_or_xmlid, pycompat.string_types):
+        if isinstance(views_or_xmlid, str):
             views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
         else:
             views = views_or_xmlid

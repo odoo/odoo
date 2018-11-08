@@ -11,8 +11,6 @@ from lxml import html
 from lxml import etree
 from werkzeug import urls
 
-from odoo.tools import pycompat
-
 from odoo import api, models, tools
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
 from odoo.http import request
@@ -130,7 +128,7 @@ class IrQWeb(models.AbstractModel, QWeb):
             view = self.env['ir.ui.view'].browse(view_id)
             return view.inherit_id is not None
 
-        if isinstance(name, pycompat.integer_types) or is_child_view(name):
+        if isinstance(name, int) or is_child_view(name):
             for node in etree.fromstring(template):
                 if node.get('t-name'):
                     node.set('t-name', str(name))

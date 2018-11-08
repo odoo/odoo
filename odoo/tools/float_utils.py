@@ -4,7 +4,6 @@
 from __future__ import print_function
 import math
 
-from odoo.tools import pycompat
 
 if not pycompat.PY2:
     import builtins
@@ -224,7 +223,7 @@ if __name__ == "__main__":
     expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
     precisions = [2, 2, 2, 2, 2, 2, 3, 4]
     for magnitude in range(7):
-        for frac, exp, prec in pycompat.izip(fractions, expecteds, precisions):
+        for frac, exp, prec in zip(fractions, expecteds, precisions):
             for sign in [-1,1]:
                 for x in range(0, 10000, 97):
                     n = x * 10**magnitude

@@ -3,7 +3,6 @@ import warnings
 
 from lxml import etree
 
-from odoo.tools import pycompat
 from ..exceptions import except_orm
 from ..models import (
     MetaModel,
@@ -125,7 +124,7 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
 
 def test_modifiers(what, expected):
     modifiers = {}
-    if isinstance(what, pycompat.string_types):
+    if isinstance(what, str):
         node = etree.fromstring(what)
         transfer_node_to_modifiers(node, modifiers)
         simplify_modifiers(modifiers)

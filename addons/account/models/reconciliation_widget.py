@@ -3,7 +3,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import pycompat
 from odoo.tools.misc import formatLang
 
 
@@ -30,7 +29,7 @@ class AccountReconciliation(models.AbstractModel):
         AccountMoveLine = self.env['account.move.line']
         ctx = dict(self._context, force_price_include=False)
 
-        for st_line, datum in pycompat.izip(st_lines, data):
+        for st_line, datum in zip(st_lines, data):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
 
             for aml_dict in datum.get('counterpart_aml_dicts', []):

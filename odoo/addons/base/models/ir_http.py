@@ -332,7 +332,7 @@ class IrHttp(models.AbstractModel):
                     if module_resource_path.startswith(module_path):
                         with open(module_resource_path, 'rb') as f:
                             content = base64.b64encode(f.read())
-                        last_update = pycompat.text_type(os.path.getmtime(module_resource_path))
+                        last_update = str(os.path.getmtime(module_resource_path))
 
             if not module_resource_path:
                 module_resource_path = obj.url

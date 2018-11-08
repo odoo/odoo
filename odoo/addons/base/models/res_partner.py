@@ -18,7 +18,6 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock
@@ -551,7 +550,7 @@ class Partner(models.Model):
                 vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
             tools.image_resize_images(vals, sizes={'image': (1024, None)})
         partners = super(Partner, self).create(vals_list)
-        for partner, vals in pycompat.izip(partners, vals_list):
+        for partner, vals in zip(partners, vals_list):
             partner._fields_sync(vals)
             partner._handle_first_contact_creation()
         return partners
