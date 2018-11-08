@@ -195,16 +195,35 @@ class View(models.Model):
     @api.model
     @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
-        if 'website_id' in self._context and not isinstance(xml_id, pycompat.integer_types):
-            current_website = self.env['website'].browse(self._context.get('website_id'))
-            domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
-
-            view = self.search(domain, order='website_id', limit=1)
-            if not view:
-                _logger.warning("Could not find view object with xml_id '%s'", xml_id)
-                raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
+        print('get_view_id', xml_id)
+        # import pudb;pu.db
+        if 'website_id' in self._context:
+            view = self.find_most_specific_view(xml_id, self._context.get('website_id'))
             return view.id
         return super(View, self).get_view_id(xml_id)
+
+    def find_most_specific_view(self, xml_id, website_id):
+        ''' Given a xml_id (string or id), it returns either:
+               * The view that match that xml_id and has the current website if there is one
+               * The view that match that xml_id if no specific
+        '''
+        if isinstance(xml_id, pycompat.integer_types):
+            view = self.browse(xml_id)
+            if not view:
+                raise ValueError("Template '%s' not found" % xml_id)
+            xml_id = view.key
+            if not xml_id:  # No key means no specific possible
+                return view
+
+        current_website = self.env['website'].browse(website_id)
+        domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
+        view = self.with_context(active_test=False).search(domain, order='website_id', limit=1)
+
+        if not view:
+            _logger.warning("Could not find view object with xml_id '%s'", xml_id)
+            raise ValueError('View %r in website %r not found' % (xml_id, website_id))
+
+        return view
 
     @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
