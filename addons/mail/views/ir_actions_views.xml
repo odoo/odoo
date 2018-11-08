@@ -7,7 +7,7 @@
             <field name="model">ir.actions.server</field>
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
+                <xpath expr="//page[@name='page_object']" position="after">
                     <page string="Activity" name="next_activity" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'next_activity')]}">
                         <group>
                             <group>
@@ -33,8 +33,8 @@
                         </group>
                         <field name="activity_note" placeholder="Log a note..."/>
                     </page>
-                </notebook>
-                <field name="link_field_id" position="after">
+                </xpath>
+                <xpath expr="//field[@name='link_field_id']" position="after">
                     <field name="partner_ids" widget="many2many_tags"
                         attrs="{'invisible': [('state', '!=', 'followers')]}"/>
                     <field name="channel_ids" widget="many2many_tags"
@@ -42,7 +42,7 @@
                     <field name="template_id"
                         attrs="{'invisible': [('state', '!=', 'email')],
                                 'required': [('state', '=', 'email')]}"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
