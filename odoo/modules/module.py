@@ -434,12 +434,8 @@ def get_test_modules(module):
         mod = importlib.import_module('.tests', modpath)
     except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
         # Hide ImportErrors on `tests` sub-module, but display other exceptions
-        if pycompat.PY2:
-            if e.message.startswith('No module named') and e.message.endswith("tests"):
-                return []
-        else:
-            if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
-                return []
+        if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
+            return []
         _logger.exception('Can not `import %s`.', module)
         return []
     except Exception as e:

@@ -95,7 +95,7 @@ class Web_Editor(http.Controller):
         font_obj = ImageFont.truetype(addons_path + font, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
-        icon = pycompat.unichr(int(icon)) if icon.isdigit() else icon
+        icon = chr(int(icon)) if icon.isdigit() else icon
 
         # Determine the dimensions of the icon
         image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))

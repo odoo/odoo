@@ -5,6 +5,7 @@
 
 from collections import defaultdict
 import glob
+import importlib.util
 import logging
 import os
 from os.path import join as opj
@@ -14,39 +15,16 @@ import odoo.release as release
 import odoo.tools as tools
 from odoo.tools.parse_version import parse_version
 
-if pycompat.PY2:
-    import imp
-    def load_script(path, module_name):
-        fp, fname = tools.file_open(path, pathinfo=True)
-        fp2 = None
-
-        # pylint: disable=file-builtin,undefined-variable
-        if not isinstance(fp, file):
-            # imp.load_source need a real file object, so we create
-            # one from the file-like object we get from file_open
-            fp2 = os.tmpfile()
-            fp2.write(fp.read())
-            fp2.seek(0)
-
-        try:
-            return imp.load_source(module_name, fname, fp2 or fp)
-        finally:
-            if fp:
-                fp.close()
-            if fp2:
-                fp2.close()
-
-else:
-    import importlib.util
-    def load_script(path, module_name):
-        full_path = get_resource_path(*path.split(os.path.sep))
-        spec = importlib.util.spec_from_file_location(module_name, full_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        return module
-
-
 _logger = logging.getLogger(__name__)
+
+
+def load_script(path, module_name):
+    full_path = get_resource_path(*path.split(os.path.sep))
+    spec = importlib.util.spec_from_file_location(module_name, full_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
 
 class MigrationManager(object):
     """
