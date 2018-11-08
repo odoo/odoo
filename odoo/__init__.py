@@ -3,17 +3,21 @@
 
 """ OpenERP core library."""
 
+
 #----------------------------------------------------------
 # odoo must be a namespace package for odoo.addons to become one too
 # https://packaging.python.org/guides/packaging-namespace-packages/
 #----------------------------------------------------------
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
+# As of version 12.0, python 2 is no longer supported, ensure py version is >= 3.5
+import sys
+assert sys.version_info > (3, 5), "Python 2 detected, Odoo requires Python >= 3.5 to run."
+
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
 #----------------------------------------------------------
 # Is the server running with gevent.
-import sys
 evented = False
 if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
     sys.argv.remove('gevent')
