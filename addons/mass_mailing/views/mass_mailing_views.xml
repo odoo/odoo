@@ -636,11 +636,12 @@
                                         <field name="create_date" readonly="1" attrs="{'invisible': [('create_date', '=', False)]}"/>
                                         <field name="sent_date" readonly="1" attrs="{'invisible': [('sent_date', '=', False)]}"/>
                                     </group>
-                                    <group string="Campaign" groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign">
+                                    <group string="Marketing" groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign">
                                         <field name="mass_mailing_campaign_id"
-                                            string="Campaign"
+                                            string="Mailing Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"/>
-                                        <field name="campaign_id" invisible="1"
+                                        <field name="campaign_id"
+                                            string="UTM Campaign"
                                             groups="base.group_no_one"/>
                                         <field name="source_id"
                                             string="Source"
