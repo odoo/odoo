@@ -67,6 +67,17 @@ class Company(models.Model):
                 'value': 'stock.location,%d' % production_location.id,
             })
 
+    def _create_scrap_location(self):
+        for company in self:
+            parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
+            scrap_location = self.env['stock.location'].create({
+                'name': '%s: Scrap' % company.name,
+                'usage': 'inventory',
+                'location_id': parent_location.id,
+                'company_id': company.id,
+                'scrap_location': True,
+            })
+
     @api.model
     def create_missing_warehouse(self):
         """ This hook is used to add a warehouse on existing companies
@@ -102,11 +113,20 @@ class Company(models.Model):
             company._create_production_location()
 
     @api.model
+    def create_missing_scrap_location(self):
+        company_ids  = self.env['res.company'].search([])
+        companies_having_scrap_loc = self.env['stock.location'].search([('scrap_location', '=', True)]).mapped('company_id')
+        company_without_property = company_ids - companies_having_scrap_loc
+        for company in company_without_property:
+            company._create_scrap_location()
+
+    @api.model
     def create(self, vals):
         company = super(Company, self).create(vals)
 
         company.create_transit_location()
         company.sudo()._create_inventory_loss_location()
         company.sudo()._create_production_location()
+        company.sudo()._create_scrap_location()
         self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id, 'partner_id': company.partner_id.id})
         return company
