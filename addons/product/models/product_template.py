@@ -434,7 +434,6 @@ class ProductTemplate(models.Model):
     @api.multi
     def create_variant_ids(self):
         Product = self.env["product.product"]
-        AttributeValues = self.env['product.attribute.value']
 
         variants_to_create = []
         variants_to_activate = []
@@ -448,34 +447,50 @@ class ProductTemplate(models.Model):
                 updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
 
-            # iterator of n-uple of product.attribute.value *ids*
-            variant_matrix = [
-                AttributeValues.browse(value_ids)
-                for value_ids in itertools.product(*(line.value_ids.ids for line in tmpl_id.attribute_line_ids if line.value_ids[:1].attribute_id.create_variant != 'no_variant'))
-            ]
+            # Determine which product variants need to be created based on the attribute
+            # configuration. If any attribute is set to generate variants dynamically, skip the
+            # process.
+            # Technical note: if there is no attribute, a variant is still created because
+            # 'not any([])' and 'set([]) not in set([])' are True.
+            if not any(attrib.create_variant == 'dynamic' for attrib in tmpl_id.mapped('attribute_line_ids.attribute_id')):
+                # Iterator containing all possible attribute values combination
+                # The iterator is used to avoid MemoryError in case of a huge number of combination.
+                all_variants = itertools.product(*(
+                    line.value_ids.ids for line in tmpl_id.attribute_line_ids if line.value_ids[:1].attribute_id.create_variant != 'no_variant'
+                ))
+                # Set containing existing attribute values combination
+                existing_variants = {
+                    frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'no_variant').ids)
+                    for variant in tmpl_id.product_variant_ids
+                }
+                # For each possible variant, create if it doesn't exist yet.
+                for value_ids in all_variants:
+                    value_ids = frozenset(value_ids)
+                    if value_ids not in existing_variants:
+                        variants_to_create.append({
+                            'product_tmpl_id': tmpl_id.id,
+                            'attribute_value_ids': [(6, 0, list(value_ids))],
+                        })
+                        if len(variants_to_create) > 1000:
+                            raise UserError(_(
+                            'The number of variants to generate is too high. '
+                            'You should either not generate variants for each combination or generate them on demand from the sales order. '
+                            'To do so, open the form view of attributes and change the mode of *Create Variants*.'))
 
-            # get the value (id) sets of existing variants
-            existing_variants = {frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'no_variant').ids) for variant in tmpl_id.product_variant_ids}
-            # -> for each value set, create a recordset of values to create a
-            #    variant for if the value set isn't already a variant
-            for value_ids in variant_matrix:
-                if set(value_ids.ids) not in existing_variants and not any(value_id.attribute_id.create_variant == 'dynamic' for value_id in value_ids):
-                    variants_to_create.append({
-                        'product_tmpl_id': tmpl_id.id,
-                        'attribute_value_ids': [(6, 0, value_ids.ids)]
-                    })
-
-            if len(variants_to_create) > 1000:
-                raise UserError(_("""
-                The number of variants to generate is too high.
-                You should either not generate variants for each combination or generate them on demand from the sales order.
-                To do so, open the form view of attributes and change the mode of *Create Variants*."""))
-
-            # check product
+            # Check existing variants if any needs to be activated or unlinked.
+            # - if the product is not active and has valid attributes and attribute values, it
+            #   should be activated
+            # - if the product does not have valid attributes or attribute values, it should be
+            #   deleted
+            valid_value_ids = tmpl_id.mapped('attribute_line_ids.value_ids').filtered(
+                lambda v: v.attribute_id.create_variant != 'no_variant'
+            )
+            valid_attribute_ids = valid_value_ids.mapped('attribute_id')
             for product_id in tmpl_id.product_variant_ids:
-                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'no_variant') in variant_matrix:
-                    variants_to_activate.append(product_id)
-                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'no_variant') not in variant_matrix:
+                if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
+                    if not product_id.active:
+                        variants_to_activate.append(product_id)
+                else:
                     variants_to_unlink.append(product_id)
 
         if variants_to_activate:
