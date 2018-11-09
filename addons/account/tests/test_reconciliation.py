@@ -998,7 +998,6 @@ class TestReconciliation(AccountingTestCase):
         invoice = self.account_invoice_model.create({
             'partner_id': self.partner_agrolait_id,
             'payment_term_id': payment_term.id,
-            'reference_type': 'none',
             'currency_id': self.currency_usd_id,
             'name': 'Multiple payment terms',
             'account_id': self.account_rcv.id,
