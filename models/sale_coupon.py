@@ -4,7 +4,6 @@ import random
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.tools import pycompat
 
 
 class SaleCoupon(models.Model):
@@ -23,7 +22,7 @@ class SaleCoupon(models.Model):
         Generate 8 bytes (64 bits) barcodes as 16 bytes barcodes are not 
         compatible with all scanners.
          """
-        return pycompat.text_type(random.getrandbits(64))
+        return str(random.getrandbits(64))
 
     code = fields.Char(default=_generate_code, required=True, readonly=True)
     expiration_date = fields.Date('Expiration Date', compute='_compute_expiration_date')
