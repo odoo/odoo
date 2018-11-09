@@ -6,6 +6,7 @@
 # Copyright (C) 2012-2012 南京盈通 ccdos@intoerp.com <small business chart>
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
 # Copyright (C) 2017-now  jeffery9@gmail.com
+# Copyright (C) 2018-now  浪潮PS Cloud pscloud@inspur.com    < PM and LTS >
 
 {
     'name': '会计科目表 - 中国企业会计准则',
@@ -36,5 +37,4 @@ Including the following data in the Accounting Standards for Business Enterprise
         'data/account_chart_template_data.xml',
         'data/account_chart_template_data.yml',
     ],
-	'auto_install': True
 }
