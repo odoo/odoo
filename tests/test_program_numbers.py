@@ -517,3 +517,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 1, "Nothing should be added to the cart (2)")
         self.assertEqual(len(generated_coupon), 1, "A coupon should have been generated")
         self.assertEqual(generated_coupon.state, 'reserved', "The coupon should be reserved")
+
+        sol1.product_uom_qty = 1
+        order.recompute_coupon_lines()
+        generated_coupon = order.generated_coupon_ids
+        self.assertEqual(len(order.order_line.ids), 1, "Nothing should be added to the cart (3)")
+        self.assertEqual(len(generated_coupon), 1, "No more coupon should have been generated and the existing one should not have been deleted")
+        self.assertEqual(generated_coupon.state, 'expired', "The coupon should have been set as expired as it is no more valid since we don't have the required quantity")
+
+        sol1.product_uom_qty = 2
+        order.recompute_coupon_lines()
+        generated_coupon = order.generated_coupon_ids
+        self.assertEqual(len(generated_coupon), 1, "We should still have only 1 coupon as we now benefit again from the program but no need to create a new one (see next assert)")
+        self.assertEqual(generated_coupon.state, 'reserved', "The coupon should be set back to reserved as we had already an expired one, no need to create a new one")
