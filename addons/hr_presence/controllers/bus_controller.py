@@ -21,4 +21,4 @@ class BusController(BusController):
                 with registry(request.env.cr.dbname).cursor() as cr:
                     env = Environment(cr, request.env.user.id, {})
                     env['res.users.log'].create({'ip': ip_address})
-        return super(BusController, self).poll(channels, last, options=None)
+        return super(BusController, self).poll(channels, last, options=options)
