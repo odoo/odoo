@@ -426,7 +426,7 @@ class TestPayment(AccountingTestCase):
             'invoice_ids': [(4, invoice.id, None)]
             })
         payment.post()
-        self.check_journal_items(payment.move_line_ids, [
+        self.assertRecordValues(payment.move_line_ids, [
             {'account_id': self.account_eur.id, 'debit': 0.0, 'credit': 90.0, 'amount_currency': 0.0, 'currency_id': False},
             {'account_id': self.account_payable.id, 'debit': 0.0, 'credit': 10.0, 'amount_currency': 0.0, 'currency_id': False},
             {'account_id': self.account_receivable.id, 'debit': 100.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
