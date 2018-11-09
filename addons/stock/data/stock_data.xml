@@ -31,13 +31,6 @@
             <field name="posz">1</field>
             <field name="company_id"></field>
         </record>
-        <record id="stock_location_scrapped" model="stock.location">
-            <field name="name">Scrapped</field>
-            <field name="location_id" ref="stock_location_locations_virtual"/>
-            <field name="scrap_location">True</field>
-            <field name="usage">inventory</field>
-            <field name="company_id"></field>
-        </record>
 
         <record id="location_procurement" model="stock.location">
             <field name="name">Procurements</field>
@@ -165,6 +158,9 @@
             <value model="res.company" eval="obj()"/>
         </function>
         <function model="res.company" name="create_missing_production_location">
+            <value model="res.company" eval="obj()"/>
+        </function>
+        <function model="res.company" name="create_missing_scrap_location">
             <value model="res.company" eval="obj()"/>
         </function>
     </data>
