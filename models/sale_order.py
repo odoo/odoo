@@ -347,7 +347,7 @@ class SaleOrder(models.Model):
         order = self
 
         applicable_programs = order._get_applicable_no_code_promo_program() + order._get_applicable_programs() + order._get_applied_coupon_program_coming_from_another_so()
-        applied_programs = order._get_applied_programs_with_rewards_on_current_order()
+        applied_programs = order._get_applied_programs_with_rewards_on_current_order() + order._get_applied_programs_with_rewards_on_next_order()
         programs_to_remove = applied_programs - applicable_programs
         products_to_remove = programs_to_remove.mapped('discount_line_product_id')
 
@@ -369,6 +369,10 @@ class SaleOrder(models.Model):
         return self.no_code_promo_program_ids.filtered(lambda p: p.promo_applicability == 'on_current_order') + \
                self.applied_coupon_ids.mapped('program_id') + \
                self.code_promo_program_id.filtered(lambda p: p.promo_applicability == 'on_current_order')
+
+    def _get_applied_programs_with_rewards_on_next_order(self):
+        return self.no_code_promo_program_ids.filtered(lambda p: p.promo_applicability == 'on_next_order') + \
+            self.code_promo_program_id.filtered(lambda p: p.promo_applicability == 'on_next_order')
 
 
 class SaleOrderLine(models.Model):
