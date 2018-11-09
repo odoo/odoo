@@ -354,6 +354,13 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
             return $.when(null);
         }
 
+        if (t === 'date') {
+            // v is flagged UTC, so it will get transformed
+            // into the browser's timezone when calling toDate
+            // to avoid it, we use the string representation
+            // that will be truncated later to build another moment
+            v = v.format();
+        }
         var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
         if (!m.isValid()) { return $.when(null); }
         var date_string = field_utils.format[t](m, {type: t});
