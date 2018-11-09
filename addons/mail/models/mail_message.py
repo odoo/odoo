@@ -767,7 +767,8 @@ class Message(models.Model):
                         'name': name,
                         'datas': match.group(2),
                         'datas_fname': name,
-                        'res_model': 'mail.message',
+                        'res_model': values.get('model'),
+                        'res_id': values.get('res_id'),
                     })
                     attachment.generate_access_token()
                     values['attachment_ids'].append((4, attachment.id))
