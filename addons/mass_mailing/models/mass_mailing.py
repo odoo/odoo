@@ -768,10 +768,9 @@ class MassMailing(models.Model):
             # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
             target_list_contacts = self.env['mail.mass_mailing.list_contact_rel'].search(
                 [('list_id', 'in', self.contact_list_ids.ids)])
-            opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out).mapped('contact_id.email')
-            opt_in_contacts = target_list_contacts.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email')
-            normalized_email = [tools.email_split(c) for c in opt_out_contacts if c not in opt_in_contacts]
-            opt_out = set(email[0].lower() for email in normalized_email if email)
+            opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
+            opt_in_contacts = target_list_contacts.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
+            opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
 
             _logger.info(
                 "Mass-mailing %s targets %s, blacklist: %s emails",
