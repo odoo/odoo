@@ -12,7 +12,7 @@ class Company(models.Model):
         'stock.location', 'Internal Transit Location', on_delete="restrict",
         help="Technical field used for resupply routes between warehouses that belong to this company")
 
-    def create_transit_location(self):
+    def _create_transit_location(self):
         '''Create a transit location with company_id being the given company_id. This is needed
            in case of resuply routes between warehouses belonging to the same company, because
            we don't want to create accounting entries at that time.
@@ -23,12 +23,12 @@ class Company(models.Model):
                 'name': _('%s: Transit Location') % company.name,
                 'usage': 'transit',
                 'location_id': parent_location and parent_location.id or False,
+                'company_id': company.id,
             })
-            location.sudo().write({'company_id': company.id})
+
             company.write({'internal_transit_location_id': location.id})
 
-            warehouses = self.env['stock.warehouse'].search([('partner_id', '=', company.partner_id.id)])
-            warehouses.mapped('partner_id').with_context(force_company=company.id).write({
+            company.partner_id.with_context(force_company=company.id).write({
                 'property_stock_customer': location.id,
                 'property_stock_supplier': location.id,
             })
@@ -95,6 +95,12 @@ class Company(models.Model):
             })
 
     @api.model
+    def create_missing_transit_location(self):
+        company_without_transit = self.env['res.company'].search([('internal_transit_location_id', '=', False)])
+        for company in company_without_transit:
+            company._create_transit_location()
+
+    @api.model
     def create_missing_inventory_loss_location(self):
         company_ids  = self.env['res.company'].search([])
         inventory_loss_product_template_field = self.env['ir.model.fields'].search([('model','=','product.template'),('name','=','property_stock_inventory')])
@@ -124,7 +130,7 @@ class Company(models.Model):
     def create(self, vals):
         company = super(Company, self).create(vals)
 
-        company.create_transit_location()
+        company.sudo()._create_transit_location()
         company.sudo()._create_inventory_loss_location()
         company.sudo()._create_production_location()
         company.sudo()._create_scrap_location()
