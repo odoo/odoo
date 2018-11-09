@@ -1,6 +1,9 @@
 // Hacky way to detect if its the backend or not
 $-is-backend: variable-exists('primary');
 
+// Use auto threshold for yiq colors
+$yiq-contrasted-threshold: false;
+
 // Automatically update bootstrap colors map (unused by BS itself)
 $-palette: nth($o-color-palettes, $o-color-palette-number);
 $colors: () !default;

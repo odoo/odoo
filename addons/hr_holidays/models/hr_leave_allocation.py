@@ -374,6 +374,11 @@ class HolidaysAllocation(models.Model):
             'parent_id': self.id,
             'employee_id': employee.id,
             'accrual': self.accrual,
+            'date_to': self.date_to,
+            'interval_unit': self.interval_unit,
+            'interval_number': self.interval_number,
+            'number_per_interval': self.number_per_interval,
+            'unit_per_interval': self.unit_per_interval,
         }
         return values
 
