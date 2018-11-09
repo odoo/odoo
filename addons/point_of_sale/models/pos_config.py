@@ -137,7 +137,8 @@ class PosConfig(models.Model):
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
-        help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.')
+        help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.',
+        default=lambda self: self.env.user.company_id.nomenclature_id)
     group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
         help='This field is there to pass the id of the pos manager group to the point of sale client.')
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
@@ -152,7 +153,6 @@ class PosConfig(models.Model):
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
-    barcode_scanner = fields.Boolean("Barcode Scanner")
     start_category = fields.Boolean("Set Start Category")
     module_account = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
@@ -281,20 +281,6 @@ class PosConfig(models.Model):
     def _onchange_available_pricelist_ids(self):
         if self.pricelist_id not in self.available_pricelist_ids:
             self.pricelist_id = False
-
-    @api.onchange('iface_scan_via_proxy')
-    def _onchange_iface_scan_via_proxy(self):
-        if self.iface_scan_via_proxy:
-            self.barcode_scanner = True
-        else:
-            self.barcode_scanner = False
-
-    @api.onchange('barcode_scanner')
-    def _onchange_barcode_scanner(self):
-        if self.barcode_scanner:
-            self.barcode_nomenclature_id = self.env.user.company_id.nomenclature_id
-        else:
-            self.barcode_nomenclature_id = False
 
     @api.onchange('is_posbox')
     def _onchange_is_posbox(self):
