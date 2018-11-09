@@ -2286,7 +2286,8 @@ options.onCreateLink = function (sLinkUrl) {
       // pass
     } else if (sLinkUrl.indexOf('@') !== -1 && sLinkUrl.indexOf(':') === -1) {
       sLinkUrl =  'mailto:' + sLinkUrl;
-    } else if (sLinkUrl.indexOf('://') === -1 && sLinkUrl.indexOf('/') !== 0 && sLinkUrl.indexOf('#') !== 0) {
+    } else if (sLinkUrl.indexOf('://') === -1 && sLinkUrl[0] !== '/'
+               && sLinkUrl[0] !== '#' && sLinkUrl.slice(0, 2) !== '${') {
       sLinkUrl = 'http://' + sLinkUrl;
     }
     return sLinkUrl;
