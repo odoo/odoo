@@ -668,12 +668,13 @@
             <field name="name">mail.mass_mailing.kanban</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban default_group_by="state">
                     <field name='color'/>
                     <field name='expected'/>
                     <field name='failed'/>
                     <field name='sent_date'/>
                     <field name='active'/>
+                    <field name='state'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
