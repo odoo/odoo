@@ -1180,8 +1180,9 @@ var ManualModel = StatementModel.extend({
             });
 
         var domainReconcile = [];
-        if (context && context.company_ids) {
-            domainReconcile.push(['company_id', 'in', context.company_ids]);
+        var company_ids = context && context.company_ids || [session.company_id]
+        if (company_ids) {
+            domainReconcile.push(['company_id', 'in', company_ids]);
         }
         var def_reconcileModel = this._rpc({
                 model: 'account.reconcile.model',
