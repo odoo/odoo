@@ -148,8 +148,8 @@
         </function>
 
         <!-- create the transit location for each company existing -->
-        <function model="res.company" name="create_transit_location">
-            <value model="res.company" eval="obj().search([('internal_transit_location_id', '=', False)]).ids"/>
+        <function model="res.company" name="create_missing_transit_location">
+            <value model="res.company" eval="obj()"/>
         </function>
         <function model="res.company" name="create_missing_warehouse">
             <value model="res.company" eval="obj()"/>
