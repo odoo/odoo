@@ -45,7 +45,7 @@ var ChatterComposer = BasicComposer.extend({
      *
      * @override
      */
-    clearComposerOnSend: function () {},
+    _clearComposerOnSend: function () {},
 
     //--------------------------------------------------------------------------
     // Private
