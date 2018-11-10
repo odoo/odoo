@@ -42,26 +42,22 @@ var ProductConfiguratorFormController = FormController.extend({
     },
     /**
      * This is overridden to allow catching the "select" event on our product template select field.
-     * This will not work anymore if more fields are added to the form.
-     * TODO awa: Find a better way to catch that event.
-     *
      * @override
      */
     _onFieldChanged: function (event) {
         var self = this;
-
         this.$el.parents('.modal').find('.o_sale_product_configurator_add').removeClass('disabled');
-
-        this._rpc({
-            route: '/product_configurator/configure',
-            params: {
-                product_id: event.data.changes.product_template_id.id,
-                pricelist_id: this.renderer.pricelistId
-            }
-        }).then(function (configurator) {
-            self.renderer.renderConfigurator(configurator);
-        });
-
+        if (event.data.changes.product_template_id) {
+            this._rpc({
+                route: '/product_configurator/configure',
+                params: {
+                    product_id: event.data.changes.product_template_id.id,
+                    pricelist_id: this.renderer.pricelistId
+                }
+            }).then(function (configurator) {
+                self.renderer.renderConfigurator(configurator);
+            });
+        }
         this._super.apply(this, arguments);
     },
 
