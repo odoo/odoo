@@ -3,24 +3,25 @@
 # * base
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Martin Trigaux, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
-# Eric Geens <eric.geens@vitabiz.be>, 2016
+# Eric Geens <eric.geens@vitabiz.be>, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 # Julia van Orsouw <julia@odooexperts.nl>, 2017
-# Melroy van den Berg <webmaster1989@gmail.com>, 2017
+# Melroy van den Berg <webmaster1989@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Eric Geens <ericgeens@yahoo.com>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 10:02+0000\n"
-"PO-Revision-Date: 2018-08-02 10:02+0000\n"
-"Last-Translator: Cas Vissers <c.vissers@brahoo.nl>, 2018\n"
+"PO-Revision-Date: 2016-08-05 12:54+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -812,6 +813,9 @@ msgid ""
 "        social media configuration for any other module that might need it.\n"
 "    "
 msgstr ""
+"\n"
+"Het doel van deze technische module is om een front te bieden voor\n"
+"        sociale media-configuratie voor elke andere module die het nodig heeft."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_barcode
@@ -841,6 +845,9 @@ msgid ""
 "        of another database on which a counterpart addon is installed.\n"
 "    "
 msgstr ""
+"\n"
+"Met deze module kunnen werknemers van medewerkers communiceren met livechat-operators\n"
+"         van een andere database waarop een tegenhanger-add-on is geïnstalleerd."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1043,6 +1050,14 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"Maak de blokkeerdatum onomkeerbaar:\n"
+"\n"
+" * Je kunt geen strengere voorwaarden definiëren voor adviseurs dan voor gebruikers. Vervolgens moet de blokkeerdatum op de adviseur vóór de blokkeerdatum voor gebruikers worden ingesteld.\n"
+"* U kunt een periode die nog niet is afgelopen niet vergrendelen. De blokkeerdatum voor adviseurs moet dan worden ingesteld vóór de laatste dag van de vorige maand.\n"
+" * De nieuwe blokkeerdatum voor adviseurs moet worden ingesteld na de vorige blokkeerdatum.\n"
+" * The new lock date for advisors must be set after the previous lock date.\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -17209,12 +17224,12 @@ msgstr "Mexicaanse lokalisatie rapportages"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_customs
 msgid "Odoo Mexico Localization for Invoice with customs Number"
-msgstr ""
+msgstr "Odoo mexikaanse localisatie voor facturatie met aangepaste nummering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr ""
+msgstr "Odoo mexikaanse localisatie voor stock"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -17767,6 +17782,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:base.action_partner_form
 msgid "Odoo helps you easily track all activities related to a customer."
 msgstr ""
+"Odoo helpt u bij het gemakkelijk opvolgen van alle activiteiten gerelateerd "
+"aan een klant."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -21038,7 +21055,7 @@ msgstr "TGZ-archiefbestand"
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "TGZ format: bundles multiple PO(T) files as a single archive"
-msgstr ""
+msgstr "TGZ-formaat: bundelt meerdere PO(T) -bestanden als een enkel archief"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
@@ -21193,7 +21210,7 @@ msgstr "Test performantie"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_marketing_automation
 msgid "Test Suits for Automated Marketing Campaigns"
-msgstr ""
+msgstr "Test suites voor geautomatiseerde marketing campagnes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_testing_utilities
@@ -21670,6 +21687,8 @@ msgstr "De geselecteerde modules zijn bijgewerkt / geïnstalleerd !"
 msgid ""
 "The server refused the sender address (%(email_from)s) with error %(repl)s"
 msgstr ""
+"De server heeft het afzenderadres (%(email_from)s) met een fout geweigerd "
+"%(repl)s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:181
@@ -21839,6 +21858,9 @@ msgid ""
 "change the report filename. You can use a python expression with the "
 "'object' and 'time' variables."
 msgstr ""
+"Dit is de bestandsnaam van het rapport dat gedownload wordt. Laat leeg om de"
+" bestandsnaam niet te wijzigen. U kan een Python expressie gebruiken met het"
+" object en de tijdsvariabelen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -23607,6 +23629,8 @@ msgstr ""
 #, python-format
 msgid "You cannot archive a contact linked to an internal user."
 msgstr ""
+"U kunt een contactpersoon die is gekoppeld aan een interne gebruiker niet "
+"archiveren."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:327
