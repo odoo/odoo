@@ -222,7 +222,7 @@ msgstr ""
 "                    <p style=\"font-size:16px;\">\n"
 "                        Salve,\n"
 "                    </p><p style=\"font-size:16px;\">\n"
-"                        siamo felici di confermare la tua registrazione all'evento:\n"
+"                        siamo felici di confermare la registrazione all'evento:\n"
 "                    </p>\n"
 "                    <ul>\n"
 "                        <li>Evento: \n"
@@ -323,7 +323,7 @@ msgstr ""
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Aggiungi questo evento al calendario</strong>\n"
+"                                <strong>Aggiungere questo evento al calendario</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
 "                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
@@ -348,7 +348,7 @@ msgstr ""
 "                    <div>Spedito da ${object.company_id.name}</div>\n"
 "                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                    <div>\n"
-"                        Scopri<a href=\"/event\" style=\"text-decoration:none;color:#717188;\">tutti i nostri eventi</a>.\n"
+"                        Scopri <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">tutti i nostri eventi</a>.\n"
 "                    </div>\n"
 "                    % endif\n"
 "                </td>\n"
@@ -548,7 +548,7 @@ msgstr ""
 "                        Salve,\n"
 "                    </p>\n"
 "                    <p style=\"font-size:16px;\">\n"
-"                        Siamo emozionati nel ricordarti che l'evento\n"
+"                        Siamo emozionati nel ricordare che l'evento\n"
 "                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
@@ -557,7 +557,7 @@ msgstr ""
 "                        sta per iniziare\n"
 "                        <strong>${object.get_date_range_str()}</strong>.\n"
 "                    </p><p style=\"font-size:16px;\">\n"
-"                        Confermiamo la tua registrazione e speriamo di incontrarti,\n"
+"                        Confermiamo la registrazione in attesa dell'incontro,\n"
 "                    </p><p style=\"font-size:16px; margin-bottom: 30px\">\n"
 "                        <i>\n"
 "                           -- <br/>\n"
@@ -692,8 +692,8 @@ msgstr ""
 "\n"
 "<p>Spett.le ${object.name},</p>\n"
 "<p>grazie per la richiesta.</p>\n"
-"<p>Qui trovi il badge per l'evento ${object.event_id.name}.</p>\n"
-"<p>Se hai domande, non esitare a contattarci.</p>\n"
+"<p>Il badge per l'evento si trova qui ${object.event_id.name}.</p>\n"
+"<p>Per le domande, non esitare a contattarci.</p>\n"
 "<p>Cordialmente,</p>"
 
 #. module: event
@@ -766,8 +766,8 @@ msgstr ""
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
 msgstr ""
-"<i>Sarai in grado di creare pagine dinamiche che interagiscono direttamente "
-"con l'ORM.</i>"
+"<i>Acquisire la capacità di creare pagine dinamiche che interagiscono "
+"direttamente con l'ORM.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -777,8 +777,8 @@ msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
 msgstr ""
-"<i>Sarai in grado di sviluppare un'applicazione completa di backend e "
-"interfaccia utente.</i>"
+"<i>Acquisire la capacità di sviluppare un'applicazione completa di backend e"
+" interfaccia utente.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -787,8 +787,8 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
 msgstr ""
-"<i>Sarai capace di sviluppare semplici componenti dinamici nelle pagine "
-"HTML.</i>"
+"<i>Acquisire la capacità di sviluppare semplici componenti dinamici nelle "
+"pagine HTML.</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -888,7 +888,7 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
-"Aggiungi un menu di navigazione alla pagina web dell'evento con orario, "
+"Aggiungere un menu di navigazione alla pagina web dell'evento con orario, "
 "percorsi, un modulo proposta percorso, ecc."
 
 #. module: event
@@ -921,8 +921,7 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
-"Sei sicuro di voler annullare questo evento? Tutti gli iscritti verranno "
-"cancellati."
+"Annullare veramente questo evento? Tutti gli iscritti verranno cancellati."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -988,7 +987,7 @@ msgstr "Conferma iscrizioni automaticamente"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr "Invia le email automaticamente"
+msgstr "Invia le e-mail automaticamente"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
@@ -1121,7 +1120,7 @@ msgstr "Azienda"
 #: code:addons/event/models/event.py:486
 #, python-format
 msgid "Compose Email"
-msgstr "Componi email"
+msgstr "Componi e-mail"
 
 #. module: event
 #: model:event.type,name:event.event_type_2
@@ -1231,7 +1230,7 @@ msgstr "Cliente"
 #: code:addons/event/models/event.py:451
 #, python-format
 msgid "Customer Email"
-msgstr "Email del cliente"
+msgstr "E-mail del cliente"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1318,19 +1317,19 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Email Schedule"
-msgstr "Calendario email"
+msgstr "Calendario e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail_template_id
 msgid "Email Template"
-msgstr "Modello email"
+msgstr "Modello e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
@@ -1450,7 +1449,7 @@ msgstr ""
 "                            Fallito con errore:\n"
 "                              - %s\n"
 "\n"
-"                            Ricevi questa email perché sei:\n"
+"                            Si riceve questa e-mail perché si è:\n"
 "                              - l'organizzatore dell'evento,\n"
 "                              - o il responsabile dell'evento,\n"
 "                              - o l'ultimo autore del modello."
@@ -1543,7 +1542,7 @@ msgstr "Completa evento"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr "Per ogni altra informazione, contattaci all'indirizzo"
+msgstr "Per ogni altra informazione, contattare all'indirizzo"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_max
@@ -1551,7 +1550,7 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
-"Per ogni evento puoi definire il massimo dei posti disponibili (numero di "
+"Per ogni evento si può definire il massimo dei posti disponibili (numero di "
 "partecipanti), oltre questo numero le registrazioni all'evento non saranno "
 "accettate."
 
@@ -1562,7 +1561,7 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
-"Per ogni evento puoi definire il minimo dei posti disponibili (numero di "
+"Per ogni evento si può definire il minimo dei posti disponibili (numero di "
 "partecipanti), se non sarà raggiunto il numero minimo, l'evento non può "
 "essere confermato (scrivi 0 per ignorare questa regola)"
 
@@ -1931,7 +1930,7 @@ msgid ""
 "    sell tickets, etc."
 msgstr ""
 "Odoo aiuta nel programmare e organizzare efficientemente gli eventi:\n"
-"    tracciare le registrazioni e le partecipazioni, automatizzare le email\n"
+"    tracciare le registrazioni e le partecipazioni, automatizzare le e-mail\n"
 "    di conferma, vendere biglietti, ecc."
 
 #. module: event
@@ -2051,7 +2050,7 @@ msgstr "Oggetti Python"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Read Great Contents"
-msgstr "Leggi ottimi contenuti"
+msgstr "Leggere ottimi contenuti"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -2189,7 +2188,7 @@ msgstr "Seminario"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr "Invia per email"
+msgstr "Invia per e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_done
@@ -2438,7 +2437,7 @@ msgid ""
 "sure you want to confirm it?"
 msgstr ""
 "Attenzione: Questo evento ha non ha raggiunto il numero minimo di "
-"registrazioni. Sei sicuro di volerlo confermare?"
+"registrazioni. Confermare veramente l'evento?"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -2458,7 +2457,7 @@ msgstr "Cosa dicono le persone di questo corso?"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What you will learn?"
-msgstr "Cosa apprenderai?"
+msgstr "Cosa si apprenderà?"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2485,7 +2484,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr "Il tuo badge per ${object.event_id.name}"
+msgstr "Badge per ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription

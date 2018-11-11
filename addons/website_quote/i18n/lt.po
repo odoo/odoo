@@ -3,24 +3,25 @@
 # * website_quote
 # 
 # Translators:
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Rolandas <info@paninfo.lt>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Anatolij, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Martin Trigaux, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Rolandas <info@paninfo.lt>, 2017
-# Anatolij, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:27+0000\n"
+"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,13 +81,61 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Gerb. ${object.partner_id.name},</p><br/>\n"
+"                <p>Jūsų užsakymas <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> buvo patvirtintas!</p><br/>\n"
+"                \n"
+"                % if object.partner_id.user_ids\n"
+"                <p>Galite peržiūrėti savo pasiūlymus, pardavimų užsakymus ir sąskaitas internetu, nueidami į mūsų <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Portalą</a>.</p><br/>\n"
+"                % endif\n"
+"\n"
+"                <p>Jei turite klausimų, susisiekite su mumis.</p><br/>\n"
+"                <p>Ačiū, kad renkatės ${object.company_id.name or \"us\"}!</p>\n"
+"            </td>\n"
+"        </tr><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                % if user.signature\n"
+"                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
+"                </p>\n"
+"                % endif\n"
+"                <p style=\"font-size: 11px;\"><strong>Išsiųsta\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"                    <strong>${user.company_id.name}</strong>\n"
+"                </a> naudojant<a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>\"Odoo\"</strong></a>\n"
+"                </strong></p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "% discount"
-msgstr "% discount"
+msgstr "% nuolaida"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -115,6 +164,9 @@ msgid ""
 "                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
 msgstr ""
+":\n"
+"                                šis turinys pasirodys komerciniame pasiūlyme tik\n"
+"jei šis produktas bus įtrauktas į pasiūlymą."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -123,6 +175,9 @@ msgid ""
 "                                this content will appear on the quotation only if this\n"
 "                                product is used in the quote."
 msgstr ""
+":\n"
+"                                šis turinys pasirodys komerciniame pasiūlyme tik\n"
+"jei šis produktas bus panaudotas pasiūlyme."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -132,7 +187,7 @@ msgstr "<i class=\"fa fa-check\"/> Priimti"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/>Patvirtinti ir mokėti"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -183,6 +238,7 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop simple dynamic compenents in HTML pages.</i>"
 msgstr ""
+"<i>Jūs galėsite kurti paprastus dinaminius komponentus HTML puslapiuose.</i>"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -195,6 +251,11 @@ msgid ""
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
 msgstr ""
+"<span style=\"text-align: -webkit-center; \">Šis kursas yra skirtas "
+"programuotojams, kuriems reikia įsisavint <strong>verslo programų "
+"kūrimo</strong> procesą. Kursas skirtas pradedantiems programuotojams arba "
+"IT profesionalams, kurie nori geriau įsigilinti į techninius aspektus. "
+"</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -207,6 +268,8 @@ msgid ""
 "<span>I agree that by paying this proposal, I\n"
 "                                accept it on the behalf of </span>"
 msgstr ""
+"<span>Aš sutinku, kad apmokėdamas šį\n"
+"pasiūlymą, jį priimu vardu </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -214,6 +277,8 @@ msgid ""
 "<span>I agree that by signing this proposal, I\n"
 "                                    accept it on the behalf of </span>"
 msgstr ""
+"<span>Aš sutinku, kad pasirašydamas šį\n"
+"pasiūlymą, jį priimu vardu </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -276,6 +341,9 @@ msgid ""
 "                                will appear on all quotations using this\n"
 "                                template."
 msgstr ""
+"<strong>Šablono antraštė:</strong>šis turinys\n"
+"bus atvaizduojamas visuose pasiūlymuose,\n"
+"naudojančiuose šį šabloną."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -305,8 +373,8 @@ msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quote."
 msgstr ""
-"<strong>Šis komercinis pasiūlymas buvo ayšauktas.</strong> Susisiekite su "
-"mumis, kad gautumėte naują pasiūlymą."
+"<strong>Šis pasiūlymas buvo atšauktas.</strong> Susisiekite su mumis "
+"norėdami gauti naują pasiūlymą."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -324,11 +392,13 @@ msgid ""
 "Access to an Account Manager at Odoo SA to discuss strategic, sales and "
 "service issues"
 msgstr ""
+"Prieiga prie \"Odoo SA\" projektų vadovo diskusijai apie strategines, "
+"pardavimų ir paslaugų problemas"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Partners Portal"
-msgstr ""
+msgstr "Partnerių portalo prieiga"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_active
@@ -338,7 +408,7 @@ msgstr "Aktyvus"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Add to order lines"
-msgstr ""
+msgstr "Pridėti prie užsakymo eilučių"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -346,7 +416,7 @@ msgstr ""
 #: model:product.template,name:website_quote.product_template_quote_3
 #: model:sale.quote.option,name:website_quote.website_sale_option_line_1
 msgid "Advanced CRM Functional"
-msgstr "Platesnis CRM funkcionalumas"
+msgstr "Išplėstinis CRM funkcionalumas"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -354,7 +424,7 @@ msgstr "Platesnis CRM funkcionalumas"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Advanced JQuery"
-msgstr "Išsami užklausa"
+msgstr "Išplėstinis JQuery"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -364,12 +434,12 @@ msgstr "Suma"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
 msgid "Amount Before Discount"
-msgstr "Suma be mokesčių"
+msgstr "Suma prieš nuolaidą"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "An Odoo official partner commits to:"
-msgstr ""
+msgstr "\"Odoo\" oficialus partneris įsipareigoja:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
@@ -382,7 +452,7 @@ msgstr "Archyvuojamas"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Arrays"
-msgstr "Rinkiniai"
+msgstr "Masyvai"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -391,11 +461,14 @@ msgid ""
 "                                       we know that success is all about the\n"
 "                                       commitment we put on strong services."
 msgstr ""
+"Kaip viena iš lyderiaujančių paslaugų įmonių,\n"
+"mes žinome, kad sėkmė priklauso nuo atsidavimo,\n"
+"kurį skiriame savo paslaugoms."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "Ask Changes"
-msgstr "Užklausti pakeitimų"
+msgstr "Prašyti pakeitimą"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -405,12 +478,14 @@ msgstr "Grįžti"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Back to Sales Order"
-msgstr ""
+msgstr "Grįžti į pardavimų užsakymą"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Be available for periodic review meeting with Odoo SA account managers"
 msgstr ""
+"Būkite pasiruošę periodiniams peržiūros susitikimams su \"Odoo SA\" projektų"
+" vadovais"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -418,16 +493,18 @@ msgid ""
 "Be the first level of support for his Odoo customers and use Odoo SA for the"
 " second level of support (mostly for bug fixes)"
 msgstr ""
+"Būkite pirmasis palaikymo lygis \"Odoo\" klientams ir naudokite \"Odoo SA\" "
+"antrojo lygmens palaikymui (dažniausiai, klaidų taisymui)"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Become a Certified Odoo Partner"
-msgstr ""
+msgstr "Tapkite sertifikuotu \"Odoo\" partneriu"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Benefits for a partner"
-msgstr ""
+msgstr "Partnerio naudos"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -435,12 +512,12 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Better comfort to facilitate your learning process"
-msgstr ""
+msgstr "Jūsų mokymosi proceso palengvinimas"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Bill To:"
-msgstr "Išrašyti sąskaitą:"
+msgstr "Pateikti sąskaitą:"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -456,7 +533,7 @@ msgstr "Bootstrap CSS"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Bring your own laptop."
-msgstr "Atsineškite savo asmeninį nešiojamą kompiuterį."
+msgstr "Atsineškite savo nešiojamąjį kompiuterį."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -464,7 +541,7 @@ msgstr "Atsineškite savo asmeninį nešiojamą kompiuterį."
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Building a Full Application"
-msgstr "Kuriant pilną modulį"
+msgstr "Visos programos kūrimas"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -472,7 +549,7 @@ msgstr "Kuriant pilną modulį"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Calling the ORM"
-msgstr "Skambinant ORM"
+msgstr "Kreipiantis į ORM"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -495,7 +572,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
 msgid "Click here to create your template."
-msgstr "Spauskite čia norėdami sukurti savo šabloną."
+msgstr "Spauskite norėdami sukurti savo šabloną."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -524,7 +601,7 @@ msgstr "Susisiekite su mumis"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Controllers and Views"
-msgstr "Kontroleriai ir rodiniai"
+msgstr "Valdikliai ir rodiniai"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -599,7 +676,7 @@ msgstr "Aprašymas"
 #: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
-msgstr "Komercinio pasiūlymo aprašymas"
+msgstr "Pasiūlymo aprašymas"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_product_product_website_description
@@ -613,7 +690,7 @@ msgstr "Tinklalapio aprašymas"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Develop a new module for a particular application."
-msgstr "Sukurti naują modulį konkrečiai aplikacijai."
+msgstr "Sukurti naują modulį konkrečiam tikslui."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -641,12 +718,12 @@ msgstr "Vaizduojamas pavadinimas"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Dive into Strings"
-msgstr "Nerti į ryšius"
+msgstr "Gilintis į eilutes"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Edit Quote"
-msgstr "Keisti komercinį pasiūlymą"
+msgstr "Redaguoti pasiūlymą"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -656,7 +733,7 @@ msgstr "Redaguoti šabloną"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Expiration Date:"
-msgstr "Galiojimo datos pabaiga:"
+msgstr "Galiojimo data:"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_ir_model_fields
@@ -666,7 +743,7 @@ msgstr "Laukai"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Follows a transparent ranking system. Ready - Silver - Gold"
-msgstr ""
+msgstr "Seka skaidrią reitingavimo sistemą. Pasiruošęs - Sidabras - Auksas"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_1
@@ -687,17 +764,17 @@ msgstr "Funkcijos"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Gets access to training sessions (updated weekly)"
-msgstr ""
+msgstr "Gauna prieigą prie mokymo sesijų (atnaujinama kas savaitę)"
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr "Surūšiuos užsakymus atvaizduojant komercinių pasiūlymų eilutes."
+msgstr "Priskiria eilės tvarką, kai rodomas pardavimų užklausų sąrašas."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
 msgid "Gives the sequence order when displaying a list of suggested product."
-msgstr ""
+msgstr "Suteikia eilės tvarką, kai rodomas siūlomų produktų sąrašas."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -708,6 +785,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
+"Geri komercinių pasiūlymų šablonai žymiai\n"
+"<strong>padidins jūsų sėkmės tikimybę</strong>.\n"
+"Pirmoji sekcija dažniausiai yra apie jūsų\n"
+"kompaniją, jūsų nuorodas, jūsų metodologiją\n"
+"arba garantijas, jūsų komandą, sąlygas ir t.t."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -715,23 +797,25 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Hands-on exercises and their solutions"
-msgstr ""
+msgstr "Praktiniai pratimai ir jų sprendimai"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Has a direct relationship with Odoo SA to escalate issues"
-msgstr ""
+msgstr "Turi tiesioginį ryšį su \"Odoo SA\", kad galėtų kelti problemas"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Has access to Odoo Enterprise source code on Github and latest bug fixes"
 msgstr ""
+"Turi prieigą prie \"Odoo Enterprise\" kodo Github platformoje ir naujausių "
+"klaidų ištaisymų"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Have dedicated resources assigned to Odoo projects"
-msgstr ""
+msgstr "Turi išteklių, priskirtų \"Odoo\" projektams"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -739,7 +823,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Hello World"
-msgstr "Sveikas, pasauli"
+msgstr "Labas, pasauli"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -752,7 +836,7 @@ msgstr "Istorija"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "How to Debug"
-msgstr "Kaip derinti"
+msgstr "Kaip taisyti klaidas"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_id
@@ -770,6 +854,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"Jei pasiūlymas redaguojamas iš pasiūlymo \"Peržiūros\", jūs\n"
+"atnaujinsite pasiūlymą tik šiam klientui. Jei redaguojate  pasiūlymo\n"
+"šabloną iš nustatymų meniu, visi ateities pasiūlymai naudos šį\n"
+"pakeistą šabloną."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_active
@@ -777,6 +865,7 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
+"Jei nepažymėta, tai leis jums paslėpti pasiūlymo šabloną jo nepašalinant."
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:103
@@ -786,7 +875,7 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
-"Jei išsaugosime Jūsų mokėjimo informaciją savo serveryje, abonementiniai "
+"Jei išsaugosime jūsų mokėjimo informaciją savo serveryje, abonementiniai "
 "mokėjimai bus atlikti automatiškai."
 
 #. module: website_quote
@@ -800,7 +889,7 @@ msgstr "su mokesčiais)"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Install and administer your own server;"
-msgstr "Instaliuokite ir administruokite savo nuosavą serverį;"
+msgstr "Įdiekite ir administruokite savo serverį."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -821,7 +910,7 @@ msgstr "Įvadas"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to JQuery"
-msgstr "Įvadas į užklausą"
+msgstr "Įvadas į JQuery"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -842,7 +931,7 @@ msgstr "Įvadas į QWeb"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Is fully trained on Odoo"
-msgstr ""
+msgstr "Yra pasiruošęs darbui \"Odoo\""
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option___last_update
@@ -879,6 +968,9 @@ msgid ""
 "Learn directly from our team and network of Odoo experts. Choose from the "
 "available training sessions for a better functional understanding of Odoo"
 msgstr ""
+"Tiesiogiai mokykitės iš mūsų komandos ir \"Odoo\" ekspertų tinklo. Norėdami "
+"geriau suprasti funkcinę \"Odoo\" dalį, pasirinkite vieną iš galimų mokymų "
+"sesijų"
 
 #. module: website_quote
 #: model:product.product,description_sale:website_quote.product_product_quote_2
@@ -888,6 +980,9 @@ msgid ""
 "Learn directly from our team and network of Odoo experts. Choose from the "
 "available training sessions for a better technical understanding of Odoo"
 msgstr ""
+"Tiesiogiai mokykitės iš mūsų komandos ir \"Odoo\" ekspertų tinklo. Norėdami "
+"geriau suprasti techninę \"Odoo\" dalį, pasirinkite vieną iš galimų mokymų "
+"sesijų"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_line_id
@@ -912,7 +1007,7 @@ msgstr "Eilutės"
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Live Q&amp;A sessions with a trainer"
-msgstr "Gyva Q&amp;A sesija su treneriu"
+msgstr "Gyva klausimų-atsakymų sesija su mokytoju"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -928,7 +1023,7 @@ msgstr "Ciklai"
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Lower training budget for the same quality courses"
-msgstr "Mažesnis mokymų biudžetas tai pačiai kursų kokybei"
+msgstr "Mažesnis mokymų biudžetas tokios pačios kokybės kursams"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -936,7 +1031,7 @@ msgstr "Mažesnis mokymų biudžetas tai pačiai kursų kokybei"
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Modular approach applied to the learning method"
-msgstr "Modulinis požiūris taikomas mokymosi metoduose"
+msgstr "Modulinis požiūris, taikomas mokymosi metodui"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -965,7 +1060,7 @@ msgstr "Dienų skaičius komercinio pasiūlymo galiojimo trukmės skaičiavimui"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Odoo Official Website"
-msgstr "Odoo oficialus tinklalapis"
+msgstr "Oficiali \"Odoo\" svetainė"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -973,17 +1068,17 @@ msgstr "Odoo oficialus tinklalapis"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Odoo Web Client"
-msgstr "Odoo internetinis klientas"
+msgstr "\"Odoo\" internetinis klientas"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Odoo official partners will benefit from:"
-msgstr ""
+msgstr "Oficialūs \"Odoo\" partneriai gaus naudos:"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Odoo sales training session"
-msgstr ""
+msgstr "\"Odoo\" pardavimų mokymų sesija"
 
 #. module: website_quote
 #: selection:sale.order,require_payment:0
@@ -1008,34 +1103,34 @@ msgstr "Nuotoliniai mokymai"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_website_description
 msgid "Option Description"
-msgstr "Varianto aprašymas"
+msgstr "Pasirinkimo aprašymas"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Optional Product:"
-msgstr "Galimas produktas:"
+msgstr "Papildomas produktas:"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_line_option_line_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_options
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_options
 msgid "Optional Products Lines"
-msgstr "Galimų produktų eilutės"
+msgstr "Papildomų produktų eilutės"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
-msgstr ""
+msgstr "Mūsų pasiūlymas"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Quality"
-msgstr ""
+msgstr "Mūsų kokybė"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Service"
-msgstr ""
+msgstr "Mūsų paslaugos"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1046,6 +1141,8 @@ msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
 msgstr ""
+"Tikimasi, kad dalyviai turės programavimo žinių. Rekomenduojami Python "
+"programavimo pagrindai."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1056,18 +1153,18 @@ msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
 msgstr ""
-"Dalyviai pirmumo tvarka turi funkcinias žinias apie mūsų programinę įrangą "
+"Iš dalyvių pageidaujama turėti funkcines žinias apie mūsų programinę įrangą "
 "(žiūrėti funkcinius mokymus)."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Partner Program"
-msgstr ""
+msgstr "Partnerių programa"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Partners Commitment"
-msgstr ""
+msgstr "Partnerių įsipareigojimas"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:197
@@ -1088,7 +1185,7 @@ msgstr "Mokėjimų gavimas"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Payment Terms:"
-msgstr ""
+msgstr "Mokėjimo sąlygos:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -1099,7 +1196,7 @@ msgstr "Peržiūra"
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Price"
-msgstr "Suma"
+msgstr "Kaina"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1132,6 +1229,10 @@ msgid ""
 "                                       stand on; we build it with a relentless\n"
 "                                       focus on fabric, performance and craftsmanship."
 msgstr ""
+"Produkto kokybė yra tas pamatas,\n"
+"ant kurio mes stovime; kuriame su\n"
+"didžiuliu dėmesiu detalėms, efektyvumui\n"
+"ir profesionalumui."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -1146,12 +1247,12 @@ msgstr "Produktai"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Promote Odoo Enterprise to its customers"
-msgstr ""
+msgstr "Reklamuokite \"Odoo Enterprise\" jos klientams"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Publishes references directly on Odoo.com"
-msgstr ""
+msgstr "Skelbia nuorodas tiesiogiai į Odoo.com"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1172,7 +1273,7 @@ msgstr "Kiekis"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order
 msgid "Quotation"
-msgstr "Įkainojimas"
+msgstr "Komercinis pasiūlymas"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
@@ -1229,7 +1330,7 @@ msgstr "Klientas peržiūrėjo komercinį pasiūlymą"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Quote Date:"
-msgstr "Komercinio pasiūlymo data:"
+msgstr "Pasiūlymo data:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1239,7 +1340,7 @@ msgstr "Atmesti"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Reject This Quote"
-msgstr "Atmesti šį komercinį pasiūlymą"
+msgstr "Atmesti šį pasiūlymą"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1247,7 +1348,7 @@ msgstr "Atmesti šį komercinį pasiūlymą"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Report Engine"
-msgstr "Raportuoti bazę"
+msgstr "Ataskaitų variklis"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1277,7 +1378,7 @@ msgstr "Pardavimo užsakymo eilutė"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "Pardavimų užsakymo numeris"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -1288,7 +1389,7 @@ msgstr "Pardavimų pasiūlymo šablono eilutės"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
 msgid "Search Quotation Template"
-msgstr ""
+msgstr "Paieška pasiūlymo šablone"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
@@ -1351,7 +1452,7 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
-"Pasakykite kodėl atsisakote šio komercinio pasiūlymo, tai padės mums "
+"Papasakokite, kodėl atsisakote šio komercinio pasiūlymo, tai padės mums "
 "tobulinti savo paslaugas."
 
 #. module: website_quote
@@ -1378,7 +1479,7 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "The Odoo Enterprise GitHub repositories for all his developers"
-msgstr ""
+msgstr "\"Odoo Enterprise\" GitHub visiems jos kūrėjams"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1388,6 +1489,11 @@ msgid ""
 "guarantee that, the Odoo Partner Program ensures that official partners have"
 " the resources and knowledge required to offer Odoo implementation services."
 msgstr ""
+"\"Odoo\" ekosistema yra sukurta tam, kad galėtų pasiūlyti geriausią "
+"vartotojo patirtį \"Odoo\" vartotojams, nuo produkto iki įdiegimo paslaugų. "
+"Norėdami tai garantuoti, \"Odoo\" partnerių programa užtikrina, kad "
+"oficialūs partneriai turėtų išteklius ir žinias, kurių reikia siūlant "
+"\"Odoo\" diegimo paslaugas."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1395,6 +1501,8 @@ msgid ""
 "The ability to report bugs to be fixed by Odoo on behalf of his customer "
 "(Enterprise contracts only)"
 msgstr ""
+"Galimybė pranešti apie klaidas \"Odoo\" kliento vardu (tik Enterprise "
+"sutartys)"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1407,6 +1515,10 @@ msgid ""
 "cloud-based labs. Many of our online learning courses also include dozens of"
 " recorded webinars and live sessions by our senior instructors."
 msgstr ""
+"Šie kursai turi tokios pat aukštos kokybės mokymus kaip tradiciniai gyvi "
+"mokymai, tik yra papildyti modulinėmis sesijomis ir debesijos "
+"technologijomis grįstomis užduotimis. Daugelis mūsų kursų turi dešimtis "
+"įrašytų seminarų ir gyvų sesijų, sukurtų mūsų instruktorių."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_mail_template_id
@@ -1425,6 +1537,10 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"Tai yra <strong>pavyzdinis komercinio pasiūlymo šablonas </strong>.\n"
+"Turėtumėte redaguoti jį pagal savo individualius poreikius,\n"
+"iš <i>Pardavimų</i> programos, naudojant meniu:\n"
+"Nustatymai / Komercinių pasiūlymų šablonai."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1437,8 +1553,8 @@ msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
 msgstr ""
-"Šis užsakymas buvo patvirtintas. Ačiū už pasitikėjimą\n"
-"                          ir jeigu kyla kokių klausimų rašykite el. laišką arba skambinkite telfonu"
+"Šis užsakymas buvo patvirtintas. Ačiū už pasitikėjimą,\n"
+"nedvejokite ir"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1452,6 +1568,9 @@ msgid ""
 "                                <i>Heading 2</i> will be used to generate the\n"
 "                                table of content automatically."
 msgstr ""
+"Antraštės su <i>Antraštė 1 </i> ir\n"
+"<i>Antraštė 2</i> bus naudojamos \n"
+"automatiniam turinio generavimui."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1459,7 +1578,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "To get more information, visit the"
-msgstr "Gauti daugiau informacijos, apsilankykite"
+msgstr "Norėdami gauti daugiau informacijos, apsilankykite"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1469,7 +1588,7 @@ msgstr "Bendra kaina"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Train their staff by following Odoo training sessions"
-msgstr ""
+msgstr "Apmoko savo darbuotojus pagal \"Odoo\" mokymų sesijas"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1493,7 +1612,7 @@ msgstr "Apatinis brūkšnys"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Understand the development concepts and architecture;"
-msgstr "Supraskite tobulėjimo konceptą ir architektūrą;"
+msgstr "Supraskite kūrimo koncepciją ir architektūrą;"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_price_unit
@@ -1517,6 +1636,8 @@ msgid ""
 "Up to 20% commission on Odoo Enterprise sales, depending on the partnership "
 "level"
 msgstr ""
+"Iki 20% komisinių nuo \"Odoo Enterprise\" pardavimų, priklausomai nuo "
+"partnerystės lygio"
 
 #. module: website_quote
 #: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
@@ -1525,6 +1646,11 @@ msgid ""
 "                    Send these quotes by email and let your customers sign online.\n"
 "                    Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"Naudokite šablonus, kad per kelias minutes sukurtumėte\n"
+"išpuoselėtus ir profesionalius pasiūlymus. Siųskite šiuos pasiūlymus\n"
+"el. paštu ir leiskite klientams pasirašyti internetu.\n"
+"Panaudokite kryžminį pardavimą ir nuolaidas, kad padidintumėte\n"
+"savo pardavimus."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1537,7 +1663,7 @@ msgstr "Patvirtinti užsakymą"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Variables &amp; Operators"
-msgstr "Kintamieji &amp; Operatoriai"
+msgstr "Kintamieji ir Operatoriai"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1545,7 +1671,7 @@ msgstr "Kintamieji &amp; Operatoriai"
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Videos with detailed demos"
-msgstr "Video medžiaga su detalia demonstracija"
+msgstr "Vaizdo medžiaga su išsamia demonstracija"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1553,6 +1679,8 @@ msgid ""
 "Visibility and recognition, by being listed as an official partner on "
 "Odoo.com Partners page"
 msgstr ""
+"Matomumas ir atpažįstamumas būnant oficialių partnerių sąraše \"Odoo.com\" "
+"partnerių puslapyje"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1561,11 +1689,15 @@ msgid ""
 "                                       set at a fair price so that you will be\n"
 "                                       happy to buy them."
 msgstr ""
+"Mes visada užtikriname, kad mūsų\n"
+"produktai yra įkainoti sąžiningai ir\n"
+"jūsų būtumėte laimingi įsigydami\n"
+"juos."
 
 #. module: website_quote
 #: model:ir.actions.report,name:website_quote.report_web_quote
 msgid "Web Quotation"
-msgstr "Interaktyvus pasiūlymas"
+msgstr "Internetinis pasiūlymas"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1586,17 +1718,17 @@ msgstr "Ką jūs išmoksite?"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Workflows"
-msgstr "Darbų eiga"
+msgstr "Darbų eigos"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Yearly upgrade training sessions when a new version is released"
-msgstr ""
+msgstr "Metinės mokymų sesijos, kai išleidžiama nauja versija"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "You can"
-msgstr ""
+msgstr "Jūs galite"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1607,12 +1739,17 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"Galite nustatyti <strong>aprašymą produktui </strong>. \"Odoo\" \n"
+"automatiškai sukurs komercinį pasiūlymą pagal visų\n"
+"produktų aprašymus pasiūlyme. Turinys kairėje yra\n"
+"sugeneruojamas automatiškai, naudojant stilius,\n"
+"kuriuos jūs panaudojote aprašyme (antraštė 1, antraštė 2, ...)"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:150
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr "Jūs negalite pridėti pasirinkimų prie patviritnto užsakymo."
+msgstr "Negalite pridėti pasirinkimų prie jau patvirtinto užsakymo."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1632,7 +1769,7 @@ msgstr "Jūsų komercinis pasiūlymas"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Reference:"
-msgstr "Jūsų užsakymo numeris:"
+msgstr "Jūsų numeris:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1650,7 +1787,7 @@ msgstr "Jūsų priedai"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your feedback....."
-msgstr "Jūsų atgalinis ryšys..."
+msgstr "Jūsų grįžtamasis ryšys..."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1660,7 +1797,7 @@ msgstr "Jūsų žinutė buvo sėkmingai išsiųsta!"
 #. module: website_quote
 #: model:mail.template,subject:website_quote.confirmation_mail
 msgid "Your order ${object.name} is confirmed"
-msgstr ""
+msgstr "Jūsų užsakymas ${object.name} patvirtintas"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
@@ -1706,21 +1843,23 @@ msgid ""
 "for\n"
 "                          any questions."
 msgstr ""
+"jei\n"
+" kyla klausimų."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has already been cancelled!"
-msgstr ""
+msgstr "jau buvo atšauktas!"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has already been validated!"
-msgstr ""
+msgstr "jau buvo patvirtintas!"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has not yet been sent!"
-msgstr ""
+msgstr "dar nebuvo išsiųstas!"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
