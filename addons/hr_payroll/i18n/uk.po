@@ -5,12 +5,13 @@
 # Translators:
 # Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -190,7 +191,7 @@ msgstr "Всі дочірні правила"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.ALW
 msgid "Allowance"
-msgstr "Allowance"
+msgstr "Дозвіл"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -308,7 +309,7 @@ msgstr "Дочірній"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Children Definition"
-msgstr "Визначення дочірного"
+msgstr "Дочірнє визначення"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -370,7 +371,7 @@ msgstr "Розрахунок"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Compute Sheet"
-msgstr "Розрахувати листок"
+msgstr "Розрахувати звіт"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_select
@@ -428,7 +429,7 @@ msgstr "Реєстр накопичення"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Contribution Register's Payslip Lines"
-msgstr "Рядки листа з реєстром копичення"
+msgstr "Рядки листа з реєстром накопичення"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
@@ -527,9 +528,9 @@ msgid ""
 msgstr ""
 "Визначає правила розрахунку, які необхідно застосувати для цього листа "
 "відповідно до обраного контракту. Якщо ви залишите це поле порожнім, воно "
-"більше не є обов'язковим, то будуть використовуватися всі правила, що "
-"прописані в структурі зарплати для всіх дійсних на даний момент контрактів "
-"цього співробітника."
+"більше не є обов'язковим, будуть використовуватися всі правила, що прописані"
+" в структурі зарплати для всіх дійсних на даний момент контрактів цього "
+"співробітника."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__note
@@ -803,7 +804,7 @@ msgstr "Дані введення"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__input_ids
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Inputs"
-msgstr "Ручний ввід"
+msgstr "Вхідні"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__note
@@ -1242,13 +1243,13 @@ msgstr "Код Python"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_python
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_python
 msgid "Python Condition"
-msgstr "Python умова"
+msgstr "Умова Python"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Python Expression"
-msgstr "Python вираз"
+msgstr "Вираз Python"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__quantity
@@ -1334,7 +1335,7 @@ msgstr "Розрахунок зарплати"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "Salary Rule"
-msgstr ""
+msgstr "Правило зарплатні"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1465,7 +1466,7 @@ msgid ""
 "rules. In that case, it is case sensitive."
 msgstr ""
 "Код правила розрахунку може використовуватися як посилання при розрахунку "
-"інших правил. В цьому випадку регістр літер має значення."
+"інших правил. В цьому випадку реєстр літер має значення."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__code
@@ -1508,7 +1509,7 @@ msgid ""
 msgstr ""
 "Використовується для розрахунку значення суми відсотком. В загальному "
 "застосовується для категорії basic але ви может вказати код іншої категорії "
-"в нижньому регістрі (hra, ma, lta, і т. д.)."
+"в нижньому реєстрі (hra, ma, lta, і т. д.)."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__total
@@ -1618,7 +1619,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
-"Ви не можете вилучити розрахунковий листок, що не в стані чернетки або у "
+"Ви не можете вилучити розрахунковий листок, що не є в стані чернетки або у "
 "скасованому стані."
 
 #. module: hr_payroll
@@ -1637,4 +1638,4 @@ msgstr "Ви повинні встановити контракт, щоб ств
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "result will be affected to a variable"
-msgstr "result will be affected to a variable"
+msgstr "результат буде впливати на змінну"
