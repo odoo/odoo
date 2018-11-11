@@ -3,25 +3,24 @@
 # * website_event_track
 # 
 # Translators:
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Martin Trigaux, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Rytis Štreimikis <r.streimikis@hotmail.lt>, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Anatolij, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:26+0000\n"
+"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +49,23 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    <p>\n"
+"        Gerb. <t t-esc=\"object.partner_name\"/>\n"
+"    </p><p>\n"
+"        Džiaugiamės galėdami pranešit, kad jūsų pasiūlymas ${object.name} buvo priimtas ir patvirtintas įvykiui ${object.event_id.name}.\n"
+"    </p><p>\n"
+"        Čia rasite daugiau informacijos:\n"
+"        <div style=\"margin-top: 16px;\">\n"
+"            <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                Peržiūrėti įvykį\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"    <p>Nuoširdžiai,</p>\n"
+"</div>\n"
+"            "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -69,7 +85,7 @@ msgstr "<b>Telefonas</b>:"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Proposed By</b>:"
-msgstr "<b>Siūlyta pagal</b>:"
+msgstr "<b>Pasiūlė</b>:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -79,7 +95,7 @@ msgstr "<b>Pranešėjų biografija</b>:"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Talk Introduction</b>:"
-msgstr "<b>Pokalbio įžanga</b>:"
+msgstr "<b>Kalbos įžanga</b>:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -97,12 +113,12 @@ msgid ""
 "                            <b>Location</b><br/>"
 msgstr ""
 "<br/>\n"
-"                            <b>Lokacija</b><br/>"
+"                            <b>Vieta</b><br/>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "<span id=\"search_number\">0</span> Found"
-msgstr "<span id=\"search_number\">0</span> Rasta"
+msgstr "Rasta <span id=\"search_number\">0</span> "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -110,11 +126,13 @@ msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
 "                                    different topics. Most topics are accepted in lightning talks."
 msgstr ""
+"<strong>Blitz pranešimai</strong>. Tai yra 30 minučių pranešimai\n"
+"daugeliu skirtingų temų. Šio tipo pranešimuose priimamos įvairios temos."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "<strong>Participate on Twitter</strong>"
-msgstr "<strong>Dalyvauti Twitteryje</strong>"
+msgstr "<strong>Diskutuoti \"Twitter\"</strong>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -122,6 +140,8 @@ msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
 msgstr ""
+"<strong>Įprasti pranešimai</strong>. Tai yra standartiniai pranešimai\n"
+"su skaidrėmis, paskirstyti po 60 minučių."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -129,6 +149,7 @@ msgid ""
 "A technical explanation of Odoo as a CMS and a eCommerce platform for "
 "version 8."
 msgstr ""
+"Techninis \"Odoo\" TVS ir e-komercijos platformos paaiškinimas 8 versijai."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_kanban_state
@@ -158,11 +179,13 @@ msgstr "Aktyvus"
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management with Odoo: tips and tricks from the fields"
 msgstr ""
+"Šaltųjų kontaktų valdymas su \"Odoo\" pažengusiems: patarimai iš įvairių "
+"sričių"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
 msgid "Advanced reporting with Google Spreadsheets integration."
-msgstr ""
+msgstr "Ataskaitos pažengusiems su \"Google Spreadsheets\" integracija."
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:95
@@ -182,6 +205,8 @@ msgid ""
 "Allow video and audio recording of their\n"
 "                                    presentation, for publishing on our website."
 msgstr ""
+"Leisti įrašyti jų pristatymo garsą ir vaizdą\n"
+"skelbimui mūsų svetainėje."
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
@@ -191,7 +216,7 @@ msgstr "Paskelbta"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
-msgstr "Modulis"
+msgstr "Programa"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -211,12 +236,12 @@ msgstr "Bronza"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Call for Proposals"
-msgstr "Skambutis pasiūlymo pateikimui"
+msgstr "Kvietimas teikti pasiūlymus"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_is_cancel
 msgid "Canceled Stage"
-msgstr ""
+msgstr "Atšaukta būsena"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
@@ -248,7 +273,7 @@ msgstr "Konferencija"
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of ${object.name}"
-msgstr ""
+msgstr "${object.name} patvirtinimas"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
@@ -368,7 +393,7 @@ msgstr "Įvykio vietos"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor
 msgid "Event Sponsor"
-msgstr ""
+msgstr "Renginio rėmėjas"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor_type
@@ -379,7 +404,7 @@ msgstr "Įvykio rėmėjo tipas"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_form
 msgid "Event Sponsor Types"
-msgstr "Įvykio rėmėjo tipai"
+msgstr "Įvykių rėmėjų tipai"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
@@ -412,7 +437,7 @@ msgstr "Įvykių įrašai"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Fill this form to propose your talk."
-msgstr "Užpildykite šią formą, norėdami pasiūlyti savo pokalbį."
+msgstr "Norėdami pasiūlyti savo kalbą, užpildykite šią formą."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
@@ -425,6 +450,8 @@ msgid ""
 "Find out what people see and say about this event,\n"
 "                        and join the conversation."
 msgstr ""
+"Sužinokite, ką žmonės kalba apie šį renginį\n"
+"ir prisijunkite prie diskusijos."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_fold
@@ -464,7 +491,7 @@ msgstr "Aukštas"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Highest"
-msgstr "Didžiausias"
+msgstr "Aukščiausias"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
@@ -472,26 +499,30 @@ msgid ""
 "How to build your marketing strategy for the purpose of generating leads "
 "with Odoo."
 msgstr ""
+"Kaip su \"Odoo\" sukurti savo rinkodaros strategiją, generuojančią "
+"šaltuosius kontaktus."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track1
 msgid "How to develop a website module."
-msgstr ""
+msgstr "Kaip sukurti svetainės modulį."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track4
 msgid "How to develop automated tests in the Odoo web client."
-msgstr ""
+msgstr "Kaip kurti automatizuotus testus \"Odoo\" internetinės svetainės kliente."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
 msgid "How to develop real time apps, the website live chat module explained."
 msgstr ""
+"Kaip kurti realaus laiko programas, svetainės gyvo susirašinėjimo modulio "
+"paaiškinimas."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track2
 msgid "How to integrate hardware materials with the Odoo point of sale."
-msgstr ""
+msgstr "Kaip integruoti techninę įrangą su \"Odoo\" pardavimų tašku."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track9
@@ -499,6 +530,8 @@ msgid ""
 "How to use Odoo for your HR process: recruitment, leaves management, "
 "appraisals, expenses, etc."
 msgstr ""
+"Kaip naudoti \"Odoo\" savo žmogiškųjų išteklių procesuose: įdarbinimas, "
+"laisvadienių valdymas, įvertinimai, išlaidos ir t.t."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_id
@@ -516,6 +549,8 @@ msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
 msgstr ""
+"Jei nustatyta, įvykiui pasiekus šį žingsnį, vartotojui bus nusiunčiamas "
+"laiškas."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
@@ -525,17 +560,17 @@ msgstr "Paveikslėlis"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Introduction"
-msgstr "Įvadas"
+msgstr "Įžanga"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_kanban_state
 msgid "Kanban State"
-msgstr "Kanban statusas"
+msgstr "Kanban būsena"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
 msgid "Key Success factors selling Odoo."
-msgstr "Pagrindiniai sėkmės faktoriai, pardavinėjant Odoo."
+msgstr "\"Odoo\" pardavimo sėkmės faktoriai."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor___last_update
@@ -600,7 +635,7 @@ msgstr "Valdykite savo KPI (rekomenduojama openERP partneriams)"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track12
 msgid "Manage your events with Odoo, the new training modules."
-msgstr "Valdykite savo įvykius su Odoo naujais mokymo moduliais."
+msgstr "Valdykite savo įvykius su naujais \"Odoo\" mokymo moduliais."
 
 #. module: website_event_track
 #: selection:event.track,priority:0
@@ -616,8 +651,8 @@ msgid ""
 "or some kanban views."
 msgstr ""
 "Vidutinio dydžio kontakto nuotrauka. Nuotraukos dydis automatiškai "
-"sumažinamas, išlaikant kraštinių santykį, į 128x128px, kai nuotrauka viršija"
-" minėtą dydį. Naudokite šį lauką paprastose arba Kanban formose."
+"sumažinamas į 128x128px, išlaikant kraštinių santykį. Naudokite šį lauką "
+"paprastose arba Kanban formose."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
@@ -637,7 +672,7 @@ msgstr "Rytinė pertrauka"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Activities"
-msgstr "Mano veiksmai"
+msgstr "Mano veiklos"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
@@ -647,7 +682,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track14
 msgid "New Paypal modules (portal, handling, installments)."
-msgstr ""
+msgstr "Nauji \"Paypal\" moduliai (portalas, tvarkymas, diegimas)."
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
@@ -672,22 +707,22 @@ msgstr "Įrašų nerasta!"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
 msgid "Odoo Mobile for Notes, Meetings and Messages."
-msgstr "Odoo Mobile užrašams, susitikimams ir pranešimams."
+msgstr "\"Odoo Mobile\" užrašams, susitikimams ir pranešimams."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
 msgid "Odoo Status & Strategy 2014"
-msgstr "Odoo būsena ir strategija 2014"
+msgstr "\"Odoo\" padėtis ir strategija 2014"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track16
 msgid "Odoo as your Enterprise Social Network."
-msgstr "Odoo kaip Jūsų įmonės socialinis tinklas."
+msgstr "\"Odoo\" kaip jūsų įmonės socialinis tinklas."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
 msgid "Odoo in 2014"
-msgstr "Odoo 2014"
+msgstr "\"Odoo\" 2014-aisiais"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_sponsor
@@ -702,7 +737,7 @@ msgstr "Praktinė informacija"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_priority
 msgid "Priority"
-msgstr "Svarbumas"
+msgstr "Svarba"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -717,17 +752,17 @@ msgstr "Pasiūlymai uždaryti!"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_website_track_proposal
 msgid "Proposals on Website"
-msgstr ""
+msgstr "Pasiūlymai svetainėje"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "Proposed by"
-msgstr "Siūlyta pagal"
+msgstr "Pasiūlė"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 msgid "Published"
-msgstr "Publikuotas"
+msgstr "Paskelbtas"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -740,7 +775,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
 msgid "Raising qualitive insights with the survey app"
-msgstr ""
+msgstr "Su apklausų programa keliami kokybiniai klausimai"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -767,7 +802,7 @@ msgstr "Atsakingas"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_10951
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
-msgstr "Kambarys"
+msgstr "Patalpa"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_sequence
@@ -790,41 +825,41 @@ msgstr "Sidabras"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "Social Stream"
-msgstr "Socialinis srautas"
+msgstr "Socialinių tinklų"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_id
 msgid "Speaker"
-msgstr ""
+msgstr "Pranešėjas"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_biography
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker Biography"
-msgstr "Pranšėjo biografija"
+msgstr "Pranešėjo biografija"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:159
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_email
 #, python-format
 msgid "Speaker Email"
-msgstr ""
+msgstr "Pranešėjo el. paštas"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_name
 msgid "Speaker Name"
-msgstr ""
+msgstr "Pranešėjo vardas"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_phone
 msgid "Speaker Phone"
-msgstr ""
+msgstr "Pranešėjo telefonas"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:179
 #, python-format
 msgid "Speakers"
-msgstr "Speakers"
+msgstr "Pranešėjai"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_name
@@ -835,7 +870,7 @@ msgstr "Rėmėjo tipas"
 #: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_type
 #: model:ir.ui.menu,name:website_event_track.menu_event_sponsor_type
 msgid "Sponsor Types"
-msgstr "Rėmėjo tipai"
+msgstr "Rėmėjų tipai"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_url
@@ -872,7 +907,7 @@ msgstr "Etapo pavadinimas"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Submission Agreement"
-msgstr ""
+msgstr "Pateikimo susitarimas"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -898,7 +933,7 @@ msgstr "Žymos"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Introduction"
-msgstr "Pokalbio įžanga"
+msgstr "Pranešimo įžanga"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:62
@@ -906,12 +941,12 @@ msgstr "Pokalbio įžanga"
 #: code:addons/website_event_track/models/event.py:106
 #, python-format
 msgid "Talk Proposals"
-msgstr "Pokalbio pasiūlymai"
+msgstr "Pranešimų pasiūlymai"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Title"
-msgstr "Pokalbio pavadinimas"
+msgstr "Pranešimo pavadinimas"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:56
@@ -919,22 +954,22 @@ msgstr "Pokalbio pavadinimas"
 #: code:addons/website_event_track/models/event.py:103
 #, python-format
 msgid "Talks"
-msgstr "Pokalbiai"
+msgstr "Pranešimaii"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talks Types"
-msgstr "Pokalbių tipai"
+msgstr "Pranešimų tipai"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "Thank you for your proposal."
-msgstr "Ačiū Jums už Jūsų pasiūlymą."
+msgstr "Dėkojame už pasiūlymą."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
 msgid "The Art of Making an Odoo Demo."
-msgstr ""
+msgstr "\"Odoo\" demonstracijos kūrimo menas."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track29
@@ -946,6 +981,8 @@ msgstr "Nauja rinkodaros strategija."
 msgid ""
 "The new way to promote your modules in the Apps platform and Odoo website."
 msgstr ""
+"Naujas būdas reklamuoti savo modulius programų platformoje ir \"Odoo\" "
+"svetainėje."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -958,8 +995,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ši stadija bus suskleista kanban tipo rodinyje, jei nebus nė vieno įrašo "
-"šioje stadijoje."
+"Ši stadija bus suskleista kanban tipo peržiūroje, jei šioje stadijoje nebus "
+"nė vieno įrašo."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -967,11 +1004,13 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                                    for publishing on our website."
 msgstr ""
+"Savalaikis prezentacijos medžiagos (skaidrių)\n"
+"išleidimas skelbimui jūsų svetainėje."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_name
 msgid "Title"
-msgstr "Antraštė"
+msgstr "Pavadinimas"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1102,7 +1141,7 @@ msgstr "Rodyti įrašą"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We require speakers to accept an agreement in which they commit to:"
-msgstr ""
+msgstr "Mes prašome pranešėjų sutikti su susitarimu, kuriam jie įsipareigoja:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1115,11 +1154,16 @@ msgid ""
 "                                audience, it will be considered for\n"
 "                                inclusion in the programme."
 msgstr ""
+"Mes priimame platų prezentacijų spektrą:\n"
+"nuo akademinių projektų iki mokymų ir \n"
+"atvejų analizių. Jei prezentacija yra įdomi\n"
+"ir potencialiai naudinga auditorijai, jos\n"
+"įtraukimas į programą bus apsvarstytas."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "We will evaluate your proposition and get back to you shortly."
-msgstr ""
+msgstr "Mes įvertinsime jūsų pasiūlymą ir netrukus susisieksime su jumis."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1139,7 +1183,7 @@ msgstr "Jūsų telefonas"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr "pvz. įkvėpiantis verslo pokalbis"
+msgstr "pvz. įkvepiantis verslo pranešimas"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -1150,10 +1194,10 @@ msgstr "valandos"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "talks"
-msgstr ""
+msgstr "pranešimai"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 #: model:ir.ui.view,arch_db:website_event_track.tracks
 msgid "unpublished"
-msgstr "nepublikuota"
+msgstr "nepaskelbta"
