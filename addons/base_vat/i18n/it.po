@@ -3,16 +3,17 @@
 # * base_vat
 # 
 # Translators:
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Marius Marolla <mariusmarolla@entersys.it>, 2018
 # Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
 "Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -42,8 +43,8 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
-"Se questa casella è selezionata, non potrai registrare un contatto se il suo"
-" numero di partita IVA non può essere verificato dal servizio europeo VIES."
+"Se questa casella è selezionata, non sarà possibile salvare un contatto se "
+"la sua partita IVA non supera la verifica del servizio europeo VIES."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:154
@@ -52,7 +53,7 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
-"La P.IVA [%s] del partner [%s] non sembra valida. \n"
+"La partita IVA [%s] del partner [%s] non sembra essere valida. \n"
 "Nota: il formato atteso è %s"
 
 #. module: base_vat
@@ -62,8 +63,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
-"La Partita IVA [%s] del Partner [%s] non ha superato la validazione VIES (il"
-" sistema elettronico di scambio dei dati IVA) oppure non è nel formato %s."
+"La partita IVA [%s] del partner [%s] non ha superato la verifica di validità"
+" VIES oppure non rispetta il formato %s atteso."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -76,9 +77,9 @@ msgstr "IVA"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "Verifica numeri di Partita IVA"
+msgstr "Verificare le partite IVA"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "Verifica i numeri di Partita IVA con il servizio europeo VIES"
+msgstr "Verifica delle partite IVA con il servizio europeo VIES"
