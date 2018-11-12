@@ -116,6 +116,9 @@ class PublisherWarrantyContract(AbstractModel):
                 self.env['ir.config_parameter'].sudo().set_param('database.expiration_date', result['enterprise_info'].get('expiration_date'), ['base.group_user'])
                 self.env['ir.config_parameter'].sudo().set_param('database.expiration_reason', result['enterprise_info'].get('expiration_reason', 'trial'), ['base.group_system'])
                 self.env['ir.config_parameter'].sudo().set_param('database.enterprise_code', result['enterprise_info'].get('enterprise_code'), ['base.group_user'])
+                self.env['ir.config_parameter'].sudo().set_param('database.already_linked_subscription_url', result['enterprise_info'].get('database_already_linked_subscription_url'), ['base.group_system'])
+                self.env['ir.config_parameter'].sudo().set_param('database.already_linked_email', result['enterprise_info'].get('database_already_linked_email'), ['base.group_system'])
+                self.env['ir.config_parameter'].sudo().set_param('database.already_linked_send_mail_url', result['enterprise_info'].get('database_already_linked_send_mail_url'), ['base.group_system'])
 
         except Exception:
             if cron_mode:
