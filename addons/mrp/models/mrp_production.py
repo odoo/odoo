@@ -874,6 +874,10 @@ class MrpProduction(models.Model):
         self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+
+        # log an activity on Parent MO if child MO is cancelled.
+        if finish_moves:
+            self._log_downside_manufactured_quantity({finish_move: (self.product_uom_qty, 0.0) for finish_move in finish_moves}, cancel=True)
         (finish_moves | raw_moves)._action_cancel()
         picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         picking_ids.action_cancel()
@@ -980,7 +984,7 @@ class MrpProduction(models.Model):
         )
         return super(MrpProduction, self).get_empty_list_help(help)
 
-    def _log_downside_manufactured_quantity(self, moves_modification):
+    def _log_downside_manufactured_quantity(self, moves_modification, cancel=False):
 
         def _keys_in_sorted(move):
             """ sort by picking and the responsible for the product the
@@ -997,21 +1001,14 @@ class MrpProduction(models.Model):
         def _render_note_exception_quantity_mo(rendering_context):
             values = {
                 'production_order': self,
-                'order_exceptions': dict((key, d[key]) for d in rendering_context for key in d),
+                'order_exceptions': rendering_context,
                 'impacted_pickings': False,
-                'cancel': False
+                'cancel': cancel
             }
             return self.env.ref('mrp.exception_on_mo').render(values=values)
 
-        documents = {}
-        for move, (old_qty, new_qty) in moves_modification.items():
-            document = self.env['stock.picking']._log_activity_get_documents(
-                {move: (old_qty, new_qty)}, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
-            for key, value in document.items():
-                if documents.get(key):
-                    documents[key] += [value]
-                else:
-                    documents[key] = [value]
+        documents = self.env['stock.picking']._log_activity_get_documents(moves_modification, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self.env['stock.picking']._less_quantities_than_expected_add_documents(moves_modification, documents)
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
 
     def _log_manufacture_exception(self, documents, cancel=False):
