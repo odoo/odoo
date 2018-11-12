@@ -5,12 +5,13 @@
 # Translators:
 # Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:20+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -147,7 +148,7 @@ msgid ""
 "                A payment represents the employee reimbursement to the company."
 msgstr ""
 "Грошовий рух може бути або витратою, або оплатою.<br>\n"
-"                Витрата автоматично створюється за чековим замовленням.<br>\n"
+"                Витрата автоматично створюється за замовленням на надходження.<br>\n"
 "                Оплата являє собою відшкодування співробітникам компанії."
 
 #. module: lunch
@@ -229,7 +230,7 @@ msgstr "Між:"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "By Employee"
-msgstr "По співробітникам"
+msgstr "Співробітником"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -244,12 +245,12 @@ msgstr "Користувачем"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Vendor"
-msgstr "За постачальниками"
+msgstr "Постачальником"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove__description
 msgid "Can be an order or a payment"
-msgstr "Можебути замовленням або платіжкою"
+msgstr "Може бути замовленням або оплатою"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove__amount
@@ -420,8 +421,8 @@ msgstr "Платежі працівника"
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky__is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
 msgstr ""
-"Увімкніть дану опцію, щоб встановити максимальний бюджет на випадкове "
-"\"щасливе\" замовлення."
+"Увімкніть дану опцію, щоб встановити максимальний бюджет на щасливе "
+"замовлення."
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -445,7 +446,7 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Feeling Lucky"
-msgstr "Пощастить"
+msgstr "Щастить"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__friday
@@ -465,20 +466,20 @@ msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
-"Допомагає вам керувати вашими потребами на обід, якщо ви є менеджером, ви "
+"Допомагає керувати вашими потребами на обід, якщо ви є менеджером, ви "
 "зможете створювати нові товари, забирати гроші та підтверджувати або "
 "скасовувати замовлення."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr "Тут у Вас є доступ до всіх категорій обідніх товарів."
+msgstr "Тут у вас є доступ до всіх категорій обідніх товарів."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
 msgstr ""
-"Тут Ви бачите сьогоднішні замовлення, відсортовані за постачальниками."
+"Тут ви бачите сьогоднішні замовлення, відсортовані за постачальниками."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
@@ -490,18 +491,18 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky"
-msgstr "Мені пощастить"
+msgstr "Мені щастить"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_line_lucky
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky today !"
-msgstr "Мені сьогодні пощастить!"
+msgstr "Мені сьогодні щастить!"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__is_max_budget
 msgid "I'm not feeling rich"
-msgstr "Сьогодні поскромніше"
+msgstr "Сьогодні я не відчуваю себе багатим"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
@@ -707,7 +708,7 @@ msgstr ""
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
 msgstr ""
-"Жоден товар не відповідає Вашому запиту. Тепер Ви зголоднієте як собака."
+"Жоден товар не відповідає вашому запиту. Тепер ви зголоднієте як собака."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -985,7 +986,7 @@ msgstr "Компанія, на яку зараз працює цей корис�
 #: code:addons/lunch/models/lunch.py:130
 #, python-format
 msgid "The date of your order is in the past."
-msgstr "Дата Вашого замовлення давно минула."
+msgstr "Дата вашого замовлення давно минула."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action
@@ -1118,7 +1119,7 @@ msgstr "Ваші замовлення"
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
 msgstr ""
-"Список улюблених страв буде створено на основі Ваших останніх замовлень."
+"Список улюблених страв буде створено на основі ваших останніх замовлень."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form

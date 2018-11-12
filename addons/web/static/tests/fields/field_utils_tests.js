@@ -260,5 +260,18 @@ QUnit.test('parse monetary', function(assert) {
 
     session.currencies = originalCurrencies;
 });
+
+QUnit.test('parse percentage', function(assert) {
+    assert.expect(7);
+
+    assert.strictEqual(fieldUtils.parse.percentage(""), 0);
+    assert.strictEqual(fieldUtils.parse.percentage("0"), 0);
+    assert.strictEqual(fieldUtils.parse.percentage("0%"), 0);
+    assert.strictEqual(fieldUtils.parse.percentage("0.02"), 0.02);
+    assert.strictEqual(fieldUtils.parse.percentage("1"), 1);
+    assert.strictEqual(fieldUtils.parse.percentage("2%"), 0.02);
+    assert.strictEqual(fieldUtils.parse.percentage("100%"), 1);
+})
+
 });
 });

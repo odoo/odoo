@@ -323,7 +323,7 @@
             <a t-att-href="keep('/shop/category/' + slug(categ), category=0)" t-attf-class="nav-link#{' active' if categ.id == int(category or 0) else ''}" t-field="categ.name"></a>
             <ul t-if="categ.child_id" class="nav nav-pills flex-column nav-hierarchy" t-att-style="'display:block;' if categ.id in parent_category_ids else 'display:none;'">
                 <t t-foreach="categ.child_id" t-as="categ">
-                    <t t-if="not search or c.id in search_categories_ids">
+                    <t t-if="not search or categ.id in search_categories_ids">
                         <t t-call="website_sale.option_collapse_categories_recursive" />
                     </t>
                 </t>

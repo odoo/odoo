@@ -550,7 +550,8 @@ class AccountBankStatementLine(models.Model):
                 aml_rec.payment_id.payment_date = self.date
                 aml_rec.move_id.post()
                 # We check the paid status of the invoices reconciled with this payment
-                aml_rec.payment_id.reconciled_invoice_ids.filtered(lambda x: x.state == 'in_payment').write({'state': 'paid'})
+                for invoice in aml_rec.payment_id.reconciled_invoice_ids:
+                    self._check_invoice_state(invoice)
 
         # Create move line(s). Either matching an existing journal entry (eg. invoice), in which
         # case we reconcile the existing and the new move lines together, or being a write-off.
@@ -639,6 +640,8 @@ class AccountBankStatementLine(models.Model):
 
                 (new_aml | counterpart_move_line).reconcile()
 
+                self._check_invoice_state(counterpart_move_line.invoice_id)
+
             # Balance the move
             st_line_amount = -sum([x.balance for x in move.line_ids])
             aml_dict = self._prepare_reconciliation_move_line(move, st_line_amount)
@@ -658,3 +661,7 @@ class AccountBankStatementLine(models.Model):
 
         counterpart_moves.assert_balanced()
         return counterpart_moves
+
+    def _check_invoice_state(self, invoice):
+        if invoice.state == 'in_payment' and all([payment.state == 'reconciled' for payment in invoice.mapped('payment_move_line_ids.payment_id')]):
+           invoice.write({'state': 'paid'})

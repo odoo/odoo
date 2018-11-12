@@ -167,28 +167,24 @@ class StockMove(models.Model):
             if move.picking_id:
                 move.is_locked = move.picking_id.is_locked
 
-
-    @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
+    @api.depends('product_id', 'has_tracking')
     def _compute_show_details_visible(self):
         """ According to this field, the button that calls `action_show_details` will be displayed
         to work on a move from its picking form view, or not.
         """
+        has_package = self.user_has_groups('stock.group_tracking_lot')
+        multi_locations_enabled = self.user_has_groups('stock.group_stock_multi_locations')
+        consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
+
+        show_details_visible = multi_locations_enabled or consignment_enabled or has_package
+
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
-                continue
-
-            multi_locations_enabled = False
-            if self.user_has_groups('stock.group_stock_multi_locations'):
-                multi_locations_enabled = move.location_id.child_ids or move.location_dest_id.child_ids
-            has_package = move.move_line_ids.mapped('package_id') | move.move_line_ids.mapped('result_package_id')
-            consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
-            if move.picking_id.picking_type_id.show_operations is False\
-                    and (move.state != 'draft' or (move.picking_id.immediate_transfer and move.state == 'draft'))\
-                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.move_line_ids) > 1 or has_package or consignment_enabled):
-                move.show_details_visible = True
             else:
-                move.show_details_visible = False
+                move.show_details_visible = ((show_details_visible or move.has_tracking != 'none') and
+                                             (move.state != 'draft' or (move.picking_id.immediate_transfer and move.state == 'draft')) and
+                                             move.picking_id.picking_type_id.show_operations is False)
 
     def _compute_show_reserved_availability(self):
         """ This field is only of use in an attrs in the picking view, in order to hide the

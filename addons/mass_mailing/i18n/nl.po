@@ -287,6 +287,8 @@ msgid ""
 "Allow the recipient to manage himself his state in the blacklist via the "
 "unsubscription page."
 msgstr ""
+"Sta de ontvanger toe om zelf zijn staat in de zwarte lijst te beheren via de"
+" pagina voor afmelding."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -297,6 +299,10 @@ msgid ""
 "                                   The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Sta de ontvanger toe om zelf zijn staat in de zwarte lijst te beheren via de"
+" pagina voor afmelding. Als de optie actief is, is de knop 'Blacklist mij' "
+"verborgen op de pagina voor afmelding. De knop 'Kom terug' is in elk geval "
+"altijd zichtbaar zodat leads en relaties zich opnieuw kunnen abonneren."
 
 #. module: mass_mailing
 #. openerp-web
@@ -700,6 +706,9 @@ msgid ""
 "Date when the email has been invalidated. Invalid emails are blacklisted, "
 "opted-out or invalid email format"
 msgstr ""
+"Datum waarop de e-mail ongeldig is geworden. Ongeldige e-mails worden op de "
+"zwarte lijst gezet, zijn niet aangemeld of hebben een ongeldige "
+"e-mailindeling"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__opened
@@ -1824,19 +1833,19 @@ msgstr "Rapportages"
 #: code:addons/mass_mailing/controllers/main.py:68
 #, python-format
 msgid "Requested blacklisting via unsubscribe link."
-msgstr ""
+msgstr "Gevraagde blacklisting via link afmelden."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/controllers/main.py:127
 #, python-format
 msgid "Requested blacklisting via unsubscription page."
-msgstr ""
+msgstr "Gevraagde blacklisting via de pagina voor afmelding."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/controllers/main.py:139
 #, python-format
 msgid "Requested de-blacklisting via unsubscription page."
-msgstr ""
+msgstr "Gevraagd om de-blacklisting via afmeldpagina."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__user_id
@@ -2129,6 +2138,8 @@ msgid ""
 "The mailing list can be accessible by recipient in the unsubscription page "
 "to allows him to update his subscription preferences."
 msgstr ""
+"De mailinglijst kan per ontvanger toegankelijk zijn op de afmeldpagina, waar"
+" zij de voorkeuren kan beheren."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2155,12 +2166,14 @@ msgstr ""
 #, python-format
 msgid "The recipient <strong>subscribed to %s</strong> mailing list(s)"
 msgstr ""
+"De ontvanger <strong>heeft zich aangemeld voor %s</strong> mailinglist(en)"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:623
 #, python-format
 msgid "The recipient <strong>unsubscribed from %s</strong> mailing list(s)"
 msgstr ""
+"De ontvanger <strong>heeft zich afgemeld %s</strong>voor mailinglist(en)"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:823
@@ -2284,7 +2297,7 @@ msgstr "Datum uitschrijving"
 #: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:17
 #, python-format
 msgid "Upgrade theme"
-msgstr "Thema upgraden"
+msgstr "Thema bijwerken"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2314,6 +2327,9 @@ msgid ""
 "outgoing mail server available (based on their sequencing) as it does for "
 "normal mails."
 msgstr ""
+"Gebruik een specifieke mailserver als prioriteit. Anders vertrouwt Odoo op "
+"de eerste uitgaande mailserver die beschikbaar is (op basis van hun "
+"reeksen), net zoals bij normale mails."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -2358,6 +2374,8 @@ msgid ""
 "We would appreciate if you provide feedback about why you updated<br/>your "
 "subscriptions"
 msgstr ""
+"We zouden het op prijs stellen als u feedback geeft over waarom u uw "
+"inschrijvingen<br/>hebt bijgewerkt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__website_message_ids
@@ -2440,6 +2458,8 @@ msgid ""
 "You have been successfully <strong>added to our blacklist</strong>. You will"
 " not be contacted anymore by our services."
 msgstr ""
+"Je bent succesvol toegevoegd <strong>aan onze zwarte lijst</strong>. U zult "
+"niet meer gecontacteerd worden door onze diensten."
 
 #. module: mass_mailing
 #. openerp-web
@@ -2449,6 +2469,8 @@ msgid ""
 "You have been successfully <strong>removed from our blacklist</strong>. You "
 "are now able to be contacted by our services."
 msgstr ""
+"Je bent succesvol verwijderd <strong>van onze zwarte lijst</strong>. U kunt "
+"nu gecontacteerd worden door onze diensten."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
