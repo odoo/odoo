@@ -993,7 +993,7 @@ class Page(models.Model):
         # Create redirect if needed
         if data['create_redirect']:
             self.env['website.redirect'].create({
-                'type': data['redirect_type'],
+                'redirect_type': data['redirect_type'],
                 'url_from': original_url,
                 'url_to': url,
                 'website_id': website.id,
