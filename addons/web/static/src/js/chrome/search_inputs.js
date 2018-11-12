@@ -6,6 +6,7 @@ var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var pyeval = require('web.pyeval');
+var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
@@ -346,18 +347,25 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
     complete: function (needle) {
         // Make sure the needle has a correct format before the creation of the moment object. See
         // issue https://github.com/moment/moment/issues/1407
-        var parseFormatOptions = {timezone: true};
         var t, v;
         try {
             t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
-            v = field_utils.parse[t](needle, {type: t}, parseFormatOptions);
+            v = field_utils.parse[t](needle, {type: t}, {timezone: true});
         } catch (e) {
             return $.when(null);
         }
 
         var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
+
+        if (t === 'date') {
+            // at this point, m is SOMEDAY at midnight BUT
+            // Constructed from a "v" object that was forced in utc
+            // So we need to apply timezone correction here
+            m = m.clone().add(-session.getTZOffset(m), 'minutes');
+        }
+
         if (!m.isValid()) { return $.when(null); }
-        var date_string = field_utils.format[t](m, {type: t}, parseFormatOptions);
+        var date_string = field_utils.format[t](m, {type: t});
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
                 field: '<em>' + _.escape(this.attrs.string) + '</em>',

@@ -109,11 +109,10 @@ function formatDate(value, field, options) {
     if (value === false) {
         return "";
     }
-    var fieldType = field && field.type;
-    if (fieldType === 'datetime' &&
-            (!options || !('timezone' in options)) ||
-        options && options.timezone) {
+    if (field && field.type === 'datetime') {
+        if (!options || !('timezone' in options) || options.timezone) {
             value = value.clone().add(session.getTZOffset(value), 'minutes');
+        }
     }
     var date_format = time.getLangDateFormat();
     return value.format(date_format);
@@ -373,9 +372,6 @@ function parseDate(value, field, options) {
         date = moment.utc(value);
     } else {
         date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601], true);
-        if (options && options.timezone) {
-            date.add(-session.getTZOffset(date), 'minutes');
-        }
     }
     if (date.isValid()) {
         if (date.year() === 0) {
