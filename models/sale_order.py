@@ -363,10 +363,18 @@ class SaleOrder(models.Model):
         # delete reward line coming from an archived coupon (it will never be updated/removed when recomputing the order)
         invalid_lines = order.order_line.filtered(lambda line: line.is_reward_line and line.product_id.id not in (applied_programs).mapped('discount_line_product_id').ids)
 
+        # Invalid generated coupon for which we are not eligible anymore ('expired' since it is specific to this SO and we may again met the requirements)
         self.generated_coupon_ids.filtered(lambda coupon: coupon.program_id.discount_line_product_id.id in products_to_remove.ids).write({'state': 'expired'})
+        # Reset applied coupons for which we are not eligible anymore ('valid' so it can be use on another )
+        coupons_to_remove = order.applied_coupon_ids.filtered(lambda coupon: coupon.program_id in programs_to_remove)
+        coupons_to_remove.write({'state': 'new'})
+
+        # Unbind promotion and coupon programs which requirements are not met anymore
         order.no_code_promo_program_ids -= programs_to_remove
         order.code_promo_program_id -= programs_to_remove
-        order.applied_coupon_ids -= order.applied_coupon_ids.filtered(lambda coupon: coupon.program_id in programs_to_remove)
+        order.applied_coupon_ids -= coupons_to_remove
+
+        # Remove their reward lines
         invalid_lines |= order.order_line.filtered(lambda line: line.product_id.id in products_to_remove.ids)
         invalid_lines.unlink()
 
