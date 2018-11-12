@@ -49,9 +49,10 @@ function loadTest(assert, template, context) {
                 var args = params ? JSON.parse(params.textContent) : (context ? _.clone(context) : {});
 
                 var results = doc.querySelector('result#' + template);
+
                 assert.equal(
                     trim(qweb.render(template, args)),
-                    trim(results.textContent),
+                    trim(results.textContent.replace(new RegExp(String.fromCharCode(13), 'g'), '')),
                     template);
             } catch (error) {
                 assert.notOk(error.stack || error, 'Rendering error');
