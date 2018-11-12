@@ -53,10 +53,9 @@
             <field name="parent_id" eval="ref('account.mt_invoice_validated')"/>
             <field name="relation_field">team_id</field>
         </record>
-    </data>
-    <!-- Template and notification section -->
-    <data noupdate="1">
-        <template id="" inherit_id="mail.mail_notification_paynow" name="oezirhgoi">
+
+  <!-- Template and notification section -->
+        <template id="mail_notification_paynow_so" inherit_id="mail.mail_notification_paynow">
             <xpath expr="//t[@t-set='access_name']" position="after">
                 <t t-if="record._name == 'sale.order'">
                     <t t-if="record.has_to_be_signed()">
@@ -69,7 +68,8 @@
                 </t>
             </xpath>
         </template>
-
+    </data>
+    <data noupdate="1">
         <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales Order: Send by email</field>
             <field name="model_id" ref="sale.model_sale_order"/>
