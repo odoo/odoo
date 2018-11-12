@@ -233,8 +233,10 @@ class TestProgramRules(TestSaleCouponCommon):
         order.recompute_coupon_lines()
 
         self.assertEqual(len(order.order_line.ids), 3, "The order should contains the Product A line, the Product B line and the discount line")
+        self.assertEqual(coupon.state, 'used', "The coupon should be set to Consumed as it has been used")
 
         sol1.product_uom_qty = 2
         order.recompute_coupon_lines()
 
         self.assertEqual(len(order.order_line.ids), 2, "The discount line should have been removed as we don't meet the program requirements")
+        self.assertEqual(coupon.state, 'new', "The coupon should be reset to Valid as it's reward got removed")
