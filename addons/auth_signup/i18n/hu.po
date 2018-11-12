@@ -2,12 +2,19 @@
 # This file contains the translation of the following modules:
 # * auth_signup
 # 
+# Translators:
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +41,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
+"<strong>A felhasználó jelszó visszaállítást igényelt. A következő elérési "
+"úttal/linkkel küldtünk egy e-mail-t:</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -41,6 +50,8 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
+"<strong>Egy meghívó e-mail-t küldtünk a következő feliratkozási "
+"linkkel:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -309,35 +320,35 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Egy e-mail lett kiküldve a jelszava visszaállításának biztosítására"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Ezzel az email címmel már regisztrált egy másik felhasználó."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:137
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Azonosítás nem sikerült"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr ""
+msgstr "Vissza a bejelentkezéshez"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:199
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Nem küldhető e-mail: a %s felhasználónak nincs e-mail címe."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Close"
-msgstr ""
+msgstr "Bezárás"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
@@ -347,34 +358,34 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Confirm"
-msgstr ""
+msgstr "Megerősítés"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Jelszó megerõsítése"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Megerősített"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kapcsolattartó"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "Nem sikerült létrehozni az új fiókot."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Nem sikerült visszaállítani a jelszót"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
@@ -395,7 +406,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Jelszóváltoztatás engedélyezése a belépési oldalról"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -406,7 +417,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Érvénytelen regisztrációs token"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -416,7 +427,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Soha nem kapcsolódott"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:75
@@ -427,7 +438,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "Jelszó"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -437,7 +448,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Jelszó visszaállítása"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:125
@@ -448,58 +459,58 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Jelszó visszaállítása"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:163
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Jelszó visszaállítás: hibás felhasználónév vagy jelszó"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Jelszó visszaállítási utasítások elküldése"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Meghívó e-mail küldése"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Regisztrálás"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Bejelentkezési határidő"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "Regisztrációs token"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Regisztráiós Token típusa"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Regisztrációs token érvényes"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "Regisztrációs URL"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:117
@@ -540,12 +551,14 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
+"Sablon felhasználó regisztráción keresztül létrehozott új felhasználók "
+"számára"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:123
@@ -570,7 +583,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Felhasználók"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -581,14 +594,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Az Ön e-mail címe"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Az Ön neve"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "pl. Gipsz Jakab"

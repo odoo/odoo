@@ -13544,6 +13544,90 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many with extra field from server not in (inline) form', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p" >' +
+                        '<tree>' +
+                            '<field name="datetime"/>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var x2mList = form.$('.o_field_x2many_list[name=p]');
+
+        // Add a record in the list
+        x2mList.find('.o_field_x2many_list_row_add a').click();
+
+        var modal = $('.modal-lg');
+
+        var nameInput = modal.find('input.o_input[name=display_name]');
+        nameInput.val('michelangelo').trigger('input');
+
+        // Save the record in the modal (though it is still virtual)
+        modal.find('.btn-primary').first().click();
+
+        assert.equal(x2mList.find('.o_data_row').length, 1,
+            'There should be 1 records in the x2m list');
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many with extra X2many field from server not in inline form', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p" >' +
+                        '<tree>' +
+                            '<field name="turtles"/>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var x2mList = form.$('.o_field_x2many_list[name=p]');
+
+        // Add a first record in the list
+        x2mList.find('.o_field_x2many_list_row_add a').click();
+
+        // Save & New
+        $('.modal-lg').find('.btn-primary').eq(1).click();
+
+        // Save & Close
+        $('.modal-lg').find('.btn-primary').eq(0).click();
+
+        assert.equal(x2mList.find('.o_data_row').length, 2,
+            'There should be 2 records in the x2m list');
+
+        form.destroy();
+    });
+
     QUnit.test('one2many invisible depends on parent field', function (assert) {
         assert.expect(4);
 

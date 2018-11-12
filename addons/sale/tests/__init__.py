@@ -7,3 +7,4 @@ from . import test_sale_pricelist
 from . import test_onchange
 from . import test_reinvoice
 from . import test_access_rights
+from . import test_sale_transaction

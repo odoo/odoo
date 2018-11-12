@@ -108,7 +108,7 @@ msgstr "/account/static/src/img/account_dashboard_onboarding_bg.jpg"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
 msgid "/account/static/src/img/account_invoice_onboarding_bg.jpg"
-msgstr ""
+msgstr "/account/static/src/img/account_invoice_onboarding_bg.jpg"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -208,13 +208,15 @@ msgstr "<i class=\"fa fa-download\"/> Завантажити"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-fw fa-comments\"/><b>Send message</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Надіслати повідомлення</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>Налаштувати сервери "
+"електронної пошти"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -228,6 +230,8 @@ msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
 "or received.</p>"
 msgstr ""
+"<p>Ви можете контролювати рахунок-фактуру від свого постачальника на основі "
+"того, що ви придбали чи отримали.</p>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -238,6 +242,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                        <strong>Масова розсилка електронною поштою</strong> на\n"
+"                                        <span>вибрані записи</span>\n"
+"                                    </span>\n"
+"                                    <span>Підписники документа та</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -246,6 +255,9 @@ msgid ""
 " aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
 "-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
+"-md-inline\"> Очікування платежу</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -254,6 +266,9 @@ msgid ""
 "check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Оплачено</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -262,6 +277,9 @@ msgid ""
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
+"remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Закрито</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -272,6 +290,11 @@ msgid ""
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}\">Bill </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}\">Credit Note </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}\">Чернетка рахунку</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('sequence_number_next_prefix','=',False)]}\">- Перший номер:</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_refund')]}\">Чернетка сторно</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}\">Рахунок </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}\">Сторно </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -770,7 +793,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "Шаблон плану рахунків"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -1867,7 +1890,7 @@ msgstr "Додати файл"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_payment__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Підрахунок прикріплення"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
@@ -3917,7 +3940,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "Визначає, як будуть зареєстровані банківські виписки"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__cash_rounding_id
@@ -4656,7 +4679,7 @@ msgstr "Для вхідних платежів"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_ids
 msgid "For Outgoing Payments"
-msgstr ""
+msgstr "Для вихідних платежів"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -5056,7 +5079,7 @@ msgstr "Якщо відмічено, то нові повідомлення бу
 #: model:ir.model.fields,help:account.field_account_invoice__message_has_error
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__nocreate
@@ -5800,6 +5823,8 @@ msgstr "Використовується, як типовий дебетовий
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft vendor bill by sending an email."
 msgstr ""
+"Він створює чернетку рахунка постачальника, відправивши електронне "
+"повідомлення."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__reconciled
@@ -6479,7 +6504,7 @@ msgstr "Список розсилок"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_payment__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Основне прикріплення"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
@@ -6662,7 +6687,7 @@ msgstr "Призначення платежу:"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Помилка доставлення повідомлення"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
@@ -7122,7 +7147,7 @@ msgstr "Кількість днів"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_has_error_counter
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Кількість помилок"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_needaction_counter
@@ -7136,7 +7161,7 @@ msgstr "Кількість повідомлень, які потебують д�
 #: model:ir.model.fields,help:account.field_account_invoice__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter
@@ -7972,7 +7997,7 @@ msgstr "Провести усі записи"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__post_at_bank_rec
 msgid "Post At Bank Reconciliation"
-msgstr ""
+msgstr "Пост на узгодженні з банком"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_from_invoices
@@ -8574,7 +8599,7 @@ msgstr "Відповідальний"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Відповідальний користувач"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -9189,7 +9214,7 @@ msgstr "Показати всі функції бухобліку"
 #: model:ir.model.fields,field_description:account.field_account_payment__show_partner_bank_account
 #: model:ir.model.fields,field_description:account.field_account_register_payments__show_partner_bank_account
 msgid "Show Partner Bank Account"
-msgstr ""
+msgstr "Показати банківський рахунок партнера"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9955,6 +9980,8 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_account_id` "
 "needs to be displayed or not in the payments form views"
 msgstr ""
+"Технічне поле, яке використовується для знаходження, чи потрібно відображати"
+" поле `partner_bank_account_id` у вигляді форми платежів"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_exigible
@@ -11577,6 +11604,9 @@ msgid ""
 "draft state, so that the related journal entries are only posted when "
 "performing bank reconciliation."
 msgstr ""
+"Незалежно від того, чи потрібно здійснювати платежі, у цьому журналі мають "
+"генеруватися у стані чернетки, так що пов'язані записи журналу публікуються "
+"тільки при виконанні банківського узгодження."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__is_log

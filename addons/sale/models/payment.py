@@ -67,7 +67,7 @@ class PaymentTransaction(models.Model):
             sales_orders.force_quotation_send()
 
             if record.acquirer_id.provider == 'transfer':
-                for so in sales_orders:
+                for so in record.sale_order_ids:
                     so.reference = record._compute_sale_order_reference(so)
 
     @api.multi

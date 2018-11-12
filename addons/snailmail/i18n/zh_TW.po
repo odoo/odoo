@@ -5,12 +5,13 @@
 # Translators:
 # Martin Trigaux, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
+"POT-Creation-Date: 2018-10-30 12:25+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -20,13 +21,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:243
+#: code:addons/snailmail/models/snailmail_letter.py:249
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr "通過發送文件時發生一個錯誤.<br>錯誤：%s"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:211
+#: code:addons/snailmail/models/snailmail_letter.py:215
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr "發生未知錯誤，請聯繫支援。"
@@ -165,7 +166,7 @@ msgid "Model"
 msgstr "模型"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:209
+#: code:addons/snailmail/models/snailmail_letter.py:211
 #, python-format
 msgid "One or more required fields are empty."
 msgstr "必填字段不能為空。"
@@ -176,7 +177,7 @@ msgid "Optional report to print and attach"
 msgstr "可選的列印和附加的報表"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:248
+#: code:addons/snailmail/models/snailmail_letter.py:264
 #, python-format
 msgid "Post letter: an error occured."
 msgstr "寄信: 發生了錯誤."
@@ -239,13 +240,21 @@ msgid "Status"
 msgstr "狀態"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:207
+#: code:addons/snailmail/models/snailmail_letter.py:213
+#, python-format
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
+msgstr ""
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py:209
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr "Snailmail不包含合作夥伴所在的國家或地區。"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:238
+#: code:addons/snailmail/models/snailmail_letter.py:242
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
@@ -268,7 +277,7 @@ msgstr ""
 "如果沒有，它將進入「錯誤」狀態，錯誤消息將顯示在「錯誤信件」中。"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:205
+#: code:addons/snailmail/models/snailmail_letter.py:207
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
@@ -276,7 +285,7 @@ msgid ""
 msgstr "您沒有為此服務註冊的IAP帳戶。<br>請訪問<a href=%s target=\"new\">iap.odoo.com</a>以獲得免費信用。"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:202
+#: code:addons/snailmail/models/snailmail_letter.py:204
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "

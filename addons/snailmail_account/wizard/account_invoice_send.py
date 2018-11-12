@@ -17,6 +17,13 @@ class AccountInvoiceSend(models.TransientModel):
 
     @api.multi
     @api.onchange('invoice_ids')
+    def _get_invoice_currency(self):
+        for wizard in self:
+            if wizard.invoice_ids:
+                wizard.currency_id = wizard.invoice_ids.mapped('currency_id')[0].id
+
+    @api.multi
+    @api.onchange('invoice_ids')
     def _get_partner(self):
         for wizard in self:
             if wizard.invoice_ids and len(wizard.invoice_ids) == 1:

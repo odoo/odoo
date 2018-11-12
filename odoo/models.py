@@ -3253,7 +3253,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         with self.env.protecting(protected_fields, self):
             # write stored fields with (low-level) method _write
-            if store_vals:
+            if store_vals or inverse_vals or inherited_vals:
                 self._write(store_vals)
 
             # update parent records (after possibly updating parent fields)

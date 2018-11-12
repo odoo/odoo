@@ -164,6 +164,8 @@ class IrUiView(models.Model):
     def save(self, value, xpath=None):
         """ Update a view section. The view section may embed fields to write
 
+        Note that `self` record might not exist when saving an embed field
+
         :param str xpath: valid xpath to the tag to replace
         """
         self.ensure_one()
