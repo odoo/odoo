@@ -1913,6 +1913,10 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     for (var i=0; i<nodes.length; i++) {
         if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
+            if ($(ancestor).parent().is('blockquote')) {
+                // firefox may wrap formatting block in blockquote
+                $(ancestor).unwrap();
+            }
             if (!ancestor) {
                 dom.wrap(nodes[i], sTagName);
             } else if (ancestor.tagName.toLowerCase() !== sTagName) {
