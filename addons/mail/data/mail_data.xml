@@ -137,13 +137,16 @@ ${object.body | safe}
 % endif
 <br/>
 <p style="color: #555555;">
-    Sent by
+    Sent
+    % if ctx.get('company_name')
+    by
     % if ctx.get('website_url'):
     <a href="${ctx['website_url']}" style="text-decoration:none; color: #875A7B;">
     % endif
     ${ctx.get('company_name')}
     % if ctx.get('website_url'):
     </a>
+    % endif
     % endif
     using
     <a href="https://www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a>.
