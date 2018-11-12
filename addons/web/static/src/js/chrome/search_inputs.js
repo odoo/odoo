@@ -346,24 +346,18 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
     complete: function (needle) {
         // Make sure the needle has a correct format before the creation of the moment object. See
         // issue https://github.com/moment/moment/issues/1407
+        var parseFormatOptions = {timezone: true};
         var t, v;
         try {
             t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
-            v = field_utils.parse[t](needle, {type: t}, {timezone: true});
+            v = field_utils.parse[t](needle, {type: t}, parseFormatOptions);
         } catch (e) {
             return $.when(null);
         }
 
-        if (t === 'date') {
-            // v is flagged UTC, so it will get transformed
-            // into the browser's timezone when calling toDate
-            // to avoid it, we use the string representation
-            // that will be truncated later to build another moment
-            v = v.format();
-        }
         var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
         if (!m.isValid()) { return $.when(null); }
-        var date_string = field_utils.format[t](m, {type: t});
+        var date_string = field_utils.format[t](m, {type: t}, parseFormatOptions);
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
                 field: '<em>' + _.escape(this.attrs.string) + '</em>',
