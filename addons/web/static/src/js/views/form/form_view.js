@@ -75,6 +75,13 @@ var FormView = BasicView.extend({
         var defs = [];
         if (this.loadParams && this.loadParams.fieldsInfo) {
             var fields = this.loadParams.fields;
+            
+            var paramsContext = {};
+            _.each(this.loadParams.context, function (value, key) {
+                if (!key.match(/[a-z]*_view_ref/g)) {
+                    paramsContext[key] = value;
+                }
+            });
 
             _.each(this.loadParams.fieldsInfo.form, function (attrs, fieldName) {
                 var field = fields[fieldName];
@@ -99,7 +106,7 @@ var FormView = BasicView.extend({
                     }
                     defs.push(parent.loadViews(
                             field.relation,
-                            new Context(context, self.userContext, self.loadParams.context).eval(),
+                            new Context(context, self.userContext, paramsContext).eval(),
                             [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
                         .then(function (views) {
                             for (var viewName in views) {
