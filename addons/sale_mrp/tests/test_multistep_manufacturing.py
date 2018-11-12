@@ -85,3 +85,44 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.assertEqual(mo_procurement.location_dest_id.id, self.warehouse.lot_stock_id.id, "Destination location does not match.")
 
         self.assertEqual(len(mo_procurement), 1, "No Procurement !")
+
+    def test_cancel_multilevel_manufacturing(self):
+        """ Testing for multilevel Manufacturing orders.
+            When user creates multi-level manufacturing orders,
+            and then cancelles child manufacturing order,
+            an activity should be generated on parent MO, to notify user that
+            demands from child MO has been cancelled.
+        """
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Screw'
+        self.product_screw = product_form.save()
+
+        # Add routes for manufacturing and make to order to the raw material product
+        with Form(self.product_raw) as p1:
+            p1.route_ids.clear()
+            p1.route_ids.add(self.warehouse_1.manufacture_pull_id.route_id)
+            p1.route_ids.add(self.warehouse_1.mto_pull_id.route_id)
+
+        # New BoM for raw material product, it will generate another Production order i.e. child Production order
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.product_raw
+        bom_product_form.product_tmpl_id = self.product_raw.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.product_screw
+            bom_line.product_qty = 5.0
+        self.bom_prod_manu = bom_product_form.save()
+
+        # create MO from sale order.
+        self.sale_order.action_confirm()
+        # Find child MO.
+        child_manufaturing = self.env['mrp.production'].search([('product_id', '=', self.product_raw.id)])
+        self.assertTrue((len(child_manufaturing.ids) == 1), 'Manufacturing order of raw material must be generated.')
+        # Cancel child MO.
+        child_manufaturing.action_cancel()
+        manufaturing_from_so = self.env['mrp.production'].search([('product_id', '=', self.product_manu.id)])
+        # Check if activity is generated or not on parent MO.
+        exception = self.env['mail.activity'].search([('res_model', '=', 'mrp.production'),
+                                                      ('res_id', '=', manufaturing_from_so.id)])
+        self.assertEqual(len(exception.ids), 1, 'When user cancelled child manufacturing, exception must be generated on parent manufacturing.')
