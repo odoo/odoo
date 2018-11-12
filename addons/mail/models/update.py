@@ -113,6 +113,9 @@ class PublisherWarrantyContract(AbstractModel):
                 set_param('database.expiration_date', result['enterprise_info'].get('expiration_date'))
                 set_param('database.expiration_reason', result['enterprise_info'].get('expiration_reason', 'trial'))
                 set_param('database.enterprise_code', result['enterprise_info'].get('enterprise_code'))
+                set_param('database.already_linked_subscription_url', result['enterprise_info'].get('database_already_linked_subscription_url'))
+                set_param('database.already_linked_email', result['enterprise_info'].get('database_already_linked_email'))
+                set_param('database.already_linked_send_mail_url', result['enterprise_info'].get('database_already_linked_send_mail_url'))
 
         except Exception:
             if cron_mode:
