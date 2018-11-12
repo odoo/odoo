@@ -18,8 +18,14 @@ var CustomizeMenu = Widget.extend({
     /**
      * @override
      */
-    start: function () {
+    willStart: function () {
         this.viewName = $(document.documentElement).data('view-xmlid');
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    start: function () {
         if (!this.viewName) {
             _.defer(this.destroy.bind(this));
         }
@@ -27,6 +33,7 @@ var CustomizeMenu = Widget.extend({
         if (this.$el.is('.show')) {
             this._loadCustomizeOptions();
         }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
