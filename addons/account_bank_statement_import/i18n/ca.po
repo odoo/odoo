@@ -4,13 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Quim - eccit <quim@eccit.com>, 2018
 # Manel Fernandez <manelfera@outlook.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
 "Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -30,18 +33,18 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr ""
+msgstr "%d de transaccions han estat ja importades i seran ignorades."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
-msgstr ""
+msgstr "1 transacció ha estat ja importada i serà ignorada."
 
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
-msgstr ""
+msgstr "Les transaccions d'un compte bancari poden importar-se només un cop!"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_partner_id
@@ -81,28 +84,28 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_domain
 msgid "Alias domain"
-msgstr ""
+msgstr "Pseudònim del domini"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
 msgid "Allow Cancelling Entries"
-msgstr ""
+msgstr "Permetre cancel·lar assentaments"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
 #, python-format
 msgid "Already imported items"
-msgstr ""
+msgstr "Elements ja importats"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "Almenys un element entrant"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Almenys un element sortint"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:82
@@ -114,27 +117,27 @@ msgstr "Banc"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_account_id
 msgid "Bank Account"
-msgstr ""
+msgstr "Compte bancari"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Bank Feeds"
-msgstr ""
+msgstr "Canals de comunicacions bancaris"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
-msgstr ""
+msgstr "Nom del diari del banc"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__data_file
 msgid "Bank Statement File"
-msgstr ""
+msgstr "Arxiu d'extracte bancari"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Línia d'extracte bancari"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
@@ -144,7 +147,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Pertanyent a l'empresa de l'usuari actual"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -159,6 +162,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
+"No es pot trobar un diari en què importar aquest extracte. Si us plau, "
+"seleccioni manualment un diari."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
@@ -166,6 +171,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"Marqui aquesta casella si no vol compatir la mateixa seqüència per factures "
+"rectificatives fetes des d'aquest diari."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
@@ -173,11 +180,13 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
+"Marqueu aquesta casella si voleu permetre la cancel·lació dels assentaments "
+"relacionats amb aquest diari o de la factura relacionada amb aquest diari"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
-msgstr ""
+msgstr "Esculli un arxiu a importar..."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
@@ -192,7 +201,7 @@ msgstr "Companyia"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Empresa relacionada amb aquest diari"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:112
@@ -201,6 +210,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
+"No es pot interpretar l'arxiu donat. ¿Ha instal·lat el mòdul que suporta "
+"aquest tipus d'arxiu?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_uid
@@ -222,7 +233,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr ""
+msgstr "Abonaments: Següent Nombre"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -237,12 +248,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "Default Credit Account"
-msgstr ""
+msgstr "Compte d'haver predeterminat"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_debit_account_id
 msgid "Default Debit Account"
-msgstr ""
+msgstr "Compte deure per defecte"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
@@ -261,16 +272,18 @@ msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
 msgstr ""
+"Descarregui un extracte bancari des del seu banc i importi'l aquí. Formats "
+"suportats:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
 msgid "Entry Sequence"
-msgstr ""
+msgstr "Seqüència de l'assentament"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__filename
 msgid "Filename"
-msgstr ""
+msgstr "Nom de l'arxiu"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
@@ -288,11 +301,13 @@ msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr ""
+"Obtingui els seus extractes bancaris en format electrònic del seu banc i "
+"seleccioni'ls aquí."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
 msgid "Group Invoice Lines"
-msgstr ""
+msgstr "Agrupa línies de factura"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__id
@@ -306,6 +321,8 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
+"Si aquesta opció està marcada, el sistema tractarà d'agrupar les línies del "
+"assentament quan es generin des de factures."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_journal.py:20
@@ -313,27 +330,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 #, python-format
 msgid "Import"
-msgstr ""
+msgstr "Importa"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
 msgid "Import Bank Statement"
-msgstr ""
+msgstr "Import de l'extracte bancari"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Import Bank Statements"
-msgstr ""
+msgstr "Importar extractes bancaris"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
 msgid "Import ID"
-msgstr ""
+msgstr "Import ID"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "Import Statement"
-msgstr ""
+msgstr "Importar extracte"
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.install_more_import_formats_action
@@ -343,12 +360,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "It acts as a default account for credit amount"
-msgstr ""
+msgstr "Actua com un compte per defecte per als imports en l'haver"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_debit_account_id
 msgid "It acts as a default account for debit amount"
-msgstr ""
+msgstr "Actua com un compte per defecte per la quantitat del deure"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
@@ -359,14 +376,14 @@ msgstr ""
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__journal_id
 msgid "Journal"
-msgstr ""
+msgstr "Diari"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:73
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
-msgstr ""
+msgstr "Creació del diari"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
@@ -376,7 +393,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
 msgid "Journal Name"
-msgstr ""
+msgstr "Nom diari"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -384,6 +401,8 @@ msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
 msgstr ""
+"Premi acceptar per crear el compte/diari i acabi la importació. Si s'ha "
+"arribat per error aquí, premi cancel·lar per avortar la importació."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
@@ -416,7 +435,7 @@ msgstr "Última actualització el"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
 msgid "Loss Account"
-msgstr ""
+msgstr "Compta de pèrdues"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
@@ -443,12 +462,12 @@ msgstr "Pròxim número"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:142
 #, python-format
 msgid "No currency found matching '%s'."
-msgstr ""
+msgstr "No s'ha trobat cap moneda casant '%s'."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "OK"
-msgstr ""
+msgstr "D'acord"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
@@ -458,7 +477,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid "Profit Account"
-msgstr ""
+msgstr "Compte de guanys"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -468,11 +487,14 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Seleccioni 'Vendes' per diaris de factures de client. Seleccioni 'Compres' per diaris de factures de proveïdor. \n"
+"Seleccioni 'Caixa' o 'Banc' per diaris que s'utilitzen per pagaments de clients i proveïdors. \n"
+"Seleccioni 'General' per diaris que continguin operacions vaires."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
-msgstr ""
+msgstr "Seleccioni un arxiu d'extracte bancari per importar"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -487,12 +509,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "Short Code"
-msgstr ""
+msgstr "Codi curt"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr ""
+msgstr "Mostrar diari al taulell"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -501,6 +523,9 @@ msgid ""
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
 msgstr ""
+"El compte bancari de l'extracte que està important encara no està registrat "
+"en Odoo. Per poder continuar amb la importació necessita crear un diari de "
+"banc per aquest compte."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:157
@@ -508,6 +533,8 @@ msgstr ""
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
 msgstr ""
+"El compte bancari d'aquest extracte (%s) no és la mateixa que la del diari "
+"(%s)"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:167
@@ -520,12 +547,14 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
 msgid "The currency used to enter statement"
-msgstr ""
+msgstr "La divisa utilitzada per introduir assentaments"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
+"El tipus de càlcul de l'última línia hauria de ser \"Balanç\" per assegurar "
+"que s'assignarà la quantitat per complet."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
@@ -550,18 +579,19 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
+"Aquest camp conte la informació relacionada amb la numeració d'aquest diari."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:117
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr ""
+msgstr "Aquest fitxer no conte cap declaració."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:125
 #, python-format
 msgid "This file doesn't contain any transaction."
-msgstr ""
+msgstr "Aquest fitxer no conte cap transacció."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -571,7 +601,7 @@ msgstr "Tipus"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "Utilitzat per ordenar els diaris en la vista taulell"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
@@ -579,6 +609,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"Utilitzat per registrar una pèrdua quan el saldo final d'un registre de "
+"caixa difereix del que el sistema calcula"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -586,6 +618,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"Utilitzat per registrar un guany quan el saldo final d'un registre de caixa "
+"difereix del que el sistema calcula"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
@@ -598,7 +632,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Ja sigui si aquest diari s'ha de mostrar-se al taulell o no"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
@@ -618,6 +652,8 @@ msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
 msgstr ""
+"Ha d'establir un compte de dèbit predeterminat i un compte de crèdit "
+"predeterminat per a la publicació: %s"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -632,4 +668,4 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "or"
-msgstr ""
+msgstr "o"

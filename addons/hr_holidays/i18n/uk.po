@@ -3,15 +3,16 @@
 # * hr_holidays
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
+# Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -515,7 +516,7 @@ msgstr "Стан дії"
 #: model:ir.actions.act_window,name:hr_holidays.mail_activity_type_action_config_hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Типи діяльності"
+msgstr "Типи дії"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -672,7 +673,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Approved Leaves"
-msgstr "Затверджені пропустки"
+msgstr "Затверджені відпустки"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -683,7 +684,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_attachment_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Підрахунок прикріплення"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual_limit
@@ -980,7 +981,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Спадне меню"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1245,7 +1246,7 @@ msgstr "Якщо відмічено, то нові повідомлення бу
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -1270,7 +1271,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "In"
-msgstr "в"
+msgstr "В"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_is_follower
@@ -1590,7 +1591,7 @@ msgstr "Пурпуровий"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Основне прикріплення"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
@@ -1646,7 +1647,7 @@ msgstr "Тип зустрічі"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Помилка доставлення повідомлення"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_ids
@@ -1777,7 +1778,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Кількість помилок"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours_display
@@ -1796,7 +1797,7 @@ msgstr "Кількість повідомлень, які потебують д�
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error_counter
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__interval_number
@@ -1837,8 +1838,8 @@ msgid ""
 "                number of open days related to your leave."
 msgstr ""
 "Після того, як ви записали запит на відпустку, він буде відправлений\n"
-"                 для менеджера для перевірки. Обов'язково встановіть правильний тип відпустки\n"
-"                 (рекуперація, законна відпустка, хвороба) і точну\n"
+"                 менеджеру для перевірки. Обов'язково встановіть правильний тип відпустки\n"
+"                 (видужування, законна відпустка, хвороба) і точну\n"
 "                 кількість відкритих днів, пов'язаних з вашою відпусткою."
 
 #. module: hr_holidays
@@ -1883,7 +1884,7 @@ msgstr "Інше"
 #: selection:hr.leave,activity_state:0
 #: selection:hr.leave.allocation,activity_state:0
 msgid "Overdue"
-msgstr "Прострочено"
+msgstr "Протерміновано"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_hl
@@ -2043,7 +2044,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Відповідальний користувач"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -2098,7 +2099,7 @@ msgstr "Показати всі записи, які мають дату нас�
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
-msgstr "Відпустка по хворобі"
+msgstr "Лікарняні"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -2218,7 +2219,7 @@ msgid ""
 "second level (If Leave type need second validation)"
 msgstr ""
 "Ця область автоматично заповнюється користувачем, який підтверджує відпустку"
-" на другому рівні (якщо Тип виходу потребує другої перевірки)"
+" на другому рівні (якщо тип відпустки потребує другої перевірки)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name

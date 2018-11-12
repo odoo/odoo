@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # * hr_expense
 # 
+# Translators:
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# Kovács Tibor <kovika@gmail.com>, 2018
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +29,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
 " incoming receipts</i>"
 msgstr ""
+"<i class=\"text-muted oe_edit_only\">Használja a [Hivatkozás] a bejövő "
+"nyugták tárgy előtagjához</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -69,36 +79,39 @@ msgid ""
 "<p>The accountant receive approved expense reports.</p><p>He can post "
 "journal entries in one click if taxes and accounts are right.</p>"
 msgstr ""
+"<p>A könyvelésre beérkezett jóváhagyott költség jelentések.</p><p>Könyvelhet"
+" napló tételt egy kattintással, ha az adók és a főkönyvi számlák "
+"megfelelőek.</p>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>Dátum:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Description:</strong>"
-msgstr ""
+msgstr "<strong>Leírás:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Employee:</strong>"
-msgstr ""
+msgstr "<strong>Alkalmazott:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr ""
+msgstr "<strong>Által fizetve:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Összesen</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
-msgstr ""
+msgstr "<strong>Által jóváhagyva:</strong>"
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_sheet_register_payment.py:104
@@ -107,34 +120,36 @@ msgid ""
 "A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
 " to your expense %s has been made."
 msgstr ""
+"Egy %s %s fizetés ezzel a hivatkozással <a href='/mail/view?%s'>%s</a> "
+"kapcsolódik ehhez a végrehajtott költségéhez: %s ."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
 msgid "Account"
-msgstr ""
+msgstr "Főkönyvi számla"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Accounting"
-msgstr ""
+msgstr "Könyvelés"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Művelet szükséges"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Tevékenységek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Tevékenység állapota"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.mail_activity_type_action_config_hr_expense
@@ -145,7 +160,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
-msgstr ""
+msgstr "Aktuális költség, ráfordítás táblázatok, nem az elutasítottak"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:158
@@ -157,17 +172,17 @@ msgstr ""
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
-msgstr ""
+msgstr "Légi utazás"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr ""
+msgstr "Összes költség jelentés"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
 msgid "All Expenses"
-msgstr ""
+msgstr "Összes költség, ráfordítás"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
@@ -178,29 +193,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_account_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitikus számla"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analitikus címkék"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Approve"
-msgstr ""
+msgstr "Jóváhagyás"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 msgid "Approved"
-msgstr ""
+msgstr "Jóváhagyott"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Approved Expenses"
-msgstr ""
+msgstr "Jóváhagyott készpénzes kiadás"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -223,12 +238,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "Bank Journal"
-msgstr ""
+msgstr "Banki napló"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Számla hivatkozás"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
@@ -238,24 +253,25 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 msgid "Can be Expensed"
-msgstr ""
+msgstr "Költségként elszámolható"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.car_travel
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
-msgstr ""
+msgstr "Gépjármű utazási költségek"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
 msgstr ""
+"Elismert tisztesség és alkalmazkodás,<br/>(Dátum és aláírás).<br/><br/>"
 
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
@@ -265,12 +281,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Company"
-msgstr ""
+msgstr "Vállalat"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Ehhez a naplóhoz kapcsolt vállalat"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -280,13 +296,13 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguráció"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Confirmed Expenses"
-msgstr ""
+msgstr "Megerősített költségek"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -321,7 +337,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Létrehozta"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_date
@@ -329,14 +345,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozva"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Pénznem"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
@@ -345,23 +361,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Date"
-msgstr ""
+msgstr "Dátum"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr ""
+msgstr "Alapértelmezett álnevek a költség kiadásoknak"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__department_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Department"
-msgstr ""
+msgstr "Osztály, részleg"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__name
 msgid "Description"
-msgstr ""
+msgstr "Leírás"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
@@ -369,34 +385,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Megjelenített név"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Documents"
-msgstr ""
+msgstr "Dokumentumok"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Draft"
-msgstr ""
+msgstr "Tervezet"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Draft Payment"
-msgstr ""
+msgstr "Tervezet állapotú fizetés"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Email Alias"
-msgstr ""
+msgstr "E-mail álnevek"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Emails"
-msgstr ""
+msgstr "E-mailek"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -405,22 +421,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Employee"
-msgstr ""
+msgstr "Alkalmazott"
 
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
 msgid "Employee (to reimburse)"
-msgstr ""
+msgstr "Alkalmazott (akinek visszatérít)"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Employee Expenses"
-msgstr ""
+msgstr "Alkalmazottak költségei"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id
 msgid "Employee Home Address"
-msgstr ""
+msgstr "Alkalmazott otthoni címe"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
@@ -429,7 +445,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Expense"
-msgstr ""
+msgstr "Költség"
 
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
@@ -439,24 +455,24 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Expense Date"
-msgstr ""
+msgstr "Készpénzes kiadás dátuma"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
 msgid "Expense Journal"
-msgstr ""
+msgstr "Költségek naplói"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
 msgid "Expense Lines"
-msgstr ""
+msgstr "Költségtételek"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
-msgstr ""
+msgstr "Készpénzes kiadási termékek"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -473,17 +489,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
-msgstr ""
+msgstr "Költség kiadás jelentés"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__state
 msgid "Expense Report State"
-msgstr ""
+msgstr "Költség kiadás állapot"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr ""
+msgstr "Költség kiadás összegzés"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -491,28 +507,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr ""
+msgstr "Költség kiadások"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr ""
+msgstr "Költség kiadások elemzése"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
 msgid "Expense Reports To Pay"
-msgstr ""
+msgstr "Fizetendő költség kiadások"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "Expense Reports To Post"
-msgstr ""
+msgstr "Könyvelésre küldendő költség kiadások"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr ""
+msgstr "Jóváhagyandó költség kiadások"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -522,22 +538,22 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr ""
+msgstr "Kiadás elutasításának oka"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr ""
+msgstr "Költség kiadás elfogadva"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr ""
+msgstr "Költség kiadás fizetve"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr ""
+msgstr "Költség kiadás elutasítva"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
@@ -555,7 +571,7 @@ msgstr ""
 #: model:product.product,name:hr_expense.product_product_fixed_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
 msgid "Expenses"
-msgstr ""
+msgstr "Kiadások"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_action
@@ -565,18 +581,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_graph
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_pivot
 msgid "Expenses Analysis"
-msgstr ""
+msgstr "Költségek elemzése"
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr ""
+msgstr "Költség kiadás jelentés"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr ""
+msgstr "Jóváhagyandó költség kiadások"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
@@ -601,17 +617,19 @@ msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
 msgstr ""
+"Kiadási költségekhez meg kell határozni egy költség naplót, ahhoz, hogy "
+"főkönyvi számla tételeket hozzon létre."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses of Your Team Member"
-msgstr ""
+msgstr "Csoport tagjainak költség kiadásai"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses to Invoice"
-msgstr ""
+msgstr "Számlázandó készpénzes kiadások"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
@@ -627,25 +645,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Követők"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_channel_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Követők (Csatornák)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_partner_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Követők (Partnerek)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Former Employees"
-msgstr ""
+msgstr "Valamikori alkalmazottak"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
@@ -654,6 +672,8 @@ msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
 msgstr ""
+"Innen a főkönyvi számlán jóváhagyhatja valamint elutasíthatja a költség "
+"kiadásokat, melyeket a HR Emberi Erőforrás Felső vezetője felülvizsgálta."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -664,18 +684,18 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "General Information"
-msgstr ""
+msgstr "Általános információk"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Group By"
-msgstr ""
+msgstr "Csoportosítás ezzel"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 msgid "HR Department"
-msgstr ""
+msgstr "Emberi erőforrás Osztály, részleg"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_multiple_currency
@@ -703,19 +723,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__id
 msgid "ID"
-msgstr ""
+msgstr "Azonosító"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error
@@ -727,22 +747,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Ő egy követő"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Napló"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__account_move_id
 msgid "Journal Entry"
-msgstr ""
+msgstr "Könyvelési tétel"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Könyvelési napló tételsor"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense____last_update
@@ -750,7 +770,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet____last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Legutóbb frissítve"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -758,7 +778,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Legutóbb frissítette"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_date
@@ -766,7 +786,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Legutóbb frissítve "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -790,7 +810,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__user_id
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
 msgid "Manager"
-msgstr ""
+msgstr "Menedzser"
 
 #. module: hr_expense
 #. openerp-web
@@ -798,11 +818,13 @@ msgstr ""
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
 msgstr ""
+"Felső vezetők megkaphatják az összes jelentést az ebből a menüből történő "
+"jóváhagyásra."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__communication
 msgid "Memo"
-msgstr ""
+msgstr "Emlékeztető"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
@@ -814,7 +836,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Üzenetek"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -828,27 +850,27 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Expenses"
-msgstr ""
+msgstr "Költségeim"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Reports"
-msgstr ""
+msgstr "Jelentéseim"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Team Expenses"
-msgstr ""
+msgstr "Csoportom költség kiadásai"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Team Reports"
-msgstr ""
+msgstr "Csapatom jelentései"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:186
@@ -866,7 +888,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_summary
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Következő tevékenység összegzése"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_type_id
@@ -887,6 +909,8 @@ msgstr ""
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
+"Nem található otthoni cím a következő alkalmazotthoz %s , kérem hozzon létre"
+" egyet."
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
@@ -899,6 +923,8 @@ msgstr ""
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
+"Nem található követelés, jóváíró számla a következő naplóhoz %s , kérem "
+"hozzon létre egyet."
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
@@ -914,19 +940,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Notes..."
-msgstr ""
+msgstr "Megjegyzések..."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Műveletek száma"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_number
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_number
 msgid "Number of Attachments"
-msgstr ""
+msgstr "Mellékletek száma"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -938,7 +964,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
@@ -950,12 +976,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek száma"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_user
 msgid "Officer"
-msgstr ""
+msgstr "Hivatalnok"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -969,6 +995,8 @@ msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
 msgstr ""
+"Ha elkészítette a költség kiadásait, küldje el a Felső vezetőknek "
+"jóváhagyásra."
 
 #. module: hr_expense
 #. openerp-web
@@ -995,19 +1023,19 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Other Info"
-msgstr ""
+msgstr "Egyéb információ"
 
 #. module: hr_expense
 #: selection:hr.expense,activity_state:0
 #: selection:hr.expense.sheet,activity_state:0
 msgid "Overdue"
-msgstr ""
+msgstr "lejárt"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_paid
 msgid "Paid"
-msgstr ""
+msgstr "Kifizetve"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
@@ -1018,27 +1046,27 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "Fizetés összeg"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__payment_date
 msgid "Payment Date"
-msgstr ""
+msgstr "Fizetés dátuma"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__journal_id
 msgid "Payment Method"
-msgstr ""
+msgstr "Fizetési módszer"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__payment_method_id
 msgid "Payment Type"
-msgstr ""
+msgstr "Fizetés típusa:"
 
 #. module: hr_expense
 #: selection:hr.expense,activity_state:0
@@ -1053,21 +1081,23 @@ msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"Kérem határozza meg az alapértelmezett költség kiadási számlát egy termék "
+"készpénzes vásárlásához: `property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "Napló tételek könyvelése"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Könyvelt"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Price"
-msgstr ""
+msgstr "Ár"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1078,32 +1108,32 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Product"
-msgstr ""
+msgstr "Termék"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Product Name"
-msgstr ""
+msgstr "Termék neve"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Terméksablon"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Qty"
-msgstr ""
+msgstr "Menny."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Mennyiség"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
 msgid "Reason"
-msgstr ""
+msgstr "Ok"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1118,7 +1148,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__partner_bank_account_id
 msgid "Recipient Bank Account"
-msgstr ""
+msgstr "Címzett bankszámlaszáma"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1128,18 +1158,18 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Ref."
-msgstr ""
+msgstr "Hiv."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Refuse"
-msgstr ""
+msgstr "Elutasít"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr ""
+msgstr "Költségek kiadásának elutasítása"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
@@ -1147,25 +1177,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 #: model:mail.message.subtype,name:hr_expense.mt_expense_refused
 msgid "Refused"
-msgstr ""
+msgstr "Elutasított"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Refused Expenses"
-msgstr ""
+msgstr "Elutasított költségek kiadások"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_sheet_register_payment_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Register Payment"
-msgstr ""
+msgstr "Kiegyenlítés rögzítése"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Report"
-msgstr ""
+msgstr "Kimutatás"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
@@ -1175,38 +1205,38 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Reported"
-msgstr ""
+msgstr "Jelentett"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
 msgid "Reporting"
-msgstr ""
+msgstr "Riportkészítés"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
 msgid "Reports to Approve"
-msgstr ""
+msgstr "Jóváhagyandó költség kimutatások"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_pay_expense_sheet
 msgid "Reports to Pay"
-msgstr ""
+msgstr "Kiegyenlítendő költség kiadások"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_post_expense_sheet
 msgid "Reports to Post"
-msgstr ""
+msgstr "Könyvelésre küldendő költség kiadások"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Visszaállítás tervezet állapotba"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_user_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Felelős felhasználó"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:135
@@ -1215,17 +1245,19 @@ msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure."
 msgstr ""
+"A kiválasztott mértékegység nem ugyanabban a kategóriában van mint a termék "
+"mértékegysége."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
 msgid "Settings"
-msgstr ""
+msgstr "Beállítások"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Setup your domain alias"
-msgstr ""
+msgstr "Állítsa be a domén álneveket"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard__show_partner_bank_account
@@ -1237,6 +1269,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Mutassa az összes rekordot melyre a következő műveleti dátum a mai nap "
+"előtti"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
@@ -1246,14 +1280,14 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "State"
-msgstr ""
+msgstr "Állam / megye"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__state
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_state
@@ -1268,7 +1302,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__state
 msgid "Status of the expense."
-msgstr ""
+msgstr "Költség kiadás állapota"
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
@@ -1278,23 +1312,23 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Felső vezetőnek rendelkezésére"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
 msgid "Submitted"
-msgstr ""
+msgstr "Benyújtott"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Subtotal"
-msgstr ""
+msgstr "Részösszeg"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Taxes"
-msgstr ""
+msgstr "Adók"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__hide_payment_method
@@ -1302,6 +1336,8 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
+"Technikai mező a fizetési mód eltüntetésére használt, ha a kiválasztott "
+"naplókhoz csak egy elérhető és az a 'kézi'"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__show_partner_bank_account
@@ -1317,45 +1353,47 @@ msgstr ""
 msgid ""
 "The accountant can register a payment to reimburse the employee directly."
 msgstr ""
+"A könyvelő beregisztrálhat egy kifizetést az alkalmazott közvetlen "
+"térítéséhez."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "A napló amit a kiadás elvégzése után használ."
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_sheet_register_payment.py:48
 #, python-format
 msgid "The payment amount must be strictly positive."
-msgstr ""
+msgstr "A fizetés összege csak pozitív lehet"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr ""
+msgstr "Az a fizetési mód, melyet a költség kiadására használ a vállalat."
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Approve"
-msgstr ""
+msgstr "Jóváhagyandó"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Pay"
-msgstr ""
+msgstr "Fizetendő"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Post"
-msgstr ""
+msgstr "Könyvelésre küldendő"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
 msgid "To Submit"
-msgstr ""
+msgstr "Benyújt"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -1366,18 +1404,18 @@ msgstr ""
 #: selection:hr.expense,activity_state:0
 #: selection:hr.expense.sheet,activity_state:0
 msgid "Today"
-msgstr ""
+msgstr "Ma"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "Mai napi tevékenységek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 msgid "Total"
-msgstr ""
+msgstr "Összesen"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
@@ -1389,18 +1427,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
-msgstr ""
+msgstr "Végösszeg"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Unit Price"
-msgstr ""
+msgstr "Egységár"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mértékegység"
 
 #. module: hr_expense
 #: model:product.product,uom_name:hr_expense.air_ticket
@@ -1408,24 +1446,24 @@ msgstr ""
 #: model:product.template,uom_name:hr_expense.air_ticket_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
 msgid "Unit(s)"
-msgstr ""
+msgstr "Egység(ek)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_unread_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_unsubmitted_expense
 msgid "Unreported Expenses"
-msgstr ""
+msgstr "Nem jelentett költség kiadások"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1435,22 +1473,22 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Validate"
-msgstr ""
+msgstr "Jóváhagyás"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "View Attached Documents"
-msgstr ""
+msgstr "Mellékelt dokumentumok megtekintése"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "View Attachments"
-msgstr ""
+msgstr "Mellékletek megtekintése"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "View Report"
-msgstr ""
+msgstr "Jelentés megtekintése"
 
 #. module: hr_expense
 #. openerp-web
@@ -1464,13 +1502,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Weboldal üzenetek"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__website_message_ids
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Weboldal  kommunikáció történet"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:675
@@ -1482,7 +1520,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:620
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
-msgstr ""
+msgstr "Csak jóváhagyott költsége(k) tudnak főkönyvi bejegyzést generálni."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:696
@@ -1540,7 +1578,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:180
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr ""
+msgstr "Nem jelentheti ugyanazt a sort kétszer!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1550,17 +1588,17 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "e.g. Lunch"
-msgstr ""
+msgstr "pl. Ebéd"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "e.g. Lunch with Customer"
-msgstr ""
+msgstr "pl. Ebéd ügyféllel"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "e.g. Trip to NY"
-msgstr ""
+msgstr "e.g. NY-i utazás"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1575,16 +1613,16 @@ msgstr ""
 #: model:product.template,weight_uom_name:hr_expense.car_travel_product_template
 #: model:product.template,weight_uom_name:hr_expense.product_product_fixed_cost_product_template
 msgid "kg"
-msgstr ""
+msgstr "kg"
 
 #. module: hr_expense
 #: model:product.product,uom_name:hr_expense.car_travel
 #: model:product.template,uom_name:hr_expense.car_travel_product_template
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:159
 #, python-format
 msgid "or send receipts by email to %s."
-msgstr ""
+msgstr "vagy küldje a bizonylatokat e-maillel ide: %s."

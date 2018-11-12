@@ -3,15 +3,16 @@
 # * event_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,8 +46,8 @@ msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
 msgstr ""
-"Kies een evenement en het zal automatisch een registratie voor dit evenement"
-" aanmaken."
+"Kies een evenement en het zal automatisch een inschrijving voor dit "
+"evenement aanmaken."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -54,7 +55,7 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
-"Kies een evenement ticket en het zal automatisch een registratie aanmaken "
+"Kies een evenement ticket en het zal automatisch een inschrijving aanmaken "
 "voor dit evenement ticket."
 
 #. module: event_sale
@@ -78,7 +79,7 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
-"Definieer het aantal beschikbare zitplaatsen. Als u te veel registraties "
+"Definieer het aantal beschikbare zitplaatsen. Als u te veel inschrijvingen "
 "heeft zal u niet meer tickets kunnen verkopen. Zet op 0 om deze regel te "
 "negeren en ongelimiteerde ticketten aan te bieden."
 
@@ -133,12 +134,12 @@ msgstr "Naam evenement"
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Registration"
-msgstr "Evenementregistratie"
+msgstr "Evenementinschrijving"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr "Evenementregistraties"
+msgstr "Evenementinschrijvingen"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -185,8 +186,8 @@ msgid ""
 "If checked this product automatically creates an event registration at the "
 "sales order confirmation."
 msgstr ""
-"Indien aangevinkt maakt dit product automatisch een evenementregistratie aan"
-" bij het bevestigen van de order."
+"Indien aangevinkt maakt dit product automatisch een evenemeninschrijvingen "
+"aan bij het bevestigen van de order."
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
@@ -253,7 +254,7 @@ msgstr "Geen beschikbare plaatsen meer voor dit ticket"
 #: code:addons/event_sale/models/event.py:152
 #, python-format
 msgid "No more available seats for this ticket type."
-msgstr "Geen beschikbare plaatsen meer voor dit soort ticket."
+msgstr "Geen beschikbare plaatsen meer voor dit ticketsoort."
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:250
@@ -269,7 +270,7 @@ msgstr "Bron"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr "Originele registratie"
+msgstr "Originele inschrijving"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:259
@@ -327,7 +328,7 @@ msgstr "Inschrijving"
 #: code:addons/event_sale/models/event.py:51
 #, python-format
 msgid "Registration for %s"
-msgstr "Registratie voor %s"
+msgstr "Inschrijving voor %s"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__registration_ids
@@ -337,7 +338,7 @@ msgstr "Inschrijvingen"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr "Te wijzigen registraties"
+msgstr "Te wijzigen inschrijvingen"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_reserved
@@ -396,7 +397,7 @@ msgstr "Standaard"
 #: code:addons/event_sale/models/event.py:257
 #, python-format
 msgid "The registration must be paid"
-msgstr "De registratie moet betaald worden"
+msgstr "De inschrijving moet betaald worden"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:250
@@ -408,7 +409,7 @@ msgstr "Ticket"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_search
 msgid "Ticket Type"
-msgstr "Soort ticket"
+msgstr "Ticketsoort"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:157
@@ -466,7 +467,7 @@ msgstr "kg"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr "geef aub meer details over de registraties"
+msgstr "geef aub meer details over de inschrijvingen"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket

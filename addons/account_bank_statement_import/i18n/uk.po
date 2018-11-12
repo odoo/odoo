@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 # Sergey Doroshenko <sdoroshenko@artwebny.com>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Sergey Doroshenko <sdoroshenko@artwebny.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,7 +258,7 @@ msgstr "Типовий дебетовий рахунок"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "Визначає, як будуть зареєстровані банківські виписки"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__display_name
@@ -292,7 +293,7 @@ msgstr "Для вхідних платежів"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_ids
 msgid "For Outgoing Payments"
-msgstr ""
+msgstr "Для вихідних платежів"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import__data_file
@@ -353,7 +354,7 @@ msgstr "Імпорт виписки"
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.install_more_import_formats_action
 msgid "Install Import Format"
-msgstr ""
+msgstr "Встановити формат імпорту"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
@@ -369,6 +370,7 @@ msgstr "Використовується, як рахунок за замовч�
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
 msgid "It creates draft vendor bill by sending an email."
 msgstr ""
+"Він створює чернетку рахунка постачальника, відправивши електронний лист."
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -386,7 +388,7 @@ msgstr "Створення журналу"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Journal Creation on Bank Statement Import"
-msgstr ""
+msgstr "Створення журналу з імпорту банківських виписок"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
@@ -476,7 +478,7 @@ msgstr "Ок"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
 msgid "Post At Bank Reconciliation"
-msgstr ""
+msgstr "Публікувати на узгодженні з банком"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -547,7 +549,7 @@ msgstr "Рахунок виписки (%s) не співпадає з рахун
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s)."
-msgstr ""
+msgstr "Валюта банківської виписки(%s) не така ж, як валюта журналу (%s)."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -633,6 +635,9 @@ msgid ""
 "draft state, so that the related journal entries are only posted when "
 "performing bank reconciliation."
 msgstr ""
+"Незалежно від того, чи потрібно здійснювати платежі, у цьому журналі мають "
+"генеруватися у стані чернетки, так що пов'язані записи журналу публікуються "
+"тільки при виконанні банківського узгодження."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
@@ -644,12 +649,12 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "You already have imported that file."
-msgstr ""
+msgstr "Ви вже імпортували цей файл."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can install more file formats by"
-msgstr ""
+msgstr "Ви можете встановити нові формати файлів на"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
@@ -669,7 +674,7 @@ msgstr "_Import"
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "installing the related modules"
-msgstr ""
+msgstr "встановлення відповідних модулів"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
