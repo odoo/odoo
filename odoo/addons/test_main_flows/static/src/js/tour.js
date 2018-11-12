@@ -671,7 +671,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
+    trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
     content: _t('Go to Accounting'),
     position: 'bottom',
 }, {
