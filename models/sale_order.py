@@ -270,8 +270,17 @@ class SaleOrder(models.Model):
         return programs
 
     def _get_applied_coupon_program_coming_from_another_so(self):
+        # TODO: Remove me in master as no more used
+        pass
+
+    def _get_valid_applied_coupon_program(self):
         self.ensure_one()
-        programs = self.applied_coupon_ids.mapped('program_id')._filter_programs_from_common_rules(self, True)
+        # applied_coupon_ids's coupons might be coming from:
+        #   * a coupon generated from a previous order that benefited from a promotion_program that rewarded the next sale order.
+        #     In that case requirements to benefit from the program (Quantity and price) should not be checked anymore
+        #   * a coupon_program, in that case the promo_applicability is always for the current order and everything should be checked (filtered)
+        programs = self.applied_coupon_ids.mapped('program_id').filtered(lambda p: p.promo_applicability == 'on_next_order')._filter_programs_from_common_rules(self, True)
+        programs += self.applied_coupon_ids.mapped('program_id').filtered(lambda p: p.promo_applicability == 'on_current_order')._filter_programs_from_common_rules(self)
         return programs
 
     def _create_new_no_code_promo_reward_lines(self):
@@ -346,7 +355,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order = self
 
-        applicable_programs = order._get_applicable_no_code_promo_program() + order._get_applicable_programs() + order._get_applied_coupon_program_coming_from_another_so()
+        applicable_programs = order._get_applicable_no_code_promo_program() + order._get_applicable_programs() + order._get_valid_applied_coupon_program()
         applied_programs = order._get_applied_programs_with_rewards_on_current_order() + order._get_applied_programs_with_rewards_on_next_order()
         programs_to_remove = applied_programs - applicable_programs
         products_to_remove = programs_to_remove.mapped('discount_line_product_id')
