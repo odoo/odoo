@@ -509,13 +509,11 @@ class MailActivity(models.Model):
             res_ids = tuple(a['res_id'] for a in grouped_activities)
             res = self.env[res_model].search([('id', 'in', res_ids)])
             grouped_activities = [a for a in grouped_activities if a['res_id'] in res.ids]
-        activity_type_ids = self.env['mail.activity.type']
         res_id_to_deadline = {}
         activity_data = defaultdict(dict)
         for group in grouped_activities:
             res_id = group['res_id']
             activity_type_id = group['activity_type_id'][0]
-            activity_type_ids |= self.env['mail.activity.type'].browse(activity_type_id)  # we will get the name when reading mail_template_ids
             res_id_to_deadline[res_id] = group['date_deadline'] if (res_id not in res_id_to_deadline or group['date_deadline'] < res_id_to_deadline[res_id]) else res_id_to_deadline[res_id]
             state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
             activity_data[res_id][activity_type_id] = {
@@ -525,6 +523,7 @@ class MailActivity(models.Model):
                 'o_closest_deadline': group['date_deadline'],
             }
         activity_type_infos = []
+        activity_type_ids = self.env['mail.activity.type'].search(['|', ('res_model_id.model', '=', res_model), ('res_model_id', '=', False)])
         for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
             mail_template_info = []
             for mail_template_id in elem.mail_template_ids:
