@@ -1754,7 +1754,15 @@ class Meeting(models.Model):
             if values.get('description'):
                 activity_values['note'] = values['description']
             if values.get('start'):
-                activity_values['date_deadline'] = fields.Datetime.from_string(values['start']).date()
+                # self.start is a datetime UTC *only when the event is not allday*
+                # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
+                # See 72254129dbaeae58d0a2055cba4e4a82cde495b7 for the same issue, but elsewhere
+                deadline = fields.Datetime.from_string(values['start'])
+                user_tz = self.env.context.get('tz')
+                if user_tz and not self.allday:
+                    deadline = pytz.UTC.localize(deadline)
+                    deadline = deadline.astimezone(pytz.timezone(user_tz))
+                activity_values['date_deadline'] = deadline.date()
             if values.get('user_id'):
                 activity_values['user_id'] = values['user_id']
             if activity_values.keys():
