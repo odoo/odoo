@@ -8,6 +8,7 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
      */
     var knownUnusableAccessKeys = [' ',
         'A', // reserved for Odoo Edit
+        'B', // reserved for Odoo Previous Breadcrumb (Back)
         'C', // reserved for Odoo Create
         'H', // reserved for Odoo Home
         'J', // reserved for Odoo Discard
