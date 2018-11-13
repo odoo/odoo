@@ -475,8 +475,10 @@ class HolidaysRequest(models.Model):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
         holiday = super(HolidaysRequest, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
-        if 'employee_id' in values:
+        if employee_id:
             holiday._onchange_employee_id()
+        if 'number_of_days' not in values and ('date_from' in values or 'date_to' in values):
+            holiday._onchange_leave_dates()
         holiday.activity_update()
         return holiday
 
@@ -504,9 +506,12 @@ class HolidaysRequest(models.Model):
         if values.get('state'):
             self._check_approval_update(values['state'])
         result = super(HolidaysRequest, self).write(values)
-        self.add_follower(employee_id)
-        if 'employee_id' in values:
-            self._onchange_employee_id()
+        for holiday in self:
+            if employee_id:
+                holiday.add_follower(employee_id)
+                holiday._onchange_employee_id()
+            if 'number_of_days' not in values and ('date_from' in values or 'date_to' in values):
+                holiday._onchange_leave_dates()
         return result
 
     @api.multi
