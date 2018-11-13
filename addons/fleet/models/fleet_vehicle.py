@@ -130,9 +130,9 @@ class FleetVehicle(models.Model):
                     if diff_time < 0:
                         overdue = True
                         total += 1
-                    if diff_time < 15 and diff_time >= 0:
-                            due_soon = True
-                            total += 1
+                    if 0 >= diff_time < 30:
+                        due_soon = True
+                        total += 1
                     if overdue or due_soon:
                         log_contract = self.env['fleet.vehicle.log.contract'].search([
                             ('vehicle_id', '=', record.id),
