@@ -58,8 +58,10 @@ class IrAttachment(models.Model):
 
         # domain to retrieve the attachments to migrate
         domain = {
-            'db': [('store_fname', '!=', False)],
-            'file': [('db_datas', '!=', False)],
+            'db': ['&', '|', ('res_field', '=', False), ('res_field', '!=', False),
+                   ('store_fname', '!=', False)],
+            'file': ['&', '|', ('res_field', '=', False), ('res_field', '!=', False),
+                     ('db_datas', '!=', False)],
         }[self._storage()]
 
         for attach in self.search(domain):
