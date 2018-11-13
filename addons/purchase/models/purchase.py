@@ -566,9 +566,16 @@ class PurchaseOrderLine(models.Model):
             for move in line.move_ids:
                 if move.state == 'done':
                     if move.product_uom != line.product_uom:
-                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                        qty = move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                     else:
-                        total += move.product_uom_qty
+                        qty = move.product_uom_qty
+
+                    # it's a return so negate
+                    if move.location_dest_id.usage == 'supplier' \
+                            and move.origin_returned_move_id:
+                        qty = -qty
+
+                    total += qty
             line.qty_received = total
 
     @api.model
