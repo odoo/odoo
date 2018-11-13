@@ -17,6 +17,7 @@ var ActivityRenderer = AbstractRenderer.extend({
     className: 'o_activity_view',
     events: {
         'click .o_send_mail_template': '_onSenMailTemplateClicked',
+        'click .o_activity_empty_cell': '_onEmptyCell',
     },
 
     /**
@@ -34,6 +35,41 @@ var ActivityRenderer = AbstractRenderer.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Object} activityGroup
+     * @param {integer} resID
+     * @returns {Object}
+     */
+    _getKanbanActivityData: function (activityGroup, resID) {
+        return {
+            data: {
+                activity_ids: {
+                    model: 'mail.activity',
+                    res_ids: activityGroup.ids,
+                },
+                activity_state: activityGroup.state,
+            },
+            fields: {
+                activity_ids: {},
+                activity_state: {
+                    selection: [
+                        ['overdue', "Overdue"],
+                        ['today', "Today"],
+                        ['planned', "Planned"],
+                    ],
+                },
+            },
+            fieldsInfo: {},
+            model: this.state.model,
+            type: 'record',
+            res_id: resID,
+            getContext: function () {
+                return {}; // session.user_context
+            },
+            //todo intercept event or changes on record to update view
+        };
+    },
     /**
      * @override
      * @private
@@ -105,62 +141,34 @@ var ActivityRenderer = AbstractRenderer.extend({
             class: _.contains(this.filteredResIDs, resId) ? 'o_activity_filter_' + this.activeFilter : '',
         });
         var activityRecord = new ActivityRecord(this, record, { qweb: this.qweb });
-        this.defs.push(activityRecord.appendTo($nameTD));
+        activityRecord.appendTo($nameTD);
 
         var $cells = _.map(this.state.activity_types, function (node) {
-            var $td = $('<td>').addClass("o_activity_summary_cell");
             var activity_type_id = node[0];
             var activity_group = self.state.grouped_activities[resId];
             activity_group = activity_group && activity_group[activity_type_id] || {count: 0, ids: [], state: false};
+
+            var $td = $(QWeb.render('mail.ActivityViewRow', {
+                resId: resId,
+                activityGroup: activity_group,
+                activityTypeId: activity_type_id,
+            }));
             if (activity_group.state) {
-                $td.addClass(activity_group.state);
+                var record = self._getKanbanActivityData(activity_group, resId);
+                var widget = new KanbanActivity(self, "activity_ids", record, {});
+                widget.appendTo($td).then(function() {
+                    // replace clock by closest deadline
+                    var $date = $('<div class="o_closest_deadline">');
+                    var date = new Date(activity_group.o_closest_deadline);
+                    // To remove year only if current year
+                    if (moment().year() === moment(date).year()) {
+                        $date.text(date.toLocaleDateString(moment().locale(), { day: 'numeric', month: 'short' }));
+                    } else {
+                        $date.text(moment(date).format('ll'));
+                    }
+                    $td.find('a').html($date);
+                });   
             }
-            // we need to create a fake record in order to instanciate the KanbanActivity
-            // this is the minimal information in order to make it work
-            // AAB: move this to a function
-            var record = {
-                data: {
-                    activity_ids: {
-                        model: 'mail.activity',
-                        res_ids: activity_group.ids,
-                    },
-                    activity_state: activity_group.state,
-                },
-                fields: {
-                    activity_ids: {},
-                    activity_state: {
-                        selection: [
-                            ['overdue', _t("Overdue")],
-                            ['today', _t("Today")],
-                            ['planned', _t("Planned")],
-                        ],
-                    },
-                },
-                fieldsInfo: {},
-                model: self.state.model,
-                ref: resId, // not necessary, i think
-                type: 'record',
-                res_id: resId,
-                getContext: function () {
-                    return {}; // session.user_context
-                },
-                //todo intercept event or changes on record to update view
-            };
-            var widget = new KanbanActivity(self, "activity_ids", record, {});
-            widget.appendTo($td).then(function() {
-                // replace clock by closest deadline
-                var $date = $('<div class="o_closest_deadline">');
-                var date = new Date(activity_group.o_closest_deadline);
-                // To remove year only if current year
-                if (moment().year() === moment(date).year()) {
-                    $date.text(date.toLocaleDateString(moment().locale(), { day: 'numeric', month: 'short' }));
-                } else {
-                    $date.text(moment(date).format('ll'));
-                }
-                $td.find('a')
-                    .empty()
-                    .append($date);
-            });
             return $td;
         });
         var $tr = $('<tr/>', {class: 'o_data_row'})
@@ -172,6 +180,18 @@ var ActivityRenderer = AbstractRenderer.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onEmptyCell: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        var data = $(ev.currentTarget).data();
+        this.trigger_up('empty_cell_clicked', data);
+    },
     /**
      * @private
      * @override
