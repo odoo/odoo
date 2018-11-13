@@ -254,6 +254,12 @@ var ControlPanelRenderer = Renderer.extend({
                 self.trigger_up('breadcrumb_clicked', {controllerID: bc.controllerID});
             });
         }
+
+        var secondLast = index === length - 2;
+        if (secondLast) {
+            $bc.attr('accessKey', 'b');
+        }
+
         return $bc;
     },
     /**
