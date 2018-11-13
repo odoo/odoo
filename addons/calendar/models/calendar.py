@@ -1766,7 +1766,7 @@ class Meeting(models.Model):
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
         event_ids = super(Meeting, self)._search(new_args, offset=0, limit=0, order=None, count=False, access_rights_uid=access_rights_uid)
         events = self.browse(event_ids)
-        events = self.browse(events.get_recurrent_ids(args, order=order))
+        events = self.browse(events.get_recurrent_ids(new_args, order=order))
         if count:
             return len(events)
         elif limit:
