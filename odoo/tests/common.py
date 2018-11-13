@@ -1097,42 +1097,6 @@ class Form(object):
         arch = etree.fromstring(fvg['arch'])
 
         object.__setattr__(self, '_view', fvg)
-        # TODO: make this less crappy?
-        # look up edition view for the O2M
-        for f, descr in fvg['fields'].items():
-            if descr['type'] != 'one2many':
-                continue
-
-            node = next(n for n in arch.iter('field') if n.get('name') == f)
-            default_view = next(
-                (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
-                'tree'
-            )
-
-            refs = {
-                m.group('view_type'): m.group('view_id')
-                for m in ref_re.finditer(node.get('context', ''))
-            }
-            # always fetch for simplicity, ensure we always have a tree and
-            # a form view
-            submodel = env[descr['relation']]
-            views = submodel.with_context(**refs) \
-                .load_views([(False, 'tree'), (False, 'form')])['fields_views']
-            # embedded views should take the priority on externals
-            views.update(descr['views'])
-            # re-set all resolved views on the descriptor
-            descr['views'] = views
-
-            # if the default view is a kanban or a non-editable list, the
-            # "edition controller" is the form view
-            edition = views['form']
-            if default_view == 'tree':
-                subarch = etree.fromstring(views['tree']['arch'])
-                if subarch.get('editable'):
-                    edition = views['tree']
-
-            self._process_fvg(submodel, edition)
-            descr['views']['edition'] = edition
 
         self._process_fvg(recordp, fvg)
 
@@ -1148,6 +1112,35 @@ class Form(object):
             self._init_from_values(recordp)
         else:
             self._init_from_defaults(self._model)
+
+    def _o2m_set_edition_view(self, descr, node):
+        default_view = next(
+            (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
+            'tree'
+        )
+        refs = {
+            m.group('view_type'): m.group('view_id')
+            for m in ref_re.finditer(node.get('context', ''))
+        }
+        # always fetch for simplicity, ensure we always have a tree and
+        # a form view
+        submodel = self._env[descr['relation']]
+        views = submodel.with_context(**refs) \
+            .load_views([(False, 'tree'), (False, 'form')])['fields_views']
+        # embedded views should take the priority on externals
+        views.update(descr['views'])
+        # re-set all resolved views on the descriptor
+        descr['views'] = views
+        # if the default view is a kanban or a non-editable list, the
+        # "edition controller" is the form view
+        edition = views['form']
+        if default_view == 'tree':
+            subarch = etree.fromstring(views['tree']['arch'])
+            if subarch.get('editable'):
+                edition = views['tree']
+
+        self._process_fvg(submodel, edition)
+        descr['views']['edition'] = edition
 
     def __str__(self):
         return "<%s %s(%s)>" % (
@@ -1167,7 +1160,7 @@ class Form(object):
         # pre-resolve modifiers & bind to arch toplevel
         modifiers = fvg['modifiers'] = {}
         contexts = fvg['contexts'] = {}
-        for f in etree.fromstring(fvg['arch']).iter('field'):
+        for f in etree.fromstring(fvg['arch']).xpath('//field[not(ancestor::field)]'):
             fname = f.get('name')
             modifiers[fname] = {
                 modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
@@ -1176,6 +1169,11 @@ class Form(object):
             ctx = f.get('context')
             if ctx:
                 contexts[fname] = ctx
+
+            descr = fvg['fields'].get(fname) or {'type': None}
+            if descr['type'] == 'one2many':
+                self._o2m_set_edition_view(descr, f)
+
         fvg['modifiers']['id'] = {'required': False, 'readonly': True}
         fvg['onchange'] = model._onchange_spec(fvg)
 
