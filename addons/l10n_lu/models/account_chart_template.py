@@ -11,3 +11,12 @@ class AccountChartTemplate(models.Model):
         rslt = super(AccountChartTemplate, self).get_countries_posting_at_bank_rec()
         rslt.append('LU')
         return rslt
+
+    @api.model
+    def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
+        journal_data = super(AccountChartTemplate, self)._prepare_all_journals(
+            acc_template_ref, company, journals_dict)
+        for journal in journal_data:
+            if journal['type'] in ('sale', 'purchase'):
+                journal.update({'refund_sequence': True})
+        return journal_data
