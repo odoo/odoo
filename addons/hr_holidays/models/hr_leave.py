@@ -649,7 +649,7 @@ class HolidaysRequest(models.Model):
                 elif holiday.holiday_type == 'company':
                     employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
                 else:
-                    holiday.department_id.member_ids
+                    employees = holiday.department_id.member_ids
                 for employee in employees:
                     values = holiday._prepare_holiday_values(employee)
                     leaves += self.with_context(
