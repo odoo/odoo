@@ -15,6 +15,13 @@
     </th>
 </t>
 
+<t t-name="mail.ActivityViewRow">
+    <td t-att-data-res-id="resId" t-att-data-activity-type-id="activityTypeId"
+        t-attf-class="o_activity_summary_cell #{activityGroup.state ? activityGroup.state : 'o_activity_empty_cell'}">
+        <i t-if="!activityGroup.state" title="Create" class="text-center fa fa-plus"/>
+    </td>
+</t>
+
 <div t-name="ActivityView.nodata">
     <div class="o_view_nocontent" role="alert">
         <div class="o_nocontent_help">

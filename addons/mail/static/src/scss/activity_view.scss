@@ -5,6 +5,7 @@
     }
     .o_activity_summary_cell {
         background-color: #FFF;
+        cursor: pointer;
         &.planned {
             background-color: theme-color('success');
         }
@@ -27,13 +28,18 @@
                 line-height: 42px;
             }
         }
-        > .o_activity_empty_cell {
-            display: none;
-        }
-        &:hover > .o_activity_empty_cell {
-            color: gray;
-            display: block;
-            font-style: italic;
+        &.o_activity_empty_cell {
+            > i {
+                display: none;
+            }
+            &:hover {
+                background-color: #eee;
+
+                > i {
+                    color: gray;
+                    display: block;
+                }
+            }
         }
         .o_activity_btn > span {
             bottom: 5px;
