@@ -1054,9 +1054,6 @@ QUnit.module('Views', {
             viewOptions: {hasSidebar: true},
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
-                if (route === '/web/dataset/call_kw/ir.attachment/search_read') {
-                    return $.when([]);
-                }
                 assert.step(route);
                 return this._super.apply(this, arguments);
             },
