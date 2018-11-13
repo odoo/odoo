@@ -5,6 +5,7 @@ var BasicController = require('web.BasicController');
 
 var ActivityController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
+        empty_cell_clicked: '_onEmptyCell',
         send_mail_template: '_onSendMailTemplate',
     }),
 
@@ -25,6 +26,29 @@ var ActivityController = BasicController.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEmptyCell: function (ev) {
+        var state = this.model.get(this.handle);
+        this.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'mail.activity',
+            view_mode: 'form',
+            view_type: 'form',
+            views: [[false, 'form']],
+            target: 'new',
+            context: {
+                default_res_id: ev.data.resId,
+                default_res_model: state.model,
+                default_activity_type_id: ev.data.activityTypeId,
+            },
+            res_id: false,
+        }, {
+            on_close: this.reload.bind(this),
+        });
+    },
     /**
      * @private
      * @param {OdooEvent} ev
