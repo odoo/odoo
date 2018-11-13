@@ -61,6 +61,6 @@ class WebsiteBackend(http.Controller):
         request.env['res.config.settings'].create({
             'google_management_client_id': ga_client_id,
             'google_analytics_key': ga_analytics_key,
-            'website_id': current_website,
+            'website_id': current_website.id,
         }).execute()
         return True
