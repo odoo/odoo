@@ -206,7 +206,7 @@ class DeliveryCarrier(models.Model):
                     'error_message': _('Error: this delivery method is not available for this address.'),
                     'warning_message': False}
         price = self.fixed_price
-        if self.company_id.currency_id.id != order.currency_id.id:
+        if self.company_id and self.company_id.currency_id.id != order.currency_id.id:
             price = self.env['res.currency']._compute(self.company_id.currency_id, order.currency_id, price)
         return {'success': True,
                 'price': price,
