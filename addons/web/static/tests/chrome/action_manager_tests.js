@@ -2568,6 +2568,36 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('reverse breadcrumb works on accesskey "b"', async function (assert) {
+        assert.expect(4);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        await actionManager.doAction(3);
+
+        // open a record in form view
+        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        await testUtils.dom.click(actionManager.$('.o_form_view button:contains(Execute action)'));
+
+        assert.containsN(actionManager, '.o_control_panel .breadcrumb li', 3);
+
+        var $previousBreadcrumb = actionManager.$('.o_control_panel .breadcrumb li.active').prev();
+        assert.strictEqual($previousBreadcrumb.attr("accesskey"), "b",
+            "previous breadcrumb should have accessKey 'b'");
+        await testUtils.dom.click($previousBreadcrumb);
+
+        assert.containsN(actionManager, '.o_control_panel .breadcrumb li', 2);
+
+        var $previousBreadcrumb = actionManager.$('.o_control_panel .breadcrumb li.active').prev();
+        assert.strictEqual($previousBreadcrumb.attr("accesskey"), "b",
+            "previous breadcrumb should have accessKey 'b'");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('reload previous controller when discarding a new record', async function (assert) {
         assert.expect(8);
 
