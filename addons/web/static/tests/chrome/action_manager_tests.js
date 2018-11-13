@@ -2331,6 +2331,50 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('reverse breadcrumb works on accesskey "b"', function (assert) {
+        assert.expect(10);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(3);
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+        // open a record in form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 2,
+            "there should be two controllers in the breadcrumbs");
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li:last').text(), 'First record',
+            "breadcrumbs should contain the display_name of the opened record");
+
+        actionManager.$('.o_form_view button:contains(Execute action)').click();
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 3,
+            "there should be three controllers in the breadcrumbs");
+
+        var $previousBreadcrumb = $('.o_control_panel .breadcrumb li.active').prev();
+        assert.strictEqual($previousBreadcrumb.attr("accesskey"), "b",
+            "previous breadcrumb should have accessKye 'b'");
+        assert.strictEqual($('.o_control_panel .breadcrumb li.active').text(), 'Partners Action 4',
+            "breadcrumbs should contain the display_name of the action 4");
+
+        $previousBreadcrumb.click();
+        var $previousBreadcrumb = $('.o_control_panel .breadcrumb li.active').prev();
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 2,
+            "there should be two controllers in the breadcrumbs");
+        assert.strictEqual($previousBreadcrumb.attr("accesskey"), "b",
+            "previous breadcrumb should have accessKye 'b'");
+        assert.strictEqual($('.o_control_panel .breadcrumb li.active').text(), 'First record',
+            "breadcrumbs should contain the display_name of the opened record");
+        assert.strictEqual($previousBreadcrumb.text(), "Partners",
+            "previous breadcrumb contain Partners as a display name");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('reload previous controller when discarding a new record', function (assert) {
         assert.expect(8);
 
