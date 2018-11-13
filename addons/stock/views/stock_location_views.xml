@@ -35,7 +35,7 @@
                     <group string="Additional Information">
                         <field name="usage"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                        <field name="scrap_location"/>
+                        <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
                         <field name="return_location"/>
                     </group>
                     <group string="Localization" name="localization">

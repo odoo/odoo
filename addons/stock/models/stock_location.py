@@ -74,6 +74,11 @@ class Location(models.Model):
         else:
             self.complete_name = self.name
 
+    @api.onchange('usage')
+    def _onchange_usage(self):
+        if self.usage not in ('internal', 'inventory'):
+            self.scrap_location = False
+
     def write(self, values):
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
