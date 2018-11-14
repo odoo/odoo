@@ -142,6 +142,7 @@ class Employee(models.Model):
     def _compute_leaves_count(self):
         all_leaves = self.env['hr.leave.report'].read_group([
             ('employee_id', 'in', self.ids),
+            ('holiday_status_id.allocation_type', '!=', 'no'),
             ('state', '=', 'validate')
         ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
         mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in all_leaves])
