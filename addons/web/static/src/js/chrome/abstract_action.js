@@ -32,6 +32,13 @@ var AbstractAction = Widget.extend({
      * Called each time the action is detached from the DOM.
      */
     on_detach_callback: function () {},
+    /**
+     * Called by the action manager when action is restored (typically, when the
+     * user clicks on the action in the breadcrumb)
+     *
+     * @returns {Deferred|undefined}
+     */
+    willRestore: function () {},
 
     //--------------------------------------------------------------------------
     // Public
