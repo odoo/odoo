@@ -123,5 +123,29 @@
             <field name="position_id" ref="account_fiscal_position_foreign"/>
         </record>
 
+        <record id="account_fiscal_position_purchase_account" model="account.fiscal.position.account.template">
+            <field name="account_src_id" ref="l10n_mx.cuenta201_01"/>
+            <field name="account_dest_id" ref="l10n_mx.cuenta201_02"/>
+            <field name="position_id" ref="account_fiscal_position_foreign"/>
+        </record>
+
+        <record id="account_fiscal_position_sale_account" model="account.fiscal.position.account.template">
+            <field name="account_src_id" ref="l10n_mx.cuenta105_01"/>
+            <field name="account_dest_id" ref="l10n_mx.cuenta105_02"/>
+            <field name="position_id" ref="account_fiscal_position_foreign"/>
+        </record>
+
+        <record id="account_fiscal_position_purchase_advance_account" model="account.fiscal.position.account.template">
+            <field name="account_src_id" ref="l10n_mx.cuenta120_01"/>
+            <field name="account_dest_id" ref="l10n_mx.cuenta120_02"/>
+            <field name="position_id" ref="account_fiscal_position_foreign"/>
+        </record>
+
+        <record id="account_fiscal_position_sale_advance_account" model="account.fiscal.position.account.template">
+            <field name="account_src_id" ref="l10n_mx.cuenta206_01"/>
+            <field name="account_dest_id" ref="l10n_mx.cuenta206_02"/>
+            <field name="position_id" ref="account_fiscal_position_foreign"/>
+        </record>
+
     </data>
 </odoo>
