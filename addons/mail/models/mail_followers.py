@@ -121,7 +121,7 @@ SELECT partner.id as pid, NULL AS cid,
         SELECT partner_id FROM sub_followers
         WHERE sub_followers.channel_id IS NULL
             AND sub_followers.partner_id = partner.id
-            AND (sub_followers.internal <> TRUE OR partner.partner_share <> TRUE)
+            AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
     ) %s
     GROUP BY partner.id, users.notification_type
 UNION
