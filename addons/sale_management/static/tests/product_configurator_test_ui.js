@@ -16,7 +16,14 @@ tour.register('sale_product_configurator_tour', {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_sale_order"
 }, {
-    trigger: "a:contains('Configure a product')"
+    trigger: ".o_required_modifier[name=partner_id] input",
+    run: "text Couscous Magique",
+}, {
+    trigger: ".ui-menu-item > a:contains('Couscous Magique')",
+    auto: true,
+}, {
+    trigger: "a:contains('Configure a product')",
+    extra_trigger: ".o_field_widget[name=pricelist_id] > .o_external_button", // Wait for pricelist (onchange_partner_id)
 }, {
     trigger: '.o_product_configurator .o_input_dropdown input',
     run: 'click'
@@ -84,6 +91,16 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
+    run: function (){}
+}, {
+    trigger: '.o_readonly_modifier[name=amount_total]:contains("835")',
+    in_modal: false,
+    edition: 'community',
+    run: function (){}
+}, {
+    trigger: '.o_readonly_modifier[name=amount_total]:contains("837")',
+    in_modal: false,
+    edition: 'enterprise',
     run: function (){}
 }]);
 
