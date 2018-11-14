@@ -32,7 +32,6 @@ class TestPayslipBase(TransactionCase):
         self.developer_pay_structure = self.env['hr.payroll.structure'].create({
             'name': 'Salary Structure for Software Developer',
             'code': 'SD',
-            'company_id': self.ref('base.main_company'),
             'rule_ids': [(4, self.hra_rule_id), (4, self.conv_rule_id),
                          (4, self.prof_tax_rule_id), (4, self.pf_rule_id),
                          (4, self.mv_rule_id)],

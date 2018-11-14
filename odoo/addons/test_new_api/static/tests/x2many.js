@@ -59,7 +59,7 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '[data-toggle="tab"]:contains(Participants)'
     }, {
         content: "click to add participants",
-        trigger: '.tab-pane:eq(2).active .o_field_x2many_list_row_add a'
+        trigger: '.o_form_sheet .tab-pane:eq(2).active .o_field_x2many_list_row_add a'
     }, {
         content: "select Admin",
         trigger: 'tr:has(td:containsExact(Mitchell Admin)) .o_list_record_selector input[type="checkbox"]'
@@ -70,7 +70,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // save
         content: "save discussion",
         trigger: 'button.o_form_button_save',
-        extra_trigger: '.tab-pane:eq(2) .o_field_widget tbody tr:has(td:containsExact(Mitchell Admin))',
+        extra_trigger: '.o_form_sheet .tab-pane:eq(2) .o_field_widget tbody tr:has(td:containsExact(Mitchell Admin))',
     }, { // edit
         content: "edit discussion",
         trigger: 'button.o_form_button_edit',
@@ -79,7 +79,7 @@ odoo.define('web.test.x2many', function (require) {
         trigger: 'a[role=tab]:first',
     }, {
         content: "create new message a",
-        trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a'
+        trigger: '.o_form_sheet .tab-pane:eq(0) .o_field_x2many_list_row_add a'
     }, {
         content: "insert body a",
         trigger: '.modal-body textarea:first',
@@ -330,7 +330,7 @@ odoo.define('web.test.x2many', function (require) {
 
     {
         content: "switch to the second form view to test one2many with editable list (toggle menu dropdown)",
-        trigger: 'nav .o_menu_sections .dropdown-toggle:containsExact(Discussions)',
+        trigger: 'nav .o_menu_sections .dropdown-toggle:containsExact(Discussions), li.o_extra_menu_items a i.fa-plus',
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
     }, {
         content: "switch to the second form view to test one2many with editable list (open submenu)",
@@ -447,7 +447,7 @@ odoo.define('web.test.x2many', function (require) {
 
     {
         content: "switch to the third form view to test onchange changing one2many (toggle menu dropdown)",
-        trigger: 'nav .o_menu_sections .dropdown-toggle:containsExact(Discussions)',
+        trigger: 'nav .o_menu_sections .dropdown-toggle:containsExact(Discussions), li.o_extra_menu_items a i.fa-plus',
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
     }, {
         content: "switch to the thied form view to test onchange changing one2many (open submenu)",
