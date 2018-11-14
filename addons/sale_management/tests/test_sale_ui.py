@@ -8,14 +8,28 @@ class TestUi(odoo.tests.HttpCase):
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_tour.ready", login="admin")
 
     def test_02_product_configurator(self):
-        # To be able to test the product configurator, admin user must have access to "variants and options" feature, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        # group_product_variant: use the product configurator
+        # group_sale_pricelist: display the pricelist to determine when it is changed after choosing
+        #                       the partner
+        self.env.ref('base.user_admin').write({
+            'groups_id': [
+                (4, self.env.ref('product.group_product_variant').id),
+                (4, self.env.ref('product.group_sale_pricelist').id),
+            ],
+        })
 
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_tour.ready", login="admin")
 
     def test_03_product_configurator_advanced(self):
-        # To be able to test the product configurator, admin user must have access to "variants and options" feature, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        # group_product_variant: use the product configurator
+        # group_sale_pricelist: display the pricelist to determine when it is changed after choosing
+        #                       the partner
+        self.env.ref('base.user_admin').write({
+            'groups_id': [
+                (4, self.env.ref('product.group_product_variant').id),
+                (4, self.env.ref('product.group_sale_pricelist').id),
+            ],
+        })
 
         # Prepare relevant test data
         # This is not included in demo data to avoid useless noise

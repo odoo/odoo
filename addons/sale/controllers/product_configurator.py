@@ -183,7 +183,7 @@ class ProductConfiguratorController(http.Controller):
 
         product_id = None
         list_price = product_template.price_compute('list_price')[product_template.id]
-        price = product_template.price or list_price
+        price = product_template.price
         if(product):
             product = product.with_context(
                 no_variant_attributes_price_extra=[product_attribute_value.price_extra or 0.0
@@ -194,7 +194,7 @@ class ProductConfiguratorController(http.Controller):
             )
             product_id = product.id
             list_price = product.price_compute('list_price')[product.id]
-            price = product.price or list_price
+            price = product.price
 
         display_name = [product_template.name]
         if filtered_product_template_attribute_values:
