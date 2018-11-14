@@ -1247,10 +1247,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.skip('input field: change password value', function (assert) {
-        // password policy needs an RPC call to initialize &
-        // presents somewhat differently (custom widget), need way
-        // to augment/override tests
+    QUnit.test('input field: change password value', function (assert) {
         assert.expect(4);
 
         var form = createView({
@@ -1278,7 +1275,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.skip('input field: empty password', function (assert) {
+    QUnit.test('input field: empty password', function (assert) {
         assert.expect(3);
 
         this.data.partner.records[0].foo = false;
