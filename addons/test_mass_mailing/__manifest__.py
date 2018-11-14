@@ -9,7 +9,7 @@
     'description': """This module contains tests related to mass mailing. Those
 are contained in a separate module to use specific test models defined in
 test_mail. """,
-    'depends': ['test_mail', 'mass_mailing'],
+    'depends': ['test_mail', 'mass_mailing', 'mass_mailing_crm'],
     'data': [
         'security/ir.model.access.csv',
     ],

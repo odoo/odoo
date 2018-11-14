@@ -91,3 +91,4 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
+        self.assertEqual(mailing.ignored, 12, 'blacklist ignored email number incorrect, should be equals to 2')
