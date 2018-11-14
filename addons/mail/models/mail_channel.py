@@ -344,7 +344,7 @@ class Channel(models.Model):
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
-                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in whitelist),
+                'email_to': ','.join(formataddr((partner.name, partner.email_normalized)) for partner in whitelist if partner.email_normalized),
                 'recipient_ids': [],
             }
         return super(Channel, self)._notify_email_recipients(message, whitelist.ids)
