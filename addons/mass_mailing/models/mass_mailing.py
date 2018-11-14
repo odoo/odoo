@@ -767,7 +767,8 @@ class MassMailing(models.Model):
                 [('list_id', 'in', self.contact_list_ids.ids)])
             opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out).mapped('contact_id.email')
             opt_in_contacts = target_list_contacts.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email')
-            opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
+            normalized_email = [tools.email_split(c) for c in opt_out_contacts if c not in opt_in_contacts]
+            opt_out = set(email[0].lower() for email in normalized_email if email)
 
             _logger.info(
                 "Mass-mailing %s targets %s, blacklist: %s emails",
