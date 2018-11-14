@@ -343,8 +343,13 @@ class Channel(models.Model):
         whitelist = self.env['res.partner'].sudo().search([('id', 'in', recipient_ids)]).filtered(lambda p: not p.is_blacklisted)
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
+            emails_to = []
+            for partner in whitelist:
+                email = tools.email_split(partner.email)
+                if email:
+                    emails_to.append(formataddr((partner.name, email[0].lower())))
             return {
-                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in whitelist),
+                'email_to': ','.join(email for email in emails_to),
                 'recipient_ids': [],
             }
         return super(Channel, self)._notify_email_recipients(message, whitelist.ids)
