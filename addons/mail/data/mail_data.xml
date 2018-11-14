@@ -67,7 +67,7 @@
         </t>
     </td>
     <td valign="center" align="right">
-        <img t-att-src="'/logo.png?company=%s' % company.id" style="padding: 0px; margin: 0px; height: auto; max-width: 200px; max-height: 36px;" t-att-alt="'%s' % company.name"/>
+        <img t-att-src="'/logo.png?company=%s' % company.sudo().id" style="padding: 0px; margin: 0px; height: auto; max-width: 200px; max-height: 36px;" t-att-alt="'%s' % company.name"/>
     </td>
     </tr><tr>
     <td colspan="2" style="text-align:center;">
