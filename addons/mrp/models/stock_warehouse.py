@@ -110,6 +110,7 @@ class StockWarehouse(models.Model):
                 'create_values': {
                     'action': 'manufacture',
                     'procure_method': 'make_to_order',
+                    'company_id': self.company_id.id,
                     'picking_type_id': self.manu_type_id.id,
                     'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', _('Manufacture')).id
                 },
