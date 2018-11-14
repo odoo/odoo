@@ -568,7 +568,7 @@ msgstr "Blokkeertijd"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked hour(s) over the last month"
-msgstr "Geblokkeerde uren over de laatste maand"
+msgstr "Geblokkeerde uren is de vorige maand"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
@@ -2307,7 +2307,7 @@ msgstr "Algemene apparatuureffectiviteit"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr "Algemene apparatuureffectiviteit, gebaseerd op de laatste maand"
+msgstr "Algemene apparatuureffectiviteit, gebaseerd op de vorige maand"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
@@ -2373,7 +2373,7 @@ msgstr "Performance verliezen"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__performance
 msgid "Performance over the last month"
-msgstr "Performance van de laatste maand"
+msgstr "Performance van de vorige maand"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:191
@@ -2549,6 +2549,8 @@ msgid ""
 "Produce : Move the raw materials to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the raw materials from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Produceren: verplaats de grondstoffen rechtstreeks naar de productielocatie en start het productieproces.\n"
+"Picken / Produceren: Haal de grondstoffen van de voorraad naar ontvangstlocatie en breng deze vervolgens over naar de productielocatie."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2705,7 +2707,7 @@ msgstr "Productieve tijd"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__productive_time
 msgid "Productive hour(s) over the last month"
-msgstr "Productieve uren van de laatste maand"
+msgstr "Productieve uren van de vorige maand"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3191,6 +3193,8 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
+"Sommige van uw componenten worden getraceerd, u moet een productieorder "
+"opgeven om de juiste componenten op te halen."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:590
@@ -3199,6 +3203,8 @@ msgid ""
 "Some raw materials have been consumed for a lot/serial number that has not been produced. Unlock the MO and click on the components lines to correct it.\n"
 "List of the components:\n"
 msgstr ""
+"Sommige grondstoffen zijn verbruikt voor een partij- / serienummer dat niet is geproduceerd. De-blokkeer de productieorder en klik op de componentenregels om deze te corrigeren.\n"
+"Lijst met de componenten:\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -3561,6 +3567,8 @@ msgid ""
 "This BoM is used in some Manufacturing Orders that are still open. You "
 "should rather archive this BoM and create a new one."
 msgstr ""
+"Deze stuklijst wordt gebruikt in sommige productieorders die nog open staan."
+" U kunt beter deze stuklijst archiveren en een nieuwe aanmaken."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__tz
@@ -3591,6 +3599,9 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
+"Dit zijn de kosten op basis van de stuklijst van het product. Het wordt "
+"berekend door de kosten van de componenten en bewerkingen op te tellen die "
+"nodig zijn om het product te produceren."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4065,6 +4076,11 @@ msgid ""
 " operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"Wanneer een verwerving een 'produceer'-route heeft met een bewerkingstype "
+"ingesteld, zal deze proberen een productieorder voor dat product te maken "
+"met behulp van een stuklijst van hetzelfde bewerkingstype. Hiermee kunnen "
+"voorraadregels worden gedefinieerd die verschillende productieorders met "
+"verschillende stuklijsten activeren."
 
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
@@ -4086,6 +4102,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
+"Wanneer producten nodig zijn in<b>%s</b>, <br/>wordt een productieorder "
+"gecreëerd om aan de behoefte te voldoen."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_panel
@@ -4432,7 +4450,7 @@ msgid ""
 "Productivity Losses."
 msgstr ""
 "U moet ten minste één productiviteit verlies categorie te definiëren in "
-"'Productiviteit'. Maak er één aan via de Productie app, menu: Configuratie /"
+"'Productiviteit'. Maak er één aan via de Productie app, menu: Instellingen /"
 " Productiviteitsverlies."
 
 #. module: mrp
@@ -4444,7 +4462,7 @@ msgid ""
 " Productivity Losses."
 msgstr ""
 "U moet ten minste één productiviteit verlies categorie te definiëren in "
-"'Productiviteit'. Maak er één aan via de Productie app, menu: Configuratie /"
+"'Productiviteit'. Maak er één aan via de Productie app, menu: Instellingen /"
 " Productiviteitsverlies."
 
 #. module: mrp

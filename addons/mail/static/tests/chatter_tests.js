@@ -820,12 +820,6 @@ QUnit.test('chatter: post a message disable the send button', function(assert) {
             }
             return this._super(route, args);
         },
-        intercepts: {
-            get_messages: function (ev) {
-                ev.stopPropagation();
-                ev.data.callback($.when([]));
-            },
-        },
     });
 
     form.$('.o_chatter_button_new_message').click();
@@ -836,6 +830,52 @@ QUnit.test('chatter: post a message disable the send button', function(assert) {
     form.$('.o_chatter_button_new_message').click();
     assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
         "Send button should be enabled when posting another message");
+    form.destroy();
+});
+
+QUnit.test('chatter: post message failure keep message', function(assert) {
+    assert.expect(4);
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+        mockRPC: function (route, args) {
+            if (args.method === 'message_get_suggested_recipients') {
+                return $.when({2: []});
+            }
+            if (args.method === 'message_post') {
+                assert.ok(form.$('.o_composer_button_send').prop("disabled"),
+                    "Send button should be disabled when a message is being sent");
+                // simulate failure
+                return $.Deferred().reject();
+            }
+            if (args.method === 'message_format') {
+                return $.when([]);
+            }
+            return this._super(route, args);
+        },
+    });
+
+    form.$('.o_chatter_button_new_message').click();
+    assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
+        "Send button should be enabled initially");
+    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_button_send').click();
+    assert.strictEqual(form.$('.o_composer_text_field').val(), "My first message",
+        "Should keep unsent message in the composer on failure");
+    assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
+        "Send button should be re-enabled on message post failure");
     form.destroy();
 });
 

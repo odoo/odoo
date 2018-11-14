@@ -587,6 +587,22 @@ function parseFloatTime(value) {
 }
 
 /**
+ * Parse a String containing a percentage and convert it to float.
+ * The percentage can be a regular xx.xx float or a xx%.
+ *
+ * @param {string} value
+ *                The string to be parsed
+ * @returns {float}
+ * @throws {Error} if the value couldn't be converted to float
+ */
+function parsePercentage(value) {
+    if (value.slice(-1) === '%') {
+        return parseFloat(value.slice(0, -1)) / 100;
+    }
+    return parseFloat(value);
+}
+
+/**
  * Parse a String containing integer with language formating
  *
  * @param {string} value
@@ -668,6 +684,7 @@ return {
         many2one: parseMany2one,
         monetary: parseMonetary,
         one2many: _.identity,
+        percentage: parsePercentage,
         reference: parseMany2one,
         selection: _.identity, // todo
         text: _.identity, // todo

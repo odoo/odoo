@@ -877,8 +877,8 @@ class AccountMoveLine(models.Model):
         # Create list of debit and list of credit move ordered by date-currency
         debit_moves = self.filtered(lambda r: r.debit != 0 or r.amount_currency > 0)
         credit_moves = self.filtered(lambda r: r.credit != 0 or r.amount_currency < 0)
-        debit_moves.sorted(key=lambda a: (a.date, a.currency_id))
-        credit_moves.sorted(key=lambda a: (a.date, a.currency_id))
+        debit_moves = debit_moves.sorted(key=lambda a: (a.date_maturity or a.date, a.currency_id))
+        credit_moves = credit_moves.sorted(key=lambda a: (a.date_maturity or a.date, a.currency_id))
         # Compute on which field reconciliation should be based upon:
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
         #if all lines share the same currency, use amount_residual_currency to avoid currency rounding error

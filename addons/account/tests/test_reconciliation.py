@@ -971,3 +971,62 @@ class TestReconciliation(AccountingTestCase):
         # because they owe us still 50 CC.
         self.assertEqual(invoice_cust_1.state, 'open',
                          'Invoice is in status %s' % invoice_cust_1.state)
+
+    def test_multiple_term_reconciliation_opw_1906665(self):
+        '''Test that when registering a payment to an invoice with multiple
+        payment term lines the reconciliation happens against the line
+        with the earliest date_maturity
+        '''
+
+        payment_term = self.env['account.payment.term'].create({
+            'name': 'Pay in 2 installments',
+            'line_ids': [
+                # Pay 50% immediately
+                (0, 0, {
+                    'value': 'percent',
+                    'value_amount': 50,
+                }),
+                # Pay the rest after 14 days
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 14,
+                })
+            ],
+        })
+
+        # can't use self.create_invoice because it validates and we need to set payment_term_id
+        invoice = self.account_invoice_model.create({
+            'partner_id': self.partner_agrolait_id,
+            'payment_term_id': payment_term.id,
+            'currency_id': self.currency_usd_id,
+            'name': 'Multiple payment terms',
+            'account_id': self.account_rcv.id,
+            'type': 'out_invoice',
+            'date_invoice': time.strftime('%Y') + '-07-01',
+        })
+        self.account_invoice_line_model.create({
+            'product_id': self.product.id,
+            'quantity': 1,
+            'price_unit': 50,
+            'invoice_id': invoice.id,
+            'name': self.product.display_name,
+            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
+        })
+
+        invoice.action_invoice_open()
+
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 25,
+            'currency_id': self.currency_usd_id,
+            'journal_id': self.bank_journal_usd.id,
+        })
+        payment.post()
+
+        invoice.assign_outstanding_credit(payment.move_line_ids.filtered('credit').id)
+
+        receivable_lines = invoice.move_id.line_ids.filtered(lambda line: line.account_id == self.account_rcv).sorted('date_maturity')[0]
+        self.assertTrue(receivable_lines.matched_credit_ids)

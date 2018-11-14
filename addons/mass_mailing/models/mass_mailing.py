@@ -76,6 +76,7 @@ class MassMailingContactListRel(models.Model):
         return super(MassMailingContactListRel, self).write(vals)
 
     def action_open_mailing_list_contact(self):
+        """TODO DBE : To remove - Deprecated"""
         contact_id = self.contact_id
         action = {
             'name': _(contact_id.name),
@@ -220,11 +221,41 @@ class MassMailingContact(models.Model):
     message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
+    opt_out = fields.Boolean('Opt Out', compute='_compute_opt_out', search='_search_opt_out',
+                             help='Opt out flag for a specific mailing list.'
+                                  'This field should not be used in a view without a unique and active mailing list context.')
 
     @api.depends('email')
     def _compute_is_email_valid(self):
         for record in self:
             record.is_email_valid = re.match(EMAIL_PATTERN, record.email)
+
+    @api.model
+    def _search_opt_out(self, operator, value):
+        # Assumes operator is '=' or '!=' and value is True or False
+        if operator != '=':
+            if operator == '!=' and isinstance(value, bool):
+                value = not value
+            else:
+                raise NotImplementedError()
+
+        if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
+            [active_list_id] = self._context['default_list_ids']
+            contacts = self.env['mail.mass_mailing.list_contact_rel'].search([('list_id', '=', active_list_id)])
+            return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
+        else:
+            raise UserError('Search opt out cannot be executed without a unique and valid active mailing list context.')
+
+    @api.depends('subscription_list_ids')
+    def _compute_opt_out(self):
+        if 'default_list_ids' in self._context and isinstance(self._context['default_list_ids'], (list, tuple)) and len(self._context['default_list_ids']) == 1:
+            [active_list_id] = self._context['default_list_ids']
+            for record in self:
+                active_subscription_list = record.subscription_list_ids.filtered(lambda l: l.list_id.id == active_list_id)
+                record.opt_out = active_subscription_list.opt_out
+        else:
+            for record in self:
+                record.opt_out = False
 
     def get_name_email(self, name):
         name, email = self.env['res.partner']._parse_partner_name(name)

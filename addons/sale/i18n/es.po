@@ -3,37 +3,40 @@
 # * sale
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Carlos Lopez <celm1990@hotmail.com>, 2018
-# José Vicente <txusev@gmail.com>, 2018
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
 # Miguel Orueta <mo@landoo.es>, 2018
 # e2f_es_ t7 <e2f_es_t7@outlook.com>, 2018
 # Ana Juaristi <ajuaristio@gmail.com>, 2018
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2018
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
 # e2f_es_ t8 <e2f_es_t8@outlook.com>, 2018
 # Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# e2f <projects@e2f.com>, 2018
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
 # Alejandro Santana <alejandrosantana@anubia.es>, 2018
 # Rubi Navarro <ren@odoo.com>, 2018
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2018
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2018
 # Manuel De los Reyes <manuel9410z@gmail.com>, 2018
-# Cristopher Cravioto <ccr@odoo.com>, 2018
 # Miquel Torner <miq@odoo.com>, 2018
+# Cristopher Cravioto <ccr@odoo.com>, 2018
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 # Cristian Salamea <ovnicraft@gmail.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2018
 # Harald Panten <harald.panten@qubiq.es>, 2018
 # Lucas Weigandt <lucasweigandt@gmail.com>, 2018
+# Cris Martin <cristina.marrod@gmail.com>, 2018
+# Pilar Marín <pilar@odooperu.pe>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Lucas Weigandt <lucasweigandt@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Pilar Marín <pilar@odooperu.pe>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,7 +112,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:70
 #, python-format
 msgid "<b>Print this quotation to preview it.</b>"
-msgstr ""
+msgstr "<b>Imprima este presupuesto para previsualizar.</b>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -139,6 +142,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'presupuesto' if object.state in ('draft', 'sent') else 'Pdv'\n"
+"        Estimad@ ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Aqui esta\n"
+"        % if ctx.get('proforma')\n"
+"            adjunto su factura pro-forma\n"
+"        % else\n"
+"            el ${doc_name} <strong>${object.name}</strong>\n"
+"        % endif\n"
+"        % if object.origin:\n"
+"            (con referencia: ${object.origin} )\n"
+"        % endif\n"
+"        monto en <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
+"        de ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -163,7 +190,7 @@ msgstr "<i class=\"fa fa-comment\"/> Opinión"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Send message"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> Enviar mensaje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -393,7 +420,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This is a draft quotation.</strong>"
-msgstr ""
+msgstr "<strong>Este es un presupuesto en borrador.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -403,7 +430,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been canceled.</strong>"
-msgstr ""
+msgstr "<strong>Este presupuesto ha sido cancelado.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -775,14 +802,14 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose how to confirm quotations and get paid."
-msgstr ""
+msgstr "Elija como confirmar los presupuestos y recibir el pago. "
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:41
 #, python-format
 msgid "Click here to add some products or services to your quotation."
-msgstr ""
+msgstr "Clic aqui para añadir algún producto o servicio a su presupuesto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -951,7 +978,7 @@ msgstr "Crear un nuevo producto"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "Crea un nuevo presupuesto, ¡el primer paso de una nueva venta!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1073,7 +1100,7 @@ msgstr "Personalizar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize the look of your quotations."
-msgstr ""
+msgstr "Personaliza la vista de tus presupuestos."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1114,13 +1141,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "Validez de presupuesto por defecto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity (Days)"
-msgstr ""
+msgstr "Validez de presupuesto por defecto (Días)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_sale_note
@@ -2139,6 +2166,9 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Una vez que el presupuesto esta confirmado por el cliente, este se "
+"transforma en una Orden de venta.<br> Podrás crear una factura y cobrar el "
+"pago."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -3212,12 +3242,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send a quotation to test the customer portal."
-msgstr ""
+msgstr "Enviar un presupuesto para probar el portal del cliente."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
 msgid "Send a sample quotation."
-msgstr ""
+msgstr "Enviar un ejemplo de presupuesto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3227,7 +3257,7 @@ msgstr "Enviar por correo electrónico"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send sample"
-msgstr ""
+msgstr "Enviar prueba."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3573,6 +3603,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"La factura se genera automáticamente y está disponible en el portal del cliente cuando la adquirente de pagos confirma la transacción.\n"
+"La factura se marca como pagada y el pago se registra en el diario de pagos definido en la configuración de pagos.\n"
+"Se recomienda este modo si emite la factura final en el pedido y no después de la entrega."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3785,6 +3818,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Para enviar invitaciones en modo B2B, abre un contacto o seleccciona varios "
+"en la vista modo lista y haz clic en la opción 'Gestión de acceso al Portal'"
+"  del menú desplegable *Acción*."
 
 #. module: sale
 #: selection:sale.order,activity_state:0

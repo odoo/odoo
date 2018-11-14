@@ -598,6 +598,22 @@ class ProductProduct(models.Model):
 
         return name
 
+    def _has_valid_attributes(self, valid_attributes, valid_values):
+        """ Check if a product has valid attributes. It is considered valid if:
+            - it uses ALL valid attributes
+            - it ONLY uses valid values
+            We must make sure that all attributes are used to take into account the case where
+            attributes would be added to the template.
+
+            :param valid_attributes: a recordset of product.attribute
+            :param valid_values: a recordset of product.attribute.value
+            :return: True if the attibutes and values are correct, False instead
+        """
+        self.ensure_one()
+        values = self.attribute_value_ids.filtered(lambda v: v.attribute_id.create_variant != 'no_variant')
+        attributes = values.mapped('attribute_id')
+        return attributes == valid_attributes and values <= valid_values
+
 
 class ProductPackaging(models.Model):
     _name = "product.packaging"

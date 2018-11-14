@@ -357,6 +357,17 @@ class TestInherits(TransactionCase):
         self.assertEqual(user_bar.name, 'Bar', "name is given from specific partner")
         self.assertEqual(user_bar.signature, user_foo.signature, "signature should be copied")
 
+    @mute_logger('odoo.models')
+    def test_write_date(self):
+        """ modifying inherited fields must update write_date """
+        user = self.env.user
+        write_date_before = user.write_date
+
+        # write base64 image
+        user.write({'image': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
+        write_date_after = user.write_date
+        self.assertNotEqual(write_date_before, write_date_after)
+
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
