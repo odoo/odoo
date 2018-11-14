@@ -9,9 +9,9 @@
                     <field name="parent_id" invisible="1"/>
                     <field name="type" invisible="1"/>
 
-                    <div class="o_address_format">
-                        <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"
-                             class="oe_edit_only">
+                    <!-- Only shown in edit mode (after clicking on edit) -->
+                    <div class="o_address_format oe_edit_only">
+                        <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}">
                             <b>Company Address:</b>
                         </div>
                         <div class="o_row">
@@ -19,10 +19,10 @@
                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                         </div>
                         <div class="o_row">
-                            <label for="street_number" class="oe_edit_only">House</label>
+                            <label for="street_number">House</label>
                             <field name="street_number" colspan="1" col="1"
                                    class="o_address_street"/>
-                            <label for="street_number2" class="oe_edit_only">Door</label>
+                            <label for="street_number2">Door</label>
                             <field name="street_number2" colspan="1" col="1"
                                    class="o_address_street"/>
                         </div>
@@ -42,6 +42,15 @@
                                    options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                         </div>
                     </div>
+                    <!-- Only shown in readonly mode (user hasn't clicked on edit) -->
+                    <div class="o_address_format oe_read_only">
+                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>&amp;nbsp;
+                        <field name="city" placeholder="City" class="o_address_city"/>
+                        <field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}"/>
+                        <field name="country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                    </div>
                 </div>
             </form>
         </field>
@@ -51,5 +60,3 @@
         <field name="address_view_id" ref="view_res_partner_dutch"/>
     </record>
 </odoo>
-
-
