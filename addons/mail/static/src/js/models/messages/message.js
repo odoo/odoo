@@ -262,6 +262,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             documentID: this.getDocumentID(),
             id: id,
             imageSRC: this._getModuleIcon() || this.getAvatarSource(),
+            messageID: this.getID(),
             status: this.status,
             title: title,
         };
