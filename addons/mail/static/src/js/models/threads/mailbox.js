@@ -82,7 +82,7 @@ var Mailbox = SearchableThread.extend({
                 });
                 if (similarItem) {
                     unreadCounter = similarItem.unreadCounter + 1;
-                    messageIDs = similarItem.messagesIDs.concat(messageIDs);
+                    messageIDs = similarItem.messageIDs.concat(messageIDs);
                     var index = _.findIndex(items, similarItem);
                     items[index] = {
                         unreadCounter: unreadCounter,
