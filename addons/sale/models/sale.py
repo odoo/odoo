@@ -563,7 +563,10 @@ class SaleOrder(models.Model):
             # by onchanges, which are not triggered when doing a create.
             invoice.compute_taxes()
             # Idem for partner
+            so_payment_term_id = invoice.payment_term_id.id
             invoice._onchange_partner_id()
+            # To keep the payment terms set on the SO
+            invoice.payment_term_id = so_payment_term_id
             invoice.message_post_with_view('mail.message_origin_link',
                 values={'self': invoice, 'origin': references[invoice]},
                 subtype_id=self.env.ref('mail.mt_note').id)
