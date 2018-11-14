@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Slide">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides.scss" t-ignore="true"/>
+                <!-- Js widgets, ... order loading files is IMPORTANT -->
+                <script type="text/javascript" src="/website_slides/static/src/js/slides.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_like.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_share.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_upload.js"/>
+            </xpath>
+        </template>
+
+        <template id="assets_editor_inherit_website_slides" inherit_id="website.assets_editor" name="website_slides Assets Editor">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_slides/static/src/js/website_slides.editor.js"/>
+            </xpath>
+        </template>
+
+        <!-- Bundle (minimal) for embedded slide iframe -->
+        <template id="website_slides.slide_embed_assets" name="Website slides embed assets">
+            <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
+            <t t-call="web._assets_bootstrap"/>
+            <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides.scss" t-ignore="true"/>
+
+            <t t-call="web.pdf_js_lib"></t>
+            <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
+            <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
+        </template>
+
+
+    </data>
+</odoo>
