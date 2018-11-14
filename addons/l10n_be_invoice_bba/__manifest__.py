@@ -11,17 +11,18 @@
     'description': """
 
 Add Structured Communication to customer invoices.
----------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------
 
-Using BBA structured communication simplifies the reconciliation between invoices and payments.        
+Using BBA structured communication simplifies the reconciliation between invoices and payments.
 You can select the structured communication as payment communication in Invoicing/Accounting settings.
 Three algorithms are suggested:
+
     1) Random : +++RRR/RRRR/RRRDD+++
         **R..R =** Random Digits, **DD =** Check Digits
     2) Date : +++DOY/YEAR/SSSDD+++
         **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits
     3) Customer Reference +++RRR/RRRR/SSSDDD+++
-        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  
+        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits
     """,
     'depends': ['account', 'l10n_be'],
     'data' : [
