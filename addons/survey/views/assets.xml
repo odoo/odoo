@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- survey assets  -->
+    <template id="survey_assets" name="Survey Results assets">
+        <script src="/web/static/lib/nvd3/d3.v3.js"></script>
+        <script src="/web/static/lib/nvd3/nv.d3.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+        <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
+        <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+        <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
+
+        <t t-call="web._assets_frontend_helpers"/>
+        <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
+        <t t-call="web._assets_bootstrap"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fonts.scss" />
+        <!-- Some helper classes (like mt- mb-) are required for survey templates  -->
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/scss/web_editor.common.scss"/>
+        <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+        <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+    </template>
+
+    <template id="assets_backend" name="survey assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/survey/static/src/css/survey_result.css"/>
+        </xpath>
+    </template>
+</data>
+</odoo>
