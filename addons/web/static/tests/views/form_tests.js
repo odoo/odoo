@@ -5993,10 +5993,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.skip('support password attribute', function (assert) {
-        // password policy needs an RPC call to initialize &
-        // presents somewhat differently (custom widget), need way
-        // to augment/override tests
+    QUnit.test('support password attribute', function (assert) {
         assert.expect(3);
 
         var form = createView({
