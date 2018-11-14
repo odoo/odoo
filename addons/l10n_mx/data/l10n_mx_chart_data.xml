@@ -32,6 +32,14 @@
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_105_01')])]"/>
     </record>
+    <record id='cuenta105_02' model='account.account.template'>
+        <field name='name'>Clientes extranjeros</field>
+        <field name='code'>105.02.01</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="reconcile" eval="True"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_105_02')])]"/>
+    </record>
     <record id='cuenta107_05_01' model='account.account.template'>
         <field name='name'>Mercancías Enviadas - No Facturas</field>
         <field name='code'>107.05.01</field>
@@ -135,6 +143,14 @@
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_201_01')])]"/>
+    </record>
+    <record id='cuenta201_02' model='account.account.template'>
+        <field name='name'>Proveedores extranjeros</field>
+        <field name='code'>201.02.01</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="reconcile" eval="True"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_201_02')])]"/>
     </record>
     <record id='cuenta205_06_01' model='account.account.template'>
         <field name='name'>Mercancías Recibidas - No Facturas</field>
