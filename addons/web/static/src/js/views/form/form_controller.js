@@ -40,6 +40,15 @@ var FormController = BasicController.extend({
         this.hasSidebar = params.hasSidebar;
         this.toolbarActions = params.toolbarActions || {};
     },
+    /**
+     * Force mode back to readonly. Whenever we leave a form view, it is saved,
+     * and should no longer be in edit mode.
+     *
+     * @override
+     */
+    willRestore: function () {
+        this.mode = 'readonly';
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -242,7 +251,7 @@ var FormController = BasicController.extend({
      * @override
      */
     update: function (params, options) {
-        params = _.extend({viewType: 'form'}, params);
+        params = _.extend({viewType: 'form', mode: this.mode}, params);
         return this._super(params, options);
     },
 

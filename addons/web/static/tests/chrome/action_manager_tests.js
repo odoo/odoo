@@ -2878,6 +2878,31 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('form views are restored in readonly when coming back in breadcrumbs', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(3);
+
+        // open a record in form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+        // switch to edit mode
+        $('.o_control_panel .o_form_button_edit').click();
+
+        assert.ok(actionManager.$('.o_form_view').hasClass('o_form_editable'));
+        // do some other action
+        actionManager.doAction(4);
+        // go back to form view
+        $('.o_control_panel .breadcrumb a').last().click();
+        assert.ok(actionManager.$('.o_form_view').hasClass('o_form_readonly'));
+
+        actionManager.destroy();
+    });
+
     QUnit.test('honor group_by specified in actions context', function (assert) {
         assert.expect(5);
 

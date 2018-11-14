@@ -354,6 +354,15 @@ var BaseSettingController = FormController.extend({
         this.disableAutofocus = true;
         this.renderer.activeSettingTab = this.initialState.context.module;
     },
+    /**
+     * Settings view should always be in edit mode, so we have to override
+     * default behaviour
+     *
+     * @override
+     */
+    willRestore: function () {
+        this.mode = 'edit';
+    },
 });
 
 var BaseSettingsModel = BasicModel.extend({
