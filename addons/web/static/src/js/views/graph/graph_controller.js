@@ -179,7 +179,6 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      */
     _onButtonClick: function (event) {
         var $target = $(event.target);
-        var parent;
         var field;
         if ($target.hasClass('o_graph_button')) {
             this._setMode($target.data('mode'));

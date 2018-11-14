@@ -6,10 +6,7 @@ odoo.define('web.GraphModel', function (require) {
  * server.  It basically just do a read_group and format/normalize data.
  */
 
-var core = require('web.core');
 var AbstractModel = require('web.AbstractModel');
-
-var _t = core._t;
 
 return AbstractModel.extend({
     /**
