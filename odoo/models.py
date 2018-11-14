@@ -4359,7 +4359,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.
 
-        **Synopsis**: ``_get_xml_ids() -> { 'id': ['module.xml_id'] }``
+        **Synopsis**: ``_get_external_ids() -> { 'id': ['module.external_id'] }``
 
         :return: map of ids to the list of their fully qualified External IDs
                  in the form ``module.key``, or an empty list when there's no External
