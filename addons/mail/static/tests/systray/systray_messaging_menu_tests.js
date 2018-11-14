@@ -523,5 +523,68 @@ QUnit.test('preview of inbox message not linked to document + mark as read', fun
     messagingMenu.destroy();
 });
 
+QUnit.test('grouped preview for needaction messages linked to same document', function (assert) {
+    assert.expect(5);
+
+    // simulate two (read) needaction (mention) messages in channel 'general'
+    var needactionMessage1 = {
+        author_id: [1, "Demo"],
+        body: "<p>@Administrator: ping</p>",
+        channel_ids: [1],
+        id: 3,
+        model: 'mail.channel',
+        needaction: true,
+        needaction_partner_ids: [44],
+        record_name: 'general',
+        res_id: 1,
+    };
+    var needactionMessage2 = {
+        author_id: [2, "Other"],
+        body: "<p>@Administrator: pong</p>",
+        channel_ids: [1],
+        id: 4,
+        model: 'mail.channel',
+        needaction: true,
+        needaction_partner_ids: [44],
+        record_name: 'general',
+        res_id: 1,
+    };
+    this.data['mail.message'].records = [needactionMessage1, needactionMessage2];
+    this.data.initMessaging.channel_slots.channel_channel[0].message_unread_counter = 0;
+    this.data.initMessaging.needaction_inbox_counter = 2;
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: {
+            partner_id: 44,
+        },
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    messagingMenu.$('.dropdown-toggle').click();
+    var $previews = messagingMenu.$('.o_mail_preview');
+
+    assert.strictEqual($previews.length, 2,
+        "should display two previews (one for needaction, one for channel)");
+
+    var $needactionPreview = $previews.eq(0);
+    var $channelPreview = $previews.eq(1);
+
+    assert.strictEqual($needactionPreview.find('.o_preview_counter').text().trim(), "(2)",
+        "should show two needaction messages in the needaction preview");
+    assert.strictEqual($needactionPreview.find('.o_last_message_preview').text().replace(/\s/g, ""),
+        "Other:@Administrator:pong",
+        "should display last needaction message on needaction preview");
+    assert.strictEqual($channelPreview.find('.o_preview_counter').text().trim(), "",
+        "should show no unread messages in the channel preview");
+    assert.strictEqual($channelPreview.find('.o_last_message_preview').text().replace(/\s/g, ""),
+        "Other:@Administrator:pong",
+        "should display last needaction message on channel preview");
+
+    messagingMenu.destroy();
+});
+
 });
 });
