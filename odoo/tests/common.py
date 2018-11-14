@@ -1161,6 +1161,7 @@ class Form(object):
         modifiers = fvg['modifiers'] = {}
         contexts = fvg['contexts'] = {}
         for f in etree.fromstring(fvg['arch']).xpath('//field[not(ancestor::field)]'):
+            assert not len(f), "The server-side form does not currently support embedded views"
             fname = f.get('name')
             modifiers[fname] = {
                 modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
