@@ -51,6 +51,7 @@ class TestMrpCommon(common2.TestStockCommon):
         super(TestMrpCommon, cls).setUpClass()
 
         # Fetch mrp-related user groups
+        user_group_stock_user = cls.env.ref('stock.group_stock_user')
         user_group_mrp_user = cls.env.ref('mrp.group_mrp_user')
         user_group_mrp_manager = cls.env.ref('mrp.group_mrp_manager')
 
@@ -66,13 +67,13 @@ class TestMrpCommon(common2.TestStockCommon):
             'login': 'hilda',
             'email': 'h.h@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_mrp_user.id])]})
+            'groups_id': [(6, 0, [user_group_mrp_user.id, user_group_stock_user.id])]})
         cls.user_mrp_manager = Users.create({
             'name': 'Gary Youngwomen',
             'login': 'gary',
             'email': 'g.g@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [user_group_mrp_manager.id])]})
+            'groups_id': [(6, 0, [user_group_mrp_manager.id, user_group_stock_user.id])]})
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',
