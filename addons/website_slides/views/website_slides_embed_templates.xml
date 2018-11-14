@@ -1,17 +1,6 @@
 <?xml version="1.0" ?>
 <odoo>
     <data>
-        <!-- Bundle (minimal) for embedded slide iframe -->
-        <template id="website_slides.slide_embed_assets" name="Website slides embed assets">
-            <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
-            <t t-call="web._assets_bootstrap"/>
-            <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides.scss" t-ignore="true"/>
-
-            <t t-call="web.pdf_js_lib"></t>
-            <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
-            <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
-        </template>
-
         <!--
             This template is the PDF Viewer. It will mostly rendered throught an iFrame.
             The js file to bind event is slides_embed.js
