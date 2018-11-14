@@ -48,4 +48,4 @@ class TestMail(common.SavepointCase, mail_common.MockEmails):
             'partner_ids': [(4, self.user_employee.partner_id.id)]
         })
 
-        self.assertRaises(MailDeliveryException, mail.send)
+        self.assertRaises(MailDeliveryException, lambda: mail.send(raise_exception=True))
