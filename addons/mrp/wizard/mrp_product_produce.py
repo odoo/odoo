@@ -48,6 +48,23 @@ class MrpProductProduce(models.TransientModel):
     produce_line_ids = fields.One2many('mrp.product.produce.line', 'product_produce_id', string='Product to Track')
     product_tracking = fields.Selection(related="product_id.tracking", readonly=False)
 
+    def action_generate_serial(self):
+        self.ensure_one()
+        product_produce_wiz = self.env.ref('mrp.view_mrp_product_produce_wizard', False)
+        self.lot_id = self.env['stock.production.lot'].create({
+            'product_id': self.product_id.id
+        })
+        return {
+            'name': _('Produce'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mrp.product.produce',
+            'res_id': self.id,
+            'view_id': product_produce_wiz.id,
+            'target': 'new',
+        }
+
     @api.multi
     def do_produce(self):
         # Nothing to do for lots since values are created using default data (stock.move.lots)
