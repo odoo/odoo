@@ -272,26 +272,14 @@ class HrPayslip(models.Model):
                     localdict = _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
+                        'sequence': rule.sequence,
+                        'code': rule.code,
+                        'name': rule.name,
+                        'note': rule.note,
                         'salary_rule_id': rule.id,
                         'contract_id': contract.id,
-                        'name': rule.name,
-                        'code': rule.code,
-                        'category_id': rule.category_id.id,
-                        'sequence': rule.sequence,
-                        'appears_on_payslip': rule.appears_on_payslip,
-                        'condition_select': rule.condition_select,
-                        'condition_python': rule.condition_python,
-                        'condition_range': rule.condition_range,
-                        'condition_range_min': rule.condition_range_min,
-                        'condition_range_max': rule.condition_range_max,
-                        'amount_select': rule.amount_select,
-                        'amount_fix': rule.amount_fix,
-                        'amount_python_compute': rule.amount_python_compute,
-                        'amount_percentage': rule.amount_percentage,
-                        'amount_percentage_base': rule.amount_percentage_base,
-                        'register_id': rule.register_id.id,
-                        'amount': amount,
                         'employee_id': contract.employee_id.id,
+                        'amount': amount,
                         'quantity': qty,
                         'rate': rate,
                     }
@@ -420,18 +408,31 @@ class HrPayslip(models.Model):
 
 class HrPayslipLine(models.Model):
     _name = 'hr.payslip.line'
-    _inherit = 'hr.salary.rule'
     _description = 'Payslip Line'
     _order = 'contract_id, sequence, code'
 
+    name = fields.Char(required=True, translate=True)
+    note = fields.Text(string='Description')
+    sequence = fields.Integer(required=True, index=True, default=5,
+                              help='Use to arrange calculation sequence')
+    code = fields.Char(required=True,
+                       help="The code of salary rules can be used as reference in computation of other rules. "
+                       "In that case, it is case sensitive.")
     slip_id = fields.Many2one('hr.payslip', string='Pay Slip', required=True, ondelete='cascade')
     salary_rule_id = fields.Many2one('hr.salary.rule', string='Rule', required=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     contract_id = fields.Many2one('hr.contract', string='Contract', required=True, index=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     rate = fields.Float(string='Rate (%)', digits=dp.get_precision('Payroll Rate'), default=100.0)
     amount = fields.Float(digits=dp.get_precision('Payroll'))
     quantity = fields.Float(digits=dp.get_precision('Payroll'), default=1.0)
     total = fields.Float(compute='_compute_total', string='Total', digits=dp.get_precision('Payroll'), store=True)
+
+    amount_select = fields.Selection(related='salary_rule_id.amount_select', readonly=True)
+    amount_fix = fields.Float(related='salary_rule_id.amount_fix', readonly=True)
+    amount_percentage = fields.Float(related='salary_rule_id.amount_percentage', readonly=True)
+    appears_on_payslip = fields.Boolean(related='salary_rule_id.appears_on_payslip', readonly=True)
+    category_id = fields.Many2one(related='salary_rule_id.category_id', readonly=True)
+    register_id = fields.Many2one(related='salary_rule_id.register_id', readonly=True, store=True)
 
     @api.depends('quantity', 'amount', 'rate')
     def _compute_total(self):
