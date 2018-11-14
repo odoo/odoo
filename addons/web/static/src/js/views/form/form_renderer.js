@@ -873,6 +873,7 @@ var FormRenderer = BasicRenderer.extend({
         this.has_sheet = true;
         var $sheet = $('<div>', {class: 'clearfix o_form_sheet'});
         $sheet.append(_.map(node.children, this._renderNode.bind(this)));
+        this._registerModifiers(node, this.state, $sheet);
         return $sheet;
     },
     /**
