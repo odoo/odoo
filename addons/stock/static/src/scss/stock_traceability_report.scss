@@ -21,7 +21,7 @@
 }
 .o_stock_reports_page {
     @include media-breakpoint-down(md) {
-        overflow-x:scroll;
+        overflow-x:auto;
     }
     background-color: $o-view-background-color;
     &.o_stock_reports_no_print {
@@ -32,7 +32,7 @@
             @include o-stock-reports-lines($border-width: 1px, $font-weight: normal, $border-top-style: solid, $border-bottom-style: groove);
         }
         .o_stock_reports_table {
-            white-space: nowrap;
+            white-space: normal;
             margin-bottom: 228px;
             margin-top: 30px;
         }
