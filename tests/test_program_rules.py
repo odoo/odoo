@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 
 from openerp.addons.sale_coupon.tests.common import TestSaleCouponCommon
+from odoo.exceptions import UserError
 from odoo.fields import Date
 
 class TestProgramRules(TestSaleCouponCommon):
@@ -171,3 +172,71 @@ class TestProgramRules(TestSaleCouponCommon):
         ]})
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied as the number of uses is exceeded")
+
+    def test_program_rules_coupon_qty_and_amount_remove_not_eligible(self):
+        ''' This test will:
+                * Check quantity and amount requirements works as expected (since it's slightly different from a promotion_program)
+                * Ensure that if a reward from a coupon_program was allowed and the conditions are not met anymore,
+                  the reward will be removed on recompute.
+        '''
+        self.immediate_promotion_program.active = False  # Avoid having this program to add rewards on this test
+        order = self.empty_order
+
+        program = self.env['sale.coupon.program'].create({
+            'name': 'Get 10% discount if buy at least 4 Product A and $320',
+            'program_type': 'coupon_program',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 10.0,
+            'rule_products_domain': "[('id', 'in', [%s])]" % (self.product_A.id),
+            'rule_min_quantity': 3,
+            'rule_minimum_amount': 320.00,
+        })
+
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.product_A.id,
+            'name': 'Product A',
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+
+        sol2 = self.env['sale.order.line'].create({
+            'product_id': self.product_B.id,
+            'name': 'Product B',
+            'product_uom_qty': 4.0,
+            'order_id': order.id,
+        })
+
+        # Default value for coupon generate wizard is generate by quantity and generate only one coupon
+        self.env['sale.coupon.generate'].with_context(active_id=program.id).create({}).generate_coupon()
+        coupon = program.coupon_ids[0]
+
+        # Not enough amount since we only have 220 (100*2 + 5*4)
+        with self.assertRaises(UserError):
+            self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+                'coupon_code': coupon.code
+            }).process_coupon()
+
+        sol2.product_uom_qty = 24
+
+        # Not enough qty since we only have 3 Product A (Amount is ok: 100*2 + 5*24 = 320)
+        with self.assertRaises(UserError):
+            self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+                'coupon_code': coupon.code
+            }).process_coupon()
+
+        sol1.product_uom_qty = 3
+
+        self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line.ids), 3, "The order should contains the Product A line, the Product B line and the discount line")
+        self.assertEqual(coupon.state, 'used', "The coupon should be set to Consumed as it has been used")
+
+        sol1.product_uom_qty = 2
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line.ids), 2, "The discount line should have been removed as we don't meet the program requirements")
+        self.assertEqual(coupon.state, 'new', "The coupon should be reset to Valid as it's reward got removed")
