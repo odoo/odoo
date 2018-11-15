@@ -458,6 +458,9 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     setModerationStatus: function (newModerationStatus, options) {
         var self = this;
+        if (newModerationStatus === this._moderationStatus) {
+            return;
+        }
         this._moderationStatus = newModerationStatus;
         if (newModerationStatus === 'accepted' && options) {
             _.each(options.additionalThreadIDs, function (threadID) {
