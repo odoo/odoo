@@ -3,7 +3,10 @@
 from odoo.tests import TransactionCase
 from odoo.exceptions import UserError
 
+import odoo.tests
 
+
+@odoo.tests.tagged('external', '-standard')
 class TestGeoLocalize(TransactionCase):
 
     def test_default_openstreetmap(self):
@@ -14,12 +17,17 @@ class TestGeoLocalize(TransactionCase):
         self.assertTrue(test_partner.partner_latitude)
         self.assertTrue(test_partner.date_localization)
 
-    def test_google_without_api_key(self):
+        # we don't check here that the localization is at right place
+        # but just that result is realistic float coordonates
+        self.assertTrue(float(test_partner.partner_longitude) != 0.0)
+        self.assertTrue(float(test_partner.partner_latitude) != 0.0)
+
+    def test_googlemap_without_api_key(self):
         """ Without providing API key to google maps,
         the service doesn't work."""
         test_partner = self.env.ref('base.res_partner_address_4')
-        self.env['ir.config_parameter'].set_param('base_geolocalize.provider',
-                                                  'google')
+        google_map = self.env.ref('base_geolocalize.geoprovider_google_map').id
+        self.env['ir.config_parameter'].set_param('base_geolocalize.geo_provider', google_map)
         with self.assertRaises(UserError):
             test_partner.geo_localize()
         self.assertFalse(test_partner.partner_longitude)

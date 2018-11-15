@@ -219,7 +219,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="oauth">
+                            <div class="col-12 col-lg-6 o_setting_box" id="gengo">
                                 <div class="o_setting_left_pane">
                                     <field name="module_base_gengo"/>
                                 </div>
@@ -233,7 +233,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="unsplash">
                                 <div class="o_setting_left_pane">
                                     <field name="module_web_unsplash"/>
                                 </div>
@@ -244,7 +244,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled.">
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled." id="partner_autocomplete">
                                 <div class="o_setting_left_pane">
                                     <field name="module_partner_autocomplete"/>
                                 </div>
@@ -252,6 +252,20 @@
                                     <label for="module_partner_autocomplete"/>
                                     <div class="text-muted">
                                         Autocomplete company data (name, logo, address, etc.)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="base_geolocalize">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_base_geolocalize"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="web_geolocalize_settings">
+                                    <label string="Geo Localization" for="module_base_geolocalize"/>
+                                    <div class="text-muted">
+                                       GeoLocalize your partners
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('module_base_geolocalize','=', False)]}" name="base_geolocalize_warning">
+                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to choose your Geo Provider.</div>
                                     </div>
                                 </div>
                             </div>
