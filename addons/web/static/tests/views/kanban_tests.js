@@ -4232,6 +4232,37 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars should not crash in non grouped views', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                assert.step(route)
+                return this._super(route, args);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record').text(), 'namenamenamename',
+            "should have renderer 4 records");
+
+        assert.verifySteps(['/web/dataset/search_read'], "no read on progress bar data is done");
+        kanban.destroy();
+    });
+
     QUnit.test('column progressbars: creating a new column should create a new progressbar', function (assert) {
         assert.expect(1);
 
