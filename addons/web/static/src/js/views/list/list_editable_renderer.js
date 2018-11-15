@@ -970,7 +970,7 @@ ListRenderer.include({
      * So, we try to ignore clicks on subelements of the renderer that are
      * appended in the body, outside the table)
      *
-     * @param {MouseEvent} event
+     * @param {OdooEvent} event
      */
     _onWindowClicked: function (event) {
         // ignore clicks if this renderer is not in the dom.

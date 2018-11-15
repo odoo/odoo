@@ -207,7 +207,7 @@ var ColumnQuickCreate = Widget.extend({
      * When a click happens outside the quick create, we want to close it.
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {OdooEvent} event
      */
     _onWindowClicked: function (event) {
         // ignore clicks if the quick create is not in the dom

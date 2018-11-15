@@ -342,7 +342,7 @@ FormController.include({
     },
     /**
      * @private
-     * @param {KeyEvent} event
+     * @param {OdooEvent} event
      */
     _quantityListener: function (event) {
         var character = String.fromCharCode(event.data.$event.which);

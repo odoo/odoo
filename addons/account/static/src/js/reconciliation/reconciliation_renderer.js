@@ -133,7 +133,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
 
         if (state.valuenow === state.valuemax && !this.$('.done_message').length) {
             this.showRainbowMan(state);
-
         }
 
         if (state.notifications) {

@@ -254,7 +254,7 @@ var RecordQuickCreate = Widget.extend({
      * the quick create, but is still related to it (e.g. click in a dialog
      * opened from the quick create).
      *
-     * @param {MouseEvent} ev
+     * @param {OdooEvent} ev
      */
     _onWindowClicked: function (ev) {
         // ignore clicks if the quick create is not in the dom

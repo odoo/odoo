@@ -236,7 +236,7 @@ var ThreadField = AbstractField.extend({
         ) {
             this._fetchAndRenderThread();
         }
-    }
+    },
 });
 
 field_registry.add('mail_thread', ThreadField);
