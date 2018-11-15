@@ -16,15 +16,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: product
-#: code:addons/product/models/product_template.py:469
-#, python-format
-msgid "\n"
-"                The number of variants to generate is too high.\n"
-"                You should either not generate variants for each combination or generate them on demand from the sales order.\n"
-"                To do so, open the form view of attributes and change the mode of *Create Variants*."
-msgstr ""
-
-#. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
 msgstr ""
@@ -1221,6 +1212,11 @@ msgid "Never"
 msgstr ""
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "New Price ="
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -2012,7 +2008,13 @@ msgid "The number of products under this category (Does not consider the childre
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:55
+#: code:addons/product/models/product_template.py:475
+#, python-format
+msgid "The number of variants to generate is too high. You should either not generate variants for each combination or generate them on demand from the sales order. To do so, open the form view of attributes and change the mode of *Create Variants*."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:56
 #, python-format
 msgid "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."

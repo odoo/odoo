@@ -797,7 +797,7 @@ QUnit.module('Views', {
 
         this.data.partner.fields.foo.default = false; // no default value for this test
         this.data.partner.records[1].foo = false;  // 1 is record with id=2
-        this.data.partner.records[1].int_field = false;  // 1 is record with id=2
+        this.data.partner.records[1].display_name = false;  // 1 is record with id=2
 
         var form = createView({
             View: FormView,
@@ -807,16 +807,16 @@ QUnit.module('Views', {
                     '<sheet>' +
                         '<group>' +
                             '<field name="foo"/>' +
-                            '<field name="int_field" attrs="{\'readonly\': [[\'foo\', \'=\', \'readonly\']]}"/>' +
+                            '<field name="display_name" attrs="{\'readonly\': [[\'foo\', \'=\', \'readonly\']]}"/>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('.o_field_widget.o_field_empty').length, 1,
+        assert.strictEqual(form.$('.o_field_widget.o_field_empty').length, 2,
             "should have 1 empty field with correct class");
-        assert.strictEqual(form.$('.o_form_label_empty').length, 1,
+        assert.strictEqual(form.$('.o_form_label_empty').length, 2,
             "should have 1 muted label (for the empty fied) in readonly");
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -826,10 +826,10 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_form_label_empty').length, 0,
             "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class");
 
-        form.$('input[name="foo"]').val("readonly").trigger("input"); // int_field is now rerendered as readonly
-        form.$('input[name="foo"]').val("edit").trigger("input"); // int_field is now rerendered as editable
-        form.$('input[name="int_field"]').val('1').trigger("input"); // int_field is now set
-        form.$('input[name="foo"]').val("readonly").trigger("input"); // int_field is now rerendered as readonly
+        form.$('input[name="foo"]').val("readonly").trigger("input"); // display_name is now rerendered as readonly
+        form.$('input[name="foo"]').val("edit").trigger("input"); // display_name is now rerendered as editable
+        form.$('input[name="display_name"]').val('1').trigger("input"); // display_name is now set
+        form.$('input[name="foo"]').val("readonly").trigger("input"); // display_name is now rerendered as readonly
 
         assert.strictEqual(form.$('.o_field_empty').length, 0,
             "there still should not be any empty class on fields as the readonly one is now set");
@@ -1646,12 +1646,6 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {hasSidebar: true},
             res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.ok(!form.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
@@ -1791,12 +1785,6 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.get('title'), 'first record',
@@ -1829,9 +1817,6 @@ QUnit.module('Views', {
                     assert.strictEqual(args.kwargs.context.hey, 'hoy',
                         "should have send the correct context");
                 }
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -1853,12 +1838,6 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.get('title'), 'first record',
@@ -2426,12 +2405,6 @@ QUnit.module('Views', {
             arch: '<form string="Partners"><field name="foo"></field></form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -2773,12 +2746,6 @@ QUnit.module('Views', {
                 hasSidebar: true,
             },
             res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
@@ -2818,9 +2785,6 @@ QUnit.module('Views', {
             },
             res_id: 1,
             mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             }
@@ -4990,9 +4954,6 @@ QUnit.module('Views', {
                         "the active_ids should be an array with 1 inside.");
                     return $.when({});
                 }
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -6032,10 +5993,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.skip('support password attribute', function (assert) {
-        // password policy needs an RPC call to initialize &
-        // presents somewhat differently (custom widget), need way
-        // to augment/override tests
+    QUnit.test('support password attribute', function (assert) {
         assert.expect(3);
 
         var form = createView({
@@ -6273,10 +6231,6 @@ QUnit.module('Views', {
             res_id: 1,
             viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    // rpcs done by the sidebar
-                    return $.when([]);
-                }
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'copy') {
                     return result.then(function (id) {

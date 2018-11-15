@@ -124,6 +124,8 @@ class StockWarehouse(models.Model):
                 'create_values': {
                     'action': 'buy',
                     'picking_type_id': self.in_type_id.id,
+                    'group_propagation_option': 'none',
+                    'company_id': self.company_id.id,
                     'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id
                 },
                 'update_values': {

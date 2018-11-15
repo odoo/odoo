@@ -790,7 +790,7 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
-    QUnit.test('can download a file without data', function (assert) {
+    QUnit.test('download button is disabled when there is no data', function (assert) {
         assert.expect(1);
 
         this.data.partner.records = [];
@@ -803,16 +803,10 @@ QUnit.module('Views', {
                         '<field name="date" interval="month" type="col"/>' +
                         '<field name="foo" type="measure"/>' +
                 '</pivot>',
-            session: {
-                get_file: function (args) {
-                    assert.strictEqual(args.url, '/web/pivot/export_xls',
-                        "should call get_file with correct parameters");
-                    args.complete();
-                },
-            },
         });
 
-        pivot.$buttons.find('.o_pivot_download').click();
+        assert.strictEqual(pivot.$buttons.find('.o_pivot_download').attr('disabled'), 'disabled',
+            "download button should be disabled");
         pivot.destroy();
     });
 

@@ -1054,9 +1054,6 @@ QUnit.module('Views', {
             viewOptions: {hasSidebar: true},
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
-                if (route === '/web/dataset/call_kw/ir.attachment/search_read') {
-                    return $.when([]);
-                }
                 assert.step(route);
                 return this._super.apply(this, arguments);
             },
@@ -2849,72 +2846,6 @@ QUnit.module('Views', {
         $(textarea).trigger({type: 'keydown', which: $.ui.keyCode.RIGHT});
         assert.strictEqual(document.activeElement, list.$('textarea[name="foo"]')[0],
             "next field (checkbox) should now be focused");
-        list.destroy();
-    });
-
-    QUnit.skip('navigation: moving left/right with keydown', function (assert) {
-        assert.expect(8);
-
-        this.data.foo.fields.foo.type = 'text';
-        var list = createView({
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch:
-                '<tree editable="bottom">' +
-                    '<field name="m2m" widget="many2many_tags"/>' +
-                    '<field name="foo"/>' +
-                    '<field name="bar"/>' +
-                    '<field name="m2o"/>' +
-                    '<field name="qux"/>' +
-                '</tree>',
-        });
-
-        list.$('td:contains(13)').click();
-        var $m2m = list.$('[name="m2m"] input');
-        var $foo = list.$('textarea[name="foo"]');
-        var $bar = list.$('[name="bar"] input');
-        var $m2o = list.$('[name="m2o"] input');
-        var $qux = list.$('input[name="qux"]');
-
-        assert.strictEqual(document.activeElement, $qux[0],
-            "'qux' input should be focused");
-
-        $qux[0].selectionEnd = 0; // Simulate browser keyboard left behavior (unselect)
-        $qux.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
-        assert.strictEqual(document.activeElement, $m2o[0],
-            "'m2o' input should be focused");
-
-        // forget unselecting and try leaving
-        $m2o.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
-        assert.strictEqual(document.activeElement, $m2o[0],
-            "'m2o' input should still be focused");
-
-        $m2o[0].selectionEnd = 0; // Simulate browser keyboard left behavior (unselect)
-        $m2o.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
-        assert.strictEqual(document.activeElement, $bar[0],
-            "'bar' input should be focused");
-
-        // no unselect here as it is a checkbox
-        $bar.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
-        assert.strictEqual(document.activeElement, $foo[0],
-            "'foo' input should be focused");
-
-        // forget unselecting and try leaving
-        $foo.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
-        assert.strictEqual(document.activeElement, $foo[0],
-            "'foo' input should still be focused");
-
-        $foo[0].selectionEnd = 0; // Simulate browser keyboard left behavior (unselect)
-        $foo.trigger({type: 'keydown', which: $.ui.keyCode.LEFT});
-        assert.strictEqual(document.activeElement, $m2m[0],
-            "'m2m' input should be focused");
-
-        $m2m[0].selectionStart = $m2m[0].value.length; // Simulate browser keyboard right behavior (unselect)
-        $m2m.trigger({type: 'keydown', which: $.ui.keyCode.RIGHT});
-        assert.strictEqual(document.activeElement, $foo[0],
-            "'foo' input should be focused");
-
         list.destroy();
     });
 
