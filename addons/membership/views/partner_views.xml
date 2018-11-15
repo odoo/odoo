@@ -28,9 +28,9 @@
                     <field name="category_id"/>
                     <field name="membership_start" invisible="1"/>
                     <field name="membership_stop" string="End Membership Date"/>
-                    <filter string="Customers" name="customer" domain="[('customer','=',1)]"/>
+                    <filter string="Customers" name="customer" domain="[('customer','=',True)]"/>
                     <separator/>
-                    <filter string="Vendors" name="supplier" domain="[('supplier','=',1)]"/>
+                    <filter string="Vendors" name="supplier" domain="[('supplier','=',True)]"/>
                     <separator/>
                     <filter name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
                     <filter name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>

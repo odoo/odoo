@@ -131,7 +131,7 @@ class CustomerPortal(CustomerPortal):
 
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
-        project_groups = request.env['project.task'].read_group([('project_id', 'not in', project.ids)],
+        project_groups = request.env['project.task'].read_group([('project_id', 'not in', projects.ids)],
                                                                 ['project_id'], ['project_id'])
         for group in project_groups:
             proj_id = group['project_id'][0] if group['project_id'] else False

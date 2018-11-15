@@ -87,7 +87,7 @@ QUnit.module('base_settings_tests', {
     });
 
     QUnit.test('settings views does not read existing id when coming back in breadcrumbs', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var actions = [{
             id: 1,
@@ -127,6 +127,8 @@ QUnit.module('base_settings_tests', {
         actionManager.doAction(1);
         actionManager.$('button[name="4"]').click();
         $('.o_control_panel .breadcrumb-item a').click();
+        assert.ok(actionManager.$('.o_form_view').hasClass('o_form_editable'),
+            'settings view should still be in edit mode');
         assert.verifySteps([
             'load_views', // initial setting action
             'default_get', // this is a setting view => create new record

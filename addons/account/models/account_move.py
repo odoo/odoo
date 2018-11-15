@@ -167,8 +167,8 @@ class AccountMove(models.Model):
             return line_ids.filtered(lambda x: tax in x.tax_ids)
 
         def _get_tax_account(tax, amount):
-            if tax.tax_exigibility == 'on_payment' and tax.cash_basis_account:
-                return tax.cash_basis_account
+            if tax.tax_exigibility == 'on_payment' and tax.cash_basis_account_id:
+                return tax.cash_basis_account_id
             if tax.type_tax_use == 'purchase':
                 return tax.refund_account_id if amount < 0 else tax.account_id
             return tax.refund_account_id if amount >= 0 else tax.account_id
