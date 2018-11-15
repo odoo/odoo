@@ -23,6 +23,7 @@ Belgian Payroll Rules.
     'data': [
         'views/l10n_be_hr_payroll_view.xml',
         'data/l10n_be_hr_payroll_data.xml',
-        'data/hr.salary.rule.csv',
+        'views/res_config_settings_views.xml',
+        'data/hr.salary.rule.csv'
     ],
 }
