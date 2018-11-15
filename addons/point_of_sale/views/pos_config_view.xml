@@ -173,6 +173,10 @@
                                         <label string="Receipt Printer" for="iface_print_via_proxy" class="col-lg-3 o_light_label"/>
                                         <field name="iface_print_via_proxy"/>
                                     </div>
+                                    <div class="row" attrs="{'invisible' : [('iface_print_via_proxy', '=', False)]}">
+                                        <label string="Print in Arabic-compatible mode" for="iface_print_arabic" class="col-lg-3 o_light_label"/>
+                                        <field name="iface_print_arabic"/>
+                                    </div>
                                     <div class="row">
                                         <label string="Customer Display" for="iface_customer_facing_display" class="col-lg-3 o_light_label"/>
                                         <field name="iface_customer_facing_display"/>

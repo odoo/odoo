@@ -82,6 +82,10 @@
                                 <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
                             </div>
                         </div>
+                        <div class="row" attrs="{'invisible' : [('iface_print_via_proxy', '=', True)]}">
+                             <label string="Print in Arabic-compatible mode" for="iface_print_arabic" class="col-lg-3 o_light_label"/>
+                             <field name="iface_print_arabic"/>
+                        </div>
                     </div>
                 </div>
             </div>

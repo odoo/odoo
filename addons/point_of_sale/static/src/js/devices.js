@@ -420,7 +420,10 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     /*
      * ask the printer to print a receipt
      */
-    print_receipt: function(receipt){
+    print_image_receipt: function(receipt){
+        this.print_receipt(receipt, 'image_receipt');
+    },
+    print_receipt: function(receipt, type = 'xml_receipt'){
         var self = this;
         if(receipt){
             this.receipt_queue.push(receipt);
@@ -428,7 +431,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         function send_printing_job(){
             if (self.receipt_queue.length > 0){
                 var r = self.receipt_queue.shift();
-                self.message('print_xml_receipt',{ receipt: r },{ timeout: 5000 })
+                self.message('print_' + type,{ receipt: r },{ timeout: 5000 })
                     .then(function(){
                         send_printing_job();
                     },function(error){

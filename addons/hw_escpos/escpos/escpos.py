@@ -330,7 +330,7 @@ class Escpos:
 
        
         self._raw(S_RASTER_N)
-        buffer = b"%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1], 0)
+        buffer = b"%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1]&0xff, size[1]>>8)
         self._raw(codecs.decode(buffer, 'hex'))
         buffer = ""
 
@@ -386,7 +386,7 @@ class Escpos:
 
         if im.size[0] > 512:
             print("WARNING: Image is wider than 512 and could be truncated at print time ")
-        if im.size[1] > 255:
+        if im.size[1] > 0xffff:
             raise ImageSizeError()
 
         im_border = self._check_image_size(im.size[0])

@@ -1510,7 +1510,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         if (this.should_auto_print()) {
             this.print();
             if (this.should_close_immediately()){
-                this.click_next();
+                setTimeout(this.click_next.bind(this), 1000);
             }
         } else {
             this.lock_screen(false);
@@ -1561,10 +1561,24 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.pos.get_order()._printed = true;
     },
     print_xml: function() {
-        var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
+        var self = this;
+        if (this.pos.config.iface_print_arabic) {
+            var receipt = document.getElementsByClassName('pos-sale-ticket')[0];
+            var height = receipt.offsetHeight;
+            var width = receipt.offsetWidth;
 
-        this.pos.proxy.print_receipt(receipt);
-        this.pos.get_order()._printed = true;
+            html2canvas(receipt , {
+                onrendered: function(canvas) {
+                    var img = canvas.toDataURL();
+                    self.pos.proxy.print_image_receipt(img);
+                    self.pos.get_order()._printed = true;
+                }
+            });
+        } else {
+            var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
+            this.pos.proxy.print_receipt(receipt);
+            this.pos.get_order()._printed = true;
+        }
     },
     print: function() {
         var self = this;

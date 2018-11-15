@@ -10,6 +10,8 @@ import subprocess
 import time
 import netifaces as ni
 import traceback
+from PIL import Image
+import base64
 
 try: 
     from .. escpos import *
@@ -162,6 +164,9 @@ class EscposDriver(Thread):
                     if timestamp >= time.time() - 1 * 60 * 60:
                         self.print_receipt_body(printer,data)
                         printer.cut()
+                elif task == 'image_receipt':
+                    if timestamp >= time.time() - 1 * 60 * 60:
+                        self.print_image(printer, data)
                 elif task == 'xml_receipt':
                     if timestamp >= time.time() - 1 * 60 * 60:
                         printer.receipt(data)
@@ -194,6 +199,23 @@ class EscposDriver(Thread):
     def push_task(self,task, data = None):
         self.lockedstart()
         self.queue.put((time.time(),task,data))
+
+    def print_image(self, eprint, data):
+         filename = '/tmp/someImage.png'
+         basewidth = 550
+
+         receipt = data.replace('data:image/png;base64,','')
+         image = base64.b64decode(receipt)
+         with open(filename, 'wb') as f:
+            f.write(image)
+         img = Image.open(filename)
+         wpercent = (basewidth/float(img.size[0]))
+         hsize = int((float(img.size[1])*float(wpercent)))
+         img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+         img.save(filename)
+         eprint.image(filename)
+         eprint.cut()
+
 
     def print_status(self,eprint):
         localips = ['0.0.0.0','127.0.0.1','127.0.1.1']
@@ -385,3 +407,8 @@ class EscposProxy(hw_proxy.Proxy):
     def print_xml_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT XML RECEIPT') 
         driver.push_task('xml_receipt',receipt)
+
+    @http.route('/hw_proxy/print_image_receipt', type='json', auth='none', cors='*')
+    def print_xml_receipt(self, receipt):
+        _logger.info('ESC/POS: PRINT XML RECEIPT') 
+        driver.push_task('image_receipt',receipt)
