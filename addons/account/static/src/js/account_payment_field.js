@@ -128,6 +128,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOutstandingCreditAssign: function (event) {
+        event.preventDefault();
         var self = this;
         var id = $(event.target).data('id') || false;
         this._rpc({
