@@ -404,19 +404,19 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
                             <h2 class="o_row">
-                                <div>
+                                <div class="col">
                                     <label for="planned_revenue" class="oe_edit_only" />
                                     <div class="o_row">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="planned_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <field name="planned_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey"> at </span>
                                     </div>
                                 </div>
-                                <div>
+                                <div class="col">
                                     <label for="probability" class="oe_edit_only"/>
                                     <div class="o_row">
-                                        <field name="probability" widget="integer"/>
-                                        <span>%%</span>
+                                        <field name="probability" widget="integer" class="oe_inline"/>
+                                        <span class="oe_grey"> %%</span>
                                     </div>
                                 </div>
                             </h2>

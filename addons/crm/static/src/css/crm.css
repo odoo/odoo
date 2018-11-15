@@ -2,3 +2,14 @@
 .openerp .oe_margin_top_8 {
 	margin-top: 8px;
 }
+
+/* Do not forward port after saas-11.4 */
+.o_opportunity_form .oe_title > .o_row {
+	display: flex;
+}
+.o_opportunity_form .oe_title > .o_row > .col {
+	margin-right: 0.5em;
+}
+.o_opportunity_form .oe_title > .o_row > .col:last-child {
+	margin-right: 0;
+}
