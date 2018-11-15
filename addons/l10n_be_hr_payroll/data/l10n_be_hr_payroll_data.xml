@@ -533,63 +533,14 @@ result = -min(ip_amount * tax_rate, 11745)
         <field name="parent_id" ref="hr_payroll.structure_base"/>
         </record>
 
-        <!-- Salary advantages definition -->
-        <record id="hr_contract_advantage_template_meal_voucher_amount" model="hr.contract.advantage.template">
-            <field name="name">Check Value Meal</field>
-            <field name="code">meal_voucher_amount</field>
-            <field name="default_value">7.45</field>
-        </record>
-        <record id="hr_contract_advantage_template_internet" model="hr.contract.advantage.template">
-            <field name="name">Internet</field>
-            <field name="code">internet</field>
-            <field name="default_value">38.0</field>
-        </record>
-        <record id="hr_contract_advantage_template_mobile" model="hr.contract.advantage.template">
-            <field name="name">Mobile</field>
-            <field name="code">mobile</field>
-            <field name="default_value">30.0</field>
-        </record>
-        <record id="hr_contract_advantage_template_mobile_plus" model="hr.contract.advantage.template">
-            <field name="name">Mobile +</field>
-            <field name="code">mobile_plus</field>
-            <field name="default_value">50.0</field>
-        </record>
-        <record id="hr_contract_advantage_template_additional_net_amount" model="hr.contract.advantage.template">
-            <field name="name">Net supplements</field>
-            <field name="code">additional_net_amount</field>
-        </record>
-        <record id="hr_contract_advantage_template_retained_net_amount" model="hr.contract.advantage.template">
-            <field name="name">Net retained</field>
-            <field name="code">retained_net_amount</field>
-        </record>
-        <record id="hr_contract_advantage_template_commission_on_target" model="hr.contract.advantage.template">
-            <field name="name">Commission on target</field>
-            <field name="code">commission_on_target</field>
-            <field name="default_value">0.0</field>
-        </record>
-        <record id="hr_contract_advantage_template_fuel_card" model="hr.contract.advantage.template">
-            <field name="name">Fuel card</field>
-            <field name="code">fuel_card</field>
-            <field name="default_value">150.0</field>
-            <field name="lower_bound">0.0</field>
-            <field name="upper_bound">500.0</field>
-        </record>
-        <record id="hr_contract_advantage_template_holidays" model="hr.contract.advantage.template">
-            <field name="name">Leaves duration</field>
-            <field name="code">holidays</field>
-            <field name="default_value">20.0</field>
-            <field name="lower_bound">0.0</field>
-            <field name="upper_bound">35.0</field>
-        </record>
-        <record id="hr_contract_advantage_template_representation_fees" model="hr.contract.advantage.template">
-            <field name="name">Representation fees</field>
-            <field name="code">representation_fees</field>
-            <field name="default_value">150.0</field>
-        </record>
-        <record id="hr_contract_advantage_template_eco_checks" model="hr.contract.advantage.template">
-            <field name="name">Eco-checks</field>
-            <field name="code">eco_checks</field>
-            <field name="default_value">250.0</field>
-        </record>
-
+        <!-- Default advantage values -->
+        <function model="ir.default" name="set" eval="('hr.contract', 'holidays', 20.0)"/>
+        <function model="ir.default" name="set" eval="('hr.contract', 'commission_on_target', 0.0)"/>
+        <function model="ir.default" name="set" eval="('hr.contract', 'fuel_card', 150.0)"/>
+        <function model="ir.default" name="set" eval="('hr.contract', 'representation_fees', 150.0)"/>
+        <function model="ir.default" name="set" eval="('hr.contract', 'internet', 38.0)"/>
+        <function model="ir.default" name="set" eval="('hr.contract', 'mobile', 30.0)"/>
+        <function model="ir.default" name="set" eval="('hr.contract', 'mobile_plus', 50.0)"/>
+        <function model="ir.default" name="set" eval="('hr.contract', 'meal_voucher_amount', 7.45)"/>
+        <function model="ir.default" name="set" eval="('hr.contract', 'eco_checks', 250.0)"/>
 </odoo>
