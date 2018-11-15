@@ -156,6 +156,18 @@ var Chatter = Widget.extend({
         }
     },
     /**
+     * @private
+     */
+    _disableComposer: function () {
+        this.$(".o_composer_button_send").prop('disabled', true);
+    },
+    /**
+     * @private
+     */
+    _enableComposer: function () {
+        this.$(".o_composer_button_send").prop('disabled', false);
+    },
+    /**
      * Discard changes on the record.
      *
      * @private
@@ -231,12 +243,15 @@ var Chatter = Widget.extend({
                 self.composer.focus();
             }
             self.composer.on('post_message', self, function (message) {
+                self._disableComposer();
                 self._discardOnReload(message).then(function () {
                     self.fields.thread.postMessage(message).then(function () {
                         self._closeComposer(true);
                         if (self._reloadAfterPost(message)) {
                             self.trigger_up('reload');
                         }
+                    }).fail(function () {
+                        self._enableComposer();
                     });
                 });
             });
