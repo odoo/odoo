@@ -31,30 +31,11 @@
             <field name="posz">1</field>
             <field name="company_id"></field>
         </record>
-        <record id="stock_location_scrapped" model="stock.location">
-            <field name="name">Scrapped</field>
-            <field name="location_id" ref="stock_location_locations_virtual"/>
-            <field name="scrap_location">True</field>
-            <field name="usage">inventory</field>
-            <field name="company_id"></field>
-        </record>
 
-        <record id="location_inventory" model="stock.location">
-            <field name="name">Inventory adjustment</field>
-            <field name="location_id" ref="stock_location_locations_virtual"/>
-            <field name="usage">inventory</field>
-            <field name="company_id"></field>
-        </record>
         <record id="location_procurement" model="stock.location">
             <field name="name">Procurements</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="usage">procurement</field>
-            <field name="company_id"></field>
-        </record>
-        <record id="location_production" model="stock.location">
-            <field name="name">Production</field>
-            <field name="location_id" ref="stock_location_locations_virtual"/>
-            <field name="usage">production</field>
             <field name="company_id"></field>
         </record>
         <record id="stock_location_suppliers" model="stock.location">
@@ -102,16 +83,6 @@
             <field name="name">property_stock_customer</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
-        </record>
-        <record forcecreate="True" id="property_stock_inventory" model="ir.property">
-            <field name="name">property_stock_inventory</field>
-            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_inventory')]"/>
-            <field eval="'stock.location,'+str(location_inventory)" name="value"/>
-        </record>
-        <record forcecreate="True" id="property_stock_production" model="ir.property">
-            <field name="name">property_stock_production</field>
-            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_production')]"/>
-            <field eval="'stock.location,'+str(location_production)" name="value"/>
         </record>
 
 
@@ -177,8 +148,20 @@
         </function>
 
         <!-- create the transit location for each company existing -->
-        <function model="res.company" name="create_transit_location">
-            <value model="res.company" eval="obj().search([('internal_transit_location_id', '=', False)]).ids"/>
+        <function model="res.company" name="create_missing_transit_location">
+            <value model="res.company" eval="obj()"/>
+        </function>
+        <function model="res.company" name="create_missing_warehouse">
+            <value model="res.company" eval="obj()"/>
+        </function>
+        <function model="res.company" name="create_missing_inventory_loss_location">
+            <value model="res.company" eval="obj()"/>
+        </function>
+        <function model="res.company" name="create_missing_production_location">
+            <value model="res.company" eval="obj()"/>
+        </function>
+        <function model="res.company" name="create_missing_scrap_location">
+            <value model="res.company" eval="obj()"/>
         </function>
     </data>
 </odoo>

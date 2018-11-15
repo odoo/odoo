@@ -9,7 +9,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
-            'location_dest_id': obj().env.ref('stock.location_production').id,
+            'location_dest_id': obj().env.ref('product.product_product_11').property_stock_production.id,
             'location_id': obj().env.ref('stock.stock_location_stock').id,
             'name': '[M-Las] Mouse, Laser',
             'product_id': obj().env.ref('product.product_product_11').id,
@@ -38,7 +38,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
-            'location_dest_id': obj().env.ref('stock.location_production').id,
+            'location_dest_id': obj().env.ref('product.product_product_12').property_stock_production.id,
             'location_id': obj().env.ref('stock.stock_location_stock').id,
             'name': '[M-Wir] Mouse, Wireless',
             'price_unit': 50.0,
@@ -67,7 +67,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_id" ref="stock.stock_location_14"/>
         <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
-            'location_dest_id': obj().env.ref('stock.location_production').id,
+            'location_dest_id': obj().env.ref('product.product_product_13').property_stock_production.id,
             'location_id': obj().env.ref('stock.stock_location_stock').id,
             'name': '[RAM-SR5] RAM DDR SR5',
             'price_unit': 50.0,
