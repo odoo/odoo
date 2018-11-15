@@ -264,28 +264,28 @@ var RecordQuickCreate = Widget.extend({
 
         // ignore clicks on elements that open the quick create widget, to
         // prevent from closing quick create widget that has just been opened
-        if ($(ev.data.target).closest('.o-kanban-button-new, .o_kanban_quick_add').length) {
+        if ($(ev.data.$event.target).closest('.o-kanban-button-new, .o_kanban_quick_add').length) {
             return;
         }
 
         // ignore clicks in autocomplete dropdowns
-        if ($(ev.data.target).parents('.ui-autocomplete').length) {
+        if ($(ev.data.$event.target).parents('.ui-autocomplete').length) {
             return;
         }
 
         // ignore clicks in modals
-        if ($(ev.data.target).closest('.modal').length) {
+        if ($(ev.data.$event.target).closest('.modal').length) {
             return;
         }
 
         // ignore clicks if target is no longer in dom (e.g., a click on the
         // 'delete' trash icon of a m2m tag)
-        if (!document.contains(ev.data.target)) {
+        if (!document.contains(ev.data.$event.target)) {
             return;
         }
 
         // ignore clicks if target is inside the quick create
-        if (this.el.contains(ev.data.target) && this.el !== ev.data.target) {
+        if (this.el.contains(ev.data.$event.target) && this.el !== ev.data.$event.target) {
             return;
         }
 

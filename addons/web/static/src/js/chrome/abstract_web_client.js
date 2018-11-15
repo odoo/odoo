@@ -169,7 +169,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         window.addEventListener('blur', function (e) { self._hideAccessKeyOverlay(); });
         core.bus.on('click', this, function (ev) {
             $('.tooltip').remove();
-            if (!$(ev.data.target).is('input[type=file]')) {
+            if (!$(ev.data.$event.target).is('input[type=file]')) {
                 $(this.el.getElementsByClassName('oe_dropdown_menu oe_opened')).removeClass('oe_opened');
                 $(this.el.getElementsByClassName('oe_dropdown_toggle oe_opened')).removeClass('oe_opened');
             }

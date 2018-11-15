@@ -17,12 +17,12 @@ var bus = new Bus ();
 
 _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
     $('html').on(evtype, function(ev) {
-        bus.trigger(evtype, ev);
+        bus.trigger(evtype, {$event: ev});
     });
 });
 _.each('resize,scroll'.split(','), function(evtype) {
     $(window).on(evtype, function(ev) {
-        bus.trigger(evtype, ev);
+        bus.trigger(evtype, {$event: ev});
     });
 });
 

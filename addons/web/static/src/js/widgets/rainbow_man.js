@@ -44,7 +44,7 @@ var RainbowMan = Widget.extend({
     start: function () {
         var self = this;
         core.bus.on('click', this, function (ev) {
-            if (ev.originalEvent && ev.target.className.indexOf('o_reward') === -1) {
+            if (ev.data.$event.originalEvent && ev.data.$event.target.className.indexOf('o_reward') === -1) {
                 this.destroy();
             }
         });
