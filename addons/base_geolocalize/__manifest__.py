@@ -3,14 +3,17 @@
 {
     'name': 'Partners Geolocation',
     'version': '2.1',
-    'category': 'Sales',
+    'category': 'Extra Tools',
     'description': """
 Partners Geolocation
 ========================
     """,
-    'depends': ['base'],
+    'depends': ['base_setup'],
     'data': [
+        'security/ir.model.access.csv',
         'views/res_partner_views.xml',
+        'views/res_config_settings_views.xml',
+        'data/data.xml',
     ],
     'installable': True,
 }
