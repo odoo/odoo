@@ -179,7 +179,8 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
     /**
      * Get listeners of a channel
      *
-     * @returns {$.Promise<Object[]>} resolved with list of channel listeners
+     * @returns {$.Promise<Array<Object[]>>} resolved with list of list of
+     *   channel listeners.
      */
     getMentionPartnerSuggestions: function () {
         var self = this;
@@ -193,7 +194,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
             })
             .then(function (members) {
                 self._members = members;
-                return members;
+                return [members];
             });
         }
         return this._membersDef;

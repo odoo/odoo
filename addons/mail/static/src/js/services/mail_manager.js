@@ -199,7 +199,7 @@ var MailManager =  AbstractService.extend({
      * Get partners as mentions from a chatter
      * Typically all employees as partner suggestions.
      *
-     * @returns {Array<Object[]>}
+     * @returns {Array<Array<Object[]>>}
      */
     getMentionPartnerSuggestions: function () {
         return this._mentionPartnerSuggestions;
@@ -1195,8 +1195,8 @@ var MailManager =  AbstractService.extend({
      *
      * @private
      * @param {Object} result data from server on mail/init_messaging rpc
-     * @param {Object[]} result.mention_partner_suggestions list of suggestions
-     *   with all the employees
+     * @param {Array<Object[]>} result.mention_partner_suggestions list of
+     *   suggestions.
      * @param {integer} result.menu_id the menu ID of discuss app
      */
     _updateInternalStateFromServer: function (result) {
