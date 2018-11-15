@@ -9,7 +9,6 @@ from pprint import pprint as pp
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp.tools.parse_version import parse_version
 
 logger = logging.getLogger('openerp.manage')
 
@@ -141,13 +140,44 @@ def password_reset_subcommand(args):
         logger.warning('No user match for login {}'.format(args.login))
 
 
+def anonymize_subcommand(args):
+    user_obj = pool.get('res.users')
+    address_obj = pool.get('res.partner.address')
+    fetchmail_obj = pool.get('fetchmail.server')
+
+    # Pfffiou, loads all users... RIP postgreSQL and Python memory!!
+    # Of course, maybe better to make a batch for this but no more time yet :/
+    # Afterall, this is just a huge list of ID's ;-)
+    user_ids = user_obj.search(cr, SUPERUSER_ID, [])
+    if user_ids:
+        user_obj.write(cr, SUPERUSER_ID, user_ids, {
+            'password': args.new_password,  # Use API for specific salt, etc.
+            'email': args.new_email,
+        })
+        logger.info('All users have their passwords and emails updated')
+
+    if address_obj:
+        addresses_ids = address_obj.search(cr, SUPERUSER_ID, [])
+        if addresses_ids:
+            address_obj.write(cr, SUPERUSER_ID, addresses_ids, {'email': args.new_email})
+            logger.info('All partner addresses email have been reset.')
+
+    if fetchmail_obj:
+        server_ids = fetchmail_obj.search(cr, SUPERUSER_ID, [])
+        if server_ids:
+            fetchmail_obj.write(cr, SUPERUSER_ID, server_ids, {'password': ''})
+            logger.info('Fetchmail server conf reset.')
+
+
 COMMAND_SHELL = 'shell'
 COMMAND_MIGRATE = 'migrate'
 COMMAND_PASSWORD_RESET = 'password_reset'
+COMMAND_ANONYMIZE = 'anonymize'
 COMMANDS = [
     COMMAND_SHELL,
     COMMAND_MIGRATE,
     COMMAND_PASSWORD_RESET,
+    COMMAND_ANONYMIZE,
 ]
 
 MIGRATE_STAGE_PRE = 'pre'
@@ -193,6 +223,11 @@ parser_pass_reset = subparsers.add_parser(COMMAND_PASSWORD_RESET, help='Reset th
 parser_pass_reset.set_defaults(func=password_reset_subcommand)
 parser_pass_reset.add_argument('--login', required=True)
 parser_pass_reset.add_argument('--new-password', required=True)
+
+parser_anonymize = subparsers.add_parser(COMMAND_ANONYMIZE, help='Reset ALL users password and email.')
+parser_anonymize.set_defaults(func=anonymize_subcommand)
+parser_anonymize.add_argument('--new-password', required=True)
+parser_anonymize.add_argument('--new-email', required=True)
 
 if __name__ == "__main__":
     args = parser.parse_args()
