@@ -276,7 +276,7 @@ class IrHttp(models.AbstractModel):
 
         # check read access
         try:
-            last_update = record['__last_update']
+            record['__last_update']
         except AccessError:
             return None, 403
 
