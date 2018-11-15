@@ -253,15 +253,15 @@
                             <div class="o_kanban_record_bottom">
                                 <ul class="list-unstyled">
                                     <li>
-                                        <a name="action_test_survey" type="object">Design</a>
+                                        <a name="action_test_survey" type="object" groups="survey.group_survey_manager">Design</a>
                                     </li>
                                     <li>
-                                        <t t-if="record.designed.raw_value"><a type="object" name="action_test_survey">Test</a></t>
-                                        <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Test</a></t>
+                                        <t t-if="record.designed.raw_value"><a type="object" name="action_test_survey" groups="survey.group_survey_manager">Test</a></t>
+                                        <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;" groups="survey.group_survey_manager">Test</a></t>
                                     </li>
                                     <li>
-                                        <t t-if="record.designed.raw_value"><a type="object" name="action_send_survey">Share &amp;amp; Invite</a></t>
-                                        <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Share &amp;amp; Invite</a></t>
+                                        <t t-if="record.designed.raw_value"><a type="object" name="action_send_survey" groups="survey.group_survey_manager">Share &amp;amp; Invite</a></t>
+                                        <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;" groups="survey.group_survey_manager">Share &amp;amp; Invite</a></t>
                                     </li>
                                     <li>
                                         <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
