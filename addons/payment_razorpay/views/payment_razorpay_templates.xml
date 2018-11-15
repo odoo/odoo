@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="razorpay_form">
+        <div>
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+            <input type="hidden" name="key" t-att-value='key'/>
+            <input type="hidden" name="amount" t-att-value='amount'/>
+            <input type="hidden" name="name" t-att-value='name'/>
+            <input type="hidden" name="contact" t-att-value='contact'/>
+            <input type="hidden" name="email" t-att-value='email'/>
+            <input type="hidden" name="order_id" t-att-value='order_id'/>
+            <input type="hidden" name="merchant_name" t-att-value='acquirer.company_id.name'/>
+            <script type="text/javascript" src="/payment_razorpay/static/src/js/razorpay.js"></script>
+        </div>
+    </template>
+</odoo>
