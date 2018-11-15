@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record model="ir.ui.view" id="survey_form">
+        <field name="name">Form view for survey</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <form string="Survey">
+                <field name="id" invisible="1"/>
+                <field name="tot_start_survey" invisible="1"/>
+                <field name="is_closed" invisible="1"/>
+                <header groups="survey.group_survey_manager">
+                    <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
+                    <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_survey_user_input"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o">
+                            <field string="Answers" name="tot_comp_survey" widget="statinfo"/>
+                        </button>
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title" style="width: 100%;">
+                        <label for="title" class="oe_edit_only"/>
+                        <h1><field name="title" placeholder="Survey Title"/></h1>
+                    </div>
+                    <notebook>
+                        <page string="Edit Pages and Questions">
+                            <field name="page_ids" mode="tree" context="{'default_survey_id': active_id}" nolabel="1">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="title"/>
+                                    <field name="question_ids"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Options">
+                            <group class="o_label_nowrap">
+                                <field name="users_can_go_back" string="User can come back in the previous page"/>
+                                <field name="auth_required"/>
+                                <field name="quizz_mode" groups="base.group_no_one"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id= "survey_tree">
+        <field name="name">Tree view for survey</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <tree string="Survey">
+                <field name="active" invisible="1"/>
+                <field name="title" />
+                <field name="stage_id" />
+                <field name="tot_sent_survey" string="Invitations sent" />
+                <field name="tot_start_survey" string="Started" />
+                <field name="tot_comp_survey" string="Completed" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="survey_kanban">
+        <field name="name">Kanban view for survey</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id">
+                <field name="stage_id" />
+                <field name="designed" />
+                <field name="title" />
+                <field name="tot_sent_survey" />
+                <field name="tot_start_survey" />
+                <field name="tot_comp_survey" />
+                <field name="color" />
+                <field name="auth_required" />
+                <field name="public_url" />
+                <field name="activity_ids" />
+                <field name="activity_state" />
+                <templates>
+                    <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+
+                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <span class="fa fa-ellipsis-v"/>
+                            </a>
+                            <div class="dropdown-menu" role="menu">
+                                <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                                <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                <div role="separator" class="dropdown-divider"/>
+                                <div role="separator" class="dropdown-item-text">Color</div>
+                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                            </div>
+                        </div>
+                        <div class="o_kanban_record_top">
+                            <h4 class="o_kanban_record_title mb4"><field name="title" /></h4>
+                        </div>
+                        <div class="o_kanban_record_bottom">
+                            <ul class="list-unstyled">
+                                <li id="survey_test">
+                                    <t t-if="record.designed.raw_value"><a type="object" name="action_test_survey">Test</a></t>
+                                    <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Test</a></t>
+                                </li>
+                                <li>
+                                    <t t-if="record.designed.raw_value"><a type="object" name="action_send_survey">Share &amp;amp; Invite</a></t>
+                                    <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Share &amp;amp; Invite</a></t>
+                                </li>
+                                <li>
+                                    <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
+                                    <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="o_kanban_record_bottom">
+                            <div class="oe_kanban_bottom_left"/>
+                            <div class="oe_kanban_bottom_right">
+                                <field name="activity_ids" widget="kanban_activity" />
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="survey_survey_view_search" model="ir.ui.view">
+        <field name="name">survey.survey.search</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <search string="Survey">
+                <field string="Title" name="title"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <separator/>
+                <filter string="My Activities" name="activities_my"
+                    domain="[('activity_ids.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Upcoming Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                    ]"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_survey_form">
+        <field name="name">Surveys</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a new survey
+          </p><p>
+            You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.
+          </p><p>
+            Design easily your survey, send invitations to answer by email and analyse answers.
+          </p>
+        </field>
+    </record>
+    <act_window context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}" id="act_survey_pages" name="Pages" res_model="survey.page" src_model="survey.survey"/>
+    <act_window context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}" id="act_survey_question" name="Questions" res_model="survey.question" src_model="survey.survey"/>
+
+    <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
+
+</data>
+</odoo>
