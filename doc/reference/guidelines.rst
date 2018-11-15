@@ -399,11 +399,6 @@ source code tries to respect Python standard, but some of them can be ignored.
 - E501: line too long
 - E301: expected 1 blank line, found 0
 - E302: expected 2 blank lines, found 1
-- E126: continuation line over-indented for hanging indent
-- E123: closing bracket does not match indentation of opening bracket's line
-- E127: continuation line over-indented for visual indent
-- E128: continuation line under-indented for visual indent
-- E265: block comment should start with '# '
 
 Imports
 -------
