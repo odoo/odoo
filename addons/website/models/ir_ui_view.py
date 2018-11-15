@@ -45,7 +45,7 @@ class View(models.Model):
                     view.with_context(no_cow=True).key = 'website.key_%s' % str(uuid.uuid4())[:6]
                 if not view.website_id and current_website_id and not self._context.get('no_cow'):
                     # If already a specific view for this generic view, write on it
-                    website_specific_view = self.env['ir.ui.view'].search([
+                    website_specific_view = view.search([
                         ('key', '=', view.key),
                         ('website_id', '=', current_website_id)
                     ], limit=1)
