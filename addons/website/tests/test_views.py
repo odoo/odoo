@@ -421,10 +421,13 @@ class TestCowViewSaving(common.TransactionCase):
             'arch': '<div>content</div>',
         })
 
-        total_views = View.search_count([])
+        total_views = View.with_context(active_test=False).search_count([])
         base_view.with_context(website_id=1).write({'name': 'New Name'})  # This will not write on `base_view` but will copy it to a specific view on which the `name` change will be applied
+        specific_view = View.search([['name', '=', 'New Name'], ['website_id', '=', 1]])
         base_view.with_context(website_id=1).write({'name': 'Another New Name'})
-        self.assertEqual(total_views + 1, View.search_count([]), "Second write should have wrote on the view copied during first write")
+        specific_view.active = False
+        base_view.with_context(website_id=1).write({'name': 'Yet Another New Name'})
+        self.assertEqual(total_views + 1, View.with_context(active_test=False).search_count([]), "Subsequent writes should have written on the view copied during first write")
 
         # 2. Test with calling save() from ir.ui.view
         view_arch = '''<t name="Second View" t-name="website.second_view">
@@ -444,12 +447,12 @@ class TestCowViewSaving(common.TransactionCase):
             'arch': view_arch,
         })
 
-        total_views = View.search_count([])
+        total_views = View.with_context(active_test=False).search_count([])
         second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[1]" data-oe-field="arch" data-oe-model="ir.ui.view">First editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[1]")
         second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[3]" data-oe-field="arch" data-oe-model="ir.ui.view">Second editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[3]")
-        self.assertEqual(total_views + 1, View.search_count([]), "Second save should have wrote on the view copied during first save")
+        self.assertEqual(total_views + 1, View.with_context(active_test=False).search_count([]), "Second save should have written on the view copied during first save")
 
-        total_specific_view = View.search_count([('arch_db', 'like', 'First editable_part'), ('arch_db', 'like', 'Second editable_part')])
+        total_specific_view = View.with_context(active_test=False).search_count([('arch_db', 'like', 'First editable_part'), ('arch_db', 'like', 'Second editable_part')])
         self.assertEqual(total_specific_view, 1, "both editable_part should have been replaced on a created specific view")
 
     def test_cow_complete_flow(self):
