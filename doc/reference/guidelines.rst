@@ -280,8 +280,8 @@ Odoo supports custom tags acting as syntactic sugar:
 The 4 first tags are prefered over the *record* notation.
 
 
-Naming xml_id
--------------
+XML IDs and naming
+------------------
 
 Security, View and Action
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -304,17 +304,33 @@ Use the following pattern :
   for the 'model_name_group_user', 'public' for public user, 'company'
   for multi-company rules, ...).
 
+Name should be identical to xml id with dots replacing underscores. Actions
+should have a real naming as it is used as display name.
+
 .. code-block:: xml
 
-    <!-- views and menus -->
+    <!-- views  -->
     <record id="model_name_view_form" model="ir.ui.view">
+        <field name="name">model.name.view.form</field>
         ...
     </record>
 
     <record id="model_name_view_kanban" model="ir.ui.view">
+        <field name="name">model.name.view.kanban</field>
         ...
     </record>
 
+    <!-- actions -->
+    <record id="model_name_action" model="ir.act.window">
+        <field name="name">Model Main Action</field>
+        ...
+    </record>
+
+    <record id="model_name_action_child_list" model="ir.actions.act_window">
+        <field name="name">Model Access Childs</field>
+    </record>
+
+    <!-- menus and sub-menus -->
     <menuitem
         id="model_name_menu_root"
         name="Main Menu"
@@ -327,15 +343,6 @@ Use the following pattern :
         action="model_name_action"
         sequence="10"
     />
-
-    <!-- actions -->
-    <record id="model_name_action" model="ir.actions.act_window">
-        ...
-    </record>
-
-    <record id="model_name_action_child_list" model="ir.actions.act_window">
-        ...
-    </record>
 
     <!-- security -->
     <record id="module_name_group_user" model="res.groups">
@@ -350,30 +357,31 @@ Use the following pattern :
         ...
     </record>
 
+Inheriting XML
+~~~~~~~~~~~~~~
 
+Xml Ids of inheriting views should use the same ID as the original record.
+It helps finding all inheritance at a glance. As final Xml Ids are prefixed
+by the module that creates them there is no overlap.
 
-.. note:: View names use dot notation ``my.model.view_type`` or
-          ``my.model.view_type.inherit`` instead of *"This is the form view of
-          My Model"*.
-
-
-Inherited XML
-~~~~~~~~~~~~~
-
-The naming pattern of inherited view is
-
-#. Extension mode: Use the same xml id than the original view you are extending, and suffix it by :samp:`{_inherit}` . For instance, the view :samp:`project.project_view_form` can be extended by :samp:`project_forecast.project_view_form_inherit`.
-#. Primary mode: Keep the original xml id.
-
+Naming should contain an ``.inherit.{details}`` suffix to ease understanding
+the override purpose when looking at its name.
 
 .. code-block:: xml
 
-    <record id="module2.model_view_form_inherit" model="ir.ui.view">
+    <record id="model_view_form" model="ir.ui.view">
+        <field name="name">model.view.form.inherit.module2</field>
         <field name="inherit_id" ref="module1.model_view_form"/>
         ...
     </record>
 
+New primary views do not require the inherit suffix as those are new records
+based upon the first one.
+
+.. code-block:: xml
+
     <record id="module2.model_view_form" model="ir.ui.view">
+        <field name="name">model.view.form.module2</field>
         <field name="inherit_id" ref="module1.model_view_form"/>
         <field name="mode">primary</field>
         ...
