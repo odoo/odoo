@@ -114,7 +114,7 @@ SELECT partner.id as pid, NULL AS cid,
         partner.active as active, partner.partner_share as pshare, NULL as ctype,
         users.notification_type AS notif, array_agg(groups.id) AS groups
     FROM res_partner partner
-    LEFT JOIN res_users users ON users.partner_id = partner.id
+    LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
     LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
     LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
     WHERE EXISTS (
@@ -148,7 +148,7 @@ SELECT partner.id as pid, NULL AS cid,
     partner.active as active, partner.partner_share as pshare, NULL as ctype,
     users.notification_type AS notif, NULL AS groups
 FROM res_partner partner
-LEFT JOIN res_users users ON users.partner_id = partner.id
+LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
 WHERE partner.id IN %s"""
                 params.append(tuple(pids))
             if cids:
