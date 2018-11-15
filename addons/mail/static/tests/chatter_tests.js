@@ -2450,6 +2450,124 @@ QUnit.test('chatter: suggested partner auto-follow on message post', function (a
     form.destroy();
 });
 
+QUnit.test('chatter: mention prefetched partners (followers & employees)', function (assert) {
+    // Note: employees are in prefeteched partner for mentions in chatter when
+    // the module hr is installed.
+    assert.expect(10);
+
+    var followerSuggestions = [{
+        id: 1,
+        name: 'FollowerUser1',
+        email: 'follower-user1@example.com',
+    }, {
+        id: 2,
+        name: 'FollowerUser2',
+        email: 'follower-user2@example.com',
+    }];
+
+    var nonFollowerSuggestions = [{
+        id: 3,
+        name: 'NonFollowerUser1',
+        email: 'non-follower-user1@example.com',
+    }, {
+        id: 4,
+        name: 'NonFollowerUser2',
+        email: 'non-follower-user2@example.com',
+    }];
+
+    // link followers
+    this.data.partner.records[0].message_follower_ids = [10, 20];
+
+    // prefetched partners
+    this.data.initMessaging = {
+        mention_partner_suggestions: [followerSuggestions.concat(nonFollowerSuggestions)],
+    };
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                    '<field name="message_ids" widget="mail_thread" options="{\'display_log_button\': True}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (route === '/mail/read_followers') {
+                return $.when({
+                    followers: [{
+                        id: 10,
+                        name: 'FollowerUser1',
+                        email: 'follower-user1@example.com',
+                        res_model: 'res.partner',
+                        res_id: 1,
+                    }, {
+                        id: 20,
+                        name: 'FollowerUser2',
+                        email: 'follower-user2@example.com',
+                        res_model: 'res.partner',
+                        res_id: 2,
+                    }],
+                    subtypes: [],
+                });
+            }
+            if (args.method === 'message_get_suggested_recipients') {
+                return $.when({2: []});
+            }
+            if (args.method === 'get_mention_suggestions') {
+                throw new Error('should not fetch partners for mentions');
+            }
+            return this._super(route, args);
+        },
+        session: {},
+    });
+
+    assert.strictEqual(form.$('.o_followers_count').text(), '2',
+        "should have two followers of this document");
+    assert.strictEqual(form.$('.o_followers_list > .o_partner').text().replace(/\s+/g, ''),
+        'FollowerUser1FollowerUser2',
+        "should have correct follower names");
+    assert.strictEqual(form.$('.o_composer_mention_dropdown').length, 0,
+        "should not show the mention suggestion dropdown");
+
+    form.$('.o_chatter_button_new_message').click();
+    var $input = form.$('.oe_chatter .o_composer_text_field:first()');
+    $input.val('@');
+    // the cursor position must be set for the mention manager to detect that we are mentionning
+    $input[0].selectionStart = 1;
+    $input[0].selectionEnd = 1;
+    $input.trigger('keyup');
+
+    assert.strictEqual(form.$('.o_composer_mention_dropdown').length, 1,
+        "should show the mention suggestion dropdown");
+
+    assert.strictEqual(form.$('.o_mention_proposition').length, 4,
+        "should show 4 mention suggestions");
+    assert.strictEqual(form.$('.o_mention_proposition').eq(0).text().replace(/\s+/g, ''),
+        "FollowerUser1(follower-user1@example.com)",
+        "should display correct 1st mention suggestion");
+    assert.strictEqual(form.$('.o_mention_proposition').eq(1).text().replace(/\s+/g, ''),
+        "FollowerUser2(follower-user2@example.com)",
+        "should display correct 2nd mention suggestion");
+    assert.ok(form.$('.o_mention_proposition').eq(1).next().hasClass('dropdown-divider'),
+        "should have a mention separator after last follower mention suggestion");
+    assert.strictEqual(form.$('.o_mention_proposition').eq(2).text().replace(/\s+/g, ''),
+        "NonFollowerUser1(non-follower-user1@example.com)",
+        "should display correct 3rd mention suggestion");
+    assert.strictEqual(form.$('.o_mention_proposition').eq(3).text().replace(/\s+/g, ''),
+        "NonFollowerUser2(non-follower-user2@example.com)",
+        "should display correct 4th mention suggestion");
+
+    //cleanup
+    form.destroy();
+});
+
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach: function () {
         this.data = {
