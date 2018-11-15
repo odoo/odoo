@@ -416,7 +416,7 @@ QUnit.module('core', {}, function () {
                 "deferred that is never resolved nor rejected");
         });
         assert.ok(!def,
-            "The trigger_up is not performed and the call returns a deferred "+
+            "The trigger is not performed and the call returns a deferred "+
                 "never resolved nor rejected");
 
         assert.ok(true,

@@ -115,7 +115,7 @@ odoo.define('sale.product.configurator.tests', function (require) {
             testUtils.dom.click(form.$("a:contains('Configure a product')"));
         });
 
-        QUnit.test('trigger_up the "add_record" event and checks that rows are correctly added to the list', function (assert) {
+        QUnit.test('trigger the "add_record" event and checks that rows are correctly added to the list', function (assert) {
             assert.expect(1);
 
             var form = createView({

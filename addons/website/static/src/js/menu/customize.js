@@ -167,7 +167,7 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _launchAce: function () {
         var def = $.Deferred();
-        this.trigger_up('action_demand', {
+        this.trigger('action_demand', {
             actionName: 'close_all_widgets',
             onSuccess: def.resolve.bind(def),
         });

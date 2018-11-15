@@ -227,7 +227,7 @@ FormController.include({
     //--------------------------------------------------------------------------
 
     /**
-     * The barcode is activate when at least one widget trigger_up 'activeBarcode' event
+     * The barcode is activate when at least one widget trigger 'activeBarcode' event
      * with the widget option
      *
      * @param {OdooEvent} event
@@ -416,7 +416,7 @@ FormRenderer.include({
     // Private
     //--------------------------------------------------------------------------
     /**
-     * trigger_up 'activeBarcode' to Add barcode event handler
+     * trigger 'activeBarcode' to Add barcode event handler
      *
      * @private
      * @param {jQueryElement} $button

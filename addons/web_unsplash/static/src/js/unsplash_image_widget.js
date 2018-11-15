@@ -43,7 +43,7 @@ weWidgets.ImageWidget.include({
         // Unsplash API will either be (it's still being discussed):
         //  * a service (ideally coming with an improvement to not auto load
         //    the service)
-        //  * initialized in the website_root (trigger_up)
+        //  * initialized in the website_root (trigger)
         if (unsplashAPI === null) {
             this.unsplashAPI = new UnsplashAPI(this);
             unsplashAPI = this.unsplashAPI;

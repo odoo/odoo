@@ -176,7 +176,7 @@ var ActionManager = Widget.extend({
     /**
      * Compatibility with client actions that are still using do_push_state.
      *
-     * @todo: convert all of them to trigger_up('push_state') instead.
+     * @todo: convert all of them to trigger('push_state') instead.
      * @param {Object} state
      */
     do_push_state: function (state) {

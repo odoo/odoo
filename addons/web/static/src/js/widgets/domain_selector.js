@@ -107,7 +107,7 @@ var DomainNode = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the add button is clicked -> trigger_up an event to ask
+     * Called when the add button is clicked -> trigger an event to ask
      * creation of a new child in its parent.
      *
      * @param {Event} e
@@ -118,7 +118,7 @@ var DomainNode = Widget.extend({
         this.trigger("add_node_clicked", {newBranch: !!$(e.currentTarget).data("branch"), child: this});
     },
     /**
-     * Called when the delete button is clicked -> trigger_up an event to ask
+     * Called when the delete button is clicked -> trigger an event to ask
      * deletion of this node from its parent.
      *
      * @param {Event} e
@@ -237,7 +237,7 @@ var DomainTree = DomainNode.extend({
 
     /**
      * Adds a domain part to the widget.
-     * -> trigger_up "domain_changed" if the child is added
+     * -> trigger "domain_changed" if the child is added
      *
      * @private
      * @param {Array} domain - the prefix-like domain to build and add to the
@@ -344,7 +344,7 @@ var DomainTree = DomainNode.extend({
     },
     /**
      * Removes a given child from the widget.
-     * -> trigger_up domain_changed if the child is removed
+     * -> trigger domain_changed if the child is removed
      *
      * @private
      * @param {DomainNode} oldChild - the child instance to remove
@@ -750,11 +750,11 @@ var DomainLeaf = DomainNode.extend({
      * should be adapted to a valid one for the new field and the value should
      * also be adapted to the new field and/or operator.
      *
-     * -> trigger_up domain_changed event to ask for a re-rendering (if not
+     * -> trigger domain_changed event to ask for a re-rendering (if not
      * silent)
      *
      * @param {string[]} chain - the new field chain
-     * @param {boolean} silent - true if the method call should not trigger_up a
+     * @param {boolean} silent - true if the method call should not trigger a
      *                         domain_changed event
      */
     _changeFieldChain: function (chain, silent) {
@@ -776,11 +776,11 @@ var DomainLeaf = DomainNode.extend({
      * Handles an operator change in the domain. In that case, the value should
      * be adapted to a valid one for the new operator.
      *
-     * -> trigger_up domain_changed event to ask for a re-rendering
+     * -> trigger domain_changed event to ask for a re-rendering
      * (if not silent)
      *
      * @param {string} operator - the new operator
-     * @param {boolean} silent - true if the method call should not trigger_up a
+     * @param {boolean} silent - true if the method call should not trigger a
      *                         domain_changed event
      */
     _changeOperator: function (operator, silent) {
@@ -804,11 +804,11 @@ var DomainLeaf = DomainNode.extend({
      * Handles a formatted value change in the domain. In that case, the value
      * should be adapted to a valid technical one.
      *
-     * -> trigger_up "domain_changed" event to ask for a re-rendering (if not
+     * -> trigger "domain_changed" event to ask for a re-rendering (if not
      * silent)
      *
      * @param {*} value - the new formatted value
-     * @param {boolean} silent - true if the method call should not trigger_up a
+     * @param {boolean} silent - true if the method call should not trigger a
      *                         domain_changed event
      */
     _changeValue: function (value, silent) {

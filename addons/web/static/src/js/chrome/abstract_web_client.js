@@ -438,7 +438,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
     /**
      * This function must be implemented by actual webclient to scroll either to
      * a given offset or to a target element (given a selector).
-     * It must be called with: trigger_up('scrollTo', options).
+     * It must be called with: trigger('scrollTo', options).
      *
      * @abstract
      * @param {OdooEvent} ev

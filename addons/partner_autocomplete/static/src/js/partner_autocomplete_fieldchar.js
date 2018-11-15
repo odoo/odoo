@@ -320,7 +320,7 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
     },
 
     /**
-     * Called when a dropdown suggestion is clicked -> trigger_up changes for
+     * Called when a dropdown suggestion is clicked -> trigger changes for
      * some fields in the view (not only this <input/> one) with the associated
      * data (@see _selectCompany).
      *

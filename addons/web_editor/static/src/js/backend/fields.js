@@ -187,7 +187,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         return this.$content.html();
     },
     /**
-     * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
+     * trigger 'field_changed' add record into the "ir.attachment" field found in the view.
      * This method is called when an image is uploaded by the media dialog.
      *
      * For e.g. when sending email, this allows people to add attachments with the content

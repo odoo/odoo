@@ -19,7 +19,7 @@ odoo.define('web.AbstractField', function (require) {
  * - notify the system when some action has to be taken, such as opening a record
  * - the Field widget should not, ever, under any circumstance, be aware of
  *   its parent.  The way it communicates changes with the rest of the system is by
- *   triggering events (with trigger_up).  These events bubble up and are interpreted
+ *   triggering events (with trigger).  These events bubble up and are interpreted
  *   by the most appropriate parent.
  *
  * Also, in some cases, it may not be practical to have the same widget for all
