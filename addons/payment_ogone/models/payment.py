@@ -30,8 +30,8 @@ class PaymentAcquirerOgone(models.Model):
     ogone_pspid = fields.Char('PSPID', required_if_provider='ogone', groups='base.group_user')
     ogone_userid = fields.Char('API User ID', required_if_provider='ogone', groups='base.group_user')
     ogone_password = fields.Char('API User Password', required_if_provider='ogone', groups='base.group_user')
-    ogone_shakey_in = fields.Char('SHA Key IN', size=32, required_if_provider='ogone', groups='base.group_user')
-    ogone_shakey_out = fields.Char('SHA Key OUT', size=32, required_if_provider='ogone', groups='base.group_user')
+    ogone_shakey_in = fields.Char('SHA Key IN', required_if_provider='ogone', groups='base.group_user')
+    ogone_shakey_out = fields.Char('SHA Key OUT', required_if_provider='ogone', groups='base.group_user')
     ogone_alias_usage = fields.Char('Alias Usage', default="Allow saving my payment data",
                                     help="If you want to use Ogone Aliases, this default "
                                     "Alias Usage will be presented to the customer as the "
