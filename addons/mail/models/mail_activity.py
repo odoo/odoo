@@ -422,8 +422,10 @@ class MailActivity(models.Model):
 
     @api.model
     def get_activity_data(self, res_model, domain):
-        res = self.env[res_model].search(domain)
-        activity_domain = [('res_id', 'in', res.ids), ('res_model', '=', res_model)]
+        activity_domain = [('res_model', '=', res_model)]
+        if domain:
+            res = self.env[res_model].search(domain)
+            activity_domain.append(('res_id', 'in', res.ids))
         grouped_activities = self.env['mail.activity'].read_group(
             activity_domain,
             ['res_id', 'activity_type_id', 'res_name:max(res_name)', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'],
@@ -443,7 +445,6 @@ class MailActivity(models.Model):
             state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
             activity_data[res_id][activity_type_id] = {
                 'count': group['__count'],
-                'domain': group['__domain'],
                 'ids': group['ids'],
                 'state': state,
                 'o_closest_deadline': group['date_deadline'],
