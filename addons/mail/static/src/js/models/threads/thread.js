@@ -111,7 +111,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      * By default, a thread has not listener.
      *
      * @abstract
-     * @returns {$.Promise<Object[]>}
+     * @returns {$.Promise<Array<Object[]>>}
      */
     getMentionPartnerSuggestions: function () {
         return $.when([]);
