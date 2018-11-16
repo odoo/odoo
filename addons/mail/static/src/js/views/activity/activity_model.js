@@ -31,6 +31,7 @@ var ActivityModel = BasicModel.extend({
      * @param {Array[]} params.domain
      */
     load: function (params) {
+        this.originalDomain = _.extend([], params.domain);
         params.domain.push(['activity_ids', '!=', false]);
         this.domain = params.domain;
         this.modelName = params.modelName;
@@ -46,6 +47,7 @@ var ActivityModel = BasicModel.extend({
      */
     reload: function (handle, params) {
         if (params && 'domain' in params) {
+            this.originalDomain = _.extend([], params.domain);
             params.domain.push(['activity_ids', '!=', false]);
             this.domain = params.domain;
         }
