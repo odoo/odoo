@@ -325,7 +325,7 @@ class TestCalendar(TransactionCase):
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Agrolait')], limit=1).id,
+            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
         })
 
         calendar_event = self.env['calendar.event'].create({
@@ -336,7 +336,7 @@ class TestCalendar(TransactionCase):
         })
 
         # Check output in UTC
-        self.assertEqual(activity_id.date_deadline, '2018-11-12')
+        self.assertEqual(str(activity_id.date_deadline), '2018-11-12')
 
         # Check output in the user's tz
         # write on the event to trigger sync of activities
@@ -344,7 +344,7 @@ class TestCalendar(TransactionCase):
             'start': '2018-11-12 21:00:00',
         })
 
-        self.assertEqual(activity_id.date_deadline, '2018-11-13')
+        self.assertEqual(str(activity_id.date_deadline), '2018-11-13')
 
     def test_event_allday_activity_timezone(self):
         # Covers use case of commit eef4c3b48bcb4feac028bf640b545006dd0c9b91
@@ -358,7 +358,7 @@ class TestCalendar(TransactionCase):
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Agrolait')], limit=1).id,
+            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
         })
 
         calendar_event = self.env['calendar.event'].create({
@@ -374,7 +374,7 @@ class TestCalendar(TransactionCase):
         })
 
         # Check output in UTC
-        self.assertEqual(activity_id.date_deadline, '2018-10-16')
+        self.assertEqual(str(activity_id.date_deadline), '2018-10-16')
 
         # Check output in the user's tz
         # write on the event to trigger sync of activities
@@ -383,4 +383,4 @@ class TestCalendar(TransactionCase):
             'start_date': '2018-10-16',
         })
 
-        self.assertEqual(activity_id.date_deadline, '2018-10-16')
+        self.assertEqual(str(activity_id.date_deadline), '2018-10-16')
