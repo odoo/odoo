@@ -114,14 +114,16 @@ class MassMailingList(models.Model):
             from
                 mail_mass_mailing_contact_list_rel r
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
+                left join mail_blacklist bl on (LOWER(substring(c.email, %s)) = bl.email and bl.active)
             where
+                list_id in %s
                 COALESCE(r.opt_out,FALSE) = FALSE
-                AND substring(c.email, '%s') IS NOT NULL
-                AND LOWER(substring(c.email, '%s')) NOT IN (select email from mail_blacklist where active = TRUE)
+                AND c.email IS NOT NULL
+                AND bl.id IS NULL
             group by
                 list_id
-        ''' % (EMAIL_PATTERN, EMAIL_PATTERN))
-        data = dict(self.env.cr.fetchall())
+        ''')
+        data = dict(self.env.cr.fetchall(), [EMAIL_PATTERN, tuple(self.ids)])
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
 
