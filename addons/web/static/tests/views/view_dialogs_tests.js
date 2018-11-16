@@ -402,7 +402,7 @@ QUnit.module('Views', {
 
             interceptsPropagate: {
                 load_views: function (ev) {
-                    var evaluatedContext = ev.data.context.eval();
+                    var evaluatedContext = ev.data.context;
                     if (ev.data.modelName === 'instrument') {
                         assert.deepEqual(evaluatedContext, {tree_view_ref: 'some_tree_view'},
                             'The correct _view_ref should have been sent to the server, first time');
