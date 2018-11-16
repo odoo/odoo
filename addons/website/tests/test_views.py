@@ -421,10 +421,13 @@ class TestCowViewSaving(common.TransactionCase):
             'arch': '<div>content</div>',
         })
 
-        total_views = View.search_count([])
+        total_views = View.with_context(active_test=False).search_count([])
         base_view.with_context(website_id=1).write({'name': 'New Name'})  # This will not write on `base_view` but will copy it to a specific view on which the `name` change will be applied
+        specific_view = View.search([['name', '=', 'New Name'], ['website_id', '=', 1]])
         base_view.with_context(website_id=1).write({'name': 'Another New Name'})
-        self.assertEqual(total_views + 1, View.search_count([]), "Second write should have wrote on the view copied during first write")
+        specific_view.active = False
+        base_view.with_context(website_id=1).write({'name': 'Yet Another New Name'})
+        self.assertEqual(total_views + 1, View.with_context(active_test=False).search_count([]), "Subsequent writes should have written on the view copied during first write")
 
         # 2. Test with calling save() from ir.ui.view
         view_arch = '''<t name="Second View" t-name="website.second_view">
@@ -444,12 +447,12 @@ class TestCowViewSaving(common.TransactionCase):
             'arch': view_arch,
         })
 
-        total_views = View.search_count([])
+        total_views = View.with_context(active_test=False).search_count([])
         second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[1]" data-oe-field="arch" data-oe-model="ir.ui.view">First editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[1]")
         second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[3]" data-oe-field="arch" data-oe-model="ir.ui.view">Second editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[3]")
-        self.assertEqual(total_views + 1, View.search_count([]), "Second save should have wrote on the view copied during first save")
+        self.assertEqual(total_views + 1, View.with_context(active_test=False).search_count([]), "Second save should have written on the view copied during first save")
 
-        total_specific_view = View.search_count([('arch_db', 'like', 'First editable_part'), ('arch_db', 'like', 'Second editable_part')])
+        total_specific_view = View.with_context(active_test=False).search_count([('arch_db', 'like', 'First editable_part'), ('arch_db', 'like', 'Second editable_part')])
         self.assertEqual(total_specific_view, 1, "both editable_part should have been replaced on a created specific view")
 
     def test_cow_complete_flow(self):
@@ -520,3 +523,43 @@ class TestCowViewSaving(common.TransactionCase):
         base_arch_w1 = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
         self.assertEqual('Hello World' in base_arch, True)
         self.assertEqual(base_arch, base_arch_w1, "Reading a top level view with or without a website_id in the context should render that exact view..")  # ..even if there is a specific view for that one, as read_combined is supposed to render specific inherited view over generic but not specific top level instead of generic top level
+
+    def test_cow_cross_inherit(self):
+        View = self.env['ir.ui.view']
+        total_views = View.search_count([])
+
+        main_view = View.create({
+            'name': 'Main View',
+            'type': 'qweb',
+            'arch': '<body>GENERIC<div>A</div></body>',
+            'key': 'website.main_view',
+        }).with_context(load_all_views=True)
+
+        View.create({
+            'name': 'Child View',
+            'mode': 'extension',
+            'inherit_id': main_view.id,
+            'arch': '<xpath expr="//div" position="replace"><div>VIEW<p>B</p></div></xpath>',
+            'key': 'website.child_view',
+        })
+
+        child_view_2 = View.with_context(load_all_views=True).create({
+            'name': 'Child View 2',
+            'mode': 'extension',
+            'inherit_id': main_view.id,
+            'arch': '<xpath expr="//p" position="replace"><span>C</span></xpath>',
+            'key': 'website.child_view_2',
+        })
+
+        # These line doing `write()` are the real tests, it should not be changed and should not crash on xpath.
+        child_view_2.with_context(website_id=1).write({'arch': '<xpath expr="//p" position="replace"><span>D</span></xpath>'})
+        self.assertEqual(total_views + 3 + 1, View.search_count([]), "It should have created the 3 initial generic views and created a child_view_2 specific view")
+        main_view.with_context(website_id=1).write({'arch': '<body>SPECIFIC<div>Z</div></body>'})
+        self.assertEqual(total_views + 3 + 3, View.search_count([]), "It should have duplicated the Main View tree as a specific tree and then removed the specific view from the generic tree as no more needed")
+
+        generic_view = View.with_context(website_id=None).get_view_id('website.main_view')
+        specific_view = View.with_context(website_id=1).get_view_id('website.main_view')
+        generic_view_arch = View.browse(generic_view).with_context(load_all_views=True).read_combined(['arch'])['arch']
+        specific_view_arch = View.browse(specific_view).with_context(load_all_views=True, website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual(generic_view_arch == '<body>GENERIC<div>VIEW<span>C</span></div></body>', True)
+        self.assertEqual(specific_view_arch == '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', True, "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")

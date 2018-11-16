@@ -492,3 +492,15 @@ class StockMove(models.Model):
             return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id, visited) for requisition_line in self.requisition_line_ids if requisition_line.state not in ('done', 'cancel')]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+
+
+class Orderpoint(models.Model):
+    _inherit = "stock.warehouse.orderpoint"
+
+    def _quantity_in_progress(self):
+        res = super(Orderpoint, self)._quantity_in_progress()
+        for op in self:
+            for pr in self.env['purchase.requisition'].search([('state','=','draft'),('origin','=',op.name)]):
+                for prline in pr.line_ids.filtered(lambda l: l.product_id.id == op.product_id.id):
+                    res[op.id] += prline.product_uom_id._compute_quantity(prline.product_qty, op.product_uom, round=False)
+        return res

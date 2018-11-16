@@ -397,9 +397,10 @@ return {
             if (options.maxWidth) {
                 maxWidth = options.maxWidth();
             } else {
-                var rect = $el[0].getBoundingClientRect();
+                var mLeft = $el.is('.ml-auto, .mx-auto, .m-auto');
+                var mRight = $el.is('.mr-auto, .mx-auto, .m-auto');
+                maxWidth = computeFloatOuterWidthWithMargins($el[0], mLeft, mRight);
                 var style = window.getComputedStyle($el[0]);
-                maxWidth = (rect.right - rect.left);
                 maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
                 maxWidth -= _.reduce($unfoldableItems, function (sum, el) {
                     return sum + computeFloatOuterWidthWithMargins(el);
@@ -434,10 +435,17 @@ return {
             $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
         }
 
-        function computeFloatOuterWidthWithMargins(el) {
+        function computeFloatOuterWidthWithMargins(el, mLeft, mRight) {
             var rect = el.getBoundingClientRect();
             var style = window.getComputedStyle(el);
-            return rect.right - rect.left + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+            var outerWidth = rect.right - rect.left;
+            if (mLeft !== false) {
+                outerWidth += parseFloat(style.marginLeft);
+            }
+            if (mRight !== false) {
+                outerWidth += parseFloat(style.marginRight);
+            }
+            return outerWidth;
         }
     },
     /**

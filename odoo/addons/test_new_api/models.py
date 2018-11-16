@@ -468,3 +468,38 @@ class BinarySvg(models.Model):
     name = fields.Char(required=True)
     image_attachment = fields.Binary(attachment=True)
     image_wo_attachment = fields.Binary(attachment=False)
+
+
+class MonetaryBase(models.Model):
+    _name = 'test_new_api.monetary_base'
+    _description = 'Monetary Base'
+
+    base_currency_id = fields.Many2one('res.currency')
+    amount = fields.Monetary(currency_field='base_currency_id')
+
+
+class MonetaryRelated(models.Model):
+    _name = 'test_new_api.monetary_related'
+    _description = 'Monetary Related'
+
+    monetary_id = fields.Many2one('test_new_api.monetary_base')
+    currency_id = fields.Many2one('res.currency', related='monetary_id.base_currency_id')
+    amount = fields.Monetary(related='monetary_id.amount')
+
+
+class MonetaryCustom(models.Model):
+    _name = 'test_new_api.monetary_custom'
+    _description = 'Monetary Related Custom'
+
+    monetary_id = fields.Many2one('test_new_api.monetary_base')
+    x_currency_id = fields.Many2one('res.currency', related='monetary_id.base_currency_id')
+    x_amount = fields.Monetary(related='monetary_id.amount')
+
+
+class MonetaryInherits(models.Model):
+    _name = 'test_new_api.monetary_inherits'
+    _description = 'Monetary Inherits'
+    _inherits = {'test_new_api.monetary_base': 'monetary_id'}
+
+    monetary_id = fields.Many2one('test_new_api.monetary_base', required=True, ondelete='cascade')
+    currency_id = fields.Many2one('res.currency')

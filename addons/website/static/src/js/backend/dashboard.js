@@ -44,6 +44,9 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         var self = this;
         return $.when(ajax.loadLibs(this), this._super()).then(function() {
             return self.fetch_data();
+        }).then(function(){
+            var website = _.findWhere(self.websites, {selected: true});
+            self.website_id = website ? website.id : false;
         });
     },
 
