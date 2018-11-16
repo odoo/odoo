@@ -15,9 +15,9 @@ return AbstractWebClient.extend({
         menu_clicked: 'on_menu_clicked',
     }),
     start: function () {
-        core.bus.on('change_menu_section', this, function (menuID) {
+        core.bus.on('change_menu_section', this, function (ev) {
             this.do_push_state(_.extend($.bbq.getState(), {
-                menu_id: menuID,
+                menu_id: ev.data.menu_id,
             }));
         });
 
@@ -145,20 +145,20 @@ return AbstractWebClient.extend({
                     return self.action_manager.loadState(state, !!self._current_state).then(function () {
                         if (state.menu_id) {
                             if (state.menu_id !== self.menu.current_primary_menu) {
-                                core.bus.trigger('change_menu_section', state.menu_id);
+                                core.bus.trigger('change_menu_section', {menu_id: state.menu_id});
                             }
                         } else {
                             var action = self.action_manager.getCurrentAction();
                             if (action) {
                                 var menu_id = self.menu.action_id_to_primary_menu_id(action.id);
-                                core.bus.trigger('change_menu_section', menu_id);
+                                core.bus.trigger('change_menu_section', {menu_id: menu_id});
                             }
                         }
                     });
                 } else if (state.menu_id) {
                     var action_id = self.menu.menu_id_to_action_id(state.menu_id);
                     return self.do_action(action_id, {clear_breadcrumbs: true}).then(function () {
-                        core.bus.trigger('change_menu_section', state.menu_id);
+                        core.bus.trigger('change_menu_section', {menu_id: state.menu_id});
                     });
                 } else {
                     self.menu.openFirstApp();
@@ -201,7 +201,7 @@ return AbstractWebClient.extend({
             });
     },
     _on_app_clicked_done: function (ev) {
-        core.bus.trigger('change_menu_section', ev.data.menu_id);
+        core.bus.trigger('change_menu_section', {menu_id: ev.data.menu_id});
         return $.Deferred().resolve();
     },
     on_menu_clicked: function (ev) {

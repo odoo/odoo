@@ -38,7 +38,7 @@ var Menu = Widget.extend({
         });
 
         // Bus event
-        core.bus.on('change_menu_section', this, this.change_menu_section);
+        core.bus.on('change_menu_section', this, function (ev) { this.change_menu_section(ev.data.menu_id) });
     },
     start: function () {
         var self = this;
