@@ -40,7 +40,7 @@
             </div>
         </t>
         <t t-if="website_sale_order and website_sale_order.generated_coupon_ids">
-            <t t-foreach="website_sale_order.generated_coupon_ids" t-as="coupon">
+            <t t-foreach="website_sale_order.generated_coupon_ids.filtered(lambda c: c.state != 'expired')" t-as="coupon">
                 <div class="card bg-success text-white mt16">
                     <div class="card-header clearfix">
                         <span class="float-left">Your reward <b t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this promo code: <b t-esc="coupon.code"/></span>
