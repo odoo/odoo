@@ -173,7 +173,8 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @private
      * @param {mail.model.AbstractMessage} message
      */
-    _onTypingMessageAdded: function (message) {
+    _onTypingMessageAdded: function (ev) {
+        var message = ev.data;
         var operatorID = this.getOperatorPID()[0];
         if (message.hasAuthor() && message.getAuthorID() === operatorID) {
             this.unregisterTyping({ partnerID: operatorID });

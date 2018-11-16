@@ -602,12 +602,13 @@ MailManager.include({
     },
     /**
      * @private
-     * @param {boolean} open
+     * @param {OdooEvent} event
+     * @param {boolean} ev.data.open
      */
-    _onDiscussOpen: function (open) {
+    _onDiscussOpen: function (ev) {
         this._super.apply(this, arguments);
 
-        if (open) {
+        if (ev.data.open) {
             $(this.THREAD_WINDOW_APPENDTO).addClass('o_no_thread_window');
         } else {
             $(this.THREAD_WINDOW_APPENDTO).removeClass('o_no_thread_window');

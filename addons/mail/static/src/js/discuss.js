@@ -823,6 +823,7 @@ var Discuss = AbstractAction.extend({
 
         this._threadWidget
             .on('redirect', this, function (ev) {
+                debugger;
                 this.call('mail_service', 'redirect', ev.data.resModel, ev.data.resID, this._setThread.bind(this));
             })
             .on('redirect_to_channel', this, function (ev) {
@@ -1471,7 +1472,7 @@ var Discuss = AbstractAction.extend({
      * @param {Object} ev.data (messageData)
      */
     _onPostMessage: function (ev) {
-        var messageData = ev.data;
+        var messageData = ev.data.message;
         var self = this;
         var options = {};
         if (this._selectedMessage) {

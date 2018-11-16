@@ -68,7 +68,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 isMini: true,
                 thread: this._thread,
             });
-            basicComposer.on('post_message', this, this._postMessage);
+            basicComposer.on('post_message', this, function (ev) { this._postMessage(ev.data.message); });
             basicComposer.once('input_focused', this, function () {
                 var commands = this._thread.getCommands();
                 var partners = this._thread.getMentionPartnerSuggestions();

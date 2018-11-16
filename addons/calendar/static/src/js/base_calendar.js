@@ -99,7 +99,7 @@ WebClient.include({
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
         this.call('bus_service', 'onNotification', this, function (event) {
-            var notifications = event.data;
+            var notifications = event.data.notifications;
             _.each(notifications, (function (notification) {
                 if (notification[0][1] === 'calendar.alarm') {
                     this.display_calendar_notif(notification[1]);

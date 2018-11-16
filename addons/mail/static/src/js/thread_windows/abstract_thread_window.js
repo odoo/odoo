@@ -376,11 +376,9 @@ var AbstractThreadWindow = Widget.extend({
      * the thread.
      *
      * @private
-     * @param {OdooEvent} event
-     * @param {Object} ev.data (messageData)
+     * @param {Object} messageData
      */
-    _postMessage: function (ev) {
-        var messageData = ev.data;
+    _postMessage: function (messageData) {
         var self = this;
         if (!this.hasThread()) {
             return;

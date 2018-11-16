@@ -142,7 +142,9 @@ var LivechatButton = Widget.extend({
         var feedback = new Feedback(this, this._livechat);
         this._chatWindow.replaceContentWith(feedback);
 
-        feedback.on('send_message', this, this._sendMessage);
+        feedback.on('send_message', this, function (ev) {
+            this._sendMessage(ev.data); // ev.data is message
+        });
         feedback.on('feedback_sent', this, this._closeChat);
     },
     /**
@@ -273,14 +275,13 @@ var LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
-     * @param {Object} ev.data (message)
+     * @param {Object} message
      * @return {$.Deferred}
      */
-    _sendMessage: function (ev) {
+    _sendMessage: function (message) {
         var self = this;
         return session
-            .rpc('/mail/chat_post', {uuid: this._livechat.getUUID(), message_content: ev.data.content})
+            .rpc('/mail/chat_post', {uuid: this._livechat.getUUID(), message_content: message.content})
             .then(function () {
                 self._chatWindow.scrollToBottom();
             });
@@ -327,9 +328,9 @@ var LivechatButton = Widget.extend({
      * @private
      * @param {Array[]} notifications
      */
-    _onNotification: function (notifications) {
+    _onNotification: function (ev) {
         var self = this;
-        _.each(notifications, function (notification) {
+        _.each(ev.data.notifications, function (notification) {
             self._handleNotification(notification);
         });
     },

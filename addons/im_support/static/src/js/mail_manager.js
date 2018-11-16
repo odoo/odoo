@@ -230,11 +230,11 @@ MailManager.include({
      * Handles poll notifications from the Support server.
      *
      * @private
-     * @param {OdooEvent} event
-     * @param {Object[]} ev.data (notifications)
+     * @param {OdooEvent} ev
+     * @param {Object[]} ev.data.notifications
      */
     _onSupportNotification: function (ev) {
-        var notifications = ev.data;
+        var notifications = ev.data.notifications;
         var self = this;
         if (notifications && notifications.length) {
             this._setPollTimeout();

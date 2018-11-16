@@ -236,7 +236,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
             }
             return [notif.channel, notif.message];
         });
-        this.trigger("notification", notifs);
+        this.trigger("notification", {notifications: notifs});
         return notifs;
     },
     /**

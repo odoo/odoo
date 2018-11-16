@@ -294,7 +294,7 @@ FormController.include({
      * widget options then update the renderer
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {string} ev.data.barcode (barcode sent by the scanner (string generate from keypress series)
      * @param {DOM Object} ev.data.target
      * @returns {Deferred}
@@ -343,6 +343,7 @@ FormController.include({
     /**
      * @private
      * @param {OdooEvent} event
+     * @param {KeyEvent} event.data.$event
      */
     _quantityListener: function (event) {
         var character = String.fromCharCode(event.data.$event.which);

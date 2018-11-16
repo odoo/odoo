@@ -50,8 +50,8 @@ QUnit.module('Bus', {
         var widget = new Widget(parent);
         widget.appendTo($('#qunit-fixture'));
 
-        widget.call('bus_service', 'onNotification', this, function (notifications) {
-            assert.step(['notification', _.toArray(notifications.data)]);
+        widget.call('bus_service', 'onNotification', this, function (ev) {
+            assert.step(['notification', ev.data.notifications]);
         });
         widget.call('bus_service', 'addChannel', 'lambda');
 
@@ -163,8 +163,8 @@ QUnit.module('Bus', {
         var master = new Widget(parentMaster);
         master.appendTo($('#qunit-fixture'));
 
-        master.call('bus_service', 'onNotification', master, function (notifications) {
-            assert.step(['master', 'notification', _.toArray(notifications.data)]);
+        master.call('bus_service', 'onNotification', master, function (ev) {
+            assert.step(['master', 'notification', ev.data.notifications]);
         });
         master.call('bus_service', 'addChannel', 'lambda');
 
@@ -189,8 +189,8 @@ QUnit.module('Bus', {
             var slave = new Widget(parentSlave);
             slave.appendTo($('#qunit-fixture'));
 
-            slave.call('bus_service', 'onNotification', slave, function (notifications) {
-                assert.step(['slave', 'notification', _.toArray(notifications.data)]);
+            slave.call('bus_service', 'onNotification', slave, function (ev) {
+                assert.step(['slave', 'notification', ev.data.notifications]);
             });
             slave.call('bus_service', 'addChannel', 'lambda');
 

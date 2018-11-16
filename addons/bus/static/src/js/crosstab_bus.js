@@ -290,13 +290,13 @@ var CrossTabBus = Longpolling.extend({
      * Handler when the local storage is updated
      *
      * @private
-     * @param {OdooEvent} event
-     * @param {string} event.data.key
-     * @param {string} event.data.newValue
+     * @param {OdooEvent} ev
+     * @param {string} ev.data.key
+     * @param {string} ev.data.newValue
      */
-    _onStorage: function (e) {
-        var value = JSON.parse(e.data.newValue);
-        var key = e.data.key;
+    _onStorage: function (ev) {
+        var value = JSON.parse(ev.data.newValue);
+        var key = ev.data.key;
 
         if (this._isRegistered && key === this._generateKey('master') && !value) {
             //master was unloaded
@@ -310,7 +310,7 @@ var CrossTabBus = Longpolling.extend({
         // notifications changed
         else if (key === this._generateKey('notification')) {
             if (!this._isMasterTab) {
-                this.trigger("notification", value);
+                this.trigger("notification", {notifications: value});
             }
         }
         // update channels
