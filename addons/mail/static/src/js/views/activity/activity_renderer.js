@@ -18,6 +18,7 @@ var ActivityRenderer = AbstractRenderer.extend({
     events: {
         'click .o_send_mail_template': '_onSenMailTemplateClicked',
         'click .o_activity_empty_cell': '_onEmptyCell',
+        'click .o_record_selector': '_onRecordSelector',
     },
 
     /**
@@ -32,16 +33,15 @@ var ActivityRenderer = AbstractRenderer.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
-     * @private
      * @param {Object} activityGroup
      * @param {integer} resID
      * @returns {Object}
      */
-    _getKanbanActivityData: function (activityGroup, resID) {
+    getKanbanActivityData: function (activityGroup, resID) {
         return {
             data: {
                 activity_ids: {
@@ -70,6 +70,11 @@ var ActivityRenderer = AbstractRenderer.extend({
             //todo intercept event or changes on record to update view
         };
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      * @private
@@ -82,22 +87,13 @@ var ActivityRenderer = AbstractRenderer.extend({
      * @private
      */
     _render: function () {
-        this.$el
-            .removeClass('table-responsive')
-            .empty();
-
-        if (this.state.activity_types.length === 0) {
-            this.$el.append(QWeb.render('ActivityView.nodata'));
-        } else {
-            var $table = $('<table>')
-                .addClass('table-bordered')
-                .append(this._renderHeader())
-                .append(this._renderBody());
-            this.$el
-                .addClass('table-responsive')
-                .append($table);
-        }
-        return this._super();
+        this.$el.addClass('table-responsive');
+        this.$el.html(QWeb.render('mail.ActivityView', { isEmpty: !this.state.activity_types.length }));
+        this.$('table')
+            .append(this._renderHeader())
+            .append(this._renderBody())
+            .append(this._renderFooter());
+        return this._super.apply(this, arguments);
     },
     /**
      * @private
@@ -106,6 +102,13 @@ var ActivityRenderer = AbstractRenderer.extend({
     _renderBody: function () {
         var $rows = _.map(this.state.activity_res_ids, this._renderRow.bind(this));
         return $('<tbody>').append($rows);
+    },
+    /**
+     * @private
+     * @returns {jQueryElement} a <tfoot> element
+     */
+    _renderFooter: function () {
+        return QWeb.render('mail.ActivityViewFooter');
     },
     /**
      * @private
@@ -154,7 +157,7 @@ var ActivityRenderer = AbstractRenderer.extend({
                 activityTypeId: activity_type_id,
             }));
             if (activity_group.state) {
-                var record = self._getKanbanActivityData(activity_group, resId);
+                var record = self.getKanbanActivityData(activity_group, resId);
                 var widget = new KanbanActivity(self, "activity_ids", record, {});
                 widget.appendTo($td).then(function() {
                     // replace clock by closest deadline
@@ -197,6 +200,14 @@ var ActivityRenderer = AbstractRenderer.extend({
 
         var data = $(ev.currentTarget).data();
         this.trigger_up('empty_cell_clicked', data);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onRecordSelector: function (ev) {
+        ev.stopPropagation();
+        this.trigger_up('schedule_activity');
     },
     /**
      * @private

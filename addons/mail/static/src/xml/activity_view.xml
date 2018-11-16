@@ -22,17 +22,25 @@
     </td>
 </t>
 
-<div t-name="ActivityView.nodata">
-    <div class="o_view_nocontent" role="alert">
+<t t-name="mail.ActivityViewFooter">
+    <tfoot>
+        <tr class="o_data_row">
+            <td class="o_record_selector p-3">
+                <span class="fa fa-plus pr-2"/><span>Schedule activity</span>
+            </td>
+        </tr>
+    </tfoot>
+</t>
+
+<t t-name="mail.ActivityView">
+    <div t-if="isEmpty" class="o_view_nocontent" role="alert">
         <div class="o_nocontent_help">
             <p class="o_view_nocontent_empty_folder">
                 No data to display
-            </p><p>
-                No activity scheduled.
-                Activities can be scheduled from the form view chatter.
             </p>
         </div>
     </div>
-</div>
+    <table t-else="" class="table-bordered mb-5"/>
+</t>
 
 </templates>
