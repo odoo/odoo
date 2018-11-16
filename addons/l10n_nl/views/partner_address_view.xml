@@ -15,7 +15,7 @@
                             <b>Company Address:</b>
                         </div>
                         <div class="o_row">
-                            <field name="street" placeholder="Streetname..."
+                            <field name="street_name" placeholder="Streetname..."
                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                         </div>
                         <div class="o_row">
@@ -45,7 +45,6 @@
                     <!-- Only shown in readonly mode (user hasn't clicked on edit) -->
                     <div class="o_address_format oe_read_only">
                         <field name="street" placeholder="Street..." class="o_address_street"/>
-                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>&amp;nbsp;
                         <field name="city" placeholder="City" class="o_address_city"/>
                         <field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}"/>
