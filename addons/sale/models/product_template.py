@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
         [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
-        string='Re-Invoice Policy',
+        string='Re-Invoice Expenses',
         default='no',
         help="Expenses and vendor bills can be re-invoiced to a customer."
              "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
@@ -33,6 +33,7 @@ class ProductTemplate(models.Model):
         default='order')
 
     @api.multi
+    @api.depends('name')
     def _compute_hide_expense_policy(self):
         hide_expense_policy = self.user_has_groups('!analytic.group_analytic_accounting,!project.group_project_user,!hr_expense.group_hr_expense_user')
         for template in self:
