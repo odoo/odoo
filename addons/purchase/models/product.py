@@ -43,7 +43,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_view_po(self):
         action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
-        action['domain'] = [('state', 'in', ['purchase', 'done']), '&', ('product_tmpl_id', 'in', self.ids)]
+        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'search_default_last_year_purchase': 1,
             'search_default_status': 1, 'search_default_order_month': 1,
@@ -75,7 +75,7 @@ class ProductProduct(models.Model):
     @api.multi
     def action_view_po(self):
         action = self.env.ref('purchase.action_purchase_order_report_all').read()[0]
-        action['domain'] = [('state', 'in', ['purchase', 'done']), '&', ('product_id', 'in', self.ids)]
+        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.ids)]
         action['context'] = {
             'search_default_last_year_purchase': 1,
             'search_default_status': 1, 'search_default_order_month': 1,

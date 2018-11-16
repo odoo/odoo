@@ -114,14 +114,16 @@ class MassMailingList(models.Model):
             from
                 mail_mass_mailing_contact_list_rel r
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
+                left join mail_blacklist bl on (LOWER(substring(c.email, %s)) = bl.email and bl.active)
             where
+                list_id in %s
                 COALESCE(r.opt_out,FALSE) = FALSE
-                AND substring(c.email, '%s') IS NOT NULL
-                AND LOWER(substring(c.email, '%s')) NOT IN (select email from mail_blacklist where active = TRUE)
+                AND c.email IS NOT NULL
+                AND bl.id IS NULL
             group by
                 list_id
-        ''' % (EMAIL_PATTERN, EMAIL_PATTERN))
-        data = dict(self.env.cr.fetchall())
+        ''')
+        data = dict(self.env.cr.fetchall(), [EMAIL_PATTERN, tuple(self.ids)])
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
 
@@ -767,7 +769,8 @@ class MassMailing(models.Model):
                 [('list_id', 'in', self.contact_list_ids.ids)])
             opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out).mapped('contact_id.email')
             opt_in_contacts = target_list_contacts.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email')
-            opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
+            normalized_email = [tools.email_split(c) for c in opt_out_contacts if c not in opt_in_contacts]
+            opt_out = set(email[0].lower() for email in normalized_email if email)
 
             _logger.info(
                 "Mass-mailing %s targets %s, blacklist: %s emails",

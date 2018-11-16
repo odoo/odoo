@@ -4364,6 +4364,37 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars should not crash in non grouped views', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                assert.step(route)
+                return this._super(route, args);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record').text(), 'namenamenamename',
+            "should have renderer 4 records");
+
+        assert.verifySteps(['/web/dataset/search_read'], "no read on progress bar data is done");
+        kanban.destroy();
+    });
+
     QUnit.test('column progressbars: creating a new column should create a new progressbar', function (assert) {
         assert.expect(1);
 
@@ -4459,8 +4490,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    // XXX test deactivated in saas~11.2 as kanban archiving has been removed (and readded in saas~11.4)
-    QUnit.skip('column progressbars on archiving records update counter', function (assert) {
+    QUnit.test('column progressbars on archiving records update counter', function (assert) {
         assert.expect(4);
 
         // add active field on partner model and make all records active
@@ -4491,7 +4521,9 @@ QUnit.module('Views', {
             "the counter progressbars should be correctly displayed");
 
         // archive all records of the second columns
-        kanban.$('.o_kanban_group:eq(1) .o_column_archive').click();
+        kanban.$('.o_kanban_group:eq(1) .o_kanban_config a.o-no-caret').click();
+        kanban.$('.o_column_archive_records:visible').click();
+        $('.modal-footer button:first').click();
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "0",
             "counter should contain the correct value");
@@ -4501,7 +4533,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.skip('kanban with progressbars: correctly update env when archiving records', function (assert) {
+    QUnit.test('kanban with progressbars: correctly update env when archiving records', function (assert) {
         assert.expect(3);
 
         // add active field on partner model and make all records active
@@ -4526,13 +4558,15 @@ QUnit.module('Views', {
             groupBy: ['bar'],
             intercepts: {
                 env_updated: function (ev) {
-                    assert.step(ev.data.ids);
+                    assert.step(ev.data.env.ids);
                 },
             },
         });
 
         // archive all records of the first column
-        kanban.$('.o_kanban_group:first .o_column_archive').click();
+        kanban.$('.o_kanban_group:first .o_kanban_config a.o-no-caret').click();
+        kanban.$('.o_column_archive_records:visible').click();
+        $('.modal-footer button:first').click();
 
         assert.verifySteps([
             [1, 2, 3, 4],

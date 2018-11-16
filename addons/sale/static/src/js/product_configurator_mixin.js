@@ -418,7 +418,7 @@ var ProductConfiguratorMixin = {
         var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
         $price.html(self._priceToStr(combination.price));
         $default_price.html(self._priceToStr(combination.list_price));
-        if (combination.list_price - combination.price > 0.01) {
+        if (combination.list_price - combination.price >= 0.01) {
             $default_price
                 .closest('.oe_website_sale')
                 .addClass("discount");

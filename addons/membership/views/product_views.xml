@@ -12,7 +12,7 @@
             <field name="arch" type="xml">
                 <search string="Membership Products">
                     <field name="name" string="Membership Product"/>
-                    <filter string="Inactive" name="inactive" domain="[('active','=',0)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active','=',False)]"/>
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
                         <filter string='Category' name="category" domain="[]" context="{'group_by' : 'categ_id'}"/>

@@ -81,11 +81,12 @@
 
     <!-- Image choosing part of the Media Dialog -->
     <t t-name="web_editor.dialog.image">
+        <t t-set="iframeName" t-value="_.uniqueId('fileframe-')"/>
         <form class="form-inline"
             method="POST"
             action="/web_editor/attachment/add"
             enctype="multipart/form-data"
-            target="fileframe">
+            t-att-target="iframeName">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
             <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
@@ -119,7 +120,7 @@
             <div class="existing-attachments">
                 <t t-call="web_editor.dialog.image.existing"/>
             </div>
-            <iframe class="d-none" name="fileframe"/>
+            <iframe class="d-none" t-att-name="iframeName"/>
         </form>
     </t>
     <t t-name="web_editor.dialog.image.existing">

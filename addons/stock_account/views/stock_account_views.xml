@@ -87,6 +87,7 @@
         <record id="view_inventory_valuation_search" model="ir.ui.view">
             <field name="name">product.product</field>
             <field name="model">product.product</field>
+            <field name="priority" eval="17"/>
             <field name="arch" type="xml">
                 <search string="Inventory Valuation">
                     <filter string="Category" name="categ_id" context="{'group_by':'categ_id'}"/>

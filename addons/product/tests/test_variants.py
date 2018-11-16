@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
 class TestVariantsSearch(TransactionCase):
@@ -367,3 +368,96 @@ class TestVariantsNoCreate(common.TestProductCommon):
             variant_id.attribute_value_ids += self.size_S
         template.attribute_line_ids += template.attribute_line_ids.browse()
         self.assertEqual(len(template.product_variant_ids), 1)
+
+
+class TestVariantsManyAttributes(common.TestAttributesCommon):
+
+    def test_01_create_no_variant(self):
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 1)
+
+    def test_02_create_dynamic(self):
+        self.attributes.write({'create_variant': 'dynamic'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 0)
+
+    def test_03_create_always(self):
+        self.attributes.write({'create_variant': 'always'})
+        with self.assertRaises(UserError):
+            self.env['product.template'].create({
+                'name': 'Toto',
+                'attribute_line_ids': [(0, 0, {
+                    'attribute_id': attribute.id,
+                    'value_ids': [(6, 0, attribute.value_ids.ids)],
+                }) for attribute in self.attributes],
+            })
+
+    def test_04_create_no_variant_dynamic(self):
+        self.attributes[:5].write({'create_variant': 'dynamic'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 0)
+
+    def test_05_create_no_variant_always(self):
+        self.attributes[:2].write({'create_variant': 'always'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 100)
+
+    def test_06_create_dynamic_always(self):
+        self.attributes[:5].write({'create_variant': 'dynamic'})
+        self.attributes[5:].write({'create_variant': 'always'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 0)
+
+    def test_07_create_no_create_dynamic_always(self):
+        self.attributes[3:6].write({'create_variant': 'dynamic'})
+        self.attributes[6:].write({'create_variant': 'always'})
+        toto = self.env['product.template'].create({
+            'name': 'Toto',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, attribute.value_ids.ids)],
+            }) for attribute in self.attributes],
+        })
+        self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
+        self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
+        self.assertEqual(len(toto.product_variant_ids), 0)

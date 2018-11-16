@@ -353,6 +353,81 @@ QUnit.test('do not mark as read the newly open thread window from received messa
     parent.destroy();
 });
 
+QUnit.test('show document link of message linked to a document', function (assert) {
+    assert.expect(6);
+
+    this.data['mail.channel'] = {
+        fields: {
+            name: {
+                string: "Name",
+                type: "char",
+                required: true,
+            },
+            channel_type: {
+                string: "Channel Type",
+                type: "selection",
+            },
+            channel_message_ids: {
+                string: "Messages",
+                type: "many2many",
+                relation: 'mail.message'
+            },
+            message_unread_counter: {
+                string: "Amount of Unread Messages",
+                type: "integer"
+            },
+        },
+        records: [{
+            id: 2,
+            name: "R&D Tasks",
+            channel_type: "channel",
+        }],
+    };
+    this.data['mail.message'].records.push({
+        author_id: [5, "Someone else"],
+        body: "<p>Test message</p>",
+        id: 40,
+        model: 'some.document',
+        record_name: 'Some Document',
+        res_id: 10,
+        channel_ids: [2],
+    });
+
+    this.data.initMessaging.channel_slots.channel_channel.push({
+        id: 2,
+        name: "R&D Tasks",
+        channel_type: "public",
+    });
+
+    var parent = this.createParent({
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+    });
+
+    assert.strictEqual($('.o_thread_window').length, 0,
+        "no thread window should be open initially");
+
+    // get channel instance to link to thread window
+    var channel = parent.call('mail_service', 'getChannel', 2);
+    channel.detach();
+
+    var $threadWindow = $('.o_thread_window');
+    assert.strictEqual($threadWindow.length, 1,
+        "a thread window should be open");
+    assert.strictEqual($threadWindow.find('.o_thread_window_title').text().trim(),
+        "#R&D Tasks",
+        "should be thread window of correct channel");
+    assert.strictEqual($threadWindow.find('.o_thread_message').length, 1,
+        "should contain a single message in thread window");
+    assert.ok($threadWindow.find('.o_mail_info').text().replace(/\s/g, "").indexOf('Someoneelse') !== -1,
+        "message should be from 'Someone else' user");
+    assert.ok($threadWindow.find('.o_mail_info').text().replace(/\s/g, "").indexOf('onSomeDocument') !== -1,
+        "message should link to 'Some Document'");
+
+    parent.destroy();
+});
+
 });
 });
 });

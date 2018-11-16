@@ -88,11 +88,14 @@
 </ul>
 <div t-if="signature" t-raw="signature" class="font-size: 13px;"/>
 <p style="color: #555555; margin-top:32px;">
-    Sent by
+    Sent
+    <span t-if="company.name">
+    by
     <a t-if="website_url" t-att-href="website_url" style="text-decoration:none; color: #875A7B;">
         <span t-esc="company.name"/>
     </a>
     <span t-if="not website_url" t-esc="company.name"/>
+    </span>
     using
     <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="text-decoration:none; color: #875A7B;">Odoo</a>.
 </p>

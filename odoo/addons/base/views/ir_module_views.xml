@@ -37,8 +37,8 @@
                 <search string="Search modules">
                     <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
                         'ilike', self)]" string="Module"/>
-                    <filter name="app" string="Apps" domain="[('application', '=', 1)]"/>
-                    <filter name="extra" string="Extra" domain="[('application', '=', 0)]"/>
+                    <filter name="app" string="Apps" domain="[('application', '=', True)]"/>
+                    <filter name="extra" string="Extra" domain="[('application', '=', False)]"/>
                     <separator/>
                     <filter name="installed" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
                     <filter name="not_installed" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
