@@ -69,9 +69,6 @@ odoo.define('web.BasicModel', function (require) {
  *     these properties might have been modified by a view (for example, with
  *     required=true.  So, the fields kind of depends of the context of the
  *     data point.
- * - field_names: list of some relevant field names (string).  Usually, it
- *     denotes the fields present in the view.  Only those fields should be
- *     loaded.
  * - _cache and _changes are private, they should not leak out of the basicModel
  *   and be used by anyone else.
  *
@@ -3463,8 +3460,6 @@ var BasicModel = AbstractModel.extend({
      * @param {*[]} [params.domain=[]]
      * @param {Object} params.fields contains the description of each field
      * @param {Object} [params.fieldsInfo={}] contains the fieldInfo of each field
-     * @param {Object[]} [params.fieldNames] the name of fields to load, the list
-     *   of all fields by default
      * @param {string[]} [params.groupedBy=[]]
      * @param {boolean} [params.isOpen]
      * @param {integer} params.limit max number of records shown on screen (pager size)
