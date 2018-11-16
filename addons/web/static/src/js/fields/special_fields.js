@@ -163,7 +163,7 @@ var FieldReportLayout = relational_fields.FieldMany2One.extend({
             $container.append($img);
             if (val.pdf) {
                 var $previewLink = $('<a>')
-                    .text('Preview')
+                    .text('Example')
                     .attr('href', val.pdf)
                     .attr('target', '_blank');
                 $container.append($previewLink);

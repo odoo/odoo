@@ -20,7 +20,7 @@ from werkzeug.urls import url_encode
 class SaleOrder(models.Model):
     _name = "sale.order"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
-    _description = "Sale Order"
+    _description = "Sales Order"
     _order = 'date_order desc, id desc'
 
     def _default_validity_date(self):

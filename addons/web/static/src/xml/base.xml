@@ -1049,7 +1049,7 @@
         <div t-foreach="widget.value.data" t-as="file" class="oe_attachment">
             <t t-if="!file.data.upload">
                 <div>
-                    <a href="#" class="fa fa-times float-right oe_delete" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
+                    <a href="#" class="fa fa-times float-right oe_delete pl-1" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
                     <t t-raw="file.data.name || file.data.filename"/>
                 </div>
                 <a class="o_image" target="_blank" t-att-href="widget.metadata[file.id] ? widget.metadata[file.id].url : false"
