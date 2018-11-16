@@ -2,11 +2,18 @@ odoo.define('mail.ActivityController', function (require) {
 "use strict";
 
 var BasicController = require('web.BasicController');
+var core = require('web.core');
+var field_registry = require('web.field_registry');
+var ViewDialogs = require('web.view_dialogs');
+
+var KanbanActivity = field_registry.get('kanban_activity');
+var _t = core._t;
 
 var ActivityController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         empty_cell_clicked: '_onEmptyCell',
         send_mail_template: '_onSendMailTemplate',
+        schedule_activity: '_onScheduleActivity',
     }),
 
     //--------------------------------------------------------------------------
@@ -26,6 +33,25 @@ var ActivityController = BasicController.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onScheduleActivity: function () {
+        var self = this;
+
+        var state = this.model.get(this.handle);
+        new ViewDialogs.SelectCreateDialog(this, {
+            res_model: state.model,
+            domain: this.model.originalDomain,
+            title: _.str.sprintf(_t("Search: %s"), this.renderer.arch.attrs.string),
+            disable_multiple_selection: true,
+            on_selected: function (record) {
+                var fakeRecord = self.renderer.getKanbanActivityData({}, record[0]);
+                var widget = new KanbanActivity(self, 'activity_ids', fakeRecord, {});
+                widget.scheduleActivity();
+            },
+        }).open();
+    },
     /**
      * @private
      * @param {OdooEvent} ev

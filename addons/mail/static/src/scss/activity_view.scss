@@ -2,10 +2,12 @@
     height: 100%;
     > table {
         background-color: white;
+        tbody > tr > td, tfoot > tr > td {
+            cursor: pointer;
+        }
     }
     .o_activity_summary_cell {
         background-color: #FFF;
-        cursor: pointer;
         &.planned {
             background-color: theme-color('success');
         }
@@ -86,6 +88,9 @@
         .o_text_block {
             display: block;
         }
+    }
+    .o_record_selector {
+        color: $o-enterprise-primary-color;
     }
     .o_activity_type_cell {
         padding:10px;
