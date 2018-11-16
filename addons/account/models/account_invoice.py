@@ -642,6 +642,8 @@ class AccountInvoice(models.Model):
     @api.multi
     def get_taxes_values(self):
         tax_grouped = {}
+        round_tax = False if self.company_id.tax_calculation_rounding_method == 'round_globally' else True
+        currency = self.currency_id
         for line in self.invoice_line_ids:
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
@@ -652,7 +654,11 @@ class AccountInvoice(models.Model):
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
-                    tax_grouped[key]['amount'] += val['amount']
+                    amount = val['amount']
+                    if round_tax:
+                        # Round per line behavior
+                        amount = currency.round(amount)
+                    tax_grouped[key]['amount'] += amount
                     tax_grouped[key]['base'] += val['base']
         return tax_grouped
 
