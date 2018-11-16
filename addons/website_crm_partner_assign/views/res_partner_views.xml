@@ -138,7 +138,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='sale']" position="inside">
-                    <field name="assigned_partner_id" groups="base.group_no_one"/>
+                    <field name="assigned_partner_id" groups="base.group_no_one" attrs="{'invisible': [('customer','=', False)]}"/>
                 </xpath>
             </data>
         </field>
