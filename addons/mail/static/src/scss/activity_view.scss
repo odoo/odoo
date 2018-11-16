@@ -41,9 +41,9 @@
                 }
             }
         }
-        .o_activity_btn > span {
-            bottom: 5px;
-            position: relative;
+        .o_activity_btn > .badge {
+            @include o-position-absolute($bottom: 0, $right: 0);
+
             &.planned {
                 color: theme-color('success');
             }
