@@ -1501,8 +1501,11 @@ def db_monodb(httprequest=None):
         Returns ``None`` if the magic is not magic enough.
     """
     httprequest = httprequest or request.httprequest
-
-    dbs = db_list(True, httprequest)
+    dbs = []
+    try:
+        dbs = db_list(True, httprequest)
+    except psycopg2.OperationalError:
+        pass
 
     # try the db already in the session
     db_session = httprequest.session.db
