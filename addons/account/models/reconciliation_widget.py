@@ -143,12 +143,19 @@ class AccountReconciliation(models.AbstractModel):
                 bank_statements_left += line.statement_id
 
                 amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
-                results['lines'].append({
+                line_vals = {
                     'st_line': self._get_statement_line(line),
                     'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
                     'model_id': matching_amls[line.id].get('model') and matching_amls[line.id]['model'].id,
                     'write_off': matching_amls[line.id].get('status') == 'write_off',
-                })
+                }
+                if not line.partner_id and partner_map.get(line.id):
+                    partner = self.env['res.partner'].browse(partner_map[line.id])
+                    line_vals.update({
+                        'partner_id': partner.id,
+                        'partner_name': partner.name,
+                    })
+                results['lines'].append(line_vals)
 
         return results
 
