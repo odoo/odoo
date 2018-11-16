@@ -1171,7 +1171,7 @@ class MailThread(models.AbstractModel):
                     final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
                     partner_address = final_recipient_data.split(';', 1)[1].strip()
                     if partner_address:
-                        partners = partners.sudo().search([('email', 'like', partner_address)])
+                        partners = partners.sudo().search([('email', '=', partner_address)])
                         for partner in partners:
                             partner.message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
 
