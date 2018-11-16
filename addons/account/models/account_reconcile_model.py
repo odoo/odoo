@@ -106,6 +106,21 @@ class AccountReconcileModel(models.Model):
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
     second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags')
 
+    @api.multi
+    def action_reconcile_stat(self):
+        search_view_id = self.env.ref('account.view_account_move_line_filter').id
+        return {'name': 'Stat',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'account.move.line',
+            'search_view_id': search_view_id,
+            'context': {'search_default_reconcile_id': self.id},
+            'help': """<p class="o_view_nocontent_empty_folder">
+                No move from this reconciliation model
+                </p>""",
+        }
+
     @api.onchange('name')
     def onchange_name(self):
         self.label = self.name
@@ -680,6 +695,7 @@ class AccountReconcileModel(models.Model):
                                 counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
                                 payment_aml_rec=reconciliation_results['payment_aml_rec'],
                                 new_aml_dicts=new_aml_dicts,
+                                model=model,
                             )
                             results[line.id]['status'] = 'reconciled'
                             results[line.id]['reconciled_lines'] = counterpart_moves.mapped('line_ids')
@@ -711,6 +727,7 @@ class AccountReconcileModel(models.Model):
                             counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
                             payment_aml_rec=reconciliation_results['payment_aml_rec'],
                             new_aml_dicts=new_aml_dicts,
+                            model=model,
                         )
                         results[line.id]['status'] = 'reconciled'
                         results[line.id]['reconciled_lines'] = counterpart_moves.mapped('line_ids')

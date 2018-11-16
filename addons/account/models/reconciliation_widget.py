@@ -16,7 +16,7 @@ class AccountReconciliation(models.AbstractModel):
     ####################################################
 
     @api.model
-    def process_bank_statement_line(self, st_line_ids, data):
+    def process_bank_statement_line(self, st_line_ids, data, reconcile_id):
         """ Handles data sent from the bank statement reconciliation widget
             (and can otherwise serve as an old-API bridge)
 
@@ -27,6 +27,7 @@ class AccountReconciliation(models.AbstractModel):
                 except that ids are used instead of recordsets.
         """
         st_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
+        account_reconcile_model = self.env['account.reconcile.model'].browse(reconcile_id)
         AccountMoveLine = self.env['account.move.line']
         ctx = dict(self._context, force_price_include=False)
 
@@ -41,9 +42,11 @@ class AccountReconciliation(models.AbstractModel):
                 st_line.write({'partner_id': datum['partner_id']})
 
             st_line.with_context(ctx).process_reconciliation(
+                account_reconcile_model,
                 datum.get('counterpart_aml_dicts', []),
                 payment_aml_rec,
-                datum.get('new_aml_dicts', []))
+                datum.get('new_aml_dicts', []),
+            )
 
     @api.model
     def get_move_lines_for_bank_statement_line(self, st_line_id, partner_id=None, excluded_ids=None, search_str=False, offset=0, limit=None):
@@ -148,6 +151,7 @@ class AccountReconciliation(models.AbstractModel):
                     'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
                     'model_id': matching_amls[line.id].get('model') and matching_amls[line.id]['model'].id,
                     'write_off': matching_amls[line.id].get('status') == 'write_off',
+                    'reconcile_id' : matching_amls[line.id].get('reconcile_id')
                 })
 
         return results
@@ -349,7 +353,7 @@ class AccountReconciliation(models.AbstractModel):
 
         for datum in data:
             if len(datum['mv_line_ids']) >= 1 or len(datum['mv_line_ids']) + len(datum['new_mv_line_dicts']) >= 2:
-                self._process_move_lines(datum['mv_line_ids'], datum['new_mv_line_dicts'])
+                self._process_move_lines(datum['mv_line_ids'], datum['new_mv_line_dicts'], datum.get('reconcile_id',0))
 
             if datum['type'] == 'partner':
                 partners = Partner.browse(datum['id'])
@@ -514,6 +518,7 @@ class AccountReconciliation(models.AbstractModel):
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
                 'currency_id': line_currency.id,
+                'reconcile_id' : line.reconcile_id.id,
             }
 
             debit = line.debit
@@ -672,7 +677,7 @@ class AccountReconciliation(models.AbstractModel):
         return Account_move_line
 
     @api.model
-    def _process_move_lines(self, move_line_ids, new_mv_line_dicts):
+    def _process_move_lines(self, move_line_ids, new_mv_line_dicts, model):
         """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on self and new move lines
 
             :param new_mv_line_dicts: list of dicts containing values suitable for account_move_line.create()
@@ -681,6 +686,7 @@ class AccountReconciliation(models.AbstractModel):
             raise UserError(_('A reconciliation must involve at least 2 move lines.'))
 
         account_move_line = self.env['account.move.line'].browse(move_line_ids)
+        account_move_line.write({'reconcile_id':model})
         writeoff_lines = self.env['account.move.line']
 
         # Create writeoff move lines

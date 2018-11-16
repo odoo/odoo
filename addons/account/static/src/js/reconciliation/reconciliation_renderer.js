@@ -739,6 +739,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     _onSelectProposition: function (event) {
         var $el = $(event.target);
         this._destroyPopover($el);
+        this.model._reconcile_id = null;
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('remove_proposition', {'data': moveLineId});
     },
@@ -748,6 +749,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onQuickCreateProposition: function (event) {
         document.activeElement && document.activeElement.blur();
+        this.model._reconcile_id = $(event.target).data('reconcile-model-id');
         this.trigger_up('quick_create_proposition', {'data': $(event.target).data('reconcile-model-id')});
     },
     /**

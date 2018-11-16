@@ -482,7 +482,7 @@ class AccountBankStatementLine(models.Model):
     def _get_communication(self, payment_method_id):
         return self.name or ''
 
-    def process_reconciliation(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
+    def process_reconciliation(self, model, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
         """ Match statement lines with existing payments (eg. checks) and/or payables/receivables (eg. invoices and credit notes) and/or new move lines (eg. write-offs).
             If any new journal item needs to be created (via new_aml_dicts or counterpart_aml_dicts), a new journal entry will be created and will contain those
             items, as well as a journal item for the bank statement line.
@@ -541,7 +541,7 @@ class AccountBankStatementLine(models.Model):
         total = self.amount
         for aml_rec in payment_aml_rec:
             total -= aml_rec.debit - aml_rec.credit
-            aml_rec.with_context(check_move_validity=False).write({'statement_line_id': self.id})
+            aml_rec.with_context(check_move_validity=False).write({'statement_line_id': self.id, 'reconcile_id' : model.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
             if aml_rec.journal_id.post_at_bank_rec and aml_rec.payment_id and aml_rec.move_id.state == 'draft':
                 # In case the journal is set to only post payments when performing bank
@@ -597,6 +597,7 @@ class AccountBankStatementLine(models.Model):
             company = self.company_id
             date = self.date or fields.Date.today()
             for aml_dict in to_create:
+                aml_dict['reconcile_id'] = model.id
                 aml_dict['move_id'] = move.id
                 aml_dict['partner_id'] = self.partner_id.id
                 aml_dict['statement_line_id'] = self.id
@@ -624,16 +625,18 @@ class AccountBankStatementLine(models.Model):
             # Create write-offs
             for aml_dict in new_aml_dicts:
                 aml_dict['payment_id'] = payment and payment.id or False
+                aml_dict['reconcile_id'] = model.id
                 aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:
                 if aml_dict['move_line'].payment_id:
-                    aml_dict['move_line'].write({'statement_line_id': self.id})
+                    aml_dict['move_line'].write({'statement_line_id': self.id, 'reconcile_id' : model.id})
                 if aml_dict['move_line'].partner_id.id:
                     aml_dict['partner_id'] = aml_dict['move_line'].partner_id.id
                 aml_dict['account_id'] = aml_dict['move_line'].account_id.id
                 aml_dict['payment_id'] = payment and payment.id or False
+                aml_dict['reconcile_id'] = model.id
 
                 counterpart_move_line = aml_dict.pop('move_line')
                 new_aml = aml_obj.with_context(check_move_validity=False).create(aml_dict)
@@ -646,11 +649,12 @@ class AccountBankStatementLine(models.Model):
             st_line_amount = -sum([x.balance for x in move.line_ids])
             aml_dict = self._prepare_reconciliation_move_line(move, st_line_amount)
             aml_dict['payment_id'] = payment and payment.id or False
+            aml_dict['reconcile_id'] = model.id
             aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             move.post()
             #record the move name on the statement line to be able to retrieve it in case of unreconciliation
-            self.write({'move_name': move.name})
+            self.write({'move_name': move.name, 'reconcile_id': model.id})
             payment and payment.write({'payment_reference': move.name})
         elif self.move_name:
             raise UserError(_('Operation not allowed. Since your statement line already received a number (%s), you cannot reconcile it entirely with existing journal entries otherwise it would make a gap in the numbering. You should book an entry and make a regular revert of it in case you want to cancel it.') % (self.move_name))

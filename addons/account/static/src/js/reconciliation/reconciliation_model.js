@@ -716,6 +716,7 @@ var StatementModel = BasicModel.extend({
                 values_dict['new_aml_dicts'].push(unreconciled_amount_dict);
             }
             values.push(values_dict);
+            values['reconcile_id'] = self._reconcile_id;
             line.reconciled = true;
             self.valuenow++;
         });
@@ -723,7 +724,7 @@ var StatementModel = BasicModel.extend({
         return this._rpc({
                 model: 'account.reconciliation.widget',
                 method: 'process_bank_statement_line',
-                args: [ids, values],
+                args: [ids, values, self._reconcile_id],
             })
             .then(function () {
                 return {handles: handles};
@@ -1374,7 +1375,8 @@ var ManualModel = StatementModel.extend({
                     id: null,
                     type: null,
                     mv_line_ids: mv_line_ids,
-                    new_mv_line_dicts: new_mv_line_dicts
+                    new_mv_line_dicts: new_mv_line_dicts,
+                    reconcile_id: self._reconcile_id,
                 });
             }
             line.reconciliation_proposition = [];
