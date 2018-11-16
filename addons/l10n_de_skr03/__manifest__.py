@@ -46,6 +46,8 @@ German accounting chart and localization.
     'depends': ['l10n_de'],
     'data': [
         'data/l10n_de_skr03_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/l10n_de_skr03_chart_post_data.xml',
         'data/account_data.xml',
         'data/account_tax_fiscal_position_data.xml',
         'data/account_reconcile_model_template.xml',
