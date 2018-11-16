@@ -305,7 +305,7 @@ class Message(models.Model):
             'id': attachment['id'],
             'filename': attachment['datas_fname'],
             'name': attachment['name'],
-            'mimetype': 'application/octet-stream' if safari and 'video' in attachment['mimetype'] else attachment['mimetype'],
+            'mimetype': 'application/octet-stream' if safari and attachment['mimetype'] and 'video' in attachment['mimetype'] else attachment['mimetype'],
         }) for attachment in attachments_data)
 
         # 3. Tracking values
