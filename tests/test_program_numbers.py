@@ -490,3 +490,44 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         fixed_amount_program.write({'active': False})  # Check archived product will remove discount lines on recompute
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1, "Archiving the program should remove the program reward line")
+
+    def test_program_next_order(self):
+        order = self.empty_order
+        self.env['sale.coupon.program'].create({
+            'name': 'Free Keyboard if at least 1 article',
+            'promo_code_usage': 'no_code_needed',
+            'promo_applicability': 'on_next_order',
+            'program_type': 'promotion_program',
+            'reward_type': 'product',
+            'reward_product_id': self.wirelessKeyboard.id,
+            'rule_min_quantity': 2,
+        })
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.iPadMini.id,
+            'name': 'iPad Mini',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 1, "Nothing should be added to the cart")
+        self.assertEqual(len(order.generated_coupon_ids), 0, "No coupon should have been generated yet")
+
+        sol1.product_uom_qty = 2
+        order.recompute_coupon_lines()
+        generated_coupon = order.generated_coupon_ids
+        self.assertEqual(len(order.order_line.ids), 1, "Nothing should be added to the cart (2)")
+        self.assertEqual(len(generated_coupon), 1, "A coupon should have been generated")
+        self.assertEqual(generated_coupon.state, 'reserved', "The coupon should be reserved")
+
+        sol1.product_uom_qty = 1
+        order.recompute_coupon_lines()
+        generated_coupon = order.generated_coupon_ids
+        self.assertEqual(len(order.order_line.ids), 1, "Nothing should be added to the cart (3)")
+        self.assertEqual(len(generated_coupon), 1, "No more coupon should have been generated and the existing one should not have been deleted")
+        self.assertEqual(generated_coupon.state, 'expired', "The coupon should have been set as expired as it is no more valid since we don't have the required quantity")
+
+        sol1.product_uom_qty = 2
+        order.recompute_coupon_lines()
+        generated_coupon = order.generated_coupon_ids
+        self.assertEqual(len(generated_coupon), 1, "We should still have only 1 coupon as we now benefit again from the program but no need to create a new one (see next assert)")
+        self.assertEqual(generated_coupon.state, 'reserved', "The coupon should be set back to reserved as we had already an expired one, no need to create a new one")
