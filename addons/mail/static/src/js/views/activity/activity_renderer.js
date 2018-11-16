@@ -167,7 +167,13 @@ var ActivityRenderer = AbstractRenderer.extend({
                         $date.text(moment(date).format('ll'));
                     }
                     $td.find('a').html($date);
-                });   
+                    if (activity_group.count > 1) {
+                        $td.find('a').append($('<span>', {
+                            class: 'badge badge-light badge-pill border-0 ' + activity_group.state,
+                            text: activity_group.count,
+                        }));
+                    }
+                });
             }
             return $td;
         });
