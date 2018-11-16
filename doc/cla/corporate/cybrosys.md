@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Niyas Raphy niyas@cybrosys.com https://github.com/CybroOdoo
+Sainu Abideen sainu@cybrosys.com https://github.com/CybroOdoo
 
 List of contributors:
 

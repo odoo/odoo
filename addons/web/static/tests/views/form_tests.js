@@ -6986,6 +6986,69 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('keep editing after call_button fail', function (assert) {
+        assert.expect(4);
+
+        var values;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form>' +
+                    '<button name="post" class="p" string="Raise Error" type="object"/>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="display_name"/>' +
+                            '<field name="product_id"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            intercepts: {
+                execute_action: function (ev) {
+                    assert.ok(true, 'the action is correctly executed');
+                    ev.data.on_fail();
+                },
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].p[0][2], values);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // add a row and partially fill it
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input:nth(0)').val('abc').trigger('input');
+
+        // click button which will trigger_up 'execute_action' (this will save)
+        values = {
+            display_name: 'abc',
+            product_id: false,
+        };
+        form.$('button.p').click();
+
+        // edit the new row again and set a many2one value
+        form.$('.o_form_view .o_field_one2many .o_data_row .o_data_cell').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('li:first()').click();
+
+        assert.strictEqual(form.$('.o_field_many2one input').val(), 'xphone',
+            "value of the m2o should have been correctly updated");
+
+        values = {
+            product_id: 37,
+        };
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.test('asynchronous rendering of a widget tag', function (assert) {
         assert.expect(1);
 
@@ -7283,7 +7346,6 @@ QUnit.module('Views', {
                     '</sheet>' +
                 '</form>',
             res_id: 2,
-            //debug:1,
         });
         assert.strictEqual(form.$buttons.find('.o_form_button_edit')[0],document.activeElement,
                         "in read mode, when there are no primary buttons on the form, the default button with the focus should be edit");
