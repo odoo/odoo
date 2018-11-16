@@ -578,6 +578,7 @@ class StockMove(models.Model):
         moves_to_merge = []
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
+            candidate_moves = candidate_moves.with_context(prefetch_fields=False)
             for k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
                 # If we have multiple records we will merge then in a single one.
