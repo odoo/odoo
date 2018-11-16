@@ -501,6 +501,7 @@ var FieldDate = InputField.extend({
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
         this.datepickerOptions = _.defaults(
+            {},
             this.nodeOptions.datepicker || {},
             {defaultDate: this.value}
         );
