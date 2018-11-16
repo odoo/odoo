@@ -1,6 +1,7 @@
 odoo.define('mail.discuss_moderation_tests', function (require) {
 "use strict";
 
+var Thread = require('mail.model.Thread');
 var mailTestUtils = require('mail.testUtils');
 
 var createDiscuss = mailTestUtils.createDiscuss;
@@ -754,6 +755,85 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
         // // check no message
         assert.strictEqual(discuss.$('.o_thread_message').length, 0,
             "message should be removed from channel after reject");
+
+        discuss.destroy();
+        done();
+    });
+});
+
+QUnit.test('no crash when load-more fetching "accepted" message twice', function (assert) {
+    // This tests requires discuss not loading more messages due to having less
+    // messages to fetch than available height. This justifies we simply do not
+    // patch FETCH_LIMIT to 1, as it would detect that more messages could fit
+    // the empty space (it behaviour is linked to "auto load more").
+    var done = assert.async();
+    assert.expect(2);
+
+    var FETCH_LIMIT = Thread.prototype._FETCH_LIMIT;
+    // FETCH LIMIT + 30 should be enough to cover the whole available space in
+    // the thread of discuss app.
+    var messageData = [];
+    _.each(_.range(1, FETCH_LIMIT+31), function (num) {
+        messageData.push({
+                id: num,
+                body: "<p>test" + num + "</p>",
+                author_id: [100, "Someone"],
+                channel_ids: [1],
+                model: 'mail.channel',
+                res_id: 1,
+                moderation_status: 'accepted',
+            }
+        );
+    });
+
+    this.data['mail.message'].records = messageData;
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+    var count = 0;
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_fetch') {
+                count++;
+                if (count === 1) {
+                    // inbox message_fetch
+                    return $.when([]);
+                }
+                // general message_fetch
+                return $.when(messageData);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.strictEqual($general.length, 1,
+            "should have the channel item with id 1");
+        assert.strictEqual($general.attr('title'), 'general',
+            "should have the title 'general'");
+
+        // click on general
+        $general.click();
+
+        // simulate search
+        discuss.trigger_up('search', {
+            domains: [['author_id', '=', 100]],
+        });
 
         discuss.destroy();
         done();
