@@ -1392,7 +1392,6 @@ var ManualModel = StatementModel.extend({
             }
             line.reconciliation_proposition = [];
         });
-
         if (process_reconciliations.length) {
             def = self._rpc({
                     model: 'account.reconciliation.widget',
