@@ -156,7 +156,7 @@
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
                         groups="account.group_account_invoice"
-                        icon="fa-book" title="Analytic Accounts">
+                        icon="fa-book" title="Analytic Accounts" attrs="{'invisible': [('contracts_count', '=', 0)]}">
                         <field string="Analytic Accounts" name="contracts_count" widget="statinfo"/>
                     </button>
                 </button>
@@ -204,12 +204,6 @@
                                         <field name="acc_holder_name" invisible="1"/>
                                     </tree>
                                 </field>
-                                <button type="action" class="btn-link"
-                                    name="%(base.action_res_partner_bank_account_form)d"
-                                    context="{'search_default_partner_id': active_id, 'default_partner_id': active_id, 'form_view_ref': 'account.view_company_partner_bank_form'}"
-                                    string="View accounts detail"
-                                    colspan="2"
-                                />
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_user">
                                 <field name="currency_id" invisible="1"/>
@@ -224,16 +218,16 @@
                         </div>
                     </page>
                 </page>
-                <xpath expr="//page[@name='sales_purchases']/group" position="inside">
+                <xpath expr="//group[@name='misc']" position="before">
                     <group string="Fiscal Information" name="fiscal_information" priority="5" groups="account.group_account_invoice">
                         <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                     </group>
                 </xpath>
                 <group name="sale" position="inside">
-                    <field string="Payment Terms" name="property_payment_term_id" widget="selection" groups="account.group_account_invoice"/>
+                    <field string="Payment Terms" name="property_payment_term_id" widget="selection" groups="account.group_account_invoice" attrs="{'invisible': [('customer','=', False)]}"/>
                 </group>
                 <group name="purchase" position="inside">
-                    <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice"/>
+                    <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice" attrs="{'invisible': [('supplier','=', False)]}"/>
                 </group>
             </field>
         </record>

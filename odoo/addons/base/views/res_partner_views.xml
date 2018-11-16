@@ -374,18 +374,20 @@
                         <page name='internal_notes' string="Internal Notes">
                             <field name="comment" placeholder="Internal note..."/>
                         </page>
-                        <page name='sales_purchases' string="Sales &amp; Purchases">
+                        <page name='sales_purchases' string="Sales &amp; Purchase">
                             <group name="container_row_2">
                                 <group string="Sales" name="sale" priority="1">
                                     <field name="customer"/>
-                                    <field name="user_id"/>
+                                    <field name="user_id" attrs="{'invisible': [('customer','=', False)]}"/>
                                 </group>
                                 <group string="Purchase" name="purchase" priority="2">
                                     <field name="supplier"/>
                                 </group>
-                                <group string="Misc">
-                                    <field name="ref"/>
+                                <group string="Point Of Sale">
                                     <field name="barcode"/>
+                                </group>
+                                <group name="misc" string="Misc">
+                                    <field name="ref" string="Reference"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="industry_id" attrs="{'invisible': [('is_company', '=', False)]}" options="{'no_create': True}"/>
                                 </group>
