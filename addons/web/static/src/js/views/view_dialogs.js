@@ -186,9 +186,12 @@ var FormViewDialog = ViewDialog.extend({
         }
 
         fields_view_def.then(function (viewInfo) {
+            var refinedContext = _.pick(self.context, function (value, key) {
+                return key.indexOf('_view_ref') === -1;
+            });
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
-                context: self.context,
+                context: refinedContext,
                 ids: self.res_id ? [self.res_id] : [],
                 currentId: self.res_id || undefined,
                 index: 0,
