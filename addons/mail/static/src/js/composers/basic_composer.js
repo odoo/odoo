@@ -211,7 +211,8 @@ var BasicComposer = Widget.extend({
      * displayed to the user. If none of them match, then it will fetch for more
      * partner suggestions (@see _mentionFetchPartners).
      *
-     * @param {$.Deferred<Object[]>} prefetchedPartners
+     * @param {$.Deferred<Object[]>} prefetchedPartners list of list of
+     *   prefetched partners.
      */
     mentionSetPrefetchedPartners: function (prefetchedPartners) {
         this._mentionPrefetchedPartners = prefetchedPartners;
@@ -302,21 +303,23 @@ var BasicComposer = Widget.extend({
      */
     _mentionFetchPartners: function (search) {
         var self = this;
-        return $.when(this._mentionPrefetchedPartners).then(function (partners) {
+        return $.when(this._mentionPrefetchedPartners).then(function (prefetchedPartners) {
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mentionFetchLimit;
             var searchRegexp = new RegExp(_.str.escapeRegExp(mailUtils.unaccent(search)), 'i');
-            if (limit > 0) {
-                var filteredPartners = _.filter(partners, function (partner) {
-                    return partner.email && searchRegexp.test(partner.email) ||
-                           partner.name && searchRegexp.test(mailUtils.unaccent(partner.name));
-                });
-                if (filteredPartners.length) {
-                    suggestions.push(filteredPartners.slice(0, limit));
-                    limit -= filteredPartners.length;
+            _.each(prefetchedPartners, function (partners) {
+                if (limit > 0) {
+                    var filteredPartners = _.filter(partners, function (partner) {
+                        return partner.email && searchRegexp.test(partner.email) ||
+                            partner.name && searchRegexp.test(mailUtils.unaccent(partner.name));
+                    });
+                    if (filteredPartners.length) {
+                        suggestions.push(filteredPartners.slice(0, limit));
+                        limit -= filteredPartners.length;
+                    }
                 }
-            }
+            });
             if (!suggestions.length && !self.options.mentionPartnersRestricted) {
                 // no result found among prefetched partners, fetch other suggestions
                 suggestions = self._mentionFetchThrottled(

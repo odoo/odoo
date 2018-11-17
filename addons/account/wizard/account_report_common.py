@@ -45,4 +45,4 @@ class AccountCommonReport(models.TransientModel):
         data['form'] = self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'company_id'])[0]
         used_context = self._build_contexts(data)
         data['form']['used_context'] = dict(used_context, lang=self.env.context.get('lang') or 'en_US')
-        return self._print_report(data)
+        return self.with_context(discard_logo_check=True)._print_report(data)
