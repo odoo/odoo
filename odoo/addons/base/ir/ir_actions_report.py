@@ -683,8 +683,11 @@ class IrActionsReport(models.Model):
         discard_logo_check = self.env.context.get('discard_logo_check')
         if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
             template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
+            msg = _('Choose Your Document Layout')
+            if not self.env.user.company_id.logo:
+                msg += _(' and upload your Logo') 
             return {
-                'name': _('Choose Your Document Layout'),
+                'name': msg,
                 'type': 'ir.actions.act_window',
                 'context': {'default_report_name': self.report_name, 'discard_logo_check': True},
                 'view_type': 'form',
