@@ -3,22 +3,24 @@
 # * calendar
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# Martin Trigaux, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
 # boho wong <wbh924@126.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
 "Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -93,7 +95,7 @@ msgstr "3小时，通过电子邮件"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "30 Minute(s)"
-msgstr "20分钟"
+msgstr "30分钟"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
@@ -176,7 +178,7 @@ msgstr ""
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
 "    <p>\n"
 "        你好 ${object.common_name},<br/><br/>\n"
-"        ${object.event_id.user_id.partner_id.name} invited you for the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.\n"
+"        ${object.event_id.user_id.partner_id.name} 邀请您参加 ${object.event_id.name} 的会议 ${object.event_id.user_id.company_id.name}.\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
 "        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
@@ -211,10 +213,10 @@ msgstr ""
 "                    </li>\n"
 "                % endif\n"
 "                % if object.event_id.description :\n"
-"                    <li>描述: ${object.event_id.description}</li>\n"
+"                    <li>描述：${object.event_id.description}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>时长: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>时长：${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>出席者\n"
 "                <ul>\n"
@@ -233,7 +235,7 @@ msgstr ""
 "        </td>\n"
 "    </tr></table>\n"
 "    <br/>\n"
-"    感谢,\n"
+"      感谢,\n"
 "    <br/>\n"
 "    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
 "        ${object.event_id.user_id.signature | safe}\n"
@@ -316,8 +318,8 @@ msgstr ""
 "<div>\n"
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
 "    <p>\n"
-"        你好 ${object.common_name},<br/><br/>\n"
-"        The date of the meeting has been updated. The meeting ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name} is now scheduled for ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
+"        您好 ${object.common_name},<br/><br/>\n"
+"        会议日期已更新。 由 ${object.event_id.name} 创建的会议${object.event_id.user_id.partner_id.name} 现在被安排在 ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
 "        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
@@ -347,12 +349,12 @@ msgstr ""
 "            <p><strong>活动详情如下</strong></p>\n"
 "            <ul>\n"
 "                % if object.event_id.location:\n"
-"                    <li>地点: ${object.event_id.location}\n"
+"                    <li>地点:${object.event_id.location}\n"
 "                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">查看地图</a>)\n"
 "                    </li>\n"
 "                % endif\n"
 "                % if object.event_id.description :\n"
-"                    <li>描述: ${object.event_id.description}</li>\n"
+"                    <li>描述:${object.event_id.description}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
 "                    <li>时长: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
@@ -374,7 +376,7 @@ msgstr ""
 "        </td>\n"
 "    </tr></table>\n"
 "    <br/>\n"
-"    感谢您,\n"
+"     感谢您，\n"
 "    <br/>\n"
 "    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
 "        ${object.event_id.user_id.signature | safe}\n"
@@ -458,7 +460,7 @@ msgstr ""
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
 "    <p>\n"
 "        你好 ${object.common_name},<br/><br/>\n"
-"        This is a reminder for the below event :\n"
+"        这是对以下事件的提醒： :\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
 "        <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
@@ -488,7 +490,7 @@ msgstr ""
 "            <p><strong>活动详情</strong></p>\n"
 "            <ul>\n"
 "                % if object.event_id.location:\n"
-"                    <li>Location: ${object.event_id.location}\n"
+"                    <li>位置: ${object.event_id.location}\n"
 "                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">查看地图</a>)\n"
 "                    </li>\n"
 "                % endif\n"
@@ -583,7 +585,7 @@ msgstr "全天，%s"
 #. module: calendar
 #: sql_constraint:calendar.contacts:0
 msgid "An user cannot have twice the same contact."
-msgstr "用户不能重复创建联系人。"
+msgstr "用户不能重复创建相同的联系人。"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment
@@ -785,7 +787,7 @@ msgstr "显示名称"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Document"
-msgstr "单据"
+msgstr "文档"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
@@ -800,7 +802,7 @@ msgstr "文档模型"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
 msgid "Document Model Name"
-msgstr "单据模型名称"
+msgstr "文档模型名称"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
@@ -1046,7 +1048,7 @@ msgstr "是关注者"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr "是事件高亮"
+msgstr "事件是否突出显示"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1106,7 +1108,7 @@ msgstr "活动的地点"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Logo"
-msgstr "徽标"
+msgstr "Logo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
@@ -1248,7 +1250,7 @@ msgstr "需要行动消息的数量"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "递送错误的消息数量"
+msgstr "发送错误的消息数量"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0

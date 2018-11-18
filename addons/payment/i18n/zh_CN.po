@@ -3,23 +3,24 @@
 # * payment
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# Felix Yuen <fyu@odoo.com>, 2018
 # guohuadeng <guohuadeng@hotmail.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
-# neter ji <jifuyi@qq.com>, 2018
+# Felix Yuen <fyu@odoo.com>, 2018
+# Martin Trigaux, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # 湘子 南 <1360857908@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr "# 发票"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "&amp;times;"
-msgstr "&amp;times;"
+msgstr "&amp;次数;"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
@@ -81,7 +82,7 @@ msgstr "<i class=\"fa fa-trash\"/>删除"
 #: code:addons/payment/models/payment_acquirer.py:124
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr "<i>取消,</i> 你的付款已被取消。"
+msgstr "<i>取消,</i> 您的付款已取消。"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:120
@@ -106,7 +107,7 @@ msgstr "<i>错误,</i> 请注意交易中会发生的错误.。订单已确认�
 msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
-msgstr "<i>待定,</i> 你的在线付款已完成. 但是你的订单还验证。"
+msgstr "<i>待定,</i> 您的在线付款已完成. 订单验证中。"
 
 #. module: payment
 #. openerp-web
@@ -160,7 +161,7 @@ msgstr ""
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
+msgstr "<span><i>取消,</i> 您的付款已取消.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -176,7 +177,7 @@ msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 你的在线支付已成功完成. 感谢你的订单.</span>"
+msgstr "<span><i>完成,</i> 您的在线支付已成功完成. 谢谢.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -194,8 +195,7 @@ msgid ""
 "transaction. The order has been confirmed but will not be paid. Do not "
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
-msgstr ""
-"<span><i>错误，</i>请注意，事务期间发生错误。订单已经确认，但不会支付。如果您对订单状态有任何疑问，请随时与我们联系.</span>"
+msgstr "<span><i>错误，</i>请注意，发生错误。订单已经确认，但不会支付。如果您对订单状态有任何疑问，请随时与我们联系.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -210,7 +210,7 @@ msgstr ""
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>待定,</i> 你的在线支付已完成. 但是你的订单还未确认.</span>"
+msgstr "<span><i>待定,</i> 在线支付已完成. 订单未确认.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -223,7 +223,7 @@ msgstr "<span><i>待定</i>... 订单将在付款后被验证.</span>"
 #: code:addons/payment/models/account_invoice.py:72
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr "日记帐必须指定一个收单行 %s."
+msgstr "日记帐必须指定一个收单明细 %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:65
@@ -235,13 +235,13 @@ msgstr "如要创建交易，必须输入收单银行。"
 #: code:addons/payment/models/account_payment.py:55
 #, python-format
 msgid "A payment transaction already exists."
-msgstr "支付事务已经存在。"
+msgstr "有订单在支付中。"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:57
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr "创建新的支付事务需要一个令牌。"
+msgstr "创建新的支付需要一个令牌。"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:657
@@ -370,7 +370,7 @@ msgstr "应用"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr "请问您是否确定要取消授权交易吗？此操作经确定后无法撤消。"
+msgstr "是否确定取消授权交易？此操作经确定后无法撤消。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -472,7 +472,7 @@ msgstr "无法设置付款"
 #: code:addons/payment/controllers/portal.py:225
 #, python-format
 msgid "Cannot setup the payment."
-msgstr "不能设置付款"
+msgstr "无法设置付款"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
@@ -592,7 +592,7 @@ msgstr "创建新的付款收单方"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr "创建一个新的支付事务"
+msgstr "创建一个新的支付"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
@@ -758,7 +758,7 @@ msgstr "固定的手续费"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
 msgid "For Incoming Payments"
-msgstr "为收款"
+msgstr "未收款"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -809,7 +809,7 @@ msgstr "ID"
 msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
-msgstr "如果您将其留空，该付款收购方将适用于所有国家/地区。"
+msgstr "如果将其留空，该付款收购方将适用于所有国家/地区。"
 
 #. module: payment
 #. openerp-web
@@ -1013,7 +1013,7 @@ msgstr "如果在付款的时候订单被取消，会有消息提示"
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr "如果付款后订单被顺利完成，会有消息提示"
+msgstr "如果付款后订单顺利完成，通过消息提示"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
@@ -1590,7 +1590,7 @@ msgid ""
 "Small-sized image of this provider. It is automatically resized as a 64x64px"
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
-msgstr "这个供应方的小尺寸图像。他会被自动调整为６４＊６４大小的图像被保存起来，任何地方用这个小图像字段是必要的"
+msgstr "这个供应方的小尺寸图像。他会被自动调整为64*64大小的图像被保存起来，任何地方用这个小图像字段是必要的"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__specific_countries
@@ -1690,7 +1690,7 @@ msgstr "%s的%s交易%s已取消."
 msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
-msgstr "%s的%s交易%s已获得确认。等待获取发送付款状态......"
+msgstr "%s的%s交易%s已确认。等待发送付款状态......"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:675
@@ -1718,7 +1718,7 @@ msgid ""
 "and to reuse it for a later purchase. If you manage subscriptions (recurring"
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
-msgstr "该选项允许将客户信用卡的支付授权信令用于后续支付来调用。如果您管一下您的订阅信息（循环发票），则需要在发出发票时自动向客户收取费用。"
+msgstr "此选项允许客户保存信用卡作为支付令牌，并将其用于以后的购买。如果您管理订阅（循环发票），则需要在发出发票时自动向客户收取费用。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1741,7 +1741,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr "该事务已被取消。"
+msgstr "该事务已取消。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
@@ -1752,7 +1752,7 @@ msgstr "交易"
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
-msgstr "在选择支付受让人后提供转账信息。"
+msgstr "在选择支付后提供转账信息。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -1854,7 +1854,7 @@ msgstr "我们此时无法删除您的支付方式。"
 #: code:addons/payment/static/src/xml/payment_processing.xml:130
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr "我们找不到你的付款，但别担心。"
+msgstr "我们找不到您的付款。"
 
 #. module: payment
 #. openerp-web
@@ -1868,14 +1868,14 @@ msgstr "我们无法为您重新提交付款表。"
 #: code:addons/payment/static/src/js/payment_form.js:182
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr "我们无法为你重新递交付款表单。"
+msgstr "我们无法为您重新递交付款表单。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_processing.js:117
 #, python-format
 msgid "We are processing your payments, please wait ..."
-msgstr "我们正在处理你的付款，请稍候…"
+msgstr "我们正在处理您的付款，请稍候…"
 
 #. module: payment
 #. openerp-web
@@ -1902,114 +1902,114 @@ msgstr "电汇"
 #: code:addons/payment/static/src/xml/payment_processing.xml:59
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
-msgstr "你可以点击这里然后被重定向到确认页面。"
+msgstr "您可以点击这里然后被重定向到确认页面。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:131
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr "你应该在几分钟内收到一封确认付款的电子邮件。"
+msgstr "您应该在几分钟内收到一封确认付款的电子邮件。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:77
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr "付款确认后会通知你。"
+msgstr "付款确认后会通知您。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr "付款完全确认后，会通知你。"
+msgstr "付款完全确认后，会通知您。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompted with Stripe Payment page for payment information."
-msgstr "系统会向您提示条带付款步骤页面以获取付款信息​​。"
+msgstr "系统会向您提示付款步骤页面以获取付款信息​​。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
 msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
-msgstr "点击支付按钮后您将被重定向到 Adyen 网站。"
+msgstr "点击支付按钮后将被重定向到 Adyen 网站。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
 msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
-msgstr "点击付款按钮后你将会被重定向到授权的网站"
+msgstr "点击付款按钮后将会被重定向到授权的网站"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
-msgstr "在点击支付按钮后你将会被重定向到Buckaroo网站"
+msgstr "在点击支付按钮后将会被重定向到Buckaroo网站"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
-msgstr "点击支付按钮后您将被重定向到 Ingenico 网站。"
+msgstr "点击支付按钮后将被重定向到 Ingenico 网站。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_payu
 msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
-msgstr "点击支付按钮后您将被重定向到 PayUmoney 网站。"
+msgstr "点击支付按钮后将被重定向到 PayUmoney 网站。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
 msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
-msgstr "点击支付按钮后您将被重定向到Paypal网站。"
+msgstr "点击支付按钮后将被重定向到Paypal网站。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_sips
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
-msgstr "点击支付按钮后您将被重定向到Sips网站。"
+msgstr "点击支付按钮后将被重定向到Sips网站。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:39
 #, python-format
 msgid "Your order has been processed."
-msgstr "你的订单已经处理完毕。"
+msgstr "订单已经处理完毕。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:36
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr "你的订单正在处理中，请稍候…"
+msgstr "订单正在处理中，请稍候…"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr "您的付款已获授权。"
+msgstr "付款已获授权。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:76
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr "你的付款已经收到，但需要手工确认。"
+msgstr "付款已经收到，但需手工确认。"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:57
 #, python-format
 msgid "Your payment is in pending state."
-msgstr "您的付款处于待处理状态。"
+msgstr "付款处于待处理状态。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -2079,7 +2079,7 @@ msgstr "选择另一种付款方式。"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr "tx_url:交易后的形式的URL"
+msgstr "tx_url:交易后URL"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form

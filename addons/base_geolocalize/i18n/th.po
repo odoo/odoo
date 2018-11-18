@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * base_geolocalize
 # 
+# Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,15 +27,26 @@ msgstr ""
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> : Lat : </span>"
-msgstr ""
+msgstr "<span> : ละจิจูด : </span>"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> ;  Long:  </span>"
+msgstr "<span> ;  ลองจิจูด:  </span>"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:19
+#, python-format
+msgid ""
+"API key for GeoCoding (Places) required.\n"
+"\n"
+"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
+"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
+"                          "
 msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:18
+#: code:addons/base_geolocalize/models/res_partner.py:28
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
@@ -41,17 +56,17 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "ผู้ติดต่อ"
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_partner_latitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_latitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_latitude
 msgid "Geo Latitude"
 msgstr ""
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_partner_longitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_longitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_longitude
 msgid "Geo Longitude"
 msgstr ""
 
@@ -66,8 +81,8 @@ msgid "Geolocation"
 msgstr ""
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_date_localization
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
 msgid "Geolocation Date"
 msgstr ""
 
