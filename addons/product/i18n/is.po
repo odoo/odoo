@@ -22,16 +22,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: product
-#: code:addons/product/models/product_template.py:469
-#, python-format
-msgid ""
-"\n"
-"                The number of variants to generate is too high.\n"
-"                You should either not generate variants for each combination or generate them on demand from the sales order.\n"
-"                To do so, open the form view of attributes and change the mode of *Create Variants*."
-msgstr ""
-
-#. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
 msgstr ""
@@ -862,7 +852,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Future Activities"
-msgstr ""
+msgstr "Aðgerðir"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1150,7 +1140,7 @@ msgstr "Síðast uppfært þann"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Late Activities"
-msgstr ""
+msgstr "Late Activities"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -1270,6 +1260,11 @@ msgstr "Nafn"
 #. module: product
 #: selection:product.attribute,create_variant:0
 msgid "Never"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "New Price ="
 msgstr ""
 
 #. module: product
@@ -1919,7 +1914,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Show all records which has next action date is before today"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
@@ -2090,7 +2085,17 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:55
+#: code:addons/product/models/product_template.py:475
+#, python-format
+msgid ""
+"The number of variants to generate is too high. You should either not "
+"generate variants for each combination or generate them on demand from the "
+"sales order. To do so, open the form view of attributes and change the mode "
+"of *Create Variants*."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:56
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2424,13 +2429,13 @@ msgstr "Rúmmál"
 #: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Skilaboð frá vef"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__website_message_ids
 #: model:ir.model.fields,help:product.field_product_template__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Website communication history"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight

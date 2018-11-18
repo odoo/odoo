@@ -3,16 +3,18 @@
 # * google_calendar
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Martin Trigaux, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +33,7 @@ msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>教程"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:89
 #, python-format
 msgid "Accounts"
-msgstr "科目"
+msgstr "用户"
 
 #. module: google_calendar
 #. openerp-web
@@ -40,7 +42,7 @@ msgstr "科目"
 msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
-msgstr "已从所有已存在的账号中的事件断开，现在你可以重新同步。"
+msgstr "所有事件已与您上一个账号取消关联，现在你可以重新同步。"
 
 #. module: google_calendar
 #. openerp-web
@@ -58,7 +60,7 @@ msgstr "使用前需要管理员配置 Google 同步项目!"
 msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
-msgstr "在从所有已存在账户中的事件断开时有错误发生，请重试或联系系统管理员。"
+msgstr "从上一个帐户取消事件关联时发生错误。请重试或与管理员联系。"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
@@ -169,7 +171,7 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
-"抱歉Google 失踪了... 下次将全部同步了。 \n"
+"抱歉Google 失去连接了... 下次将重新进行完整同步。 \n"
 "\n"
 " %s"
 
@@ -185,15 +187,14 @@ msgstr "ID"
 msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
-msgstr "为了完成这个，你首先需要断开旧的账号中所有已存在的事件。"
+msgstr "你首先需要断开旧的账号中所有已存在的事件才能执行此操作。"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
-msgstr ""
-"已经被同步的最后一个日历ID。如果它发生改变， 将清除全部在 GoogleID 和 Odoo Google Internal ID之间的连接"
+msgstr "最后一次同步的日历ID。如果它发生改变， 将清除全部在 GoogleID 和 Odoo Google Internal ID之间的连接"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
@@ -277,7 +278,7 @@ msgstr "用户"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:42
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr "您将被重定向到Google来授权Odoo访问你的日历!"
+msgstr "您将跳转到Google并授权Odoo访问您的日历"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:296

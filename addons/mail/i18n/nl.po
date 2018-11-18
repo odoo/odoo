@@ -1674,7 +1674,7 @@ msgstr "Negeer leveringsfouten"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_cancel_action
 msgid "Discard mail delivery failures"
-msgstr "Negeer mail aflever fouten"
+msgstr "Negeer mail afleverfouten"
 
 #. module: mail
 #. openerp-web
@@ -3273,7 +3273,7 @@ msgstr "Bericht"
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr "Bericht aflever fout"
+msgstr "Bericht afleverfout"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
@@ -4894,7 +4894,8 @@ msgstr "Verzend berichten via e-mail"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:397
+#: code:addons/mail/static/src/xml/thread.xml:390
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 #: selection:mail.mail,state:0 selection:mail.notification,email_status:0
 #, python-format
@@ -5420,7 +5421,7 @@ msgid ""
 "                there is no active filter in the search bar."
 msgstr ""
 "Probeer wat activiteit toe te voegen aan records, of zorg ervoor dat\n"
-"                 er is geen actief filter in de zoekbalk is."
+"er is geen actief filter in de zoekbalk is."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -6059,6 +6060,7 @@ msgstr "Bestuursvergaderingen"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:43
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"

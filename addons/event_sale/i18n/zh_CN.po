@@ -3,17 +3,18 @@
 # * event_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2018
+# Martin Trigaux, 2018
 # THL <wt39181819@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
 "Last-Translator: THL <wt39181819@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -47,14 +48,14 @@ msgstr "确认之前"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "选择活动"
+msgstr "选择一个活动将会自动创建一个该活动的登记。"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "选译活动入券场，它将自动生成该活动的入场券"
+msgstr "选择一个活动入场券将会自动创建一个该入场券的登记。"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_uid
@@ -76,7 +77,7 @@ msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "定义可用入场券的数量。如果太多人来注册，超过设置数量就卖不出去。如果设置为0，就是忽略这条规则当成无限制"
+msgstr "定义可用入场券的数量。如果注册人数超出入场券数量，你将无法继续售卖入场券。如果设置为0，则上述规则无效。"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
@@ -93,7 +94,7 @@ msgstr "编辑销售确认的与会者详细信息"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "Edit Attendee Line on Sales Confirmation"
-msgstr "编辑销售确认的与会者行"
+msgstr "编辑销售确认的出席者列表"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -180,7 +181,7 @@ msgstr "ID"
 msgid ""
 "If checked this product automatically creates an event registration at the "
 "sales order confirmation."
-msgstr "如果选中此产品会在销售订单确认时自动创建事件登记。"
+msgstr "如果选中，将会在销售订单确认时自动创建事件登记。"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
@@ -247,7 +248,7 @@ msgstr "该入场券没有可用座位"
 #: code:addons/event_sale/models/event.py:152
 #, python-format
 msgid "No more available seats for this ticket type."
-msgstr "该入场券没有可用座位。"
+msgstr "该类入场券没有可用座位。"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:250
@@ -408,7 +409,7 @@ msgstr "入场券类型"
 #: code:addons/event_sale/models/event.py:157
 #, python-format
 msgid "Ticket cannot belong to both the event category and the event itself."
-msgstr "票不能属于事件类别和事件本身。"
+msgstr "入场券既不能属于事件类别，也不能属于事件本身。"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
