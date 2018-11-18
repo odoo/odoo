@@ -4,20 +4,21 @@
 # 
 # Translators:
 # Bonny Useful <bonny.useful@gmail.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Febrasari Almania <febrasari.almania@gmail.com>, 2017
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
 # Ngalim Siregar <ngalim.siregar@gmail.com>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Edy Kend <edy@azmall.co.id>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Ryanto The <ry.the77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Edy Kend <edy@azmall.co.id>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2018\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +87,7 @@ msgstr "Hari dalam seminggu"
 #: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users_resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "Jam Kerja Standar"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_hr_employee_resource_calendar_id
@@ -120,21 +121,20 @@ msgstr "Nama Tampilan"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
-msgstr "Faktor efisiensi"
+msgstr "Faktor Efisiensi"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_to
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_to
 msgid "End Date"
-msgstr "Tanggal berakhir"
+msgstr "Tanggal Berakhir"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:734
 #, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
-"Kesalahan! meninggalkan mulai tanggal harus lebih rendah kemudian "
-"meninggalkan akhir-date."
+"Eror! Tanggal mulai cuti harus lebih rendah daripada tanggal berakhir cuti."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -145,25 +145,25 @@ msgstr "Jumat"
 #: code:addons/resource/models/resource.py:74
 #, python-format
 msgid "Friday Evening"
-msgstr ""
+msgstr "Jumat Malam"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:73
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "Jumat Pagi"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
-msgstr ""
+msgstr "Cuti Global"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Dikelompokkan berdasarkan"
+msgstr "Kelompokkan Menurut"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -192,7 +192,7 @@ msgid ""
 "the holiday/leave is only for this resource"
 msgstr ""
 "Jika kosong, ini adalah hari libur umum bagi perusahaan. Jika sumber daya "
-"diatur, liburan / cuti hanya untuk sumber daya ini"
+"diatur, libur/cuti hanya untuk sumber daya ini"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
@@ -200,8 +200,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Jika bidang aktif diatur ke False, itu akan memungkinkan Anda untuk "
-"menyembunyikan catatan sumber daya tanpa menghapusnya."
+"Jika kolom aktif diatur ke False, itu akan memungkinkan Anda untuk "
+"menyembunyikan data sumber daya tanpa menghapusnya."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -241,12 +241,12 @@ msgstr "Terakhir diperbarui pada"
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr "Detil Cuti"
+msgstr "Detail Cuti"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr "Tinggalkan Bulan"
+msgstr "Bulan Cuti"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -268,13 +268,13 @@ msgstr "Senin"
 #: code:addons/resource/models/resource.py:66
 #, python-format
 msgid "Monday Evening"
-msgstr ""
+msgstr "Senin Malam"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:65
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "Senin Pagi"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
@@ -294,7 +294,7 @@ msgstr "Alasan"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Terkait nama pengguna untuk sumber daya untuk mengelola aksesnya."
+msgstr "Nama pengguna terkait untuk sumber daya untuk mengelola aksesnya."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_hr_employee_resource_id
@@ -313,34 +313,34 @@ msgstr "Sumber Daya"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr "Sumber daya Kalender"
+msgstr "Kalender Sumber Daya"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr "Sumber daya Detil"
+msgstr "Detail Sumber Daya"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Sumber daya Daun"
+msgstr "Cuti Sumber Daya"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "Sumber Daya Mixin"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
 msgid "Resource Type"
-msgstr "Jenis sumber daya"
+msgstr "Jenis Sumber Daya"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
 msgid "Resource's Calendar"
-msgstr "Kalender sumber daya yang"
+msgstr "Kalender Sumber Daya"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -354,7 +354,7 @@ msgstr "Sumber daya"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr "Sumber Daun"
+msgstr "Cuti Sumber Daya"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -381,19 +381,19 @@ msgstr "Cari Sumber Daya"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Leaves"
-msgstr "Cari Masa Kerja Daun"
+msgstr "Cari Cuti Masa Kerja"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
-msgstr "Cari Waktu Kerja"
+msgstr "Cari Jam Kerja"
 
 #. module: resource
 #: code:addons/resource/models/res_company.py:18
 #: code:addons/resource/models/res_company.py:23
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "Standar 40 jam/minggu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
@@ -406,16 +406,18 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"Waktu mulai dan berakhir kerja.\n"
+"Nilai spesifik seperti 24:00 diartikan sebagai 23:59:59.999999."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
 msgid "Starting Date"
-msgstr "Tanggal Awal"
+msgstr "Tanggal Mulai"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr "Mulai Tanggal Cuti Menurut Bulan"
+msgstr "Tanggal Mulai Cuti Menurut Bulan"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -425,7 +427,7 @@ msgstr "Minggu"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
 msgid "Test Resource Model"
-msgstr ""
+msgstr "Coba Model Sumber Daya"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:689
@@ -442,6 +444,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Kolom ini digunakan untuk menghitung durasi yang diharapkan dari tugas kerja"
+" di kerjaan ini. Misalnya, jika tugas kerja memerlukan waktu satu jam dan "
+"faktor efisiensinya 100%, berarti durasi yang diharapkan adalah satu jam. "
+"Jika faktor efisiensi 200%, berarti durasi yang diharapkan adalah 30 menit."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -452,18 +458,18 @@ msgstr "Kamis"
 #: code:addons/resource/models/resource.py:72
 #, python-format
 msgid "Thursday Evening"
-msgstr ""
+msgstr "Kamis Malam"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:71
 #, python-format
 msgid "Thursday Morning"
-msgstr ""
+msgstr "Kamis Pagi"
 
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Efisiensi waktu harus positif"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_tz
@@ -476,6 +482,8 @@ msgid ""
 "Timezone used when encoding the leave. It is used to correctly localize "
 "leave hours when computing time intervals."
 msgstr ""
+"Zona waktu yang digunakan untuk pencatatan cuti. Digunakan untuk lokalisasi "
+"jam cuti secara benar ketika menghitung interval waktu."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -486,13 +494,13 @@ msgstr "Selasa"
 #: code:addons/resource/models/resource.py:68
 #, python-format
 msgid "Tuesday Evening"
-msgstr ""
+msgstr "Selasa Malam"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:67
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "Selasa Pagi"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -519,23 +527,23 @@ msgstr "Rabu"
 #: code:addons/resource/models/resource.py:70
 #, python-format
 msgid "Wednesday Evening"
-msgstr ""
+msgstr "Rabu Malam"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:69
 #, python-format
 msgid "Wednesday Morning"
-msgstr ""
+msgstr "Rabu Pagi"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr "Detil pekerjaan"
+msgstr "Detail Pekerjaan"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "Sumber Daya Pekerjaan"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
@@ -545,7 +553,7 @@ msgstr "Kerja dari"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_to
 msgid "Work to"
-msgstr "Bekerja untuk"
+msgstr "Kerja hingga"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_hr_employee_resource_calendar_id
@@ -556,18 +564,18 @@ msgstr "Bekerja untuk"
 #: model:ir.model.fields,field_description:resource.field_resource_test_resource_calendar_id
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"
-msgstr "Jam kerja"
+msgstr "Jam Kerja"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:60
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr "Jam Kerja dari %s"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
-msgstr "Masa kerja"
+msgstr "Masa Kerja"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
@@ -580,4 +588,4 @@ msgstr "Masa kerja"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
-msgstr "Hari Kerja"
+msgstr "Periode Kerja"

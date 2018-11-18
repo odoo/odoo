@@ -3,30 +3,31 @@
 # * point_of_sale
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # vaalds <vaalds@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Arminas Grigonis <arminas@versada.lt>, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Aleksandr Jadov <a.jadov@tata.lt>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2017
 # Rolandas <info@paninfo.lt>, 2017
+# Arminas Grigonis <arminas@versada.lt>, 2017
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Paulius Sladkevičius <paulius@versada.eu>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Aleksandr Jadov <a.jadov@tata.lt>, 2017
+# Martin Trigaux, 2017
 # Eimantas <eimantas@focusate.eu>, 2018
 # Naglis Jonaitis, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-30 08:47+0000\n"
-"PO-Revision-Date: 2018-07-30 08:47+0000\n"
-"Last-Translator: Naglis Jonaitis, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +76,7 @@ msgstr "$ 8.50"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1474
 #, python-format
 msgid "% discount"
-msgstr "% discount"
+msgstr "% nuolaida"
 
 #. module: point_of_sale
 #. openerp-web
@@ -109,12 +110,12 @@ msgstr "<b>Nustatyti nestandartinį paveikslėlį...</b>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
 msgid "<i class=\"fa fa-eye-slash\"/>Hide"
-msgstr ""
+msgstr "<i class=\"fa fa-eye-slash\"/>Slėpti"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>How to manage tax-included prices"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Kaip valdyti kainas be mokesčių"
 
 #. module: point_of_sale
 #. openerp-web
@@ -132,16 +133,18 @@ msgid ""
 "<span class=\"o_stat_text\">Put</span>\n"
 "                                <span class=\"o_stat_text\">Money In</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Įdėti</span>\n"
+"                                <span class=\"o_stat_text\">pinigus</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Set Closing Balance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nustayti uždarymo balansą</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Set Opening Balance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nustatyti atidarymo balansą</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -149,11 +152,13 @@ msgid ""
 "<span class=\"o_stat_text\">Take</span>\n"
 "                                <span class=\"o_stat_text\">Money Out</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Išimti</span>\n"
+"                                <span class=\"o_stat_text\">pinigus</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\"><b>Praleisti peržiūros ekraną</b></span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -171,7 +176,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "<span class=\"total-amount-formatting\">TOTAL</span>"
-msgstr ""
+msgstr "<span class=\"total-amount-formatting\">VISO</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -189,17 +194,17 @@ msgstr "<span>$ 470.00</span>"
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "<span>Cash (USD):</span>"
-msgstr ""
+msgstr "<span>Grynieji (USD):</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Cash Balance</span>"
-msgstr ""
+msgstr "<span>Grynųjų balansas</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Last Closing Date</span>"
-msgstr ""
+msgstr "<span>Vėluojančio uždarymo data</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -209,37 +214,37 @@ msgstr "<span>Ataskaitos</span>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>View</span>"
-msgstr "<span>Vaizdas</span>"
+msgstr "<span>Peržiūra</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Company</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Įmonė</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Ending Balance</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Pabaigos balansas</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Journal</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Žurnalas</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Opening Date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Atidarymo data</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Starting Balance</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Pradžios balansas</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Statement Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Išrašo pavadinimas</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -261,7 +266,7 @@ msgstr "= Teorinis Uždaromasis Balansas"
 #: code:addons/point_of_sale/static/src/js/screens.js:2012
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr ""
+msgstr "? \"Patvirtinti\" paspaudimas patvirtins mokėjimą."
 
 #. module: point_of_sale
 #. openerp-web
@@ -274,7 +279,7 @@ msgstr "Kliento vardas yra privalomas"
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
-msgstr ""
+msgstr "Saugumo PIN naudojamas pardavimo taško funkcionalumui apsaugoti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_uuid
@@ -282,6 +287,8 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
+"Unikalus identifikatorius šiai pardavimo taško konfigūracijai, naudojamas "
+"išvengti kliento duomenų konfliktų."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
@@ -305,6 +312,10 @@ msgid ""
 "                currencies in your cash registers at the beginning and the end\n"
 "                of each session."
 msgstr ""
+"Sesija yra laikotarpis (dažniausiai, viena diena), per kurį\n"
+"jūs pardavinėjate pardavimo taške. Kiekvienos sesijos\n"
+"pradžioje ir pabaigoje vartotojas turi patikrinti\n"
+"valiutas jūsų kasose. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
@@ -314,12 +325,12 @@ msgstr "Unikalus sesijos eiliškumo numeris užsakymui"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
-msgstr ""
+msgstr "Toks trumpas tekstas bus įterptas kaip atspausdinto kvito poraštė."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt."
-msgstr ""
+msgstr "Toks trumpas tekstas bus įterptas kaip atspausdinto kvito antraštė."
 
 #. module: point_of_sale
 #. openerp-web
@@ -331,7 +342,7 @@ msgstr "ABC"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accept payments with an integrated card reader"
-msgstr ""
+msgstr "Priimti mokėjimus integruotu kortelių skaitytuvu"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
@@ -351,7 +362,7 @@ msgstr "Apskaitos informacija"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_invoice_journal_id
 msgid "Accounting journal used to create invoices."
-msgstr ""
+msgstr "Sąskaitų žurnalas, naudojamas sąskaitų kūrimui."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_journal_id
@@ -385,7 +396,7 @@ msgstr "Pridėti nuolaidą"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add a custom message to header and footer"
-msgstr ""
+msgstr "Pridėkite savo pranešimą antraštėje ir poraštėje"
 
 #. module: point_of_sale
 #. openerp-web
@@ -403,6 +414,8 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
+"Visi galimi kainoraščiai turi būti ta pačia valiuta, kaip įmonė, arba, jei "
+"naudojate Apskaitos programą, kaip valiuta, nustatyta šiame pardavimų taške."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:243
@@ -415,7 +428,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr "Visi pardavimai"
+msgstr "Visos pardavimų eilutės"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -425,7 +438,7 @@ msgstr "Leisti kasininkui perspausdinti kvitus"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Allow global discounts on orders"
-msgstr ""
+msgstr "Leisti globalias užsakymų nuolaidas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_sale_pricelist
@@ -433,6 +446,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Leidžia valdyti skirtingas kainas pagal klientų kategorijų taisykles.\n"
+"Pavyzdžiui: 10% mažmenininkams, šio produkto 5€ nuolaida ir t.t."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
@@ -462,13 +477,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
 msgid "An internal identification of the point of sale."
-msgstr ""
+msgstr "Vidinė pardavimo taško identifikacija."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:160
 #, python-format
 msgid "Another session is already opened for this point of sale."
-msgstr ""
+msgstr "Šia pardavimo taškui jau atidaryta kita sesija."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -481,7 +496,7 @@ msgstr "Pritaikyti nuolaidą"
 #: code:addons/point_of_sale/static/src/js/screens.js:2004
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
-msgstr ""
+msgstr "Ar esate tikri, kad klientas nori susimokėti"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_variants_action
@@ -501,12 +516,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr ""
+msgstr "Automatinis kvitų spausdinimas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Automatically open the cashdrawer."
-msgstr ""
+msgstr "Automatiškai atidaryti kasą."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_ids
@@ -518,7 +533,7 @@ msgstr "Galimi apmokėjimo būdai"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_available_pricelist_ids
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Pricelists"
-msgstr ""
+msgstr "Galimi kainoraščiai"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_account_journal_search_inherit_point_of_sale
@@ -528,7 +543,7 @@ msgstr "Pasiekiama pardavimo taškui"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 msgid "Available in POS"
-msgstr "Pasiekiama POS"
+msgstr "Pasiekiama PT"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product_available_in_pos
@@ -581,7 +596,7 @@ msgstr "Brūkšninio kodo nomenklatūra"
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Barcode Scanner"
-msgstr "Barkodo skaitytuvas"
+msgstr "Brūkšninio kodo skaitytuvas"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -680,7 +695,7 @@ msgstr "Kasos aparatas"
 #: code:addons/point_of_sale/models/pos_session.py:141
 #, python-format
 msgid "Cash control can only be applied to cash journals."
-msgstr ""
+msgstr "Grynųjų pinigų kontrolė gali būti pritaikyta tik grynųjų žurnalams."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cashbox_line
@@ -690,7 +705,7 @@ msgstr "Kasos aparato įrašas"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
 msgid "Cashbox balance"
-msgstr ""
+msgstr "Kasos balansas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
@@ -720,11 +735,13 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
+"Kategorijos yra naudojamos produktų naršymui\n"
+"jutiklinio ekrano sąsajoje."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Category Pictures"
-msgstr ""
+msgstr "Kategorijos paveikslėliai"
 
 #. module: point_of_sale
 #. openerp-web
@@ -745,7 +762,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:1205
 #, python-format
 msgid "Change Customer"
-msgstr "Pakeisti klientą"
+msgstr "Keisti klientą"
 
 #. module: point_of_sale
 #. openerp-web
@@ -768,7 +785,7 @@ msgstr "Grąža:"
 #: model:ir.model.fields,help:point_of_sale.field_product_template_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr "Pažymėkite, jei produktas yra sveriamas."
+msgstr "Pažymėkite, jei produktas turėtų būtų sveriamas svarstyklėmis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product_available_in_pos
@@ -782,11 +799,13 @@ msgstr "Pažymėkite, jei norite kad šis produktas atsirastų POS sąsajoje."
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
+"Pažymėkite, jei norite pardavimo taško užsakymuose sugrupuoti šios "
+"kategorijos produktus."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
 msgid "Check the amount of the cashbox at opening and closing."
-msgstr ""
+msgstr "Patikrinkite kasos sumą atidarant ir uždarant."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_journal_user
@@ -794,6 +813,8 @@ msgid ""
 "Check this box if this journal define a payment method that can be used in a"
 " point of sale."
 msgstr ""
+"Pažymėkite šį laukelį, jei šis žurnalas nurodo mokėjimo būdą, kuris gali "
+"būti naudojamas pardavimo taške."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_by
@@ -807,7 +828,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:2053
 #, python-format
 msgid "Check your internet connection and try again."
-msgstr "Patikrinkite interneto ryšį ir mėginkite dar kartą."
+msgstr "Patikrinkite interneto ryšį ir pabandykite dar kartą."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_child_id
@@ -817,7 +838,7 @@ msgstr "Dukterinės kategorijos"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose a pricelist for the Point Of Sale"
-msgstr ""
+msgstr "Pasirinkite kainoraštį pardavimo taškui"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -842,32 +863,32 @@ msgstr "Miestas"
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid "Click to add a new product."
-msgstr ""
+msgstr "Pridėti naują produktą."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
 msgid "Click to add a payment method."
-msgstr ""
+msgstr "Pridėti naują mokėjimo būdą."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Click to create a new PoS config."
-msgstr ""
+msgstr "Sukurti naują PT konfigūraciją."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "Click to create a new order."
-msgstr ""
+msgstr "Sukurti naują užsakymą."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
 msgid "Click to define a new category."
-msgstr ""
+msgstr "Nustatyti naują kategoriją."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "Click to start a new session."
-msgstr ""
+msgstr "Pradėti naują sesiją."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:15
@@ -880,7 +901,7 @@ msgstr "Klientas"
 #: code:addons/point_of_sale/static/src/js/chrome.js:462
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the PosBox"
-msgstr ""
+msgstr "Kliento ekranas nepalaikomas. Atnaujinkite PosBox"
 
 #. module: point_of_sale
 #. openerp-web
@@ -901,7 +922,7 @@ msgstr "Uždaryta ir paskelbta"
 #: code:addons/point_of_sale/static/src/js/gui.js:346
 #, python-format
 msgid "Closing ..."
-msgstr ""
+msgstr "Uždaroma ..."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -926,7 +947,7 @@ msgstr "Įmonė"
 #: model:product.product,name:point_of_sale.poire_conference
 #: model:product.template,name:point_of_sale.poire_conference_product_template
 msgid "Conference pears"
-msgstr ""
+msgstr "Conference kriaušės"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -936,7 +957,7 @@ msgstr "Nustatymai"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Configuration for journal entries of PoS orders"
-msgstr ""
+msgstr "PT užsakymų įrašų žurnalo konfigūracija"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -944,6 +965,8 @@ msgid ""
 "Configure at least one Point of Sale to be able to sell through the PoS "
 "interface."
 msgstr ""
+"Nustatykite bent vieną Pardavimų tašką, kad galėtumėte pardavinėti per PT "
+"sąsają."
 
 #. module: point_of_sale
 #. openerp-web
@@ -958,14 +981,14 @@ msgstr "Patvirtinti"
 #: code:addons/point_of_sale/static/src/js/chrome.js:455
 #, python-format
 msgid "Connected, Not Owned"
-msgstr ""
+msgstr "Prijungta, neturima"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:120
 #, python-format
 msgid "Connecting to the PosBox"
-msgstr "Jungiamasi prie PosBox'o"
+msgstr "Jungiamasi prie PosBox"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
@@ -987,7 +1010,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:1363
 #, python-format
 msgid "Could Not Read Image"
-msgstr "Nepavyko perskaityti paveiksliuko"
+msgstr "Nepavyko perskaityti paveikslėlio"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1042,7 +1065,7 @@ msgstr "Ši sesija"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_state
 msgid "Current Session State"
-msgstr ""
+msgstr "Dabartinė sesijos būsena"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1064,7 +1087,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_customer_facing_display
 msgid "Customer Facing Display"
-msgstr ""
+msgstr "Į vartotoją atsuktas ekranas"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:559
@@ -1104,7 +1127,7 @@ msgstr "Klaidų taisymo langas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_cashbox_lines_ids
 msgid "Default Balance"
-msgstr ""
+msgstr "Numatytasis balansas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_account_id
@@ -1114,7 +1137,7 @@ msgstr "Numatytoji debetinė sąskaita"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr ""
+msgstr "Numatytoji mokestinė aplinka"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1125,12 +1148,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Default Pricelist"
-msgstr "Numatytas kainoraštis"
+msgstr "Numatytasis kainoraštis"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
 msgid "Default company logo"
-msgstr ""
+msgstr "Numatytasis kompanijos logotipas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_barcode_nomenclature_id
@@ -1138,39 +1161,41 @@ msgid ""
 "Defines what kind of barcodes are available and how they are assigned to "
 "products, customers and cashiers."
 msgstr ""
+"Nustato, kokie brūkšniniai kodai yra galimi ir kaip jie priskiriami "
+"produktams, klientams ir kasoms."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_delay_validation
 msgid "Delay Validation"
-msgstr "Vėlavimo patvirtinimas"
+msgstr "Atidėti patvirtinimą"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1352
 #, python-format
 msgid "Delete Paid Orders"
-msgstr ""
+msgstr "Ištrinti apmokėtus užsakymus"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:263
 #, python-format
 msgid "Delete Paid Orders ?"
-msgstr ""
+msgstr "Ištrinti apmokėtus užsakymus?"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1353
 #, python-format
 msgid "Delete Unpaid Orders"
-msgstr ""
+msgstr "Ištrinti apmokėtus užsakymus"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:273
 #, python-format
 msgid "Delete Unpaid Orders ?"
-msgstr ""
+msgstr "Ištrinti apmokėtus užsakymus?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1184,7 +1209,7 @@ msgstr "Atžymėti klientą"
 #: code:addons/point_of_sale/static/src/js/chrome.js:55
 #, python-format
 msgid "Destroy Current Order ?"
-msgstr "Panaikinti dabartinį užsakymą?"
+msgstr "Panaikinti esamą užsakymą?"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_difference
@@ -1196,7 +1221,7 @@ msgstr "Skirtumas"
 msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
-msgstr "Skirtumas tarp teorinio uždarymo balanso ir tikro uždarymo balanso."
+msgstr "Skirtumas tarp teorinio uždarymo balanso ir tikrojo uždarymo balanso."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1215,7 +1240,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/chrome.js:460
 #, python-format
 msgid "Disconnected"
-msgstr ""
+msgstr "Atjungta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_discount
@@ -1253,7 +1278,7 @@ msgstr "Nuolaidos"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_display_categ_images
 msgid "Display Category Pictures"
-msgstr ""
+msgstr "Rodyti kategorijų paveikslėlius"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_display_name
@@ -1275,7 +1300,7 @@ msgstr "Vaizduojamas pavadinimas"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Display pictures of product categories"
-msgstr ""
+msgstr "Rodyti produktų kategorijų paveikslėlius"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -1285,11 +1310,15 @@ msgid ""
 "                category, you can not sell it through the point of sale\n"
 "                interface."
 msgstr ""
+"Nepamirškite nustatyti kainos ir pardavimų taško kategorijos,\n"
+"kurioje ji turėtų būti. Jei produktas neturės pardavimo taško\n"
+"kategorijos, negalėsite parduoti per pardavimo taško\n"
+"sąsają."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 msgid "Do you want to open cash registers?"
-msgstr "Ar norite atidaryti kasos aparatą?"
+msgstr "Ar norite atidaryti kasos aparatus?"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1297,6 +1326,8 @@ msgid ""
 "Don't turn this option on if you take orders on smartphones or tablets. Such"
 " devices already benefit from a native keyboard."
 msgstr ""
+"Nejunkite šio pasirinkimo, jei priimate užsakymus išmaniaisiais telefonais "
+"ar planšetėmis. Tokiems įrenginiams puikiai tinka jų klaviatūros."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -1309,20 +1340,22 @@ msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
 msgstr ""
+"Nejunkite šio pasirinkimo, jei priimate užsakymus išmaniaisiais telefonais\n"
+" ar planšetėmis. Tokiems įrenginiams puikiai tinka jų klaviatūros."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1355
 #, python-format
 msgid "Download Paid Orders"
-msgstr ""
+msgstr "Atsisiųsti apmokėtus užsakymus"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1357
 #, python-format
 msgid "Download Unpaid Orders"
-msgstr ""
+msgstr "Atsiųsti neapmokėtus užsakymus"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1335,7 +1368,7 @@ msgstr "Iki"
 #: model:product.product,name:point_of_sale.partner_product_9
 #: model:product.template,name:point_of_sale.partner_product_9_product_template
 msgid "EGGS-solutions.fr"
-msgstr ""
+msgstr "EGGS-solutions.fr"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_3
@@ -1378,12 +1411,13 @@ msgstr "Tuščias užsakymas"
 #: code:addons/point_of_sale/static/src/js/screens.js:449
 #, python-format
 msgid "Empty Serial/Lot Number"
-msgstr ""
+msgstr "Tuščias serijinis/partijos numeris"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
 msgid "Enable barcode scanning with a remotely connected barcode scanner."
 msgstr ""
+"Įjungti nuotolinį brūkšninių kodų skaitymą nuotoliniu kodų skaitytuvu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_electronic_scale
@@ -1393,12 +1427,12 @@ msgstr "Įjungia elektroninių svarstyklių integraciją."
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_payment_terminal
 msgid "Enables Payment Terminal integration."
-msgstr ""
+msgstr "Įjungia mokėjimo terminalo integraciją."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_invoicing
 msgid "Enables invoice generation from the Point of Sale."
-msgstr ""
+msgstr "Įjungia sąskaitos-faktūros generavimą iš pardavimo taško."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_end_date
@@ -1447,14 +1481,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1354
 #, python-format
 msgid "Export Paid Orders"
-msgstr ""
+msgstr "Eksportuoti apmokėtus užsakymus"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1356
 #, python-format
 msgid "Export Unpaid Orders"
-msgstr ""
+msgstr "Eksportuoti neapmokėtus užsakymus"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.chicon_flandria_extra
@@ -1478,7 +1512,7 @@ msgstr "Fanta"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1211
 #, python-format
 msgid "Finished Importing Orders"
-msgstr ""
+msgstr "Užsakymų importavimas baigtas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_fiscal_position_id
@@ -1489,7 +1523,7 @@ msgstr "Mokestinė aplinka"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position per Order"
-msgstr ""
+msgstr "Mokestinė aplinka pagal užsakymą"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_fiscal_position_ids
@@ -1500,7 +1534,7 @@ msgstr "Mokestinės aplinkos"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Footer"
-msgstr ""
+msgstr "Poraštė"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_big_scrollbars
@@ -1510,7 +1544,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits_vegetables
 msgid "Fruits and Vegetables"
-msgstr ""
+msgstr "Vaisiai ir daržovės"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1520,7 +1554,7 @@ msgstr "Bendra informacija"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Generation of your order references"
-msgstr ""
+msgstr "Jūsų užsakymų numerių generavimas"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1545,7 +1579,7 @@ msgstr "Suteikia eilės tvarką produktų kategorijų sąrašui."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_discount
 msgid "Global Discounts"
-msgstr ""
+msgstr "Globalios nuolaidos"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_golden_perlim
@@ -1563,13 +1597,13 @@ msgstr "Gordon"
 #: model:product.product,name:point_of_sale.pomme_granny_smith
 #: model:product.template,name:point_of_sale.pomme_granny_smith_product_template
 msgid "Granny Smith apples"
-msgstr ""
+msgstr "Granny Smith obuoliai"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.poivron_verts
 #: model:product.template,name:point_of_sale.poivron_verts_product_template
 msgid "Green Peppers"
-msgstr ""
+msgstr "Žalieji pipirai"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -1588,7 +1622,7 @@ msgstr "Sugrupuoti žurnalo įrašus"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_is_pos_groupable
 msgid "Group Products in POS"
-msgstr ""
+msgstr "Grupuoti produktus PT"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1612,12 +1646,12 @@ msgstr "Turi pinigų kontrolę"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Header"
-msgstr ""
+msgstr "Antraštė"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_header_or_footer
 msgid "Header & Footer"
-msgstr ""
+msgstr "Antraštė ir poraštė"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_id
@@ -1679,12 +1713,12 @@ msgstr "Paveikslėlis"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1358
 #, python-format
 msgid "Import Orders"
-msgstr ""
+msgstr "Importuoti užsakymus"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Improve navigation for imprecise industrial touchscreens"
-msgstr ""
+msgstr "Pagerinkite navigaciją netiksliuose industriniuose ekranuose"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.tomate_en_grappe
@@ -1703,8 +1737,7 @@ msgstr "Vykdoma"
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr ""
-"Norint ištrinti pardavimą, pardavimas turi būti naujai sukurtas arba "
-"atšauktas"
+"Norint ištrinti pardavimą, jis turi būti naujai sukurtas arba atšauktas"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
@@ -1716,22 +1749,22 @@ msgstr "Neaktyvus"
 #: code:addons/point_of_sale/static/src/js/gui.js:277
 #, python-format
 msgid "Incorrect Password"
-msgstr ""
+msgstr "Neteisingas slaptažodis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
 msgid "Initial Category"
-msgstr ""
+msgstr "Pradinė kategorija"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_mercury
 msgid "Integrated Card Payments"
-msgstr ""
+msgstr "Integruoti mokėjimai kortele"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Integrated Card Reader"
-msgstr ""
+msgstr "Integruotas kortelių skaitytuvas"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -1762,7 +1795,7 @@ msgstr "Sąskaita-faktūra"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_invoice_journal_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Invoice Journal"
-msgstr ""
+msgstr "Sąskaitų žurnalas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_invoiced
@@ -1785,12 +1818,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_restaurant
 msgid "Is a Bar/Restaurant"
-msgstr ""
+msgstr "Yra baras/restoranas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_account_id
 msgid "It acts as a default account for debit amount"
-msgstr "Veikia kaip numatyta sąskaita debeto sumai"
+msgstr "Veikia kaip numatytoji sąskaita debeto sumai"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_jonagold
@@ -1817,7 +1850,7 @@ msgstr "Žurnalo įrašas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_big_scrollbars
 msgid "Large Scrollbars"
-msgstr "Didelė slinkties juosta"
+msgstr "Didelės slinkties juostos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category___last_update
@@ -1844,7 +1877,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last Session Closing Date"
-msgstr ""
+msgstr "Paskutinės sesijos uždarymo data"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
@@ -1878,7 +1911,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #: model:product.product,name:point_of_sale.poireaux_poireaux
 #: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
 msgid "Leeks"
-msgstr ""
+msgstr "Porai"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.citron
@@ -1894,7 +1927,7 @@ msgstr "Eilės nr."
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale Orders"
-msgstr ""
+msgstr "Pardavimų taško užsakymų eilutės"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:33
@@ -1926,24 +1959,24 @@ msgstr "Prisijungimo eilės numeris"
 #: code:addons/point_of_sale/static/src/js/gui.js:304
 #, python-format
 msgid "Login as a Manager"
-msgstr ""
+msgstr "Prisijungti kaip vadovui"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_lot_name
 msgid "Lot Name"
-msgstr ""
+msgstr "Partijos pavadinimas"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:2371
 #, python-format
 msgid "Lot/Serial Number(s) Required"
-msgstr ""
+msgstr "Reikalingas partijos/serijos numeris (-iai)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_pack_lot_ids
 msgid "Lot/serial Number"
-msgstr ""
+msgstr "Partijos/serijinis numeris"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_loyalty
@@ -1953,7 +1986,7 @@ msgstr "Lojalumo programa"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Loyalty program to use for this point of sale."
-msgstr ""
+msgstr "Lojalumo programa šiam pardavimo taškui."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -1983,7 +2016,7 @@ msgstr "Vadovas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_medium
 msgid "Medium-sized image"
-msgstr "Vidutinio dydžio paveiksliukas"
+msgstr "Vidutinio dydžio paveikslėlis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image_medium
@@ -1992,15 +2025,16 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
-"Vidutinio dydžio kategorijos paveiksliukas. Automatiškai pakeičiamas į "
-"128x128px paveiksliuką. Naudokite šį lauką formos ar \"kanban\" peržiūrai."
+"Vidutinio dydžio kategorijos paveikslėlis. Automatiškai pakeičiamas į "
+"128x128px paveikslėlį, išlaikant kraštinių santykį. Naudokite šį lauką "
+"formos ar \"kanban\" peržiūrai."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:553
 #, python-format
 msgid "Method"
-msgstr "Metodas"
+msgstr "Būdas"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.product_product_consumable
@@ -2011,7 +2045,7 @@ msgstr "Įvairūs"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Month of order date"
-msgstr "Mėnesis pagal užsakymo datą"
+msgstr "Mėnuo pagal užsakymo datą"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2070,7 +2104,7 @@ msgstr "Kitas užsakymas"
 #: code:addons/point_of_sale/models/pos_order.py:1089
 #, python-format
 msgid "No Taxes"
-msgstr ""
+msgstr "Nėra mokesčių"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:142
@@ -2078,20 +2112,20 @@ msgstr ""
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
 msgstr ""
-"Nerasta grynųjų pinigų registravimo šioje sesijoje. Negalima įrašyti "
-"grąžintų pinigų."
+"Nerasta grynųjų pinigų registravimo šiai sesijai. Negalima įrašyti grąžintų "
+"pinigų."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/report/pos_invoice.py:24
 #, python-format
 msgid "No link to an invoice for %s."
-msgstr ""
+msgstr "Nėra nuorodos į %s sąskaitą."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:24
 #, python-format
 msgid "No sequence defined on the journal"
-msgstr ""
+msgstr "Žurnale nenustatyta jokia seka"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2112,6 +2146,8 @@ msgid ""
 "Note that you may use the menu <i>Your Session</i>\n"
 "                to quickly open a new session."
 msgstr ""
+"Atkreipkite dėmesį, kad galite naudoti meniu <i>jūsų\n"
+"sesija</i>, kad greitai atidarytumėte naują sesiją."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2127,7 +2163,7 @@ msgstr "Spausdinimo skaičius"
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Odoo Logo"
-msgstr ""
+msgstr "\"Odoo\" logotipas"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2178,6 +2214,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"Tik vartotojai su vadovo prieigos teisėmis PT programoje gali užsakymuose "
+"keisti produktų kainas."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2185,13 +2223,13 @@ msgstr ""
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
 msgstr ""
-"Paveiksliukų formatai tinka tik tokie, kuriuos palaiko web naršyklė (.png ar"
-" .jpg)"
+"Tinkami tik naršyklės palaikomi paveikslėlių formatai, tokie kaip .png ar "
+".jpg"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Open"
-msgstr "Atverti"
+msgstr "Atidaryti"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
@@ -2209,7 +2247,7 @@ msgstr "Atidaryti kasos aparatą"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Open POS Menu"
-msgstr "Atidaryti POS sistemos meniu"
+msgstr "Atidaryti PT sistemos meniu"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -2219,7 +2257,7 @@ msgstr "Atidaryti registrus"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Open Sales Details Report"
-msgstr ""
+msgstr "Atidaryti pardavimų informacijos ataskaitą"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2254,7 +2292,7 @@ msgstr "Atidarymo data"
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Opening/Closing Values"
-msgstr ""
+msgstr "Atidarymo/uždarymo reikšmės"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_picking_type_id
@@ -2271,7 +2309,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "Operacijų tipai rodomi inventoriaus skydelyje."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.papillon_orange
@@ -2308,7 +2346,7 @@ msgstr "Užsakymo ID eiliškumas"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Order Interface"
-msgstr ""
+msgstr "Užsakymo sąsaja"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_line_id
@@ -2324,7 +2362,7 @@ msgstr "Užsakymo eilutės"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Order Month"
-msgstr "Užsakymo mėnesis"
+msgstr "Užsakymo mėnuo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_order_id
@@ -2347,7 +2385,7 @@ msgstr "Užsakymo eiliškumo numeris"
 #: code:addons/point_of_sale/models/pos_order.py:571
 #, python-format
 msgid "Order is not paid."
-msgstr ""
+msgstr "Užsakymas neapmokėtas."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2378,54 +2416,54 @@ msgstr "Užsakymų analizė"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_journal_action_point_of_sale
 msgid "POS Journals"
-msgstr ""
+msgstr "PT žurnalai"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:341
 #, python-format
 msgid "POS Order %s"
-msgstr ""
+msgstr "PT užsakymas %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
 msgid "POS Order line"
-msgstr "POS sistemo užsakymo įrašai"
+msgstr "PT užsakymo įrašas"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "POS Order lines"
-msgstr "POS sistemos užsakymo įrašai"
+msgstr "PT užsakymų įrašai"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "POS Orders"
-msgstr "POS sistemos užsakymai"
+msgstr "PT užsakymai"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr "POS sistemos užsakymų įrašai"
+msgstr "PT užsakymo įrašai"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "POS Sales"
-msgstr ""
+msgstr "PT pardavimai"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:350
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "PT užsakymo eilutė %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "POS orders created during the current year"
-msgstr ""
+msgstr "PT užsakymai, sukurti per einamuosius metus"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line_pos_statement_id
 msgid "POS statement"
-msgstr ""
+msgstr "PT išrašas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_paid
@@ -2446,7 +2484,7 @@ msgstr "Partneris"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.partner_services
 msgid "Partner Services"
-msgstr ""
+msgstr "Partnerių paslaugos"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2510,7 +2548,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Payment methods available"
-msgstr ""
+msgstr "Galimi mokėjimo būdai"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
@@ -2525,7 +2563,7 @@ msgstr "Mokėjimai"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:939
 #, python-format
 msgid "Payments:"
-msgstr ""
+msgstr "Mokėjimai:"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.peche
@@ -2536,7 +2574,7 @@ msgstr "Persikai"
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
-msgstr ""
+msgstr "Pagal sesiją"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_user_id
@@ -2581,7 +2619,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:2003
 #, python-format
 msgid "Please Confirm Large Amount"
-msgstr ""
+msgstr "Patvirtinkite didelį kiekį"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:344
@@ -2607,25 +2645,25 @@ msgstr "Pasirinkite mokėjimo būdą."
 #: code:addons/point_of_sale/static/src/js/screens.js:2044
 #, python-format
 msgid "Please select the Customer"
-msgstr ""
+msgstr "Pasirinkite klientą"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 msgid "PoS Categories"
-msgstr ""
+msgstr "PT kategorijos"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pos_categ_id
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "PoS Category"
-msgstr "POS kategorija"
+msgstr "PT kategorija"
 
 #. module: point_of_sale
 #: model:stock.picking.type,name:point_of_sale.picking_type_posout
 msgid "PoS Orders"
-msgstr "POS sistemos užsakymai"
+msgstr "PT užsakymai"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
@@ -2710,39 +2748,39 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Categories"
-msgstr "Pos kategorijos"
+msgstr "PT kategorijos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_pos_config_ids
 msgid "Pos Config"
-msgstr ""
+msgstr "PT konfig"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_order_count
 msgid "Pos Order Count"
-msgstr ""
+msgstr "PT užsakymų skaičius"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "PT užsakymo įrašas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_state
 msgid "Pos Session State"
-msgstr ""
+msgstr "PT sesijos būsena"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
 msgid "Pos Session Username"
-msgstr ""
+msgstr "PT sesijos vartotojo vardas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_posbox
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PosBox"
-msgstr ""
+msgstr "PosBox"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2760,7 +2798,7 @@ msgstr "Pašto kodas"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Posted"
-msgstr "Paskelbtas"
+msgstr "Registruotas"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_de_terre
@@ -2771,12 +2809,12 @@ msgstr "Bulvės"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_precompute_cash
 msgid "Prefill Cash Payment"
-msgstr ""
+msgstr "Iš anksto užpildyti mokėjimą grynaisiais"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Prefill amount paid with the exact due amount"
-msgstr ""
+msgstr "Užpildyti apmokėtą kiekį tikslia mokėtina suma"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2785,12 +2823,12 @@ msgstr ""
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 #, python-format
 msgid "Price"
-msgstr "Suma"
+msgstr "Kaina"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Price Control"
-msgstr ""
+msgstr "Kainų kontrolė"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -2842,7 +2880,7 @@ msgstr "Spausdinti kvitą"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Print invoices on customer request"
-msgstr ""
+msgstr "Klientui pareikalavus, spausdinti sąskaitas-faktūras"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2965,7 +3003,7 @@ msgstr "Kiekis"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1373
 #, python-format
 msgid "Read Weighing Scale"
-msgstr ""
+msgstr "Skaityti svarstykles"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2973,6 +3011,7 @@ msgstr ""
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>? <i>Click here</i>."
 msgstr ""
+"Pasirengę paleisti savo <b>pardavimo tašką</b>? <i>Paspauskite čia</i>."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -2982,7 +3021,7 @@ msgstr "Realusis uždarymo balansas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_receipt_footer
 msgid "Receipt Footer"
-msgstr "Kvito apačia"
+msgstr "Kvito poraštė"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_receipt_header
@@ -2992,12 +3031,12 @@ msgstr "Kvito antraštė"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Receipt Printer"
-msgstr ""
+msgstr "Kvitų spausdintuvas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pos_reference
 msgid "Receipt Ref"
-msgstr "Kvito nuoroda"
+msgstr "Kvito nr."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_rescue
@@ -3008,20 +3047,20 @@ msgstr ""
 #: model:product.product,name:point_of_sale.poivron_rouges
 #: model:product.template,name:point_of_sale.poivron_rouges_product_template
 msgid "Red Pepper"
-msgstr ""
+msgstr "Raudonasis pipiras"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pamplemousse_rouge_pamplemousse
 #: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
 msgid "Red grapefruit"
-msgstr ""
+msgstr "Raudonasis greipfrutas"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1367
 #, python-format
 msgid "Refresh Display"
-msgstr ""
+msgstr "Atnaujinti ekraną"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -3048,12 +3087,12 @@ msgstr "Atsakingas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_restrict_price_control
 msgid "Restrict Price Modifications to Managers"
-msgstr ""
+msgstr "Leisti kainų keitimus tik vadovams"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Restrict price modification to managers"
-msgstr ""
+msgstr "Leisti kainų keitimus tik vadovams"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3070,7 +3109,7 @@ msgstr "Grąžinti produktus"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_return
 msgid "Returned"
-msgstr ""
+msgstr "Sugrįžo"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -3134,14 +3173,14 @@ msgstr "Mastelis"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1345
 #, python-format
 msgid "Scan"
-msgstr ""
+msgstr "Skenuoti"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1346
 #, python-format
 msgid "Scan EAN-13"
-msgstr ""
+msgstr "Skenuoti EAN-13"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_scan_via_proxy
@@ -3177,13 +3216,13 @@ msgstr "Ieškoti pardavimų užsakymo"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_security_pin
 msgid "Security PIN"
-msgstr ""
+msgstr "Saugumo PIN"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_users.py:15
 #, python-format
 msgid "Security PIN can only contain digits"
-msgstr ""
+msgstr "Saugumo PIN gali turėti tik skaitmenis"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3197,21 +3236,21 @@ msgstr "Pasirinkti klientą"
 #: code:addons/point_of_sale/static/src/js/gui.js:247
 #, python-format
 msgid "Select User"
-msgstr ""
+msgstr "Pasirinkti vartotoją"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:2182
 #, python-format
 msgid "Select pricelist"
-msgstr ""
+msgstr "Pasirinkti kainoraštį"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:2117
 #, python-format
 msgid "Select tax"
-msgstr ""
+msgstr "Pasirinkti mokesčius"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:249
@@ -3234,7 +3273,7 @@ msgstr "Sekos numeris"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1099
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "Serijinis/partijos numeris"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3271,7 +3310,7 @@ msgstr "Sesijos ID"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1225
 #, python-format
 msgid "Session ids:"
-msgstr ""
+msgstr "Sesijos ID:"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -3298,7 +3337,7 @@ msgstr "Pasirinkti klientą"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_start_category
 msgid "Set Start Category"
-msgstr ""
+msgstr "Nustatyti pradžios kategoriją"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3311,18 +3350,20 @@ msgstr "Nustatyti svorį"
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set barcodes to scan products, customer cards, etc."
 msgstr ""
+"Nustatykite brūkšninius kodus, kad skenuotumėte produktus, klientų korteles "
+"ir t.t."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set shop-specific prices, seasonal discounts, etc."
-msgstr ""
+msgstr "Nustatykite parduotuvių kainas, sezonines nuolaidas ir t.t."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/pos.web_editor.js:33
 #, python-format
 msgid "Set your customized advertisement here"
-msgstr ""
+msgstr "Čia nustatykite savo personalizuotą reklamą"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3332,7 +3373,7 @@ msgstr "Nustatymai"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
+msgstr "Apmokėjimą klientams rodyti nuotoliniame ekrane."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pricelist_item
@@ -3349,7 +3390,7 @@ msgstr "Praleisti"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_skip_screen
 msgid "Skip Preview Screen"
-msgstr ""
+msgstr "Praleisti peržiūros langą"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_small
@@ -3363,20 +3404,20 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Mažo dydžio paveiksliukas kategorija. Automatiškai pakeičiamas į 64x64px "
-"paveiksliuką. Naudokite šitą laukelį kai maža nuotrauka privaloma."
+"Mažo dydžio kategorijos paveikslėlis. Automatiškai pakeičiamas į 64x64px "
+"paveikslėlį. Naudokite šitą laukelį, kai reikalinga maža nuotrauka."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:333
 #, python-format
 msgid "Some orders could not be submitted to"
-msgstr ""
+msgstr "Ne visi užsakymai buvo pateikti į"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "Nurodyti produkto partijos/serijinį numerį PT užsakymo įraše"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_start_date
@@ -3386,12 +3427,12 @@ msgstr "Pradžios data"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
-msgstr ""
+msgstr "Pradėti pardavinėti iš numatytosios produkto kategorijos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
 msgid "Starting Balance"
-msgstr "Pradinis likutis"
+msgstr "Pradinis balansas"
 
 #. module: point_of_sale
 #: model:ir.actions.report,name:point_of_sale.action_report_account_statement
@@ -3425,7 +3466,7 @@ msgstr "Atsargų vieta"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Stock location used for the inventory"
-msgstr ""
+msgstr "Inventoriui naudojama atsargų vieta"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3513,7 +3554,7 @@ msgstr "Išimti pinigus"
 #: code:addons/point_of_sale/static/src/js/screens.js:2136
 #, python-format
 msgid "Tax"
-msgstr "Mokestis"
+msgstr "Mokesčiai"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -3589,7 +3630,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:332
 #, python-format
 msgid "The POS order must have lines when calling this method"
-msgstr "POS turi turėti įrašų, kai šaukiamas šis metodas"
+msgstr "PT užsakymas turi turėti įrašų, kai kreipiasi šiuo būdu"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3614,20 +3655,20 @@ msgstr "Įmonės mokėjimo metos skiriasi nuo POS sistemos"
 #, python-format
 msgid ""
 "The company of the sales journal is different than the one of point of sale"
-msgstr ""
+msgstr "Pardavimų žurnalo įmonė skiriasi nuo esančios jūsų pardavimų taške"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:215
 #, python-format
 msgid ""
 "The company of the stock location is different than the one of point of sale"
-msgstr "Įmonės sandėlio vieta skiriasi nuo POS sistemos"
+msgstr "Įmonės atsargų vieta skiriasi nuo pardavimo taško"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:235
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
-msgstr ""
+msgstr "Numatytasis kainoraštis turi būti pasiekiamuose kainoraščiuose."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_proxy_ip
@@ -3642,6 +3683,7 @@ msgstr ""
 msgid ""
 "The invoice journal and the point of sale must belong to the same company"
 msgstr ""
+"Sąskaitų žurnalas ir pardavimų taškas turi priklausyti tai pačiai įmonei"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:241
@@ -3650,17 +3692,19 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"Sąskaitų žurnalas turi būti tos pačios valiutos kaip pardavimų žurnalų arba,"
+" jei jis nenustatytas, toks kaip įmonės valiuta."
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
 msgid "The name of this POS Session must be unique !"
-msgstr "Šios POS sesijos pavadinimas privalo būti unikalus!"
+msgstr "Šios PT sesijos pavadinimas privalo būti unikalus!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr ""
+msgstr "Su šiuo klientu susijusių pardavimo taško užsakymų skaičius"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3674,7 +3718,7 @@ msgstr "Užsakymas negali būti išsiųstas"
 #: code:addons/point_of_sale/static/src/js/screens.js:2063
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
-msgstr ""
+msgstr "Dėl nežinomos klaidos nepavyko nusiųsti užsakymo į serverį"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
@@ -3682,6 +3726,8 @@ msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
 "prefilled with the exact due amount."
 msgstr ""
+"Mokėjimo įvestis elgsis panašiai kaip banko mokėjimo įvestis ir bus iš "
+"anksto užpildyta tikslia gautina suma."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_config_id
@@ -3702,11 +3748,13 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured."
 msgstr ""
+"Kainoraštis naudojamas, jei nepasirinktas joks klientas arba jeigu "
+"vartotojas neturi nustatyto pardavimų kainoraščio."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_display_categ_images
 msgid "The product categories will be displayed with pictures."
-msgstr ""
+msgstr "Produkto kategorijos bus atvaizduojamos su paveikslėliais."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3721,11 +3769,13 @@ msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
 msgstr ""
+"Jei kvitas gali būti atspausdintas automatiškai, kvito langas bus "
+"praleidžiamas."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr ""
+msgstr "Kvitas bus automatiškai atspausdinamas kiekvieno užsakymo pabaigoje."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:248
@@ -3734,13 +3784,15 @@ msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
 msgstr ""
+"Pasirinkti kainoraščiai turi nepriklausyti jokiai įmonei arba pardavimo "
+"taško įmonei."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:2058
 #, python-format
 msgid "The server encountered an error while receiving your order."
-msgstr ""
+msgstr "Priimant jūsų užsakymą įvyko serverio klaida."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -3826,6 +3878,8 @@ msgid ""
 "This cashbox line is used by default when opening or closing a balance for "
 "this point of sale"
 msgstr ""
+"Atidarant ar uždarant šio pardavimo taško balansą, standartiškai naudojama "
+"ši kasos eilutė"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_amount_authorized_diff
@@ -3866,6 +3920,8 @@ msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Ši sąskaita buvo sukurta iš pardavimo taško sesijos: <a href=# data-oe-"
+"model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_fiscal_position_ids
@@ -3883,6 +3939,9 @@ msgid ""
 "all the unsaved data and exit the point of sale. This operation cannot be "
 "undone."
 msgstr ""
+"Ši operacija naršyklėje sugriaus visus neapmokėtus užsakymus. Prarasite "
+"visus neišsaugotus duomenis ir išeisite iš pardavimo taško. Operacijos nebus"
+" galima atšaukti."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3892,6 +3951,8 @@ msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"Ši operacija visam laikui ištrins visus apmokėtus užsakymus iš vietinės "
+"saugyklos. Prarasite visus duomenis. Operacijos nebus galima atšaukti."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_tip_product_id
@@ -3921,6 +3982,8 @@ msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Šis perkėlimas buvo sukurtas iš pardavimo taško sesijos: <a href=# data-oe-"
+"model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product_pos_categ_id
@@ -3994,12 +4057,12 @@ msgstr "Bendra kaina"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:868
 #, python-format
 msgid "Total Taxes"
-msgstr ""
+msgstr "Viso mokesčių"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_total_entry_encoding
 msgid "Total of all paid sales orders"
-msgstr ""
+msgstr "Visų apmokėtų pardavimo užsakymų suma"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_end_real
@@ -4014,7 +4077,7 @@ msgstr "iš viso pinigų atidarant"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Total qty"
-msgstr "Bendras kiekis"
+msgstr "Visas kiekis"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4039,6 +4102,8 @@ msgid ""
 "Unable to open the session. You have to assign a sales journal to your point"
 " of sale."
 msgstr ""
+"Sesijos atidaryti negalima. Turite savo pardavimo taškui priskirti pardavimų"
+" žurnalą."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
@@ -4069,12 +4134,12 @@ msgstr "Negalimas failo formatas"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Unused"
-msgstr ""
+msgstr "Nepanaudotas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "Naudoti esančias partijas / Serijiniai numeriai"
+msgstr "Naudoti esančias partijų/serijinius numerius"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4084,12 +4149,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_pricelist
 msgid "Use a pricelist."
-msgstr ""
+msgstr "Naudoti kainoraštį."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a virtual keyboard for touchscreens"
-msgstr ""
+msgstr "Jutikliniams ekranams naudoti virtualią klaviatūrą"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4188,7 +4253,7 @@ msgstr "Vanduo"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1366
 #, python-format
 msgid "Weighing"
-msgstr ""
+msgstr "Svėrimas"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:12
@@ -4237,8 +4302,8 @@ msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
 "already been issued."
 msgstr ""
-"Jūs negalite pakeisti partnerio POS sistemos užsakyme, kuriame buvo išrašyta"
-" sąskaita-faktūra."
+"Jūs negalite pakeisti partnerio PT sistemos užsakyme, kuriame jau buvo "
+"išrašyta sąskaita-faktūra."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:33
@@ -4253,7 +4318,7 @@ msgstr ""
 #, python-format
 msgid "You cannot create two active sessions with the same responsible!"
 msgstr ""
-"Jūs negalite sukurti dviejų aktyvių sesijų priskirtų tam pačiam atsakingam "
+"Jūs negalite sukurti dviejų aktyvių sesijų, priskirtų tam pačiam atsakingam "
 "žmogui."
 
 #. module: point_of_sale
@@ -4272,8 +4337,8 @@ msgid ""
 "You cannot have a negative amount in a Bank payment. Use a cash payment "
 "method to return money to the customer."
 msgstr ""
-"Jūs negalite turėti neigiamos sumos banko apmokėjimuose. Naudokite grynųjų "
-"pinigų metodą, norėdami atlikti grąžinimą klientui."
+"Negalite turėti neigiamos sumos banko mokėjimuose. Naudokite grynųjų pinigų "
+"metodą, norėdami atlikti grąžinimą klientui."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:299
@@ -4282,6 +4347,8 @@ msgid ""
 "You cannot use the session of another user. This session is owned by %s. "
 "Please first close this one to use this point of sale."
 msgstr ""
+"Negalite naudoti kito vartotojo sesijos. Šią sesiją turi %s. Norėdami "
+"naudoti šį pardavimo tašką, pirmiausia uždarykite ją."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:18
@@ -4299,13 +4366,13 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:851
 #, python-format
 msgid "You have to open at least one cashbox."
-msgstr "Jūs privalote atidaryti bent vieną kasą."
+msgstr "Turite atidaryti bent vieną kasą."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:999
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
-msgstr ""
+msgstr "Turite pardavimo formoje pasirinkti kainoraštį!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:985
@@ -4333,7 +4400,7 @@ msgstr "Nustatykite įmonės logotipą ar šabloną."
 #: code:addons/point_of_sale/wizard/pos_details.py:50
 #, python-format
 msgid "You have to set your reports's header and footer layout."
-msgstr "Reikia nustatyti ataskaitų antraštės ir poraštės šablonus."
+msgstr "Turite nustatyti ataskaitų antraštės ir poraštės išdėstymą."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -4353,21 +4420,21 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:166
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr "Jūs turite priskirti prekybos vietą savo sesijai."
+msgstr "Turėtumėte priskirti savo sesijai prekybos tašką."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:56
 #, python-format
 msgid "You will lose any data associated with the current order"
-msgstr "Jūs prarasite visą informaciją, susijusią su dabartiniu užsakymu"
+msgstr "Prarasite visą informaciją, susijusią su esamu užsakymu"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1286
 #, python-format
 msgid "Your Internet connection is probably down."
-msgstr "UPS! Greičiausiai Jums dingo interneto ryšys."
+msgstr "Greičiausiai dingo jūsų interneto ryšys."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:281
@@ -4418,7 +4485,7 @@ msgstr "barcode.rule"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1222
 #, python-format
 msgid "belong to another session:"
-msgstr ""
+msgstr "priklauso kitai sesijai:"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_8
@@ -4469,12 +4536,12 @@ msgstr "nuolaida"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Company Address, Website"
-msgstr ""
+msgstr "pvz., įmonės adresas, svetainė"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Return Policy, Thanks for shopping with us!"
-msgstr ""
+msgstr "pvz., grąžinimo sąlygos; Ačiū, kad perkate!"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4488,7 +4555,7 @@ msgstr "klaida"
 #: code:addons/point_of_sale/static/src/js/screens.js:2008
 #, python-format
 msgid "for an order of"
-msgstr ""
+msgstr "užsakymui"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:329
@@ -4502,7 +4569,7 @@ msgstr "nepanaudota"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1216
 #, python-format
 msgid "paid orders"
-msgstr ""
+msgstr "apmokėti užsakymai"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -4559,18 +4626,18 @@ msgstr "kortelė"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1217
 #, python-format
 msgid "unpaid orders"
-msgstr ""
+msgstr "neapmokėti užsakymai"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1219
 #, python-format
 msgid "unpaid orders could not be imported"
-msgstr ""
+msgstr "nepavyko importuoti neapmokėtų užsakymų"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1221
 #, python-format
 msgid "were duplicates of existing orders"
-msgstr ""
+msgstr "buvo egzistuojančių užsakymų dublikatai"
