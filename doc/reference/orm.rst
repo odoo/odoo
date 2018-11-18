@@ -833,8 +833,7 @@ Model Reference
     .. attribute:: parent_path
 
         used to store an index of the tree structure when :attr:`~._parent_store`
-        is set to True - must be declared with ``required=True`` and ``index=True``
-        for proper operation.
+        is set to True - must be declared with ``index=True`` for proper operation.
 
         :type: :class:`~odoo.fields.Char`
 
