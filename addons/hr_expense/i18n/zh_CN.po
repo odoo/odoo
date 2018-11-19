@@ -3,23 +3,25 @@
 # * hr_expense
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
+# Martin Trigaux, 2018
 # bower Guo <124358678@qq.com>, 2018
-# roye w <159820@qq.com>, 2018
 # p too <totopo@163.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # xu xiaohu <xu.xiaohu@gmail.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# roye w <159820@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +35,7 @@ msgstr ""
 msgid ""
 "<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
 " incoming receipts</i>"
-msgstr "<i class=\"text-muted oe_edit_only\">用[参考]作为接收收据的主题前缀</i>"
+msgstr "<i class=\"text-muted oe_edit_only\">使用[引用]作为输入收据的主题前缀</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -423,12 +425,12 @@ msgstr "员工"
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
 msgid "Employee (to reimburse)"
-msgstr "员工（待偿还）"
+msgstr "报销"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Employee Expenses"
-msgstr "员工费用"
+msgstr "员工报销费用"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id
@@ -658,7 +660,7 @@ msgstr "关注者(业务伙伴)"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Former Employees"
-msgstr "正式员工"
+msgstr "前员工"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
@@ -904,7 +906,7 @@ msgstr "员工%s地址没有找到，请设置"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_approved_expense
 msgid "No approved employee expenses"
-msgstr "未经批准的雇员费用"
+msgstr "未经批准的报销费用"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:257
@@ -996,7 +998,7 @@ msgstr "一旦您的 <b>费用报告</b> 准备好了, 你可以把它提交给�
 #: code:addons/hr_expense/models/hr_expense.py:706
 #, python-format
 msgid "Only HR Officers or the concerned employee can reset to draft."
-msgstr "只有人力资源人员或相关员工可以重置为草稿。"
+msgstr "只有人力资源主管或相关人员可以重新起草"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:667
@@ -1318,7 +1320,7 @@ msgstr "税率"
 msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
-msgstr "技术领域用于隐藏的付款方法，如果选择的日记账只有一个可用的是“手动”"
+msgstr "如果选择的日记账只有“手动”选项，则自动隐藏付款方法，"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__show_partner_bank_account
@@ -1333,7 +1335,7 @@ msgstr "字段用于告知‘partner_bank_account_id’字段是否需要被显�
 #, python-format
 msgid ""
 "The accountant can register a payment to reimburse the employee directly."
-msgstr "为直接向员工报销，会计人员可以注册付款。"
+msgstr "员工报销可由会计人员直接付款"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
@@ -1447,7 +1449,7 @@ msgstr "未报告的费用"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid "User responsible of expense approval. Should be Expense Manager."
-msgstr "用户负责费用批准。应该是费用经理。"
+msgstr "费用经理拥有用户费用审批权。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
@@ -1475,7 +1477,7 @@ msgstr "查看报告"
 #: code:addons/hr_expense/static/src/js/tour.js:18
 #, python-format
 msgid "Want to manage your expenses? It starts here."
-msgstr "想管理你的开销吗？它从这里开始。"
+msgstr "科学管理费用，由此开始"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -1516,7 +1518,7 @@ msgid ""
 "between brackets, the product will be set automatically. Type the expense "
 "amount in the mail subject to set it on the expense too."
 msgstr ""
-"要轻松创建收入费用，您可以设置通用的电子邮件别名。要在一次点击中创建费用线，可以写一封附件中带有收据的电子邮件。如果邮件主题在括号之间包含产品的内部参考，则将自动设置产品。"
+"要轻松创建收入费用，您可以设置通用的电子邮件别名。要通过一次点击创建费用行，可以写一封附件中带有收据的电子邮件。如果邮件主题中用括号形式包含产品的内部参考，则将自动设置产品。在邮件主题中键入费用金额，以便同样将其设置在费用中。"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:575
@@ -1552,7 +1554,7 @@ msgstr "你不能拒绝自己的费用。"
 #: code:addons/hr_expense/models/hr_expense.py:182
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
-msgstr "您不能在同一个报告中为不同的员工报告费用。"
+msgstr "同一报告不能有多个报销人员"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:180

@@ -6,13 +6,15 @@
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # neter ji <jifuyi@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
 "Last-Translator: neter ji <jifuyi@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +26,7 @@ msgstr ""
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "对进来的邮件要执行的动作"
+msgstr "在传入邮件上执行的操作"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__active
@@ -63,7 +65,7 @@ msgstr "连接测试失败：%s"
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr "连接在专用的端口用SSL/TLS加密（默认为：IMAP=993，POP3S=995）"
+msgstr "专用端口链接将通过SSL/TLS加密（默认为：IMAP=993，POP3S=995）"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__object_id
@@ -339,11 +341,11 @@ msgid ""
 "Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
-msgstr "是不是把每个邮件的内容复制并附加到每次处理内容上。这一般会占用双倍的消息数据库。"
+msgstr "一直保留每封电子邮件的完整原件以供参考并附于每个处理的邮件中。这通常会使消息数据库的大小增加一倍。"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "是否应该下载附件。如果不勾这里，收到的邮件会在被处理前去掉附件。"
+msgstr "如果不勾选此项，无论是否下载附件，收到的邮件会在被处理前去掉附件。"

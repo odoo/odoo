@@ -3,25 +3,26 @@
 # * event
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2018
 # DE R1 <e2fes1@hotmail.com>, 2018
 # Ralf Hilgenstock <rh@dialoge.info>, 2018
+# Martin Trigaux, 2018
 # Wolfgang Taferner, 2018
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
 # Ermin Trevisan <trevi@twanda.com>, 2018
 # Rudolf Schnapka <rs@techno-flex.de>, 2018
 # Tina Rittmüller <tr@ife.de>, 2018
+# darenkster <inactive+darenkster@transifex.com>, 2018
 # Jan Meyer, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
 "Last-Translator: Jan Meyer, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -367,10 +368,12 @@ msgid ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        % if object.company_id\n"
 "        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
 "        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"        % endif\n"
 "        % endif\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -554,10 +557,12 @@ msgid ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        % if object.company_id:\n"
 "        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
 "        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"        % endif\n"
 "        % endif\n"
 "      </td></tr>\n"
 "    </table>\n"

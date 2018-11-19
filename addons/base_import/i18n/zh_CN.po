@@ -3,16 +3,18 @@
 # * base_import
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# Martin Trigaux, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
 "Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +44,7 @@ msgstr "( %d  更多)"
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
-msgstr "文件中仅有一栏，这经常意味着文件分隔符不正确"
+msgstr "在文件中只找到一列，这通常意味着文件分隔符不正确"
 
 #. module: base_import
 #. openerp-web
@@ -88,7 +90,7 @@ msgstr "栏位 %s 包含非法数据(值: %s)"
 #: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "栏位 %s 包含非法数据。值 %d: %s"
+msgstr "栏位 %s 包含不正确的值。 出错行 %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -209,7 +211,7 @@ msgstr "十进制分隔符："
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Defer parent/child computation"
-msgstr "推迟父/子计算"
+msgstr "延迟继承的计算"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -275,7 +277,7 @@ msgstr "日期语法错误 [%s:L%d]: %s"
 #: code:addons/base_import/models/base_import.py:289
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr "读取XLS/XLSX文件: %s 时发现错误单元格"
+msgstr "读取XLS/XLSX文件时发现错误单元: %s"
 
 #. module: base_import
 #. openerp-web
@@ -289,7 +291,7 @@ msgstr "看上去一切正常。"
 #: code:addons/base_import/static/src/xml/base_import.xml:82
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr "Excel文件推荐格式化自动字段。"
+msgstr "推荐使用Excel文件，因为字段格式是自动的。"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
@@ -396,10 +398,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
-"如果文件中包含\n"
-"                列的名称，doo的可以尝试自动检测\n"
-"                字段对应的列。这使得导入\n"
-"                简单，尤其是当文件有很多列。"
+"如果文件包含\n"
+"                列名，Odoo可以自动监测\n"
+"                字段对应的列。这使得导入\n"
+"                简单，尤其是当文件有很多列。"
 
 #. module: base_import
 #. openerp-web
@@ -409,7 +411,7 @@ msgid ""
 "If the model uses openchatter, history tracking                             "
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
-msgstr "如果该数据模型声明使用openchatter，历史跟踪功能，系统就会自动设置订阅和发送通知，导入期间，会执行很慢。"
+msgstr "如果该数据模型声明使用openchatter，历史跟踪功能将在导入期间自动设置订阅和发送通知，但会导致较慢的导入。"
 
 #. module: base_import
 #. openerp-web
@@ -419,7 +421,7 @@ msgid ""
 "If the model uses parent/child relations, computing the                     "
 "parent / child relation occurs on every line, and lead to a slower import."
 "                     Defering it can speed up import."
-msgstr "如果该模型使用父/子关系，每行都会计算父/子关系，并导致导入变慢。推迟它能提升导入速度。"
+msgstr "如果该模型使用继承关系，每行都会计算继承关系，将导致较慢的导入。推迟它可以加速导入。"
 
 #. module: base_import
 #. openerp-web
@@ -698,7 +700,7 @@ msgstr "测试:基本导入模型，字符状态"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr "测试:基本导入模型，字符还是只读"
+msgstr "测试:基本导入模型，字符仍然只读"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
@@ -733,7 +735,7 @@ msgstr "测试:基本导入模型，一对多"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr "测试:基本导入模型复杂"
+msgstr "测试:基本导入模型复合体"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
@@ -754,7 +756,7 @@ msgstr "文本分隔符: "
 msgid ""
 "The first row\n"
 "                 contains the label of the column"
-msgstr "文件的第一行包含表头"
+msgstr "文件的第一行包含列的标签"
 
 #. module: base_import
 #. openerp-web
@@ -822,7 +824,7 @@ msgstr "不能通过URL导入图像，请与管理员进行联系。"
 #: code:addons/base_import/models/base_import.py:631
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "You must configure at least one field to import"
+msgstr "您必须配置至少一个要导入的字段"
 
 #. module: base_import
 #. openerp-web

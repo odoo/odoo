@@ -3,26 +3,28 @@
 # * hr_holidays
 # 
 # Translators:
-# Martin Trigaux, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Maie <m@maie.name>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # Lisa Zhang <lzh@odoo.com>, 2018
+# Martin Trigaux, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
-# Skyy rao <raozhangshun@163.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# Skyy <raozhangshun@163.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # rejen he <251442037@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: rejen he <251442037@qq.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,8 +40,8 @@ msgid ""
 "request leaves and allocations;\tNo allocation: no allocation by default, "
 "users can freely request leaves;"
 msgstr ""
-"\tHR固定：人力资源部门分配，不能绕过;用户可以要求请假; \t由HR "
-"+分配请求修复：由HR分配，用户可以请求分配和分配;\t无分配：默认不分配，用户可以自由要求请假;"
+"\tHR固定分配：人力资源部门分配，不能绕过;用户可以要求请假; \tHR "
+"固定分配+申请分配：由HR分配，用户可以请求分配和分配;\t无分配：默认不分配，用户可以自由要求请假;"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -646,7 +648,7 @@ msgstr ""
 " - 员工：针对特定员工\n"
 " - 公司：指定公司的所有员工\n"
 " - 按部门：指定部门的所有员工\n"
-" - 按员工标记：特定员工组类别的所有员工"
+" - 按员工标记：所有员工中的特定员工"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1084,7 +1086,7 @@ msgstr "结束日期"
 #: code:addons/hr_holidays/models/hr_leave_type.py:93
 #, python-format
 msgid "End of validity period should be greater than start of validity period"
-msgstr "有效期结束时应大于有效期的开始"
+msgstr "有效期结束日期时应大于有效期的开始日期"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -1271,13 +1273,13 @@ msgstr "如果没有设置值，则无限期运行"
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr "如果生效字段设置为假，它将隐藏而不是删除这准假类型。"
+msgstr "如果生效字段设置为否，它将隐藏而不是删除这准假类型。"
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave:0
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
-msgstr "如果要更改应使用“期间”模式的天数"
+msgstr "如果您要更改天数，请使用‘期间’模式"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1417,7 +1419,7 @@ msgstr "休假申请必须确认或验证，以便拒绝申请。"
 #, python-format
 msgid ""
 "Leave request must be in Draft state (\"To Submit\") in order to confirm it."
-msgstr "休假申请必须是“草拟”状态（“待提交”），以便确认申请。"
+msgstr "休假申请必须是“草稿”状态（“待提交”），以便确认申请。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:597
@@ -1841,7 +1843,7 @@ msgstr ""
 "如果休假申请已记录，该申请将发送 \n"
 " 给经理进行验证。确定休假的 \n"
 " 正确类型（康复期、法定休假、病假）和与休假相关的确切 \n"
-" 的开放天数。"
+" 的可用天数。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:709
@@ -2174,8 +2176,8 @@ msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please also check the leaves waiting for validation."
 msgstr ""
-"对于这种休假类型，剩余休假的数量是不够的。\n"
-"还请检查等待验证的休假。"
+"当前休假类型的剩余休假天数不足。\n"
+"请检查等待验证的休假。"
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave.allocation:0
@@ -2219,7 +2221,7 @@ msgstr "这个字段会被自动填充，值是审批这个休假申请的用户
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr "这个地方是自动填充的谁第二次生效这准假。（如果要两次生效）"
+msgstr "该区域由验证第二级休假的用户自动填写（如果休假类型需要第二次验证）"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2237,13 +2239,13 @@ msgstr "这表明是否仍然可以使用这种类型的休假"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
 msgid ""
 "This value is given by the sum of all leaves requests with a negative value."
-msgstr "这值是给出休假申请的总和，它是一个负数。"
+msgstr "当前为所有请假中被拒绝请假的总值"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
 msgid ""
 "This value is given by the sum of all leaves requests with a positive value."
-msgstr "这值是给出休假申请的总和，它是一个正数。"
+msgstr "当前为所有请假中被拒绝请假的总值"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2316,7 +2318,7 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
-msgstr "分配个这个职员的法定休假总数，改变这个值生成分配/休假申请。所有没有超出限制的休假类型的总数。"
+msgstr "分配给该员工的法定休假总数，更改此值以创建分配/休假申请。基于所有的休假类型的总数，未超出限制。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2342,12 +2344,12 @@ msgstr "UX字段允许查看和修改分配持续时间，以小时计算。"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__unit_per_interval
 msgid "Unit of time added at each interval"
-msgstr "每个时间间隔添加的时间单位"
+msgstr "在每个区间添加的时间单位"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__interval_unit
 msgid "Unit of time between two intervals"
-msgstr "两个间隔之间的时间单位"
+msgstr "两个区间之间的时间单位"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_unpaid
@@ -2472,7 +2474,7 @@ msgstr "你只能在 %s 和 %s 之间分配 %s"
 #: code:addons/hr_holidays/models/hr_leave.py:397
 #, python-format
 msgid "You can not have 2 leaves that overlaps on the same day."
-msgstr "你不能在同一天有2个休假重叠。"
+msgstr "你不能在同一天有2个休假。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:463

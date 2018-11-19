@@ -3,50 +3,38 @@
 # * product
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
 # guohuadeng <guohuadeng@hotmail.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
 # diaojiaolou <124412206@qq.com>, 2018
-# snow wang <147156565@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # THL <wt39181819@gmail.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
+# Martin Trigaux, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Ryan Zhang <so_happy_boy@hotmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: product
-#: code:addons/product/models/product_template.py:469
-#, python-format
-msgid ""
-"\n"
-"                The number of variants to generate is too high.\n"
-"                You should either not generate variants for each combination or generate them on demand from the sales order.\n"
-"                To do so, open the form view of attributes and change the mode of *Create Variants*."
-msgstr ""
-"\n"
-"要生成的变体数量太多。\n"
-" 您不应为每个组合生成变体，也不应根据销售订单生成变量。\n"
-" 为此，请打开属性的表单视图并更改* Create Variants *的模式。"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -213,7 +201,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_25
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Acoustic Bloc Screens"
-msgstr "声学集团屏幕"
+msgstr "声学Bloc屏幕"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
@@ -505,7 +493,7 @@ msgstr "计算价格"
 #: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "Conference Chair"
-msgstr "会议室椅子"
+msgstr "会议室席位"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
@@ -1299,6 +1287,11 @@ msgid "Never"
 msgstr "从不"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "New Price ="
+msgstr "新价格 ="
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1621,7 +1614,7 @@ msgstr "产品属性值"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr "产品属性以及值"
+msgstr "产品属性和值"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
@@ -2054,7 +2047,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
 msgid "Steel"
-msgstr "铁"
+msgstr "钢铁"
 
 #. module: product
 #: selection:product.template,type:0
@@ -2126,7 +2119,19 @@ msgid ""
 msgstr "此类别下的产品数量（不考虑子类别）"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:55
+#: code:addons/product/models/product_template.py:475
+#, python-format
+msgid ""
+"The number of variants to generate is too high. You should either not "
+"generate variants for each combination or generate them on demand from the "
+"sales order. To do so, open the form view of attributes and change the mode "
+"of *Create Variants*."
+msgstr ""
+"要生成的变体数量太多。 您不应为每个组合生成变体，也不应根据销售订单生成变量。 为此，请打开属性的表单视图并更改* Create Variants "
+"*的模式。"
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:56
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2195,12 +2200,12 @@ msgstr "这是所有属性额外价格的总和"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr "这张备注只用于内部用途。"
+msgstr "本说明仅供内部使用。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will show up on sales orders & invoices."
-msgstr "这条备注将显示在销售订单和发票上。"
+msgstr "此注释将显示在销售订单和发票上。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
@@ -2501,7 +2506,7 @@ msgstr "重量单位"
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "重量单位计量标签"
+msgstr "重量计量单位标签"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2518,14 +2523,14 @@ msgstr "白"
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
-msgstr "你可以给你的客户分配价目表，或者在创建一个新的销售报价时选择一个。"
+msgstr "您可以为客户分配价目表，也可以在创建新的销售报价时选择一个。"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:437
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr "不能将主价目表作为价目表中的其他价目表指定。"
+msgstr "您不能将主要价目表分配为PriceList项目中的其他价格表"
 
 #. module: product
 #: code:addons/product/models/product.py:54
@@ -2545,7 +2550,7 @@ msgstr "您不能将“帐户”的小数精度定义为大于公司主要货币
 #: code:addons/product/models/product_attribute.py:79
 #, python-format
 msgid "You cannot use this attribute with the following value."
-msgstr "不能使用以下值使用此属性。"
+msgstr "您不能将此属性与以下值配合使用。"
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:26
