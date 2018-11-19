@@ -86,6 +86,7 @@ ImageWidget.include({
                 unsplashurls: self._unsplash.selectedImages,
                 res_model : self.options.res_model,
                 res_id: self.options.res_id,
+                query: self._unsplash.query,
             }
         }).then(function (images) {
             _.each(images, function (image) {
