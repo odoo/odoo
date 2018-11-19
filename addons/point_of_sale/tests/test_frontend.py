@@ -22,6 +22,12 @@ class TestUi(odoo.tests.HttpCase):
         journal_obj = env['account.journal']
         account_obj = env['account.account']
         main_company = env.ref('base.main_company')
+        main_company.transfer_account_id = account_obj.create({
+            'code': '1017',
+            'name': 'Liquidity Transfers - Test',
+            'user_type_id': env.ref('account.data_account_type_current_assets').id,
+            'reconcile': True
+        })
         main_pos_config = env.ref('point_of_sale.pos_config_main')
 
         account_receivable = account_obj.create({'code': 'X1012',
