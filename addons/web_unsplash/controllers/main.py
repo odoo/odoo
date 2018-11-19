@@ -55,11 +55,22 @@ class Web_Unsplash(http.Controller):
                 .....
             }
         """
+        def slugify(s):
+            ''' Keeps only alphanumeric characters, hyphens and spaces from a string.
+                The string will also be truncated to 1024 characters max.
+                :param s: the string to be filtered
+                :return: the sanitized string
+            '''
+            return "".join([c for c in s if c.isalnum() or c in list("- ")])[:1024]
+
         if not unsplashurls:
             return []
 
         uploads = []
         Attachments = request.env['ir.attachment']
+
+        query = kwargs.get('query', '')
+        query = slugify(query)
 
         res_model = kwargs.get('res_model', 'ir.ui.view')
         if res_model != 'ir.ui.view' and kwargs.get('res_id'):
@@ -87,20 +98,21 @@ class Web_Unsplash(http.Controller):
                 logger.exception("Timeout: " + str(e))
                 continue
 
-            name = key
-
             # optimized image before save
             if mimetype in ('image/jpeg', 'image/png'):
                 image = Image.open(io.BytesIO(datas))
                 if image.format in ('PNG', 'JPEG'):
                     datas = tools.image_save_for_web(image)
                     # append image extension in name
-                    name += '.' + image.format
+                    query += '.' + str.lower(image.format)
+
+            # /unsplash/5gR788gfd/lion
+            url_frags = ['unsplash', key, query]
 
             attachment = Attachments.create({
-                'name': name,
-                'url': '/unsplash/' + name,
-                'datas_fname': name,
+                'name': query,
+                'url': '/' + '/'.join(url_frags),
+                'datas_fname': '_'.join(url_frags),
                 'mimetype': mimetype,
                 'datas': base64.b64encode(datas),
                 'public': res_model == 'ir.ui.view',
