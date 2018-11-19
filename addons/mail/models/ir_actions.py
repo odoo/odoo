@@ -77,9 +77,27 @@ class ServerActions(models.Model):
         return False
 
     @api.model
+    def _is_recompute(self, action):
+        """When an activity is set on update of a record,
+        update might be triggered many times by recomputes.
+        When need to know it to skip these steps."""
+        records = self.env[action.model_id.model].browse(
+            self._context.get('active_ids', self._context.get('active_id')))
+        old_values = action._context.get('old_values')
+        if old_values:
+            field_names = list(old_values[records[0].id])
+            field = records._fields[field_names[0]]
+            # Pick an arbitrary field; if it is marked to be recomputed,
+            # it means we are in an extraneous write triggered by the recompute.
+            # In this case, we should not create a new activity.
+            if records._recompute_check(field):
+                return True
+        return False
+
+    @api.model
     def run_action_email(self, action, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
-        if not action.template_id or not self._context.get('active_id'):
+        if not action.template_id or not self._context.get('active_id') or self._is_recompute(action):
             return False
         # Clean context from default_type to avoid making attachment
         # with wrong values in subsequent operations
@@ -90,20 +108,10 @@ class ServerActions(models.Model):
 
     @api.model
     def run_action_next_activity(self, action, eval_context=None):
-        if not action.activity_type_id or not self._context.get('active_id'):
+        if not action.activity_type_id or not self._context.get('active_id') or self._is_recompute(action):
             return False
 
         records = self.env[action.model_id.model].browse(self._context.get('active_ids', self._context.get('active_id')))
-
-        old_values = action._context.get('old_values')
-        if old_values:
-            field_names = list(old_values[records[0].id])
-            field = records._fields[field_names[0]]
-            # Pick an arbitrary field; if it is marked to be recomputed,
-            # it means we are in an extraneous write triggered by the recompute.
-            # In this case, we should not create a new activity.
-            if records._recompute_check(field):
-                return False
 
         vals = {
             'summary': action.activity_summary or '',
