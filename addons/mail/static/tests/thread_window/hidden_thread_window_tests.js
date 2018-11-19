@@ -43,7 +43,7 @@ QUnit.module('Hidden', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            testUtils.addMockEnvironment(widget, params);
+            testUtils.mock.addMockEnvironment(widget, params);
             return widget;
         };
     },
@@ -62,7 +62,7 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
     // single thread window.
     assert.expect(13);
 
-    testUtils.patch(this.services.mail_service, {
+    testUtils.mock.patch(this.services.mail_service, {
         HIDDEN_THREAD_WINDOW_DROPDOWN_BUTTON_WIDTH: 100,
         THREAD_WINDOW_WIDTH: 300,
         _getGlobalWidth: function () { return 800; },
@@ -128,7 +128,7 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
         1, "should contain thread window with ID 1 in hidden dropdown menu");
 
     parent.destroy();
-    testUtils.unpatch(this.services.mail_service);
+    testUtils.mock.unpatch(this.services.mail_service);
 });
 
 QUnit.test('hidden thread windows dropdown when not enough horizontal space (version 2)', function (assert) {
@@ -146,7 +146,7 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
     //    With button: 2 thread windows (2*250px + 100px = 600px < 800px)
     assert.expect(16);
 
-    testUtils.patch(this.services.mail_service, {
+    testUtils.mock.patch(this.services.mail_service, {
         HIDDEN_THREAD_WINDOW_DROPDOWN_BUTTON_WIDTH: 100,
         THREAD_WINDOW_WIDTH: 250,
         _getGlobalWidth: function () { return 800; },
@@ -219,7 +219,7 @@ QUnit.test('hidden thread windows dropdown when not enough horizontal space (ver
         1, "should contain thread window with ID 2 in hidden dropdown menu");
 
     parent.destroy();
-    testUtils.unpatch(this.services.mail_service);
+    testUtils.mock.unpatch(this.services.mail_service);
 });
 
 });

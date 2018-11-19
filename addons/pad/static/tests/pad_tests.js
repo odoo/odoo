@@ -60,7 +60,7 @@ QUnit.module('pad widget', {
             "help message should be visible");
         assert.notOk(form.$('p.oe_pad_content').is(':visible'),
             "content should not be visible");
-        form.$buttons.find('.o_form_button_edit').click();
+        testUtils.form.clickEdit(form);
         assert.ok(form.$('p.oe_unconfigured').is(':visible'),
             "help message should be visible");
         assert.notOk(form.$('p.oe_pad_content').is(':visible'),
@@ -102,9 +102,9 @@ QUnit.module('pad widget', {
         assert.strictEqual(form.$('.oe_pad_content:contains(This pad will be)').length, 1,
             "content should display a message when not initialized");
 
-        form.$buttons.find('.o_form_button_edit').click();
+        testUtils.form.clickEdit(form);
 
-        assert.strictEqual(form.$('.oe_pad_content iframe').length, 1,
+        assert.containsOnce(form, '.oe_pad_content iframe',
             "should have an iframe");
 
         form.destroy();
@@ -152,8 +152,8 @@ QUnit.module('pad widget', {
         assert.strictEqual(form.$('.oe_pad_content').text(), "we should rewrite this server in haskell",
             "should display proper value");
 
-        form.$buttons.find('.o_form_button_edit').click();
-        form.$buttons.find('.o_form_button_save').click();
+        testUtils.form.clickEdit(form);
+        testUtils.form.clickSave(form);
         form.destroy();
         delete FieldPad.prototype.isPadConfigured;
     });
@@ -218,7 +218,7 @@ QUnit.module('pad widget', {
                 userName: "batman",
             },
         });
-        form.$buttons.find('.o_form_button_edit').click();
+        testUtils.form.clickEdit(form);
         var def = form.canBeDiscarded();
 
         assert.strictEqual($('.modal').length, 0,
@@ -255,8 +255,8 @@ QUnit.module('pad widget', {
                 userName: "batman",
             },
         });
-        form.$buttons.find('.o_form_button_edit').click();
-        form.$buttons.find('.o_form_button_cancel').click();
+        testUtils.form.clickEdit(form);
+        testUtils.form.clickDiscard(form);
         assert.strictEqual(form.$('.oe_pad_readonly').text(), this.data.task.pad_get_content(),
             "pad content should not have changed");
         form.destroy();

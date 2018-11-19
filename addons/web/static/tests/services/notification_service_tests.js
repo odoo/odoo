@@ -11,7 +11,7 @@ var createView = testUtils.createView;
 
 QUnit.module('Services', {
     beforeEach: function () {
-        testUtils.patch(Notification, {
+        testUtils.mock.patch(Notification, {
             _autoCloseDelay: 0,
             _animationDelay: 0,
         });
@@ -31,7 +31,7 @@ QUnit.module('Services', {
         };
     },
     afterEach: function () {
-        testUtils.unpatch(Notification);
+        testUtils.mock.unpatch(Notification);
     }
 }, function () {
     QUnit.module('Notification');
@@ -91,7 +91,7 @@ QUnit.module('Services', {
 
         setTimeout(function () {
             assert.strictEqual($notification.is(':hidden'), false, "should not hide the notification automatically");
-            $notification.find('.o_close').click();
+            testUtils.dom.click($notification.find('.o_close'));
             setTimeout(function () {
                 assert.strictEqual($('body .o_notification_manager .o_notification').length, 0, "should destroy the notification");
                 view.destroy();
@@ -125,8 +125,8 @@ QUnit.module('Services', {
         var done = assert.async();
         assert.expect(2);
 
-        testUtils.unpatch(Notification);
-        testUtils.patch(Notification, {
+        testUtils.mock.unpatch(Notification);
+        testUtils.mock.patch(Notification, {
             _autoCloseDelay: 2500,
             _animationDelay: 0,
         });
@@ -142,7 +142,7 @@ QUnit.module('Services', {
             }
         });
         assert.strictEqual(close, 0, "should wait to call onClose method once");
-        $('body .o_notification_manager .o_notification .o_close').click();
+        testUtils.dom.click($('body .o_notification_manager .o_notification .o_close'));
         setTimeout(function () {
             assert.strictEqual(close, 1, "should call onClose method once");
             view.destroy();
@@ -189,14 +189,9 @@ QUnit.module('Services', {
             "<a aria-label=\"Close\" class=\"fa fa-times o_close\" href=\"#\" title=\"Close\"></a> <div class=\"o_notification_title\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"o_icon fa fa-3x fa-question-circle-o\" title=\"Notification undefined\"></span> a0 </div> <div class=\"o_notification_content\">b0</div> <div class=\"o_buttons\"> <button class=\"btn btn-primary\" type=\"button\"> <span>accept0</span> </button><button class=\"btn btn-secondary\" type=\"button\"> <span>refuse0</span> </button> </div>",
             "should display notification");
 
-        $notification.find('.o_buttons button:contains(accept0)').click();
-        $notification.find('.o_buttons button:contains(accept0)').click();
-        $notification.find('.o_buttons button:contains(refuse0)').click();
-        $notification.eq(0).find('.o_close').click();
-
-        $notification.find('.o_buttons button:contains(refuse1)').click();
-
-        $notification.eq(2).find('.o_close').click();
+        testUtils.dom.click($notification.find('.o_buttons button:contains(accept0)'));
+        testUtils.dom.click($notification.find('.o_buttons button:contains(refuse1)'));
+        testUtils.dom.click($notification.eq(2).find('.o_close'));
 
         setTimeout(function () {
             assert.strictEqual($notification.is(':hidden'), true, "should hide the notification");
@@ -211,8 +206,8 @@ QUnit.module('Services', {
         var done = assert.async();
         assert.expect(2);
 
-        testUtils.unpatch(Notification);
-        testUtils.patch(Notification, {
+        testUtils.mock.unpatch(Notification);
+        testUtils.mock.patch(Notification, {
             _autoCloseDelay: 2500,
             _animationDelay: 0,
         });
