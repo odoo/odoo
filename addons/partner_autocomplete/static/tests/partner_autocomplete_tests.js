@@ -17,7 +17,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
             if (fields[key]) {
                 if (key === 'image') {
                     if (val) val = 'data:image/png;base64,' + val;
-                    assert.strictEqual(form.$(".o_field_image img").attr("data-src"), val, 'image value should have been updated to "' + val + '"');
+                    assert.hasAttrValue(form.$(".o_field_image img"), "data-src", val, 'image value should have been updated to "' + val + '"');
                 } else {
                     type = fields[key].type;
                     $fieldInput = form.$('input[name="' + key + '"]');
@@ -56,7 +56,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 vat: "BE0477472701",
             };
 
-            testUtils.patch(AutocompleteCore, {
+            testUtils.mock.patch(AutocompleteCore, {
                 _getBase64Image: function (url) {
                     return $.when(url === "odoo.com/logo.png" ? "odoobase64" : "");
                 },
@@ -87,7 +87,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 },
             });
 
-            testUtils.patch(AutocompleteField, {
+            testUtils.mock.patch(AutocompleteField, {
                 debounceSuggestions: 0,
             });
         },
@@ -127,8 +127,8 @@ odoo.define('partner_autocomplete.tests', function (require) {
             };
         },
         after: function () {
-            testUtils.unpatch(AutocompleteField);
-            testUtils.unpatch(AutocompleteCore);
+            testUtils.mock.unpatch(AutocompleteField);
+            testUtils.mock.unpatch(AutocompleteCore);
         },
     });
 
@@ -149,14 +149,14 @@ odoo.define('partner_autocomplete.tests', function (require) {
         }).then(function (form){
             // Set company type to Individual
             var $company_type = form.$("select[name='company_type']");
-            $company_type.val('"individual"').trigger('change');
+            testUtils.fields.editSelect($company_type, '"individual"');
 
             // Check input exists
             var $input = form.$(".o_field_partner_autocomplete > input:visible");
             assert.strictEqual($input.length, 1, "there should be an <input/> for the Partner field");
 
             // Change input val and assert nothing happens
-            $input.val("odoo").trigger("input");
+            testUtils.fields.editInput($input, "odoo")
             var $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
             assert.strictEqual($dropdown.length, 0, "there should not be an opened dropdown");
 
@@ -205,20 +205,20 @@ odoo.define('partner_autocomplete.tests', function (require) {
         }).then(function (form){
             // Set company type to Company
             var $company_type = form.$("select[name='company_type']");
-            $company_type.val('"company"').trigger('change');
+            testUtils.fields.editSelect($company_type, '"company"');
 
             // Check input exists
             var $input = form.$(".o_field_partner_autocomplete > input:visible");
             assert.strictEqual($input.length, 1, "there should be an <input/> for the field");
 
             // Change input val and assert changes
-            $input.val("odoo").trigger("input");
+            testUtils.fields.editInput($input, "odoo")
 
             var $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
             assert.strictEqual($dropdown.length, 1, "there should be an opened dropdown");
             assert.strictEqual($dropdown.children().length, 1, "there should be only one proposition");
 
-            $dropdown.find("a").first().click();
+            testUtils.dom.click($dropdown.find("a").first());
             $input = form.$(".o_field_partner_autocomplete > input");
             assert.strictEqual($input.val(), "Odoo", "Input value should have been updated to \"Odoo\"");
             assert.strictEqual(form.$("input.o_field_widget").val(), "odoo.com", "website value should have been updated to \"odoo.com\"");
@@ -226,12 +226,12 @@ odoo.define('partner_autocomplete.tests', function (require) {
             _compareResultFields(assert, form, fields, AutocompleteCore._createData);
 
             // Try suggestion with bullshit query
-            $input.val("ZZZZZZZZZZZZZZZZZZZZZZ").trigger("input");
+            testUtils.fields.editInput($input, "ZZZZZZZZZZZZZZZZZZZZZZ")
             $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
             assert.strictEqual($dropdown.length, 0, "there should be no opened dropdown when no result");
 
             // Try autocomplete again
-            $input.val("odoo").trigger("input");
+            testUtils.fields.editInput($input, "odoo")
             $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
             assert.strictEqual($dropdown.length, 1, "there should be an opened dropdown when typing odoo letters again");
 
@@ -284,7 +284,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
         }).then(function (form){
             // Set company type to Company
             var $company_type = form.$("select[name='company_type']");
-            $company_type.val('"company"').trigger('change');
+            testUtils.fields.editSelect($company_type, '"company"');
 
 
             // Check input exists
@@ -292,19 +292,19 @@ odoo.define('partner_autocomplete.tests', function (require) {
             assert.strictEqual($input.length, 1, "there should be an <input/> for the field");
 
             // Set incomplete VAT and assert changes
-            $input.val("BE047747270").trigger("input");
+            testUtils.fields.editInput($input, "BE047747270")
 
             var $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
             assert.strictEqual($dropdown.length, 0, "there should be no opened dropdown no results with incomplete VAT number");
 
             // Set complete VAT and assert changes
             // First suggestion (only vat result)
-            $input.val("BE0477472701").trigger("input");
+            testUtils.fields.editInput($input, "BE0477472701")
             $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
             assert.strictEqual($dropdown.length, 1, "there should be an opened dropdown");
             assert.strictEqual($dropdown.children().length, 1, "there should be one proposition for complete VAT number");
 
-            $dropdown.find("a").first().click();
+            testUtils.dom.click($dropdown.find("a").first());
 
             $input = form.$(".o_field_partner_autocomplete > input");
             assert.strictEqual($input.val(), "Odoo", "Input value should have been updated to \"Odoo\"");
@@ -313,12 +313,12 @@ odoo.define('partner_autocomplete.tests', function (require) {
 
             // Set complete VAT and assert changes
             // Second suggestion (only vat + clearbit result)
-            $input.val("BE0477472701").trigger("input");
+            testUtils.fields.editInput($input, "BE0477472701")
             $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
             assert.strictEqual($dropdown.length, 1, "there should be an opened dropdown");
             assert.strictEqual($dropdown.children().length, 1, "there should be one proposition for complete VAT number");
 
-            $dropdown.find("a").first().click();
+            testUtils.dom.click($dropdown.find("a").first());
 
             $input = form.$(".o_field_partner_autocomplete > input");
             assert.strictEqual($input.val(), "Odoo", "Input value should have been updated to \"Odoo\"");
@@ -356,12 +356,12 @@ odoo.define('partner_autocomplete.tests', function (require) {
             var $input = form.$('.o_field_many2one[name="parent_id"] input:visible');
             assert.strictEqual($input.length, 1, "there should be an <input/> for the Many2one");
 
-            $input.val('odoo').trigger('input');
+            testUtils.fields.editInput($input, 'odoo');
 
             concurrency.delay(0).then(function () {
                 var $dropdown = $input.autocomplete('widget');
                 assert.strictEqual($dropdown.length, 1, "there should be an opened dropdown");
-                assert.ok($dropdown.is('.o_partner_autocomplete_dropdown'), 
+                assert.ok($dropdown.is('.o_partner_autocomplete_dropdown'),
                     "there should be a partner_autocomplete");
 
                 PartnerField.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;

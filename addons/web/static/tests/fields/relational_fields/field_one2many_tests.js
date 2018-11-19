@@ -198,7 +198,7 @@ QUnit.module('fields', {}, function () {
             // change the int_field through drag and drop
             // that way, we'll trigger the sorting and the name_get
             // of the lines of "p"
-            testUtils.dragAndDrop(
+            testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
                 { position: 'top' }
@@ -240,7 +240,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_x2many_list .o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list .o_field_x2many_list_row_add a'));
 
             var $dataRows = form.$('.o_field_x2many_list .o_data_row');
             assert.equal($dataRows.length, 2,
@@ -286,7 +286,6 @@ QUnit.module('fields', {}, function () {
                 archs: {
                     'turtle,false,form': '<form><field name="parent_id" domain="[(\'id\', \'in\', parent.turtles)]"/></form>',
                 },
-
                 mockRPC: function (route, args) {
                     if (route === '/web/dataset/call_kw/turtle/name_search') {
                         // We are going to pass twice here
@@ -295,29 +294,24 @@ QUnit.module('fields', {}, function () {
                         assert.deepEqual(args.kwargs.args, [['id', 'in', []]]);
                     }
                     return this._super(route, args);
-                }
+                },
             });
 
-            form.$('.o_field_x2many_list[name=turtles] .o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list[name=turtles] .o_field_x2many_list_row_add a'));
+
+            testUtils.fields.many2one.clickOpenDropdown('parent_id');
+            testUtils.fields.many2one.clickHighlightedItem('parent_id');
+
             var $modal = $('.modal-content');
 
-            var $turtleParent = $modal.find('.o_field_many2one input');
-            var $dropdown = $turtleParent.autocomplete('widget');
-
-            $turtleParent.click();
-
-            $dropdown.find('li.o_m2o_dropdown_option:contains(Create)').first().mouseenter().click();
-
-            $modal = $('.modal-content');
-
-            $modal.eq(1).find('.modal-footer .btn-primary').eq(0).click(); // Confirm new Record
-            $modal.eq(0).find('.modal-footer .btn-primary').eq(1).click(); // Save & New
+            testUtils.dom.click($modal.eq(1).find('.modal-footer .btn-primary').eq(0));
+            testUtils.dom.click($modal.eq(0).find('.modal-footer .btn-primary').eq(1));
 
             assert.equal(form.$('.o_data_row').length, 1,
                 'The main record should have the new record in its o2m');
 
             $modal = $('.modal-content');
-            $modal.find('.o_field_many2one input').click();
+            testUtils.dom.click($modal.find('.o_field_many2one input'));
 
             form.destroy();
         });
@@ -350,16 +344,16 @@ QUnit.module('fields', {}, function () {
                 }
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             var $targetInput = $('.o_selected_row .o_input[name=foo]');
             assert.equal($targetInput[0], document.activeElement,
                 'The first input of the line should have the focus');
 
             // Simulating hitting the 'f' key twice
-            $targetInput.val('f').trigger('input');
-            $targetInput.val($targetInput.val() + 'f').trigger('input');
+            testUtils.fields.editInput($targetInput, 'f');
+            testUtils.fields.editInput($targetInput, $targetInput.val() + 'f');
 
             assert.equal($targetInput[0], document.activeElement,
                 'The first input of the line should still have the focus');
@@ -373,10 +367,10 @@ QUnit.module('fields', {}, function () {
                 'The second input of the line should have the focus after the TAB press');
 
 
-            $secondTarget.val(9).trigger('input');
-            $secondTarget.val($secondTarget.val() + 9).trigger('input');
+            testUtils.fields.editInput($secondTarget, 9);
+            testUtils.fields.editInput($secondTarget, $secondTarget.val() + 9);
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -406,19 +400,19 @@ QUnit.module('fields', {}, function () {
             });
 
 
-            assert.strictEqual(form.$('td.o_list_record_selector').length, 0,
+            assert.containsNone(form, 'td.o_list_record_selector',
                 "embedded one2many should not have a selector");
             assert.ok(!form.$('.o_field_x2many_list_row_add').length,
                 "embedded one2many should not be editable");
             assert.ok(!form.$('td.o_list_record_remove').length,
                 "embedded one2many records should not have a remove icon");
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.ok(form.$('.o_field_x2many_list_row_add').length,
                 "embedded one2many should now be editable");
 
-            assert.strictEqual(form.$('.o_field_x2many_list_row_add').attr('colspan'), "2",
+            assert.hasAttrValue(form.$('.o_field_x2many_list_row_add'), 'colspan', "2",
                 "should have colspan 2 (one for field foo, one for being below remove icon)");
 
             assert.ok(form.$('td.o_list_record_remove').length,
@@ -443,17 +437,17 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.strictEqual(form.$('td.hey').length, 1,
+            assert.containsOnce(form, 'td.hey',
                 'should have a td with the desired class');
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            assert.strictEqual(form.$('td.hey').length, 1,
+            assert.containsOnce(form, 'td.hey',
                 'should have a td with the desired class');
 
-            form.$('td.o_data_cell').click();
+            testUtils.dom.click(form.$('td.o_data_cell'));
 
-            assert.strictEqual(form.$('input[name="turtle_foo"].hey').length, 1,
+            assert.containsOnce(form, 'input[name="turtle_foo"].hey',
                 'should have an input with the desired class');
 
             form.destroy();
@@ -552,7 +546,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 'should display 2 data rows');
             form.destroy();
         });
@@ -581,7 +575,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 'should display 2 data rows');
             form.destroy();
         });
@@ -641,7 +635,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.strictEqual(form.$('span.o_row_handle').length, 1, "should have 1 handles");
+            assert.containsOnce(form, 'span.o_row_handle', "should have 1 handles");
             form.destroy();
         });
 
@@ -649,7 +643,7 @@ QUnit.module('fields', {}, function () {
             assert.expect(10);
 
             var nbConfirmChange = 0;
-            testUtils.patch(ListRenderer, {
+            testUtils.mock.patch(ListRenderer, {
                 confirmChange: function () {
                     nbConfirmChange++;
                     return this._super.apply(this, arguments);
@@ -679,21 +673,21 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            testUtils.intercept(form, "field_changed", function (event) {
+            testUtils.mock.intercept(form, "field_changed", function (event) {
                 assert.step(event.data.changes.turtles.data.turtle_int.toString());
             }, true);
 
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
                 "should have the 3 rows in the correct order");
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
                 "should still have the 3 rows in the correct order");
             assert.strictEqual(nbConfirmChange, 0, "should not have confirmed any change yet");
 
             // Drag and drop the second line in first position
-            testUtils.dragAndDrop(
+            testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
                 { position: 'top' }
@@ -706,7 +700,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
                 "should have the 3 rows in the new order");
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
                 return _.pick(turtle, 'id', 'turtle_foo', 'turtle_int');
@@ -719,7 +713,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
                 "should still have the 3 rows in the new order");
 
-            testUtils.unpatch(ListRenderer);
+            testUtils.mock.unpatch(ListRenderer);
 
             form.destroy();
         });
@@ -779,11 +773,11 @@ QUnit.module('fields', {}, function () {
                 }
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_data_cell').eq(1).click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_data_cell').eq(1));
             var $cell = form.$('.o_selected_row .o_input[name=turtle_foo]');
-            $cell.val("hop").trigger('change');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.fields.editSelect($cell, "hop");
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -841,11 +835,11 @@ QUnit.module('fields', {}, function () {
             assert.deepEqual(form.$('.o_many2many_tags_cell').text().trim(), "second record",
                 "the partner_ids should be as specified at initialization");
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_data_cell').eq(1).click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_data_cell').eq(1));
             var $cell = form.$('.o_selected_row .o_input[name=turtle_foo]');
-            $cell.val("hop").trigger("change");
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.fields.editSelect($cell, "hop");
+            testUtils.form.clickSave(form);;
 
             assert.deepEqual(form.$('.o_many2many_tags_cell').text().trim().split(/\s+/),
                 ["second", "record", "aaa"],
@@ -892,10 +886,10 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             // Drag and drop the second line in first position
-            testUtils.dragAndDrop(
+            testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
                 { position: 'top' }
@@ -949,14 +943,14 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
 
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
                 "should have the 3 rows in the correct order");
 
             // Drag and drop the second line in first position
-            testUtils.dragAndDrop(
+            testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
                 { position: 'top' }
@@ -966,7 +960,7 @@ QUnit.module('fields', {}, function () {
                 "should still have the 3 rows in the correct order");
             assert.strictEqual(turtleOnchange, 3, "should update all lines");
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             form.destroy();
         });
 
@@ -1010,16 +1004,16 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$('.o_pager_next').click();
+            testUtils.dom.click(form.$('.o_pager_next'));
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
                 "should have the 3 rows in the correct order");
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_one2many .o_list_view tbody tr:first td:first').click();
-            form.$('.o_field_one2many .o_list_view tbody tr:first input:first').val('blurp').trigger('input');
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:first td:first'));
+            testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:first input:first'), 'blurp');
 
             // Drag and drop the third line in second position
-            testUtils.dragAndDrop(
+            testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(2),
                 form.$('.o_field_one2many tbody tr').eq(1),
                 { position: 'top' }
@@ -1027,8 +1021,8 @@ QUnit.module('fields', {}, function () {
 
             assert.strictEqual(form.$('.o_data_cell').text(), "blurpkawablip", "should display to record in 'turtle_int' order");
 
-            form.$buttons.find('.o_form_button_save').click();
-            form.$('.o_pager_next').click();
+            testUtils.form.clickSave(form);;
+            testUtils.dom.click(form.$('.o_pager_next'));
 
             assert.strictEqual(form.$('.o_data_cell:not(.o_handle_cell)').text(), "blurpkawablip",
                 "should display to record in 'turtle_int' order");
@@ -1095,29 +1089,29 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should display the records in order");
 
-            form.$('.o_field_one2many .o_list_view tbody tr:first td:first').click();
-            form.$('.o_field_one2many .o_list_view tbody tr:first input:first').val('blurp').trigger('input');
+            testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:first td:first'));
+            testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:first input:first'), 'blurp');
 
             // the domain fail if the widget does not use the allready loaded data.
-            form.$buttons.find('.o_form_button_cancel').click();
+            testUtils.form.clickDiscard(form);;
 
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "blurp#21#22#23#24#25#26#27#28#29",
                 "should display the records in order with the changes");
 
-            $('.modal .modal-footer button:first').click();
+            testUtils.dom.click($('.modal .modal-footer button:first'));
 
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             // Drag and drop the third line in second position
-            testUtils.dragAndDrop(
+            testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(2),
                 form.$('.o_field_one2many tbody tr').eq(1),
                 { position: 'top' }
@@ -1127,7 +1121,7 @@ QUnit.module('fields', {}, function () {
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
             // Drag and drop the third line in second position
-            testUtils.dragAndDrop(
+            testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(2),
                 form.$('.o_field_one2many tbody tr').eq(1),
                 { position: 'top' }
@@ -1136,12 +1130,12 @@ QUnit.module('fields', {}, function () {
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
-            form.$buttons.find('.o_form_button_cancel').click();
+            testUtils.form.clickDiscard(form);;
 
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence");
 
-            $('.modal .modal-footer button:first').click();
+            testUtils.dom.click($('.modal .modal-footer button:first'));
 
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
@@ -1189,33 +1183,33 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_pager_next').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_pager_next'));
 
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(1) td:first').click();
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(1) input:first').val('value 1').trigger('input');
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(2) td:first').click();
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(2) input:first').val('value 2').trigger('input');
+            testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:eq(1) td:first'));
+            testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:eq(1) input:first'), 'value 1');
+            testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:eq(2) td:first'));
+            testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:eq(2) input:first'), 'value 2');
 
-            assert.strictEqual(form.$('.o_data_row').length, 40, "should display 40 records");
+            assert.containsN(form, '.o_data_row', 40, "should display 40 records");
             assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#39))').index(), 0, "should display '#39' at the first line");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('.o_data_row').length, 40, "should display 39 records and the create line");
-            assert.strictEqual(form.$('.o_data_row:first .o_field_char').length, 1, "should display the create line in first position");
+            assert.containsN(form, '.o_data_row', 40, "should display 39 records and the create line");
+            assert.containsOnce(form, '.o_data_row:first .o_field_char', "should display the create line in first position");
             assert.strictEqual(form.$('.o_data_row:first .o_field_char').val(), "", "should an empty input");
             assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#39))').index(), 1, "should display '#39' at the second line");
 
-            form.$('.o_data_row input:first').val('value 3').trigger('input');
+            testUtils.fields.editInput(form.$('.o_data_row input:first'), 'value 3');
 
-            assert.strictEqual(form.$('.o_data_row:first .o_field_char').length, 1, "should display the create line in first position after onchange");
+            assert.containsOnce(form, '.o_data_row:first .o_field_char', "should display the create line in first position after onchange");
             assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#39))').index(), 1, "should display '#39' at the second line after onchange");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('.o_data_row').length, 40, "should display 39 records and the create line");
-            assert.strictEqual(form.$('.o_data_row:first .o_field_char').length, 1, "should display the create line in first position");
+            assert.containsN(form, '.o_data_row', 40, "should display 39 records and the create line");
+            assert.containsOnce(form, '.o_data_row:first .o_field_char', "should display the create line in first position");
             assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(value 3))').index(), 1, "should display the created line at the second position");
             assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#39))').index(), 2, "should display '#39' at the third line");
 
@@ -1264,27 +1258,27 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_pager_next').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_pager_next'));
 
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(1) td:first').click();
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(1) input:first').val('value 1').trigger('input');
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(2) td:first').click();
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(2) input:first').val('value 2').trigger('input');
+            testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:eq(1) td:first'));
+            testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:eq(1) input:first'), 'value 1');
+            testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:eq(2) td:first'));
+            testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:eq(2) input:first'), 'value 2');
 
-            assert.strictEqual(form.$('.o_data_row').length, 40, "should display 40 records");
+            assert.containsN(form, '.o_data_row', 40, "should display 40 records");
             assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#77))').index(), 39, "should display '#77' at the last line");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('.o_data_row').length, 41, "should display 41 records and the create line");
+            assert.containsN(form, '.o_data_row', 41, "should display 41 records and the create line");
             assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#76))').index(), 38, "should display '#76' at the penultimate line");
             assert.strictEqual(form.$('.o_data_row:has(.o_field_char)').index(), 40, "should display the create line at the last position");
 
-            form.$('.o_data_row input:first').val('value 3').trigger('input');
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.fields.editInput(form.$('.o_data_row input:first'), 'value 3');
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('.o_data_row').length, 42, "should display 42 records and the create line");
+            assert.containsN(form, '.o_data_row', 42, "should display 42 records and the create line");
             assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#76))').index(), 38, "should display '#76' at the penultimate line");
             assert.strictEqual(form.$('.o_data_row:has(.o_field_char)').index(), 41, "should display the create line at the last position");
 
@@ -1318,13 +1312,13 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "there should be one record in the relation");
 
             // change the value of foo to trigger the onchange
-            form.$('.o_field_widget[name=foo]').val('some value').trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'some value');
 
-            assert.strictEqual(form.$('.o_data_row').length, 3,
+            assert.containsN(form, '.o_data_row', 3,
                 "there should be three records in the relation");
 
             form.destroy();
@@ -1373,16 +1367,16 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "there should be one record in the relation");
             assert.strictEqual(form.$('.o_data_row .o_field_widget[name=partner_ids]').text().replace(/\s/g, ''),
                 'secondrecordaaa', "many2many_tags should be correctly displayed");
 
             // change the value of foo to trigger the onchange
             checkRPC = true; // enable flag to check read RPC for the m2m field
-            form.$('.o_field_widget[name=foo]').val('some value').trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'some value');
 
-            assert.strictEqual(form.$('.o_data_row').length, 3,
+            assert.containsN(form, '.o_data_row', 3,
                 "there should be three records in the relation");
             assert.strictEqual(form.$('.o_data_row:first .o_field_widget[name=partner_ids]').text().trim(),
                 'first record', "many2many_tags should be correctly displayed");
@@ -1431,16 +1425,16 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "there should be one record in the relation");
             assert.strictEqual(form.$('.ref_field').text().trim(), 'xpad',
                 "reference field should be correctly displayed");
 
             // change the value of foo to trigger the onchange
             checkRPC = true; // enable flag to check read RPC for reference field
-            form.$('.o_field_widget[name=foo]').val('some value').trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'some value');
 
-            assert.strictEqual(form.$('.o_data_row').length, 3,
+            assert.containsN(form, '.o_data_row', 3,
                 "there should be three records in the relation");
             assert.strictEqual(form.$('.ref_field').text().trim(), 'xpadxphone',
                 "reference fields should be correctly displayed");
@@ -1482,25 +1476,25 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "the onchange should have created one record in the relation");
 
             // open the created o2m record in a form view, and add a m2m subrecord
             // in its relation
-            form.$('.o_data_row').click();
+            testUtils.dom.click(form.$('.o_data_row'));
 
             assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
             assert.strictEqual($('.modal .o_data_row').length, 0,
                 "there should be no record in the one2many in the dialog");
 
             // add a many2many subrecord
-            $('.modal .o_field_x2many_list_row_add a').click();
+            testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
 
             assert.strictEqual($('.modal').length, 2,
                 "should have opened a second dialog");
 
             // select a many2many subrecord
-            $('.modal:nth(1) .o_list_view .o_data_cell:first').click();
+            testUtils.dom.click($('.modal:nth(1) .o_list_view .o_data_cell:first'));
 
             assert.strictEqual($('.modal').length, 1,
                 "second dialog should be closed");
@@ -1510,25 +1504,25 @@ QUnit.module('fields', {}, function () {
                 'm2m pager should be hidden');
 
             // click on 'Save & Close'
-            $('.modal-footer .btn-primary:first').click();
+            testUtils.dom.click($('.modal-footer .btn-primary:first'));
 
             assert.strictEqual($('.modal').length, 0, "dialog should be closed");
 
             // reopen o2m record, and another m2m subrecord in its relation, but
             // discard the changes
-            form.$('.o_data_row').click();
+            testUtils.dom.click(form.$('.o_data_row'));
 
             assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
             assert.strictEqual($('.modal .o_data_row').length, 1,
                 "there should be one record in the one2many in the dialog");
 
             // add another m2m subrecord
-            $('.modal .o_field_x2many_list_row_add a').click();
+            testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
 
             assert.strictEqual($('.modal').length, 2,
                 "should have opened a second dialog");
 
-            $('.modal:nth(1) .o_list_view .o_data_cell:first').click();
+            testUtils.dom.click($('.modal:nth(1) .o_list_view .o_data_cell:first'));
 
             assert.strictEqual($('.modal').length, 1,
                 "second dialog should be closed");
@@ -1536,12 +1530,12 @@ QUnit.module('fields', {}, function () {
                 "there should be two records in the one2many in the dialog");
 
             // click on 'Discard'
-            $('.modal-footer .btn-secondary').click();
+            testUtils.dom.clickFirst($('.modal-footer .btn-secondary'));
 
             assert.strictEqual($('.modal').length, 0, "dialog should be closed");
 
             // reopen o2m record to check that second changes have properly been discarded
-            form.$('.o_data_row').click();
+            testUtils.dom.click(form.$('.o_data_row'));
 
             assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
             assert.strictEqual($('.modal .o_data_row').length, 1,
@@ -1596,11 +1590,11 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            testUtils.intercept(form, "field_changed", function (event) {
+            testUtils.mock.intercept(form, "field_changed", function (event) {
                 assert.step(form.model.get(event.data.changes.turtles.id).res_id);
             }, true);
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             var steps = [];
             var positions = [
@@ -1611,7 +1605,7 @@ QUnit.module('fields', {}, function () {
             function dragAndDrop() {
                 var pos = positions.shift();
 
-                testUtils.dragAndDrop(
+                testUtils.dom.dragAndDrop(
                     form.$('.ui-sortable-handle').eq(pos[0]),
                     form.$('tbody tr').eq(pos[1]),
                     { position: pos[2] }
@@ -1670,19 +1664,19 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            testUtils.intercept(form, "field_changed", function (event) {
+            testUtils.mock.intercept(form, "field_changed", function (event) {
                 assert.step(event.data.changes.p.data.int_field.toString());
             }, true);
 
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
                 "should have the 3 rows in the correct order");
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
                 "should still have the 3 rows in the correct order");
 
             // Drag and drop the second line in first position
-            testUtils.dragAndDrop(
+            testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
                 { position: 'top' }
@@ -1694,12 +1688,12 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
                 "should have the 3 rows in the new order");
 
-            form.$('tbody tr:first td:first').click();
+            testUtils.dom.click(form.$('tbody tr:first td:first'));
 
             assert.strictEqual(form.$('tbody tr:first td.o_data_cell:not(.o_handle_cell) input').val(), "blip",
                 "should edit the correct row");
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
                 "should still have the 3 rows in the new order");
 
@@ -1773,7 +1767,7 @@ QUnit.module('fields', {}, function () {
 
             // move to the second page of the o2m: 1 RPC should have been done to fetch
             // the 2 subrecords of page 2, and those records should now be displayed
-            form.$('.o_x2m_control_panel .o_pager_next').click();
+            testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
             assert.strictEqual(count, 7, 'one RPC should have been done');
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 2,
                 'one2many kanban should contain 2 cards for record 1 at page 2');
@@ -1788,7 +1782,7 @@ QUnit.module('fields', {}, function () {
             // been correctly reloaded
             form.pager.previous();
             assert.strictEqual(count, 11, 'two RPCs should have been done');
-            form.$('.o_x2m_control_panel .o_pager_next').click();
+            testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
             assert.strictEqual(count, 12, 'one RPC should have been done');
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 2,
                 'one2many kanban should contain 2 cards for record 1 at page 2');
@@ -1895,10 +1889,10 @@ QUnit.module('fields', {}, function () {
 
             // add a record on page one
             checkRead = true;
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o-kanban-button-new').click();
-            $('.modal input').val('new record').trigger('input');
-            $('.modal .modal-footer .btn-primary:first').click(); // save and close
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o-kanban-button-new'));
+            testUtils.fields.editInput($('.modal input'), 'new record');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
             // checks
             assert.strictEqual(readIDs, undefined, "should not have read any record");
             assert.strictEqual(form.$('span:contains(new record)').length, 0,
@@ -1910,14 +1904,14 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_kanban_record:first span:contains(new record)').length,
                 0, 'new record should not be on page 1');
             // save
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             // delete a record on page one
             checkRead = true;
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
             assert.strictEqual(form.$('.o_kanban_record:first span:contains(relational record 10)').length,
                 1, 'first record should be the one with id 10 (next checks rely on that)');
-            form.$('.delete_icon:first').click();
+            testUtils.dom.click(form.$('.delete_icon:first'));
             // checks
             assert.deepEqual(readIDs, [50],
                 "should have read a record (to display 40 records on page 1)");
@@ -1926,31 +1920,31 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
                 '1-40 / 45', "pager range should be correct");
             // save
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             // add and delete records in both pages
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
             checkRead = true;
             readIDs = undefined;
             // add and delete a record in page 1
-            form.$('.o-kanban-button-new').click();
-            $('.modal input').val('new record page 1').trigger('input');
-            $('.modal .modal-footer .btn-primary:first').click(); // save and close
+            testUtils.dom.click(form.$('.o-kanban-button-new'));
+            testUtils.fields.editInput($('.modal input'), 'new record page 1');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
             assert.strictEqual(form.$('.o_kanban_record:first span:contains(relational record 11)').length,
                 1, 'first record should be the one with id 11 (next checks rely on that)');
-            form.$('.delete_icon:first').click();
+            testUtils.dom.click(form.$('.delete_icon:first'));
             assert.deepEqual(readIDs, [51],
                 "should have read a record (to display 40 records on page 1)");
             // add and delete a record in page 2
-            form.$('.o_x2m_control_panel .o_pager_next').click();
+            testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
             assert.strictEqual(form.$('.o_kanban_record:first span:contains(relational record 52)').length,
                 1, 'first record should be the one with id 52 (next checks rely on that)');
             checkRead = true;
             readIDs = undefined;
-            form.$('.delete_icon:first').click();
-            form.$('.o-kanban-button-new').click();
-            $('.modal input').val('new record page 2').trigger('input');
-            $('.modal .modal-footer .btn-primary:first').click(); // save and close
+            testUtils.dom.click(form.$('.delete_icon:first'));
+            testUtils.dom.click(form.$('.o-kanban-button-new'));
+            testUtils.fields.editInput($('.modal input'), 'new record page 2');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
             assert.strictEqual(readIDs, undefined, "should not have read any record");
             // checks
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 5,
@@ -1962,7 +1956,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_kanban_record span:contains(new record page 2)').length,
                 1, 'new records should be on page 2');
             // save
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -1991,16 +1985,16 @@ QUnit.module('fields', {}, function () {
                 },
                 res_id: 1,
             });
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            $('input[name="turtle_int"]').val('5').trigger('input');
-            $('.modal-footer button.btn-primary').first().click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput($('input[name="turtle_int"]'), '5');
+            testUtils.dom.click($('.modal-footer button.btn-primary').first());
             assert.strictEqual(form.$('tbody tr:eq(1) td.o_data_cell').text(), '5',
                 'should display 5 in the foo field');
-            form.$('tbody tr:eq(1) td.o_data_cell').click();
+            testUtils.dom.click(form.$('tbody tr:eq(1) td.o_data_cell'));
 
-            $('input[name="turtle_int"]').val('3').trigger('input');
-            $('.modal-footer button.btn-primary').first().click();
+            testUtils.fields.editInput($('input[name="turtle_int"]'), '3');
+            testUtils.dom.click($('.modal-footer button.btn-primary').first());
             assert.strictEqual(form.$('tbody tr:eq(1) td.o_data_cell').text(), '3',
                 'should now display 3 in the foo field');
             form.destroy();
@@ -2041,13 +2035,13 @@ QUnit.module('fields', {}, function () {
                 throw "should not render the whole form";
             };
 
-            form.$('table thead th:contains(Foo)').click();
+            testUtils.dom.click(form.$('table thead th:contains(Foo)'));
             assert.strictEqual(rpcCount, 0,
                 'sort should be in memory, no extra RPCs should have been done');
             assert.ok(form.$('table tbody tr:eq(2) td:contains(xyz)').length,
                 "the 3rd record is the one with 'xyz' value");
 
-            form.$('table thead th:contains(Foo)').click();
+            testUtils.dom.click(form.$('table thead th:contains(Foo)'));
             assert.ok(form.$('table tbody tr:eq(2) td:contains(abc)').length,
                 "the 3rd record is the one with 'abc' value");
 
@@ -2080,33 +2074,33 @@ QUnit.module('fields', {}, function () {
             // edit the first line of the o2m
             assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'relational record 1',
                 "display name of first record in o2m list should be 'relational record 1'");
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_one2many tbody td').first().click();
-            assert.ok(form.$('.o_field_one2many tbody td').first().parent().hasClass('o_selected_row'),
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_one2many tbody td').first());
+            assert.hasClass(form.$('.o_field_one2many tbody td').first().parent(),'o_selected_row',
                 "first row of o2m should be in edition");
-            form.$('.o_field_one2many tbody td').first().find('input').val("new value").trigger('input');
-            assert.ok(form.$('.o_field_one2many tbody td').first().parent().hasClass('o_selected_row'),
+            testUtils.fields.editInput(form.$('.o_field_one2many tbody td').first().find('input'), "new value");
+            assert.hasClass(form.$('.o_field_one2many tbody td').first().parent(),'o_selected_row',
                 "first row of o2m should still be in edition");
 
             // // leave o2m edition
-            form.$el.click();
-            assert.ok(!form.$('.o_field_one2many tbody td').first().parent().hasClass('o_selected_row'),
+            testUtils.dom.click(form.$el);
+            assert.doesNotHaveClass(form.$('.o_field_one2many tbody td').first().parent(), 'o_selected_row',
                 "first row of o2m should be readonly again");
 
             // discard changes
-            form.$buttons.find('.o_form_button_cancel').click();
+            testUtils.form.clickDiscard(form);;
             assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
                 "changes shouldn't have been discarded yet, waiting for user confirmation");
-            $('.modal .modal-footer .btn-primary').click();
+            testUtils.dom.click($('.modal .modal-footer .btn-primary'));
             assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'relational record 1',
                 "display name of first record in o2m list should be 'relational record 1'");
 
             // edit again and save
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_one2many tbody td').first().click();
-            form.$('.o_field_one2many tbody td').first().find('input').val("new value").trigger('input');
-            form.$el.click();
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_one2many tbody td').first());
+            testUtils.fields.editInput(form.$('.o_field_one2many tbody td').first().find('input'), "new value");
+            testUtils.dom.click(form.$el);
+            testUtils.form.clickSave(form);;
             // FIXME: this next test doesn't pass as the save of updates of
             // relational data is temporarily disabled
             // assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
@@ -2134,7 +2128,7 @@ QUnit.module('fields', {}, function () {
             assert.ok(!form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" link should not be available in readonly');
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.ok(!form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" link should not be available in readonly');
@@ -2175,29 +2169,29 @@ QUnit.module('fields', {}, function () {
                         '<form string="Partner"><field name="display_name"/></form>',
                 },
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            assert.strictEqual(form.$('td.o_list_record_remove button').length, 3,
+            assert.containsN(form, 'td.o_list_record_remove button', 3,
                 "should have 3 remove buttons");
 
-            assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-times'),
+            assert.hasClass(form.$('td.o_list_record_remove button').first(),'fa fa-times',
                 "should have X icons to remove (unlink) records");
 
-            form.$('td.o_list_record_remove button').first().click();
+            testUtils.dom.click(form.$('td.o_list_record_remove button').first());
 
-            assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
+            assert.containsN(form, 'td.o_list_record_remove button', 2,
                 "should have 2 remove buttons (a record is supposed to have been unlinked)");
 
-            form.$('tr.o_data_row').first().click();
+            testUtils.dom.click(form.$('tr.o_data_row').first());
             assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
                 'there should be a modal having Remove Button');
-            $('.modal .modal-footer .o_btn_remove').click();
+            testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
 
-            assert.strictEqual(form.$('td.o_list_record_remove button').length, 1,
+            assert.containsOnce(form, 'td.o_list_record_remove button',
                 "should have 1 delete button (another record is supposed to have been unlinked)");
 
             // save and check that the correct command has been generated
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             form.destroy();
         });
 
@@ -2235,29 +2229,29 @@ QUnit.module('fields', {}, function () {
                         '<form string="Partner"><field name="display_name"/></form>',
                 },
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            assert.strictEqual(form.$('td.o_list_record_remove button').length, 3,
+            assert.containsN(form, 'td.o_list_record_remove button', 3,
                 "should have 3 remove buttons");
 
-            assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-trash-o'),
+            assert.hasClass(form.$('td.o_list_record_remove button').first(),'fa fa-trash-o',
                 "should have trash bin icons to remove (delete) records");
 
-            form.$('td.o_list_record_remove button').first().click();
+            testUtils.dom.click(form.$('td.o_list_record_remove button').first());
 
-            assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
+            assert.containsN(form, 'td.o_list_record_remove button', 2,
                 "should have 2 remove buttons (a record is supposed to have been deleted)");
 
-            form.$('tr.o_data_row').first().click();
+            testUtils.dom.click(form.$('tr.o_data_row').first());
             assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
                 'there should be a modal having Remove Button');
-            $('.modal .modal-footer .o_btn_remove').click();
+            testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
 
-            assert.strictEqual(form.$('td.o_list_record_remove button').length, 1,
+            assert.containsOnce(form, 'td.o_list_record_remove button',
                 "should have 1 remove button (another record is supposed to have been deleted)");
 
             // save and check that the correct command has been generated
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             // FIXME: it would be nice to test that the view is re-rendered correctly,
             // but as the relational data isn't re-fetched, the rendering is ok even
@@ -2304,7 +2298,7 @@ QUnit.module('fields', {}, function () {
             assert.ok(!form.$('.o_field_one2many .o-kanban-button-new').length,
                 '"Create" button should not be visible in readonly');
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
                 'should contain 1 record');
@@ -2316,46 +2310,46 @@ QUnit.module('fields', {}, function () {
                 'delete icon should be visible in edit');
             assert.ok(form.$('.o_field_one2many .o-kanban-button-new').length,
                 '"Create" button should be visible in edit');
-            assert.ok(form.$('.o_field_one2many .o-kanban-button-new').hasClass('btn-secondary'),
+            assert.hasClass(form.$('.o_field_one2many .o-kanban-button-new'),'btn-secondary',
                 "'Create' button should have className 'btn-secondary'");
             assert.strictEqual(form.$('.o_field_one2many .o-kanban-button-new').text().trim(), "Add",
                 'Create button should have "Add" label');
 
             // edit existing subrecord
-            form.$('.oe_kanban_global_click').click();
+            testUtils.dom.click(form.$('.oe_kanban_global_click'));
 
-            $('.modal .o_form_view input').val('new name').trigger('input');
-            $('.modal .modal-footer .btn-primary').click(); // save
+            testUtils.fields.editInput($('.modal .o_form_view input').first(), 'new name');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary'));
             assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'new name',
                 'value of subrecord should have been updated');
 
             // create a new subrecord
-            form.$('.o-kanban-button-new').click();
-            $('.modal .o_form_view input').val('new subrecord 1').trigger('input');
-            $('.modal .modal-footer .btn-primary').click(); // save and close
+            testUtils.dom.click(form.$('.o-kanban-button-new'));
+            testUtils.fields.editInput($('.modal .o_form_view input').first(), 'new subrecord 1');
+            testUtils.dom.clickFirst($('.modal .modal-footer .btn-primary'));
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 2,
                 'should contain 2 records');
             assert.strictEqual(form.$('.o_kanban_record:nth(1) span').text(), 'new subrecord 1',
                 'value of newly created subrecord should be "new subrecord 1"');
 
             // create two new subrecords
-            form.$('.o-kanban-button-new').click();
-            $('.modal .o_form_view input').val('new subrecord 2').trigger('input');
-            $('.modal .modal-footer .btn-primary:nth(1)').click(); // save and new
-            $('.modal .o_form_view input').val('new subrecord 3').trigger('input');
-            $('.modal .modal-footer .btn-primary').click(); // save and close
+            testUtils.dom.click(form.$('.o-kanban-button-new'));
+            testUtils.fields.editInput($('.modal .o_form_view input').first(), 'new subrecord 2');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:nth(1)'));
+            testUtils.fields.editInput($('.modal .o_form_view input').first(), 'new subrecord 3');
+            testUtils.dom.clickFirst($('.modal .modal-footer .btn-primary'));
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 4,
                 'should contain 4 records');
 
             // delete subrecords
-            form.$('.oe_kanban_global_click').first().click();
+            testUtils.dom.click(form.$('.oe_kanban_global_click').first());
             assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
                 'There should be a modal having Remove Button');
-            $('.modal .modal-footer .o_btn_remove').click(); // Click Remove Button of Formview Dialog
+            testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 3,
                 'should contain 3 records');
-            form.$('.o_kanban_view .delete_icon:first()').click();
-            form.$('.o_kanban_view .delete_icon:first()').click();
+            testUtils.dom.click(form.$('.o_kanban_view .delete_icon:first()'));
+            testUtils.dom.click(form.$('.o_kanban_view .delete_icon:first()'));
             assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
                 'should contain 1 records');
             assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'new subrecord 3',
@@ -2386,7 +2380,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
             assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o-kanban-button-new').text().trim(),
                 "Add turtle", "In O2M Kanban, Add button should have 'Add turtle' label");
 
@@ -2423,7 +2417,7 @@ QUnit.module('fields', {}, function () {
             assert.ok(!form.$('.o-kanban-button-new').length,
                 '"Add" button should not be available in readonly');
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.ok(!form.$('.o-kanban-button-new').length,
                 '"Add" button should not be available in edit');
@@ -2453,9 +2447,9 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a record, then click in form view to confirm it
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$el.click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click(form.$el);
 
             assert.strictEqual(form.$('.o_cp_pager').text().trim(), '1-3 / 5',
                 "pager should display the correct total");
@@ -2498,9 +2492,9 @@ QUnit.module('fields', {}, function () {
             assert.ok(!form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" should not be visible in readonly');
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 2,
+            assert.containsN(form, '.o_list_view td.o_list_number', 2,
                 'should contain 2 records');
             assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'second record',
                 'display_name of first subrecord should be the one in DB');
@@ -2510,10 +2504,10 @@ QUnit.module('fields', {}, function () {
                 '"Add an item" should not visible in edit');
 
             // edit existing subrecord
-            form.$('.o_list_view tbody tr:first() td:eq(1)').click();
+            testUtils.dom.click(form.$('.o_list_view tbody tr:first() td:eq(1)'));
 
-            $('.modal .o_form_view input').val('new name').trigger('input');
-            $('.modal .modal-footer .btn-primary').click(); // save
+            testUtils.fields.editInput($('.modal .o_form_view input'), 'new name');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary'));
             assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
                 'value of subrecord should have been updated');
             assert.strictEqual(nbWrite, 0, "should not have write anything in DB");
@@ -2522,13 +2516,13 @@ QUnit.module('fields', {}, function () {
             // TODO when 'Add an item' will be implemented
 
             // remove subrecords
-            form.$('.o_list_record_remove:nth(1)').click();
-            assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 1,
+            testUtils.dom.click(form.$('.o_list_record_remove:nth(1)'));
+            assert.containsOnce(form, '.o_list_view td.o_list_number',
                 'should contain 1 subrecord');
             assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
                 'the remaining subrecord should be "new name"');
 
-            form.$buttons.find('.o_form_button_save').click(); // save the record
+            testUtils.form.clickSave(form);; // save the record
             assert.strictEqual(nbWrite, 1, "should have write the changes in DB");
 
             form.destroy();
@@ -2558,26 +2552,26 @@ QUnit.module('fields', {}, function () {
             assert.ok(!form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" link should not be available in readonly');
 
-            form.$('.o_list_view tbody td:first()').click();
+            testUtils.dom.click(form.$('.o_list_view tbody td:first()'));
             assert.ok($('.modal .o_form_readonly').length,
                 'in readonly, clicking on a subrecord should open it in readonly in a dialog');
-            $('.modal .o_form_button_cancel').click(); // close the dialog
+            testUtils.dom.click($('.modal .o_form_button_cancel'));
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.ok(form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" link should be available in edit');
 
             // edit existing subrecord
-            form.$('.o_list_view tbody td:first()').click();
+            testUtils.dom.click(form.$('.o_list_view tbody td:first()'));
             assert.strictEqual($('.modal').length, 0,
                 'in edit, clicking on a subrecord should not open a dialog');
-            assert.ok(form.$('.o_list_view tbody tr:first()').hasClass('o_selected_row'),
+            assert.hasClass(form.$('.o_list_view tbody tr:first()'),'o_selected_row',
                 'first row should be in edition');
-            form.$('.o_list_view input:first()').val('new name').trigger('input');
+            testUtils.fields.editInput(form.$('.o_list_view input:first()'), 'new name');
 
-            form.$('.o_list_view tbody tr:nth(1) td:first').click(); // click on second record to validate the first one
-            assert.ok(!form.$('.o_list_view tbody tr:first').hasClass('o_selected_row'),
+            testUtils.dom.click(form.$('.o_list_view tbody tr:nth(1) td:first'));
+            assert.doesNotHaveClass(form.$('.o_list_view tbody tr:first'), 'o_selected_row',
                 'first row should not be in edition anymore');
             assert.strictEqual(form.$('.o_list_view tbody td:first').text(), 'new name',
                 'value of subrecord should have been updated');
@@ -2614,22 +2608,22 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit mode, then click on Add an item and enter a value
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_selected_row > td input').val('kartoffel').trigger('input');
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_selected_row > td input'), 'kartoffel');
 
             // click again on Add an item
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             assert.strictEqual(form.$('td:contains(kartoffel)').length, 1,
                 "should have one td with the new value");
-            assert.strictEqual(form.$('.o_selected_row > td input').length, 1,
+            assert.containsOnce(form, '.o_selected_row > td input',
                 "should have one other new td");
-            assert.strictEqual(form.$('tr.o_data_row').length, 2, "should have 2 data rows");
+            assert.containsN(form, 'tr.o_data_row', 2, "should have 2 data rows");
 
             // enter another value and save
-            form.$('.o_selected_row > td input').val('gemuse').trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 2, "should have 2 data rows");
+            testUtils.fields.editInput(form.$('.o_selected_row > td input'), 'gemuse');
+            testUtils.form.clickSave(form);;
+            assert.containsN(form, 'tr.o_data_row', 2, "should have 2 data rows");
             assert.strictEqual(form.$('td:contains(kartoffel)').length, 1,
                 "should have one td with the new value");
             assert.strictEqual(form.$('td:contains(gemuse)').length, 1,
@@ -2658,18 +2652,18 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit mode, then click on Add an item 2 times
-            assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            assert.containsOnce(form, 'tr.o_data_row',
                 "should have 1 data rows");
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 3,
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsN(form, 'tr.o_data_row', 3,
                 "should have 3 data rows");
 
             // cancel the edition
-            form.$buttons.find('.o_form_button_cancel').click();
-            $('.modal-footer button.btn-primary').first().click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            testUtils.form.clickDiscard(form);;
+            testUtils.dom.click($('.modal-footer button.btn-primary').first());
+            assert.containsOnce(form, 'tr.o_data_row',
                 "should have 1 data rows");
 
             form.destroy();
@@ -2706,18 +2700,16 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit mode, then click on Add an item
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            assert.containsNone(form, 'tr.o_data_row',
                 "should have 0 data rows");
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             assert.strictEqual(form.$('textarea').val(), "",
                 "field turtle_description should be empty");
 
             // add a value in the turtle_trululu field to trigger an onchange
-            var $dropdown = form.$('.o_field_many2one[name=turtle_trululu] input')
-                .autocomplete('widget');
-            form.$('.o_field_many2one[name=turtle_trululu] input').click();
-            $dropdown.find('a:contains(first record)').mouseenter().click();
+            testUtils.fields.many2one.clickOpenDropdown('turtle_trululu');
+            testUtils.fields.many2one.clickHighlightedItem('turtle_trululu');
             assert.strictEqual(form.$('textarea').val(), "Some Description",
                 "field turtle_description should be set to the result of the onchange");
             form.destroy();
@@ -2752,18 +2744,18 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit mode, then click on Add an item, then click elsewhere
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            assert.containsNone(form, 'tr.o_data_row',
                 "should have 0 data rows");
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('label.o_form_label').first().click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click(form.$('label.o_form_label').first());
+            assert.containsNone(form, 'tr.o_data_row',
                 "should still have 0 data rows");
 
             // click on Add an item again, then click on save
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$buttons.find('.o_form_button_save').click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.form.clickSave(form);;
+            assert.containsNone(form, 'tr.o_data_row',
                 "should still have 0 data rows");
 
             assert.verifySteps(['read', 'default_get', 'default_get']);
@@ -2789,8 +2781,8 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a record, to reach the page size limit
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             // the record currently being added should not count in the pager
             assert.ok(!form.$('.o_cp_pager').is(':visible'),
@@ -2819,12 +2811,12 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a record, then discard
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$buttons.find('.o_form_button_cancel').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.form.clickDiscard(form);;
 
             // confirm the discard operation
-            $('.modal .modal-footer .btn-primary').click(); // click on confirm
+            testUtils.dom.click($('.modal .modal-footer .btn-primary'));
 
             assert.strictEqual(form.$('.o_cp_pager').text().trim(), '1-3 / 4',
                 "pager should still be visible");
@@ -2853,12 +2845,12 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a (empty) record
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             // go on next page. The new record is not valid and should be discarded
-            form.$('.o_pager_next').click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            testUtils.dom.click(form.$('.o_pager_next'));
+            assert.containsOnce(form, 'tr.o_data_row',
                 "should have 1 data rows");
 
             form.destroy();
@@ -2887,23 +2879,23 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a record with a dirty state, but not valid
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('input[name="turtle_int"]').val(4321).trigger('input');
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('input[name="turtle_int"]'), 4321);
 
             // go to next page. The new record is not valid, but dirty. we should
             // see a confirm dialog
-            form.$('.o_pager_next').click();
+            testUtils.dom.click(form.$('.o_pager_next'));
 
             assert.strictEqual(form.$('.o_cp_pager').text().trim(), '1-3 / 4',
                 "pager should still display the correct total");
 
             // click on cancel
-            $('.modal .modal-footer .btn-secondary').click(); // click on cancel
+            testUtils.dom.click($('.modal .modal-footer .btn-secondary'));
 
             assert.strictEqual(form.$('.o_cp_pager').text().trim(), '1-3 / 4',
                 "pager should again display the correct total");
-            assert.strictEqual(form.$('.o_field_one2many input.o_field_invalid').length, 1,
+            assert.containsOnce(form, '.o_field_one2many input.o_field_invalid',
                 "there should be an invalid input in the one2many");
             form.destroy();
         });
@@ -2928,20 +2920,20 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a 4 records record (to make the pager appear)
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             // go on next page
-            form.$('.o_pager_next').click();
+            testUtils.dom.click(form.$('.o_pager_next'));
 
             // discard
-            form.$buttons.find('.o_form_button_cancel').click();
-            $('.modal .modal-footer .btn-primary').click();
+            testUtils.form.clickDiscard(form);;
+            testUtils.dom.click($('.modal .modal-footer .btn-primary'));
 
-            assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            assert.containsOnce(form, 'tr.o_data_row',
                 "should have 1 data row");
             assert.ok(!form.$('.o_cp_pager').is(':visible'),
                 "pager should not be visible");
@@ -2973,31 +2965,31 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit mode, then click on Add an item, then click elsewhere
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            assert.containsNone(form, 'tr.o_data_row',
                 "should have 0 data rows");
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsOnce(form, 'tr.o_data_row',
                 "should have 1 data rows");
 
             // adding a value in the non required field, so it is dirty, but with
             // a missing required field
-            form.$('input[name="turtle_int"]').val('12345').trigger('input');
+            testUtils.fields.editInput(form.$('input[name="turtle_int"]'), '12345');
 
             // click elsewhere,
-            form.$('label.o_form_label').click();
+            testUtils.dom.click(form.$('label.o_form_label'));
             assert.strictEqual($('.modal').length, 1,
                 'a confirmation model should be opened');
 
             // click on cancel, the line should still be selected
-            $('.modal .modal-footer button.btn-secondary').click();
-            assert.strictEqual(form.$('tr.o_data_row.o_selected_row').length, 1,
+            testUtils.dom.click($('.modal .modal-footer button.btn-secondary'));
+            assert.containsOnce(form, 'tr.o_data_row.o_selected_row',
                 "should still have 1 selected data row");
 
             // click elsewhere, and click on ok (on the confirmation dialog)
-            form.$('label.o_form_label').click();
-            $('.modal .modal-footer button.btn-primary').click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            testUtils.dom.click(form.$('label.o_form_label'));
+            testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+            assert.containsNone(form, 'tr.o_data_row',
                 "should have 0 data rows (invalid line has been discarded");
 
             form.destroy();
@@ -3029,13 +3021,13 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit mode, then click on Add an item, then click elsewhere
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             form.$('input[name="turtle_foo"]').trigger($.Event('keydown', {
                 which: $.ui.keyCode.ENTER,
                 keyCode: $.ui.keyCode.ENTER,
             }));
-            assert.ok(form.$('input[name="turtle_foo"]').hasClass('o_field_invalid'),
+            assert.hasClass(form.$('input[name="turtle_foo"]'),'o_field_invalid',
                 "input should be marked invalid");
             assert.verifySteps(['read', 'default_get']);
             form.destroy();
@@ -3076,18 +3068,18 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit mode, then click on Add an item
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            assert.containsNone(form, 'tr.o_data_row',
                 "should have 0 data rows");
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             // input some text in required turtle_foo field
-            form.$('input[name="turtle_foo"]').val('aubergine').trigger('input');
+            testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'aubergine');
             assert.strictEqual(form.$('input[name="turtle_int"]').val(), "9",
                 "onchange should have been triggered");
 
             // save and check everything is fine
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             assert.strictEqual(form.$('.o_data_row td:contains(aubergine)').length, 1,
                 "should have one row with turtle_foo value");
             assert.strictEqual(form.$('.o_data_row td:contains(9)').length, 1,
@@ -3118,13 +3110,13 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsOnce(form, 'tr.o_data_row',
                 "there should be one data row");
 
             form.$('input[name="turtle_foo"]').trigger({ type: 'keydown', which: $.ui.keyCode.ESCAPE });
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            assert.containsNone(form, 'tr.o_data_row',
                 "data row should have been discarded");
             assert.verifySteps(['read', 'default_get']);
             form.destroy();
@@ -3153,13 +3145,13 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsOnce(form, 'tr.o_data_row',
                 "there should be one data row");
 
             form.$('input[name="turtle_foo"]').trigger({ type: 'keydown', which: $.ui.keyCode.ESCAPE });
-            assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            assert.containsNone(form, 'tr.o_data_row',
                 "data row should have been discarded");
             assert.verifySteps(['read', 'default_get']);
             form.destroy();
@@ -3196,8 +3188,8 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_x2many_list_row_add a').click();
-            $('.modal .o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
 
             assert.strictEqual($('.modal .o_data_row.o_selected_row').length, 1,
                 "there should be a row in edition in the dialog");
@@ -3243,10 +3235,10 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_data_cell:first').click();
+            testUtils.dom.click(form.$('.o_data_cell:first'));
             form.$('.o_field_widget[name="product_id"] input').val('').trigger('keyup');
             assert.verifySteps(['read', 'read'], 'no onchange should be done as line is invalid');
-            form.$('.o_list_record_remove').click();
+            testUtils.dom.click(form.$('.o_list_record_remove'));
             assert.verifySteps(['read', 'read', 'onchange'], 'onchange should have been done');
 
             form.destroy();
@@ -3289,10 +3281,10 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_one2many tbody td').first().click();
-            form.$('.o_field_one2many tbody td').first().find('input').val("new value").trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_one2many tbody td').first());
+            testUtils.fields.editInput(form.$('.o_field_one2many tbody td').first().find('input'), "new value");
+            testUtils.form.clickSave(form);;
 
             assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'from onchange',
                 "display name of first record in o2m list should be 'new value'");
@@ -3388,10 +3380,10 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            form.$('td:contains(9)').click();
-            form.$('td input[name="turtle_int"]').val("3").trigger('input');
+            testUtils.dom.click(form.$('td:contains(9)'));
+            testUtils.fields.editInput(form.$('td input[name="turtle_int"]'), "3");
 
             // the 'change' event is triggered on the input when we focus somewhere
             // else, for example by clicking in the body.  However, if we try to
@@ -3428,17 +3420,17 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            form.$('td:contains(01/25/2017)').click();
-            form.$('.o_datepicker_input').click();
-            $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-            $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-            $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-            $('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
-            $('.day:contains(22)').click(); // select the 22 February
+            testUtils.dom.click(form.$('td:contains(01/25/2017)'));
+            testUtils.dom.click(form.$('.o_datepicker_input'));
+            testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch').first());
+            testUtils.dom.click($('.bootstrap-datetimepicker-widget .picker-switch:eq(1)'));
+            testUtils.dom.click($('.bootstrap-datetimepicker-widget .year:contains(2017)'));
+            testUtils.dom.click($('.bootstrap-datetimepicker-widget .month').eq(1));
+            testUtils.dom.click($('.day:contains(22)'));
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             assert.verifySteps(['read', 'read', 'onchange', 'write', 'read', 'read']);
             form.destroy();
@@ -3482,34 +3474,34 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "o2m should contain one row");
 
             // empty o2m by triggering the onchange
-            form.$('.o_field_widget[name=foo]').val('trigger onchange').trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'trigger onchange');
 
-            assert.strictEqual(form.$('.o_data_row').length, 0,
+            assert.containsNone(form, '.o_data_row',
                 "rows of the o2m should have been deleted");
 
             // add two new subrecords
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_field_widget[name=display_name]').val('x').trigger('input');
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_field_widget[name=display_name]').val('y').trigger('input');
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'x');
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'y');
 
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 "o2m should contain two rows");
 
             // empty o2m by triggering the onchange
-            form.$('.o_field_widget[name=foo]').val('trigger onchange again').trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'trigger onchange again');
 
-            assert.strictEqual(form.$('.o_data_row').length, 0,
+            assert.containsNone(form, '.o_data_row',
                 "rows of the o2m should have been deleted");
 
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_field_widget[name=display_name]').val('z').trigger('input');
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'z');
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             form.destroy();
         });
 
@@ -3568,13 +3560,13 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "o2m should contain one row");
 
-            form.$('.o_field_one2many .o_list_view tbody tr:first td:first').click();
-            form.$('.o_field_one2many .o_list_view tbody tr:first input:first').val('blurp').trigger('input');
+            testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:first td:first'));
+            testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:first input:first'), 'blurp');
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             form.destroy();
         });
 
@@ -3582,7 +3574,7 @@ QUnit.module('fields', {}, function () {
             assert.expect(5);
 
             var delta = 0;
-            testUtils.patch(AbstractField, {
+            testUtils.mock.patch(AbstractField, {
                 init: function () {
                     delta++;
                     this._super.apply(this, arguments);
@@ -3649,43 +3641,43 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 0,
+            assert.containsNone(form, '.o_data_row',
                 "o2m shouldn't contain any row");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             // trigger the first onchange
             deactiveOnchange = false;
-            form.$('input[name="turtle_int"]').val('10').trigger('input');
+            testUtils.fields.editInput(form.$('input[name="turtle_int"]'), '10');
             // put the list back in non edit mode
-            form.$('input[name="foo"]').click();
+            testUtils.dom.click(form.$('input[name="foo"]'));
             assert.strictEqual(form.$('.o_data_row').text(), "first10second-10",
                 "should correctly refresh the records");
 
             // trigger the second onchange
-            form.$('.o_field_x2many_list tbody tr:first td:first').click();
-            form.$('input[name="turtle_int"]').val('20').trigger('input');
+            testUtils.dom.click(form.$('.o_field_x2many_list tbody tr:first td:first'));
+            testUtils.fields.editInput(form.$('input[name="turtle_int"]'), '20');
 
-            form.$('input[name="foo"]').click();
+            testUtils.dom.click(form.$('input[name="foo"]'));
             assert.strictEqual(form.$('.o_data_row').text(), "first20second-20",
                 "should correctly refresh the records");
 
-            assert.strictEqual(form.$('.o_field_widget').length, delta,
+            assert.containsN(form, '.o_field_widget', delta,
                 "all (non visible) field widgets should have been destroyed");
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             assert.strictEqual(form.$('.o_data_row').text(), "first20second-20",
                 "should correctly refresh the records after save");
 
             form.destroy();
-            testUtils.unpatch(AbstractField);
+            testUtils.mock.unpatch(AbstractField);
         });
 
         QUnit.test('editable one2many with sub widgets are rendered in readonly', function (assert) {
             assert.expect(2);
 
             var editableWidgets = 0;
-            testUtils.patch(AbstractField, {
+            testUtils.mock.patch(AbstractField, {
                 init: function () {
                     this._super.apply(this, arguments);
                     if (this.mode === 'edit') {
@@ -3714,13 +3706,13 @@ QUnit.module('fields', {}, function () {
 
             assert.strictEqual(editableWidgets, 1,
                 "o2m is only widget in edit mode");
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
 
             assert.strictEqual(editableWidgets, 3,
                 "3 widgets currently in edit mode");
 
             form.destroy();
-            testUtils.unpatch(AbstractField);
+            testUtils.mock.unpatch(AbstractField);
         });
 
         QUnit.test('one2many editable list with onchange keeps the order', function (assert) {
@@ -3751,9 +3743,9 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_data_cell').text(), 'first recordsecond recordaaa',
                 "records should be display in the correct order");
 
-            form.$('.o_data_row:first .o_data_cell').click();
-            form.$('.o_selected_row .o_field_widget[name=display_name]').val('new').trigger('input');
-            form.$el.click(); // click outside to validate the row
+            testUtils.dom.click(form.$('.o_data_row:first .o_data_cell'));
+            testUtils.fields.editInput(form.$('.o_selected_row .o_field_widget[name=display_name]'), 'new');
+            testUtils.dom.click(form.$el);
 
             assert.strictEqual(form.$('.o_data_cell').text(), 'newsecond recordaaa',
                 "records should be display in the correct order");
@@ -3783,18 +3775,18 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            assert.ok(form.$('.o_list_view tbody tr:eq(0) td:first').hasClass('o_readonly_modifier'),
+            assert.hasClass(form.$('.o_list_view tbody tr:eq(0) td:first'),'o_readonly_modifier',
                 "first record should have display_name in readonly mode");
 
-            assert.notOk(form.$('.o_list_view tbody tr:eq(1) td:first').hasClass('o_readonly_modifier'),
+            assert.doesNotHaveClass(form.$('.o_list_view tbody tr:eq(1) td:first'), 'o_readonly_modifier',
                 "second record should not have display_name in readonly mode");
             form.destroy();
         });
 
         QUnit.test('pager of one2many field in new record', function (assert) {
-            assert.expect(2);
+            assert.expect(3);
 
             this.data.partner.records[0].p = [];
 
@@ -3805,23 +3797,18 @@ QUnit.module('fields', {}, function () {
                 arch: '<form string="Partners">' +
                     '<field name="p">' +
                     '<tree editable="top">' +
-                    '<field name="foo"/>' +
+                        '<field name="foo"/>' +
                     '</tree>' +
                     '</field>' +
                     '</form>',
-                archs: {
-                    'partner,false,form':
-                        '<form string="Partner"><field name="foo"/></form>',
-                },
             });
 
             assert.ok(!form.$('.o_x2m_control_panel .o_cp_pager div').is(':visible'),
                 'o2m pager should be hidden');
 
             // click to create a subrecord
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
-            $('.modal input').val('new record').trigger('input');
-            $('.modal .modal-footer button:eq(0)').click(); // save and close
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
+            assert.containsOnce(form, 'tr.o_data_row');
 
             assert.ok(!form.$('.o_x2m_control_panel .o_cp_pager div').is(':visible'),
                 'o2m pager should be hidden');
@@ -3864,7 +3851,7 @@ QUnit.module('fields', {}, function () {
                             "should trigger onchange with correct parameters");
                     }
                     return this._super.apply(this, arguments);
-                }
+                },
             });
 
             assert.strictEqual(form.$('tbody td:contains(xphone)').length, 1,
@@ -3872,18 +3859,14 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('tbody td:contains(xpad)').length, 0,
                 "should not display 'xpad' anywhere");
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
 
-            $('.modal .o_field_many2one input').click();
+            testUtils.fields.many2one.clickOpenDropdown('product_id');
+            testUtils.fields.many2one.clickItem('product_id', 'xpad');
 
-            var $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
-
-            $dropdown.find('li:eq(1) a').mouseenter();
-            $dropdown.find('li:eq(1) a').click();
-
-            $('.modal .modal-footer button:eq(0)').click(); // save and close
+            testUtils.dom.click($('.modal .modal-footer button:eq(0)'));
 
             assert.strictEqual(form.$('tbody td:contains(xpad)').length, 1,
                 "should display 'xpad' on a td");
@@ -3930,56 +3913,52 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
 
             // write in the many2one field, value = 37 (xphone)
-            $('.modal .o_field_many2one input').click();
-            var $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
-            $dropdown.find('li:eq(0) a').mouseenter();
-            $dropdown.find('li:eq(0) a').click();
+            testUtils.fields.many2one.clickOpenDropdown('product_id');
+            testUtils.fields.many2one.clickHighlightedItem('product_id');
 
             // write in the integer field
-            $('.modal .modal-body input.o_field_widget').val('123').trigger('input');
+            testUtils.fields.editInput($('.modal .modal-body input.o_field_widget'), '123');
 
             // save and close
-            $('.modal .modal-footer button:eq(0)').click();
+            testUtils.dom.click($('.modal .modal-footer button:eq(0)'));
 
             assert.strictEqual(form.$('tbody td:contains(xphone)').length, 1,
                 "should display 'xphone' in a td");
 
             // reopen the record in form view
-            form.$('tbody td:contains(xphone)').click();
+            testUtils.dom.click(form.$('tbody td:contains(xphone)'));
 
             assert.strictEqual($('.modal .modal-body input').val(), "xphone",
                 "should display 'xphone' in an input");
 
-            $('.modal .modal-body input.o_field_widget').val('456').trigger('input');
+            testUtils.fields.editInput($('.modal .modal-body input.o_field_widget'), '456');
 
             // discard
-            $('.modal .modal-footer span:contains(Discard)').click();
+            testUtils.dom.click($('.modal .modal-footer span:contains(Discard)'));
 
             // reopen the record in form view
-            form.$('tbody td:contains(xphone)').click();
+            testUtils.dom.click(form.$('tbody td:contains(xphone)'));
 
             assert.strictEqual($('.modal .modal-body input.o_field_widget').val(), "123",
                 "should display 123 (previous change has been discarded)");
 
             // write in the many2one field, value = 41 (xpad)
-            $('.modal .o_field_many2one input').click();
-            $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
-            $dropdown.find('li:eq(1) a').mouseenter();
-            $dropdown.find('li:eq(1) a').click();
+            testUtils.fields.many2one.clickOpenDropdown('product_id');
+            testUtils.fields.many2one.clickItem('product_id', 'xpad');
 
             // save and close
-            $('.modal .modal-footer button:eq(0)').click();
+            testUtils.dom.click($('.modal .modal-footer button:eq(0)'));
 
             assert.strictEqual(form.$('tbody td:contains(xpad)').length, 1,
                 "should display 'xpad' in a td");
 
             // save the record
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             form.destroy();
         });
 
@@ -4018,12 +3997,12 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
             // open a modal
-            form.$('tr.o_data_row:eq(0) td:contains(xphone)').click();
+            testUtils.dom.click(form.$('tr.o_data_row:eq(0) td:contains(xphone)'));
 
             // write in the many2one field
-            $('.modal .o_field_many2one input').click();
+            testUtils.dom.click($('.modal .o_field_many2one input'));
 
             form.destroy();
         });
@@ -4057,8 +4036,8 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_widget[name=product_id] input').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_widget[name=product_id] input'));
 
             form.destroy();
         });
@@ -4091,12 +4070,12 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            form.$('tr.o_data_row:eq(0) td:contains(xphone)').click();
+            testUtils.dom.click(form.$('tr.o_data_row:eq(0) td:contains(xphone)'));
 
             // trigger a name search
-            form.$('table td input').click();
+            testUtils.dom.click(form.$('table td input'));
 
             form.destroy();
         });
@@ -4131,8 +4110,8 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             form.destroy();
         });
@@ -4169,10 +4148,10 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('input[name="turtle_foo"]').val('hammer').trigger('input');
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'hammer');
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             form.destroy();
         });
 
@@ -4194,20 +4173,20 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('td input.o_field_widget').length, 1,
+            assert.containsOnce(form, 'td input.o_field_widget',
                 "should have created a row in edit mode");
 
-            form.$('td input.o_field_widget').val('a').trigger('input');
+            testUtils.fields.editInput(form.$('td input.o_field_widget'), 'a');
 
-            assert.strictEqual(form.$('td input.o_field_widget').length, 1,
+            assert.containsOnce(form, 'td input.o_field_widget',
                 "should not have unselected the row after edition");
 
-            form.$('td input.o_field_widget').val('abc').trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.fields.editInput(form.$('td input.o_field_widget'), 'abc');
+            testUtils.form.clickSave(form);;
 
             assert.strictEqual(form.$('td:contains(abc)').length, 1,
                 "should have a row with the correct value");
@@ -4240,8 +4219,8 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
             form.destroy();
         });
 
@@ -4288,39 +4267,37 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.strictEqual($('.modal .o_data_row').length, 2,
                 "sould have 2 records in the select view (the last one is not displayed because it is already selected)");
 
-            $('.modal .o_data_row:first .o_list_record_selector input').click();
-            $('.modal .o_select_button').click();
-            $('.o_form_button_save').click();
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click($('.modal .o_data_row:first .o_list_record_selector input'));
+            testUtils.dom.click($('.modal .o_select_button'));
+            testUtils.dom.click($('.o_form_button_save'));
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.strictEqual($('.modal .o_data_row').length, 1,
                 "sould have 1 record in the select view");
 
-            $('.modal-footer button:eq(1)').click();
-            $('.modal input.o_field_widget[name="turtle_foo"]').val('tototo').trigger('input');
-            $('.modal input.o_field_widget[name="turtle_int"]').val(50).trigger('input');
-            var $many2one = $('.modal [name="product_id"] input').click();
-            var $dropdown = $many2one.autocomplete('widget');
-            $dropdown.find('li:first a').mouseenter();
-            $dropdown.find('li:first a').click();
+            testUtils.dom.click($('.modal-footer button:eq(1)'));
+            testUtils.fields.editInput($('.modal input.o_field_widget[name="turtle_foo"]'), 'tototo');
+            testUtils.fields.editInput($('.modal input.o_field_widget[name="turtle_int"]'), 50);
+            testUtils.fields.many2one.clickOpenDropdown('product_id');
+            testUtils.fields.many2one.clickHighlightedItem('product_id');
 
-            $('.modal-footer button:contains(&):first').click();
+            testUtils.dom.click($('.modal-footer button:contains(&):first'));
 
             assert.strictEqual($('.modal').length, 0, "sould close the modals");
 
-            assert.strictEqual(form.$('.o_data_row').length, 3,
+            assert.containsN(form, '.o_data_row', 3,
                 "sould have 3 records in one2many list");
             assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.50tototo1.550xphone",
                 "should display the record values in one2many list");
 
-            $('.o_form_button_save').click();
+            testUtils.dom.click($('.o_form_button_save'));
 
             form.destroy();
         });
@@ -4370,37 +4347,33 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_data_row:first').click();
+            testUtils.dom.click(form.$('.o_data_row:first'));
             assert.strictEqual($('.modal .modal-title').first().text().trim(), 'Open: one2many turtle field',
                 "modal should use the python field string as title");
-            $('.modal .o_form_button_cancel').click();
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.dom.click($('.modal .o_form_button_cancel'));
+            testUtils.form.clickEdit(form);
 
             // edit the first one2many record
-            form.$('.o_data_row:first').click();
-            var $many2one = $('.modal [name="product_id"] input').click();
-            var $dropdown = $many2one.autocomplete('widget');
-            $dropdown.find('li:first a').mouseenter();
-            $dropdown.find('li:first a').click();
-            $('.modal-footer button:first').click();
+            testUtils.dom.click(form.$('.o_data_row:first'));
+            testUtils.fields.many2one.clickOpenDropdown('product_id');
+            testUtils.fields.many2one.clickHighlightedItem('product_id');
+            testUtils.dom.click($('.modal-footer button:first'));
 
-            $('.o_form_button_save').click(); // don't save anything because the one2many does not change
+            testUtils.dom.click($('.o_form_button_save'));
 
             // add a one2many record
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            $('.modal .o_data_row:first .o_list_record_selector input').click();
-            $('.modal .o_select_button').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click($('.modal .o_data_row:first .o_list_record_selector input'));
+            testUtils.dom.click($('.modal .o_select_button'));
 
             // edit the second one2many record
-            form.$('.o_data_row:eq(1)').click();
-            $many2one = $('.modal [name="product_id"] input').click();
-            $dropdown = $many2one.autocomplete('widget');
-            $dropdown.find('li:first a').mouseenter();
-            $dropdown.find('li:first a').click();
-            $('.modal-footer button:first').click();
+            testUtils.dom.click(form.$('.o_data_row:eq(1)'));
+            testUtils.fields.many2one.clickOpenDropdown('product_id');
+            testUtils.fields.many2one.clickHighlightedItem('product_id');
+            testUtils.dom.click($('.modal-footer button:first'));
 
-            $('.o_form_button_save').click();
+            testUtils.dom.click($('.o_form_button_save'));
 
             form.destroy();
         });
@@ -4436,8 +4409,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
             form.destroy();
         });
 
@@ -4468,8 +4440,8 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
             form.destroy();
         });
 
@@ -4499,9 +4471,7 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
             assert.verifySteps(['default_get', 'onchange', 'default_get', 'onchange']);
             form.destroy();
         });
@@ -4559,9 +4529,9 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-            form.$('td.o_field_x2many_list_row_add a').click();
-            form.$('td input[name="turtle_foo"]').val('cat').trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.dom.click(form.$('td.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('td input[name="turtle_foo"]'), 'cat');
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -4588,9 +4558,9 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('tbody td.o_field_x2many_list_row_add a').click();
-            $('.modal-footer button.btn-primary').first().click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
+            testUtils.dom.click($('.modal-footer button.btn-primary').first());
 
             assert.strictEqual($('.modal').length, 1, "should still have an open modal");
             assert.strictEqual($('.modal tbody label.o_field_invalid').length, 1,
@@ -4631,7 +4601,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_list_button button').click();
+            testUtils.dom.click(form.$('.o_list_button button'));
 
             form.destroy();
         });
@@ -4675,7 +4645,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.oe_kanban_action_button').click();
+            testUtils.dom.click(form.$('.oe_kanban_action_button'));
 
             form.destroy();
         });
@@ -4720,7 +4690,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$('.oe_kanban_action:eq(0)').click();
+            testUtils.dom.click(form.$('.oe_kanban_action:eq(0)'));
             assert.strictEqual($('.o_domain_selector').length, 1, "should add domain selector widget");
             form.destroy();
         });
@@ -4788,17 +4758,17 @@ QUnit.module('fields', {}, function () {
                 }
             });
 
-            form.$('.o_field_one2many .o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_one2many .o_field_x2many_list_row_add a'));
             assert.strictEqual($('.modal').length, 1, "form view dialog should be opened");
-            $('.modal-body input[name="model_name"]').val('partner').trigger('input');
-            $('.modal-footer button:first').click();
+            testUtils.fields.editInput($('.modal-body input[name="model_name"]'), 'partner');
+            testUtils.dom.click($('.modal-footer button:first'));
 
             assert.strictEqual(form.$('.o_field_one2many tbody tr:first').text(), "coucouhas changed[]",
                 "the onchange should create one new record and remove the existing");
 
-            form.$('.o_field_one2many .o_list_view tbody tr:eq(0) td:first').click();
+            testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:eq(0) td:first'));
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             assert.strictEqual(nbFetchSpecialDomain, 1,
                 "should only fetch special domain once");
             form.destroy();
@@ -4826,10 +4796,10 @@ QUnit.module('fields', {}, function () {
                 }
             });
 
-            assert.strictEqual(form.$('.o_field_widget[name="turtles"] .o_list_view').length, 1,
+            assert.containsOnce(form, '.o_field_widget[name="turtles"] .o_list_view',
                 'should display one2many list view in the modal');
 
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 'should display the 2 turtles');
 
             form.destroy();
@@ -4879,7 +4849,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 'should display the 2 turtles');
             assert.strictEqual(form.$('.o_data_row:first td:nth(1)').text(), 'xphone',
                 "should correctly display the m2o");
@@ -4888,36 +4858,34 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_data_row:first td:nth(2) .badge:first span').text(),
                 'second record', "m2m values should have been correctly fetched");
 
-            form.$('.o_data_row:first').click();
+            testUtils.dom.click(form.$('.o_data_row:first'));
 
             assert.strictEqual($('.modal .o_field_widget').text(), "xphone",
                 'should display the form view dialog with the many2one value');
-            $('.modal-footer button').click(); // close the modal
+            testUtils.dom.click($('.modal-footer button'));
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             // edit the m2m of first row
-            form.$('.o_list_view tbody td:first()').click();
+            testUtils.dom.click(form.$('.o_list_view tbody td:first()'));
             // remove a tag
-            form.$('.o_field_many2manytags .badge:contains(aaa) .o_delete').click();
+            testUtils.dom.click(form.$('.o_field_many2manytags .badge:contains(aaa) .o_delete'));
             assert.strictEqual(form.$('.o_selected_row .o_field_many2manytags .o_badge_text:contains(aaa)').length, 0,
                 "tag should have been correctly removed");
             // add a tag
-            var $m2mInput = form.$('.o_selected_row .o_field_many2manytags input');
-            $m2mInput.click();
-            $m2mInput.autocomplete('widget').find('li:first()').click();
+            testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+            testUtils.fields.many2one.clickHighlightedItem('partner_ids');
             assert.strictEqual(form.$('.o_selected_row .o_field_many2manytags .o_badge_text:contains(first record)').length, 1,
                 "tag should have been correctly added");
 
             // edit the m2o of first row
-            var $m2oInput = form.$('.o_selected_row .o_field_many2one:first input');
-            $m2oInput.click();
-            $m2oInput.autocomplete('widget').find('li:contains(xpad)').mouseover().click();
+            testUtils.fields.many2one.clickOpenDropdown('product_id');
+            testUtils.fields.many2one.clickItem('product_id', 'xpad');
             assert.strictEqual(form.$('.o_selected_row .o_field_many2one:first input').val(), 'xpad',
                 "m2o value should have been updated");
 
             // save (should correctly generate the commands)
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);
 
             form.destroy();
         });
@@ -4948,12 +4916,12 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 'there should be only 2 rows displayed');
-            form.$('.o_list_record_remove').click();
-            form.$('.o_list_record_remove').click();
+            testUtils.dom.clickFirst(form.$('.o_list_record_remove'));
+            testUtils.dom.clickFirst(form.$('.o_list_record_remove'));
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 'there should be just one remaining row');
 
             assert.verifySteps([
@@ -5035,20 +5003,20 @@ QUnit.module('fields', {}, function () {
             });
 
             // add new line (first, xpad)
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('input[name="display_name"]').val('first').trigger('input');
-            form.$('div[name="product_id"] input').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('input[name="display_name"]'), 'first');
+            testUtils.dom.click(form.$('div[name="product_id"] input'));
             // the onchange won't be generated
-            $('li.ui-menu-item a:contains(xpad)').trigger('mouseenter').click();
+            testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
 
-            assert.strictEqual(form.$('.o_field_many2manytags.o_input').length, 1,
+            assert.containsOnce(form, '.o_field_many2manytags.o_input',
                 'should display the line in editable mode');
             assert.strictEqual(form.$('.o_field_many2one input').val(), "xpad",
                 'should display the product xpad');
             assert.strictEqual(form.$('.o_field_many2manytags.o_input .o_badge_text').text(), "first record",
                 'should display the tag from the onchange');
 
-            form.$('input.o_field_integer[name="int_field"]').click();
+            testUtils.dom.click(form.$('input.o_field_integer[name="int_field"]'));
 
             assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xpad",
                 'should display the product xpad');
@@ -5056,7 +5024,7 @@ QUnit.module('fields', {}, function () {
                 'should display the tag in readonly');
 
             // enable the many2many onchange and generate it
-            form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
+            testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), '10');
 
             assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xenomorphexphone",
                 'should display the product xphone and xenomorphe');
@@ -5064,23 +5032,23 @@ QUnit.module('fields', {}, function () {
                 'should display the name, one2many and many2many value');
 
             // disable the many2many onchange
-            form.$('input.o_field_integer[name="int_field"]').val('0').trigger('input');
+            testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), '0');
 
             // remove and start over
-            form.$('.o_list_record_remove:first button').click();
-            form.$('.o_list_record_remove:first button').click();
+            testUtils.dom.click(form.$('.o_list_record_remove:first button'));
+            testUtils.dom.click(form.$('.o_list_record_remove:first button'));
 
             // enable the many2many onchange
-            form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
+            testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), '10');
 
             // add new line (first, xenomorphe)
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('input[name="display_name"]').val('first').trigger('input');
-            form.$('div[name="product_id"] input').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('input[name="display_name"]'), 'first');
+            testUtils.dom.click(form.$('div[name="product_id"] input'));
             // generate the onchange
-            $('li.ui-menu-item a:contains(xenomorphe)').trigger('mouseenter').click();
+            testUtils.dom.click($('li.ui-menu-item a:contains(xenomorphe)').trigger('mouseenter'));
 
-            assert.strictEqual(form.$('.o_field_many2manytags.o_input').length, 1,
+            assert.containsOnce(form, '.o_field_many2manytags.o_input',
                 'should display the line in editable mode');
             assert.strictEqual(form.$('.o_field_many2one input').val(), "xenomorphe",
                 'should display the product xenomorphe');
@@ -5088,19 +5056,19 @@ QUnit.module('fields', {}, function () {
                 'should display the tag from the onchange');
 
             // put list in readonly mode
-            form.$('input.o_field_integer[name="int_field"]').click();
+            testUtils.dom.click(form.$('input.o_field_integer[name="int_field"]'));
 
             assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xenomorphexphone",
                 'should display the product xphone and xenomorphe');
             assert.strictEqual(form.$('.o_field_many2manytags:not(.o_input) .o_badge_text').text(), "second recordfirst record",
                 'should display the tag in readonly (first record and second record)');
 
-            form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
+            testUtils.fields.editInput(form.$('input.o_field_integer[name="int_field"]'), '10');
 
             assert.strictEqual(form.$('.o_data_row').text().replace(/\s+/g, ' '), "firstxenomorphe second record new linexphone first record ",
                 'should display the name, one2many and many2many value');
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             assert.strictEqual(form.$('.o_data_row').text().replace(/\s+/g, ' '), "firstxenomorphe second record new linexphone first record ",
                 'should display the name, one2many and many2many value after save');
@@ -5141,10 +5109,10 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 'should display the 2 turtles');
 
-            form.$('.o_data_row:first').click();
+            testUtils.dom.click(form.$('.o_data_row:first'));
 
             assert.strictEqual($('.modal .o_field_widget[name="partner_ids"] .o_list_view').length, 1,
                 'should display many2many list view in the modal');
@@ -5176,7 +5144,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_data_row:first').click();
+            testUtils.dom.click(form.$('.o_data_row:first'));
 
             assert.strictEqual($('.modal .o_field_widget[name="turtle_foo"]').text(), 'blip',
                 'should open the modal and display the form field');
@@ -5225,18 +5193,17 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_data_row:first').click(); // edit first record
+            testUtils.dom.click(form.$('.o_data_row:first')); // edit first record
 
-            var $input = $('.modal .o_field_many2manytags input');
-            $input.click(); // opens the dropdown
-            $input.autocomplete('widget').find('li').click(); // add 'first record'
+            testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+            testUtils.fields.many2one.clickHighlightedItem('partner_ids');
 
             // add a many2many tag and save
-            $('.modal .o_field_x2many_list_row_add a').click();
-            $('.modal .o_field_widget[name=name]').val('test').trigger('input');
-            $('.modal .modal-footer .btn-primary').click(); // save
+            testUtils.dom.click($('.modal .o_field_many2manytags input'));
+            testUtils.fields.editInput($('.modal .o_field_many2manytags input'), 'test');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary')); // save
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);
 
             form.destroy();
         });
@@ -5283,20 +5250,20 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit the first partner in the one2many partner form view
-            form.$('.o_data_row:first td.o_data_cell').click();
+            testUtils.dom.click(form.$('.o_data_row:first td.o_data_cell'));
             // open form view for many2one
-            form.$('.o_external_button').click();
+            testUtils.dom.click(form.$('.o_external_button'));
 
             // click on add, to add a new partner in the m2m
-            $('.modal .o_field_x2many_list_row_add a').click();
+            testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
 
             // select the partner_type 'gold' (this closes the 2nd modal)
-            $('.modal td:contains(gold)').click();
+            testUtils.dom.click($('.modal td:contains(gold)'));
 
             // confirm the changes in the modal
-            $('.modal .modal-footer .btn-primary').click();
+            testUtils.dom.click($('.modal .modal-footer .btn-primary'));
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             form.destroy();
         });
 
@@ -5327,9 +5294,9 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_list_view .o_data_row').length, 2,
+            assert.containsN(form, '.o_list_view .o_data_row', 2,
                 "one2many list should contain 2 rows");
-            assert.strictEqual(form.$('.o_list_view .o_field_many2manytags[name="partner_ids"] .badge').length, 2,
+            assert.containsN(form, '.o_list_view .o_field_many2manytags[name="partner_ids"] .badge', 2,
                 "m2mtags should contain two tags");
             assert.strictEqual(form.$('.o_list_view .o_field_many2manytags[name="partner_ids"] .o_badge_text').text(),
                 'aaafirst record', "tag names should have been correctly loaded");
@@ -5361,7 +5328,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_data_row:first').click();
+            testUtils.dom.click(form.$('.o_data_row:first'));
 
             assert.strictEqual($('.modal .o_field_widget[name="turtle_foo"]').text(), 'blip',
                 'should open the modal and display the form field');
@@ -5410,21 +5377,21 @@ QUnit.module('fields', {}, function () {
                 res_id: 4,
             });
 
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view').length, 1,
+            assert.containsOnce(form, '.o_field_widget .o_kanban_view',
                 "should have one inner kanban view for the one2many field");
             assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 0,
                 "should not have kanban records yet");
 
             // // switch to edit mode and create a new kanban record
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_widget .o-kanban-button-new').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_widget .o-kanban-button-new'));
 
             // save & close the modal
             assert.strictEqual($('.modal-content input.o_field_widget').val(), 'My little Foo Value',
                 "should already have the default value for field foo");
-            $('.modal-content .btn-primary').first().click();
+            testUtils.dom.click($('.modal-content .btn-primary').first());
 
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view').length, 1,
+            assert.containsOnce(form, '.o_field_widget .o_kanban_view',
                 "should have one inner kanban view for the one2many field");
             assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 1,
                 "should now have one kanban record");
@@ -5434,8 +5401,8 @@ QUnit.module('fields', {}, function () {
                 'My little Foo Value', "should have a value for the foo field");
 
             // save the view to force a create of the new record in the one2many
-            form.$buttons.find('.o_form_button_save').click();
-            assert.strictEqual(form.$('.o_field_widget .o_kanban_view').length, 1,
+            testUtils.form.clickSave(form);;
+            assert.containsOnce(form, '.o_field_widget .o_kanban_view',
                 "should have one inner kanban view for the one2many field");
             assert.strictEqual(form.$('.o_field_widget .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 1,
                 "should now have one kanban record");
@@ -5467,9 +5434,9 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            form.$('.o_data_row:first td:first').click();
+            testUtils.dom.click(form.$('.o_data_row:first td:first'));
             assert.strictEqual(form.$('input[name="turtle_foo"]')[0], document.activeElement,
                 "turtle foo field should have focus");
 
@@ -5508,21 +5475,21 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "should start with one data row");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 "should have 2 data rows");
             assert.strictEqual(form.$('tr.o_data_row:first input').val(), 'default foo turtle',
                 "first row should be the new value");
-            assert.ok(form.$('tr.o_data_row:first').hasClass('o_selected_row'),
+            assert.hasClass(form.$('tr.o_data_row:first'),'o_selected_row',
                 "first row should be selected");
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             form.destroy();
         });
 
@@ -5555,21 +5522,21 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "should start with one data row");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 "should have 2 data rows");
             assert.strictEqual(form.$('tr.o_data_row:eq(1) input').val(), 'default foo turtle',
                 "second row should be the new value");
-            assert.ok(form.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
+            assert.hasClass(form.$('tr.o_data_row:eq(1)'),'o_selected_row',
                 "second row should be selected");
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
             form.destroy();
         });
 
@@ -5601,7 +5568,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.strictEqual(form.$('.o_field_one2many .o_kanban_view').length, 1,
+            assert.containsOnce(form, '.o_field_one2many .o_kanban_view',
                 "should have rendered a kanban view");
 
             form.destroy();
@@ -5638,17 +5605,17 @@ QUnit.module('fields', {}, function () {
                 },
                 res_id: 1,
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should start with value 0");
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should still be 0 (no onchange should have been done yet");
 
             assert.verifySteps(['read', 'default_get'], "no onchange should have been applied");
 
-            form.$('.o_field_widget[name="turtle_foo"]').val("some text").trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_foo"]'), "some text");
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
                 "int_field should now be 1 (the onchange should have been done");
 
@@ -5699,27 +5666,26 @@ QUnit.module('fields', {}, function () {
                 },
                 res_id: 1,
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should start with value 0");
 
             // add a new row (which is invalid at first)
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should still be 0 (no onchange should have been done yet)");
             assert.verifySteps(['load_views', 'read', 'default_get'], "no onchange should have been applied");
 
             // fill turtle_foo field
-            form.$('.o_field_widget[name="turtle_foo"]').val("some text").trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_foo"]'), "some text");
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should still be 0 (no onchange should have been done yet)");
             assert.verifySteps(['load_views', 'read', 'default_get'], "no onchange should have been applied");
 
             // fill partner_ids field with a tag (all required fields will then be set)
-            var $m2mInput = form.$('.o_field_widget[name=partner_ids] input');
-            $m2mInput.click();
-            $m2mInput.autocomplete('widget').find('li:first()').click();
+            testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+            testUtils.fields.many2one.clickHighlightedItem('partner_ids');
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
                 "int_field should now be 1 (the onchange should have been done");
 
@@ -5751,18 +5717,18 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
                 "int_field should start with value 10");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
                 "int_field should still be 10 (no onchange, because line is not valid)");
 
             // fill turtle_foo field
-            form.$('.o_field_widget[name="turtle_foo"]').val("some text").trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_foo"]'), "some text");
 
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
                 "int_field should be 1 (onchange triggered, because line is now valid)");
@@ -5796,18 +5762,18 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
                 "int_field should start with value 10");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
                 "int_field should still be 10 (no onchange, because line is not valid)");
 
             // fill turtle_int field
-            form.$('.o_field_widget[name="turtle_int"]').val("1").trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_int"]'), "1");
 
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
                 "int_field should be 1 (onchange triggered, because line is now valid)");
@@ -5848,29 +5814,29 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a first line but hold the onchange back
-            form.$('.o_field_x2many_list_row_add a').click();
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsOnce(form, '.o_data_row',
                 "should have created the first row immediately");
             def = $.Deferred();
-            form.$('.o_field_many2one input').click();
-            form.$('.o_field_many2one input').autocomplete('widget').find('a').first().click();
+            testUtils.fields.many2one.clickOpenDropdown('turtle_trululu');
+            testUtils.fields.many2one.clickHighlightedItem('turtle_trululu');
 
             // try to add a second line and check that it is correctly waiting
             // for the onchange to return
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             assert.strictEqual($('.modal').length, 0, "no modal should be displayed");
             assert.strictEqual($('.o_field_invalid').length, 0,
                 "no field should be marked as invalid");
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "should wait for the onchange to create the second row");
-            assert.ok(form.$('.o_data_row').hasClass('o_selected_row'),
+            assert.hasClass(form.$('.o_data_row'),'o_selected_row',
                 "first row should still be in edition");
 
             // resolve the onchange def
             def.resolve();
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 "second row should now have been created");
-            assert.notOk(form.$('.o_data_row:first').hasClass('o_selected_row'),
+            assert.doesNotHaveClass(form.$('.o_data_row:first'), 'o_selected_row',
                 "first row should no more be in edition");
 
             form.destroy();
@@ -5906,16 +5872,16 @@ QUnit.module('fields', {}, function () {
 
             // click twice to add a new line
             def = $.Deferred();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            assert.strictEqual(form.$('.o_data_row').length, 0,
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsNone(form, '.o_data_row',
                 "no row should have been created yet (waiting for the onchange)");
 
             // resolve the onchange def
             def.resolve();
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "only one row should have been created");
-            assert.ok(form.$('.o_data_row:first').hasClass('o_selected_row'),
+            assert.hasClass(form.$('.o_data_row:first'),'o_selected_row',
                 "the created row should be in edition");
 
             form.destroy();
@@ -5960,17 +5926,17 @@ QUnit.module('fields', {}, function () {
             });
 
             // trigger the two onchanges
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_data_row .o_field_widget').val('a name').trigger('input');
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_data_row .o_field_widget'), 'a name');
             def = $.Deferred();
-            form.$('.o_datepicker_input').click(); // focusout o2m and set value to today
+            testUtils.dom.click(form.$('.o_datepicker_input'));
             var dateTimeVal = fieldUtils.format.datetime(moment(), { timezone: false });
-            form.$('.o_datepicker_input').val(dateTimeVal).trigger('change');
+            testUtils.fields.editSelect(form.$('.o_datepicker_input'), dateTimeVal);
 
             // resolve the onchange def
             def.resolve();
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "should have one record in the o2m");
             assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), 'new',
                 "should be the record created by the onchange");
@@ -6021,11 +5987,11 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a line (this should trigger an onchange and a warning)
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             // check if 'Add an item' still works (this should trigger an onchange
             // and a warning again)
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.verifySteps(['onchange', 'warning', 'onchange', 'warning']);
 
@@ -6081,9 +6047,9 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$('.o_data_cell:first').click();
-            form.$('.o_field_widget[name=display_name]').val('abc').trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.dom.click(form.$('.o_data_cell:first'));
+            testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'abc');
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -6114,7 +6080,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('input[name="foo"]').val('abcd').trigger('input');
+            testUtils.fields.editInput(form.$('input[name="foo"]'), 'abcd');
             assert.verifySteps(['read', 'onchange']);
 
             form.destroy();
@@ -6155,12 +6121,12 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "the one2many should contain one row");
-            assert.strictEqual(form.$('.o_field_widget[name="timmy"]').length, 0,
+            assert.containsNone(form, '.o_field_widget[name="timmy"]',
                 "timmy should not be displayed in the list view");
 
-            form.$('.o_data_row td:first').click(); // open the record
+            testUtils.dom.click(form.$('.o_data_row td:first'));
 
             assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"]').length, 1,
                 "timmy should be displayed in the form view");
@@ -6199,10 +6165,10 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             });
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             // triggers an onchange on partner, because the new record is valid
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.verifySteps(['read', 'default_get', 'onchange']);
             form.destroy();
@@ -6241,11 +6207,11 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_x2many_list_row_add a').click();
-            $('.modal .o_field_x2many_list_row_add a').click();
-            $('.modal .o_data_cell input').val('new record').trigger('input');
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput($('.modal .o_data_cell input'), 'new record');
             checkOnchange = true;
-            $('.modal .modal-footer .btn-primary').click(); // save (should trigger the onchange)
+            testUtils.dom.clickFirst($('.modal .modal-footer .btn-primary'));
 
             form.destroy();
         });
@@ -6285,18 +6251,18 @@ QUnit.module('fields', {}, function () {
             });
 
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('tr.o_data_row').length, 41,
+            assert.containsN(form, 'tr.o_data_row', 41,
                 "should have 41 data rows on the current page");
-            assert.ok(form.$('tr.o_data_row').last().hasClass('o_selected_row'),
+            assert.hasClass(form.$('tr.o_data_row').last(),'o_selected_row',
                 "last row should be selected");
 
-            form.$('.o_data_row input[name="turtle_foo"]').val('rainbow dash').trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.fields.editInput(form.$('.o_data_row input[name="turtle_foo"]'), 'rainbow dash');
+            testUtils.form.clickSave(form);;
 
-            assert.strictEqual(form.$('tr.o_data_row').length, 40,
+            assert.containsN(form, 'tr.o_data_row', 40,
                 "should have 40 data rows on the current page");
 
             assert.verifySteps(['read', 'read', 'default_get', 'write', 'read', 'read']);
@@ -6328,13 +6294,13 @@ QUnit.module('fields', {}, function () {
             });
 
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_data_row input[name="turtle_foo"]').val('rainbow dash').trigger('input');
-            form.$('.o_x2m_control_panel .o_pager_next').click();
-            form.$('.o_x2m_control_panel .o_pager_next').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_data_row input[name="turtle_foo"]'), 'rainbow dash');
+            testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
+            testUtils.dom.click(form.$('.o_x2m_control_panel .o_pager_next'));
 
-            assert.strictEqual(form.$('tr.o_data_row').length, 3,
+            assert.containsN(form, 'tr.o_data_row', 3,
                 "should have 3 data rows on the current page");
             form.destroy();
         });
@@ -6375,27 +6341,27 @@ QUnit.module('fields', {}, function () {
             });
 
 
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_pager_next').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_pager_next'));
 
-            assert.strictEqual(form.$('tr.o_data_row').length, 2,
+            assert.containsN(form, 'tr.o_data_row', 2,
                 "should have 2 data rows on the current page");
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('tr.o_data_row').length, 3,
+            assert.containsN(form, 'tr.o_data_row', 3,
                 "should have 3 data rows on the current page (2 records and the created line)");
 
-            assert.ok(form.$('tr.o_data_row').first().hasClass('o_selected_row'),
+            assert.hasClass(form.$('tr.o_data_row').first(),'o_selected_row',
                 "first row should be selected");
 
             assert.strictEqual(form.$('tr.o_data_row input').val(), 'default foo',
                 "selected input should have correct string");
 
-            form.$('.o_data_row input[name="turtle_foo"]').val('rainbow dash').trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.fields.editInput(form.$('.o_data_row input[name="turtle_foo"]'), 'rainbow dash');
+            testUtils.form.clickSave(form);;
 
-            assert.strictEqual(form.$('tr.o_data_row').length, 40,
+            assert.containsN(form, 'tr.o_data_row', 40,
                 "should have 40 data rows on the current page");
 
             assert.verifySteps(['read', 'read', 'read', 'default_get', 'write', 'read', 'read']);
@@ -6435,11 +6401,9 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             def = $.Deferred();
-            form.$('.o_field_widget[name=int_field]')
-                .val('44')
-                .trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), '44');
 
             var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
             // set trululu before onchange
@@ -6490,19 +6454,17 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             def = $.Deferred();
-            form.$('.o_field_widget[name=int_field]')
-                .val('44')
-                .trigger('input')
-                .trigger({ type: 'keydown', which: $.ui.keyCode.TAB });
+            testUtils.fields.editAndTrigger(form.$('.o_field_widget[name=int_field]'), '44',
+                ['input', { type: 'keydown', which: $.ui.keyCode.TAB }]);
             def.resolve();
 
             assert.strictEqual(document.activeElement, form.$('.o_field_widget[name=qux]')[0],
                 "qux field should have the focus");
 
-            form.$('.o_field_many2one input').click();
-            form.$('.o_field_many2one input').autocomplete('widget').find('a').first().click();
+            testUtils.fields.many2one.clickOpenDropdown('trululu');
+            testUtils.fields.many2one.clickHighlightedItem('trululu');
             assert.strictEqual(form.$('.o_field_many2one input').val(), 'first record',
                 "the one2many field should have the expected value");
 
@@ -6529,9 +6491,9 @@ QUnit.module('fields', {}, function () {
                     '</form>',
             });
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            form.$('.o_field_widget[name=bar] input').click();
+            testUtils.dom.click(form.$('.o_field_widget[name=bar] input'));
             assert.notOk(form.$('.o_field_widget[name=bar] input').prop('checked'),
                 "the checkbox should be unticked");
 
@@ -6560,15 +6522,15 @@ QUnit.module('fields', {}, function () {
             });
 
             // edit the line and enter an invalid value for int_field
-            form.$('.o_data_row .o_data_cell:nth(1)').click();
-            form.$('.o_field_widget[name=int_field]').val('e').trigger('input');
-            form.$el.click(); // try to validate the line
+            testUtils.dom.click(form.$('.o_data_row .o_data_cell:nth(1)'));
+            testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), 'e');
+            testUtils.dom.click(form.$el);
 
-            assert.strictEqual(form.$('.o_data_row.o_selected_row').length, 1,
+            assert.containsOnce(form, '.o_data_row.o_selected_row',
                 "line should not have been removed and should still be in edition");
             assert.strictEqual($('.modal').length, 1,
                 "a confirmation dialog should be opened");
-            assert.ok(form.$('.o_field_widget[name=int_field]').hasClass('o_field_invalid'),
+            assert.hasClass(form.$('.o_field_widget[name=int_field]'),'o_field_invalid',
                 "should indicate that int_field is invalid");
 
             form.destroy();
@@ -6609,7 +6571,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_data_cell').text(), '1 record',
                 "should correctly display the value of the inner o2m");
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -6656,23 +6618,23 @@ QUnit.module('fields', {}, function () {
                 "initial text should be correct");
 
             // click and edit value to 'foo', which will trigger onchange
-            form.$('.o_data_row .o_data_cell:nth(0)').click();
-            form.$('.o_field_widget[name=turtle_foo]').val('foo').trigger('input');
-            form.$el.click();
+            testUtils.dom.click(form.$('.o_data_row .o_data_cell:nth(0)'));
+            testUtils.fields.editInput(form.$('.o_field_widget[name=turtle_foo]'), 'foo');
+            testUtils.dom.click(form.$el);
             assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'foo',
                 "field should have been changed to foo");
 
             // click and edit value to 'pinky', which trigger a failed onchange
-            form.$('.o_data_row .o_data_cell:nth(0)').click();
-            form.$('.o_field_widget[name=turtle_foo]').val('pinky').trigger('input');
-            form.$el.click();
+            testUtils.dom.click(form.$('.o_data_row .o_data_cell:nth(0)'));
+            testUtils.fields.editInput(form.$('.o_field_widget[name=turtle_foo]'), 'pinky');
+            testUtils.dom.click(form.$el);
 
             assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(0)').text(), 'foo',
                 "turtle_foo text should now be set back to foo");
 
             // we make sure here that when we save, the values are the current
             // values displayed in the field.
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -6700,9 +6662,9 @@ QUnit.module('fields', {}, function () {
                 },
                 viewOptions: { context: { flutter: 'shy' } },
             });
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('input[name="turtle_foo"]').val('pinky pie').trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'pinky pie');
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -6756,19 +6718,19 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_widget[name=display_name]').val('trigger onchange').trigger('input');
+            testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'trigger onchange');
 
             assert.strictEqual(form.$('.o_data_cell').text(), 'test',
                 "should have added the new row to the one2many");
 
             // open the new subrecord to check the value of the nested o2m, and to
             // ensure that it will be saved
-            form.$('.o_data_cell:first').click();
+            testUtils.dom.click(form.$('.o_data_cell:first'));
             assert.strictEqual($('.modal .o_data_cell').text(), 'test nested',
                 "should have added the new row to the nested one2many");
-            $('.modal .modal-footer .btn-primary').click();
+            testUtils.dom.clickFirst($('.modal .modal-footer .btn-primary'));
 
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             form.destroy();
         });
@@ -6810,7 +6772,7 @@ QUnit.module('fields', {}, function () {
                     mode: 'edit',
                 },
             });
-            form.$('.o_list_record_remove:first button').click();
+            testUtils.dom.click(form.$('.o_list_record_remove:first button'));
             assert.strictEqual(form.$('.o_data_row').text(), 'from onchange',
                 'onchange has been properly applied');
             form.destroy();
@@ -6854,7 +6816,7 @@ QUnit.module('fields', {}, function () {
                     mode: 'edit',
                 },
             });
-            form.$('.o_list_record_remove:first button').click();
+            testUtils.dom.click(form.$('.o_list_record_remove:first button'));
             assert.strictEqual(form.$('.o_data_row').text(), 'from onchange id2from onchange id3',
                 'onchange has been properly applied');
             form.destroy();
@@ -6893,9 +6855,9 @@ QUnit.module('fields', {}, function () {
             // check line is at the correct place
 
             var inputText = 'ninja';
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_input[name="turtle_foo"]').val(inputText).trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText);
+            testUtils.form.clickSave(form);;
 
             assert.strictEqual($('.o_data_cell').text(), "blipyopkawa" + inputText);
             form.destroy();
@@ -6934,9 +6896,9 @@ QUnit.module('fields', {}, function () {
             // check line is at the correct place
 
             var inputText = 'ninja';
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_input[name="turtle_foo"]').val(inputText).trigger('input');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText);
+            testUtils.form.clickSave(form);;
 
             assert.strictEqual($('.o_data_cell').text(), inputText + "blipyopkawa");
             form.destroy();
@@ -6980,13 +6942,13 @@ QUnit.module('fields', {}, function () {
             // check line is at the correct place
 
             var inputText = 'ninja';
-            $('.o_field_x2many_list_row_add a').click();
-            $('.o_input[name="turtle_foo"]').val(inputText).trigger('input');
-            $('.modal .modal-footer .btn-primary:first').click();
+            testUtils.dom.click($('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput($('.o_input[name="turtle_foo"]'), inputText);
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
 
             assert.strictEqual($('.o_data_cell').text(), "blipyopkawa" + inputText);
 
-            $('.o_form_button_save').click();
+            testUtils.dom.click($('.o_form_button_save'));
             assert.strictEqual($('.o_data_cell').text(), "blipyopkawa" + inputText);
             form.destroy();
         });
@@ -7020,7 +6982,7 @@ QUnit.module('fields', {}, function () {
 
             // click add a new line
             // check turtle_int for new is the current max of the page
-            $('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click($('.o_field_x2many_list_row_add a'));
             assert.strictEqual($('.modal .o_input[name="turtle_int"]').val(), '10');
             form.destroy();
         });
@@ -7054,7 +7016,7 @@ QUnit.module('fields', {}, function () {
 
             // click add a new line
             // check turtle_int for new is the current max of the page +1
-            $('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click($('.o_field_x2many_list_row_add a'));
             assert.strictEqual($('.modal .o_input[name="turtle_int"]').val(), '22');
             form.destroy();
         });
@@ -7108,11 +7070,11 @@ QUnit.module('fields', {}, function () {
 
             var inputText1 = 'relax';
             var inputText2 = 'max';
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_input[name="turtle_foo"]').val(inputText1).trigger('input');
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_input[name="turtle_foo"]').val(inputText2).trigger('input');
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText1);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), inputText2);
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.strictEqual($('.o_data_cell:nth-child(2)').text(), inputText1 + inputText2);
 
@@ -7120,7 +7082,7 @@ QUnit.module('fields', {}, function () {
 
             assert.equal($handles.length, 3, 'There should be 3 sequence handlers');
 
-            testUtils.dragAndDrop($handles.eq(1),
+            testUtils.dom.dragAndDrop($handles.eq(1),
                 form.$('tbody tr').first(),
                 { position: 'top' }
             );
@@ -7186,9 +7148,9 @@ QUnit.module('fields', {}, function () {
                 "should display two records out of three, in the correct order");
 
             // edit turtle_int field of first row
-            form.$('.o_data_cell:first').click();
-            form.$('.o_field_widget[name=turtle_int]').val(3).trigger('input');
-            form.$el.click(); // leave edition
+            testUtils.dom.click(form.$('.o_data_cell:first'));
+            testUtils.fields.editInput(form.$('.o_field_widget[name=turtle_int]'), 3);
+            testUtils.dom.click(form.$el);
 
             assert.strictEqual(form.$('.o_data_cell.foo').text(), 'blipkawa',
                 "should still display the same two records");
@@ -7225,7 +7187,7 @@ QUnit.module('fields', {}, function () {
             });
             assert.strictEqual(form.$('.o_data_row').text(), 'yopblip',
                 'data has been properly loaded');
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             assert.strictEqual(form.$('.o_data_row').text(), 'yopblip',
                 'data has been properly saved');
@@ -7266,10 +7228,10 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_x2many_list_row_add a').click();
-            assert.strictEqual(form.$('.o_data_row').length, 4, 'should have 4 data rows');
-            form.$('.o_input[name="turtle_foo"]').val('a').trigger('input');
-            assert.strictEqual(form.$('.o_data_row').length, 4,
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            assert.containsN(form, '.o_data_row', 4, 'should have 4 data rows');
+            testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), 'a');
+            assert.containsN(form, '.o_data_row', 4,
                 'should still have 4 data rows (the limit is increased to 4)');
 
             form.destroy();
@@ -7306,7 +7268,7 @@ QUnit.module('fields', {}, function () {
             });
 
             // swap 2 lines in the one2many
-            testUtils.dragAndDrop(form.$('.ui-sortable-handle:eq(1)'), form.$('tbody tr').first(),
+            testUtils.dom.dragAndDrop(form.$('.ui-sortable-handle:eq(1)'), form.$('tbody tr').first(),
                 { position: 'top' });
             assert.verifySteps(['load_views', 'read', 'read', 'onchange', 'onchange']);
             form.destroy();
@@ -7341,8 +7303,8 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a row and trigger the onchange
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_data_row .o_field_widget[name=display_name]').val('a name').trigger('input');
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput(form.$('.o_data_row .o_field_widget[name=display_name]'), 'a name');
 
             assert.strictEqual(form.$('.o_data_row .o_field_widget[name=turtle_int]').val(), "44",
                 "should have triggered the onchange");
@@ -7374,31 +7336,31 @@ QUnit.module('fields', {}, function () {
                     '</form>',
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 0,
+            assert.containsNone(form, '.o_data_row',
                 "there should be no record in the relation");
 
             // add a new record
-            form.$('.o_field_x2many_list_row_add a').click();
-            $('.modal .o_field_widget').val('new record').trigger('input');
-            $('.modal .modal-footer .btn-primary:first').click(); // Save & Close
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editInput($('.modal .o_field_widget'), 'new record');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
 
             assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), 'new record',
                 "should display the new record");
 
             // reopen freshly added record and edit it
-            form.$('.o_data_row .o_data_cell').click();
-            $('.modal .o_field_widget').val('new record edited').trigger('input');
+            testUtils.dom.click(form.$('.o_data_row .o_data_cell'));
+            testUtils.fields.editInput($('.modal .o_field_widget'), 'new record edited');
 
             // save it, and choose to directly create another record
-            $('.modal .modal-footer .btn-primary:nth(1)').click(); // Save & New
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:nth(1)'));
 
             assert.strictEqual($('.modal').length, 1,
                 "the model should still be open");
             assert.strictEqual($('.modal .o_field_widget').text(), '',
                 "should have cleared the input");
 
-            $('.modal .o_field_widget').val('another new record').trigger('input');
-            $('.modal .modal-footer .btn-primary:first').click(); // Save & Close
+            testUtils.fields.editInput($('.modal .o_field_widget'), 'another new record');
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
 
             assert.strictEqual(form.$('.o_data_row .o_data_cell').text(),
                 'new record editedanother new record', "should display the two records");
@@ -7443,16 +7405,16 @@ QUnit.module('fields', {}, function () {
 
             // click add food
             // check it's empty
-            form.$('.o_field_x2many_list_row_add a:eq(0)').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(0)'));
             assert.strictEqual($('.o_data_cell').text(), "");
 
             // click add pizza
             // save the modal
             // check it's pizza
-            form.$('.o_field_x2many_list_row_add a:eq(1)').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(1)'));
             // click add pasta
-            form.$('.o_field_x2many_list_row_add a:eq(2)').click();
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(2)'));
+            testUtils.form.clickSave(form);;
             assert.strictEqual($('.o_data_cell').text(), "pizzapasta");
 
             form.destroy();
@@ -7495,22 +7457,22 @@ QUnit.module('fields', {}, function () {
 
             // click add food
             // check it's empty
-            form.$('.o_field_x2many_list_row_add a:eq(0)').click();
-            $('.modal .modal-footer .btn-primary:first').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(0)'));
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
             assert.strictEqual($('.o_data_cell').text(), "");
 
             // click add pizza
             // save the modal
             // check it's pizza
-            form.$('.o_field_x2many_list_row_add a:eq(1)').click();
-            $('.modal .modal-footer .btn-primary:first').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(1)'));
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
             assert.strictEqual($('.o_data_cell').text(), "pizza");
 
             // click add pasta
             // save the whole record
             // check it's pizzapasta
-            form.$('.o_field_x2many_list_row_add a:eq(2)').click();
-            $('.modal .modal-footer .btn-primary:first').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(2)'));
+            testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
             assert.strictEqual($('.o_data_cell').text(), "pizzapasta");
 
             form.destroy();
@@ -7582,27 +7544,27 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "there should be one record in the one2many");
             assert.strictEqual(form.$('.o_data_cell').text(), 'second record',
                 "initial display_name of o2m record should be correct");
 
             // open one2many record in form view
-            form.$('.o_data_cell:first').click();
+            testUtils.dom.click(form.$('.o_data_cell:first'));
             assert.strictEqual($('.modal .o_form_view').length, 1,
                 "should have opened the form view in a dialog");
             assert.strictEqual($('.modal .o_form_view .o_data_row').length, 0,
                 "there should be no record in the many2many");
 
             // click on the action button
-            $('.modal .o_form_view button').click();
+            testUtils.dom.click($('.modal .o_form_view button'));
             assert.strictEqual($('.modal .o_data_row').length, 1,
                 "fields in the o2m form view should have been read");
             assert.strictEqual($('.modal .o_data_cell').text(), 'gold',
                 "many2many subrecord should have been fetched");
 
             // save the dialog
-            $('.modal .modal-footer .btn-primary').click();
+            testUtils.dom.click($('.modal .modal-footer .btn-primary'));
 
             assert.strictEqual(form.$('.o_data_cell').text(), 'new name',
                 "fields in the o2m list view should have been read as well");
@@ -7668,32 +7630,32 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a turtle on second partner
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_data_row:eq(1)').click();
-            $('.modal .o_field_x2many_list_row_add a').click();
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_data_row:eq(1)'));
+            testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
             $('.modal input[name="display_name"]').val('michelangelo').change();
-            $('.modal .btn-primary').click();
+            testUtils.dom.click($('.modal .btn-primary'));
             // open first partner so changes from previous action are applied
-            form.$('.o_data_row:eq(0)').click();
-            $('.modal .btn-primary').click();
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.dom.click(form.$('.o_data_row:eq(0)'));
+            testUtils.dom.click($('.modal .btn-primary'));
+            testUtils.form.clickSave(form);;
 
             assert.strictEqual(numUserOnchange, 2,
                 'there should 2 and only 2 onchange from closing the partner modal');
 
-            form.$('.o_data_row:eq(0)').click();
+            testUtils.dom.click(form.$('.o_data_row:eq(0)'));
             assert.strictEqual($('.modal .o_data_row').length, 1,
                 'only 1 turtle for first partner');
             assert.strictEqual($('.modal .o_data_row').text(), 'donatello',
                 'first partner turtle is donatello');
-            $('.modal .o_form_button_cancel').click();
+            testUtils.dom.click($('.modal .o_form_button_cancel'));
 
-            form.$('.o_data_row:eq(1)').click();
+            testUtils.dom.click(form.$('.o_data_row:eq(1)'));
             assert.strictEqual($('.modal .o_data_row').length, 1,
                 'only 1 turtle for second partner');
             assert.strictEqual($('.modal .o_data_row').text(), 'michelangelo',
                 'second partner turtle is michelangelo');
-            $('.modal .o_form_button_cancel').click();
+            testUtils.dom.click($('.modal .o_form_button_cancel'));
 
             form.destroy();
         });
@@ -7719,11 +7681,11 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            form.$('.o_email_cell a').click();
+            testUtils.dom.click(form.$('.o_email_cell a'));
             assert.strictEqual($('.modal .o_form_view').length, 0,
                 'click should not open the modal');
 
-            form.$('.o_url_cell a').click();
+            testUtils.dom.click(form.$('.o_url_cell a'));
             assert.strictEqual($('.modal .o_form_view').length, 0,
                 'click should not open the modal');
             form.destroy();
@@ -7748,14 +7710,13 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.strictEqual(form.$('.o_selected_row').length, 1,
+            assert.containsOnce(form, '.o_selected_row',
                 "should have create a new row in edition");
 
-            var $input = form.$('.o_field_widget[name="turtle_trululu"] input');
-            $input.click();
-            $input.autocomplete('widget').find('.o_m2o_dropdown_option').focus().click();
+            testUtils.fields.many2one.clickOpenDropdown('turtle_trululu');
+            testUtils.fields.many2one.clickItem('turtle_trululu','Create and Edit...');
 
             assert.strictEqual($('.modal .o_form_view').length, 1,
                 "should have opened a form view in a dialog");
@@ -7767,7 +7728,7 @@ QUnit.module('fields', {}, function () {
 
             assert.strictEqual($('.modal .o_form_view').length, 0,
                 "should have closed the dialog");
-            assert.strictEqual(form.$('.o_selected_row').length, 1,
+            assert.containsOnce(form, '.o_selected_row',
                 "new row should still be present");
 
             form.destroy();
@@ -7803,8 +7764,8 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            $('button[name="action_invoice_open"]').click();
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click($('button[name="action_invoice_open"]'));
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             form.destroy();
         });
 
@@ -7830,18 +7791,16 @@ QUnit.module('fields', {}, function () {
             });
 
             // add a row, fill it, then trigger the tab shortcut
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$('.o_input[name="turtle_foo"]')
-                .val('ninja')
-                .trigger('input')
-                .trigger($.Event('keydown', {
-                    which: $.ui.keyCode.TAB,
-                    keyCode: $.ui.keyCode.TAB,
-                }));
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.fields.editAndTrigger(
+                form.$('.o_input[name="turtle_foo"]'),
+                'ninja',
+                ['input', $.Event('keydown', {which: $.ui.keyCode.TAB, keyCode: $.ui.keyCode.TAB,})]
+            );;
 
             assert.strictEqual(form.$('.o_field_text').text(), 'blipninja',
                 'current line should be saved');
-            assert.strictEqual(form.$('textarea.o_field_text').length, 1,
+            assert.containsOnce(form, 'textarea.o_field_text',
                 'new line should be created');
 
             form.destroy();
@@ -7881,14 +7840,14 @@ QUnit.module('fields', {}, function () {
             var value = "hello";
 
             // add a new line
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             // we want to add a delay to simulate an onchange
             def = $.Deferred();
 
             // write something in the field
             var $input = form.$('input[name="turtle_foo"]');
-            $input.val(value).trigger('input');
+            testUtils.fields.editInput($input, value);
 
             // trigger keydown ENTER
             $input.trigger($.Event('keydown', {
@@ -7898,7 +7857,7 @@ QUnit.module('fields', {}, function () {
 
             // check that nothing changed before the onchange finished
             assert.strictEqual($input.val(), value, "input content shouldn't change");
-            assert.strictEqual(form.$('.o_data_row').length, 1,
+            assert.containsOnce(form, '.o_data_row',
                 "should still contain only one row");
 
             // unlock onchange
@@ -7907,7 +7866,7 @@ QUnit.module('fields', {}, function () {
             // check the current line is added with the correct content and a new line is editable
             assert.strictEqual(form.$('td.o_data_cell').text(), value);
             assert.strictEqual(form.$('input[name="turtle_foo"]').val(), '');
-            assert.strictEqual(form.$('.o_data_row').length, 2,
+            assert.containsN(form, '.o_data_row', 2,
                 "should now contain two rows");
 
             form.destroy();
@@ -7939,15 +7898,15 @@ QUnit.module('fields', {}, function () {
                 fieldDebounce: 5000,
             });
 
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            form.$('input').val('some foo value').trigger('input');
+            testUtils.fields.editInput(form.$('input'), 'some foo value');
 
             // click to add a second row to unselect the current one, then save
-            form.$('.o_field_x2many_list_row_add a').click();
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            testUtils.form.clickSave(form);;
 
-            assert.strictEqual(form.$('.o_form_readonly').length, 1,
+            assert.containsOnce(form, '.o_form_readonly',
                 "form view should be in readonly");
             assert.strictEqual(form.$('.o_data_row').text(), 'some foo value',
                 "foo field should have correct value");
@@ -7992,20 +7951,20 @@ QUnit.module('fields', {}, function () {
                 }
             });
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             var x2mList = form.$('.o_field_x2many_list[name=p]');
 
             // Add a record in the list
-            x2mList.find('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(x2mList.find('.o_field_x2many_list_row_add a'));
 
             var modal = $('.modal-lg');
 
             var nameInput = modal.find('input.o_input[name=display_name]');
-            nameInput.val('michelangelo').trigger('input');
+            testUtils.fields.editInput(nameInput, 'michelangelo');
 
             // Save the record in the modal (though it is still virtual)
-            modal.find('.btn-primary').first().click();
+            testUtils.dom.click(modal.find('.btn-primary').first());
 
             assert.equal(x2mList.find('.o_data_row').length, 1,
                 'There should be 1 records in the x2m list');
@@ -8018,7 +7977,7 @@ QUnit.module('fields', {}, function () {
                 'The display name field should have the right value');
 
             // Save the whole thing
-            form.$buttons.find('.o_form_button_save').click();
+            testUtils.form.clickSave(form);;
 
             x2mList = form.$('.o_field_x2many_list[name=p]');
 
@@ -8064,18 +8023,18 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            assert.strictEqual(form.$('th').length, 2,
+            assert.containsN(form, 'th', 2,
                 "should be 2 columns in the one2many");
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_many2one[name="product_id"] input').click();
-            $('li.ui-menu-item a:contains(xpad)').trigger('mouseenter').click();
-            assert.strictEqual(form.$('th').length, 1,
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
+            testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            assert.containsOnce(form, 'th',
                 "should be 1 column when the product_id is set");
             form.$('.o_field_many2one[name="product_id"] input').val('').trigger('keyup');
-            assert.strictEqual(form.$('th').length, 2,
+            assert.containsN(form, 'th', 2,
                 "should be 2 columns in the one2many when product_id is not set");
-            form.$('.o_field_boolean[name="bar"] input').click();
-            assert.strictEqual(form.$('th').length, 1,
+            testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            assert.containsOnce(form, 'th',
                 "should be 1 column after the value change");
             form.destroy();
         });
@@ -8110,19 +8069,19 @@ QUnit.module('fields', {}, function () {
             });
 
             // bar is false so there should be 1 column
-            assert.strictEqual(form.$('th').length, 1,
+            assert.containsOnce(form, 'th',
                 "should be only 1 column ('foo') in the one2many");
-            assert.strictEqual(form.$('.o_list_view .o_data_row').length, 1, "should contain one row");
+            assert.containsOnce(form, '.o_list_view .o_data_row', "should contain one row");
 
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
 
             // add a new o2m record
-            form.$('.o_field_x2many_list_row_add a').click();
+            testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             form.$('.o_field_one2many input:first').focus();
-            form.$('.o_field_one2many input:first').val('New line').trigger('input');
-            form.$el.click(); // click outside to save a line
+            testUtils.fields.editInput(form.$('.o_field_one2many input:first'), 'New line');
+            testUtils.dom.click(form.$el);
 
-            assert.strictEqual(form.$('th').length, 2, "should be 2 columns('foo' + 'int_field')");
+            assert.containsN(form, 'th', 2, "should be 2 columns('foo' + 'int_field')");
 
             form.destroy();
         });
@@ -8156,18 +8115,18 @@ QUnit.module('fields', {}, function () {
                         '</tree>',
                 },
             });
-            assert.strictEqual(form.$('th').length, 2,
+            assert.containsN(form, 'th', 2,
                 "should be 2 columns in the one2many");
-            form.$buttons.find('.o_form_button_edit').click();
-            form.$('.o_field_many2one[name="product_id"] input').click();
-            $('li.ui-menu-item a:contains(xpad)').trigger('mouseenter').click();
-            assert.strictEqual(form.$('th').length, 1,
+            testUtils.form.clickEdit(form);
+            testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
+            testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            assert.containsOnce(form, 'th',
                 "should be 1 column when the product_id is set");
             form.$('.o_field_many2one[name="product_id"] input').val('').trigger('keyup');
-            assert.strictEqual(form.$('th').length, 2,
+            assert.containsN(form, 'th', 2,
                 "should be 2 columns in the one2many when product_id is not set");
-            form.$('.o_field_boolean[name="bar"] input').click();
-            assert.strictEqual(form.$('th').length, 1,
+            testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            assert.containsOnce(form, 'th',
                 "should be 1 column after the value change");
             form.destroy();
         });

@@ -32,7 +32,7 @@ var createViewer = function (params) {
             return $.when();
         }
     };
-    testUtils.addMockEnvironment(parent, {
+    testUtils.mock.addMockEnvironment(parent, {
         mockRPC: function () {
             if (params.mockRPC) {
                 var _super = this._super;
@@ -82,19 +82,19 @@ QUnit.module('DocumentViewer', {
             attachments: this.attachments,
         });
 
-        assert.strictEqual(viewer.$('.o_viewer_content').length, 1,
+        assert.containsOnce(viewer, '.o_viewer_content',
             "there should be a preview");
-        assert.strictEqual(viewer.$('.o_close_btn').length, 1,
+        assert.containsOnce(viewer, '.o_close_btn',
             "there should be a close button");
-        assert.strictEqual(viewer.$('.o_viewer-header').length, 1,
+        assert.containsOnce(viewer, '.o_viewer-header',
             "there should be a header");
-        assert.strictEqual(viewer.$('.o_image_caption').length, 1,
+        assert.containsOnce(viewer, '.o_image_caption',
             "there should be an image caption");
-        assert.strictEqual(viewer.$('.o_viewer_zoomer').length, 1,
+        assert.containsOnce(viewer, '.o_viewer_zoomer',
             "there should be a zoomer");
-        assert.strictEqual(viewer.$('.fa-chevron-right').length, 1,
+        assert.containsOnce(viewer, '.fa-chevron-right',
             "there should be a right nav icon");
-        assert.strictEqual(viewer.$('.fa-chevron-left').length, 1,
+        assert.containsOnce(viewer, '.fa-chevron-left',
             "there should be a left nav icon");
 
         viewer.destroy();
@@ -120,14 +120,14 @@ QUnit.module('DocumentViewer', {
             },
         });
 
-        assert.strictEqual(viewer.$('.o_page_number_input').length, 1,
+        assert.containsOnce(viewer, '.o_page_number_input',
             "pdf should have a page input");
-        assert.strictEqual(viewer.$('.o_remainder_input').length, 1,
+        assert.containsOnce(viewer, '.o_remainder_input',
             "pdf should have a remainder checkbox");
-        assert.strictEqual(viewer.$('.o_split_btn').length, 1,
+        assert.containsOnce(viewer, '.o_split_btn',
             "pdf should have a split button");
 
-        viewer.$('.o_split_btn').click();
+        testUtils.dom.click(viewer.$('.o_split_btn'));
 
         assert.ok(viewer.isDestroyed(), 'viewer should be destroyed');
     });
@@ -149,7 +149,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('urlYoutubeName')").length, 1,
             "the viewer should be on the right attachment");
-        assert.strictEqual(viewer.$('.o_viewer_text[data-src="' + youtubeURL + '"]').length, 1,
+        assert.containsOnce(viewer, '.o_viewer_text[data-src="' + youtubeURL + '"]',
             "there should be a video player");
 
         viewer.destroy();
@@ -165,7 +165,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('text.html')").length, 1,
             "the viewer be on the right attachment");
-        assert.strictEqual(viewer.$('iframe[data-src="/web/content/4"]').length, 1,
+        assert.containsOnce(viewer, 'iframe[data-src="/web/content/4"]',
             "there should be an iframe with the right src");
 
         viewer.destroy();
@@ -181,7 +181,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('video.mp4')").length, 1,
             "the viewer be on the right attachment");
-        assert.strictEqual(viewer.$('.o_viewer_video').length, 1,
+        assert.containsOnce(viewer, '.o_viewer_video',
             "there should be a video player");
 
         viewer.destroy();
@@ -197,7 +197,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('image.jpg')").length, 1,
             "the viewer be on the right attachment");
-        assert.strictEqual(viewer.$('img[data-src="/web/image/6?unique=1&signature=999"]').length, 1,
+        assert.containsOnce(viewer, 'img[data-src="/web/image/6?unique=1&signature=999"]',
             "there should be a video player");
 
         viewer.destroy();
@@ -211,12 +211,12 @@ QUnit.module('DocumentViewer', {
             attachments: this.attachments,
         });
 
-        assert.strictEqual(viewer.$('.o_viewer_content').length, 1,
+        assert.containsOnce(viewer, '.o_viewer_content',
             "should have a document viewer");
-        assert.strictEqual(viewer.$('.o_close_btn').length, 1,
+        assert.containsOnce(viewer, '.o_close_btn',
             "should have a close button");
 
-        viewer.$('.o_close_btn').click();
+        testUtils.dom.click(viewer.$('.o_close_btn'));
 
         assert.ok(viewer.isDestroyed(), 'viewer should be destroyed');
     });
@@ -229,12 +229,12 @@ QUnit.module('DocumentViewer', {
             attachments: this.attachments,
         });
 
-        assert.strictEqual(viewer.$('.o_viewer_content').length, 1,
+        assert.containsOnce(viewer, '.o_viewer_content',
             "should have a document viewer");
-        assert.strictEqual(viewer.$('.o_viewer_img_wrapper').length, 1,
+        assert.containsOnce(viewer, '.o_viewer_img_wrapper',
             "should have a wrapper");
 
-        viewer.$('.o_viewer_img_wrapper').click();
+        testUtils.dom.click(viewer.$('.o_viewer_img_wrapper'));
 
         assert.ok(viewer.isDestroyed(), 'viewer should be destroyed');
     });

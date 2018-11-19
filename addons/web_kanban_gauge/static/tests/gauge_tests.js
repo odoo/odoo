@@ -38,7 +38,7 @@ QUnit.module('basic_fields', {
                 '</t></templates></kanban>',
         });
 
-        assert.strictEqual(kanban.$('.o_kanban_record:first .oe_gauge svg').length, 1,
+        assert.containsOnce(kanban, '.o_kanban_record:first .oe_gauge svg',
             "should render the gauge widget");
 
         kanban.destroy();

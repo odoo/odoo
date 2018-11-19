@@ -67,26 +67,26 @@ QUnit.module('section_and_note', {
         // section should be displayed correctly
         var $tr0 = form.$('tr.o_data_row:eq(0)');
 
-        assert.strictEqual($tr0.hasClass('o_is_line_section'), false,
+        assert.doesNotHaveClass($tr0, 'o_is_line_section',
             "should not have a section class");
 
         var $tr1 = form.$('tr.o_data_row:eq(1)');
 
-        assert.strictEqual($tr1.hasClass('o_is_line_section'), true,
+        assert.hasClass($tr1, 'o_is_line_section',
             "should have a section class");
 
         // enter edit mode
-        form.$buttons.find('.o_form_button_edit').click();
+        testUtils.form.clickEdit(form);
 
         // editing line should be textarea
         $tr0 = form.$('tr.o_data_row:eq(0)');
-        $tr0.find('td.o_data_cell').click();
+        testUtils.dom.click($tr0.find('td.o_data_cell'));
         assert.strictEqual($tr0.find('td.o_data_cell textarea[name="name"]').length, 1,
             "editing line should be textarea");
 
         // editing section should be input
         $tr1 = form.$('tr.o_data_row:eq(1)');
-        $tr1.find('td.o_data_cell').click();
+        testUtils.dom.click($tr1.find('td.o_data_cell'));
         assert.strictEqual($tr1.find('td.o_data_cell input[name="name"]').length, 1,
             "editing section should be input");
 

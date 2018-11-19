@@ -81,7 +81,8 @@ QUnit.module('DebugManager', {}, function () {
         assert.strictEqual($attachmentMenu.length, 1, "should have Manage Attachments menu item");
         assert.strictEqual($attachmentMenu.text().trim(), "Manage Attachments",
             "should have correct menu item text");
-        $attachmentMenu.click();
+        testUtils.dom.click(debugManager.$('> a')); // open dropdown
+        testUtils.dom.click($attachmentMenu);
 
         debugManager.destroy();
     });
@@ -152,14 +153,15 @@ QUnit.module('DebugManager', {}, function () {
         debugManager.update('action', action, form);
 
         // click on set_defaults dropdown
-        debugManager.$('a[data-action="set_defaults"]').click();
+        testUtils.dom.click(debugManager.$('> a')); // open dropdown
+        testUtils.dom.click(debugManager.$('a[data-action="set_defaults"]'));
         var $modal = $('.modal-content');
         assert.strictEqual($modal.length, 1, 'One modal present');
 
         $modal.find('select[id=formview_default_fields] option[value=foo]').prop('selected', true);
 
         // Save
-        $modal.find('.modal-footer button').eq(1).click();
+        testUtils.dom.click($modal.find('.modal-footer button').eq(1));
 
         form.destroy();
         debugManager.destroy();

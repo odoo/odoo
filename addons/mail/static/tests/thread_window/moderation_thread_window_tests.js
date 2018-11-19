@@ -74,7 +74,7 @@ QUnit.module('Moderation', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            testUtils.addMockEnvironment(widget, params);
+            testUtils.mock.addMockEnvironment(widget, params);
             return widget;
         };
     },

@@ -49,7 +49,9 @@ QUnit.module('Mail DebugManager', {}, function () {
         assert.strictEqual($messageMenu.length, 1, "should have Manage Message menu item");
         assert.strictEqual($messageMenu.text().trim(), "Manage Messages",
             "should have correct menu item text");
-        $messageMenu.click();
+
+        testUtils.dom.click(debugManager.$('> a')); // open dropdown
+        testUtils.dom.click($messageMenu);
 
         debugManager.destroy();
     });

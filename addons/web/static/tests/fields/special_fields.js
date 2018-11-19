@@ -208,7 +208,7 @@ QUnit.module('special_fields', {
                     '<field name="tz" widget="timezone_mismatch"/>' +
                 '</form>',
         });
-        form.$buttons.find('.o_form_button_edit').click();
+        testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('select').length, 1, "should have the select field");
         form.destroy();
     });
