@@ -12,13 +12,6 @@ class Channel(models.Model):
         self.env['mail.bot']._apply_logic(self, kwargs, command="help")  # kwargs are not usefull but...
 
     @api.model
-    def channel_fetch_listeners(self, uuid):
-        """ Return the id, name and email of partners listening to the given channel """
-        result = super().channel_fetch_listeners(uuid)
-        odoobot = self.env.ref("base.partner_root").sudo()
-        return result + [{'id': odoobot.id, 'name': odoobot.name, 'email': odoobot.email}]
-
-    @api.model
     def init_odoobot(self):
         if self.env.user.odoobot_state == 'not_initialized':
             partner = self.env.user.partner_id
