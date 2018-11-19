@@ -864,6 +864,8 @@ class AccountBankStatementLine(models.Model):
             :returns: The journal entries with which the transaction was matched. If there was at least an entry in counterpart_aml_dicts or new_aml_dicts, this list contains
                 the move created by the reconciliation, containing entries for the statement.line (1), the counterpart move lines (0..*) and the new move lines (0..*).
         """
+        payable_account_type = self.env.ref('account.data_account_type_payable')
+        receivable_account_type = self.env.ref('account.data_account_type_receivable')
         counterpart_aml_dicts = counterpart_aml_dicts or []
         payment_aml_rec = payment_aml_rec or self.env['account.move.line']
         new_aml_dicts = new_aml_dicts or []
@@ -884,10 +886,20 @@ class AccountBankStatementLine(models.Model):
                 raise UserError(_('A selected move line was already reconciled.'))
             if isinstance(aml_dict['move_line'], pycompat.integer_types):
                 aml_dict['move_line'] = aml_obj.browse(aml_dict['move_line'])
+
+        partner_accounts = self.env['account.account']
         for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
             if aml_dict.get('tax_ids') and isinstance(aml_dict['tax_ids'][0], pycompat.integer_types):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = [(4, id, None) for id in aml_dict['tax_ids']]
+
+            account_id = aml_dict.get('account_id')
+            account = self.env['account.account'].browse(account_id)
+            if account.user_type_id in [
+                payable_account_type,
+                receivable_account_type
+            ]:
+                partner_accounts |= account
         if any(line.journal_entry_ids for line in self):
             raise UserError(_('A selected statement line was already reconciled with an account move.'))
 
@@ -913,20 +925,41 @@ class AccountBankStatementLine(models.Model):
             # Create The payment
             payment = self.env['account.payment']
             if abs(total)>0.00001:
-                partner_id = self.partner_id and self.partner_id.id or False
+                partner = self.partner_id or False
                 partner_type = False
-                if partner_id:
-                    if total < 0:
-                        partner_type = 'supplier'
-                    else:
-                        partner_type = 'customer'
+                # Check based on account type whether we have a payment for receivable (customer) or payable (supplier) accounts and fallback in case none of them are used
+                if partner and partner != self.env.user.company_id.partner_id:
+                    for account in partner_accounts:
+                        block = False
+                        if account.user_type_id == payable_account_type:
+                            if partner_type == 'customer':
+                                block = True
+                            partner_type = 'supplier'
+                        elif account.user_type_id == receivable_account_type:
+                            if partner_type == 'supplier':
+                                block = True
+                            partner_type = 'customer'
+                        if block:
+                            raise UserError(
+                                'It is not supported to create a payment through reconciliation widget for a payable AND a receivable in the same statement line.\n'
+                                'Please do create these moves manually.'
+                            )
+
+                    if not partner_type:
+                        if total < 0:
+                            partner_type = 'supplier'
+                        else:
+                            partner_type = 'customer'
+                # Do not allow to create a payment without partner on a payable or a receivable account
+                elif partner_accounts:
+                    raise UserError('You need to define a partner for this statement line in order to create a payment with a payable or a receivable account.')
 
                 payment_methods = (total>0) and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
                 currency = self.journal_id.currency_id or self.company_id.currency_id
                 payment = self.env['account.payment'].create({
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
                     'payment_type': total >0 and 'inbound' or 'outbound',
-                    'partner_id': self.partner_id and self.partner_id.id or False,
+                    'partner_id': partner and partner.id or False,
                     'partner_type': partner_type,
                     'journal_id': self.statement_id.journal_id.id,
                     'payment_date': self.date,
