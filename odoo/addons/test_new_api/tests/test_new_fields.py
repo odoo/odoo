@@ -587,20 +587,42 @@ class TestFields(common.TransactionCase):
                                         'value': tag0, 'type': 'many2one'})
 
         # create/modify a record, and check the value for each user
-        record = self.env['test_new_api.company'].create({'foo': 'main', 'tag_id': tag1})
+        record = self.env['test_new_api.company'].create({
+            'foo': 'main',
+            'date': '1932-11-09',
+            'moment': '1932-11-09 00:00:00',
+            'tag_id': tag1.id,
+        })
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'default')
         self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(record.sudo(user0).date, '1932-11-09')
+        self.assertEqual(record.sudo(user1).date, False)
+        self.assertEqual(record.sudo(user2).date, False)
+        self.assertEqual(record.sudo(user0).moment, '1932-11-09 00:00:00')
+        self.assertEqual(record.sudo(user1).moment, False)
+        self.assertEqual(record.sudo(user2).moment, False)
         self.assertEqual(record.sudo(user0).tag_id, tag1)
         self.assertEqual(record.sudo(user1).tag_id, tag0)
         self.assertEqual(record.sudo(user2).tag_id, tag0)
 
-        record.sudo(user1).write({'foo': 'alpha', 'tag_id': tag2.id})
+        record.sudo(user1).write({
+            'foo': 'alpha',
+            'date': '1932-12-10',
+            'moment': '1932-12-10 23:59:59',
+            'tag_id': tag2.id,
+        })
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'alpha')
         self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(record.sudo(user0).date, '1932-11-09')
+        self.assertEqual(record.sudo(user1).date, '1932-12-10')
+        self.assertEqual(record.sudo(user2).date, False)
+        self.assertEqual(record.sudo(user0).moment, '1932-11-09 00:00:00')
+        self.assertEqual(record.sudo(user1).moment, '1932-12-10 23:59:59')
+        self.assertEqual(record.sudo(user2).moment, False)
         self.assertEqual(record.sudo(user0).tag_id, tag1)
         self.assertEqual(record.sudo(user1).tag_id, tag2)
         self.assertEqual(record.sudo(user2).tag_id, tag0)
