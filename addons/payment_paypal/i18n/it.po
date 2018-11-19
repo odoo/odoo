@@ -5,15 +5,16 @@
 # Translators:
 # Paolo Valier, 2018
 # Martin Trigaux, 2018
-# Alessandro Forte <a.forte1010@gmail.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:20+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,17 +30,17 @@ msgstr "Token di accesso"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
 msgid "Access Token Validity"
-msgstr "Validità Token Accesso"
+msgstr "Validità token di accesso"
 
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
-msgstr "Come configurare il tuo account paypal?"
+msgstr "Come configurare l'account PayPal."
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Acquirente di pagamento"
+msgstr "Servizio di pagamento"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_pdt_token
@@ -47,16 +48,18 @@ msgid ""
 "Payment Data Transfer allows you to receive notification of successful "
 "payments as they are made."
 msgstr ""
+"Il PDT (trasferimento dati di pagamento) consente di ricevere notifiche dei "
+"pagamenti andati a buon fine."
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transazione Pagamento"
+msgstr "Transazione di pagamento"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
 msgid "Paypal Email ID"
-msgstr "Paypal Email ID"
+msgstr "ID email PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
@@ -66,7 +69,7 @@ msgstr "Notifica immediata di pagamento PayPal"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
 msgid "Paypal Merchant ID"
-msgstr "ID Commerciante PayPal"
+msgstr "ID commerciante PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_pdt_token
@@ -77,17 +80,17 @@ msgstr "Token PDT PayPal"
 #: code:addons/payment_paypal/models/payment.py:138
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr "Paypal: ricevuti dati con riferimenti mancanti (%s) o txn_id (%s)"
+msgstr "PayPal: ricevuti dati con riferimento (%s) o txn_id (%s) mancante"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
 msgid "Rest API Password"
-msgstr "Rest API Password"
+msgstr "Password API REST"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
 msgid "Rest API Username"
-msgstr "Rest API Username"
+msgstr "Nome utente API REST"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
@@ -95,8 +98,8 @@ msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
 msgstr ""
-"L'ID Commerciante PayPal è utilizzato per assicurarsi che le comunicazioni "
-"provenienti da PayPal siano valide e protette."
+"L'ID commerciante PayPal è usato per garantire che le comunicazioni da "
+"PayPal siano valide e protette."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
@@ -106,9 +109,9 @@ msgstr "Tipo di transazione"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
 msgid "Use IPN"
-msgstr "Usa IPN"
+msgstr "Usare IPN"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
 msgid "Use Rest API"
-msgstr "Usa API REST"
+msgstr "Usare API REST"

@@ -392,9 +392,17 @@ var StatementModel = BasicModel.extend({
                     };
                 });
             });
+        var domainReconcile = [];
+        if (context && context.company_ids) {
+            domainReconcile.push(['company_id', 'in', context.company_ids]);
+        }
+        if (context && context.active_model === 'account.journal' && context.active_ids) {
+            domainReconcile.push(['journal_id', 'in', [false].concat(context.active_ids)]);
+        }
         var def_reconcileModel = this._rpc({
                 model: 'account.reconcile.model',
                 method: 'search_read',
+                domain: domainReconcile,
             })
             .then(function (reconcileModels) {
                 self.reconcileModels = reconcileModels;
@@ -1171,9 +1179,15 @@ var ManualModel = StatementModel.extend({
                 self.accounts = _.object(self.account_ids, _.pluck(accounts, 'code'));
             });
 
+        var domainReconcile = [];
+        var company_ids = context && context.company_ids || [session.company_id]
+        if (company_ids) {
+            domainReconcile.push(['company_id', 'in', company_ids]);
+        }
         var def_reconcileModel = this._rpc({
                 model: 'account.reconcile.model',
                 method: 'search_read',
+                domain: domainReconcile,
             })
             .then(function (reconcileModels) {
                 self.reconcileModels = reconcileModels;
