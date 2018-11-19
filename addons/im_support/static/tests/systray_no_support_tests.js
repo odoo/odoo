@@ -38,15 +38,14 @@ QUnit.test('messaging menu does not display the Support channel if not available
     assert.expect(1);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
-        0, "should not display the Support channel");
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsNone(messagingMenu, '.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]', "should not display the Support channel");
 
     messagingMenu.destroy();
 });

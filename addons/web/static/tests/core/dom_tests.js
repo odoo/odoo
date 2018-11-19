@@ -2,6 +2,7 @@ odoo.define('web.dom_tests', function (require) {
 "use strict";
 
 var dom = require('web.dom');
+var testUtils = require('web.test_utils');
 
 /**
  * Create an autoresize text area with 'border-box' as box sizing rule.
@@ -43,7 +44,7 @@ QUnit.module('dom', {}, function () {
             $fixedTextarea[0].scrollHeight + 'px',
             "autoresized textarea should have height of fixed textarea + padding (0 line)");
 
-        $textarea.val('a\nb\nc\nd').trigger('input');
+        testUtils.fields.editInput($textarea, 'a\nb\nc\nd');
         assert.strictEqual($textarea.css('height'),
             $fixedTextarea[0].scrollHeight + 'px',
             "autoresized textarea should have height of fixed textarea + padding (4 lines)");
@@ -63,7 +64,7 @@ QUnit.module('dom', {}, function () {
             expectedTextAreaHeight + 'px',
             "autoresized textarea should have height of fixed textarea + padding (0 line)");
 
-        $textarea.val('a\nb\nc\nd').trigger('input');
+        testUtils.fields.editInput($textarea, 'a\nb\nc\nd');
         // twice the padding of 10px
         expectedTextAreaHeight = $fixedTextarea[0].scrollHeight + 2*10;
         assert.strictEqual($textarea.css('height'),
@@ -88,7 +89,7 @@ QUnit.module('dom', {}, function () {
             expectedTextAreaHeight + 'px',
             "autoresized textarea should have height of fixed textarea + border (0 line)");
 
-        $textarea.val('a\nb\nc\nd').trigger('input');
+        testUtils.fields.editInput($textarea, 'a\nb\nc\nd');
         // top (2px) + bottom (3px) borders
         expectedTextAreaHeight = $fixedTextarea[0].scrollHeight + (2 + 3);
         assert.strictEqual($textarea.css('height'),
@@ -114,7 +115,7 @@ QUnit.module('dom', {}, function () {
             expectedTextAreaHeight + 'px',
             "autoresized textarea should have height of fixed textarea + border (0 line)");
 
-        $textarea.val('a\nb\nc\nd').trigger('input');
+        testUtils.fields.editInput($textarea, 'a\nb\nc\nd');
         // twice padding (10px) + top (2px) + bottom (3px) borders
         expectedTextAreaHeight = $fixedTextarea[0].scrollHeight + (2*10 + 2 + 3);
         assert.strictEqual($textarea.css('height'),

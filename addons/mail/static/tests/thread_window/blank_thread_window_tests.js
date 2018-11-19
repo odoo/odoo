@@ -44,7 +44,7 @@ QUnit.module('Blank', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            testUtils.addMockEnvironment(widget, params);
+            testUtils.mock.addMockEnvironment(widget, params);
             return widget;
         };
 
@@ -125,7 +125,7 @@ QUnit.test('close blank thread window', function (assert) {
     // open blank thread window
     parent.call('mail_service', 'openBlankThreadWindow');
 
-    $('.o_thread_window_close').click();
+    testUtils.dom.click($('.o_thread_window_close'));
 
     assert.strictEqual($('.o_thread_window').length, 0,
         "blank thread window should be closed");
@@ -147,7 +147,7 @@ QUnit.test('fold blank thread window', function (assert) {
     var HEIGHT_OPEN = AbstractThreadWindow.prototype.HEIGHT_OPEN;
 
     // Make fold animation instantaneous
-    testUtils.patch(AbstractThreadWindow, {
+    testUtils.mock.patch(AbstractThreadWindow, {
         FOLD_ANIMATION_DURATION: 0,
     });
 
@@ -159,12 +159,12 @@ QUnit.test('fold blank thread window', function (assert) {
         console.warn('Assertion above may fail due to too narrow height of browser');
     }
 
-    $('.o_thread_window_title').click();
+    testUtils.dom.click($('.o_thread_window_title'));
     assert.strictEqual($('.o_thread_window').css('height'), HEIGHT_FOLDED,
         "blank thread window should be open");
 
     parent.destroy();
-    testUtils.unpatch(AbstractThreadWindow);
+    testUtils.mock.unpatch(AbstractThreadWindow);
 });
 
 QUnit.test('open new DM chat from blank thread window', function (assert) {
@@ -224,7 +224,7 @@ QUnit.test('open new DM chat from blank thread window', function (assert) {
         assert.strictEqual($('.ui-menu-item a').eq(1).text(), "DemoUser2",
             "second suggestion should be 'DemoUser2'");
 
-        $('.ui-menu-item a').eq(0).click();
+        testUtils.dom.click($('.ui-menu-item a').eq(0));
     });
     selectDef.then(function () {
         assert.strictEqual($('.o_thread_window').length, 1,
@@ -299,7 +299,7 @@ QUnit.test('open already detached DM chat from blank thread window', function (a
     $('.o_thread_search_input input').val("D").trigger('keydown');
 
     $.when(sourceDef, def).then(function () {
-        $('.ui-menu-item a').eq(0).click();
+        testUtils.dom.click($('.ui-menu-item a').eq(0));
     });
     selectDef.then(function () {
         assert.strictEqual($('.o_thread_window').length, 1,

@@ -38,7 +38,7 @@ QUnit.test('note activity menu widget: create note from activity menu', function
     assert.expect(15);
     var self = this;
     var activityMenu = new ActivityMenu();
-    testUtils.addMockEnvironment(activityMenu, {
+    testUtils.mock.addMockEnvironment(activityMenu, {
         services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
@@ -72,52 +72,52 @@ QUnit.test('note activity menu widget: create note from activity menu', function
         },
     });
     activityMenu.appendTo($('#qunit-fixture'));
-    assert.ok(activityMenu.$el.hasClass('o_mail_systray_item'),
+    assert.hasClass(activityMenu.$el,'o_mail_systray_item',
         'should be the instance of widget');
     assert.strictEqual(activityMenu.$('.o_notification_counter').text(), '0',
         "should not have any activity notification initially");
 
     // toggle quick create for note
-    activityMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(activityMenu.$('.o_no_activity').length, 1,
+    testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    assert.containsOnce(activityMenu, '.o_no_activity',
         "should not have any activity preview");
-    assert.strictEqual(activityMenu.$('.o_note_show').hasClass('d-none'), false,
+    assert.doesNotHaveClass(activityMenu.$('.o_note_show'), 'd-none',
         'ActivityMenu should have Add new note CTA');
-    activityMenu.$('.o_note_show').click();
-    assert.strictEqual(activityMenu.$('.o_note_show').hasClass('d-none'), true,
+    testUtils.dom.click(activityMenu.$('.o_note_show'));
+    assert.hasClass(activityMenu.$('.o_note_show'), 'd-none',
         'ActivityMenu should hide CTA when entering a new note');
-    assert.strictEqual(activityMenu.$('.o_note').hasClass('d-none'), false,
+    assert.doesNotHaveClass(activityMenu.$('.o_note'), 'd-none',
         'ActivityMenu should display input for new note');
 
     // creating quick note without date
     activityMenu.$("input.o_note_input").val("New Note");
-    activityMenu.$(".o_note_save").click();
+    testUtils.dom.click(activityMenu.$(".o_note_save"));
     assert.strictEqual(activityMenu.$('.o_notification_counter').text(), '1',
         "should increment activity notification counter after creating a note");
-    assert.strictEqual(activityMenu.$('.o_mail_preview[data-res_model="note.note"]').length, 1,
+    assert.containsOnce(activityMenu, '.o_mail_preview[data-res_model="note.note"]',
         "should have an activity preview that is a note");
     assert.strictEqual(activityMenu.$('.o_activity_filter_button[data-filter="today"]').text().trim(),
         "1 Today",
         "should display one note for today");
 
-    assert.strictEqual(activityMenu.$('.o_note_show').hasClass('d-none'), false,
+    assert.doesNotHaveClass(activityMenu.$('.o_note_show'), 'd-none',
         'ActivityMenu add note button should be displayed');
-    assert.strictEqual(activityMenu.$('.o_note').hasClass('d-none'), true,
+    assert.hasClass(activityMenu.$('.o_note'), 'd-none',
         'ActivityMenu add note input should be hidden');
 
     // creating quick note with date
-    activityMenu.$('.o_note_show').click();
+    testUtils.dom.click(activityMenu.$('.o_note_show'));
     activityMenu.$('input.o_note_input').val("New Note");
-    activityMenu.$('.o_note_set_datetime').click();
-    activityMenu.$(".o_note_save").click();
+    testUtils.dom.click(activityMenu.$('.o_note_set_datetime'));
+    testUtils.dom.click(activityMenu.$(".o_note_save"));
     assert.strictEqual(activityMenu.$('.o_notification_counter').text(), '2',
         "should increment activity notification counter after creating a second note");
     assert.strictEqual(activityMenu.$('.o_activity_filter_button[data-filter="today"]').text().trim(),
         "2 Today",
         "should display 2 notes for today");
-    assert.strictEqual(activityMenu.$('.o_note_show').hasClass('d-none'), false,
+    assert.doesNotHaveClass(activityMenu.$('.o_note_show'), 'd-none',
         'ActivityMenu add note button should be displayed');
-    assert.strictEqual(activityMenu.$('.o_note').hasClass('d-none'), true,
+    assert.hasClass(activityMenu.$('.o_note'), 'd-none',
         'ActivityMenu add note input should be hidden');
     activityMenu.destroy();
 });

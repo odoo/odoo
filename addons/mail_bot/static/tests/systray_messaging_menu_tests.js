@@ -28,7 +28,7 @@ QUnit.module('MessagingMenu', {
         // the detection of push notifications permissions can be simulated in
         // the test cases. By default, shows 'OdooBot has a request'
         this.hasMailbotRequest = true;
-        testUtils.patch(MailBotService, {
+        testUtils.mock.patch(MailBotService, {
             /**
              * @override
              */
@@ -48,7 +48,7 @@ QUnit.module('MessagingMenu', {
     },
     afterEach: function () {
         // unpatch MailBotService
-        testUtils.unpatch(MailBotService);
+        testUtils.mock.unpatch(MailBotService);
     }
 });
 
@@ -56,19 +56,19 @@ QUnit.test('messaging menu widget: rendering with OdooBot has a request', functi
     assert.expect(5);
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    assert.strictEqual(messagingMenu.$('.o_notification_counter').length, 1,
+    assert.containsOnce(messagingMenu, '.o_notification_counter',
         "should display a notification counter next to the messaging menu");
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
         "should display a counter of '1' next to the messaging menu");
 
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_preview_info').length, 1,
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_preview_info',
         "should display a preview in the messaging menu");
     assert.strictEqual(messagingMenu.$('.o_preview_name').text().trim(),
         'OdooBot has a request',
@@ -85,18 +85,18 @@ QUnit.test('messaging menu widget: rendering without OdooBot has a request', fun
     this.hasMailbotRequest = false;
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    assert.strictEqual(messagingMenu.$('.o_notification_counter').length, 1,
+    assert.containsOnce(messagingMenu, '.o_notification_counter',
         "should display a notification counter next to the messaging menu");
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
         "should display a counter of '0' next to the messaging menu");
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_preview_info').length, 0,
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsNone(messagingMenu, '.o_preview_info',
         "should display no preview in the messaging menu");
 
     messagingMenu.destroy();

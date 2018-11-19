@@ -213,11 +213,11 @@ QUnit.test('basic rendering', function (assert) {
         "there should be a followers widget, moved inside the chatter's topbar");
     assert.ok(form.$('.o_chatter').length, "there should be a chatter widget");
     assert.ok(form.$('.o_mail_thread').length, "there should be a mail thread");
-    assert.strictEqual(form.$('.o_chatter_button_attachment').length, 1, "should have one attachment button");
+    assert.containsOnce(form, '.o_chatter_button_attachment', "should have one attachment button");
     assert.ok(!form.$('.o_chatter_topbar .o_chatter_button_log_note').length,
         "log note button should not be available");
 
-    form.$buttons.find('.o_form_button_edit').click();
+    testUtils.form.clickEdit(form);
     assert.strictEqual(count, 0, "should have done no read_followers rpc as there are no followers");
     assert.strictEqual(unwanted_read_count, 0, "followers should only be fetched with read_followers route");
     form.destroy();
@@ -234,7 +234,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
 
     var shownDef = $.Deferred();
     var hiddenDef = $.Deferred();
-    testUtils.patch(Activity, {
+    testUtils.mock.patch(Activity, {
         _bindPopoverFocusout: function () {
             this._super.apply(this, arguments);
             shownDef.resolve();
@@ -265,7 +265,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
     $popoverEl.on('hidden.bs.popover', hiddenDef.resolve.bind(hiddenDef));
 
     // open popover
-    $popoverEl.click();
+    testUtils.dom.click($popoverEl);
 
     shownDef.then(function () {
         // write a feedback and focusout
@@ -276,7 +276,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
             shownDef = $.Deferred();
 
             // re-open popover
-            $popoverEl.click();
+            testUtils.dom.click($popoverEl);
 
             shownDef.then(function () {
                 var $feedbackPopover = $($popoverEl.data('bs.popover').tip);
@@ -284,7 +284,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
                     "feedback should have been kept");
 
                 form.destroy();
-                testUtils.unpatch(Activity);
+                testUtils.mock.unpatch(Activity);
                 done();
             });
         });
@@ -308,18 +308,32 @@ QUnit.test('attachmentBox basic rendering', function (assert) {
                     '<field name="foo"/>' +
                 '</sheet>' +
                 '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
                 '</div>' +
             '</form>',
         res_id: 7,
+        mockRPC: function (route, args) {
+            var result = this._super.apply(this, arguments);
+            if (args.method === 'read' && args.model === 'partner') {
+                return result.then(function (records) {
+                    // here we force the attachment_count to 1 (which is correct
+                    // actually), so that the attachment button is visible
+                    // FIXME: this could be handled by an extension of mockRead
+                    records[0].message_attachment_count = 1;
+                    return records;
+                });
+            }
+            return result;
+        },
     });
     var $button = form.$('.o_chatter_button_attachment');
     assert.strictEqual($button.length, 1, "should have one attachment button");
-    $button.click();
-    assert.strictEqual(form.$('.o_mail_chatter_attachments').length, 1,
+    testUtils.dom.click($button);
+    assert.containsOnce(form, '.o_mail_chatter_attachments',
         "attachment widget should exist after a first click on the button");
-    assert.strictEqual(form.$('.o_attachment_image').length, 1, "there should be an image preview");
-    assert.strictEqual(form.$('.o_attachments_previews').length, 1, "there should be a list of previews");
-    assert.strictEqual(form.$('.o_attachments_list').length, 1, "there should be a list of non previewable attachments");
+    assert.containsOnce(form, '.o_attachment_image', "there should be an image preview");
+    assert.containsOnce(form, '.o_attachments_previews', "there should be a list of previews");
+    assert.containsOnce(form, '.o_attachments_list', "there should be a list of non previewable attachments");
     assert.strictEqual(form.$('.o_attachment_title').text(), 'name1',
         "the image name should be correct");
     // since there are two elements "Download name2"; one "name" and the other "txt" as text content, the following test
@@ -328,13 +342,12 @@ QUnit.test('attachmentBox basic rendering', function (assert) {
         "the attachment name should be correct");
     assert.ok(form.$('.o_attachment_image').css('background-image').indexOf('/web/image/1/160x160/?crop=true') >= 0,
         "the attachment image URL should be correct");
-    assert.strictEqual(form.$('.o_attachment_download').eq(0).attr('href'), '/web/content/1?download=true',
+    assert.hasAttrValue(form.$('.o_attachment_download').eq(0), 'href', '/web/content/1?download=true',
         "the download URL of name1 must be correct");
-    assert.strictEqual(form.$('.o_attachment_download').eq(1).attr('href'), '/web/content/2?download=true',
+    assert.hasAttrValue(form.$('.o_attachment_download').eq(1), 'href', '/web/content/2?download=true',
         "the download URL of name2 must be correct");
-    $button.click();
-    assert.strictEqual(form.$('.o_mail_chatter_attachments').length, 0,
-        "attachment widget should de destroyed after we reclick the button");
+    testUtils.dom.click($button);
+    assert.containsNone(form, '.o_mail_chatter_attachments')
     form.destroy();
 });
 
@@ -363,14 +376,14 @@ QUnit.test('chatter in create mode', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_chatter').length, 1,
+    assert.containsOnce(form, '.o_chatter',
         "chatter should be displayed");
 
     // entering create mode
-    form.$buttons.find('.o_form_button_create').click();
-    assert.ok(form.$el.find('.o_form_view').hasClass('o_form_editable'),
+    testUtils.form.clickCreate(form);
+    assert.hasClass(form.$el.find('.o_form_view'),'o_form_editable',
         "we should be in create mode");
-    assert.strictEqual(form.$('.o_chatter').length, 1,
+    assert.containsOnce(form, '.o_chatter',
         "chatter should still be displayed in create mode");
 
     // topbar buttons disabled in create mode (e.g. 'send message')
@@ -378,24 +391,24 @@ QUnit.test('chatter in create mode', function (assert) {
         "button should be disabled in create mode");
 
     // chatter containing a single message with 'Creating a record...'
-    assert.strictEqual(form.$('.o_mail_thread').length, 1,
+    assert.containsOnce(form, '.o_mail_thread',
         "there should be a mail thread");
-    assert.strictEqual(form.$('.o_thread_message').length, 1,
+    assert.containsOnce(form, '.o_thread_message',
         "there should be a single thread message");
     assert.strictEqual(form.$('.o_thread_message_content').text().trim(),
         "Creating a new record...",
         "the content of the message should be 'Creating a new record...'");
 
     // getting out of create mode by saving
-    form.$('.o_field_char').val('coucou').trigger('input');
-    form.$buttons.find('.o_form_button_save').click();
+    testUtils.fields.editInput(form.$('.o_field_char'), 'coucou');
+    testUtils.form.clickSave(form);
 
-    assert.strictEqual(form.$('.o_chatter').length, 1,
+    assert.containsOnce(form, '.o_chatter',
         "chatter should still be displayed after saving from create mode");
 
     // check if chatter buttons still work
-    form.$('.o_chatter_button_new_message').click();
-    assert.strictEqual(form.$('.o_thread_composer:visible').length, 1,
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    assert.containsOnce(form, '.o_thread_composer:visible',
         "chatter should be opened");
 
     form.destroy();
@@ -430,25 +443,25 @@ QUnit.test('chatter rendering inside the sheet', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_chatter').length, 1,
+    assert.containsOnce(form, '.o_chatter',
         "chatter should be displayed");
 
-    form.$buttons.find('.o_form_button_create').click();
-    assert.ok(form.$el.find('.o_form_view').hasClass('o_form_editable'),
+    testUtils.form.clickCreate(form);
+    assert.hasClass(form.$el.find('.o_form_view'),'o_form_editable',
         "we should be in create mode");
 
-    assert.strictEqual(form.$('.o_chatter').length, 1,
+    assert.containsOnce(form, '.o_chatter',
         "chatter should be displayed");
 
-    form.$('.o_field_char').val('coucou').trigger('input');
-    form.$buttons.find('.o_form_button_save').click();
+    testUtils.fields.editInput(form.$('.o_field_char'), 'coucou');
+    testUtils.form.clickSave(form);
 
-    assert.strictEqual(form.$('.o_chatter').length, 1,
+    assert.containsOnce(form, '.o_chatter',
         "chatter should be displayed");
 
     // check if chatter buttons still work
-    form.$('.o_chatter_button_new_message').click();
-    assert.strictEqual(form.$('.o_thread_composer:visible').length, 1,
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    assert.containsOnce(form, '.o_thread_composer:visible',
         "chatter should be opened");
 
     form.destroy();
@@ -481,7 +494,7 @@ QUnit.test('kanban activity widget with no activity', function (assert) {
     assert.strictEqual(rpcCount, 1, '1 RPC (search_read) should have been done');
 
     // click on the activity button
-    $record.find('.o_activity_btn').click();
+    testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 1, 'no RPC should have been done as there is no activity');
     assert.strictEqual($record.find('.o_no_activity').length, 1, "should have no activity scheduled");
 
@@ -535,7 +548,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
     assert.strictEqual(rpcCount, 1, '1 RPC (search_read) should have been done');
 
     // click on the activity button
-    $record.find('.o_activity_btn').click();
+    testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 2, 'a read should have been done to fetch the activity details');
     assert.strictEqual($record.find('.o_activity_title').length, 1, "should have an activity scheduled");
     var label = $record.find('.o_activity_log .o_activity_color_today');
@@ -543,16 +556,16 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
     assert.strictEqual(label.find('.badge-warning').text(), "1", "should display the correct count");
 
     // click on the activity button to close the dropdown
-    $record.find('.o_activity_btn').click();
+    testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 2, 'no RPC should be done when closing the dropdown');
 
     // click on the activity button to re-open dropdown
-    $record.find('.o_activity_btn').click();
+    testUtils.dom.click($record.find('.o_activity_btn'));
     assert.strictEqual(rpcCount, 3, 'should have reloaded the activities');
 
     // mark activity as done
-    $record.find('.o_mark_as_done').click();
-    $record.find('.o_activity_popover_done').click();
+    testUtils.dom.click($record.find('.o_mark_as_done'));
+    testUtils.dom.click($record.find('.o_activity_popover_done'));
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
     assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
     assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
@@ -605,17 +618,17 @@ QUnit.test('kanban activity widget popover test', function (assert) {
 
     var $record = kanban.$('.o_kanban_record').first();
 
-    $record.find('.o_activity_btn').click();
+    testUtils.dom.click($record.find('.o_activity_btn'));
 
     // Click on button and see popover no RPC call
-    $record.find('.o_mark_as_done').click();
+    testUtils.dom.click($record.find('.o_mark_as_done'));
     assert.equal(rpcCount, 0, "");
     // Click on discard no RPC call
-    $record.find('.o_activity_popover_discard').click();
+    testUtils.dom.click($record.find('.o_activity_popover_discard'));
     assert.equal(rpcCount, 0, "");
     // Click on button and then on done and schedule next
     // RPC call
-    $record.find('.o_activity_popover_done_next').click();
+    testUtils.dom.click($record.find('.o_activity_popover_done_next'));
     assert.equal(rpcCount, 1, "");
 
     kanban.destroy();
@@ -708,7 +721,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
 
     assert.ok(form.$('.o_chatter_topbar .o_chatter_button_log_note').length,
         "log note button should be available");
-    assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain one message");
+    assert.containsOnce(form, '.o_thread_message', "thread should contain one message");
     assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
         "the message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('A message') >= 0,
@@ -717,12 +730,12 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         "the message's author should be correct");
 
     // send a message
-    form.$('.o_chatter_button_new_message').click();
-    assert.ok(!$('.oe_chatter .o_thread_composer').hasClass('o_hidden'), "chatter should be opened");
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    assert.isVisible($('.oe_chatter .o_thread_composer'), "chatter should be opened");
     form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
-    form.$('.oe_chatter .o_composer_button_send').click();
-    assert.ok($('.oe_chatter .o_thread_composer').hasClass('o_hidden'), "chatter should be closed");
-    assert.strictEqual(form.$('.o_thread_message').length, 2, "thread should contain two messages");
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
+    assert.isNotVisible($('.oe_chatter .o_thread_composer'), "chatter should be closed");
+    assert.containsN(form, '.o_thread_message', 2, "thread should contain two messages");
     assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
         "the last message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
@@ -731,12 +744,12 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         "the message's author should be correct");
 
     // log a note
-    form.$('.o_chatter_button_log_note').click();
-    assert.ok(!$('.oe_chatter .o_thread_composer').hasClass('o_hidden'), "chatter should be opened");
+    testUtils.dom.click(form.$('.o_chatter_button_log_note'));
+    assert.isVisible($('.oe_chatter .o_thread_composer'), "chatter should be opened");
     form.$('.oe_chatter .o_composer_text_field:first()').val("My first note");
-    form.$('.oe_chatter .o_composer_button_send').click();
-    assert.ok($('.oe_chatter .o_thread_composer').hasClass('o_hidden'), "chatter should be closed");
-    assert.strictEqual(form.$('.o_thread_message').length, 3, "thread should contain three messages");
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
+    assert.isNotVisible($('.oe_chatter .o_thread_composer'), "chatter should be closed");
+    assert.containsN(form, '.o_thread_message', 3, "thread should contain three messages");
     assert.ok(!form.$('.o_thread_message:first().o_mail_discussion').length,
         "the last message should not be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first note') >= 0,
@@ -747,17 +760,17 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     // star message 2
     assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.fa-star-o').length,
         "message 2 should not be starred");
-    form.$('.o_thread_message[data-message-id=2] .o_thread_message_star').click();
+    testUtils.dom.click(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star'));
     assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.fa-star').length,
         "message 2 should be starred");
 
     // unstar message 2
-    form.$('.o_thread_message[data-message-id=2] .o_thread_message_star').click();
+    testUtils.dom.click(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star'));
     assert.ok(form.$('.o_thread_message[data-message-id=2] .o_thread_message_star.fa-star-o').length,
         "message 2 should not be starred");
 
     // very basic test of mention
-    form.$('.o_chatter_button_new_message').click();
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
     var $input = form.$('.oe_chatter .o_composer_text_field:first()');
     $input.val('@');
     // the cursor position must be set for the mention manager to detect that we are mentionning
@@ -771,7 +784,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     getSuggestionsDef
         .then(concurrency.delay.bind(concurrency, 0))
         .then(function () {
-            assert.strictEqual(form.$('.o_mention_proposition:visible').length, 1,
+            assert.containsOnce(form, '.o_mention_proposition:visible',
                 "there should be one mention suggestion");
             assert.strictEqual(form.$('.o_mention_proposition').data('id'), 1,
                 "suggestion's id should be correct");
@@ -822,12 +835,12 @@ QUnit.test('chatter: post a message disable the send button', function(assert) {
         },
     });
 
-    form.$('.o_chatter_button_new_message').click();
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
     assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
         "Send button should be enabled when posting a message");
     form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
-    form.$('.oe_chatter .o_composer_button_send').click();
-    form.$('.o_chatter_button_new_message').click();
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
     assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
         "Send button should be enabled when posting another message");
     form.destroy();
@@ -867,11 +880,11 @@ QUnit.test('chatter: post message failure keep message', function(assert) {
         },
     });
 
-    form.$('.o_chatter_button_new_message').click();
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
     assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
         "Send button should be enabled initially");
     form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
-    form.$('.oe_chatter .o_composer_button_send').click();
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
     assert.strictEqual(form.$('.o_composer_text_field').val(), "My first message",
         "Should keep unsent message in the composer on failure");
     assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
@@ -1019,19 +1032,19 @@ QUnit.test('chatter: post a message and switch in edit mode', function (assert) 
         },
     });
 
-    assert.strictEqual(form.$('.o_thread_message').length, 0, "thread should not contain messages");
+    assert.containsNone(form, '.o_thread_message', "thread should not contain messages");
 
     // send a message
-    form.$('.o_chatter_button_new_message').click();
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
     form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
-    form.$('.oe_chatter .o_composer_button_send').click();
-    assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain a message");
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
+    assert.containsOnce(form, '.o_thread_message', "thread should contain a message");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
         "the message's body should be correct");
 
     // switch in edit mode
-    form.$buttons.find('.o_form_button_edit').click();
-    assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain a message");
+    testUtils.form.clickEdit(form);
+    assert.containsOnce(form, '.o_thread_message', "thread should contain a message");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
         "the message's body should be correct");
 
@@ -1072,12 +1085,12 @@ QUnit.test('chatter: discard changes on message post with post_refresh "always"'
     });
 
     // Make record dirty
-    form.$('.o_form_sheet input').val('trululu').trigger('input');
+    testUtils.fields.editInput(form.$('.o_form_sheet input'), 'trululu');
 
     // Send a message
-    form.$('.o_chatter_button_new_message').click();
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
     form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
-    form.$('.oe_chatter .o_composer_button_send').click();
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 1, "should have a modal opened");
@@ -1149,12 +1162,12 @@ QUnit.test('chatter: discard changes on message post without post_refresh', func
     });
 
     // Make record dirty
-    form.$('.o_form_sheet input').val('trululu').trigger('input');
+    testUtils.fields.editInput(form.$('.o_form_sheet input'), 'trululu');
 
     // Send a message
-    form.$('.o_chatter_button_new_message').click();
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
     form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
-    form.$('.oe_chatter .o_composer_button_send').click();
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 0, "should have no modal opened");
@@ -1227,10 +1240,10 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
     });
 
     // Make record dirty
-    form.$('.o_form_sheet input').val('trululu').trigger('input');
+    testUtils.fields.editInput(form.$('.o_form_sheet input'), 'trululu');
 
     // create a new message
-    form.$('.o_chatter_button_new_message').click();
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
 
     // Add a user as mention
     form.$('.oe_chatter .o_composer_text_field:first()').val("@");
@@ -1252,7 +1265,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
             form.$('input[type="checkbox"]').prop('checked', false);
 
             // send message
-            form.$('.oe_chatter .o_composer_button_send').click();
+            testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
 
             var $modal = $('.modal-dialog');
             assert.strictEqual($modal.length, 1, "should have a modal opened");
@@ -1301,11 +1314,11 @@ QUnit.test('chatter: discard changes on opening full-composer', function (assert
     });
 
     // Make record dirty
-    form.$('.o_form_sheet input').val('trululu').trigger('input');
+    testUtils.fields.editInput(form.$('.o_form_sheet input'), 'trululu');
 
     // Open full-composer
-    form.$('.o_chatter_button_new_message').click();
-    form.$('.o_composer_button_full_composer').click();
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    testUtils.dom.click(form.$('.o_composer_button_full_composer'));
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 1, "should have a modal opened");
@@ -1350,7 +1363,7 @@ QUnit.test('chatter in x2many form view', function (assert) {
         },
     });
 
-    form.$('.o_data_row:first').click();
+    testUtils.dom.click(form.$('.o_data_row:first'));
 
     assert.strictEqual($('.modal .o_form_view').length, 1,
         "should have open a form view in a modal");
@@ -1426,28 +1439,28 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
             return this._super.apply(this, arguments);
         },
     });
-    assert.strictEqual(form.$('.o_thread_message .o_attachment').length, 4,
+    assert.containsN(form, '.o_thread_message .o_attachment', 4,
         "there should be three attachment on message");
-    assert.strictEqual(form.$('.o_thread_message .o_attachment a').first().attr('href'), '/web/content/1?download=true',
+    assert.hasAttrValue(form.$('.o_thread_message .o_attachment a').first(), 'href', '/web/content/1?download=true',
         "image caption should have correct download link");
     // click on first image attachement
-    form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first().click();
+    testUtils.dom.click(form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first());
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1&signature=999"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
-    $('.modal .arrow.arrow-right.move_next span').click();
+    testUtils.dom.click($('.modal .arrow.arrow-right.move_next span'));
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1&signature=999"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
         "Modal popup should have download button");
     // close attachment popup
-    $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
+    testUtils.dom.click($('.o_modal_fullscreen .o_viewer-header .o_close_btn'));
     // click on pdf attachement
-    form.$('span:contains(Test PDF 1)').click();
+    testUtils.dom.click(form.$('span:contains(Test PDF 1)'));
     assert.strictEqual($('.o_modal_fullscreen iframe[data-src*="/web/content/4"]').length, 1,
         "Modal popup should open with the pdf preview");
     // close attachment popup
-    $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
+    testUtils.dom.click($('.o_modal_fullscreen .o_viewer-header .o_close_btn'));
     form.destroy();
 });
 
@@ -1491,13 +1504,13 @@ QUnit.test('form activity widget: read RPCs', function (assert) {
     });
 
     assert.strictEqual(nbReads, 1, "should have read the activities");
-    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+    assert.containsOnce(form, '.o_mail_activity .o_thread_message',
         "should display an activity");
     assert.strictEqual(form.$('.o_mail_activity .o_thread_message .o_activity_date').text(),
         'Today', "the activity should be today");
 
-    form.$buttons.find('.o_form_button_edit').click();
-    form.$buttons.find('.o_form_button_save').click();
+    testUtils.form.clickEdit(form);
+    testUtils.form.clickSave(form);
 
     assert.strictEqual(nbReads, 1, "should not have re-read the activities");
 
@@ -1569,7 +1582,7 @@ QUnit.test('form activity widget with another x2many field in view', function (a
         res_id: 2,
     });
 
-    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+    assert.containsOnce(form, '.o_mail_activity .o_thread_message',
         "should display an activity");
 
     form.destroy();
@@ -1621,11 +1634,11 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         },
     });
     //Schedule next activity
-    form.$('.o_mail_activity .o_mark_as_done[data-activity-id=1]').click();
-    assert.strictEqual(form.$('.o_mail_activity_feedback.popover').length, 1,
+    testUtils.dom.click(form.$('.o_mail_activity .o_mark_as_done[data-activity-id=1]'));
+    assert.containsOnce(form, '.o_mail_activity_feedback.popover',
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
-    form.$('.o_activity_popover_done_next').click(); // schedule next activity
+    testUtils.dom.click(form.$('.o_activity_popover_done_next'));
     form.destroy();
 });
 
@@ -1686,10 +1699,10 @@ QUnit.test('form activity widget: edit next activity', function (assert) {
             },
         },
     });
-    assert.strictEqual(form.$('.o_mail_activity .o_mail_info strong:eq(1)').text(), " Type 2", 
+    assert.strictEqual(form.$('.o_mail_activity .o_mail_info strong:eq(1)').text(), " Type 2",
         "Initial type should be Type 2");
-    form.$('.o_mail_activity .o_edit_activity[data-activity-id=1]').click();
-    assert.strictEqual(form.$('.o_mail_activity .o_mail_info strong:eq(1)').text(), " Type 1", 
+    testUtils.dom.click(form.$('.o_mail_activity .o_edit_activity[data-activity-id=1]'));
+    assert.strictEqual(form.$('.o_mail_activity .o_mail_info strong:eq(1)').text(), " Type 1",
         "After edit type should be Type 1");
     form.destroy();
 });
@@ -1752,12 +1765,12 @@ QUnit.test('form activity widget: clic mail template', function (assert) {
             },
         },
     });
-    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+    assert.containsOnce(form, '.o_mail_activity .o_thread_message',
         "we should have one activity");
-    assert.strictEqual(form.$('.o_activity_template_preview').length, 1,
+    assert.containsOnce(form, '.o_activity_template_preview',
         "Activity should contains one mail template");
-    form.$('.o_activity_template_preview[data-template-id=100]').click();
-    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+    testUtils.dom.click(form.$('.o_activity_template_preview[data-template-id=100]'));
+    assert.containsOnce(form, '.o_mail_activity .o_thread_message',
         "activity should still be there");
     form.destroy();
 });
@@ -1797,13 +1810,13 @@ QUnit.test('form activity widget: schedule activity does not discard changes', f
     });
 
     // update value of foo field
-    form.$('.o_field_widget[name=foo]').val('new value').trigger('input');
+    testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'new value');
 
     // schedule an activity (this triggers a do_action)
-    form.$('.o_chatter_button_schedule_activity').click();
+    testUtils.dom.click(form.$('.o_chatter_button_schedule_activity'));
 
     // save the record
-    form.$buttons.find('.o_form_button_save').click();
+    testUtils.form.clickSave(form);
 
     form.destroy();
 });
@@ -1887,12 +1900,12 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 2,
+    assert.containsN(form, '.o_mail_activity .o_thread_message', 2,
         "there should be two activities");
 
     // remove activity 1
-    form.$('.o_mail_activity .o_unlink_activity[data-activity-id=1]').click();
-    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+    testUtils.dom.click(form.$('.o_mail_activity .o_unlink_activity[data-activity-id=1]'));
+    assert.containsOnce(form, '.o_mail_activity .o_thread_message',
         "there should be one remaining activity");
     assert.ok(!form.$('.o_mail_activity .o_unlink_activity[data-activity-id=1]').length,
         "activity 1 should have been removed");
@@ -1900,16 +1913,15 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
     // mark activity done
     assert.ok(!form.$('.o_mail_thread .o_thread_message').length,
         "there should be no chatter message");
-    form.$('.o_mail_activity .o_mark_as_done[data-activity-id=2]').click();
-    assert.strictEqual(form.$('.o_mail_activity_feedback.popover').length, 1,
+    testUtils.dom.click(form.$('.o_mail_activity .o_mark_as_done[data-activity-id=2]'));
+    assert.containsOnce(form, '.o_mail_activity_feedback.popover',
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
-    form.$('.o_activity_popover_done').click(); // send feedback
-    assert.strictEqual(form.$('.o_mail_activity_feedback.popover').length, 0,
-        "the feedback popover should be closed");
+    testUtils.dom.click(form.$('.o_activity_popover_done'));
+    assert.containsNone(form, '.o_mail_activity_feedback.popover')
     assert.ok(!form.$('.o_mail_activity .o_thread_message').length,
         "there should be no more activity");
-    assert.strictEqual(form.$('.o_mail_thread .o_thread_message').length, 1,
+    assert.containsOnce(form, '.o_mail_thread .o_thread_message',
         "a chatter message should have been generated");
     assert.strictEqual(form.$('.o_thread_message:contains(The activity has been done)').length, 1,
         "the message's body should be correct");
@@ -2002,29 +2014,29 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
         'should display the "Follow" button');
 
     // click to follow the document
-    form.$('.o_followers_follow_button').click();
+    testUtils.dom.click(form.$('.o_followers_follow_button'));
     assert.strictEqual(form.$('.o_followers_count').text(), "1", 'should have one follower');
     assert.ok(form.$('.o_followers_follow_button.o_followers_following').length,
         'should display the "Following/Unfollow" button');
-    assert.strictEqual(form.$('.o_followers_list .o_partner').length, 1,
+    assert.containsOnce(form, '.o_followers_list .o_partner',
         "there should be one follower in the follower dropdown");
 
     // edit the subtypes
-    assert.strictEqual(form.$('.o_subtypes_list .o_subtype').length, 3,
+    assert.containsN(form, '.o_subtypes_list .o_subtype', 3,
         'subtype list should contain 3 subtypes');
-    assert.strictEqual(form.$('.o_subtypes_list .o_subtype_checkbox:checked').length, 2,
+    assert.containsN(form, '.o_subtypes_list .o_subtype_checkbox:checked', 2,
         'two subtypes should be checked by default');
-    form.$('.o_subtypes_list .dropdown-toggle').click(); // click to open the dropdown
+    testUtils.dom.click(form.$('.o_subtypes_list .dropdown-toggle'));
     assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should be opened');
-    form.$('.o_subtypes_list .o_subtype input[data-id=2]').click(); // uncheck second subtype
+    testUtils.dom.click(form.$('.o_subtypes_list .o_subtype input[data-id=2]'));
     assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should remain opened');
     assert.ok(!form.$('.o_subtypes_list .o_subtype_checkbox[data-id=2]:checked').length,
         'second subtype should now be unchecked');
 
     // click to unfollow
-    form.$('.o_followers_follow_button').click(); // click to open the dropdown
+    testUtils.dom.click(form.$('.o_followers_follow_button'));
     assert.ok($('.modal').length, 'a confirm modal should be opened');
-    $('.modal .modal-footer .btn-primary').click(); // click on 'OK'
+    testUtils.dom.click($('.modal .modal-footer .btn-primary'));
     assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
     assert.ok(form.$('.o_followers_follow_button.o_followers_notfollow').length,
         'should display the "Follow" button');
@@ -2093,7 +2105,7 @@ QUnit.test('followers widget: do not display follower duplications', function (a
 
     assert.strictEqual(form.$('.o_followers_count').text(), '2',
         "should have 2 followers");
-    assert.strictEqual(form.$('.o_followers_list .o_partner').length, 2,
+    assert.containsN(form, '.o_followers_list .o_partner', 2,
         "there should be 2 followers in the follower dropdown");
 
     form.destroy();
@@ -2209,19 +2221,19 @@ QUnit.test('chatter: do not duplicate messages on (un)star message', function (a
         session: {},
     });
 
-    assert.strictEqual(form.$('.o_thread_message').length, 1,
+    assert.containsOnce(form, '.o_thread_message',
         "there should be a single message in the chatter");
     assert.ok(form.$('.o_thread_message .o_thread_message_star.fa-star-o').length,
         "message should not be starred");
 
     // star message
-    form.$('.o_thread_message .o_thread_message_star').click();
-    assert.strictEqual(form.$('.o_thread_message').length, 1,
+    testUtils.dom.click(form.$('.o_thread_message .o_thread_message_star'));
+    assert.containsOnce(form, '.o_thread_message',
         "there should still be a single message in the chatter after starring the message");
 
     // unstar message
-    form.$('.o_thread_message .o_thread_message_star').click();
-    assert.strictEqual(form.$('.o_thread_message').length, 1,
+    testUtils.dom.click(form.$('.o_thread_message .o_thread_message_star'));
+    assert.containsOnce(form, '.o_thread_message',
         "there should still be a single message in the chatter after unstarring the message");
 
     //cleanup
@@ -2263,9 +2275,9 @@ QUnit.test('chatter: new messages on document without any "display_name"', funct
         session: {},
     });
 
-    assert.strictEqual(form.$('.o_thread_message').length, 1,
+    assert.containsOnce(form, '.o_thread_message',
         "should have a single message in the chatter");
-    assert.strictEqual(form.$('.o_thread_message[data-message-id="1"]').length, 1,
+    assert.containsOnce(form, '.o_thread_message[data-message-id="1"]',
         "single message should have ID 1");
 
     // Simulate a new message in the chatter
@@ -2285,11 +2297,11 @@ QUnit.test('chatter: new messages on document without any "display_name"', funct
 
     form.reload();
 
-    assert.strictEqual(form.$('.o_thread_message').length, 2,
+    assert.containsN(form, '.o_thread_message', 2,
         "should have a two messages in the chatter after reload");
-    assert.strictEqual(form.$('.o_thread_message[data-message-id="1"]').length, 1,
+    assert.containsOnce(form, '.o_thread_message[data-message-id="1"]',
         "one of the message should have ID 1");
-    assert.strictEqual(form.$('.o_thread_message[data-message-id="2"]').length, 1,
+    assert.containsOnce(form, '.o_thread_message[data-message-id="2"]',
         "the other message should have ID 2");
 
     //cleanup
@@ -2399,25 +2411,25 @@ QUnit.test('chatter: suggested partner auto-follow on message post', function (a
         session: {},
     });
 
-    assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain one message");
+    assert.containsOnce(form, '.o_thread_message', "thread should contain one message");
     assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
         "the message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('A message') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('John Doe') >= 0,
         "the message's author should be correct");
-    assert.strictEqual(form.$('.o_followers').length, 1,
+    assert.containsOnce(form, '.o_followers',
         "should display follower widget");
     assert.strictEqual(form.$('.o_followers_count').text(), "1",
         "should have a single follower (widget counter)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner').length, 1,
+    assert.containsOnce(form, '.o_followers_list > div.o_partner',
         "should have a single follower (listed partners)");
     assert.strictEqual(form.$('.o_followers_list > div.o_partner > a').text(), "Admin",
         "should have 'Admin' as follower");
 
     // open composer
-    form.$('.o_chatter_button_new_message').click();
-    assert.ok(!$('.oe_chatter .o_thread_composer').hasClass('o_hidden'), "chatter should be opened");
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    assert.isVisible($('.oe_chatter .o_thread_composer'), "chatter should be opened");
     assert.strictEqual($('.o_composer_suggested_partners').length, 1,
         "should display suggested partners");
     assert.strictEqual($('.o_composer_suggested_partners > div').length, 1,
@@ -2433,11 +2445,11 @@ QUnit.test('chatter: suggested partner auto-follow on message post', function (a
 
     // send message
     form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
-    form.$('.oe_chatter .o_composer_button_send').click();
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
 
     assert.strictEqual(form.$('.o_followers_count').text(), "2",
         "should have a two followers (widget counter)");
-    assert.strictEqual(form.$('.o_followers_list > div.o_partner').length, 2,
+    assert.containsN(form, '.o_followers_list > div.o_partner', 2,
         "should have two followers (listed partners)");
     assert.strictEqual(form.$('.o_followers_list > div.o_partner > a[data-oe-id="5"]').text(),
         "Admin",
@@ -2630,12 +2642,12 @@ QUnit.test('fieldmany2many tags email', function (assert) {
     }).then(function (form) {
         // should read it 3 times (1 with the form view, one with the form dialog and one after save)
         assert.verifySteps([[12, 14], [14], [14]]);
-        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 2,
+        assert.containsN(form, '.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0', 2,
             "two tags should be present");
         var firstTag = form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').first();
         assert.strictEqual(firstTag.find('.o_badge_text').text(), "gold",
             "tag should only show display_name");
-        assert.strictEqual(firstTag.find('.o_badge_text').attr('title'), "coucou@petite.perruche",
+        assert.hasAttrValue(firstTag.find('.o_badge_text'), 'title', "coucou@petite.perruche",
             "tag should show email address on mouse hover");
         form.destroy();
         done();
@@ -2649,8 +2661,8 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         "there should be an email field in the modal");
 
     // set the email and save the modal (will render the form view)
-    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
-    $('.modal-footer .btn-primary').click();
+    testUtils.fields.editInput($('.modal-body.o_act_window input[name="email"]'), 'coucou@petite.perruche');
+    testUtils.dom.click($('.modal-footer .btn-primary'));
 });
 
 QUnit.test('fieldmany2many tags email (edition)', function (assert) {
@@ -2685,13 +2697,12 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     });
 
     assert.verifySteps([[12]]);
-    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 1,
+    assert.containsOnce(form, '.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0',
         "should contain one tag");
 
     // add an other existing tag
-    var $input = form.$('.o_field_many2manytags input');
-    $input.click(); // opens the dropdown
-    $input.autocomplete('widget').find('li:first').click(); // add 'silver'
+    testUtils.fields.many2one.clickOpenDropdown('timmy');
+    testUtils.fields.many2one.clickHighlightedItem('timmy');
 
     assert.strictEqual($('.modal-body.o_act_window').length, 1,
         "there should be one modal opened to edit the empty email");
@@ -2701,10 +2712,10 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
         "there should be an email field in the modal");
 
     // set the email and save the modal (will rerender the form view)
-    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
-    $('.modal-footer .btn-primary').click();
+    testUtils.fields.editInput($('.modal-body.o_act_window input[name="email"]'), 'coucou@petite.perruche');
+    testUtils.dom.click($('.modal-footer .btn-primary'));
 
-    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 2,
+    assert.containsN(form, '.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0', 2,
         "should contain the second tag");
     // should have read [14] three times: when opening the dropdown, when opening the modal, and
     // after the save

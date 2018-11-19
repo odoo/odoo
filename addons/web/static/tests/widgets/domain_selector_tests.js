@@ -60,7 +60,7 @@ QUnit.module('DomainSelector', {
             readonly: false,
             debugMode: true,
         });
-        testUtils.addMockEnvironment(domainSelector, {data: this.data});
+        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         domainSelector.appendTo($target);
 
         // As we gave an empty domain, there should be a visible button to add
@@ -71,7 +71,7 @@ QUnit.module('DomainSelector', {
 
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
-        $domainAddFirstNodeButton.click();
+        testUtils.dom.click($domainAddFirstNodeButton);
         var $fieldSelector = domainSelector.$(".o_field_selector:visible");
         assert.strictEqual($fieldSelector.length, 1,
             "there should be a field selector");
@@ -97,7 +97,7 @@ QUnit.module('DomainSelector', {
 
         // Clicking the "Bar" field should change the internal domain and this
         // should be displayed in the debug input
-        $barLi.click();
+        testUtils.dom.click($barLi);
         assert.strictEqual(
             domainSelector.$(".o_domain_debug_input").val(),
             '[["bar","=",True]]',
@@ -108,7 +108,7 @@ QUnit.module('DomainSelector', {
         // should add the default "['id', '=', 1]" domain
         var $plus = domainSelector.$(".fa-plus-circle");
         assert.strictEqual($plus.length, 1, "there should be a '+' button");
-        $plus.click();
+        testUtils.dom.click($plus);
         assert.strictEqual(
             domainSelector.$(".o_domain_debug_input").val(),
             '["&",["bar","=",True],["id","=",1]]',
@@ -119,7 +119,7 @@ QUnit.module('DomainSelector', {
         // domains and the "|" operator
         var $dots = domainSelector.$(".fa-ellipsis-h");
         assert.strictEqual($dots.length, 2, "there should be two '...' buttons");
-        $dots.first().click();
+        testUtils.dom.click($dots.first());
         assert.strictEqual(
             domainSelector.$(".o_domain_debug_input").val(),
             '["&","&",["bar","=",True],"|",["id","=",1],["id","=",1],["id","=",1]]',
@@ -140,8 +140,8 @@ QUnit.module('DomainSelector', {
         // "foo" fields, with the initial "&" operator
         var $minus = domainSelector.$(".o_domain_delete_node_button");
         assert.strictEqual($minus.length, 5, "there should be five 'x' buttons");
-        $minus.last().click();
-        domainSelector.$(".o_domain_delete_node_button").last().click();
+        testUtils.dom.click($minus.last());
+        testUtils.dom.click(domainSelector.$(".o_domain_delete_node_button").last());
         assert.strictEqual(
             domainSelector.$(".o_domain_debug_input").val(),
             '["&",["bar","=",True],["foo","=","hello"]]',
@@ -159,7 +159,7 @@ QUnit.module('DomainSelector', {
         var domainSelector = new DomainSelector(null, "partner", [["nice_datetime", "=", "2017-03-27 15:42:00"]], {
             readonly: false,
         });
-        testUtils.addMockEnvironment(domainSelector, {data: this.data});
+        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         domainSelector.appendTo($target);
 
         // Check that there is a datepicker to choose the date
@@ -168,8 +168,8 @@ QUnit.module('DomainSelector', {
             "there should be a datepicker");
 
         var val = $datepicker.find('input').val();
-        testUtils.openDatepicker($datepicker);
-        $('.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]').click();
+        testUtils.dom.openDatepicker($datepicker);
+        testUtils.dom.clickFirst($('.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]'));
         assert.notEqual(domainSelector.$(".o_datepicker:visible input").val(), val,
             "datepicker value should have changed");
 
@@ -186,10 +186,10 @@ QUnit.module('DomainSelector', {
             debugMode: true,
             readonly: false,
         });
-        testUtils.addMockEnvironment(domainSelector, {data: this.data});
+        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         domainSelector.appendTo($target);
 
-        domainSelector.$('.o_domain_leaf_value_input').val('pad').trigger('input').trigger('change');
+        testUtils.fields.editAndTrigger(domainSelector.$('.o_domain_leaf_value_input'), 'pad', ['input', 'change']);
         assert.strictEqual(domainSelector.$('.o_domain_debug_input').val(), '[["product_id","ilike","pad"]]',
             "string should have been allowed as m2o value");
 
@@ -206,7 +206,7 @@ QUnit.module('DomainSelector', {
             debugMode: true,
             readonly: false,
         });
-        testUtils.addMockEnvironment(domainSelector, {data: this.data});
+        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         domainSelector.appendTo($target);
 
         assert.strictEqual(domainSelector.$el.text(), "This domain is not supported.",
@@ -226,12 +226,12 @@ QUnit.module('DomainSelector', {
             debugMode: true,
             default: [["foo","=","kikou"]],
         });
-        testUtils.addMockEnvironment(domainSelector, {data: this.data});
+        testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         domainSelector.appendTo($target);
 
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
-        domainSelector.$(".o_domain_add_first_node_button:visible").click();
+        testUtils.dom.click(domainSelector.$(".o_domain_add_first_node_button:visible"));
 
         assert.strictEqual(
             domainSelector.$(".o_domain_debug_input").val(),
