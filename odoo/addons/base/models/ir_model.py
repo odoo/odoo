@@ -1471,17 +1471,20 @@ class IrModelData(models.Model):
 
         # rows to insert
         rowf = "(%s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')"
-        rows = set()
+        rows = tools.OrderedSet()
         for data in data_list:
             prefix, suffix = data['xml_id'].split('.', 1)
             record = data['record']
             noupdate = bool(data.get('noupdate'))
-            rows.add((prefix, suffix, record._name, record.id, noupdate))
-            # also create XML ids for parent records
+            # First create XML ids for parent records, then create XML id for
+            # record. The order reflects their actual creation order. This order
+            # is relevant for the uninstallation process: the record must be
+            # deleted before its parent records.
             for parent_model, parent_field in record._inherits.items():
                 parent = record[parent_field]
                 puffix = suffix + '_' + parent_model.replace('.', '_')
                 rows.add((prefix, puffix, parent._name, parent.id, noupdate))
+            rows.add((prefix, suffix, record._name, record.id, noupdate))
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
