@@ -5,31 +5,18 @@ import random
 import re
 from collections import Counter
 from itertools import product
-
 from werkzeug import urls
 
 from odoo import _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.survey.tests import common
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase
 
-class TestSurvey(TransactionCase):
+
+class TestSurvey(common.SurveyCase):
 
     def setUp(self):
         super(TestSurvey, self).setUp()
-        User = self.env['res.users'].with_context({'no_reset_password': True})
-        (group_survey_user, group_employee) = (self.ref('survey.group_survey_user'), self.ref('base.group_user'))
-        self.survey_manager = User.create({
-            'name': 'Gustave Doré', 'login': 'Gustav','email': 'gustav.dore@example.com',
-            'groups_id': [(6, 0, [self.ref('survey.group_survey_manager'), group_survey_user, group_employee])]})
-
-        self.survey_user = User.create({
-            'name': 'Lukas Peeters', 'login': 'Lukas', 'email': 'lukas.petters@example.com',
-            'groups_id': [(6, 0, [group_survey_user, group_employee])]})
-
-        self.user_public = User.create({
-            'name': 'Wout Janssens', 'login': 'Wout', 'email': 'wout.janssens@example.com',
-            'groups_id': [(6, 0, [self.ref('base.group_public')])]})
 
         self.survey1 = self.env['survey.survey'].sudo(self.survey_manager).create({'title': "S0", 'page_ids': [(0, 0, {'title': "P0"})]})
         self.page1 = self.survey1.page_ids[0]
