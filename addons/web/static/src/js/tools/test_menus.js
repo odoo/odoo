@@ -14,7 +14,7 @@
         var Discuss = odoo.__DEBUG__.services['mail.Discuss'];
         var WebClient = odoo.__DEBUG__.services["web.WebClient"];
 
-        WebClient.include({ 
+        WebClient.include({
             current_action_updated : function (action, controller) {
                 this._super(action, controller);
                 clientActionCount++;
@@ -57,7 +57,7 @@
         if (isEnterprise) {
             console.log("Odoo flavor: Enterprise")
             var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-            $homeMenu.click()
+            testUtils.dom.click($homeMenu);
             $listOfAppMenuItems = $(".o_app, .o_menuitem")
         } else {
             console.log("Odoo flavor: Community")
@@ -73,10 +73,10 @@
             console.log("ok");
         }).always(function() {
             console.log("Test took ", (performance.now() - startTime)/1000, " seconds");
-        }).fail(function () { 
+        }).fail(function () {
             console.error("Error !")
         });
-    } 
+    }
 
 
     /**
@@ -101,7 +101,7 @@
         }).then(function(){
                 // no effect in community
                 var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-                $homeMenu.click();
+                testUtils.dom.click($homeMenu);
         });
     }
 
@@ -119,7 +119,7 @@
         console.log("Testing menu", element.innerText.trim(), " ", element.dataset.menuXmlid);
         testedMenus.push(element.dataset.menuXmlid);
         var startActionCount = clientActionCount;
-        element.click();
+        testUtils.dom.click(element);
         var isModal = false;
         return waitForCondition(function() {
             // sometimes, the app is just a modal that needs to be closed
@@ -173,7 +173,7 @@
         setTimeout(function() {
             var $element = $("nav.o_cp_switch_buttons > button[data-view-type=" + viewType + "]");
             console.log('Clicking on: ', $element[0].dataset.viewType,  ' view switcher');
-            $element.click();
+            testUtils.dom.click($element);
         },250);
         var waitViewSwitch = waitForCondition(function(){
             return $('.o_content > .o_view_controller').data('view-type') === viewType;
@@ -203,16 +203,16 @@
                     return $.Deferred().resolve();
                 };
                 console.log('Clicking on filter "', $filter.text().trim(), '"');
-                $filter[0].click();
+                testUtils.dom.click($filter[0]);
                 setTimeout(function() {
                     var $filterOption = $('.o_menu_item .o_item_option[data-item_id="' + filter_id + '"]:not(.selected) a');
                     // In case the filter is a date filter, we need to click on the first filter option (like 'today','This week' ...)
                     if ($filterOption.length > 0) {
                         console.log('Clicking on filter option "', $filterOption[0], '"');
-                        $filterOption[0].click();
+                        testUtils.dom.click($filterOption[0]);
                         console.log('And now on filter again');
                         $filter = $('.o_menu_item[data-id="' + filter_id + '"] a');
-                        $filter[0].click(); // To avoid that the next view fold the options
+                        testUtils.dom.click($filter[0]);
                     }
                 }, 250);
                 return waitForCondition(function() {
@@ -251,7 +251,7 @@
         return def;
     };
 
-    
+
     /**
      * chain deferred actions
      * @param $elements: a list of jquery elements to be passed as arg to the function

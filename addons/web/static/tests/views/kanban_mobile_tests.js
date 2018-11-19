@@ -72,29 +72,29 @@ QUnit.module('Views', {
         });
 
         // basic rendering tests
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns" );
-        assert.ok(kanban.$('.o_kanban_mobile_tab:first').hasClass('o_current'),
+        assert.containsN(kanban, '.o_kanban_group', 2, "should have 2 columns" );
+        assert.hasClass(kanban.$('.o_kanban_mobile_tab:first'),'o_current',
             "first tab is the active tab with class 'o_current'");
-        assert.strictEqual(kanban.$('.o_kanban_group:first > div.o_kanban_record').length, 2,
+        assert.containsN(kanban, '.o_kanban_group:first > div.o_kanban_record', 2,
             "there are 2 records in active tab");
         assert.strictEqual(kanban.$('.o_kanban_group:nth(1) > div.o_kanban_record').length, 0,
             "there is no records in next tab. Records will be loaded when it will be opened");
 
         // quick create in first column
-        kanban.$buttons.find('.o-kanban-button-new').click();
-        assert.ok(kanban.$('.o_kanban_group:nth(0) > div:nth(1)').hasClass('o_kanban_quick_create'),
+        testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));
+        assert.hasClass(kanban.$('.o_kanban_group:nth(0) > div:nth(1)'),'o_kanban_quick_create',
             "clicking on create should open the quick_create in the first column");
 
         // move to second column
         kanban.$('.o_kanban_mobile_tab:nth(1)').trigger('click');
-        assert.ok(kanban.$('.o_kanban_mobile_tab:nth(1)').hasClass('o_current'),
+        assert.hasClass(kanban.$('.o_kanban_mobile_tab:nth(1)'),'o_current',
             "second tab is now active with class 'o_current'");
         assert.strictEqual(kanban.$('.o_kanban_group:nth(1) > div.o_kanban_record').length, 2,
             "the 2 records of the second group have now been loaded");
 
         // quick create in second column
-        kanban.$buttons.find('.o-kanban-button-new').click();
-        assert.ok(kanban.$('.o_kanban_group:nth(1) >  div:nth(1)').hasClass('o_kanban_quick_create'),
+        testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));
+        assert.hasClass(kanban.$('.o_kanban_group:nth(1) >  div:nth(1)'),'o_kanban_quick_create',
             "clicking on create should open the quick_create in the second column");
 
         // kanban column should match kanban mobile tabs
@@ -120,8 +120,8 @@ QUnit.module('Views', {
         });
 
         // first column should be undefined with framework unique identifier
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have 3 columns" );
-        assert.strictEqual(kanban.$('.o_kanban_group:first-child[data-id^="partner_"]').length, 1,
+        assert.containsN(kanban, '.o_kanban_group', 3, "should have 3 columns" );
+        assert.containsOnce(kanban, '.o_kanban_group:first-child[data-id^="partner_"]',
             "Undefined column should be first and have unique framework identifier as data-id")
 
         // kanban column should match kanban mobile tabs
@@ -147,8 +147,8 @@ QUnit.module('Views', {
         });
 
         // basic rendering tests
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 4, "should have 4 columns" );
-        assert.strictEqual(kanban.$('.o_kanban_group[data-id^="partner_"]').length, 4,
+        assert.containsN(kanban, '.o_kanban_group', 4, "should have 4 columns" );
+        assert.containsN(kanban, '.o_kanban_group[data-id^="partner_"]', 4,
             "all column should have framework unique identifiers");
 
         // kanban column should match kanban mobile tabs

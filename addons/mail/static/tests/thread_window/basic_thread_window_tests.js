@@ -44,7 +44,7 @@ QUnit.module('Basic', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            testUtils.addMockEnvironment(widget, params);
+            testUtils.mock.addMockEnvironment(widget, params);
             return widget;
         };
     },
@@ -121,7 +121,7 @@ QUnit.test('close thread window using ESCAPE key', function (assert) {
         "there should be a thread window that is opened");
 
     // focus on the thread window and press ESCAPE
-    $('.o_thread_window .o_composer_text_field').click();
+    testUtils.dom.click($('.o_thread_window .o_composer_text_field'));
     assert.strictEqual(document.activeElement,
         $('.o_thread_window .o_composer_text_field')[0],
         "thread window's input should now be focused");
@@ -150,7 +150,7 @@ QUnit.test('thread window\'s input can still be focused when the UI is blocked',
     channel.detach();
 
     var $input = $('<input/>', {type: 'text'}).appendTo($dom);
-    $input.focus().click();
+    testUtils.dom.click($input.focus());
     assert.strictEqual(document.activeElement, $input[0],
         "fake input should be focused");
 
@@ -159,7 +159,7 @@ QUnit.test('thread window\'s input can still be focused when the UI is blocked',
     // makes no sense, this test is just about
     // making sure that the code which forces the
     // focus on click is not removed
-    $('.o_thread_window .o_composer_text_field').click();
+    testUtils.dom.click($('.o_thread_window .o_composer_text_field'));
     assert.strictEqual(document.activeElement,
         $('.o_thread_window .o_composer_text_field')[0],
         "thread window's input should now be focused");
@@ -181,7 +181,7 @@ QUnit.test('emoji popover should open correctly in thread windows', function (as
     channel.detach();
 
     var $emojiButton = $('.o_composer_button_emoji');
-    $emojiButton.trigger('focusin').focus().click();
+    testUtils.dom.click($emojiButton.trigger('focusin').focus());
     var $popover = $('.o_mail_emoji_container');
 
     var done = assert.async();
@@ -254,7 +254,7 @@ QUnit.test('do not increment unread counter with focus on thread window', functi
         "thread should have unread counter to 0 initially");
 
     // hard focus on thread window composer
-    $('.o_composer_text_field').click();
+    testUtils.dom.click($('.o_composer_text_field'));
 
     // simulate receiving message from someone else
     var messageData = {
@@ -346,7 +346,7 @@ QUnit.test('do not mark as read the newly open thread window from received messa
     assert.strictEqual($threadWindow.find('.o_thread_window_title').text().replace(/\s/g, ''), '#DM(1)',
         "open DM chat window should have one unread message");
 
-    $threadWindow.find('.o_thread_composer').click();
+    testUtils.dom.click($threadWindow.find('.o_thread_composer'));
     assert.strictEqual($threadWindow.find('.o_thread_window_title').text().replace(/\s/g, ''), '#DM',
         "open DM chat window should have message marked as read on composer focus");
 

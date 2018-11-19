@@ -85,7 +85,7 @@ QUnit.module('Form View', {
                     '</field>'
                 '</form>';
         this.run(assert, done, function (form) {
-            form.$buttons.find('.o_form_button_edit').click();
+            testUtils.form.clickEdit(form);
             form.$('.o_data_cell:first').click();
             form.$('input:first').val("tralala").trigger('input');
         });
