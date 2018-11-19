@@ -28,26 +28,22 @@
                                 <span attrs="{'invisible': [('invalid_addresses', '!=', 0)]}">
                                     <div class="text-right text-muted d-inline-block" name="address">
                                         <span> to: </span>
-                                        <field name="partner_id" readonly="1" force_save="1" context="{'show_address': not invalid_addresses, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
+                                        <field name="partner_id" readonly="1" force_save="1" context="{'show_address': 1, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
                                     </div>
                                 </span>
                                 <span attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
                                     <div class="text-right d-inline-block" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
-                                        <span class="text-muted">
-                                            Incomplete address for 
-                                            <field name="partner_id" readonly="1" force_save="1" context="{'show_address': not invalid_addresses, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
+                                        <span class="text-danger">
+                                            Incomplete customer address
                                         </span>
                                     </div>
                                 </span>
                             </span>
                             <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
                                 <span attrs="{'invisible': [('snailmail_cost', '=', 0)]}">
-                                    <span class="text-muted" attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
-                                        Only <field name="snailmail_cost" readonly="1" options="{'digits':[0,0]}"/> of the selected invoices have a valid address.
+                                    <span class="text-danger" attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
+                                        <field name="invalid_addresses" readonly="1" options="{'digits':[0,0]}"/>  invoice(s) do not have a complete customer address
                                     </span>
-                                </span>
-                                <span class="text-muted" attrs="{'invisible': [('snailmail_cost', '!=', 0)]}">
-                                    None of the selected invoices have a valid address
                                 </span>
                             </span>
                         </span>
