@@ -50,7 +50,7 @@
 <t t-name="web_unsplash.dialog.error.content">
     <div class="row mt16 text-muted unsplash_error">
         <div class="m-auto text-center">
-            <t t-if="key_not_found">
+            <t t-if="status == 'key_not_found'">
                 <t t-call="web_unsplash.dialog.error.credentials">
                     <t t-set="title">
                         Unsplash requires an access key and an application ID
