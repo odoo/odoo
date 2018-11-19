@@ -15,7 +15,7 @@ ENV LC_ALL C.UTF-8
 
 RUN apt-get update -qq &&  \
     apt-get upgrade -qq -y && \
-    apt-get install \
+    apt-get install -qq -y\
         adduser \
         postgresql \
         postgresql-client \
@@ -40,6 +40,7 @@ RUN apt-get update -qq &&  \
         python3-pydot \
         python3-pyparsing \
         python3-pypdf2 \
+        python3-qrcode \
         python3-reportlab \
         python3-requests \
         python3-serial \
@@ -49,7 +50,7 @@ RUN apt-get update -qq &&  \
         python3-vatnumber \
         python3-vobject \
         python3-werkzeug \
-        python3-xlsxwriter \
+        python3-xlsxwriter && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
