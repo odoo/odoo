@@ -224,12 +224,23 @@ class SaleOrderLine(models.Model):
     def _get_qty_procurement(self):
         self.ensure_one()
         qty = 0.0
-        for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
-            if move.picking_code == 'outgoing':
-                qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-            elif move.picking_code == 'incoming':
-                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
+        for move in outgoing_moves:
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
+        for move in incoming_moves:
+            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
         return qty
+
+    def _get_outgoing_incoming_moves(self):
+        outgoing_moves = self.env['stock.move']
+        incoming_moves = self.env['stock.move']
+        for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped):
+            if move.location_dest_id.usage == "customer":
+                if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
+                    outgoing_moves |= move
+            elif move.location_dest_id.usage != "customer" and move.to_refund:
+                incoming_moves |= move
+        return outgoing_moves, incoming_moves
 
     @api.multi
     def _action_launch_procurement_rule(self):
@@ -289,12 +300,13 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         super(SaleOrderLine, self)._get_delivered_qty()
         qty = 0.0
-        for move in self.move_ids.filtered(lambda r: r.state == 'done' and not r.scrapped):
-            if move.location_dest_id.usage == "customer":
-                if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                    qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
-            elif move.location_dest_id.usage != "customer" and move.to_refund:
-                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
+        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
+        outgoing_moves = outgoing_moves.filtered(lambda r: r.state == 'done')
+        incoming_moves = incoming_moves.filtered(lambda r: r.state == 'done')
+        for move in outgoing_moves:
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
+        for move in incoming_moves:
+            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
