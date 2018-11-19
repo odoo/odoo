@@ -67,7 +67,7 @@ tour.register('sale_tour', {
 }, {
     trigger: ".o_sale_print",
     extra_trigger: ".o_sale_order.o_form_readonly",
-    content: _t("<b>Print this quotation to preview it.</b>"),
+    content: _t("Print this quotation to preview it."),
     position: "bottom"
 }, {
     trigger: ".breadcrumb-item:not(.active):last",

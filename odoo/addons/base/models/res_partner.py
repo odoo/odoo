@@ -151,7 +151,7 @@ class Partner(models.Model):
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids = fields.One2many('res.partner', 'parent_id', string='Contacts', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
-    ref = fields.Char(string='Internal Reference', index=True)
+    ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
                             help="All the emails and documents sent to this contact will be translated in this language.")
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
@@ -180,13 +180,13 @@ class Partner(models.Model):
     function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
-         ('invoice', 'Invoice address'),
-         ('delivery', 'Shipping address'),
-         ('other', 'Other address'),
+         ('invoice', 'Invoice Address'),
+         ('delivery', 'Shipping Address'),
+         ('other', 'Other Address'),
          ("private", "Private Address"),
         ], string='Address Type',
         default='contact',
-        help="Used by Sales and Purchase Apps to select the relevant address depending on the context.")
+        help="Invoice & Shipping addresses are used in sales orders. Private addresses are only visible by authorized users.")
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)

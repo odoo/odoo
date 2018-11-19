@@ -61,7 +61,7 @@
         </field>
     </record>
     <record id="action_open_sale_onboarding_payment_acquirer_wizard" model="ir.actions.act_window">
-        <field name="name">How your customers can confirm an order</field>
+        <field name="name">Choose how to confirm quotations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.payment.acquirer.onboarding.wizard</field>
         <field name="view_type">form</field>
@@ -77,6 +77,9 @@
         <field name="mode">primary</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
+            <xpath expr="//button[@special='save']" position="after">
+                <button string="Preview" type="action" class="btn btn-secondary" name="web.action_report_externalpreview"/>
+            </xpath>
             <xpath expr="//button[@special='save']" position="replace">
                 <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_quotation_layout" />
             </xpath>
@@ -112,7 +115,7 @@
     </record>
 
     <record id="action_open_sale_onboarding_sample_quotation" model="ir.actions.act_window">
-        <field name="name">Send a sample quotation.</field>
+        <field name="name">Send a sample quotation</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mail.compose.message</field>
         <field name="view_mode">form</field>
