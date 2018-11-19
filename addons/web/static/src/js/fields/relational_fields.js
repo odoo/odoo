@@ -1050,8 +1050,8 @@ var FieldX2Many = AbstractField.extend({
         this.pager.on('pager_changed', this, function (ev) {
             self.trigger('load', {
                 id: self.value.id,
-                limit: ev.data.limit,
-                offset: ev.data.current_min - 1,
+                limit: ev.data.state.limit,
+                offset: ev.data.state.current_min - 1,
                 on_success: function (value) {
                     self.value = value;
                     self._render();

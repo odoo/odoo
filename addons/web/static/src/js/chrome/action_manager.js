@@ -383,10 +383,11 @@ var ActionManager = Widget.extend({
              *   `on_close` handler.
              */
             dialog.on('closed', self, function (ev) {
+                var options = ev.data.options || {};
                 self._removeAction(action.jsID);
                 self.currentDialogController = null;
-                if (ev.data.silent !== true) {
-                    controller.onClose(ev.data.infos);
+                if (options.silent !== true) {
+                    controller.onClose(options.infos);
                 }
             });
             controller.dialog = dialog;

@@ -83,7 +83,9 @@ var ControlPanel = Widget.extend({
         // the updateIndex is used to prevent concurrent updates of the control
         // panel depending on asynchronous code to be executed in the wrong order
         this.bus.updateIndex = 0;
-        this.bus.on("update", this, this.update);
+        this.bus.on("update", this, function (ev) {
+            this.update(ev.data.cp_status, ev.data.options);
+        });
     },
     /**
      * Renders the control panel and creates a dictionnary of its exposed elements
@@ -118,7 +120,6 @@ var ControlPanel = Widget.extend({
     },
     /**
      * Updates the content and displays the ControlPanel
-     * @param {OdooEvent} event
      * @param {Object} [status.active_view] the current active view
      * @param {Array} [status.breadcrumbs] the breadcrumbs to display (see _render_breadcrumbs() for
      * precise description)
@@ -129,11 +130,7 @@ var ControlPanel = Widget.extend({
      * @param {Boolean} [options.clear] set to true to clear from control panel
      * elements that are not in status.cp_content
      */
-    update: function(ev) {
-
-        var status = ev.data ? ev.data.cp_status : ev;
-        var options = ev.data ? ev.data.options : ev.options;
-
+    update: function(status, options) {
         this.bus.updateIndex++;
 
         this._toggle_visibility(!status.hidden);

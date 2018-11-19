@@ -404,8 +404,8 @@ var ListRenderer = BasicRenderer.extend({
             pager.disable();
             this.trigger('load', {
                 id: group.id,
-                limit: ev.data.limit,
-                offset: ev.data.current_min - 1,
+                limit: ev.data.state.limit,
+                offset: ev.data.state.current_min - 1,
                 on_success: function (reloadedGroup) {
                     _.extend(group, reloadedGroup);
                     self._renderView();

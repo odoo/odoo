@@ -1153,7 +1153,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * Called when a demand to open a color picker dialog is received on the bus.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {Object} ev.data
      */
     _onColorPickerDialogDemand: function (ev) {
@@ -1175,7 +1175,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * Called when a demand to open a crop dialog is received on the bus.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {Object} ev.data
      */
     _onCropImageDialogDemand: function (ev) {
@@ -1203,7 +1203,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * Called when a demand to open a link dialog is received on the bus.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {Object} ev.data
      */
     _onLinkDialogDemand: function (ev) {
@@ -1228,7 +1228,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * Called when a demand to open a media dialog is received on the bus.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {Object} ev.data
      */
     _onMediaDialogDemand: function (ev) {

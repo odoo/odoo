@@ -27,21 +27,36 @@ QUnit.module('core', {}, function () {
         widget.destroy();
     });
 
-    QUnit.test('test case to perform trigger properly', function (assert) {
-        assert.expect(1);
+    QUnit.test('perform a trigger properly', function (assert) {
+        assert.expect(6);
 
         var parentWidget = Widget.extend({
             custom_events: {
-                'w_event': function (isWorking) {
-                    return isWorking;
+                'w_event': function (ev) {
+                    assert.step('parent_w_event');
+                    return ev;
                 }
             }
         });
 
-        var childWidget = Widget.extend({
+        var childWidget1 = Widget.extend({
             custom_events: {
-                'w_event': function (isWorking) {
-                    return isWorking;
+                'w_event': function (ev) {
+                    assert.step('child1_w_event');
+                    return ev;
+                }
+            },
+            call_me: function() {
+                this.trigger('w_event', {isWorking: true});
+            }
+        });
+
+        var childWidget2 = Widget.extend({
+            custom_events: {
+                'w_event': function (ev) {
+                    ev.stopPropagation();
+                    assert.step('child2_w_event');
+                    return ev;
                 }
             },
             call_me: function() {
@@ -52,7 +67,9 @@ QUnit.module('core', {}, function () {
         // parent widget instance
         var parentInstance = new parentWidget();
         // child widget instance
-        var childInstance = new childWidget(parentInstance);
+        var childInstance1 = new childWidget1(parentInstance);
+        // child widget instance to test stopPropagation
+        var childInstance2 = new childWidget2(parentInstance);
 
         // intercept the w_event in parent instance
         testUtils.intercept(parentInstance, 'w_event', function (ev) {
@@ -60,10 +77,15 @@ QUnit.module('core', {}, function () {
                 "should have sent proper data");
         },true);
 
-        childInstance.call_me();
+        childInstance1.call_me();
+
+        assert.verifySteps(['child1_w_event', 'parent_w_event']);
+
+        childInstance2.call_me();
+        // child2's w_event will stop propagation so w_event of parent should not be called
+        assert.verifySteps(['child1_w_event', 'parent_w_event', 'child2_w_event']);
 
         parentInstance.destroy();
-
     });
 
 
