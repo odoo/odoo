@@ -183,9 +183,9 @@ odoo.define('website_form.animation', function (require) {
                 });
 
                 // Update field color if invalid or erroneous
-                $field.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+                $field.removeClass('o_has_error').find('.form-control, .custom-select, .form-check-input').removeClass('is-invalid');
                 if (invalid_inputs.length || error_fields[field_name]){
-                    $field.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid')
+                    $field.addClass('o_has_error').find('.form-control, .custom-select, .form-check-input').addClass('is-invalid')
                     if (_.isString(error_fields[field_name])){
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.
