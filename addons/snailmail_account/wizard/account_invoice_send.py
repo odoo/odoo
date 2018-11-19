@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountInvoiceSend(models.TransientModel):
@@ -17,8 +18,15 @@ class AccountInvoiceSend(models.TransientModel):
 
     @api.depends('snailmail_cost', 'letter_ids')
     def _compute_invalid_addresses(self):
-        for wizard in self: 
-            wizard.invalid_addresses = len(wizard.letter_ids) - wizard.snailmail_cost
+        for wizard in self:
+            count_invalid_addresses = 0
+            required_fields = ['street', 'city', 'zip', 'country_id']
+            for letter in wizard.letter_ids:
+                for field in required_fields:
+                    if not letter.partner_id[field]:
+                        count_invalid_addresses += 1
+                        break
+            wizard.invalid_addresses = count_invalid_addresses
 
     @api.multi
     @api.onchange('invoice_ids')
@@ -77,6 +85,18 @@ class AccountInvoiceSend(models.TransientModel):
 
     @api.multi
     def send_and_print_action(self):
+        if self.snailmail_is_letter and self.invalid_addresses:
+            if self.composition_mode == "mass_mail":
+                self.env['bus.bus'].sendone(
+                            (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                            {'type': 'snailmail_invalid_address', 'title': _("Invalid Addresses"),
+                            'message': _("%s of the selected invoice(s) had an invalid address and were not sent") % self.invalid_addresses}
+                        )
+            else:
+                raise UserError(_(
+                    '''Cannot send by post to an incomplete address.
+                    Please update the customer's address or uncheck \'Send by Post\'.'''
+                ))
         res = super(AccountInvoiceSend, self).send_and_print_action()
         if self.snailmail_is_letter:
             self.snailmail_print_action()
