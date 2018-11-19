@@ -73,7 +73,7 @@ QUnit.module('Views', {
 
         var done = assert.async();
         return concurrency.delay(0).then(function () {
-            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+            assert.containsOnce(graph, 'div.o_graph_svg_container svg.nvd3-svg',
                         "should contain a div with a svg element");
 
             assert.strictEqual(graph.renderer.state.mode, "bar",
@@ -134,15 +134,15 @@ QUnit.module('Views', {
                 '</graph>',
         });
         assert.strictEqual(graph.renderer.state.mode, "line", "should be in line chart mode by default");
-        assert.notOk(graph.$buttons.find('button[data-mode="bar"]').hasClass('active'),
+        assert.doesNotHaveClass(graph.$buttons.find('button[data-mode="bar"]'), 'active',
             'bar type button should not be active');
-        assert.ok(graph.$buttons.find('button[data-mode="line"]').hasClass('active'),
+        assert.hasClass(graph.$buttons.find('button[data-mode="line"]'),'active',
             'line type button should be active');
-        graph.$buttons.find('button[data-mode="bar"]').click();
+        testUtils.dom.click(graph.$buttons.find('button[data-mode="bar"]'));
         assert.strictEqual(graph.renderer.state.mode, "bar", "should be in bar chart mode by default");
-        assert.notOk(graph.$buttons.find('button[data-mode="line"]').hasClass('active'),
+        assert.doesNotHaveClass(graph.$buttons.find('button[data-mode="line"]'), 'active',
             'line type button should not be active');
-        assert.ok(graph.$buttons.find('button[data-mode="bar"]').hasClass('active'),
+        assert.hasClass(graph.$buttons.find('button[data-mode="bar"]'),'active',
             'bar type button should be active');
         graph.destroy();
     });
@@ -214,7 +214,8 @@ QUnit.module('Views', {
                 "should have used the correct measure");
             assert.ok(graph.$buttons.find('.dropdown-item[data-field="foo"]').length,
                 "should have foo in the list of measures");
-            graph.$buttons.find('.dropdown-item[data-field="foo"]').click();
+            testUtils.dom.click(graph.$buttons.find('.dropdown-toggle:contains(Measures)'));
+            testUtils.dom.click(graph.$buttons.find('.dropdown-item[data-field="foo"]'));
 
             return concurrency.delay(0);
         }).then(function () {
@@ -238,9 +239,9 @@ QUnit.module('Views', {
                         '<field name="product_id"/>' +
                 '</graph>',
         });
-        assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 0,
+        assert.containsNone(graph, 'div.o_graph_svg_container svg.nvd3-svg',
                     "should not contain a div with a svg element");
-        assert.strictEqual(graph.$('div.o_view_nocontent').length, 1,
+        assert.containsOnce(graph, 'div.o_view_nocontent',
             "should display the no content helper");
         graph.destroy();
     });
@@ -257,9 +258,9 @@ QUnit.module('Views', {
                         '<field name="product_id"/>' +
                 '</graph>',
         });
-        assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 0,
+        assert.containsNone(graph, 'div.o_graph_svg_container svg.nvd3-svg',
             "should not contain a div with a svg element");
-        assert.strictEqual(graph.$('div.o_view_nocontent').length, 1,
+        assert.containsOnce(graph, 'div.o_view_nocontent',
             "should display the no content helper");
         graph.destroy();
     });
@@ -286,7 +287,7 @@ QUnit.module('Views', {
                 '</graph>',
         });
 
-        assert.strictEqual(graph.$('div.o_view_nocontent').length, 0,
+        assert.containsNone(graph, 'div.o_view_nocontent',
         "should not display the no content helper");
         assert.strictEqual($('.o_graph_svg_container svg > text').text(),
             "No data to displayNo data to display", "should display two empty pie charts instead");
@@ -310,7 +311,7 @@ QUnit.module('Views', {
                         "should contain a div with a svg element");
             assert.notOk(graph.$('div.o_view_nocontent').length,
                 "should not display the no content helper");
-            graph.update({domain: [['product_id', '=', 4]]});
+            testUtils.graph.reload(graph, {domain: [['product_id', '=', 4]]});
 
             assert.notOk(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should not contain a div with a svg element");
@@ -339,7 +340,7 @@ QUnit.module('Views', {
             assert.notOk(graph.$('text:contains(red)').length,
                         "should not contain a text element with color in legend");
 
-            graph.update({groupBy: ['color_id']});
+            testUtils.graph.reload(graph, {groupBy: ['color_id']});
 
             return concurrency.delay(0);
         }).then(function () {
@@ -372,7 +373,8 @@ QUnit.module('Views', {
                 graph_intervalMapping: {},
             }, "context should be correct");
 
-            graph.$buttons.find('.dropdown-item[data-field="foo"]').click(); // change measure
+            testUtils.dom.click(graph.$buttons.find('.dropdown-toggle:contains(Measures)'));
+            testUtils.dom.click(graph.$buttons.find('.dropdown-item[data-field="foo"]'));
 
             return concurrency.delay(0);
         }).then(function () {
@@ -383,7 +385,7 @@ QUnit.module('Views', {
                 graph_intervalMapping: {},
             }, "context should be correct");
 
-            graph.$buttons.find('button[data-mode="line"]').click(); // change mode
+            testUtils.dom.click(graph.$buttons.find('button[data-mode="line"]'));
 
             return concurrency.delay(0);
         }).then(function () {
@@ -394,7 +396,7 @@ QUnit.module('Views', {
                 graph_intervalMapping: {},
             }, "context should be correct");
 
-            graph.update({groupBy: ['product_id', 'color_id']}); // change groupbys
+            testUtils.graph.reload(graph, {groupBy: ['product_id', 'color_id']}); // change groupbys
 
             return concurrency.delay(0);
         }).then(function () {
@@ -413,7 +415,7 @@ QUnit.module('Views', {
     QUnit.test('correctly uses graph_ keys from the context', function (assert) {
         var done = assert.async();
         assert.expect(6);
-        
+
         var lastOne = _.last(this.data.foo.records);
         lastOne.color_id = 14;
 
@@ -437,9 +439,9 @@ QUnit.module('Views', {
 
             // check mode
             assert.strictEqual(graph.renderer.state.mode, "line", "should be in line chart mode");
-            assert.notOk(graph.$buttons.find('button[data-mode="bar"]').hasClass('active'),
+            assert.doesNotHaveClass(graph.$buttons.find('button[data-mode="bar"]'), 'active',
                 'bar chart button should not be active');
-            assert.ok(graph.$buttons.find('button[data-mode="line"]').hasClass('active'),
+            assert.hasClass(graph.$buttons.find('button[data-mode="line"]'),'active',
                 'line chart button should be active');
 
             // check groupbys
@@ -498,7 +500,7 @@ QUnit.module('Views', {
         });
 
         assert.strictEqual(graph.renderer.state.mode, "bar", "should be in bar chart mode");
-        assert.ok(graph.$buttons.find('button[data-mode="bar"]').hasClass('active'),
+        assert.hasClass(graph.$buttons.find('button[data-mode="bar"]'),'active',
             'bar chart button should be active');
 
         var reloadParams = {
@@ -508,7 +510,7 @@ QUnit.module('Views', {
                 graph_groupbys: ['color_id'],
             },
         };
-        graph.reload(reloadParams);
+        testUtils.graph.reload(graph, reloadParams);
         return concurrency.delay(0).then(function () {
             // check measure
             assert.strictEqual(graph.$('text.nv-legend-text:contains(Foo)').length, 1,
@@ -516,9 +518,9 @@ QUnit.module('Views', {
 
             // check mode
             assert.strictEqual(graph.renderer.state.mode, "line", "should be in line chart mode");
-            assert.notOk(graph.$buttons.find('button[data-mode="bar"]').hasClass('active'),
+            assert.doesNotHaveClass(graph.$buttons.find('button[data-mode="bar"]'), 'active',
                 'bar chart button should not be active');
-            assert.ok(graph.$buttons.find('button[data-mode="line"]').hasClass('active'),
+            assert.hasClass(graph.$buttons.find('button[data-mode="line"]'),'active',
                 'line chart button should be active');
 
             // check groupbys
@@ -552,7 +554,7 @@ QUnit.module('Views', {
             },
         });
 
-        graph.reload({groupBy: []});
+        testUtils.graph.reload(graph, {groupBy: []});
 
         graph.destroy();
     });
@@ -580,12 +582,12 @@ QUnit.module('Views', {
 
 
         return concurrency.delay(0).then(function () {
-            assert.strictEqual(graph.$('.nv-groups rect').length, 2,
+            assert.containsN(graph, '.nv-groups rect', 2,
                 "should display two groups");
 
-            graph.reload({groupBy: []});
+            testUtils.graph.reload(graph, {groupBy: []});
             return concurrency.delay(0).then(function () {
-                assert.strictEqual(graph.$('.nv-groups rect').length, 2,
+                assert.containsN(graph, '.nv-groups rect', 2,
                     "should still display two groups");
 
                 graph.destroy();
@@ -607,7 +609,7 @@ QUnit.module('Views', {
         });
         var done = assert.async();
         return concurrency.delay(0).then(function () {
-            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+            assert.containsOnce(graph, 'div.o_graph_svg_container svg.nvd3-svg',
                         "should contain a div with a svg element");
 
             assert.strictEqual(graph.renderer.state.mode, "bar",
@@ -633,7 +635,7 @@ QUnit.module('Views', {
         });
         var done = assert.async();
         return concurrency.delay(0).then(function () {
-            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+            assert.containsOnce(graph, 'div.o_graph_svg_container svg.nvd3-svg',
                         "should contain a div with a svg element");
 
             assert.strictEqual(graph.renderer.state.mode, "bar",
@@ -665,7 +667,8 @@ QUnit.module('Views', {
         return concurrency.delay(0).then(function () {
             // need to set the measure this way because it cannot be set in the
             // arch.
-            graph.$buttons.find('.dropdown-item[data-field="product_id"]').click();
+            testUtils.dom.click(graph.$buttons.find('.dropdown-toggle:contains(Measures)'));
+            testUtils.dom.click(graph.$buttons.find('.dropdown-item[data-field="product_id"]'));
 
             assert.strictEqual(graph.model.chart.data[0].value, 1,
                 "should have first datapoint with value 1");
@@ -756,13 +759,13 @@ QUnit.module('Views', {
             "Bouh should be the first measure");
         assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:last').data('field'), '__count__',
             "Count should be the last measure");
-        
+
         graph.destroy();
     });
 
     QUnit.test('Undefined should appear in bar, pie graph but not in line graph', function (assert) {
         assert.expect(4);
-        
+
         var graph = createView({
             View: GraphView,
             model: "foo",
@@ -776,7 +779,7 @@ QUnit.module('Views', {
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('Undefined')").length, 0);
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('March')").length, 1);
 
-        graph.$buttons.find('.o_graph_button[data-mode=bar]').click();
+        testUtils.dom.click(graph.$buttons.find('.o_graph_button[data-mode=bar]'));
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('Undefined')").length, 1);
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
 

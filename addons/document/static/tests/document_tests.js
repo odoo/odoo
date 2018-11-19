@@ -77,10 +77,10 @@ odoo.define('document.tests', function (require) {
                 }
             });
 
-            assert.strictEqual(form.sidebar.$('.o_sidebar_delete_attachment').length, 2, "there should be two attachments");
-            form.sidebar.$('.o_sidebar_delete_attachment:eq(0)').click();
-            $('.modal-footer .btn-primary').click();
-            assert.strictEqual(form.sidebar.$('.o_sidebar_delete_attachment').length, 1, "there should be only one attachment");
+            assert.containsN(form.sidebar, '.o_sidebar_delete_attachment', 2, "there should be two attachments");
+            testUtils.dom.click(form.sidebar.$('.o_sidebar_delete_attachment:eq(0)'));
+            testUtils.dom.click($('.modal-footer .btn-primary'));
+            assert.containsOnce(form.sidebar, '.o_sidebar_delete_attachment', "there should be only one attachment");
             form.destroy();
         });
 
@@ -103,9 +103,9 @@ odoo.define('document.tests', function (require) {
             });
 
             // select record then trigger render
-            list.$('.o_group_header:last').click();
-            list.$('.o_data_row input').click();
-            list.$('.o_group_header:first').click();
+            testUtils.dom.click(list.$('.o_group_header:last'));
+            testUtils.dom.click(list.$('.o_data_row input'));
+            testUtils.dom.click(list.$('.o_group_header:first'));
 
             assert.verifySteps(['partner', 'partner', 'partner'],
                 "ir.attachment not called when selecting record in list view");

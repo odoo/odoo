@@ -3,6 +3,8 @@ odoo.define('mail.discuss_mobile_tests', function (require) {
 
 var mailTestUtils = require('mail.testUtils');
 
+var testUtils = require('web.test_utils');
+
 var createDiscuss = mailTestUtils.createDiscuss;
 
 QUnit.module('mail', {}, function () {
@@ -35,55 +37,55 @@ QUnit.test('mobile basic rendering', function (assert) {
         services: this.services,
     }).then(function (discuss) {
         // test basic rendering in mobile
-        assert.strictEqual(discuss.$('.o_mail_discuss_content .o_mail_no_content').length, 1,
+        assert.containsOnce(discuss, '.o_mail_discuss_content .o_mail_no_content',
             "should display the no content message");
-        assert.strictEqual(discuss.$('.o_mail_mobile_tabs').length, 1,
+        assert.containsOnce(discuss, '.o_mail_mobile_tabs',
             "should have rendered the tabs");
-        assert.ok(discuss.$('.o_mail_mobile_tab[data-type=mailbox_inbox]').hasClass('active'),
+        assert.hasClass(discuss.$('.o_mail_mobile_tab[data-type=mailbox_inbox]'),'active',
             "should be in inbox tab");
-        assert.strictEqual(discuss.$('.o_mail_discuss_mobile_mailboxes_buttons:visible').length, 1,
+        assert.containsOnce(discuss, '.o_mail_discuss_mobile_mailboxes_buttons:visible',
             "inbox/starred buttons should be visible");
-        assert.ok(discuss.$('.o_mail_discuss_mobile_mailboxes_buttons .o_mailbox_inbox_item[data-type=mailbox_inbox]').hasClass('btn-primary'),
+        assert.hasClass(discuss.$('.o_mail_discuss_mobile_mailboxes_buttons .o_mailbox_inbox_item[data-type=mailbox_inbox]'),'btn-primary',
             "should be in inbox");
-        assert.ok($('.o_mail_discuss_button_dm_chat').hasClass('d-none'),
+        assert.hasClass($('.o_mail_discuss_button_dm_chat'),'d-none',
             "should have invisible button 'New Message'");
-        assert.ok($('.o_mail_discuss_button_public').hasClass('d-none'),
+        assert.hasClass($('.o_mail_discuss_button_public'),'d-none',
             "should have invisible button 'New Channel'");
 
         // move to 'Chat' tab
-        discuss.$('.o_mail_mobile_tab[data-type=dm_chat]').click();
-        assert.ok(discuss.$('.o_mail_mobile_tab[data-type=dm_chat]').hasClass('active'),
+        testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type=dm_chat]'));
+        assert.hasClass(discuss.$('.o_mail_mobile_tab[data-type=dm_chat]'),'active',
             "should be in 'Chat' tab");
-        assert.strictEqual(discuss.$('.o_mail_discuss_content .o_mail_no_content').length, 0,
+        assert.containsNone(discuss, '.o_mail_discuss_content .o_mail_no_content',
             "should display the no content message");
         assert.strictEqual($('.o_mail_discuss_button_dm_chat').length, 1,
             "should have a button to open DM chat in 'Chat' tab");
-        assert.notOk($('.o_mail_discuss_button_dm_chat').hasClass('d-none'),
+        assert.doesNotHaveClass($('.o_mail_discuss_button_dm_chat'), 'd-none',
             "should be visible in 'Chat' tab");
-        assert.ok($('.o_mail_discuss_button_public').hasClass('d-none'),
+        assert.hasClass($('.o_mail_discuss_button_public'),'d-none',
             "should have invisible button 'New Channel' in 'Chat' tab");
-        $('.o_mail_discuss_button_dm_chat').click(); // click to open a chat
-        assert.strictEqual(discuss.$('.o_mail_add_thread input:visible').length, 1,
+        testUtils.dom.click($('.o_mail_discuss_button_dm_chat'));
+        assert.containsOnce(discuss, '.o_mail_add_thread input:visible',
             "should display the input to add a channel");
 
         // move to 'Channels' tab
-        discuss.$('.o_mail_mobile_tab[data-type=public]').click();
-        assert.ok($('.o_mail_discuss_button_dm_chat').hasClass('d-none'),
+        testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type=public]'));
+        assert.hasClass($('.o_mail_discuss_button_dm_chat'),'d-none',
             "should have invisible button 'New Message' in 'Channels' tab");
-        assert.notOk($('.o_mail_discuss_button_public').hasClass('d-none'),
+        assert.doesNotHaveClass($('.o_mail_discuss_button_public'), 'd-none',
             "should have visible button 'New Channel' in 'Channels' tab");
-        $('.o_mail_discuss_button_public').click(); // click to open a chat
-        assert.strictEqual(discuss.$('.o_mail_add_thread input:visible').length, 1,
+        testUtils.dom.click($('.o_mail_discuss_button_public'));
+        assert.containsOnce(discuss, '.o_mail_add_thread input:visible',
             "should display the input to add a channel");
 
         // move to Private Channels tab
-        discuss.$('.o_mail_mobile_tab[data-type=private]').click();
-        assert.ok($('.o_mail_discuss_button_dm_chat').hasClass('d-none'),
+        testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type=private]'));
+        assert.hasClass($('.o_mail_discuss_button_dm_chat'),'d-none',
             "should have invisible button 'New Message' in 'Private Channels' tab");
-        assert.notOk($('.o_mail_discuss_button_private').hasClass('d-none'),
+        assert.doesNotHaveClass($('.o_mail_discuss_button_private'), 'd-none',
             "should have invisible button 'New Channel' in 'Private Channels' tab");
-        $('.o_mail_discuss_button_private').click(); // click to open a chat
-        assert.strictEqual(discuss.$('.o_mail_add_thread input:visible').length, 1,
+        testUtils.dom.click($('.o_mail_discuss_button_private'));
+        assert.containsOnce(discuss, '.o_mail_add_thread input:visible',
             "should display the input to add a channel");
 
         discuss.destroy();

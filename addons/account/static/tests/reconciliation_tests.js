@@ -595,22 +595,22 @@ QUnit.module('account', {
         assert.expect(11);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             'data': this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
 
         var widget = clientAction.widgets[0];
 
-        assert.ok(widget.$el.hasClass('o_reconciliation_line'), "should instance of widget reconciliation");
-        assert.strictEqual(widget.$('.accounting_view').length, 1, "should have one view");
-        assert.strictEqual(widget.$('.match').length, 1, "should have 'match' panel");
-        assert.strictEqual(widget.$('.create').length, 1, "should have 'create' panel");
+        assert.hasClass(widget.$el,'o_reconciliation_line', "should instance of widget reconciliation");
+        assert.containsOnce(widget, '.accounting_view', "should have one view");
+        assert.containsOnce(widget, '.match', "should have 'match' panel");
+        assert.containsOnce(widget, '.create', "should have 'create' panel");
 
         assert.strictEqual(widget.$('thead').text().replace(/[\n\r\s]+/g, ' '), " 101401 2017-01-01 SAJ/2014/002 and SAJ/2014/003 $ 1,175.00 ", "should display the line information");
         assert.ok(widget.$('caption .o_field_many2one').length, "should display the many2one with to select a partner");
 
-        assert.strictEqual(clientAction.$('[data-mode="inactive"]').length, 3, "should be as 'inactive' mode by default");
+        assert.containsN(clientAction, '[data-mode="inactive"]', 3, "should be as 'inactive' mode by default");
         assert.strictEqual(widget.$el.data('mode'), 'match', "the first one should automatically switch to match mode");
 
         widget.$('.accounting_view thead td:first').trigger('click');
@@ -628,7 +628,7 @@ QUnit.module('account', {
         assert.expect(6);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {
                 currencies: {
@@ -647,9 +647,9 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(clientAction.widgets[2].$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         widget.$('.accounting_view tfoot td:first').trigger('click');
-        assert.strictEqual(widget.$('.create input.o_input').length, 7,
+        assert.containsN(widget, '.create input.o_input', 7,
             "create panel should contain 7 fields (account_id, tax_id, journal_id, analytic_account_id, analytic_tag_ids, label, amount)");
-        assert.strictEqual(widget.$('.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier').length, 3,
+        assert.containsN(widget, '.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier', 3,
             "account_id, label and amount should be required fields");
         assert.strictEqual(widget.$('.create .create_label input').val(), 'SAJ/2014/002 and SAJ/2014/003',
             "should use the name of the reconciliation line for the default label value");
@@ -663,7 +663,7 @@ QUnit.module('account', {
         assert.expect(17);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {
                 currencies: {
@@ -679,16 +679,16 @@ QUnit.module('account', {
         clientAction.appendTo($('#qunit-fixture'));
         var widget = clientAction.widgets[0];
 
-        assert.strictEqual(widget.$('.mv_line').length, 2, "should display 2 account move lines");
+        assert.containsN(widget, '.mv_line', 2, "should display 2 account move lines");
         assert.strictEqual(widget.$('.mv_line').text().replace(/[\n\r\s]+/g, ' '),
             " 101200 2017-02-07 INV/2017/0002 $ 650.00 101200 2017-02-07 INV/2017/0003 $ 525.00 ",
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
         assert.strictEqual(widget.$('.mv_line .cell_right:contains(".")').length, 2, "should display only the credit account move lines (hide the debit)");
 
         clientAction.widgets[1].$('.accounting_view thead td:first').trigger('click');
-        assert.strictEqual(clientAction.widgets[1].$('.mv_line').length, 5, "should display 5 account move lines");
+        assert.containsN(clientAction.widgets[1], '.mv_line', 5, "should display 5 account move lines");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_right:contains(".")').length, 4, "should display only the credit account move lines (hide the debit)");
-        assert.strictEqual(clientAction.widgets[1].$('.mv_line.already_reconciled').length, 3, "should display 3 already reconciled account move lines");
+        assert.containsN(clientAction.widgets[1], '.mv_line.already_reconciled', 3, "should display 3 already reconciled account move lines");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line').text().replace(/[\n\r\s]+/g, ' '),
             " 101401 2017-01-23 ASUSTeK: BNK1/2017/0002: SUPP.OUT/2017/0002 : BILL/2017/0003 $ 376.00 101401 2017-01-23 Agrolait: BNK1/2017/0003: CUST.IN/2017/0001 $ 100.00 101401 2017-01-23 Agrolait: BNK1/2017/0004: CUST.IN/2017/0002 : INV/2017/0003 $ 525.50 101200 2017-02-07 Agrolait: INV/2017/0002 $ 650.00 101200 2017-02-22 Agrolait: INV/2017/0004 $ 525.00 ",
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
@@ -698,7 +698,7 @@ QUnit.module('account', {
         assert.ok(clientAction.widgets[1].$('.match div.load-more a:visible').length, "should display the 'load more' button");
         assert.equal(clientAction.widgets[1].$('.match div.load-more span').text(), 3, "should display 3 items remaining");
         clientAction.widgets[1].$('.match div.load-more a').trigger('click');
-        assert.strictEqual(clientAction.widgets[1].$('.mv_line').length, 8, "should load 3 more records"),
+        assert.containsN(clientAction.widgets[1], '.mv_line', 8, "should load 3 more records"),
         assert.notOk(clientAction.widgets[1].$('.match div.load-more a:visible').length, "should not display the 'load more' button anymore");
 
         assert.ok(clientAction.widgets[0].$('caption button.btn-secondary:visible').length, "should display the 'validate' button");
@@ -714,7 +714,7 @@ QUnit.module('account', {
         widget.$('.match .cell_account_code:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
 
-        testUtils.intercept(clientAction, 'call_service', function (event) {
+        testUtils.mock.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
                 [[5],[{partner_id: 8, counterpart_aml_dicts: [{
                                                                   "counterpart_aml_id": 109,
@@ -747,7 +747,7 @@ QUnit.module('account', {
         assert.expect(1);
         // Test added to prevent this issue happening again: https://github.com/odoo/odoo/commit/3549688b21eb65e16b9c3f2b6462eb8d8b52cd47
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {
                 currencies: {
@@ -766,7 +766,7 @@ QUnit.module('account', {
         // Ensure that when we validate a line without any selection, it is the same
         // as when we manually create a line with the line.balance and that only one
         // line is send back to server.
-        testUtils.intercept(clientAction, 'call_service', function (event) {
+        testUtils.mock.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
                 [[5],[{partner_id: 8, counterpart_aml_dicts: [],
                                     payment_aml_ids: [], new_aml_dicts: [{
@@ -791,7 +791,7 @@ QUnit.module('account', {
         assert.expect(1);
         // Test added to check this functionality: https://github.com/odoo/odoo/commit/2f3b469dee6f18cbccce1cdf2a81cfe57960c533
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {
                 currencies: {
@@ -815,7 +815,7 @@ QUnit.module('account', {
 
         // Ensure that when we validate a line with propositions and that there is a remaining balance
         // We also create a line which is the open balance.
-        testUtils.intercept(clientAction, 'call_service', function (event) {
+        testUtils.mock.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
                 [[5],[{partner_id: 8,
                                     counterpart_aml_dicts: [{
@@ -847,7 +847,7 @@ QUnit.module('account', {
         assert.expect(10);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
                 console.log(args.method);
@@ -894,12 +894,12 @@ QUnit.module('account', {
         widget.$('.o_input_dropdown input').trigger('click');
         widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
 
-        assert.strictEqual(widget.$('button.btn-primary:visible').length, 0, "should display the reconcile model buttons");
-        assert.strictEqual(widget.$('.text-danger:visible').length, 1, "should display counterpart alert");
+        assert.containsNone(widget, 'button.btn-primary:visible', "should display the reconcile model buttons");
+        assert.containsOnce(widget, '.text-danger:visible', "should display counterpart alert");
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
-        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
-        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_true'), "should display the partial reconciliation information");
-        assert.strictEqual(widget.$('button.btn-primary:visible').length, 1, "should display the reconcile button");
+        assert.containsOnce(widget, '.accounting_view .cell_left .line_info_button', "should display a partial reconciliation alert");
+        assert.doesNotHaveClass(widget.$('.accounting_view .cell_left .line_info_button'), 'do_partial_reconcile_true', "should display the partial reconciliation information");
+        assert.containsOnce(widget, 'button.btn-primary:visible', "should display the reconcile button");
         assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
         widget.$('button.btn-primary:visible').trigger('click');
 
@@ -910,7 +910,7 @@ QUnit.module('account', {
         assert.expect(6);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             'data': this.params.data,
         });
 
@@ -918,11 +918,11 @@ QUnit.module('account', {
 
         assert.strictEqual(clientAction.$('h1.statement_name:visible').text(), "BNK/2014/001", "Should display the statement name");
         clientAction.$('h1.statement_name').trigger('click');
-        assert.strictEqual(clientAction.$('h1.statement_name:visible').length, 0, "Should hide the statement name title to edit the content");
-        assert.strictEqual(clientAction.$('h1.statement_name_edition:visible').length, 1, "Should show the edition field of statement name");
-        clientAction.$('h1.statement_name_edition input').val('BNK/2014/001-BB').trigger('input').blur();
-        assert.strictEqual(clientAction.$('h1.statement_name_edition:visible').length, 0, "Should hide the edition field of statement name");
-        assert.strictEqual(clientAction.$('h1.statement_name:visible').length, 1, "Should show the statement name");
+        assert.containsNone(clientAction, 'h1.statement_name:visible', "Should hide the statement name title to edit the content");
+        assert.containsOnce(clientAction, 'h1.statement_name_edition:visible', "Should show the edition field of statement name");
+        testUtils.fields.editAndTrigger(clientAction.$('h1.statement_name_edition input'), 'BNK/2014/001-BB', ['input', 'blur']);
+        assert.containsNone(clientAction, 'h1.statement_name_edition:visible', "Should hide the edition field of statement name");
+        assert.containsOnce(clientAction, 'h1.statement_name:visible', "Should show the statement name");
         assert.strictEqual(clientAction.$('h1.statement_name:visible').text(), "BNK/2014/001-BB", "Should update the statement name");
 
         clientAction.destroy();
@@ -933,7 +933,7 @@ QUnit.module('account', {
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             'data': this.params.data,
             session: this.params.session,
             translateParameters: {
@@ -966,7 +966,7 @@ QUnit.module('account', {
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             archs: {
                 'res.partner,false,list': '<tree string="Partners"><field name="display_name"/></tree>',
@@ -979,20 +979,20 @@ QUnit.module('account', {
         clientAction.appendTo($('#qunit-fixture'));
         var widget = clientAction.widgets[0];
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
-        assert.strictEqual(widget.$('.match table tr').length, 2, "agrolait should have 2 propositions for reconciliation");
+        assert.containsN(widget, '.match table tr', 2, "agrolait should have 2 propositions for reconciliation");
 
         // Adding the two propositions
         // This is in order to try that after changing partner the propositions are emptied
         widget.$('.match .cell_account_code:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "Both proposition should be selected");
+        assert.containsN(widget, '.accounting_view tbody tr', 2, "Both proposition should be selected");
 
         // Similate changing partner to one that does not have propositions to see if create mode is open after
         widget.$('.o_input_dropdown input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(partner 1)').trigger('mouseenter').trigger('click');
         clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'partner 1', id: 1}}, stopped: false});
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "partner 1", "the partner many2one should display partner 1");
-        assert.strictEqual(widget.$('.match table tr.mv_line').length, 0, "partner 1 should have 0 propositions for reconciliation");
+        assert.containsNone(widget, '.match table tr.mv_line', "partner 1 should have 0 propositions for reconciliation");
         assert.strictEqual(widget.$el.data('mode'), 'create', "widget should be in create mode");
 
         // Simulate changing partner
@@ -1000,7 +1000,7 @@ QUnit.module('account', {
         $('.ui-autocomplete .ui-menu-item a:contains(Camptocamp)').trigger('mouseenter').trigger('click');
         clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'Camptocamp', id: 12}}, stopped: false});
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
-        assert.strictEqual(widget.$('.match table tr.mv_line').length, 3, "camptocamp should have 3 propositions for reconciliation");
+        assert.containsN(widget, '.match table tr.mv_line', 3, "camptocamp should have 3 propositions for reconciliation");
 
         // Simulate changing partner with SelectCreateDialog
         widget = clientAction.widgets[1];
@@ -1008,21 +1008,21 @@ QUnit.module('account', {
         widget.$('.o_input_dropdown input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(Search More):eq(1)').trigger('mouseenter').trigger('click');
         assert.strictEqual($('.modal').length, 1, "should open a SelectCreateDialog");
-        $('.modal table.o_list_view td:contains(Camptocamp)').click();
+        testUtils.dom.click($('.modal table.o_list_view td:contains(Camptocamp)'));
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
 
         widget = clientAction.widgets[2];
         widget.$('.accounting_view thead td:first').trigger('click');
         widget.$('.accounting_view .mv_line .cell_label').trigger('click');
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display agrolait");
-        assert.strictEqual(widget.$('.match table tr').length, 3, "Camptocamp should have 3 propositions for reconciliation");
+        assert.containsN(widget, '.match table tr', 3, "Camptocamp should have 3 propositions for reconciliation");
         assert.notOk(widget.$('.match div.load-more a:visible').length, "should not display the load more button");
 
         // Simulate remove partner
         widget.$('.o_input_dropdown input').trigger('click');
         widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "", "the partner many2one should be empty");
-        assert.strictEqual(widget.$('.match table tr.mv_line').length, 5, "should have 5 propositions for reconciliation if partner is false");
+        assert.containsN(widget, '.match table tr.mv_line', 5, "should have 5 propositions for reconciliation if partner is false");
         assert.ok(widget.$('.match div.load-more a:visible').length, "should display the load more button");
 
         clientAction.destroy();
@@ -1033,7 +1033,7 @@ QUnit.module('account', {
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {
                 currencies: {
@@ -1058,44 +1058,44 @@ QUnit.module('account', {
         $('.ui-autocomplete .ui-menu-item a:contains(101200 Account Receivable)').trigger('mouseenter').trigger('click');
 
         assert.notOk(widget.$('.accounting_view tfoot .cell_label').text(), "should not display 'Open Balance' line because the rest to reconcile is null");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 1, "should have only the created reconcile line");
+        assert.containsOnce(widget, '.accounting_view tbody tr', "should have only the created reconcile line");
         assert.strictEqual(widget.$('.accounting_view tbody tr').text().replace(/[\n\r\s$,]+/g, ' '), " 101200 New SAJ/2014/002 and SAJ/2014/003 1175.00 ",
             "the new line should have the selected account, name and amout");
         assert.ok(widget.$('caption button.btn-primary:visible').length, "should display the 'Reconcile' button");
 
-        testUtils.intercept(clientAction, 'do_action', function (event) {
+        testUtils.mock.intercept(clientAction, 'do_action', function (event) {
             assert.strictEqual(JSON.stringify(event.data.action),
                 '{"type":"ir.actions.act_window","res_model":"account.reconcile.model","views":[[false,"form"]],"target":"current"}',
                 "should open the reconcile model form view");
         });
         widget.$('.create .reconcile_model_create').trigger('click');
 
-        testUtils.intercept(clientAction, 'do_action', function (event) {
+        testUtils.mock.intercept(clientAction, 'do_action', function (event) {
             assert.strictEqual(JSON.stringify(event.data.action),
                 '{"type":"ir.actions.act_window","res_model":"account.reconcile.model","views":[[false,"list"],[false,"form"]],"view_type":"list","view_mode":"list","target":"current"}',
                 "should open the reconcile model list view");
         });
         widget.$('.create .reconcile_model_edit').trigger('click');
 
-        widget.$('.create .create_amount input').val('1100.00').trigger('input');
+        testUtils.fields.editInput(widget.$('.create .create_amount input'), '1100.00');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00", "should display the value 1100.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$ 75.00", "should display 'Open Balance' line because the rest to reconcile is 75.00");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 1, "should have ever only the created reconcile line");
+        assert.containsOnce(widget, '.accounting_view tbody tr', "should have ever only the created reconcile line");
         assert.strictEqual(widget.$('.accounting_view tbody tr').text().replace(/[\n\r\s$,]+/g, ' '), " 101200 New SAJ/2014/002 and SAJ/2014/003 1100.00 ",
             "the new line should be update the amout");
         assert.ok(widget.$('caption button.btn-secondary:visible').length, "should display the 'validate' button");
 
         widget.$('.create .add_line').trigger('click').trigger('click');
-        widget.$('.create .create_amount input').val('-100').trigger('input');
+        testUtils.fields.editInput(widget.$('.create .create_amount input'), '-100');
         widget.$('.create .create_account_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(101000 Current Assets)').trigger('mouseenter').trigger('click');
-        widget.$('.create .create_label input').val('test0').trigger('input');
+        testUtils.fields.editInput(widget.$('.create .create_label input'), 'test0');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_left:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 100.00", "should display the value 100.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$ 175.00", "should display 'Open Balance' line because the rest to reconcile is 175.00");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
+        assert.containsN(widget, '.accounting_view tbody tr', 2, "should have 2 created reconcile lines");
         assert.strictEqual(widget.$('.accounting_view tbody tr:eq(1)').text().replace(/[\n\r\s$,]+/g, ' '), " 101000 New test0 100.00 ",
             "the new line should have the selected account, name and amout");
 
@@ -1104,15 +1104,15 @@ QUnit.module('account', {
 
         assert.strictEqual(widget.$('.create .create_amount input').val(), "175.00", "should have '175.00' as default amount value");
 
-        widget.$('.create .create_amount input').val('200').trigger('input');
+        testUtils.fields.editInput(widget.$('.create .create_amount input'), '200');
         widget.$('.create .create_account_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(101000 Current Assets)').trigger('mouseenter').trigger('click');
-        widget.$('.create .create_label input').val('test1').trigger('input');
+        testUtils.fields.editInput(widget.$('.create .create_label input'), 'test1');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 200.00", "should display the value 200.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$ 25.00", "should display 'Open balance' with 25.00 in left column");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 3, "should have 3 created reconcile lines");
+        assert.containsN(widget, '.accounting_view tbody tr', 3, "should have 3 created reconcile lines");
 
         clientAction.destroy();
     });
@@ -1123,7 +1123,7 @@ QUnit.module('account', {
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         var def = $.Deferred();
 
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {
                 currencies: {
@@ -1163,7 +1163,7 @@ QUnit.module('account', {
         widget.$('.create .create_account_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(Search)').trigger('mouseenter').trigger('click');
         // select the account who does not appear in the drop drown
-        $('.modal tr.o_data_row:contains(502)').click();
+        testUtils.dom.click($('.modal tr.o_data_row:contains(502)'));
         assert.strictEqual(widget.$('.create .create_account_id input').val(), "101200 Account Receivable", "Selected account does not change");
         // wait the name_get to render the changes
         def.resolve();
@@ -1177,7 +1177,7 @@ QUnit.module('account', {
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {
                 currencies: {
@@ -1196,13 +1196,13 @@ QUnit.module('account', {
         widget.$('.accounting_view tfoot td:first').trigger('click');
         widget.$('.create .create_account_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(101000 Current Assets)').trigger('mouseenter').trigger('click');
-        widget.$('.create .create_label input').val('test1').trigger('input');
-        widget.$('.create .create_amount input').val('1100').trigger('input');
+        testUtils.fields.editInput(widget.$('.create .create_label input'), 'test1');
+        testUtils.fields.editInput(widget.$('.create .create_amount input'), '1100');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00", "should display the value 1100.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$\u00a075.00", "should display 'Open Balance' with 75.00 in right column");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 1, "should have 1 created reconcile lines");
+        assert.containsOnce(widget, '.accounting_view tbody tr', "should have 1 created reconcile lines");
 
         widget.$('.create .create_tax_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(10.00%)').trigger('mouseenter').trigger('click');
@@ -1211,7 +1211,7 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$\u00a075.00", "should display 'Open Balance' with 75.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "", "should display 'Open Balance' without any value in left column");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
+        assert.containsN(widget, '.accounting_view tbody tr', 2, "should have 2 created reconcile lines");
 
         widget.$('.create .create_tax_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(20.00%)').trigger('mouseenter').trigger('click');
@@ -1219,7 +1219,7 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00 $ 220.00", "should have 2 created reconcile lines with right column values");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$\u00a0145.00", "should display 'Open balance' with 145.00 in right column");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
+        assert.containsN(widget, '.accounting_view tbody tr', 2, "should have 2 created reconcile lines");
 
         clientAction.destroy();
     });
@@ -1229,7 +1229,7 @@ QUnit.module('account', {
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
@@ -1244,7 +1244,7 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Open balance229.12", "should display the 'Open balance' line with value in left column");
 
-        widget.$('.create .create_amount input').val('100').trigger('input');
+        testUtils.fields.editInput(widget.$('.create .create_amount input'), '100');
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' '),
             " 101120 New ATOS Banque 1075.00 101120 New Tax 20.00% 215.00 101130 New ATOS Frais 90.91 101300 New Tax 10.00% include 9.09 ",
@@ -1271,7 +1271,7 @@ QUnit.module('account', {
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: this.params.session,
         });
@@ -1281,8 +1281,8 @@ QUnit.module('account', {
             " 101000 Current AssetsLast Reconciliation: 2017-02-16 101000 ",
             "should display the account as title");
         assert.strictEqual(clientAction.$('.o_reconciliation_line:first').data('mode'), "inactive", "should be in 'inactive' mode because no line to displayed and the balance amount is null");
-        assert.strictEqual(clientAction.$('.accounting_view:first tbody tr').length, 2, "should have 2 propositions");
-        assert.strictEqual(clientAction.$('.accounting_view:first .o_reconcile:visible').length, 1, "should display the reconcile button");
+        assert.containsN(clientAction, '.accounting_view:first tbody tr', 2, "should have 2 propositions");
+        assert.containsOnce(clientAction, '.accounting_view:first .o_reconcile:visible', "should display the reconcile button");
 
         clientAction.$('.accounting_view:first .o_reconcile:visible').trigger('click');
 
@@ -1295,7 +1295,7 @@ QUnit.module('account', {
         assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_right .o_multi_currency').data('content'),
             "10,222.00 €", "sould display the monetary information in €");
 
-        assert.strictEqual(clientAction.$('.accounting_view:first .o_no_valid:visible').length, 1, "should display the skip button");
+        assert.containsOnce(clientAction, '.accounting_view:first .o_no_valid:visible', "should display the skip button");
 
         clientAction.$('.accounting_view:eq(1) thead td:first').trigger('click');
         clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="21"] .cell_label').trigger('click');
@@ -1306,7 +1306,7 @@ QUnit.module('account', {
 
         clientAction.$('.o_reconciliation_line:eq(1) .o_reconcile:visible').trigger('click');
 
-        assert.strictEqual(clientAction.$('.o_reconciliation_line[data-mode!="inactive"]').length, 1, "should have only one line open");
+        assert.containsOnce(clientAction, '.o_reconciliation_line[data-mode!="inactive"]', "should have only one line open");
 
         clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="23"] .cell_label').trigger('click');
         clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="24"] .cell_label').trigger('click');
@@ -1336,7 +1336,7 @@ QUnit.module('account', {
              amount_str: "$ 999.00", debit: 999.0, account_code: "101200", ref: "", already_paid: false};
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
                 if (args.method === 'process_bank_statement_line') {
@@ -1391,14 +1391,14 @@ QUnit.module('account', {
         assert.ok($reconciliationAlert.length,
             "should display the partial reconciliation alert");
 
-        $reconciliationAlert.click();
+        testUtils.dom.click($reconciliationAlert);
 
         var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
 
         assert.equal($buttonReconcile.length, 1,
             'The reconcile button must be visible');
 
-        $buttonReconcile.click();
+        testUtils.dom.click($buttonReconcile);
 
         clientAction.destroy();
     });
@@ -1429,7 +1429,7 @@ QUnit.module('account', {
              amount_str: "$ 1200.00", debit: 1200.0, account_code: "101200", ref: "", already_paid: false};
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
                 if (args.method === 'process_bank_statement_line') {
@@ -1498,15 +1498,15 @@ QUnit.module('account', {
         assert.equal(writeOffCreate.find('input[name=amount]').val(), -1225,
             'The right amount should be proposed for the write-off');
 
-        writeOffCreate.find('.create_account_id input.ui-autocomplete-input').click();
-        $('ul.ui-autocomplete li a:first').click(); // select first account to do the write off in
+        testUtils.dom.click(writeOffCreate.find('.create_account_id input.ui-autocomplete-input'));
+        testUtils.dom.click($('ul.ui-autocomplete li a:first'));
 
         var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
 
         assert.equal($buttonReconcile.length, 1,
             'The reconcile button must be visible');
 
-        $buttonReconcile.click();
+        testUtils.dom.click($buttonReconcile);
 
         clientAction.destroy();
     });
@@ -1524,7 +1524,7 @@ QUnit.module('account', {
         ];
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
                 if (args.method === 'process_move_lines') {
@@ -1572,13 +1572,13 @@ QUnit.module('account', {
             'The right amount should be proposed for the write-off');
 
         // remove the first line, the other two will balance one another
-        widget.$('tr[data-line-id="999"] td:first').click()
+        testUtils.dom.click(widget.$('tr[data-line-id="999"] td:first'));
 
         var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
         assert.equal($buttonReconcile.length, 1,
             'The reconcile button must be visible');
 
-        $buttonReconcile.click();
+        testUtils.dom.click($buttonReconcile);
 
         clientAction.destroy();
     });
@@ -1587,7 +1587,7 @@ QUnit.module('account', {
         assert.expect(2);
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {
                 currencies: {
@@ -1610,7 +1610,7 @@ QUnit.module('account', {
         assert.notOk('data-line-id' in emptyLine.getAttributes(),
             'Empty line should be empty');
 
-        emptyLine.find('td:first').click();
+        testUtils.dom.click(emptyLine.find('td:first'));
 
         // Check that a create form is here
         var writeOffCreate = widget.$('div.create .create_account_id');

@@ -1,6 +1,6 @@
 odoo.define('sms.sms_widget_tests', function (require) {
 "use strict";
-    
+
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 
@@ -21,7 +21,7 @@ QUnit.module('fields', {
         };
     }
 }, function () {
-    
+
     QUnit.module('SmsWidget');
 
     QUnit.test('Sms widgets are correctly rendered', function (assert) {
@@ -32,7 +32,6 @@ QUnit.module('fields', {
             data: this.data,
             arch: '<form><sheet><field name="message" widget="sms_widget"/></sheet></form>',
         });
-        form.$buttons.find('.o_form_button_edit').click();
         assert.ok(form.$('.o_sms_count').length, "Should have a sms counter");
         assert.strictEqual(form.$('.o_sms_count').text(), '0 chars, fits in 0 SMS (GSM7) ', 'Should be "0 chars, fits in 0 SMS (GSM7) " by default');
         // GSM-7
@@ -60,7 +59,7 @@ QUnit.module('fields', {
         text = Array(72).join('ê');
         form.$('.o_input').val(text).trigger('input');
         assert.strictEqual(form.$('.o_sms_count').text(), '71 chars, fits in 2 SMS (UNICODE) ', 'Should be "71 chars, fits in 2 SMS (UNICODE) " for 71 x "ê"');
-        
+
         form.destroy();
     });
 });

@@ -105,8 +105,10 @@ QUnit.module('gdrive_integration', {
         assert.strictEqual($googleAction.length, 1,
             'The button to the google action should be present');
 
-        // Trigger opening of the dynamic link
-        $googleAction.click();
+        // click on gdrive sidebar item
+        testUtils.dom.click(form.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        testUtils.dom.click($googleAction);
+
         form.destroy();
     });
 
@@ -114,6 +116,7 @@ QUnit.module('gdrive_integration', {
         assert.expect(3);
         var self = this;
 
+        var currentID;
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -139,7 +142,7 @@ QUnit.module('gdrive_integration', {
                                     id: 1}]);
                 }
                 if (route === '/web/dataset/call_kw/google.drive.config/get_google_drive_url') {
-                    assert.deepEqual(args.args, [27, self.activeId, 'T1000'],
+                    assert.deepEqual(args.args, [27, currentID, 'T1000'],
                         'The route to get the Google url should have been called');
                     // We don't return anything useful, otherwise it will open a new tab
                     return $.when();
@@ -148,16 +151,15 @@ QUnit.module('gdrive_integration', {
             },
         });
 
-        var nameToId = {
-            'Locomotive Breath': 1,
-            'Hey Macarena': 2,
-        }
-        // Trigger opening of the dynamic link
-        self.activeId = nameToId[$("[name='display_name']").text()];
-        form.sidebar.$('.oe_share_gdoc').click();
-        form.pager.$('.o_pager_next').click();
-        self.activeId = nameToId[$("[name='display_name']").text()];
-        form.sidebar.$('.oe_share_gdoc').click();
+        currentID = 1;
+        testUtils.dom.click(form.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        testUtils.dom.click(form.sidebar.$('.oe_share_gdoc'));
+
+        testUtils.dom.click(form.pager.$('.o_pager_next'));
+        currentID = 2;
+        testUtils.dom.click(form.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        testUtils.dom.click(form.sidebar.$('.oe_share_gdoc'));
+
         form.destroy();
     });
 });

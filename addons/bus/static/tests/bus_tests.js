@@ -27,7 +27,7 @@ QUnit.module('Bus', {
         var pollDeferred = $.Deferred();
 
         var parent = new Widget();
-        testUtils.addMockEnvironment(parent, {
+        testUtils.mock.addMockEnvironment(parent, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -87,7 +87,7 @@ QUnit.module('Bus', {
         assert.expect(3);
 
         // Simulate no ID of last notification in the local storage
-        testUtils.patch(LocalStorageServiceMock, {
+        testUtils.mock.patch(LocalStorageServiceMock, {
             getItem: function (key) {
                 if (key === 'last_ts') {
                     return 0;
@@ -98,7 +98,7 @@ QUnit.module('Bus', {
 
         var pollDeferred = $.Deferred();
         var parent = new Widget();
-        testUtils.addMockEnvironment(parent, {
+        testUtils.mock.addMockEnvironment(parent, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -127,7 +127,7 @@ QUnit.module('Bus', {
         widget.call('bus_service', 'addChannel', 'lambda');
         assert.verifySteps(['/longpolling/poll']);
 
-        testUtils.unpatch(LocalStorageServiceMock);
+        testUtils.mock.unpatch(LocalStorageServiceMock);
         parent.destroy();
     });
 
@@ -140,7 +140,7 @@ QUnit.module('Bus', {
         var pollDeferredMaster = $.Deferred();
 
         var parentMaster = new Widget();
-        testUtils.addMockEnvironment(parentMaster, {
+        testUtils.mock.addMockEnvironment(parentMaster, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -172,7 +172,7 @@ QUnit.module('Bus', {
 
         setTimeout(function () {
             var parentSlave = new Widget();
-            testUtils.addMockEnvironment(parentSlave, {
+            testUtils.mock.addMockEnvironment(parentSlave, {
                 data: {},
                 services: {
                     bus_service: BusService,

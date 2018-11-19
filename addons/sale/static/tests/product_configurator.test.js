@@ -112,7 +112,7 @@ odoo.define('sale.product.configurator.tests', function (require) {
 
             assert.strictEqual(form.$("a:contains('Configure a product')").length, 1);
 
-            form.$("a:contains('Configure a product')").click();
+            testUtils.dom.click(form.$("a:contains('Configure a product')"));
         });
 
         QUnit.test('trigger_up the "add_record" event and checks that rows are correctly added to the list', function (assert) {
@@ -161,8 +161,8 @@ odoo.define('sale.product.configurator.tests', function (require) {
                         return this._super.apply(this, arguments);
                     }
             });
-            product_configurator_form.$('.o_input').click();
-            $("ul.ui-autocomplete li a:contains('Customizable Desk')").mouseenter().click();
+            testUtils.dom.click(product_configurator_form.$('.o_input'));
+            testUtils.dom.click($("ul.ui-autocomplete li a:contains('Customizable Desk')").mouseenter());
         });
     });
 });

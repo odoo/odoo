@@ -82,14 +82,14 @@ QUnit.test('preview of mail failure', function (assert) {
     }];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
-    messagingMenu.$('.dropdown-toggle').click();
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
-    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+    assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should display one preview for the mail failure");
     assert.strictEqual(messagingMenu.$('.o_mail_preview').data('document-model'), 'mail.channel',
         "preview should link to correct document model");
@@ -138,14 +138,14 @@ QUnit.test('preview grouped failures by document', function (assert) {
     }];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
-    messagingMenu.$('.dropdown-toggle').click();
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
-    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 2,
+    assert.containsN(messagingMenu, '.o_mail_preview', 2,
         "should have a two messaging previews for the mail failures");
     var $channelPreview = messagingMenu.$('.o_mail_preview[data-document-model="mail.channel"]');
     assert.strictEqual($channelPreview.data('document-id'), 100,
@@ -194,14 +194,14 @@ QUnit.test('preview grouped failures by document model', function (assert) {
     }];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         data: this.data,
         services: this.services,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
-    messagingMenu.$('.dropdown-toggle').click();
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
 
-    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 2,
+    assert.containsN(messagingMenu, '.o_mail_preview', 2,
         "should have a two messaging previews for the mail failures");
     var $channelPreview = messagingMenu.$('.o_mail_preview[data-document-model="mail.channel"]');
     assert.notOk($channelPreview.data('document-id'),

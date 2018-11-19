@@ -22,7 +22,7 @@ QUnit.module('Sales Team Dashboard', {
     }
 });
 
-QUnit.test('edit target with several o_kanban_primary_bottom divs', function (assert) {
+QUnit.test('edit target with several o_kanban_primary_bottom divs [REQUIRE FOCUS]', function (assert) {
     assert.expect(4);
 
     var kanban = createView({
@@ -48,16 +48,15 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs', function (as
             }
             return this._super.apply(this, arguments);
         },
-
     });
 
-    assert.strictEqual(kanban.$('.o_kanban_view .sales_team_target_definition').length, 1,
+    assert.containsOnce(kanban, '.o_kanban_view .sales_team_target_definition',
         "should have classname 'sales_team_target_definition'");
-    assert.strictEqual(kanban.$('.o_kanban_primary_bottom').length, 2,
+    assert.containsN(kanban, '.o_kanban_primary_bottom', 2,
         "should have two divs with classname 'o_kanban_primary_bottom'");
 
-    kanban.$('a.sales_team_target_definition').click();
-    assert.strictEqual(kanban.$('.o_kanban_primary_bottom:last input').length, 1,
+    testUtils.dom.click(kanban.$('a.sales_team_target_definition'));
+    assert.containsOnce(kanban, '.o_kanban_primary_bottom:last input',
         "should have rendered an input in the last o_kanban_primary_bottom div");
 
     kanban.$('.o_kanban_primary_bottom:last input').focus();

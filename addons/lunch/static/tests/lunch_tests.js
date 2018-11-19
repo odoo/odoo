@@ -77,7 +77,7 @@ QUnit.module('lunch', {
         var widgetText = form.$('.o_field_widget[name="previous_order_widget"]').text();
         assert.ok(widgetText.indexOf('This is the first time you order a meal') !== -1,
             "the widget should display its no content text");
-        assert.strictEqual(form.$('.o_lunch_vignette').length, 0,
+        assert.containsNone(form, '.o_lunch_vignette',
             "there should be no vignette");
 
         form.destroy();
@@ -125,16 +125,16 @@ QUnit.module('lunch', {
             },
         });
 
-        assert.strictEqual(form.$('.o_list_view tr.o_data_row').length, 0,
+        assert.containsNone(form, '.o_list_view tr.o_data_row',
             "there should be no row in the one2many list");
 
-        assert.strictEqual(form.$('.o_lunch_vignette').length, 1,
+        assert.containsOnce(form, '.o_lunch_vignette',
             "there should be a vignette");
 
         // add an order
-        form.$('.o_lunch_vignette .o_add_button').click();
+        testUtils.dom.click(form.$('.o_lunch_vignette .o_add_button'));
 
-        assert.strictEqual(form.$('.o_list_view tr.o_data_row').length, 1,
+        assert.containsOnce(form, '.o_list_view tr.o_data_row',
             "there should be one new row in the one2many list");
         assert.strictEqual(form.$('.o_list_view tr.o_data_row').text(), "Pizza Margheritacoucou6.90",
             "the line should contain the correct data");
