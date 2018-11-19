@@ -15,6 +15,7 @@
                 <field name="stage_id"/>
                 <field name="maintenance_team_id"/>
                 <separator/>
+                <filter string="Not Cancelled" name="not_archived" domain="[('archive', '=', False)]"/>
                 <filter string="To do" domain="[('stage_id.done', '=', False)]" name="todo"/>
                 <filter string="Blocked" name="kanban_state_block" domain="[('kanban_state', '=', 'blocked')]"/>
                 <filter string="In Progress" name="progress" domain="[('kanban_state', '=', 'normal')]"/>
@@ -230,9 +231,9 @@
     <record id="hr_equipment_request_action" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,search,graph,calendar</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
-        <field name="context">{'default_technician_user_id': uid}</field>
+        <field name="context">{'default_technician_user_id': uid, 'search_default_not_archived': True}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new maintenance request.
