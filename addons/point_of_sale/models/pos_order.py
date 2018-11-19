@@ -298,10 +298,16 @@ class PosOrder(models.Model):
 
         for order in self.filtered(lambda o: not o.account_move or o.state == 'paid'):
             current_company = order.sale_journal.company_id
-            account_def = IrProperty.get(
-                'property_account_receivable_id', 'res.partner')
-            order_account = order.partner_id.property_account_receivable_id.id or account_def and account_def.id
             partner_id = ResPartner._find_accounting_partner(order.partner_id).id or False
+            account_def = IrProperty.get(
+                'property_account_receivable_id', 'res.partner'
+            )
+            if partner_id:
+                order_account = order.partner_id.property_account_receivable_id.id or account_def and account_def.id
+            else:
+                # In case we do not have a partner we need to define any regular account like the transfer account
+                order_account = current_company.transfer_account_id.id
+
             if move is None:
                 # Create an entry for the sale
                 journal_id = self.env['ir.config_parameter'].sudo().get_param(
@@ -874,11 +880,12 @@ class PosOrder(models.Model):
 
     def _prepare_bank_statement_line_payment_values(self, data):
         """Create a new payment for the order"""
+        partner = self.env["res.partner"]._find_accounting_partner(self.partner_id)
         args = {
             'amount': data['amount'],
             'date': data.get('payment_date', fields.Date.context_today(self)),
             'name': self.name + ': ' + (data.get('payment_name', '') or ''),
-            'partner_id': self.env["res.partner"]._find_accounting_partner(self.partner_id).id or False,
+            'partner_id': partner.id or False,
         }
 
         journal_id = data.get('journal', False)
@@ -889,7 +896,10 @@ class PosOrder(models.Model):
         # use the company of the journal and not of the current user
         company_cxt = dict(self.env.context, force_company=journal.company_id.id)
         account_def = self.env['ir.property'].with_context(company_cxt).get('property_account_receivable_id', 'res.partner')
-        args['account_id'] = (self.partner_id.property_account_receivable_id.id) or (account_def and account_def.id) or False
+        if partner:
+            args['account_id'] = (partner.property_account_receivable_id.id) or (account_def and account_def.id) or False
+        else:
+            args['account_id'] = journal.company_id.transfer_account_id.id
 
         if not args['account_id']:
             if not args['partner_id']:

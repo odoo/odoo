@@ -12,6 +12,12 @@ class TestPointOfSaleCommon(common.TransactionCase):
         self.PosOrder = self.env['pos.order']
         self.PosSession = self.env['pos.session']
         self.company_id = self.ref('base.main_company')
+        self.env.ref('base.main_company').transfer_account_id = self.env['account.account'].create({
+            'code': '1017',
+            'name': 'Liquidity Transfers - Test',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'reconcile': True
+        })
         self.product3 = self.env.ref('product.product_product_3')
         self.product4 = self.env.ref('product.product_product_4')
         self.partner1 = self.env.ref('base.res_partner_1')
