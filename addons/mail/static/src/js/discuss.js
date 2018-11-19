@@ -823,7 +823,6 @@ var Discuss = AbstractAction.extend({
 
         this._threadWidget
             .on('redirect', this, function (ev) {
-                debugger;
                 this.call('mail_service', 'redirect', ev.data.resModel, ev.data.resID, this._setThread.bind(this));
             })
             .on('redirect_to_channel', this, function (ev) {
@@ -895,7 +894,7 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {integer} ev.data.messageID
      */
     _selectMessage: function (ev) {
@@ -1252,7 +1251,7 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {integer|string} ev.data.channelID
      */
     _onChannelLeft: function (ev) {
@@ -1337,12 +1336,15 @@ var Discuss = AbstractAction.extend({
      * key `isVisible`.
      *
      * @private
-     * @param {mail.model.Thread} thread
-     * @param {Object} query
-     * @param {boolean} query.isVisible the response to provide on whether the
+     * @param {OdooEvent} ev
+     * @param {mail.model.Thread} ev.data.thread
+     * @param {Object} ev.data.query
+     * @param {boolean} ev.data.query.isVisible the response to provide on whether the
      *   bottom of the thread is visible in discuss.
      */
-    _onIsThreadBottomVisible: function (thread, query) {
+    _onIsThreadBottomVisible: function (ev) {
+        var thread = ev.data.thread;
+        var query = ev.data.query;
         query.isVisible = query.isVisible ||
                             (
                                 thread.getID() === this._thread.getID() &&
@@ -1377,7 +1379,7 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {mail.model.Message} ev.data.message
      * @param {string} [ev.data.type] the channel
      */
@@ -1418,7 +1420,7 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {mail.model.Channel} ev.data.channel
      */
     _onNewChannel: function (ev) {
@@ -1430,11 +1432,11 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {mail.model.Message} ev.data (message)
      */
     _onNewMessage: function (ev) {
-        var message = ev.data;
+        var message = ev.data.message;
         var self = this;
         if (_.contains(message.getThreadIDs(), this._thread.getID())) {
             if (this._thread.getType() !== 'mailbox' && this._threadWidget.isAtBottom()) {
@@ -1457,7 +1459,7 @@ var Discuss = AbstractAction.extend({
      * All threads except document threads are valid for discuss app.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {mail.model.Thread} ev.data.thread
      */
     _onOpenThreadInDiscuss: function (ev) {
@@ -1468,7 +1470,7 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {Object} ev.data (messageData)
      */
     _onPostMessage: function (ev) {

@@ -552,11 +552,11 @@ MailManager.include({
      * extra notification to prevent that situation to occur.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
     _onNotification: function (ev) {
         var self = this;
-        var notifs = ev.data.notifications ? ev.data.notifications : ev;
+        var notifs = ev.data.notifications;
         notifs = this._filterNotificationsOnUnsubscribe(notifs);
         _.each(notifs, function (notif) {
             var model = notif[0][1];

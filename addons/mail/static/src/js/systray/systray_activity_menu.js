@@ -24,7 +24,9 @@ var ActivityMenu = Widget.extend({
     },
     start: function () {
         this._$activitiesPreview = this.$('.o_mail_systray_dropdown_items');
-        this.call('mail_service', 'getMailBus').on('activity_updated', this, this._updateCounter);
+        this.call('mail_service', 'getMailBus').on('activity_updated', this, function (ev) {
+            this._updateCounter(ev.data)
+        });
         this._updateCounter();
         this._updateActivityPreview();
         return this._super();
@@ -77,14 +79,12 @@ var ActivityMenu = Widget.extend({
     /**
      * update counter based on activity status(created or Done)
      * @private
-     * @param {OdooEvent} event
      * @param {Object} [data] key, value to decide activity created or deleted
      * @param {String} [data.type] notification type
      * @param {Boolean} [data.activity_deleted] when activity deleted
      * @param {Boolean} [data.activity_created] when activity created
      */
-    _updateCounter: function (ev) {
-        var data = ev && ev.data ? ev.data.data : ev;
+    _updateCounter: function (data) {
         if (data) {
             if (data.activity_created) {
                 this.activityCounter ++;

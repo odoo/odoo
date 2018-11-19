@@ -303,7 +303,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * Note: this callback function is only called for 'res.partner'
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {string} ev.data.resModel
      * @param {integer} ev.data.resID
      */
@@ -313,7 +313,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {integer} ev.data.channelID
      */
     _onRedirectToChannel: function (ev) {
@@ -354,10 +354,11 @@ var ThreadWindow = AbstractThreadWindow.extend({
     },
     /**
      * @private
-     * @param {integer} messageID
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.messageID
      */
-    _onToggleStarStatus: function (messageID) {
-        var message = this.call('mail_service', 'getMessage', messageID);
+    _onToggleStarStatus: function (ev) {
+        var message = this.call('mail_service', 'getMessage', ev.data.messageID);
         message.toggleStarStatus();
     },
     /**

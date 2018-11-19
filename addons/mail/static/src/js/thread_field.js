@@ -181,11 +181,11 @@ var ThreadField = AbstractField.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {mail.model.Message} ev.data
      */
     _onNewMessage: function (ev) {
-        var message = ev.data;
+        var message = ev.data.message;
         if (
             message.isLinkedToDocumentThread() &&
             message.getDocumentModel() === this.model &&
@@ -200,7 +200,7 @@ var ThreadField = AbstractField.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {integer} ev.data.channelID
      */
     _onRedirectToChannel: function (ev) {
@@ -212,7 +212,7 @@ var ThreadField = AbstractField.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {string} ev.data.resModel
      * @param {integer} ev.data.resID
      */
@@ -224,7 +224,7 @@ var ThreadField = AbstractField.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {mail.model.Message} ev.data.message
      */
     _onUpdateMessage: function (ev) {

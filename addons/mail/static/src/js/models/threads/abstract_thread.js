@@ -42,7 +42,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      */
     addMessage: function (message) {
         this._addMessage.apply(this, arguments);
-        this.trigger('message_added', message);
+        this.trigger('message_added', {message: message});
     },
     /**
      * Updates the folded state of the thread

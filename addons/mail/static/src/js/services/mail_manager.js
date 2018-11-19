@@ -517,7 +517,7 @@ var MailManager =  AbstractService.extend({
         this._addNewMessagePostprocessThread(message, options);
         this._addMessageToThreads(message, options);
         if (!options.silent) {
-            this._mailBus.trigger('new_message', message);
+            this._mailBus.trigger('new_message', {message: message});
         }
         return message;
     },

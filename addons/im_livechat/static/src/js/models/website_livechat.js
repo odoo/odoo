@@ -171,10 +171,11 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      *
      * @override {mail.model.ThreadTypingMixin}
      * @private
-     * @param {mail.model.AbstractMessage} message
+     * @param {OdooEvent} ev
+     * @param {mail.model.AbstractMessage} ev.data.message
      */
     _onTypingMessageAdded: function (ev) {
-        var message = ev.data;
+        var message = ev.data.message;
         var operatorID = this.getOperatorPID()[0];
         if (message.hasAuthor() && message.getAuthorID() === operatorID) {
             this.unregisterTyping({ partnerID: operatorID });

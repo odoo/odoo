@@ -565,9 +565,8 @@ MailManager.include({
      * This is either a new message or an updated message.
      *
      * @private
-     * @param {OdooEvent} event
-     * @param {mail.model.Message} ev.data.message
-     * @param {Object} ev.data.options
+     * @param {mail.model.Message} message
+     * @param {Object} options
      * @param {boolean} [options.keepBottom=false] if set, thread windows with
      *   this message should scroll to the bottom if their bottoms are currently
      *   visible.
@@ -575,9 +574,7 @@ MailManager.include({
      *   this message become passive, so that they are marked as read only when
      *   the focus is on the thread window.
      */
-    _updateThreadWindowsFromMessage: function (ev) {
-        var message = ev.data.message;
-        var options = ev.data.options;
+    _updateThreadWindowsFromMessage: function (message, options) {
         if (this._areAllThreadWindowsHidden()) {
             return;
         }
@@ -624,11 +621,11 @@ MailManager.include({
      * @param {OdooEvent} event
      * @param {mail.model.Thread} ev.data.thread
      * @param {Object} ev.data.query
-     * @param {boolean} query.isVisible write on it
+     * @param {boolean} ev.data.query.isVisible write on it
      */
     _onIsThreadBottomVisible: function (ev) {
         var thread = ev.data.thread;
-        var query = ev.data.query
+        var query = ev.data.query;
         _.each(this._threadWindows, function (threadWindow) {
             if (
                 thread.getID() === threadWindow.getID() &&
@@ -643,7 +640,7 @@ MailManager.include({
      * Show or hide window of this channel when a new channel is added.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {mail.model.Channel} ev.data.channel
      */
     _onNewChannel: function (ev) {
@@ -658,17 +655,17 @@ MailManager.include({
      * Update thread window containing this message when a new message is added.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {Object} ev.data (message)
      */
     _onNewMessage: function (ev) {
-        this._updateThreadWindowsFromMessage({data: {message: ev.data, options: { keepBottom: true, passively: true }}});
+        this._updateThreadWindowsFromMessage(ev.data.message, { keepBottom: true, passively: true });
     },
     /**
      * Close the thread window when unsusbscribe from a channel.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {integer} ev.data.channelID
      */
     _onUnsubscribeFromChannel: function (ev) {
@@ -710,7 +707,7 @@ MailManager.include({
      * in order to display the correct new im status of this users.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      * @param {mail.model.Thread} ev.data.thread
      */
     _onUpdateDmPresence: function (ev) {
@@ -725,10 +722,11 @@ MailManager.include({
      * Called when a message has been updated.
      *
      * @private
-     * @param {Object} message
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.message
      */
     _onUpdateMessage: function (ev) {
-        this._updateThreadWindowsFromMessage({data: {message: ev.data.message, options: { keepBottom: false }}});
+        this._updateThreadWindowsFromMessage(ev.data.message, { keepBottom: false });
     },
 
 });

@@ -326,7 +326,8 @@ var LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {Array[]} notifications
+     * @param {OdooEvent} ev
+     * @param {Array[]} ev.data.notifications
      */
     _onNotification: function (ev) {
         var self = this;
