@@ -59,7 +59,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_fiscal_year_view.xml',
         'views/account_incoterms_view.xml',
         'data/account_incoterms_data.xml',
-        'views/res_company_view.xml',
         'views/digest_views.xml',
         'wizard/account_invoice_send_views.xml',
     ],

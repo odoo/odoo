@@ -305,11 +305,6 @@
                         <strong>This quotation has been canceled.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
                     </div>
 
-                    <div t-if="sale_order.state == 'draft'" class="alert alert-warning alert-dismissable d-print-none" role="status">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
-                        <strong>This is a draft quotation.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get the final version.</a>
-                    </div>
-
                     <div t-if="sale_order.is_expired" class="alert alert-warning alert-dismissable d-print-none" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
                         <strong>This offer expired!</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
@@ -343,7 +338,7 @@
 
                     <!-- chatter -->
                     <div id="sale_order_communication" class="mt-4">
-                        <h2>Communication</h2>
+                        <h2>History</h2>
                         <t t-call="portal.message_thread">
                             <t t-set="object" t-value="sale_order"/>
                         </t>
@@ -361,8 +356,8 @@
     <template id="sale_order_portal_content" name="Sales Order Portal Content">
         <!-- Intro -->
         <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
-            <h2 class="my-0">
-                <span t-field="sale_order.type_name"></span>
+          <h2 class="my-0">
+                <t t-esc="sale_order.type_name"/>
                 <em t-esc="sale_order.name"/>
             </h2>
         </div>

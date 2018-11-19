@@ -33,7 +33,7 @@
                                 <field name="payment_method" widget="radio" nolabel="1"/>
                             </group>
                         </div>
-                        <div class="col offset-md-1" name="right-column">
+                        <div class="col" name="right-column">
                             <div attrs="{'invisible': [('payment_method', '!=', 'paypal')]}">
                                 <group>
                                     <field name="paypal_email_account" attrs="{'required': [('payment_method', '=', 'paypal')]}" />
