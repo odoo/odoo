@@ -72,6 +72,8 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
             if country_code:
                 country = env['res.country'].search([('code', 'ilike', country_code)])[0]
                 env['res.company'].browse(1).write({'country_id': country_code and country.id, 'currency_id': country_code and country.currency_id.id})
+                if country.is_l10_base_available:
+                    country.is_l10_base_install = True
                 if len(country_timezones.get(country_code, [])) == 1:
                     users = env['res.users'].search([])
                     users.write({'tz': country_timezones[country_code][0]})

@@ -283,6 +283,9 @@ class TestAPI(common.TransactionCase):
     @mute_logger('odoo.models')
     def test_60_prefetch(self):
         """ Check the record cache prefetching """
+        parnter1 = self.env.ref('base.res_partner_1')
+        parnter1.country_id = self.env.ref('base.be')
+
         partners = self.env['res.partner'].search([], limit=models.PREFETCH_MAX)
         self.assertTrue(len(partners) > 1)
 
@@ -291,29 +294,29 @@ class TestAPI(common.TransactionCase):
 
         # reading ONE partner should fetch them ALL
         for partner in partners:
-            partner.state_id
+            partner.country_id
             break
         partner_ids_with_field = [partner.id
                                   for partner in partners
-                                  if 'state_id' in partner._cache]
+                                  if 'country_id' in partner._cache]
         self.assertItemsEqual(partner_ids_with_field, partners.ids)
 
-        # partners' states are ready for prefetching
-        state_ids = {sid
+        # partners' country are ready for prefetching
+        country_ids = {sid
                        for partner in partners
-                       for sid in partner._cache['state_id']}
-        self.assertTrue(len(state_ids) > 1)
-        self.assertItemsEqual(state_ids, partners._prefetch['res.country.state'])
+                       for sid in partner._cache['country_id']}
+        self.assertTrue(len(country_ids) > 1)
+        self.assertItemsEqual(country_ids, partners._prefetch['res.country'])
 
         # reading ONE partner country should fetch ALL partners' countries
         for partner in partners:
-            if partner.state_id:
-                partner.state_id.name
+            if partner.country_id:
+                partner.country_id.name
                 break
-        state_ids_with_field = [state.id
-                                  for state in partners.mapped('state_id')
-                                  if 'name' in state._cache]
-        self.assertItemsEqual(state_ids_with_field, state_ids)
+        country_ids_with_field = [country.id
+                                  for country in partners.mapped('country_id')
+                                  if 'name' in country._cache]
+        self.assertItemsEqual(country_ids_with_field, country_ids)
 
     @mute_logger('odoo.models')
     def test_60_prefetch_object(self):

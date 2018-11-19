@@ -7,5 +7,6 @@
 like countries, country states or country-related information that are not related to accounting.
 """,
     'data': ['data/res.country.state.csv'],
+    'demo': ['demo/res_users_demo.xml'],
     'auto_install': True,
 }
