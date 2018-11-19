@@ -1439,6 +1439,11 @@ var BasicModel = AbstractModel.extend({
                 record._rawChanges[name] = val;
                 return;
             }
+            if (record._rawChanges[name]) {
+                // if previous _rawChanges exists, clear them since the field is now knwon
+                // and restoring outdated onchange over posterious change is wrong
+                delete record._rawChanges[name];
+            }
             var oldValue = name in record._changes ? record._changes[name] : record.data[name];
             var id;
             if (field.type === 'many2one') {
@@ -2552,11 +2557,6 @@ var BasicModel = AbstractModel.extend({
                     relationField: field.relation_field,
                     viewType: view ? view.type : fieldInfo.viewType,
                 });
-                // set existing changes to the list
-                if (record._changes && record._changes[fieldName]) {
-                    list._changes = self.localData[record._changes[fieldName]]._changes;
-                    record._changes[fieldName] = list.id;
-                }
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
                     var def = self._readUngroupedList(list).then(function () {
