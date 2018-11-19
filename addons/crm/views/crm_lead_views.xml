@@ -677,6 +677,7 @@
         <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
             <field name="name">crm.lead.search.opportunity</field>
             <field name="model">crm.lead</field>
+            <field name="priority">15</field>
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
                     <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
