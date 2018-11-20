@@ -47,7 +47,7 @@
     // Main function that starts orchestration of tests
     function clickEverywhere(){
         console.log("Starting ClickEverywhere test");
-        var startTime = performance.now()
+        var startTime = performance.now();
         createWebClientHooks();
         testedApps = [];
         testedMenus = [];
@@ -55,12 +55,12 @@
         // finding applications menus
         var $listOfAppMenuItems;
         if (isEnterprise) {
-            console.log("Odoo flavor: Enterprise")
+            console.log("Odoo flavor: Enterprise");
             var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-            testUtils.dom.click($homeMenu);
-            $listOfAppMenuItems = $(".o_app, .o_menuitem")
+            $homeMenu.click();
+            $listOfAppMenuItems = $(".o_app, .o_menuitem");
         } else {
-            console.log("Odoo flavor: Community")
+            console.log("Odoo flavor: Community");
             $listOfAppMenuItems = $('a.o_app');
         }
         console.log('Found ', $listOfAppMenuItems.length, 'apps to test');
@@ -74,7 +74,7 @@
         }).always(function() {
             console.log("Test took ", (performance.now() - startTime)/1000, " seconds");
         }).fail(function () {
-            console.error("Error !")
+            console.error("Error !");
         });
     }
 
@@ -101,7 +101,7 @@
         }).then(function(){
                 // no effect in community
                 var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-                testUtils.dom.click($homeMenu);
+                $homeMenu.click();
         });
     }
 
@@ -119,7 +119,7 @@
         console.log("Testing menu", element.innerText.trim(), " ", element.dataset.menuXmlid);
         testedMenus.push(element.dataset.menuXmlid);
         var startActionCount = clientActionCount;
-        testUtils.dom.click(element);
+        element.click();
         var isModal = false;
         return waitForCondition(function() {
             // sometimes, the app is just a modal that needs to be closed
@@ -173,7 +173,7 @@
         setTimeout(function() {
             var $element = $("nav.o_cp_switch_buttons > button[data-view-type=" + viewType + "]");
             console.log('Clicking on: ', $element[0].dataset.viewType,  ' view switcher');
-            testUtils.dom.click($element);
+            $element.click();
         },250);
         var waitViewSwitch = waitForCondition(function(){
             return $('.o_content > .o_view_controller').data('view-type') === viewType;
@@ -190,7 +190,7 @@
     function testFilters() {
         var filterDef = $.when();
         // var $filters = $('div.o_control_panel div.btn-group.o_dropdown > ul.o_filters_menu > li:not(.o_add_custom_filter)');
-        var $filters = $('.o_filters_menu > .o_menu_item')
+        var $filters = $('.o_filters_menu > .o_menu_item');
         console.log("Testing " + $filters.length + " filters");
         var filter_ids = _.compact(_.map($filters, function(f) { return f.dataset.id}));
         _.each(filter_ids, function(filter_id){
@@ -203,16 +203,16 @@
                     return $.Deferred().resolve();
                 };
                 console.log('Clicking on filter "', $filter.text().trim(), '"');
-                testUtils.dom.click($filter[0]);
+                $filter[0].click();
                 setTimeout(function() {
                     var $filterOption = $('.o_menu_item .o_item_option[data-item_id="' + filter_id + '"]:not(.selected) a');
                     // In case the filter is a date filter, we need to click on the first filter option (like 'today','This week' ...)
                     if ($filterOption.length > 0) {
                         console.log('Clicking on filter option "', $filterOption[0], '"');
-                        testUtils.dom.click($filterOption[0]);
+                        $filterOption[0].click();
                         console.log('And now on filter again');
                         $filter = $('.o_menu_item[data-id="' + filter_id + '"] a');
-                        testUtils.dom.click($filter[0]);
+                        $filter[0].click(); // To avoid that the next view fold the options
                     }
                 }, 250);
                 return waitForCondition(function() {
