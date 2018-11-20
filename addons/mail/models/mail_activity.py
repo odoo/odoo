@@ -316,22 +316,23 @@ class MailActivity(models.Model):
     @api.multi
     def write(self, values):
         if values.get('user_id'):
-            pre_responsibles = self.mapped('user_id.partner_id')
+            user_changes = self.filtered(lambda activity: activity.user_id.id != values.get('user_id'))
+            pre_responsibles = user_changes.mapped('user_id.partner_id')
         res = super(MailActivity, self).write(values)
 
         if values.get('user_id'):
             if values['user_id'] != self.env.uid:
-                to_check = self.filtered(lambda act: not act.automated)
+                to_check = user_changes.filtered(lambda act: not act.automated)
                 to_check._check_access_assignation()
                 if not self.env.context.get('mail_activity_quick_update', False):
-                    self.action_notify()
-            for activity in self:
+                    user_changes.action_notify()
+            for activity in user_changes:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
                 if activity.date_deadline <= fields.Date.today():
                     self.env['bus.bus'].sendone(
                         (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
                         {'type': 'activity_updated', 'activity_created': True})
-            for activity in self:
+            for activity in user_changes:
                 if activity.date_deadline <= fields.Date.today():
                     for partner in pre_responsibles:
                         self.env['bus.bus'].sendone(
@@ -350,6 +351,8 @@ class MailActivity(models.Model):
 
     @api.multi
     def action_notify(self):
+        if not self:
+            return
         body_template = self.env.ref('mail.message_activity_assigned')
         for activity in self:
             model_description = self.env['ir.model']._get(activity.res_model).display_name
