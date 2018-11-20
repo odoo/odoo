@@ -201,7 +201,7 @@ shelf have not (their price was manually overriden)",
         trigger: ".product:contains('Miscellaneous')",
     }, {
         content: "verify there is one line with 3 miscellaneous products",
-        trigger: ".orderline:contains('Miscellaneous') em:contains('3.000')",
+        trigger: ".orderline:contains('Miscellaneous') em:contains('3.00')",
         run: function () {}, // it's a check
     }, {
         content: "close the Point of Sale frontend",
@@ -330,7 +330,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     // test opw-672118 orderline subtotal rounding
     steps = steps.concat(add_product_to_order('Desk Organizer'));
     steps = steps.concat(generate_product_screen_keypad_steps('.999')); // sets orderline qty
-    steps = steps.concat(verify_order_total('5.09'));
+    steps = steps.concat(verify_order_total('5.10'));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
     steps = steps.concat(generate_payment_screen_keypad_steps("10"));
     steps = steps.concat(finish_order());

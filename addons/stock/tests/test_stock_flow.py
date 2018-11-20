@@ -575,7 +575,7 @@ class TestStockFlow(TestStockCommon):
         self.MoveObj.create({
             'name': self.gB.name,
             'product_id': self.gB.id,
-            'product_uom_qty': 0.525,
+            'product_uom_qty': 0.52,
             'product_uom': self.uom_kg.id,
             'picking_id': picking_in_B.id,
             'location_id': self.supplier_location,
@@ -609,8 +609,8 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(PackSdozAround.product_uom_id.id, self.uom_unit.id, 'Wrong uom in pack operation for product SDozARound.')
         # Check pack operation quantity and unit of measure for product gB.
         packgB = self.StockPackObj.search([('product_id', '=', self.gB.id), ('picking_id', '=', picking_in_B.id)], limit=1)
-        self.assertEqual(packgB.product_uom_qty, 0.525, 'Wrong quantity in pack operation (%s found instead of 0.525)' % (packgB.product_uom_qty))
-        self.assertEqual(packgB.product_qty, 525, 'Wrong real quantity in pack operation (%s found instead of 525)' % (packgB.product_qty))
+        self.assertEqual(packgB.product_uom_qty, 0.52, 'Wrong quantity in pack operation (%s found instead of 0.52)' % (packgB.product_uom_qty))
+        self.assertEqual(packgB.product_qty, 520, 'Wrong real quantity in pack operation (%s found instead of 520)' % (packgB.product_qty))
         self.assertEqual(packgB.product_uom_id.id, packgB.move_id.product_uom.id, 'Wrong uom in pack operation for product kgB.')
         # Check pack operation quantity and unit of measure for product kgB.
         packkgB = self.StockPackObj.search([('product_id', '=', self.kgB.id), ('picking_id', '=', picking_in_B.id)], limit=1)
@@ -674,7 +674,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(moves_kgB.product_uom.id, self.uom_gm.id, 'Wrong uom in move for product kgB.')
         # Check two moves created for product gB with quantity (0.525 kg and 0.3 g)
         moves_gB_kg = self.MoveObj.search([('product_id', '=', self.gB.id), ('picking_id', '=', picking_in_B.id), ('product_uom', '=', self.uom_kg.id)], limit=1)
-        self.assertEqual(moves_gB_kg.product_uom_qty, 0.526, 'Wrong move quantity (%s found instead of 0.526)' % (moves_gB_kg.product_uom_qty))
+        self.assertEqual(moves_gB_kg.product_uom_qty, 0.53, 'Wrong move quantity (%s found instead of 0.53)' % (moves_gB_kg.product_uom_qty))
         self.assertEqual(moves_gB_kg.product_uom.id, self.uom_kg.id, 'Wrong uom in move for product gB.')
 
         # TODO Test extra move once the uom is editable in the move_lines
@@ -757,8 +757,8 @@ class TestStockFlow(TestStockCommon):
 
         # Check quantity difference after stock transfer.
         quantity_diff = before_out_quantity - self.kgB.qty_available
-        self.assertEqual(float_round(quantity_diff, precision_rounding=0.0001), 0.001, 'Wrong quantity diffrence.')
-        self.assertEqual(self.kgB.qty_available, 0.039, 'Wrong quantity available (%s found instead of 0.039)' % (self.kgB.qty_available))
+        self.assertEqual(float_round(quantity_diff, precision_rounding=0.0001), 0.00, 'Wrong quantity diffrence.')
+        self.assertEqual(self.kgB.qty_available, 0.04, 'Wrong quantity available (%s found instead of 0.04)' % (self.kgB.qty_available))
 
         # ======================================================================
         # Outgoing shipments.
@@ -834,7 +834,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(SDozARound_qty, 3, 'Wrong move quantity availability (%s found instead of 3)' % (SDozARound_qty))
         # Check product D available quantity
         gB_qty = self.MoveObj.search([('product_id', '=', self.gB.id), ('picking_id', '=', picking_out.id)], limit=1).product_qty
-        self.assertEqual(gB_qty, 503, 'Wrong move quantity availability (%s found instead of 503)' % (gB_qty))
+        self.assertEqual(gB_qty, 500, 'Wrong move quantity availability (%s found instead of 500)' % (gB_qty))
         # Check product D available quantity
         kgB_qty = self.MoveObj.search([('product_id', '=', self.kgB.id), ('picking_id', '=', picking_out.id)], limit=1).product_qty
         self.assertEqual(kgB_qty, 0.020, 'Wrong move quantity availability (%s found instead of 0.020)' % (kgB_qty))
@@ -865,13 +865,13 @@ class TestStockFlow(TestStockCommon):
         # Check quants and available quantity for product gB.
         quants = self.StockQuantObj.search([('product_id', '=', self.gB.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(round(sum(total_qty), 1), 548.3, 'Expecting 547.6 g , got %.4f g on location stock!' % (sum(total_qty)))
-        self.assertEqual(round(self.gB.qty_available, 1), 548.3, 'Wrong quantity available (%s found instead of 547.6)' % (self.gB.qty_available))
+        self.assertEqual(round(sum(total_qty), 1), 551.3, 'Expecting 551.3 g , got %.4f g on location stock!' % (sum(total_qty)))
+        self.assertEqual(round(self.gB.qty_available, 1), 551.3, 'Wrong quantity available (%s found instead of 551.3)' % (self.gB.qty_available))
         # Check quants and available quantity for product kgB.
         quants = self.StockQuantObj.search([('product_id', '=', self.kgB.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
-        self.assertEqual(sum(total_qty), 0.019, 'Expecting 0.019 kg , got %.4f kg on location stock!' % (sum(total_qty)))
-        self.assertEqual(self.kgB.qty_available, 0.019, 'Wrong quantity available (%s found instead of 0.019)' % (self.kgB.qty_available))
+        self.assertEqual(round(sum(total_qty),2), 0.02, 'Expecting 0.02 kg , got %.4f kg on location stock!' % (sum(total_qty)))
+        self.assertEqual(self.kgB.qty_available, 0.02, 'Wrong quantity available (%s found instead of 0.02)' % (self.kgB.qty_available))
 
         # ----------------------------------------------------------------------
         # Receipt back order of incoming shipment.
