@@ -34,16 +34,23 @@
         <field name="arch" type="xml">
             <form string="Stage">
                 <sheet>
-                    <group>
-                        <field name="team_count" invisible="1"/>
-                        <group>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name"/>
+                        </div>
+                        <h1>
                             <field name="name"/>
-                            <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
-                            <field name="fold"/>
-                        </group>
+                        </h1>
+                    </div>
+                    <group>
                         <group>
                             <field name="on_change"/>
                             <field name="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
+                        </group>
+                        <field name="team_count" invisible="1"/>
+                        <group>
+                            <field name="fold"/>
+                            <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
                         </group>
                     </group>
                     <separator string="Requirements"/>

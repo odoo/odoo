@@ -40,6 +40,9 @@ class Team(models.Model):
         ('stage', 'Stage'),
     ], string='Grouping Method', default='day', help="How this channel's dashboard graph will group the results.")
 
+    alias_user_id = fields.Many2one(domain=lambda self: [
+        ('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman_all_leads').id)])
+
     def _compute_unassigned_leads_count(self):
         leads_data = self.env['crm.lead'].read_group([
             ('team_id', 'in', self.ids),
