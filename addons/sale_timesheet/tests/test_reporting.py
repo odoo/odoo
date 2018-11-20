@@ -330,11 +330,23 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         self.assertTrue(float_is_zero(project_global_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
         self.assertTrue(float_is_zero(project_global_stat['expense_cost'], precision_rounding=rounding), "The expense cost of the global project should be 0.0")
 
+        # simulate the auto creation of the SO line for expense, like we confirm a vendor bill.
+        so_line_expense = self.env['sale.order.line'].create({
+            'name': self.product_expense.name,
+            'product_id': self.product_expense.id,
+            'product_uom_qty': 0.0,
+            'product_uom': self.product_expense.uom_id.id,
+            'price_unit': self.product_expense.list_price,  # reinvoice at sales price
+            'order_id': self.sale_order_1.id,
+            'is_expense': True,
+        })
+
         # add expense AAL: 20% margin when reinvoicing
         AnalyticLine = self.env['account.analytic.line']
         expense1 = AnalyticLine.create({
             'name': 'expense on project_so_1',
             'account_id': project_so_1.analytic_account_id.id,
+            'so_line': so_line_expense.id,
             'employee_id': self.employee_user.id,
             'unit_amount': 4,
             'amount': 4 * self.product_expense.list_price * -1,
