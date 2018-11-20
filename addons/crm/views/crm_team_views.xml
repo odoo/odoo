@@ -97,7 +97,7 @@
                    <xpath expr="//field[@name='user_id']" position="after">
                         <label for="alias_name" string="Email Alias"
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
-                        <div name="alias_def"
+                        <div class="oe_inline" name="alias_def"
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}">
                             <field name="alias_id" class="oe_read_only oe_inline"
                                 string="Email Alias" required="0"/>
@@ -109,6 +109,7 @@
                             groups="base.group_no_one"
                             string="Accept Emails From"
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
+                        <field name="alias_user_id" string="Assign to"/>
                    </xpath>
                     <field name="dashboard_graph_period" position="attributes">
                         <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.lead')]}</attribute>
