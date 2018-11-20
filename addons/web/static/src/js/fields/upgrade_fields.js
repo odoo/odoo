@@ -146,7 +146,6 @@ var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
      * @private
      */
     _insertEnterpriseLabel: function ($enterpriseLabel) {
-        if(this.name==='module_partner_autocomplete') debugger;
         var $el = this.$label || this.$el;
         $el.append('&nbsp;').append($enterpriseLabel);
     },
