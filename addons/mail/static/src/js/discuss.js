@@ -852,7 +852,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
 
             // Update control panel before focusing the composer, otherwise
             // focus is on the searchview
-            self.set("title", '#' + self._thread.getName());
+            self.set("title", self._thread.getTitle());
             self._updateControlPanel();
             self._updateControlPanelButtons(self._thread);
 
