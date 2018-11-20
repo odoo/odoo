@@ -22,6 +22,13 @@ var testUtilsKanban = require('web.test_utils_kanban');
 var testUtilsMock = require('web.test_utils_mock');
 var testUtilsModal = require('web.test_utils_modal');
 var testUtilsPivot = require('web.test_utils_pivot');
+var tools = require('web.tools');
+
+function deprecated(fn, type) {
+    var msg = `Helper 'testUtils.${fn.name}' is deprecated. ` +
+        `Please use 'testUtils.${type}.${fn.name}' instead.`;
+    return tools.deprecated(fn, msg);
+};
 
 // Loading static files cannot be properly simulated when their real content is
 // really needed. This is the case for static XML files so we load them here,
@@ -99,6 +106,19 @@ return $.when(
         createView: testUtilsCreate.createView,
         createModel: testUtilsCreate.createModel,
         createParent: testUtilsCreate.createParent,
+
+        // backward-compatibility
+        addMockEnvironment: deprecated(testUtilsMock.addMockEnvironment, 'mock'),
+        dragAndDrop: deprecated(testUtilsDom.dragAndDrop, 'dom'),
+        fieldsViewGet: deprecated(testUtilsMock.fieldsViewGet, 'mock'),
+        intercept: deprecated(testUtilsMock.intercept, 'mock'),
+        openDatepicker: deprecated(testUtilsDom.openDatepicker, 'dom'),
+        patch: deprecated(testUtilsMock.patch, 'mock'),
+        patchDate: deprecated(testUtilsMock.patchDate, 'mock'),
+        triggerKeypressEvent: deprecated(testUtilsDom.triggerKeypressEvent, 'dom'),
+        triggerMouseEvent: deprecated(testUtilsDom.triggerMouseEvent, 'dom'),
+        triggerPositionalMouseEvent: deprecated(testUtilsDom.triggerPositionalMouseEvent, 'dom'),
+        unpatch: deprecated(testUtilsMock.unpatch, 'mock'),
     };
 });
 
