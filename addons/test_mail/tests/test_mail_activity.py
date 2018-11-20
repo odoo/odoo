@@ -151,6 +151,13 @@ class TestActivityFlow(TestActivityCommon):
         self.assertEqual(activity.create_uid, self.user_employee)
         self.assertEqual(activity.user_id, self.user_employee)
 
+    def test_activity_dont_notify_no_user_change(self):
+        self.user_employee.notification_type = 'email'
+        activity = self.test_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_employee.id)
+        with self.assertNotifications(partner_employee=(0, 'email', 'read')):
+            activity.sudo(self.user_admin).write({'user_id': self.user_employee.id})
+        self.assertEqual(activity.user_id, self.user_employee)
+
 
 @tests.tagged('mail_activity')
 class TestActivityMixin(TestActivityCommon):
