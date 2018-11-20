@@ -1270,11 +1270,28 @@ var UrlWidget = InputField.extend({
     /**
      * Urls are links in readonly mode.
      *
+     * You can use attributes to customize its visualization:
+     *
+     * `text` set a static text for the anchor content
+     * `text_field` use another field for the anchor content
+     *
+     * Fallbacks to `value` (the plain URL).
+     *
      * @override
      */
     init: function () {
         this._super.apply(this, arguments);
         this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+        this.anchor_text = this.attrs.text || this.value;
+        // retrieve customized `<a />` text from a field
+        // via `text_field` attribute
+        var field_value = this.recordData[this.attrs.text_field];
+        if (_.isObject(field_value) && _.has(field_value.data)) {
+            field_value = field_value.data.display_name;
+        }
+        if (field_value) {
+            this.anchor_text = field_value;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1302,7 +1319,7 @@ var UrlWidget = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.text(this.attrs.text || this.value)
+        this.$el.text(this.anchor_text)
             .addClass('o_form_uri o_text_overflow')
             .attr('target', '_blank')
             .attr('href', this.value);
