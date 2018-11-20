@@ -1169,9 +1169,7 @@ class MailThread(models.AbstractModel):
                     final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
                     partner_address = final_recipient_data.split(';', 1)[1].strip()
                     if partner_address:
-                        partners = partners.sudo().search([('email', '=', partner_address)])
-                        for partner in partners:
-                            partner.message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
+                        partners.message_receive_bounce(partner_address)
 
                 mail_message = self.env['mail.message']
                 if email_part:
@@ -1188,7 +1186,7 @@ class MailThread(models.AbstractModel):
                     })
 
                 if bounced_model in self.env and hasattr(self.env[bounced_model], 'message_receive_bounce') and bounced_thread_id:
-                    self.env[bounced_model].browse(int(bounced_thread_id)).message_receive_bounce(partner_address, partners, mail_id=bounced_mail_id)
+                    self.env[bounced_model].browse(int(bounced_thread_id)).message_receive_bounce(partner_address)
 
                 _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s: dest %s (partner %s)',
                              email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partners)
@@ -1466,19 +1464,15 @@ class MailThread(models.AbstractModel):
         return True
 
     @api.multi
-    def message_receive_bounce(self, email, partner, mail_id=None):
+    def message_receive_bounce(self, email_from):
         """Called by ``message_process`` when a bounce email (such as Undelivered
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented.
 
-        :param mail_id: ID of the sent email that bounced. It may not exist anymore
-                        but it could be usefull if the information was kept. This is
-                        used notably in mass mailing.
-        :param RecordSet partner: partner matching the bounced email address, if any
-        :param string email: email that caused the bounce """
+        :param string email_from: email that caused the bounce """
         if 'message_bounce' in self._fields:
-            for record in self:
+            for record in self._get_records_from_email(email_from):
                 record.message_bounce = record.message_bounce + 1
 
     def _message_reset_bounce(self, email_from):

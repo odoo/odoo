@@ -330,12 +330,12 @@ class Channel(models.Model):
         return res
 
     @api.multi
-    def message_receive_bounce(self, email, partner, mail_id=None):
+    def message_receive_bounce(self, email_from):
         """ Override bounce management to unsubscribe bouncing addresses """
-        for p in partner:
-            if p.message_bounce >= self.MAX_BOUNCE_LIMIT:
-                self._action_unfollow(p)
-        return super(Channel, self).message_receive_bounce(email, partner, mail_id=mail_id)
+        for partner in self.env['res.partner']._get_records_from_email(email_from):
+            if partner.message_bounce >= self.MAX_BOUNCE_LIMIT:
+                self._action_unfollow(partner)
+        return super(Channel, self).message_receive_bounce(email_from)
 
     @api.multi
     def _notify_email_recipients(self, message, recipient_ids):

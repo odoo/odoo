@@ -54,7 +54,7 @@ class MailThread(models.AbstractModel):
         return super(MailThread, no_massmail).message_post_with_template(template_id, **kwargs)
 
     @api.multi
-    def message_receive_bounce(self, email, partner, mail_id=None):
+    def message_receive_bounce(self, email_from):
         """In addition, an auto blacklist rule check if the email can be blacklisted
         to avoid sending mails indefinitely to this email address.
         This rule checks if the email bounced too much. If this is the case,
@@ -63,16 +63,16 @@ class MailThread(models.AbstractModel):
         in the last month and the bounced are at least separated by one week,
         to avoid blacklist someone because of a temporary mail server error,
         then the email is considered as invalid and is blacklisted."""
-        super(MailThread, self).message_receive_bounce(email, partner, mail_id=None)
+        super(MailThread, self).message_receive_bounce(email_from)
 
         if self.message_bounce >= 5:
             three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
             stats = self.env['mail.mail.statistics'] \
-                .search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', email)]) \
+                .search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', email_from)]) \
                 .mapped('bounced')
             if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT:
                 if max(stats) > min(stats) + datetime.timedelta(weeks=1):
-                    blacklist_rec = self.env['mail.blacklist'].sudo()._add(email)
+                    blacklist_rec = self.env['mail.blacklist'].sudo()._add(email_from)
                     blacklist_rec._message_log(
                         'This email has been automatically blacklisted because of too much bounced.')
 
