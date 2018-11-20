@@ -89,6 +89,15 @@
             display: block;
         }
     }
+    .o_activity_filter_planned {
+        background-color: mix(theme-color('success'), $o-webclient-background-color, 5%);
+    }
+    .o_activity_filter_today {
+        background-color: mix(theme-color('warning'), $o-webclient-background-color, 5%);
+    }
+    .o_activity_filter_overdue {
+        background-color: mix(theme-color('danger'), $o-webclient-background-color, 5%);
+    }
     .o_record_selector {
         color: $o-enterprise-primary-color;
     }
@@ -105,6 +114,15 @@
             cursor: pointer;
             &:hover {
                 color: theme-color('success');
+            }
+        }
+        .o_kanban_counter {
+            margin: 5px 0 0 0;
+            > .o_kanban_counter_progress {
+                width: 100%;
+                > div.active {
+                    border: 1px solid;
+                }
             }
         }
     }
