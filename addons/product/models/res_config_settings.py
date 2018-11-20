@@ -28,18 +28,23 @@ class ResConfigSettings(models.TransientModel):
         ('0', 'Kilogram'),
         ('1', 'Pound'),
     ], 'Weight unit of measure', config_parameter='product.weight_in_lbs', default='0')
+    decimal_product_uom = fields.Integer(string="Unit of Measure Decimal Accuracy")
 
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         product_rule = self.env.ref('product.product_comp_rule')
+        decimal_product_uom = self.env.ref('product.decimal_product_uom')
         res.update(
             company_share_product=not bool(product_rule.active),
+            decimal_product_uom = decimal_product_uom.digits
         )
         return res
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         product_rule = self.env.ref('product.product_comp_rule')
+        decimal_product_uom = self.env.ref('product.decimal_product_uom')
         product_rule.write({'active': not bool(self.company_share_product)})
+        decimal_product_uom.write({'digits': self.decimal_product_uom})
