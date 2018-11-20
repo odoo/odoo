@@ -218,7 +218,8 @@ class Partner(models.Model):
     # technical field used for managing commercial fields
     commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
                                              string='Commercial Entity', store=True, index=True)
-    commercial_partner_country_id = fields.Many2one('res.country', related='commercial_partner_id.country_id', store=True)
+    commercial_partner_country_id = fields.Many2one('res.country', related='commercial_partner_id.country_id', store=True,
+        string="Commercial Entity's Country")
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
