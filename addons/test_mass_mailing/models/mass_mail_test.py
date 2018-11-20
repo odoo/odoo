@@ -9,7 +9,8 @@ class MassMailTest(models.Model):
     mailing features and base performances. """
     _description = 'Simple Mass Mailing Model'
     _name = 'mass.mail.test'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.address.mixin']
+    _primary_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char()
@@ -21,7 +22,7 @@ class MassMailTestBlacklist(models.Model):
     _name = 'mass.mail.test.bl'
     _inherit = ['mail.thread', 'mail.blacklist.mixin']
 
-    _primary_email = ['email_from']  # blacklist field to check
+    _primary_email = 'email_from'  # blacklist field to check
 
     name = fields.Char()
     email_from = fields.Char()

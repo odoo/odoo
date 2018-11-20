@@ -24,7 +24,7 @@ class ChannelPartner(models.Model):
     _description = 'Listeners of a Channel'
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
-    _primary_email = ['partner_email']
+    _primary_email = 'partner_email'
 
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
     partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
@@ -344,7 +344,7 @@ class Channel(models.Model):
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
-                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in whitelist),
+                'email_to': ','.join(formataddr((partner.name, partner.email_normalized)) for partner in whitelist if partner.email_normalized),
                 'recipient_ids': [],
             }
         return super(Channel, self)._notify_email_recipients(message, whitelist.ids)

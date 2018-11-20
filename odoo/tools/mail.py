@@ -502,6 +502,21 @@ def email_split_and_format(text):
                 if addr[1]
                 if '@' in addr[1]]
 
+def email_normalize(text):
+    """ Sanitize and standardize email address entries.
+        A normalized email is considered as :
+        - having a left part + @ + a right part (the domain can be without '.something')
+        - being lower case
+        - having no name before the address. Typically, having no 'Name <>'
+        Ex:
+        - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
+        - Normalized Output Email : 'name@domain.com'
+    """
+    emails = email_split(text)
+    if not emails or len(emails) != 1:
+        return False
+    return emails[0].lower()
+
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
     return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
