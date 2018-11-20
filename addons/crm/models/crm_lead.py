@@ -78,7 +78,7 @@ class Lead(models.Model):
     description = fields.Text('Notes', track_visibility='onchange', track_sequence=6)
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
     contact_name = fields.Char('Contact Name', track_visibility='onchange', track_sequence=3)
-    partner_name = fields.Char("Customer Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
+    partner_name = fields.Char("Company Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
     type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")
@@ -937,7 +937,7 @@ class Lead(models.Model):
     def get_empty_list_help(self, help):
         help_title, sub_title = "", ""
         if self._context.get('default_type') == 'lead':
-            help_title = _('Add a new lead')
+            help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity in your pipeline')
         alias_record = self.env['mail.alias'].search([
@@ -1189,7 +1189,8 @@ class Lead(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
-        self = self.with_context(default_user_id=False)
+        if self._uid == self.env.ref('base.user_root').id:
+            self = self.with_context(default_user_id=False)
 
         if custom_values is None:
             custom_values = {}

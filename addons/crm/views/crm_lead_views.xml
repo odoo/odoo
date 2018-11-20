@@ -9,9 +9,18 @@
             <field name="arch" type="xml">
                 <form string="Lead Tags">
                     <sheet>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
                         <group>
-                            <field name="name"/>
-                            <field name="color" groups="base.group_no_one"/>
+                            <group>
+                                <field name="color" required="True"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -46,7 +55,7 @@
             <form string="Leads Form">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
-                            help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
+                            help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'opportunity'), ('active', '=', False)]}"/>
                     <button name="toggle_active"
                         string="Restore"
                         type="object"
@@ -69,11 +78,11 @@
                     <group>
                         <group>
                             <!-- Preload all the partner's information -->
-                            <field name="partner_id" string="Customer"
+                            <field name="partner_id"
                                     widget="res_partner_many2one"
                                     context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website, 'show_vat': True}"
                                     groups="base.group_no_one"/>
-                            <field name="partner_name" string="Company Name"/>
+                            <field name="partner_name"/>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
@@ -120,9 +129,9 @@
                         <page name="extra" string="Extra Info">
                             <group>
                                 <group string="Email">
-                                    <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
+                                    <field name="message_bounce" readonly="1"/>
                                 </group>
-                                <group string="Tracking" groups="base.group_multi_company,base.group_no_one" name="categorization">
+                                <group string="Tracking" groups="base.group_multi_company" name="categorization">
                                     <field name="company_id"
                                         groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
@@ -131,7 +140,7 @@
                                     <field name="source_id"/>
                                     <field name="referred"/>
                                 </group>
-                                <group string="Analysis" groups="base.group_no_one">
+                                <group string="Analysis">
                                     <field name="date_open"/>
                                     <field name="date_closed"/>
                                     <field name="probability"/>
@@ -492,10 +501,10 @@
                             <h2 class="o_row row no-gutters d-flex">
                                 <div class="col">
                                     <label for="planned_revenue" class="oe_edit_only" />
-                                    <div class="o_row">
+                                    <div>
                                         <field name="company_currency" invisible="1"/>
                                         <field name="planned_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                                        <span class="oe_grey"> at </span>
+                                        <span class="oe_grey p-2"> at </span>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -552,6 +561,8 @@
 
                             <group>
                                 <field name="date_deadline"/>
+                                <field name="priority" widget="priority"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
 
                             <group>
@@ -559,8 +570,6 @@
                                 <field name="team_id" widget="selection"/>
                             </group>
                             <group>
-                                <field name="priority" widget="priority"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
                                 <field name="date_conversion" invisible="1"/>
                             </group>
@@ -568,11 +577,11 @@
 
                         <notebook colspan="4">
                         <page string="Internal Notes">
-                            <field name="description"/>
+                            <field name="description" placeholder="Add a description..."/>
                         </page>
                         <page name="lead" string="Followup">
                             <group>
-                                <group string="Initial Contact Information">
+                                <group string="Contact Information">
                                     <field name="partner_name"/>
                                     <label for="street" string="Address"/>
                                     <div class="o_address_format">
@@ -778,10 +787,19 @@
             <field name="arch" type="xml">
                 <form string="Channel">
                     <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="active"/>
-                        </group>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
                     </sheet>
                 </form>
             </field>
@@ -1108,9 +1126,9 @@ for rec in records:
             <field name="view_id" ref="crm_lead_tag_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new tag for your opportunities
+                Create new tags for your opportunities
               </p><p>
-                Create tags that fit your business (product structure, sales type, etc.) to better manage and tack your opportunities.
+                Create tags that fit your business (product structure, sales type, etc.) to better manage and track your opportunities.
               </p>
             </field>
         </record>
