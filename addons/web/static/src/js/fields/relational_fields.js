@@ -1609,7 +1609,7 @@ var FieldOne2Many = FieldX2Many.extend({
             fields_view: this.attrs.views && this.attrs.views.form,
             parentID: this.value.id,
             viewInfo: this.view,
-            deletable: this.activeActions.delete,
+            deletable: this.activeActions.delete && params.deletable,
         }));
     },
 
@@ -1714,7 +1714,7 @@ var FieldOne2Many = FieldX2Many.extend({
             on_remove: function () {
                 self._setValue({operation: 'DELETE', ids: [id]});
             },
-            deletable: this.activeActions.delete,
+            deletable: this.activeActions.delete && this.view.arch.tag !== 'tree',
             readonly: this.mode === 'readonly',
         });
     },
@@ -1788,7 +1788,7 @@ var FieldMany2Many = FieldX2Many.extend({
                 self._setValue({operation: 'FORGET', ids: [ev.data.id]});
             },
             readonly: this.mode === 'readonly',
-            deletable: this.activeActions.delete,
+            deletable: this.activeActions.delete && this.view.arch.tag !== 'tree',
             string: this.string,
         });
     },
