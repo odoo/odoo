@@ -142,12 +142,18 @@ $-compat-gray-map: (
     @extend .card-body;
 }
 
-// Adapt grid (push-pull, xs ?)
-@each $breakpoint in map-keys($grid-breakpoints) {
-    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+// Adapt grid (push-pull ?)
+$-compat-breakpoints: (
+  xs: map-get($grid-breakpoints, 'xs'),
+  sm: map-get($grid-breakpoints, 'md'),
+  md: map-get($grid-breakpoints, 'lg'),
+  lg: map-get($grid-breakpoints, 'xl'),
+);
+@each $breakpoint in map-keys($-compat-breakpoints) {
+    $infix: breakpoint-infix($breakpoint, $-compat-breakpoints);
     $infix: if($infix != "", $infix, "-xs");
 
-    @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint, $-compat-breakpoints) {
         // `$grid-columns - 1` because offsetting by the width of an entire row isn't possible
         @for $i from 0 through ($grid-columns - 1) {
             .col#{$infix}-offset-#{$i} {
@@ -196,105 +202,148 @@ $-compat-gray-map: (
 .btn-default {
     @include button-variant(theme-color('secondary'), theme-color('secondary'));
 }
+.btn-xs {
+    @extend .btn-sm;
+}
 
 // Adapt display classes
-.hidden, .hide {
+.hide {
     display: none !important;
-}
-.hidden {
-    &-xs {
-        @include media-breakpoint-down(sm) {
-            display: none;
-        }
-    }
-    &-sm {
-        @include media-breakpoint-only(md) {
-            display: none;
-        }
-    }
-    &-md {
-        @include media-breakpoint-only(lg) {
-            display: none;
-        }
-    }
-    &-lg {
-        @include media-breakpoint-only(xl) {
-            display: none;
-        }
-    }
-    &-print {
-        @media print {
-            display: none;
-        }
-    }
 }
 .show {
     display: block !important;
 }
+.hidden {
+    display: none !important;
+}
 .visible {
-    &-xs {
-        &-block, &-inline-block {
-            display: none;
+    &-xs, &-sm, &-md, &-lg {
+        &, &-block, &-inline, &-inline-block {
+            display: none !important;
         }
-        @include media-breakpoint-down(sm) {
-            &-block {
-                display: block;
+    }
+    &-xs {
+        &, &-block {
+            @include media-breakpoint-down(sm) {
+                display: block !important;
             }
-            &-inline-block {
-                display: inline-block;
+        }
+        &-inline {
+            @include media-breakpoint-down(sm) {
+                display: inline !important;
+            }
+        }
+        &-inline-block {
+            @include media-breakpoint-down(sm) {
+                display: inline-block !important;
             }
         }
     }
     &-sm {
-        &-block, &-inline-block {
-            display: none;
-        }
-        @include media-breakpoint-only(md) {
-            &-block {
-                display: block;
+        &, &-block {
+            @include media-breakpoint-only(md) {
+                display: block !important;
             }
-            &-inline-block {
-                display: inline-block;
+        }
+        &-inline {
+            @include media-breakpoint-only(md) {
+                display: inline !important;
+            }
+        }
+        &-inline-block {
+            @include media-breakpoint-only(md) {
+                display: inline-block !important;
             }
         }
     }
     &-md {
-        &-block, &-inline-block {
-            display: none;
-        }
-        @include media-breakpoint-only(lg) {
-            &-block {
-                display: block;
+        &, &-block {
+            @include media-breakpoint-only(lg) {
+                display: block !important;
             }
-            &-inline-block {
-                display: inline-block;
+        }
+        &-inline {
+            @include media-breakpoint-only(lg) {
+                display: inline !important;
+            }
+        }
+        &-inline-block {
+            @include media-breakpoint-only(lg) {
+                display: inline-block !important;
             }
         }
     }
     &-lg {
-        &-block, &-inline-block {
-            display: none;
-        }
-        @include media-breakpoint-only(xl) {
-            &-block {
-                display: block;
+        &, &-block {
+            @include media-breakpoint-up(xl) {
+                display: block !important;
             }
-            &-inline-block {
-                display: inline-block;
+        }
+        &-inline {
+            @include media-breakpoint-up(xl) {
+                display: inline !important;
+            }
+        }
+        &-inline-block {
+            @include media-breakpoint-up(xl) {
+                display: inline-block !important;
             }
         }
     }
-    &-print {
-        &-block, &-inline-block {
-            display: none;
+}
+.hidden {
+    &-xs {
+        @include media-breakpoint-down(sm) {
+            display: none !important;
         }
+    }
+    &-sm {
+        @include media-breakpoint-only(md) {
+            display: none !important;
+        }
+    }
+    &-md {
+        @include media-breakpoint-only(lg) {
+            display: none !important;
+        }
+    }
+    &-lg {
+        @include media-breakpoint-up(xl) {
+            display: none !important;
+        }
+    }
+}
+.visible-print {
+    display: none !important;
+
+    @media print {
+        display: block !important;
+    }
+
+    &-block {
+        display: none !important;
+
         @media print {
-            &-block {
-                display: block;
-            }
-            &-inline-block {
-                display: inline-block;
-            }
+            display: block !important;
         }
+    }
+    &-inline {
+        display: none !important;
+
+        @media print {
+            display: inline !important;
+        }
+    }
+    &-inline-block {
+        display: none !important;
+
+        @media print {
+            display: inline-block !important;
+        }
+    }
+}
+.hidden-print {
+    @media print {
+        display: none !important;
     }
 }
