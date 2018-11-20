@@ -27,8 +27,21 @@ class ReportIntrastat(models.Model):
 
     def init(self):
         drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""
+        query = self._query()
+        self.env.cr.execute(' '.join([query['create'],
+                                    query['select'],
+                                    query['from'],
+                                    query['where'],
+                                    query['group_by'],
+                                    query['end'],
+                                    ]))
+    
+    def _query(self):
+        result = {}
+        result['create'] = """
             create or replace view report_intrastat as (
+        """
+        result['select'] = """
                 select
                     to_char(inv.date_invoice, 'YYYY') as name,
                     to_char(inv.date_invoice, 'MM') as month,
@@ -55,6 +68,8 @@ class ReportIntrastat(models.Model):
                         else 'import'
                         end as type,
                     inv.company_id as company_id
+        """
+        result['from'] = """
                 from
                     account_invoice inv
                     left join account_invoice_line inv_line on inv_line.invoice_id=inv.id
@@ -67,9 +82,25 @@ class ReportIntrastat(models.Model):
                     left join (res_partner inv_address
                         left join res_country inv_country on (inv_country.id = inv_address.country_id))
                     on (inv_address.id = coalesce(inv.partner_shipping_id, inv.partner_id))
+        """
+        result['where'] = """
                 where
                     inv.state in ('open','paid')
                     and inv_line.product_id is not null
                     and inv_country.intrastat=true
-                group by to_char(inv.date_invoice, 'YYYY'), to_char(inv.date_invoice, 'MM'),intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id, inv.company_id
-            )""")
+        """
+        result['group_by'] = """
+                group by 
+                    to_char(inv.date_invoice, 'YYYY'), 
+                    to_char(inv.date_invoice, 'MM'),
+                    intrastat.id,inv.type,
+                    pt.intrastat_id, 
+                    inv_country.code,
+                    inv.number,  
+                    inv.currency_id, 
+                    inv.company_id
+        """
+        result['end'] = """
+            )
+        """
+        return result
