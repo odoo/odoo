@@ -20,6 +20,7 @@ This is the latest Ethiopian Odoo localization and consists of:
     'author':'Michael Telahun Makonnen <mmakonnen@gmail.com>',
     'website':'http://miketelahun.wordpress.com',
     'depends': [
+        'l10n_base_et',
         'account',
     ],
     'data': [
@@ -30,6 +31,5 @@ This is the latest Ethiopian Odoo localization and consists of:
         'data/account.tax.group.csv',
         'data/account.tax.template.csv',
         'data/account_chart_template_configure_data.xml',
-        'data/res.country.state.csv',
     ],
 }

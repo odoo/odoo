@@ -678,6 +678,8 @@ class TestAutoJoin(TransactionCase):
 
         # Get country/state data
         country_us = self.env['res.country'].search([('code', 'like', 'US')], limit=1)
+        state_obj.create({'name': 'Kansas', 'country_id': country_us.id, 'code': 'KN'})
+        state_obj.create({'name': 'New Jersey', 'country_id': country_us.id, 'code': 'NW'})
         states = self.env['res.country.state'].search([('country_id', '=', country_us.id)], limit=2)
 
         # Create demo data: partners and bank object

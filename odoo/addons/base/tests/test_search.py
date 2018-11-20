@@ -65,11 +65,18 @@ class test_search(TransactionCase):
         # Get country/state data
         country_be = self.env.ref('base.be')
         country_us = self.env.ref('base.us')
+
+        state_obj = self.env['res.country.state']
+        state_obj.create({'name': 'Hainaut', 'country_id': country_be.id, 'code': 'HI'})
+        state_obj.create({'name': 'California', 'country_id': country_us.id, 'code': 'CL'})
+        state_obj.create({'name': 'Florida', 'country_id': country_us.id, 'code': 'FD'})
+
         states_us = country_us.state_ids[:2]
+        states_be = country_be.state_ids[:1]
 
         # Create test users
         u = Users.create({'name': '__search', 'login': '__search', 'groups_id': [(6, 0, [group_employee.id])]})
-        a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': country_be.id})
+        a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': states_be[0].id})
         b = Users.create({'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us.id, 'state_id': states_us[1].id})
         c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
 

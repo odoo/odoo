@@ -4,6 +4,7 @@
 import re
 import logging
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from psycopg2 import IntegrityError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
@@ -65,6 +66,9 @@ class Country(models.Model):
         ], string="Customer Name Position", default="before",
         help="Determines where the customer/company name should be placed, i.e. after or before the address.")
     vat_label = fields.Char(string='Vat Label', translate=True, help="Use this field if you want to change vat label.")
+    is_l10_base_install = fields.Boolean(string="Module Installed", compute='_compute_l10_base_install', inverse='_inverse_l10_base_install', help="Toggle button which allow possibility to activate/deactivate a country, \
+        and install appropriate l10n_base_ module (which contain all of it's country specific data) if it exists.")
+    is_l10_base_available = fields.Boolean(string="Module Install", compute="_compute_is_l10_base_available")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
@@ -93,6 +97,33 @@ class Country(models.Model):
         self.ensure_one()
         return re.findall(r'\((.+?)\)', self.address_format)
 
+    def _compute_l10_base_install(self):
+        installed_l10n_modules = self.env['ir.module.module'].search([('name', 'ilike', 'l10n_base_'), ('state', '=', 'installed')])
+        for country in self:
+            if country.code:
+                module_name = 'l10n_base_%s' % country.code.lower()
+                country.is_l10_base_install = module_name in installed_l10n_modules.mapped('name')
+
+    @api.depends('is_l10_base_install')
+    def _compute_is_l10_base_available(self):
+        for country in self:
+            module_name = 'l10n_base_%s' % country.code.lower()
+            base_module = self.env['ir.module.module'].search([('name', '=', module_name)])
+            country.is_l10_base_available = bool(base_module)
+
+    def _inverse_l10_base_install(self):
+        for country in self:
+            if not country.code:
+                raise ValidationError('You should define country code to load localisation data')
+            module_name = 'l10n_base_%s' % country.code.lower()
+            base_module = self.env['ir.module.module'].search([('name', '=', module_name)])
+            if base_module:
+                if country.is_l10_base_install:
+                    base_module.button_immediate_install()
+                else:
+                    base_module.button_immediate_uninstall()
+            else:
+                raise UserError('Localisation module is not available')
 
 class CountryGroup(models.Model):
     _description = "Country Group"

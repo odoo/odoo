@@ -9,7 +9,6 @@
             <field name="company_name">YourCompany</field>
             <field name="street">3575  Buena Vista Avenue</field>
             <field name="city">Eugene</field>
-            <field name="state_id"  model="res.country.state" search="[('code','ilike','OR')]"/>
             <field name="zip">97401</field>
             <field name="country_id" ref="us"/>
             <field name="tz">Europe/Brussels</field>
@@ -24,7 +23,6 @@
             <field name="city">Scranton</field>
             <field name="zip">18540</field>
             <field name='country_id' ref='base.us'/>
-            <field name='state_id' ref='state_us_39'/>
             <field name="phone">+1 555 123 8069</field>
             <field name="email">info@yourcompany.example.com</field>
             <field name="website">www.example.com</field>
@@ -52,7 +50,6 @@
             <field name="city">Scranton</field>
             <field name="zip">18503</field>
             <field name='country_id' ref='base.us'/>
-            <field name='state_id' ref='state_us_39'/>
             <field name="phone">+1 555-555-5555</field>
             <field name="email">admin@yourcompany.example.com</field>
             <field name="tz">Europe/Brussels</field>
@@ -68,7 +65,6 @@
             <field name="customer" eval="True"/>
             <field name="street">858 Lynn Street</field>
             <field name="city">Bayonne</field>
-            <field model="res.country.state" name="state_id" search="[('code','ilike','NJ')]"/>
             <field name="zip">07002</field>
             <field name="country_id" ref="base.us"/>
             <field name="company_name">YourCompany</field>

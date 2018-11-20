@@ -31,7 +31,7 @@ With this module you will have:
 .. _SAT: http://www.sat.gob.mx/
     """,
     "depends": [
-        "account", "account_cancel"
+        "l10n_base_mx", "account", "account_cancel"
     ],
     "data": [
         "data/account_tag_data.xml",

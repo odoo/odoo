@@ -31,6 +31,7 @@ Spanish charts of accounts (PGCE 2008).
     * Defines tax reports mod 111, 115 and 303
 """,
     "depends" : [
+        "l10n_base_es",
         "account",
         "base_iban",
         "base_vat",

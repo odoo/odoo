@@ -84,7 +84,8 @@ en Odoo):
     """,
     'author': 'Gustavo Valverde - iterativo | Consultores de Odoo',
     'website': 'http://iterativo.do',
-    'depends': ['account',
+    'depends': ['l10n_base_do',
+                'account',
                 'base_iban'
                 ],
     'data': [
@@ -95,8 +96,6 @@ en Odoo):
         'data/account_chart_template_data.xml',
         'data/account_data.xml',
         'data/account.tax.template.xml',
-        # Country States
-        'data/l10n_do_state_data.xml',
         # Adds fiscal position
         'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...

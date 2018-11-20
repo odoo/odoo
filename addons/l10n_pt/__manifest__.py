@@ -12,6 +12,7 @@
     'category': 'Localization',
     'description': 'Plano de contas SNC para Portugal',
     'depends': ['base',
+                'l10n_base_pt',
                 'account',
                 'base_vat',
                 ],

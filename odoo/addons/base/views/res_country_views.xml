@@ -11,6 +11,7 @@
                 <tree string="Country">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="is_l10_base_install" widget="boolean_toggle" string="Load Localization Data"/>
                 </tree>
             </field>
         </record>
@@ -28,6 +29,12 @@
                             <field name="name"/>
                             <field name="currency_id"/>
                             <field name="code"/>
+                            <field name="is_l10_base_available" invisible="1"/>
+                            <div colspan="2">
+                                <label for="is_l10_base_install" style="font-weight: bold" string="Load Localization Data"/>
+                                <field name="is_l10_base_install" widget="boolean_toggle" string="Load Localization Data" attrs="{'readonly': [('is_l10_base_available', '=', False)]}"/>
+                                <label for="is_l10_base_install" string="Localization module is not available" class="ml8 text-danger" attrs="{'invisible': [('is_l10_base_available','=', True)]}"></label>
+                            </div>
                         </group>
                         <group>
                             <field name="phone_code"/>

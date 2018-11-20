@@ -34,6 +34,7 @@ by the customs broker. On the vendor, set the fiscal position to International.
 position.
     """,
     'depends': [
+        'l10n_base_ca',
         'account',
         'base_iban',
         'l10n_multilang',

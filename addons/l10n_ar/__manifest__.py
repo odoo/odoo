@@ -15,7 +15,7 @@ Plan contable argentino e impuestos de acuerdo a disposiciones vigentes
     """,
     'author': ['Cubic ERP'],
     'category': 'Localization',
-    'depends': ['base', 'account'],
+    'depends': ['base', 'l10n_base_ar', 'account'],
     'data':[
         'data/l10n_ar_chart_data.xml',
         'data/account_data.xml',
