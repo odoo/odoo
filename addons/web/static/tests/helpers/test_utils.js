@@ -23,6 +23,21 @@ var testUtilsMock = require('web.test_utils_mock');
 var testUtilsModal = require('web.test_utils_modal');
 var testUtilsPivot = require('web.test_utils_pivot');
 
+function deprecatedDomUtils(fn) {
+    return function () {
+        console.warn(`Helper 'testUtils.${fn.name}' is deprecated. ` +
+            `Please use 'testUtils.dom.${fn.name}' instead.`);
+        fn.apply(this, arguments);
+    };
+}
+function deprecatedMockUtils(fn) {
+    return function () {
+        console.warn(`Helper 'testUtils.${fn.name}' is deprecated. ` +
+            `Please use 'testUtils.mock.${fn.name}' instead.`);
+        fn.apply(this, arguments);
+    };
+}
+
 // Loading static files cannot be properly simulated when their real content is
 // really needed. This is the case for static XML files so we load them here,
 // before starting the qunit test suite.
@@ -99,6 +114,19 @@ return $.when(
         createView: testUtilsCreate.createView,
         createModel: testUtilsCreate.createModel,
         createParent: testUtilsCreate.createParent,
+
+        // backward-compatibility
+        addMockEnvironment: deprecatedMockUtils(testUtilsMock.addMockEnvironment),
+        dragAndDrop: deprecatedDomUtils(testUtilsDom.dragAndDrop),
+        fieldsViewGet: deprecatedMockUtils(testUtilsMock.fieldsViewGet),
+        intercept: deprecatedMockUtils(testUtilsMock.intercept),
+        openDatepicker: deprecatedDomUtils(testUtilsDom.openDatepicker),
+        patch: deprecatedMockUtils(testUtilsMock.patch),
+        patchDate: deprecatedMockUtils(testUtilsMock.patchDate),
+        triggerKeypressEvent: deprecatedDomUtils(testUtilsDom.triggerKeypressEvent),
+        triggerMouseEvent: deprecatedDomUtils(testUtilsDom.triggerMouseEvent),
+        triggerPositionalMouseEvent: deprecatedDomUtils(testUtilsDom.triggerPositionalMouseEvent),
+        unpatch: deprecatedMockUtils(testUtilsMock.unpatch),
     };
 });
 
