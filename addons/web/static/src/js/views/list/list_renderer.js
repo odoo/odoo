@@ -43,6 +43,7 @@ var ListRenderer = BasicRenderer.extend({
         'keypress thead tr td': '_onKeyPress',
         'keydown tr': '_onKeyDown',
         'keydown thead tr': '_onKeyDown',
+        "click .o_add_column_dropdown .dropdown-item input": "_onAddColumn",
     },
     /**
      * @constructor
@@ -68,6 +69,7 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
         this.isGrouped = this.state.groupedBy.length > 0;
+        this.debug = config.debug;
     },
 
     //--------------------------------------------------------------------------
@@ -180,6 +182,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _getNumberOfCols: function () {
         var n = this.columns.length;
+        n = this.hiddenColumns ? n + 1 : n;
         return this.hasSelectors ? n + 1 : n;
     },
     /**
@@ -190,7 +193,7 @@ var ListRenderer = BasicRenderer.extend({
     _processColumns: function (columnInvisibleFields) {
         var self = this;
         self.handleField = null;
-        this.columns = _.reject(this.arch.children, function (c) {
+        this.allColumns = _.reject(this.arch.children, function (c) {
             if (c.tag === 'control') {
                 return true;
             }
@@ -205,6 +208,12 @@ var ListRenderer = BasicRenderer.extend({
             }
             return reject;
         });
+        var colGroup = _.groupBy(this.allColumns, function (col) {
+            return col.attrs.optional === "True" && !(col.attrs.modifiers && col.attrs.modifiers.required) ? "hiddenColumns" : "columns";
+        });
+        this.columns = colGroup.columns;
+        this.displayedColumns = _.map(this.columns, function (col) {return col.attrs.name});
+        this.hiddenColumns = colGroup.hiddenColumns;
     },
     /**
      * Render a list of <td>, with aggregates if available.  It can be displayed
@@ -524,10 +533,58 @@ var ListRenderer = BasicRenderer.extend({
     _renderHeader: function () {
         var $tr = $('<tr>')
             .append(_.map(this.columns, this._renderHeaderCell.bind(this)));
+        if (this.hiddenColumns) {
+            $tr.append(this._renderAddColumnOption(this.hiddenColumns));
+        }
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('th'));
         }
         return $('<thead>').append($tr);
+    },
+    /**
+     * Render a single <th> with dropdown menu to display hidden nodes of view.
+     *
+     * @private
+     * @param {Object} nodes
+     * @returns {jQueryElement} a <th> element
+     */
+    _renderAddColumnOption: function (nodes) {
+        var self = this;
+        var $th = $('<th>', {
+            class: 'o_add_column text-center dropdown dropdown',
+        });
+
+        var $a = $("<a>", {
+            'class': "dropdown-toggle text-dark",
+            "href": "#",
+            'data-toggle': "dropdown",
+            'role': "button",
+            "aria-expanded": "false",
+        });
+        $("<i class='fa fa-ellipsis-v'></i>").appendTo($a);
+        var $div = $("<div>", {
+            class: 'dropdown-menu o_add_column_dropdown',
+        });
+        $div.append(_.map(nodes, function (col) {
+            var txt = self.debug ? self.state.fields[col.attrs.name].string + " (" + col.attrs.name +")" : self.state.fields[col.attrs.name].string;
+            var $label =$('<label>', {
+                text: txt,
+                for: col.attrs.name,
+            });
+            var $checkBox = $("<input>", {
+                type: "checkbox",
+                value: col.attrs.name,
+                name: col.attrs.name,
+                id: col.attrs.name,
+                checked: _.contains(self.displayedColumns, col.attrs.name) ? true : false,
+            });
+            return $("<div>", {
+                class: "dropdown-item",
+            }).append($checkBox.add($label));
+        }));
+        $a.appendTo($th);
+        $div.appendTo($th);
+        return $th;
     },
     /**
      * Render a single <th> with the informations for a column. If it is not a
@@ -827,6 +884,24 @@ var ListRenderer = BasicRenderer.extend({
         var checked = $(ev.currentTarget).prop('checked') || false;
         this.$('tbody .o_list_record_selector input:not(":disabled")').prop('checked', checked);
         this._updateSelection();
+    },
+    _onAddColumn: function (ev) {
+        var currentElement = ev.currentTarget;
+        if (!currentElement.checked) {
+            var rmIndex = _.findIndex(this.columns, function (col) {
+                return col.attrs.name === ev.currentTarget.value;
+            });
+            var rmCol = this.columns[rmIndex];
+            this.displayedColumns.splice(this.displayedColumns.indexOf(rmCol.attrs.name), 1);
+            this.columns.splice(rmIndex, 1);
+        } else {
+            var self = this;
+            this.displayedColumns.push(ev.currentTarget.value);
+            this.columns = _.filter(this.allColumns, function (col) {
+                return _.contains(self.displayedColumns, col.attrs.name);
+            });
+        }
+        this._renderView();
     },
 });
 

@@ -1,4 +1,6 @@
-
+.table-responsive {
+    overflow: visible;
+}
 .o_list_view {
     position: relative;
     cursor: pointer;
@@ -28,6 +30,23 @@
             }
             &:not(.o_column_sortable):hover {
                 cursor: default;
+            }
+        }
+        .o_add_column .dropdown-toggle {
+            width: 100%;
+            display: inline-block;
+            &:after {
+                content: none
+            }
+        }
+        .o_add_column_dropdown .dropdown-item {
+            input {
+                vertical-align: middle;
+            }
+            label {
+                width: 100%;
+                margin: 0px;
+                padding-left: 10px;
             }
         }
     }

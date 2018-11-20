@@ -1023,6 +1023,12 @@ ListRenderer.include({
 
         this.unselectRow();
     },
+    _onAddColumn: function (ev) {
+        var self = this;
+        this.unselectRow().then(function () {
+            self._super.apply(self, [ev]);
+        });
+    },
 });
 
 });
