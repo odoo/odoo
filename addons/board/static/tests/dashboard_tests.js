@@ -698,6 +698,64 @@ QUnit.test('save actions to dashboard', function (assert) {
     actionManager.destroy();
 });
 
+QUnit.test('save two searches to dashboard', function (assert) {
+    // the second search saved should not be influenced by the first
+    assert.expect(2);
+
+    var actionManager = createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                if (filter_count === 0) {
+                    assert.deepEqual(args.domain, [["display_name", "ilike", "a"]],
+                        "the correct domain should be sent");
+                }
+                if (filter_count === 1) {
+                    assert.deepEqual(args.domain, [["display_name", "ilike", "b"]],
+                        "the correct domain should be sent");
+                }
+
+                filter_count += 1;
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+    });
+
+    var filter_count = 0;
+    // Add a first filter
+    $('span.fa-filter').click();
+    $('.o_add_custom_filter:visible').click();
+    $('.o_searchview_extended_prop_value .o_input').val('a')
+    $('.o_apply_filter').click();
+    // Add it to dashboard
+    $('.o_add_to_dashboard_button').click();
+    // Remove it
+    $('.o_facet_remove').click();
+
+    // Add the second filter
+    $('span.fa-filter').click();
+    $('span.fa-filter').click();
+    $('.o_add_custom_filter:visible').click();
+    $('.o_searchview_extended_prop_value .o_input').val('b')
+    $('.o_apply_filter').click();
+    // Add it to dashboard
+    $('.o_add_to_dashboard_button').click();
+
+    actionManager.destroy();
+});
+
 QUnit.test('save to dashboard actions with flag keepSearchView', function (assert) {
     assert.expect(4);
 
