@@ -519,11 +519,10 @@ class Partner(models.Model):
         if vals.get('company_id'):
             company = self.env['res.company'].browse(vals['company_id'])
             for partner in self:
-                if partner.user_ids:
-                    companies = set(user.company_id for user in partner.user_ids)
-                    if len(companies) > 1 or company not in companies:
-                        raise UserError(
-                            ("The selected company is not compatible with the companies of the related user(s)"))
+                companies = partner.user_ids.filtered(lambda x: x.active).mapped('company_id')
+                if len(companies) > 1 or company not in companies:
+                    raise UserError(
+                        ("The selected company is not compatible with the companies of the related user(s)"))
         tools.image_resize_images(vals, sizes={'image': (1024, None)})
 
         result = True
