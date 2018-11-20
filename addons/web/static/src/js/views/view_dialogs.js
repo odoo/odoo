@@ -75,6 +75,8 @@ var FormViewDialog = ViewDialog.extend({
      *   creation mode
      * @param {boolean} [options.deletable=false] whether or not the record can
      *   be deleted
+     * @param {boolean} [options.showRemove=false] set to true for showing 'Remove'
+     *   button on relational record's FormViewDialog, if it is deletable
      * @param {boolean} [options.disable_multiple_selection=false] set to true
      *   to remove the possibility to create several records in a row
      * @param {function} [options.on_saved] callback executed after saving a
@@ -102,7 +104,7 @@ var FormViewDialog = ViewDialog.extend({
         this.recordID = options.recordID;
         this.shouldSaveLocally = options.shouldSaveLocally;
         this.readonly = options.readonly;
-        this.deletable = options.deletable;
+        this.deletable = options.deletable && options.showRemove;
         this.disable_multiple_selection = options.disable_multiple_selection;
         var oBtnRemove = 'o_btn_remove';
 

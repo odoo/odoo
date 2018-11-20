@@ -1673,6 +1673,7 @@ var FieldOne2Many = FieldX2Many.extend({
                 on_saved: function (record) {
                     self._setValue({ operation: 'ADD', id: record.id });
                 },
+                showRemove: this.view.type === 'kanban',
             });
         }
     },
@@ -1716,6 +1717,7 @@ var FieldOne2Many = FieldX2Many.extend({
             },
             deletable: this.activeActions.delete,
             readonly: this.mode === 'readonly',
+            showRemove: ev.data.showRemove
         });
     },
 });
