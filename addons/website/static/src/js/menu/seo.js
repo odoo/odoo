@@ -29,7 +29,7 @@ var Suggestion = Widget.extend({
         this._super(parent);
     },
     select: function () {
-        this.trigger('selected', this.keyword);
+        this.trigger('selected', {keyword: this.keyword});
     },
 });
 
@@ -75,7 +75,7 @@ var SuggestionList = Widget.extend({
                     keyword: keyword,
                 });
                 suggestion.on('selected', self, function (ev) {
-                    self.trigger('selected', {word: ev.data.word, language: ev.data.language});
+                    self.trigger('selected', {word: ev.data.keyword, language: ev.data.language});
                 });
                 suggestion.appendTo(self.$el);
             }
@@ -184,7 +184,7 @@ var KeywordList = Widget.extend({
                self.trigger('content-updated', true);
             });
             keyword.on('selected', self, function (ev) {
-                self.trigger('selected', {word: ev.data.word, language: ev.data.word});
+                self.trigger('selected', {word: ev.data.word, language: ev.data.language || language});
             });
             keyword.appendTo(self.$el);
         }
@@ -450,8 +450,8 @@ var MetaKeywords = Widget.extend({
             self.$input.removeAttr('readonly').attr('placeholder', "");
             self.$('button[data-action=add]').prop('disabled', false).removeClass('disabled');
         });
-        this.keywordList.on('selected', this, function (word, language) {
-            self.keywordList.add(word, language);
+        this.keywordList.on('selected', this, function (ev) {
+            self.keywordList.add(ev.data.word, ev.data.language);
         });
         this.keywordList.on('content-updated', this, function (removed) {
             self._updateTable(removed);
