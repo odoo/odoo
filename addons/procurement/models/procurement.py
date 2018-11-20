@@ -162,9 +162,13 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def cancel(self):
-        to_cancel = self.filtered(lambda procurement: procurement.state != 'done')
-        if to_cancel:
-            return to_cancel.write({'state': 'cancel'})
+        done_procs = self.filtered(lambda procurement: procurement.state == 'done')
+        if done_procs:
+            raise UserError(_(
+                "Cannot cancel procurements '%s' (IDs %s) that are in 'Done' state.")
+                % (', '.join([p.display_name for p in done_procs]),
+                   ', '.join([str(p.id) for p in done_procs])))
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def reset_to_confirmed(self):
