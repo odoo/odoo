@@ -423,6 +423,96 @@ QUnit.test('@ mention in channel', function (assert) {
     });
 });
 
+QUnit.test('@ mention with special chars', function (assert) {
+    assert.expect(9);
+    var done = assert.async();
+    var fetchListenersDef = $.Deferred();
+    var receiveMessageDef = $.Deferred();
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+    var objectDiscuss;
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_fetch_listeners') {
+                fetchListenersDef.resolve();
+                return $.when([
+                    {id: 1, name: '\u0405pëciãlUser<&>"`\' \u30C4'},
+                ]);
+            }
+            if (args.method === 'message_post') {
+                var data = {
+                    author_id: ["42", "Me"],
+                    body: args.kwargs.body,
+                    channel_ids: [1],
+                };
+                var notification = [[false, 'mail.channel', 1], data];
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                receiveMessageDef.resolve();
+                return $.when(42);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        objectDiscuss = discuss;
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        // click on general
+        $general.click();
+        var $input = discuss.$('textarea.o_composer_text_field').first();
+        assert.ok($input.length, "should display a composer input");
+        // Note: focus is needed in order to trigger rpc 'channel_fetch_listeners'
+        $input.focus();
+        $input.val("@");
+        $input.trigger('keyup');
+        fetchListenersDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+                var $mention = discuss.$('.o_mention_proposition');
+                // correct mention proposition
+                assert.ok($mention.hasClass('active'),
+                    "first partner mention should be active");
+                assert.strictEqual($mention.data('id'), 1,
+                    "first partner mention should link to the correct partner id");
+                assert.strictEqual($mention.find('.o_mention_name').text(), '\u0405pëciãlUser<&>"`\' \u30C4',
+                    "first partner mention should display the correct partner name");
+                // equivalent to $mentionPropositions.find('active').click();
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
+                assert.strictEqual(discuss.$('.o_mention_proposition').length, 0,
+                    "should not have any partner mention proposition after ENTER");
+                assert.strictEqual($input.val().trim() , "@\u0405pëciãlUser<&>\"`'\u00A0\u30C4",
+                    "should have the correct mention link in the composer input");
+                // send message
+                $input.trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
+                receiveMessageDef
+                    .then(concurrency.delay.bind(concurrency, 0))
+                    .then(function () {
+                        assert.strictEqual(discuss.$('.o_thread_message_content').length, 1,
+                            "should display one message with some content");
+                        assert.strictEqual(discuss.$('.o_thread_message_content a').length, 1,
+                            "should contain a link in the message content");
+                        assert.strictEqual(discuss.$('.o_thread_message_content a').text(),
+                            "@\u0405pëciãlUser<&>\"`' \u30C4",
+                            "should have correct mention link in the message content");
+                        discuss.destroy();
+                        done();
+                });
+        });
+    });
+});
+
 QUnit.test('no crash focusout emoji button', function (assert) {
     assert.expect(3);
     var done = assert.async();
