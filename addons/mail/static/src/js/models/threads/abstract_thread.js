@@ -147,6 +147,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      */
     resetUnreadCounter: function () {
         this._unreadCounter = 0;
+        this._warnUpdatedUnreadCounter();
     },
 
     //--------------------------------------------------------------------------
@@ -177,7 +178,6 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _markAsRead: function () {
         this.resetUnreadCounter();
-        this._warnUpdatedUnreadCounter();
         return $.when();
     },
     /**
