@@ -612,7 +612,7 @@ QUnit.test('long typing partner A and in-between short typing partner B', functi
             res_id: 1,
         };
         var notification = [[false, 'mail.channel', 1], messageData];
-        discuss.call('bus_service', 'trigger', 'notification', [notification]);
+        discuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
         $general = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');

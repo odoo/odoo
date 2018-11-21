@@ -337,7 +337,7 @@ QUnit.test('do not mark as read the newly open thread window from received messa
     // Unread counter is obtained from fetched channel data, because this is
     // a new message from a new channel.
     this.data['mail.channel'].records[0].message_unread_counter++;
-    parent.call('bus_service', 'trigger', 'notification', [notification]);
+    parent.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     var $threadWindow = $('.o_thread_window');
     assert.strictEqual($threadWindow.length, 1,

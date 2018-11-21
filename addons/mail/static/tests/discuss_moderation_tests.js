@@ -571,7 +571,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
                     message: message,
                 };
                 var notification = [metaData, notifData];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
                 messagePostDef.resolve();
                 return $.when(message.id);
@@ -673,7 +673,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
         };
         var metaData = [dbName, 'mail.channel'];
         var notification = [metaData, messageData];
-        discuss.call('bus_service', 'trigger', 'notification', [notification]);
+        discuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
         // check message is accepted
         $message = discuss.$('.o_thread_message');

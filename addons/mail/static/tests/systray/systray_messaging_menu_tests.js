@@ -171,7 +171,7 @@ QUnit.test('messaging menu widget: open inbox for needaction not linked to any d
     var notifications = [
         [['myDB', 'ir.needaction'], message]
     ];
-    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+    messagingMenu.call('bus_service', 'trigger', 'notification', {notifications: notifications});
 
     // Open messaging menu
     testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
@@ -409,7 +409,7 @@ QUnit.test('update messaging preview on receiving a new message in channel previ
         channel_ids: [1],
     };
     var notification = [[false, 'mail.channel', 1], data];
-    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+    messagingMenu.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     assert.containsOnce(messagingMenu, '.o_mail_preview',
         "should still display a single channel preview");

@@ -288,7 +288,7 @@ QUnit.test('@ mention in channel', function (assert) {
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel', 1], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
                 receiveMessageDef.resolve();
                 return $.when(42);
             }
@@ -767,7 +767,7 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
                 return $.when(42);
             }
             return this._super.apply(this, arguments);
@@ -873,7 +873,7 @@ QUnit.test('convert emoji sources to unicodes on message_post', function (assert
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel', 1], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
                 receiveMessageDef.resolve();
                 return $.when(42);
             }
@@ -949,7 +949,7 @@ QUnit.test('mark all messages as read from Inbox', function (assert) {
                     message_ids: [1, 2],
                 };
                 var notification = [[false, 'res.partner', 3], notificationData];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
                 markAllReadDef.resolve();
                 return $.when();
             }

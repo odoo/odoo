@@ -713,7 +713,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                form.call('bus_service', 'trigger', 'notification', [notification]);
+                form.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
                 return $.when();
             }
             return this._super(route, args);
@@ -933,7 +933,7 @@ QUnit.test('chatter: receive notif when document is open', function (assert) {
     };
     this.data['mail.message'].records.push(needactionMessageData);
     var notification = [[false, 'mail.channel', 1], needactionMessageData];
-    form.call('bus_service', 'trigger', 'notification', [notification]);
+    form.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     assert.strictEqual(thread.getUnreadCounter(), 1,
         "document thread should now have one unread message");
