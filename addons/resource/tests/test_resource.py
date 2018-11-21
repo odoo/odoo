@@ -351,7 +351,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
-        self.assertEqual(data, {'days': 1.375, 'hours': 13})
+        self.assertEqual(data, {'days': 1.4375, 'hours': 13})
 
         # Viewing it as Patel
         # Views from 2018/04/01 11:00:00 to 2018/04/06 10:00:00
@@ -359,7 +359,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.patel.tz),
         )
-        self.assertEqual(data, {'days': 1.125, 'hours': 10})
+        self.assertEqual(data, {'days': 1.1875, 'hours': 10})
 
         # Viewing it as John
         data = self.john.get_work_days_data(
@@ -505,7 +505,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.john.tz),
         )
-        self.assertEqual(data, {'days': 1, 'hours': 10})
+        self.assertEqual(data, {'days': 0.9375, 'hours': 10})
 
         # half days
         leave = self.env['resource.calendar.leaves'].create({
