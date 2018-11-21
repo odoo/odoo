@@ -509,6 +509,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._inherits = {}
         cls._depends = {}
         cls._constraints = {}
+        _sql_constraints = {}
         cls._sql_constraints = []
 
         for base in reversed(cls.__bases__):
@@ -527,9 +528,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for cons in base._constraints:
                 # cons may override a constraint with the same function name
                 cls._constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
+            for key, definition, message in base._sql_constraints:
+                _sql_constraints[key] = (key, definition, message)
 
-            cls._sql_constraints += base._sql_constraints
-
+        cls._sql_constraints = _sql_constraints.values()
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._constraints = list(cls._constraints.values())
 
