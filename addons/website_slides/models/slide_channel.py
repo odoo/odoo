@@ -101,6 +101,7 @@ class Channel(models.Model):
     nbr_videos = fields.Integer('Number of Videos', compute='_compute_slides_statistics', store=True)
     nbr_infographics = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
     nbr_webpages = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
+    nbr_quizs = fields.Integer("Number of quizzes", compute="_compute_slides_statistics", store=True)
     total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True, oldname='total')
     total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
@@ -174,7 +175,7 @@ class Channel(models.Model):
     def _compute_slides_statistics(self):
         result = dict((cid, dict(total_slides=0, total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
-            [('is_published', '=', True), ('channel_id', 'in', self.ids)],
+            [('is_published', '=', True),('channel_id', 'in', self.ids)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
             groupby=['channel_id', 'slide_type'],
             lazy=False)
@@ -195,7 +196,7 @@ class Channel(models.Model):
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Can be overridden to compute stats on added slide_types """
-        result = dict((cid, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0)) for cid in self.ids)
+        result = dict((cid, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0, nbr_quizs=0)) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
             result[cid]['nbr_presentations'] += res_group.get('slide_type', '') == 'presentation' and res_group['__count'] or 0
@@ -203,6 +204,7 @@ class Channel(models.Model):
             result[cid]['nbr_videos'] += res_group.get('slide_type', '') == 'video' and res_group['__count'] or 0
             result[cid]['nbr_infographics'] += res_group.get('slide_type', '') == 'infographic' and res_group['__count'] or 0
             result[cid]['nbr_webpages'] += res_group.get('slide_type', '') == 'webpage' and res_group['__count'] or 0
+            result[cid]['nbr_quizs'] += res_group.get('slide_type', '') == 'quiz' and res_group['__count'] or 0
         return result
 
     @api.depends('slide_partner_ids')
@@ -409,6 +411,7 @@ class Category(models.Model):
     nbr_videos = fields.Integer("Number of Videos", compute='_count_presentations', store=True)
     nbr_infographics = fields.Integer("Number of Infographics", compute='_count_presentations', store=True)
     nbr_webpages = fields.Integer("Number of Webpages", compute='_count_presentations', store=True)
+    nbr_quizs = fields.Integer("Number of quizzes", compute="_count_presentations", store=True)
     total_slides = fields.Integer(compute='_count_presentations', store=True, oldname='total')
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published')
@@ -432,6 +435,7 @@ class Category(models.Model):
             'nbr_videos': result[record_id].get('video', 0),
             'nbr_infographics': result[record_id].get('infographic', 0),
             'nbr_webpages': result[record_id].get('webpage', 0),
+            'nbr_quizs': result[record_id].get('quiz', 0),
             'total_slides': 0
         }
 
@@ -440,5 +444,6 @@ class Category(models.Model):
         statistics['total_slides'] += statistics['nbr_videos']
         statistics['total_slides'] += statistics['nbr_infographics']
         statistics['total_slides'] += statistics['nbr_webpages']
+        statistics['total_slides'] += statistics['nbr_quizs']
 
         return statistics

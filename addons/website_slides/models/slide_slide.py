@@ -23,11 +23,13 @@ class SlidePartnerRelation(models.Model):
     _description = 'Slide / Partner decorated m2m'
     _table = 'slide_slide_partner'
 
-    slide_id = fields.Many2one('slide.slide', index=True, required=True)
+    slide_id = fields.Many2one('slide.slide', ondelete="cascade", index=True, required=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", related="slide_id.channel_id", store=True, index=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     vote = fields.Integer('Vote', default=0)
     completed = fields.Boolean('Completed')
+
+    quiz_attempts_count = fields.Integer(string="Number of times this user attempted the quiz")
 
 
 class SlideLink(models.Model):
@@ -95,6 +97,7 @@ class Slide(models.Model):
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
     }
+    _order = 'category_sequence asc, sequence asc'
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
@@ -106,6 +109,8 @@ class Slide(models.Model):
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
+    sequence = fields.Integer('Sequence', default=10)
+    category_sequence = fields.Integer('Category sequence', related="category_id.sequence", store=True)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
@@ -126,15 +131,24 @@ class Slide(models.Model):
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='base.group_website_publisher')
     slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='base.group_website_publisher')
-    user_membership_id = fields.Many2one('slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
+    user_membership_id = fields.Many2one(
+        'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
         help="Subscriber information for the current logged in user")
+    # Quiz related fields
+    question_ids = fields.One2many("slide.question","slide_id", string="Questions")
+    quiz_first_attempt_reward = fields.Integer("First attempt reward", default=10)
+    quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
+    quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
+    quiz_fourth_attempt_reward = fields.Integer("Reward for every attempt after the third try", default=2)
+
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
+        ('webpage', 'Web Page'),
         ('presentation', 'Presentation'),
         ('document', 'Document'),
-        ('webpage', 'Web Page'),
-        ('video', 'Video')],
+        ('video', 'Video'),
+        ('quiz', "Quiz")],
         string='Type', required=True,
         default='document', readonly=True,
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")

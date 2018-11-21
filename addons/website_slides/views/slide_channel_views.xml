@@ -135,7 +135,7 @@
             </field>
         </record>
 
-        <record id="view_slide_channel_tree" model="ir.ui.view">
+        <record id="slide_channel_view_tree" model="ir.ui.view">
             <field name="name">slide.channel.tree</field>
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
@@ -154,7 +154,8 @@
             <field name="name">slide.channel.search</field>
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
-                <search string="Channel">
+                <search string="Courses">
+                    <field name="name" string="Course"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
@@ -165,6 +166,7 @@
             <field name="res_model">slide.channel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="website_slides.slide_channel_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a channel
