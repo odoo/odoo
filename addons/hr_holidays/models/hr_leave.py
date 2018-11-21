@@ -145,7 +145,7 @@ class HolidaysRequest(models.Model):
         'Duration in days', compute='_compute_number_of_days_display', copy=False, readonly=True,
         help='Number of days of the leave request. Used for interface.')
     number_of_hours_display = fields.Float(
-        'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True, 
+        'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True,
         help='Number of hours of the leave request according to your working schedule. Used for interface.')
     # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
@@ -181,55 +181,55 @@ class HolidaysRequest(models.Model):
     request_date_to = fields.Date('Request End Date')
     # Interface fields used when using hour-based computation
     request_hour_from = fields.Selection([
-        (0, '12:00 PM'), (0.5, '0:30 AM'),
-        (1, '1:00 AM'), (1.5, '1:30 AM'),
-        (2, '2:00 AM'), (2.5, '2:30 AM'),
-        (3, '3:00 AM'), (3.5, '3:30 AM'),
-        (4, '4:00 AM'), (4.5, '4:30 AM'),
-        (5, '5:00 AM'), (5.5, '5:30 AM'),
-        (6, '6:00 AM'), (6.5, '6:30 AM'),
-        (7, '7:00 AM'), (7.5, '7:30 AM'),
-        (8, '8:00 AM'), (8.5, '8:30 AM'),
-        (9, '9:00 AM'), (9.5, '9:30 AM'),
-        (10, '10:00 AM'), (10.5, '10:30 AM'),
-        (11, '11:00 AM'), (11.5, '11:30 AM'),
-        (12, '12:00 AM'), (12.5, '0:30 PM'),
-        (13, '1:00 PM'), (13.5, '1:30 PM'),
-        (14, '2:00 PM'), (14.5, '2:30 PM'),
-        (15, '3:00 PM'), (15.5, '3:30 PM'),
-        (16, '4:00 PM'), (16.5, '4:30 PM'),
-        (17, '5:00 PM'), (17.5, '5:30 PM'),
-        (18, '6:00 PM'), (18.5, '6:30 PM'),
-        (19, '7:00 PM'), (19.5, '7:30 PM'),
-        (20, '8:00 PM'), (20.5, '8:30 PM'),
-        (21, '9:00 PM'), (21.5, '9:30 PM'),
-        (22, '10:00 PM'), (22.5, '10:30 PM'),
-        (23, '11:00 PM'), (23.5, '11:30 PM')], string='Hour from')
+        ('0', '12:00 PM'), ('0.5', '0:30 AM'),
+        ('1', '1:00 AM'), ('1.5', '1:30 AM'),
+        ('2', '2:00 AM'), ('2.5', '2:30 AM'),
+        ('3', '3:00 AM'), ('3.5', '3:30 AM'),
+        ('4', '4:00 AM'), ('4.5', '4:30 AM'),
+        ('5', '5:00 AM'), ('5.5', '5:30 AM'),
+        ('6', '6:00 AM'), ('6.5', '6:30 AM'),
+        ('7', '7:00 AM'), ('7.5', '7:30 AM'),
+        ('8', '8:00 AM'), ('8.5', '8:30 AM'),
+        ('9', '9:00 AM'), ('9.5', '9:30 AM'),
+        ('10', '10:00 AM'), ('10.5', '10:30 AM'),
+        ('11', '11:00 AM'), ('11.5', '11:30 AM'),
+        ('12', '12:00 AM'), ('12.5', '0:30 PM'),
+        ('13', '1:00 PM'), ('13.5', '1:30 PM'),
+        ('14', '2:00 PM'), ('14.5', '2:30 PM'),
+        ('15', '3:00 PM'), ('15.5', '3:30 PM'),
+        ('16', '4:00 PM'), ('16.5', '4:30 PM'),
+        ('17', '5:00 PM'), ('17.5', '5:30 PM'),
+        ('18', '6:00 PM'), ('18.5', '6:30 PM'),
+        ('19', '7:00 PM'), ('19.5', '7:30 PM'),
+        ('20', '8:00 PM'), ('20.5', '8:30 PM'),
+        ('21', '9:00 PM'), ('21.5', '9:30 PM'),
+        ('22', '10:00 PM'), ('22.5', '10:30 PM'),
+        ('23', '11:00 PM'), ('23.5', '11:30 PM')], string='Hour from')
     request_hour_to = fields.Selection([
-        (0, '12:00 PM'), (0.5, '0:30 AM'),
-        (1, '1:00 AM'), (1.5, '1:30 AM'),
-        (2, '2:00 AM'), (2.5, '2:30 AM'),
-        (3, '3:00 AM'), (3.5, '3:30 AM'),
-        (4, '4:00 AM'), (4.5, '4:30 AM'),
-        (5, '5:00 AM'), (5.5, '5:30 AM'),
-        (6, '6:00 AM'), (6.5, '6:30 AM'),
-        (7, '7:00 AM'), (7.5, '7:30 AM'),
-        (8, '8:00 AM'), (8.5, '8:30 AM'),
-        (9, '9:00 AM'), (9.5, '9:30 AM'),
-        (10, '10:00 AM'), (10.5, '10:30 AM'),
-        (11, '11:00 AM'), (11.5, '11:30 AM'),
-        (12, '12:00 AM'), (12.5, '0:30 PM'),
-        (13, '1:00 PM'), (13.5, '1:30 PM'),
-        (14, '2:00 PM'), (14.5, '2:30 PM'),
-        (15, '3:00 PM'), (15.5, '3:30 PM'),
-        (16, '4:00 PM'), (16.5, '4:30 PM'),
-        (17, '5:00 PM'), (17.5, '5:30 PM'),
-        (18, '6:00 PM'), (18.5, '6:30 PM'),
-        (19, '7:00 PM'), (19.5, '7:30 PM'),
-        (20, '8:00 PM'), (20.5, '8:30 PM'),
-        (21, '9:00 PM'), (21.5, '9:30 PM'),
-        (22, '10:00 PM'), (22.5, '10:30 PM'),
-        (23, '11:00 PM'), (23.5, '11:30 PM')], string='Hour to')
+        ('0', '12:00 PM'), ('0.5', '0:30 AM'),
+        ('1', '1:00 AM'), ('1.5', '1:30 AM'),
+        ('2', '2:00 AM'), ('2.5', '2:30 AM'),
+        ('3', '3:00 AM'), ('3.5', '3:30 AM'),
+        ('4', '4:00 AM'), ('4.5', '4:30 AM'),
+        ('5', '5:00 AM'), ('5.5', '5:30 AM'),
+        ('6', '6:00 AM'), ('6.5', '6:30 AM'),
+        ('7', '7:00 AM'), ('7.5', '7:30 AM'),
+        ('8', '8:00 AM'), ('8.5', '8:30 AM'),
+        ('9', '9:00 AM'), ('9.5', '9:30 AM'),
+        ('10', '10:00 AM'), ('10.5', '10:30 AM'),
+        ('11', '11:00 AM'), ('11.5', '11:30 AM'),
+        ('12', '12:00 AM'), ('12.5', '0:30 PM'),
+        ('13', '1:00 PM'), ('13.5', '1:30 PM'),
+        ('14', '2:00 PM'), ('14.5', '2:30 PM'),
+        ('15', '3:00 PM'), ('15.5', '3:30 PM'),
+        ('16', '4:00 PM'), ('16.5', '4:30 PM'),
+        ('17', '5:00 PM'), ('17.5', '5:30 PM'),
+        ('18', '6:00 PM'), ('18.5', '6:30 PM'),
+        ('19', '7:00 PM'), ('19.5', '7:30 PM'),
+        ('20', '8:00 PM'), ('20.5', '8:30 PM'),
+        ('21', '9:00 PM'), ('21.5', '9:30 PM'),
+        ('22', '10:00 PM'), ('22.5', '10:30 PM'),
+        ('23', '11:00 PM'), ('23.5', '11:30 PM')], string='Hour to')
     # used only when the leave is taken in half days
     request_date_from_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
@@ -281,8 +281,8 @@ class HolidaysRequest(models.Model):
                 hour_from = float_to_time(attendance_to.hour_from)
                 hour_to = float_to_time(attendance_to.hour_to)
         elif self.request_unit_hours:
-            hour_from = float_to_time(self.request_hour_from)
-            hour_to = float_to_time(self.request_hour_to)
+            hour_from = float_to_time(float(self.request_hour_from))
+            hour_to = float_to_time(float(self.request_hour_to))
         elif self.request_unit_custom:
             hour_from = self.date_from.time()
             hour_to = self.date_to.time()
