@@ -23,7 +23,8 @@ QUnit.module('Sales Team Dashboard', {
 });
 
 QUnit.test('edit target with several o_kanban_primary_bottom divs', function (assert) {
-    assert.expect(4);
+    assert.expect(6);
+    var searchReads = 0;
 
     var kanban = createView({
         View: KanbanView,
@@ -33,6 +34,7 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs', function (as
                 '<templates>' +
                     '<t t-name="kanban-box">' +
                         '<div class="container o_kanban_card_content">' +
+                            '<field name="invoiced_target" />' +
                             '<a href="#" class="sales_team_target_definition o_inline_link">' +
                                 'Click to define a target</a>' +
                             '<div class="col-12 o_kanban_primary_bottom"/>' +
@@ -45,6 +47,13 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs', function (as
             if (args.method === 'write') {
                 assert.strictEqual(args.args[1].invoiced_target, 123,
                     "new value is correctly saved");
+            }
+            if (route === '/web/dataset/search_read') {
+                if (searchReads === 1) { // we modify a record, hence we should have reloaded
+                    assert.deepEqual(args.fields, ['invoiced_target'],
+                        'the second search_read should ask for invoiced_target');
+                }
+                searchReads += 1;
             }
             return this._super.apply(this, arguments);
         },
@@ -63,6 +72,9 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs', function (as
     kanban.$('.o_kanban_primary_bottom:last input').focus();
     kanban.$('.o_kanban_primary_bottom:last input').val('123');
     kanban.$('.o_kanban_primary_bottom:last input').blur();
+
+    assert.strictEqual(kanban.$('.o_kanban_record').text(), "123Click to define a target",
+        'The kanban record should display the updated target value');
 
     kanban.destroy();
 });
