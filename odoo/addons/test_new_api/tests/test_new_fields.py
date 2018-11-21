@@ -1076,6 +1076,16 @@ class TestFields(common.TransactionCase):
         self.assertEqual(count(message), 1)
         self.assertEqual(count(message1), 0)
 
+    def test_85_binary_guess_xml(self):
+        from odoo.addons.base.tests.test_mimetypes import XML
+        # Regular XML files can be uploaded by non-admin users
+        self.env['test_new_api.binary_svg'].sudo(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': XML,
+        })
+
     def test_90_binary_svg(self):
         from odoo.addons.base.tests.test_mimetypes import SVG
         # This should work without problems
