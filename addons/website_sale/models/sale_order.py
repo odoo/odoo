@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
             ('date_order', '<=', abandoned_datetime),
             ('team_id.team_type', '=', 'website'),
             ('state', '=', 'draft'),
-            ('partner_id.id', '!=', self.env.ref('base.public_partner').id),
+            ('partner_id', '!=', self.env.ref('base.public_partner').id),
             ('order_line', '!=', False)
         ])
         # is_abandoned domain possibilities
