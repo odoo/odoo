@@ -416,7 +416,7 @@ var MentionManager = Widget.extend({
         this._composer.$input.val(textInputNew);
         this._setCursorPosition(textLeft.length+substitution.length+2);
         this.set('mention_suggestions', []);
-        this._composer.focus(); // to trigger autoresize
+        this._composer.focus('body'); // to trigger autoresize
     },
     /**
      * @private
