@@ -123,9 +123,17 @@ class ResPartner(models.Model):
             'vat': vat,
         })
         if response and response.get('company_data'):
-            return self._format_data_company(response.get('company_data'))
+            result = self._format_data_company(response.get('company_data'))
         else:
-            return {}
+            result = {}
+
+        if error:
+            result.update({
+                'error': True,
+                'error_message': error
+            })
+
+        return result
 
     @api.model
     def read_by_vat(self, vat):
