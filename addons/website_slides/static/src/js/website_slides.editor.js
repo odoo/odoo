@@ -5,6 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var QWeb = core.qweb;
 var WebsiteNewMenu = require('website.newMenu');
+var wUtils = require('website.utils');
 
 var _t = core._t;
 
