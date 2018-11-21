@@ -3,12 +3,12 @@ odoo.define('partner.autocomplete.many2one', function (require) {
 
 var FieldMany2One = require('web.relational_fields').FieldMany2One;
 var core = require('web.core');
-var Autocomplete = require('partner.autocomplete.core');
+var AutocompleteMixin = require('partner.autocomplete.Mixin');
 var field_registry = require('web.field_registry');
 
 var _t = core._t;
 
-var PartnerField = FieldMany2One.extend({
+var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
     jsLibs: [
         '/partner_autocomplete/static/lib/jsvat.js'
     ],
@@ -21,7 +21,7 @@ var PartnerField = FieldMany2One.extend({
         this._addAutocompleteSource(this._searchSuggestions, {
             placeholder: _t('Searching Autocomplete...'),
             order: 20,
-            validation: Autocomplete.validateSearchTerm,
+            validation: this._validateSearchTerm,
         });
 
         this.additionalContext['show_vat'] = true;
@@ -42,7 +42,7 @@ var PartnerField = FieldMany2One.extend({
         var self = this;
         self.$('input').val('');
 
-        return Autocomplete.getCreateData(company).then(function (data){
+        return self._getCreateData(company).then(function (data){
             var context = {
                 'default_is_company': true
             };
@@ -120,10 +120,10 @@ var PartnerField = FieldMany2One.extend({
     _searchSuggestions: function (search_val) {
         var def = $.Deferred();
 
-        if (Autocomplete.isOnline()) {
+        if (this._isOnline()) {
             var self = this;
 
-            Autocomplete.autocomplete(search_val).then(function (suggestions) {
+            self._autocomplete(search_val).then(function (suggestions) {
                 var choices = [];
                 if (suggestions && suggestions.length) {
                     _.each(suggestions, function (suggestion) {
