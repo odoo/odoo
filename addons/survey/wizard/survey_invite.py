@@ -5,6 +5,7 @@ import logging
 import re
 import uuid
 
+from email.utils import formataddr
 from werkzeug import urls
 
 from odoo import api, fields, models, _
@@ -17,16 +18,47 @@ emails_split = re.compile(r"[;,\n\r]+")
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
 
-class SurveyMailComposeMessage(models.TransientModel):
-    _name = 'survey.mail.compose.message'
-    _inherit = 'mail.compose.message'
-    _description = 'Email composition wizard for Survey'
+class SurveyInvite(models.TransientModel):
+    _name = 'survey.invite'
+    _description = 'Survey Invitation Wizard'
 
     def default_survey_id(self):
         context = self.env.context
         if context.get('model') == 'survey.survey':
             return context.get('res_id')
 
+    @api.model
+    def _get_default_from(self):
+        if self.env.user.email:
+            return formataddr((self.env.user.name, self.env.user.email))
+        raise UserError(_("Unable to post message, please configure the sender's email address."))
+
+    @api.model
+    def _get_default_author(self):
+        return self.env.user.partner_id
+
+    # composer content
+    subject = fields.Char('Subject')
+    body = fields.Html('Contents', default='', sanitize_style=True)
+    attachment_ids = fields.Many2many(
+        'ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id',
+        string='Attachments')
+    template_id = fields.Many2one(
+        'mail.template', 'Use template', index=True,
+        domain="[('model', '=', 'survey.survey')]")
+    # origin
+    email_from = fields.Char('From', default=_get_default_from, help="Email address of the sender.")
+    author_id = fields.Many2one(
+        'res.partner', 'Author', index=True,
+        ondelete='set null', default=_get_default_author,
+        help="Author of the message.")
+    # recipients
+    partner_ids = fields.Many2many('res.partner', 'survey_mail_compose_message_res_partner_rel', 'wizard_id', 'partner_id', string='Existing contacts')
+    multi_email = fields.Text(string='List of emails', help="This list of emails of recipients will not be converted in contacts.\
+        Emails must be separated by commas, semicolons or newline.")
+    # technical info
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
+    # survey
     survey_id = fields.Many2one('survey.survey', string='Survey', default=default_survey_id, required=True)
     public = fields.Selection([('public_link', 'Share the public web link to your audience.'),
                                 ('email_public_link', 'Send by email the public web link to your audience.'),
@@ -34,10 +66,6 @@ class SurveyMailComposeMessage(models.TransientModel):
                                 string='Share options', default='public_link', required=True)
     public_url = fields.Char(compute="_compute_survey_url", string="Public url")
     public_url_html = fields.Char(compute="_compute_survey_url", string="Public HTML web link")
-    partner_ids = fields.Many2many('res.partner', 'survey_mail_compose_message_res_partner_rel', 'wizard_id', 'partner_id', string='Existing contacts')
-    attachment_ids = fields.Many2many('ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id', string='Attachments')
-    multi_email = fields.Text(string='List of emails', help="This list of emails of recipients will not be converted in contacts.\
-        Emails must be separated by commas, semicolons or newline.")
     date_deadline = fields.Date(string="Deadline to which the invitation to respond is valid",
         help="Deadline to which the invitation to respond for this survey is valid. If the field is empty,\
         the invitation is still valid.")
@@ -50,7 +78,7 @@ class SurveyMailComposeMessage(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        res = super(SurveyMailComposeMessage, self).default_get(fields)
+        res = super(SurveyInvite, self).default_get(fields)
         context = self.env.context
         if context.get('active_model') == 'res.partner' and context.get('active_ids'):
             res.update({'partner_ids': context['active_ids']})
@@ -73,6 +101,49 @@ class SurveyMailComposeMessage(models.TransientModel):
 
         emails_checked.sort()
         self.multi_email = '\n'.join(emails_checked)
+
+    @api.onchange('template_id', 'survey_id')
+    def _onchange_template_id(self):
+        """ UPDATE ME """
+        to_render_fields = [
+            'subject', 'body_html',
+            'email_from', 'reply_to',
+            'partner_to', 'email_to', 'email_cc',
+            'attachment_ids',
+            'mail_server_id'
+        ]
+        returned_fields = to_render_fields + ['partner_ids', 'attachments']
+        for wizard in self:
+            if wizard.template_id:
+                values = {}
+
+                template_values = wizard.template_id.generate_email([wizard.survey_id.id], fields=to_render_fields)[wizard.survey_id.id]
+                values = dict((field, template_values[field]) for field in returned_fields if template_values.get(field))
+                values['body'] = values.pop('body_html', '')
+
+                # transform attachments into attachment_ids; not attached to the document because this will
+                # be done further in the posting process, allowing to clean database if email not send
+                Attachment = self.env['ir.attachment']
+                for attach_fname, attach_datas in values.pop('attachments', []):
+                    data_attach = {
+                        'name': attach_fname,
+                        'datas': attach_datas,
+                        'datas_fname': attach_fname,
+                        'res_model': 'mail.compose.message',  # TDE CHECKME
+                        'res_id': 0,
+                        'type': 'binary',  # override default_type from context, possibly meant for another model!
+                    }
+                    values.setdefault('attachment_ids', list()).append(Attachment.create(data_attach).id)
+            else:
+                default_values = self.default_get(returned_fields)
+                values = dict((key, default_values[key]) for key in returned_fields if key in default_values)
+
+            # This onchange should return command instead of ids for x2many field.
+            # ORM handle the assignation of command list on new onchange (api.v8),
+            # this force the complete replacement of x2many field with
+            # command and is compatible with onchange api.v7
+            values = self._convert_to_write(values)
+            wizard.update(values)
 
     #------------------------------------------------------
     # Wizard validation and send
@@ -183,8 +254,6 @@ class SurveyMailComposeMessage(models.TransientModel):
                 partner_list.append({'id': partner.id, 'email': partner.email})
 
             if not len(emails_list) and not len(partner_list):
-                if wizard.model == 'res.partner' and wizard.res_id:
-                    return False
                 raise UserError(_("Please enter at least one valid recipient."))
 
             for email in emails_list:
