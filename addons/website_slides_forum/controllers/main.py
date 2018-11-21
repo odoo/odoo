@@ -9,14 +9,15 @@ class WebsiteSlidesForum(WebsiteSlides):
 
     def _slide_channel_prepare_values(self, **kwargs):
         communication_type = kwargs.get('communication_type')
+        channel = super(WebsiteSlidesForum, self)._slide_channel_prepare_values(**kwargs)
         if communication_type:
             if communication_type == 'forum':
                 forum = request.env['forum.forum'].create({
                     'name': kwargs.get('name')
                 })
-                kwargs['forum_id'] = forum.id
-            kwargs['allow_comment'] = communication_type == 'comment'
-        return super(WebsiteSlidesForum, self)._slide_channel_prepare_values(**kwargs)
+                channel['forum_id'] = forum.id
+        channel['allow_comment'] = communication_type == 'comment'
+        return channel
 
     # Profile
     # ---------------------------------------------------

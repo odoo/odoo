@@ -1,0 +1,156 @@
+.slide-header {
+    background-color: #62495B;
+    height: 200px;
+}
+
+.slide-header-container {
+    width: 1000px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+.slide-header-box{
+    display: flex;
+    height: 100%;
+    width: 50%;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 50px;
+
+    a {
+        color: #fff;
+        font-size: 2.5rem;
+        text-decoration: none  !important;
+    }
+}
+
+
+.slide-content-list {
+    position: absolute;
+    top: 140px;
+    left: 80px;
+    background-color: #fff;
+    height: 500px;
+    z-index: 200;
+}
+
+.slide-list{
+    background-color: #fff;
+    list-style: none;
+    height: 100%;
+    padding: 0;
+    overflow: auto;
+    border: 1px solid #ccc;
+    border-left: none;
+    box-sizing: border-box;
+    flex: 1;
+
+    a {
+        text-decoration: none;
+        color: $text-muted;
+    }
+
+    a .active{
+        background-color: #eee !important;
+    }
+}
+
+.slide-content-list-section{
+    border-bottom: 1px solid #fff;
+    color: #9B9B9B;
+    text-transform: uppercase;
+    padding: 10px 15px;
+}
+
+.slide-content-list-slide{
+    color: #666666;
+    padding: 10px 15px;
+}
+
+.slide-list-cell{
+    word-wrap: none;
+    padding: 0.5rem 1rem;;
+    height: 40px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    text-decoration: none !important;
+}
+
+.slide-list-cell:hover{
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.slide-list-cell:active{
+    background-color: #eee;
+    cursor: pointer;
+}
+
+
+.slide-content-list-header {
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    background-color: #F7F7F7;
+    color: #6F6F6F;
+}
+
+.slide-button {
+    color: #666;
+    text-decoration: none;
+    border:1px solid #B9B9B9;
+    padding: 5px 10px;
+    width: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0;
+    border-radius: 3px;
+}
+
+.slide-button-fullscreen {
+    color: #666;
+    text-decoration: none;
+    border:1px solid #B9B9B9;
+    padding: 5px 10px;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0;
+    border-radius: 3px;
+}
+
+.slide-button-done {
+    color: #fff;
+    text-transform: uppercase;
+    background-color: $primary;
+    text-decoration: none;
+    padding: 10px 15px;
+    width: 50px;
+    text-align: center;
+    border-radius: 3px;
+    margin: 0;
+}
+
+.slide-title {
+    width: 60%;
+    display: flex;
+    align-items: center;
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .slide-points {
+        margin-left: 20px;
+        padding: 5px 10px;
+        background-color:  #DC9D45;
+        border-radius: 10px;
+        color: #fff;
+        font-weight: bold;
+    }
+}
+
+.slide-documentation-sidebar {
+    position: absolute;
+    top: 300px;
+    left: 30px;
+}

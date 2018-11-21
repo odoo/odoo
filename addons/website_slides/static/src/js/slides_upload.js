@@ -30,6 +30,7 @@ var SlideUploadDialog = Dialog.extend({
         this._setup();
 
         this.channelID = parseInt(options.channelId, 10);
+        this.defaultCategoryID = parseInt(options.categoryId,10)
         this.canUpload = options.canUpload === 'True';
         this.canPublish = options.canPublish === 'True';
 
@@ -198,6 +199,7 @@ var SlideUploadDialog = Dialog.extend({
      */
     _getSelect2DropdownValues: function (){
         var result = {};
+        var self = this;
         // tags
         var tagValues = [];
         _.each(this.$('#tag_ids').select2('data'), function (val) {
@@ -211,11 +213,17 @@ var SlideUploadDialog = Dialog.extend({
             result['tag_ids'] = tagValues;
         }
         // category
-        var categoryValue = this.$('#category_id').select2('data');
-        if (categoryValue && categoryValue.create) {
-            result['category_id'] = [0, {'name': categoryValue.text}];
-        } else if (categoryValue) {
-            result['category_id'] =  [categoryValue.id];
+        if(!self.defaultCategoryID){
+            var categoryValue = this.$('#category_id').select2('data');
+            if (categoryValue && categoryValue.create) {
+                result['category_id'] = [0, {'name': categoryValue.text}];
+            } else if (categoryValue) {
+                result['category_id'] =  [categoryValue.id];
+                this.categoryID = categoryValue.id;
+            }
+        } else {
+            result['category_id'] =  [self.defaultCategoryID];
+            this.categoryID = self.defaultCategoryID;
         }
         return result;
     },
@@ -303,6 +311,25 @@ var SlideUploadDialog = Dialog.extend({
 
         return values;
     },
+    _reorderSlidesSequence: function(){
+        var self = this;
+        var slidesElement = $('li.content-slide');
+        var slides = [];
+        for(var i = 0; i < slidesElement.length;i++){
+            slides.push({
+                id: parseInt($(slidesElement[i]).attr('slide_id')),
+                category_id: parseInt($(slidesElement[i]).attr('category_id')),
+                sequence: i
+            })
+        }
+        self._rpc({
+            route: '/slides/resequence_slides',
+            params: {
+                slides_data: slides
+            }
+        }).then(function(){
+        })
+    },
     /**
      * Init the data relative to the support slide type to upload
      *
@@ -325,6 +352,11 @@ var SlideUploadDialog = Dialog.extend({
                 label: _t('Video'),
                 template: 'website.slide.upload.modal.video',
             },
+            quiz: {
+                icon: 'fa-question-circle',
+                label: _t('Quiz'),
+                template: 'website.slide.upload.quiz'
+            }
         };
     },
     /**
@@ -472,12 +504,11 @@ var SlideUploadDialog = Dialog.extend({
     _onChangeSlideUrl: function (ev) {
         var self = this;
         var url = $(ev.target).val();
-
         this._alertRemove();
         this.isValidUrl = false;
         this.set('can_submit_form', false);
         this._fetchUrlPreview(url).then(function (data) {
-            this.set('can_submit_form', true);
+            self.set('can_submit_form', true);
             if (data.error) {
                 self._alertDisplay(data.error);
             } else {
@@ -508,6 +539,12 @@ var SlideUploadDialog = Dialog.extend({
                     self.set('state', oldType);
                     self._alertDisplay(data.error);
                 } else {
+                    //Quick and really dirty fix for reordering issues
+                    if(data.channel_type == 'training' && self.categoryID){
+                        var categoryElement = $('ul[category_id='+self.categoryID+']');
+                        $('<li hidden class="content-slide" slide_id="'+data.slide_id+'" category_id="'+self.categoryID+'">temp</li>').appendTo(categoryElement)
+                        self._reorderSlidesSequence();
+                    }
                     window.location = data.url;
                 }
             });
