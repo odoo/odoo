@@ -66,7 +66,7 @@ class AccountFrFec(models.TransientModel):
             AND am.state = 'posted'
             '''
         company = self.env.user.company_id
-        formatted_date_from = self.date_from.replace('-', '')
+        formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
         formatted_date_year = date_from.year
         self._cr.execute(
@@ -172,7 +172,7 @@ class AccountFrFec(models.TransientModel):
         HAVING sum(aml.balance) != 0
         AND aat.type not in ('receivable', 'payable')
         '''
-        formatted_date_from = self.date_from.replace('-', '')
+        formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
         formatted_date_year = date_from.year
         self._cr.execute(
@@ -332,7 +332,7 @@ class AccountFrFec(models.TransientModel):
             w.writerow(list(row))
 
         siren = company.vat[4:13]
-        end_date = self.date_to.replace('-', '')
+        end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''
         if self.export_type == "nonofficial":
             suffix = '-NONOFFICIAL'

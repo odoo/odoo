@@ -16,7 +16,14 @@ tour.register('sale_product_configurator_advanced_tour', {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_sale_order"
 }, {
-    trigger: "a:contains('Configure a product')"
+    trigger: ".o_required_modifier[name=partner_id] input",
+    run: "text Tajine Saucisse",
+}, {
+    trigger: ".ui-menu-item > a:contains('Tajine Saucisse')",
+    auto: true,
+}, {
+    trigger: "a:contains('Configure a product')",
+    extra_trigger: ".o_field_widget[name=pricelist_id] > .o_external_button", // Wait for pricelist (onchange_partner_id)
 }, {
     trigger: '.o_product_configurator .o_input_dropdown input',
     run: 'click'
