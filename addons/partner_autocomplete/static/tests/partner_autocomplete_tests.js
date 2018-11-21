@@ -4,9 +4,9 @@ odoo.define('partner_autocomplete.tests', function (require) {
     var FormView = require('web.FormView');
     var concurrency = require('web.concurrency');
     var testUtils = require("web.test_utils");
-    var AutocompleteCore = require('partner.autocomplete.core');
     var AutocompleteField = require('partner.autocomplete.fieldchar');
     var PartnerField = require('partner.autocomplete.many2one');
+    var NotificationService = require('web.NotificationService');
 
     var createView = testUtils.createAsyncView;
 
@@ -36,13 +36,67 @@ odoo.define('partner_autocomplete.tests', function (require) {
         });
     }
 
+    var suggestions = [{
+        name: "Odoo",
+        website: "odoo.com",
+        domain: "odoo.com",
+        logo: "odoo.com/logo.png",
+        vat: "BE0477472701"
+    }];
+
+    var enrichData = {};
+
+    var createData = {};
+
     QUnit.module('partner_autocomplete', {
         before: function () {
-            var suggestions = [
-                {name: "Odoo", website: "odoo.com", domain: "odoo.com", logo: "odoo.com/logo.png", vat: "BE0477472701"}
-            ];
+            var fieldsToPatch = [PartnerField, AutocompleteField];
+            _.each(fieldsToPatch, function (fieldToPatch) {
+                testUtils.mock.patch(fieldToPatch, {
+                    _getBase64Image: function (url) {
+                        return $.when(url === "odoo.com/logo.png" ? "odoobase64" : "");
+                    },
+                    _isOnline: function () {
+                        return true;
+                    },
+                    _getCreateData: function (company) {
+                        var def = this._super.apply(this, arguments);
+                        def.then(function (data) {
+                            createData = data.company;
+                        });
+                        return def;
+                    },
+                    _enrichCompany: function (company) {
+                        return $.when(enrichData);
+                    },
+                    _getOdooSuggestions: function (value, isVAT) {
+                        var results = _.filter(suggestions, function (suggestion) {
+                            value = value ? value.toLowerCase() : '';
+                            if (isVAT) return (suggestion.vat.toLowerCase().indexOf(value) >= 0);
+                            else return (suggestion.name.toLowerCase().indexOf(value) >= 0);
+                        });
+                        return $.when(results);
+                    },
+                    _getClearbitSuggestions: function (value) {
+                        return this._getOdooSuggestions(value);
+                    },
+                    do_notify: function (title, message, sticky, className) {
+                        return this.call('notification', 'notify', {
+                            title: title,
+                            message: message,
+                            sticky: true,
+                            className: 'o_partner_autocomplete_test_notify'
+                        });
+                    },
+                });
+            });
 
-            var enrich_data = {
+            testUtils.mock.patch(AutocompleteField, {
+                debounceSuggestions: 0,
+            });
+        },
+        beforeEach: function () {
+            enrichData = {
                 country_id: 20,
                 state_id: false,
                 partner_gid: 1,
@@ -56,42 +110,6 @@ odoo.define('partner_autocomplete.tests', function (require) {
                 vat: "BE0477472701",
             };
 
-            testUtils.mock.patch(AutocompleteCore, {
-                _getBase64Image: function (url) {
-                    return $.when(url === "odoo.com/logo.png" ? "odoobase64" : "");
-                },
-                isOnline: function () {
-                    return true;
-                },
-                getCreateData: function (company) {
-                    var self = this;
-                    var def = this._super.apply(this, arguments);
-                    def.then(function (data) {
-                        self._createData = data.company;
-                    });
-                    return def;
-                },
-                enrichCompany: function (company) {
-                    return $.when(enrich_data);
-                },
-                _getOdooSuggestions(value, isVAT) {
-                    var results = _.filter(suggestions, function (suggestion) {
-                        value = value ? value.toLowerCase() : '';
-                        if (isVAT) return (suggestion.vat.toLowerCase().indexOf(value) >= 0);
-                        else return (suggestion.name.toLowerCase().indexOf(value) >= 0);
-                    });
-                    return $.when(results);
-                },
-                _getClearbitSuggestions(value) {
-                    return this._getOdooSuggestions(value);
-                },
-            });
-
-            testUtils.mock.patch(AutocompleteField, {
-                debounceSuggestions: 0,
-            });
-        },
-        beforeEach: function () {
             this.data = {
                 'res.partner': {
                     fields: {
@@ -128,7 +146,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
         },
         after: function () {
             testUtils.mock.unpatch(AutocompleteField);
-            testUtils.mock.unpatch(AutocompleteCore);
+            testUtils.mock.unpatch(PartnerField);
         },
     });
 
@@ -223,7 +241,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
             assert.strictEqual($input.val(), "Odoo", "Input value should have been updated to \"Odoo\"");
             assert.strictEqual(form.$("input.o_field_widget").val(), "odoo.com", "website value should have been updated to \"odoo.com\"");
 
-            _compareResultFields(assert, form, fields, AutocompleteCore._createData);
+            _compareResultFields(assert, form, fields, createData);
 
             // Try suggestion with bullshit query
             testUtils.fields.editInput($input, "ZZZZZZZZZZZZZZZZZZZZZZ")
@@ -309,7 +327,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
             $input = form.$(".o_field_partner_autocomplete > input");
             assert.strictEqual($input.val(), "Odoo", "Input value should have been updated to \"Odoo\"");
 
-            _compareResultFields(assert, form, fields, AutocompleteCore._createData);
+            _compareResultFields(assert, form, fields, createData);
 
             // Set complete VAT and assert changes
             // Second suggestion (only vat + clearbit result)
@@ -323,7 +341,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
             $input = form.$(".o_field_partner_autocomplete > input");
             assert.strictEqual($input.val(), "Odoo", "Input value should have been updated to \"Odoo\"");
 
-            _compareResultFields(assert, form, fields, AutocompleteCore._createData);
+            _compareResultFields(assert, form, fields, createData);
 
             // Test if dropdown closes on focusout
             $input.trigger("focusout");
@@ -369,6 +387,52 @@ odoo.define('partner_autocomplete.tests', function (require) {
 
                 done();
             });
+        });
+    });
+
+    QUnit.test("Partner autocomplete : Notify not enough credits", function (assert) {
+        assert.expect(1);
+        var done = assert.async();
+
+        enrichData = {
+            error: true,
+            error_message: 'Insufficient Credit',
+        };
+
+        createView({
+            View: FormView,
+            model: 'res.partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                '<field name="company_type"/>' +
+                '<field name="name" widget="field_partner_autocomplete"/>' +
+                '</form>',
+            services: {
+                notification: NotificationService,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "get_credits_url"){
+                    return $.when('credits_url');
+                }
+                return this._super.apply(this, arguments);
+            },
+        }).then(function (form){
+            // Set company type to Company
+            var $company_type = form.$("select[name='company_type']");
+            testUtils.fields.editSelect($company_type, '"company"');
+
+            var $input = form.$(".o_field_partner_autocomplete > input:visible");
+            testUtils.fields.editInput($input, "BE0477472701");
+
+            var $dropdown = form.$(".o_field_partner_autocomplete .dropdown-menu:visible");
+            testUtils.dom.click($dropdown.find("a").first());
+
+            var $notify = $(".o_partner_autocomplete_test_notify");
+            assert.isVisible($notify, "there should be an 'Insufficient Credit' notification");
+
+            form.destroy();
+            done();
         });
     });
 });

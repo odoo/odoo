@@ -1,14 +1,20 @@
-odoo.define('partner.autocomplete.core', function (require) {
+odoo.define('partner.autocomplete.Mixin', function (require) {
 'use strict';
 
-var rpc = require('web.rpc');
 var concurrency = require('web.concurrency');
 
-return {
+var core = require('web.core');
+var Qweb = core.qweb;
+var _t = core._t;
+
+/**
+ * This mixin only works with classes having EventDispatcherMixin in 'web.mixins'
+ */
+var PartnerAutocompleteMixin = {
     _dropPreviousOdoo: new concurrency.DropPrevious(),
     _dropPreviousClearbit: new concurrency.DropPrevious(),
     _timeout : 1000, // Timeout for Clearbit autocomplete in ms
-    
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -20,7 +26,7 @@ return {
      * @returns {Deferred}
      * @private
      */
-    autocomplete: function (value) {
+    _autocomplete: function (value) {
         value = value.trim();
         var def = $.Deferred(),
             isVAT = this._isVAT(value),
@@ -62,11 +68,14 @@ return {
      * Get enrichment data
      *
      * @param {Object} company
+     * @param {string} company.website
+     * @param {string} company.partner_gid
+     * @param {string} company.vat
      * @returns {Deferred}
      * @private
      */
-    enrichCompany: function (company) {
-        return rpc.query({
+    _enrichCompany: function (company) {
+        return this._rpc({
             model: 'res.partner',
             method: 'enrich_company',
             args: [company.website, company.partner_gid, company.vat],
@@ -80,7 +89,7 @@ return {
      * @returns {Deferred}
      * @private
      */
-    getCompanyLogo: function (url) {
+    _getCompanyLogo: function (url) {
         return this._getBase64Image(url).then(function (base64Image) {
             // base64Image equals "data:" if image not available on given url
             return base64Image ? base64Image.replace(/^data:image[^;]*;base64,?/, '') : false;
@@ -93,7 +102,9 @@ return {
      * @param {Object} company
      * @returns {Deferred}
      */
-    getCreateData: function (company) {
+    _getCreateData: function (company) {
+        var self = this;
+
         var removeUselessFields = function (company) {
             var fields = 'label,description,domain,logo,legal_name'.split(',');
             fields.forEach(function (field) {
@@ -109,10 +120,10 @@ return {
         var def = $.Deferred();
 
         // Fetch additional company info via Autocomplete Enrichment API
-        var enrichPromise = this.enrichCompany(company);
+        var enrichPromise = this._enrichCompany(company);
 
         // Get logo
-        var logoPromise = company.logo ? this.getCompanyLogo(company.logo) : false;
+        var logoPromise = company.logo ? this._getCompanyLogo(company.logo) : false;
 
         this._whenAll([enrichPromise, logoPromise]).always(function (company_data, logo_data){
             if (Array.isArray(company_data)) company_data = company_data[0];
@@ -120,6 +131,11 @@ return {
 
             if (Array.isArray(logo_data)) logo_data = logo_data[0];
             else logo_data = '';
+
+            if (company_data.error && company_data.error_message === 'Insufficient Credit'){
+                self._notifyNoCredits();
+                company_data = company;
+            }
 
             if (_.isEmpty(company_data)) company_data = company;
 
@@ -142,7 +158,7 @@ return {
      *
      * @returns {boolean}
      */
-    isOnline: function () {
+    _isOnline: function () {
         return navigator && navigator.onLine;
     },
 
@@ -154,7 +170,7 @@ return {
      * @returns {boolean}
      * @private
      */
-    validateSearchTerm: function (search_val, onlyVAT) {
+    _validateSearchTerm: function (search_val, onlyVAT) {
         if (onlyVAT) return this._isVAT(search_val);
         else return search_val && search_val.length > 2;
     },
@@ -226,7 +242,7 @@ return {
     _getOdooSuggestions: function (value, isVAT) {
         var method = isVAT ? 'read_by_vat' : 'autocomplete';
 
-        var def = rpc.query({
+        var def = this._rpc({
             model: 'res.partner',
             method: method,
             args: [value],
@@ -334,5 +350,27 @@ return {
 
         return deferred.promise();
     },
+
+    /**
+     * @private 
+     * @returns {$.Promise}
+     */
+    _notifyNoCredits: function () {
+        var self = this;
+        this._rpc({
+            model: 'iap.account',
+            method: 'get_credits_url',
+            args: ['partner_autocomplete'],
+        }).then(function (url) {
+            var title = _t('Not enough credits for Partner Autocomplete');
+            var content = Qweb.render('partner_autocomplete.insufficient_credit_notification', {
+                credits_url: url
+            });
+            self.do_notify(title, content, false, 'o_partner_autocomplete_no_credits_notify');
+        });
+    },
 };
+
+return PartnerAutocompleteMixin;
+
 });
