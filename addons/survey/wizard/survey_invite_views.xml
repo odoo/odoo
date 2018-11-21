@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <!-- Replace the default mass-mailing wizard in base with the composition wizard -->
-
         <!-- Composition form (context['survey_resent_token'], if True, hide share option, emails list and partner_ids) -->
-        <record model="ir.ui.view" id="survey_email_compose_message">
-            <field name="name">survey.mail.compose.message.form</field>
-            <field name="model">survey.mail.compose.message</field>
+        <record model="ir.ui.view" id="survey_invite_view_form">
+            <field name="name">survey.invite.view.form</field>
+            <field name="model">survey.invite</field>
             <field name="arch" type="xml">
                 <form string="Compose Email">
-                    <field name="composition_mode" invisible="1"/>
-                    <field name="model" invisible="1"/>
-                    <field name="res_id" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
                     <group col="2">
                         <field name="survey_id" readonly="context.get('default_survey_id')"/>
                         <field name="public" widget="radio" invisible="context.get('survey_resent_token')" />

@@ -132,7 +132,7 @@ class TestSurvey(TransactionCase):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'survey.mail.compose.message',
+            'res_model': 'survey.invite',
             'target': 'new',
             'context': ctx,
         })
@@ -150,15 +150,15 @@ class TestSurvey(TransactionCase):
     def test_07_survey_email_message(self):
         # Case-1: Executing send_mail with correct data.
         partner = self.env['res.partner'].create({'name': 'Marie De Cock', 'email': 'marie.de.cock@gmail.com'})
-        survey_mail_message = self.env['survey.mail.compose.message'].sudo(self.survey_manager).create({
+        survey_mail_message = self.env['survey.invite'].sudo(self.survey_manager).create({
             'survey_id': self.survey1.id, 'public': 'email_public_link', 'body': '__URL__', 'partner_ids': [(4, partner.id)]})
         survey_mail_message.send_mail()
 
         # Case-2: Executing send_mail with incorrect data.
         mail_messages = [
-            self.env['survey.mail.compose.message'].sudo(self.survey_manager).create({  # Mail Message without __URL__ in body.
+            self.env['survey.invite'].sudo(self.survey_manager).create({  # Mail Message without __URL__ in body.
                 'survey_id': self.survey1.id, 'public': 'email_public_link'}),
-            self.env['survey.mail.compose.message'].sudo(self.survey_manager).create({  # Mail Message without recipents.
+            self.env['survey.invite'].sudo(self.survey_manager).create({  # Mail Message without recipents.
                 'survey_id': self.survey1.id, 'public': 'email_public_link', 'body': "__URL__"})]
         for message in mail_messages:
             self.assertRaises(UserError, message.send_mail)
