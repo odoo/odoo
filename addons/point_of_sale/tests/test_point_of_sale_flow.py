@@ -3,7 +3,7 @@ import time
 
 import odoo
 from odoo import fields
-from odoo.tools import float_compare, mute_logger, test_reports
+from odoo.tools import float_compare, mute_logger, test_reports, pycompat
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
 
@@ -665,9 +665,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         debit_lines = self.pos_order_pos0.account_move.mapped('line_ids.debit')
         credit_lines = self.pos_order_pos0.account_move.mapped('line_ids.credit')
         amount_currency_lines = self.pos_order_pos0.account_move.mapped('line_ids.amount_currency')
-        for a, b in zip(sorted(debit_lines), [0.0, 0.0, 0.0, 0.0, 879.55]):
+        for a, b in pycompat.izip(sorted(debit_lines), [0.0, 0.0, 0.0, 0.0, 879.55]):
             self.assertAlmostEqual(a, b)
-        for a, b in zip(sorted(credit_lines), [0.0, 22.5, 40.91, 388.64, 427.5]):
+        for a, b in pycompat.izip(sorted(credit_lines), [0.0, 22.5, 40.91, 388.64, 427.5]):
             self.assertAlmostEqual(a, b)
-        for a, b in zip(sorted(amount_currency_lines), [-855.0, -777.27, -81.82, -45.0, 1752.75]):
+        for a, b in pycompat.izip(sorted(amount_currency_lines), [-855.0, -777.27, -81.82, -45.0, 1752.75]):
             self.assertAlmostEqual(a, b)
