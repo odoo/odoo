@@ -145,6 +145,11 @@ if(!the_form.length) {
             if(_.has(response, 'errors')){  // some questions have errors
                 _.each(_.keys(response.errors), function(key){
                     $("#" + key + '>.js_errzone').append('<p>' + response.errors[key] + '</p>').show();
+                    if (_.keys(response.errors)[_.keys(response.errors).length - 1] === key) {
+                         $('html, body').animate({
+                            scrollTop: $('.js_errzone:visible:first').closest('.js_question-wrapper').offset().top - $('.o_main_navbar').height()
+                        }, 500);
+                    }
                 });
                 return false;
             }
