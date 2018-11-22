@@ -6,7 +6,7 @@
         <p class="text-muted">Your favorite meals will be created based on your last orders.</p>
         <p class="text-muted">Don't forget the alerts displayed in the reddish area</p>
     </div>
-    <t t-name="LunchPreviousOrdersWidgetList">
+    <div t-name="LunchPreviousOrdersWidgetList" class="row">
         <div t-foreach="categories" t-as="supplier" class="col-lg-4">
             <h3><t t-esc="supplier"/></h3>
             <div t-foreach='categories[supplier]' t-as='order' class="o_lunch_vignette">
@@ -25,5 +25,5 @@
                 </div>
             </div>
         </div>
-    </t>
+    </div>
 </templates>

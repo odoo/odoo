@@ -37,20 +37,20 @@
 .. see "man quilt" for the rest of the subcommands. FWIW I could not get
    "quilt setup" to do anything useful.
 
-================
-In-App Purchases
-================
+===============
+In-App Purchase
+===============
 
-In-App Purchase (IAP) allow providers of ongoing services through Odoo apps to
+In-App Purchase (IAP) allows providers of ongoing services through Odoo apps to
 be compensated for ongoing service use rather than — and possibly instead of
 — a sole initial purchase.
 
 In that context, Odoo acts mostly as a *broker* between a client and an Odoo
 App Developer:
 
-* users purchase service tokens from Odoo
-* service providers draw tokens from the user's Odoo account when service
-  is requested
+* Users purchase service tokens from Odoo.
+* Service providers draw tokens from the user's Odoo account when service
+  is requested.
 
 .. attention::
 
@@ -67,13 +67,13 @@ Overview
     The Players
 
     * The Service Provider is (probably) you the reader, you will be providing
-      value to the client in the form of a service paid per-use
-    * The Client installed your Odoo App, and from there will request services
+      value to the client in the form of a service paid per-use.
+    * The Client installed your Odoo App, and from there will request services.
     * Odoo brokers crediting, the Client adds credit to their account, and you
-      can draw credits from there to provide services
+      can draw credits from there to provide services.
     * The External Service is an optional player: *you* can either provide a
       service directly, or you can delegate the actual service acting as a
-      bridge/translator between an Odoo system and the actual service
+      bridge/translator between an Odoo system and the actual service.
 
     
 .. figure:: images/credits.jpg
@@ -81,16 +81,16 @@ Overview
 
     The Credits
 
-.. note:: The credits went from integer to float value starting **October 2018**
+.. note:: The credits went from integer to float value starting **October 2018**.
     Integer values are still supported.
 
-    Every service provided through the In-App platform can be used by the
+    Every service provided through the IAP platform can be used by the
     clients with tokens or *credits*. The credits are an float unit and
     their monetary value depends on the service and is decided by the
     provider. This could be:
 
-    * for an sms service: 1 credit = 1 sms,
-    * for an add service: 1 credit = 1 add,
+    * for an sms service: 1 credit = 1 sms;
+    * for an ad service: 1 credit = 1 ad; or
     * for a postage service: 1 credit = 1 post stamp.
 
     A credit can also simply be associated with a fixed amount of money
@@ -98,56 +98,58 @@ Overview
     may vary following the countries).
 
     The value of the credits is fixed with the help of prepaid credit packs
-    that the clients can buy on https://iap.odoo.com (see :ref:`Packages <iap-packages>`).
+    that the clients can buy on https://iap.odoo.com (see :ref:`Packs <iap-packages>`).
 
-.. note:: in the following explanations we will ignore the External Service,
-          they're just a detail of the service you provide
+.. note:: In the following explanations we will ignore the External Service,
+          they are just a detail of the service you provide.
 
 .. figure:: images/normal.png
     :align: center
 
-    A "normal" service flow
+    'Normal' service flow
 
-    If everything goes well, the normal flow is:
+    If everything goes well, the normal flow is the following:
 
-    1. the Client requests a service of some sort
-    2. the Service Provider asks Odoo if there are enough credits for the
+    1. The Client requests a service of some sort.
+    2. The Service Provider asks Odoo if there are enough credits for the
        service in the Client's account, and creates a transaction over that
-       amount
-    3. the Service Provider provides the service (either on their own or
-       calling to External Services)
-    4. the Service Provider goes back to Odoo to capture (if the service could
+       amount.
+    3. The Service Provider provides the service (either on their own or
+       calling to External Services).
+    4. The Service Provider goes back to Odoo to capture (if the service could
        be provided) or cancel (if the service could not be provided) the
-       transaction created at step 2
-    5. finally the Service Provider notifies the Client that the service has
+       transaction created at step 2.
+    5. Finally, the Service Provider notifies the Client that the service has
        been rendered, possibly (depending on the service) displaying or
-       storing its results in the client's system
+       storing its results in the client's system.
 
 .. figure:: images/no-credit.png
     :align: center
 
-    Insufficient Credits
+    Insufficient credits
 
-    If the Client's account lacks credits for the service, however
+    However, if the Client's account lacks credits for the service, the flow will be as follows:
 
-    1. the Client requests a service as previously
-    2. the Service Provider asks Odoo if there are enough credits on the
-       Client's account and gets a negative reply
-    3. this is signaled back to the Client
-    4. who is redirected to their Odoo account to credit it and re-try
+    1. The Client requests a service as previously.
+    2. The Service Provider asks Odoo if there are enough credits on the
+       Client's account and gets a negative reply.
+    3. This is signaled back to the Client.
+    4. Who is redirected to their Odoo account to credit it and re-try.
 
 
 Building your service
 =====================
 
 For this example, the service we will provide is ~~mining dogecoins~~ burning
-10 seconds of CPU for a credit. For your own services, you could for example:
+10 seconds of CPU for a credit. For your own services, you could, for example:
 
 * provide an online service yourself (e.g. convert quotations to faxes for
-  business in Japan)
-* provide an *offline* service yourself (e.g. provide accountancy service)
+  business in Japan);
+* provide an *offline* service yourself (e.g. provide accountancy service); or
 * act as intermediary to an other service provider (e.g. bridge to an MMS
-  gateway)
+  gateway).
+
+.. _register-service:
 
 Register the service on Odoo
 ----------------------------
@@ -173,30 +175,40 @@ Log in then go to :menuselection:`My Account --> Your In-App Services`, click
 Create and provide the informations of your service.
 
 
-The service has *four* important fields:
+The service has *seven* important fields:
 
-* :samp:`name` - :class:`ServiceName`: this will identify your service in the
-  client's :ref:`app <iap-odoo-app>` communicates directly with IAP, choose it 
-  carefully!
+* :samp:`name` - :class:`ServiceName`: This is the string you will need to provide inside
+  the client's :ref:`app <iap-odoo-app>` when requesting a transaction from Odoo. (e.g.
+  :class:`self.env['iap.account].get(name)`). As good practice, this should match the
+  technical name of your app.
+
+* :samp:`label` - :class:`Label`: The name displayed on the shopping portal for the
+  client.
+
 .. warning::
-    The :class:`ServiceName` is unique and should usually match the name of your 
-    Odoo Client App.
+   Both the :class:`ServiceName` and :class:`Label` are unique. As good practice, the 
+   :class:`ServiceName` should usually match the name of your Odoo Client App.
 
-* :samp:`Icon` - :class:`Icon`: A generic icon that will serve as default for your
-  :ref:`packages <iap-packages>`
+* :samp:`icon` - :class:`Icon`: A generic icon that will serve as default for your
+  :ref:`packs <iap-packages>`.
 
-* :samp:`key` - :class:`ServiceKey`: the developer key that identifies you in 
+* :samp:`key` - :class:`ServiceKey`: The developer key that identifies you in
   IAP (see :ref:`your service <iap-service>`) and allows to draw credits from
   the client's account. It will be shown only once upon creation of the service
   and can be regenerated at will.
-.. danger:: 
+
+.. danger::
     Your :class:`ServiceKey` *is a secret*, leaking your service key
     allows other application developers to draw credits bought for
     your service(s).
 
+* :samp:`trial credits` - :class:`Float`: This corresponds to the credits you are ready to offer
+  upon first use to your app users. Note that such service will only be available to clients that
+  have an active enterprise contract.
+
 * :samp:`privacy policy` - :class:`PrivacyPolicy`: This is an url to the privacy
   policy of your service. This should explicitly mention the **information you collect**,
-  How you **use it, its relevance** to make your service work and inform the 
+  how you **use it, its relevance** to make your service work and inform the
   client on how they can **access, update or delete their personal information**.
 
 .. image:: images/menu.png
@@ -216,27 +228,27 @@ use your service.
 
 .. _iap-packages:
 
-Packages
---------
+Packs
+-----
 
-The credit packages are essentially a product with 5 characteristics.
+A credit pack is essentially a product with five characteristics:
 
-* Name: the name of the package,
-* Icon: A specific icon for the package. If not provided, it will fallback on the service icon
-* Description: details on the package that will appear on the shop page as
+* Name: name of the pack,
+* Icon: specific icon for the pack (if not provided, it will fallback on the service icon),
+* Description: details on the pack that will appear on the shop page as
   well as the invoice,
-* Credits: the amount of credits the client is entitled to when buying the package,
-* Price: the price in *EUROS* for the time being (USD support is planned).
+* Amount: amount of credits the client is entitled to when buying the pack,
+* Price: price in EUR (for the time being, USD support is planned).
 
 .. note:: 
     
-    Odoo takes a 25% commission on all package sales. Adjust your selling price accordingly.
+    Odoo takes a 25% commission on all pack sales. Adjust your selling price accordingly.
 
 
 .. note::
 
-    Depending on the strategy, the price per credit can vary from one
-    package to another.
+    Depending on the strategy, the price per credit may vary from one
+    pack to another.
 
 
 .. image:: images/package.png
@@ -252,17 +264,17 @@ Odoo App
 .. todo:: does this actually require apps?
 
 The second step is to develop an `Odoo App`_ which clients can install in their
-Odoo instance and through which they can *request* services you will provide.
+Odoo instance and through which they can *request* the services you provide.
 Our app will just add a button to the Partners form which lets a user request
 burning some CPU time on the server.
 
-First, we'll create an *odoo module* depending on ``iap``. IAP is a standard
+First, we will create an *odoo module* depending on ``iap``. IAP is a standard
 V11 module and the dependency ensures a local account is properly set up and
-we will have access to some necessary views and useful helpers
+we will have access to some necessary views and useful helpers.
 
 .. patch::
 
-Second, the "local" side of the integration, here we will only be adding an
+Second, the "local" side of the integration. Here we will only be adding an
 action button to the partners view, but you can of course provide significant
 local value via your application and additional parts via a remote service.
 
@@ -283,8 +295,8 @@ other Odoo instance and transparently re-raise relevant Odoo exceptions
 
 In that call, we will need to provide:
 
-* any relevant client parameter (none here)
-* the :class:`token <UserToken>` of the current client, this is provided by
+* any relevant client parameter (none here),
+* the :class:`token <UserToken>` of the current client that is provided by
   the ``iap.account`` model's ``account_token`` field. You can retrieve the
   account for your service by calling :samp:`env['iap.account'].get({service_name})`
   where :class:`service_name <ServiceName>` is the name of the service registered 
@@ -336,19 +348,14 @@ perform the service within:
 
 The :class:`~odoo.addons.iap.models.iap.charge` helper will:
 
-.. note::
-
-    Since the 15th of January 2018, a new functionality that allows one to capture a different amount than autorized has been added.
-    See :ref:`Charging <iap-charging>`
-
 1. authorize (create) a transaction with the specified number of credits,
    if the account does not have enough credits it will raise the relevant
    error
 2. execute the body of the ``with`` statement
-3. (NEW) if the body of the ``with`` executes succesfully, update the price 
+3. if the body of the ``with`` executes succesfully, update the price 
    of the transaction if needed
 4. capture (confirm) the transaction
-5. otherwise if an error is raised from the body of the ``with`` cancel the
+5. otherwise, if an error is raised from the body of the ``with``, cancel the
    transaction (and release the hold on the credits)
 
 .. danger::
@@ -364,17 +371,17 @@ The :class:`~odoo.addons.iap.models.iap.charge` helper will:
     ``iap.endpoint`` if none already exists).
 
 The :class:`~odoo.addons.iap.models.iap.charge` helper has two additional optional
-parameters we can use to make things clearer to the end-user:
+parameters we can use to make things clearer to the end-user.
 
 ``description``
     is a message which will be associated with the transaction and will be
     displayed in the user's dashboard, it is useful to remind the user why
-    the charge exists
+    the charge exists.
 ``credit_template``
     is the name of a :ref:`reference/qweb` template which will be rendered
     and shown to the user if their account has less credit available than the
     service provider is requesting, its purpose is to tell your users why
-    they should be interested in your IAP offers
+    they should be interested in your IAP offers.
 
 .. patch::
 
@@ -412,10 +419,12 @@ Authorize
     :param UserToken account_token:
     :param float credit:
     :param str description: optional, helps users identify the reason for
-                            charges on their accounts.
-    :returns: :class:`TransactionToken` if the authorization succeeded.
+                            charges on their account
+    :param str dbuuid: optional, allows the user to benefit from trial
+                       credits if his database is eligible (see :ref:`Service registration <register-service>`)
+    :returns: :class:`TransactionToken` if the authorization succeeded
     :raises: :class:`~odoo.exceptions.AccessError` if the service token is invalid
-    :raises: :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` if the account does
+    :raises: :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` if the account does not have enough credits
     :raises: ``TypeError`` if the ``credit`` value is not an integer or a float
 
 .. code-block:: python
@@ -450,7 +459,7 @@ Capture
 
     :param TransactionToken token:
     :param ServiceKey key:
-    :param float credit_to_capture: (new - 15 Jan 2018) optional parameter to capture a smaller amount of credits than authorized
+    :param float credit_to_capture: optional parameter to capture a smaller amount of credits than authorized
     :raises: :class:`~odoo.exceptions.AccessError`
 
 .. code-block:: python
@@ -504,7 +513,7 @@ Types
 -----
 
 Exceptions aside, these are *abstract types* used for clarity, you should not
-care how they are implemented
+care how they are implemented.
 
 .. class:: ServiceName
 
@@ -516,11 +525,11 @@ care how they are implemented
     Identifier generated for the provider's service. Each key (and service)
     matches a token of a fixed value, as generated by the service provide.
 
-    Multiple types of tokens correspond to multiple services e.g. SMS and MMS
-    could either be the same service (with an MMS being "worth" multiple SMS)
+    Multiple types of tokens correspond to multiple services. As an exampe, SMS and MMS
+    could either be the same service (with an MMS being 'worth' multiple SMS)
     or could be separate services at separate price points.
 
-    .. danger:: your service key *is a secret*, leaking your service key
+    .. danger:: Your service key *is a secret*, leaking your service key
                 allows other application developers to draw credits bought for
                 your service(s).
 
@@ -531,7 +540,7 @@ care how they are implemented
 .. class:: TransactionToken
 
     Transaction identifier, returned by the authorization process and consumed
-    by either capturing or cancelling the transaction
+    by either capturing or cancelling the transaction.
 
 .. exception:: odoo.addons.iap.models.iap.InsufficientCreditError
 
@@ -543,8 +552,8 @@ care how they are implemented
 
     Raised by:
 
-    * any operation to which a service token is required, if the service token is invalid.
-    * any failure in an inter-server call. (typically, in :func:`~odoo.addons.iap.jsonrpc`)
+    * any operation to which a service token is required, if the service token is invalid; or
+    * any failure in an inter-server call. (typically, in :func:`~odoo.addons.iap.jsonrpc`).
 
 .. exception:: odoo.exceptions.UserError
 
@@ -558,53 +567,47 @@ In order to test the developped app, we propose a sandbox platform that allows y
 
 1. Test the whole flow from the client's point of view - Actual services and transactions
    that can be consulted. (again this requires to change the endpoint, see the danger note
-   in :ref:`Service <iap-service>`)
+   in :ref:`Service <iap-service>`).
 2. Test the API.
 
 The latter consists in specific tokens that will work on **IAP-Sandbox only**.
 
-* token ``000000``: represents a non-existing account. Returns
+* Token ``000000``: Represents a non-existing account. Returns
   an :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` on authorize attempt.
-* token ``000111``: Represents an account without sufficient credits to perform any service.
+* Token ``000111``: Represents an account without sufficient credits to perform any service.
   Returns an :class:`~odoo.addons.iap.models.iap.InsufficientCreditError` on authorize attempt.
-* token ``111111``: Represents an account with enough credits to perform any service. 
-  An authorize attempt will return a dummy transacion token that is processed by the capture 
+* Token ``111111``: Represents an account with enough credits to perform any service.
+  An authorize attempt will return a dummy transacion token that is processed by the capture
   and cancel routes.
 
 .. note::
 
     * Those tokens are only active on the IAP-Sanbox server.
-    * The service key is completely ignored with this flow, If you want to run a robust test 
+    * The service key is completely ignored with this flow, If you want to run a robust test
       of your service, you should ignore these tokens.
 
 Odoo Helpers
 ============
 
 For convenience, if you are implementing your service using Odoo the ``iap``
-module provides a few helpers to make IAP flow even simpler:
+module provides a few helpers to make IAP flow even simpler.
 
 .. _iap-charging:
 
 Charging
 --------
 
-.. note::
-
-    A new functionality was introduced to capture a different amount of credits than reserved.
-    As this patch was added on the **15th of January 2018**, you will need to upgrade your ``iap`` module in order to use it.
-    The specifics of the new functionality are highlighted in the code. 
-
-.. class:: odoo.addons.iap.models.iap.charge(env, key, account_token, credit[, description, credit_template])
+.. class:: odoo.addons.iap.models.iap.charge(env, key, account_token, credit[, dbuuid, description, credit_template])
 
     A *context manager* for authorizing and automatically capturing or
     cancelling transactions for use in the backend/proxy.
 
     Works much like e.g. a cursor context manager:
 
-    * immediately authorizes a transaction with the specified parameters
-    * executes the ``with`` body
-    * if the body executes in full without error, captures the transaction
-    * otherwise cancels it
+    * immediately authorizes a transaction with the specified parameters;
+    * executes the ``with`` body;
+    * if the body executes in full without error, captures the transaction;
+    * otherwise cancels it.
 
     :param odoo.api.Environment env: used to retrieve the ``iap.endpoint``
                                      configuration key
@@ -636,6 +639,126 @@ Charging
                 ('grid', '=', 'M-10'),
                 ('name', '=', 'Alderaan'),
             ]).unlink()
+
+
+Authorize
+---------
+
+.. class:: odoo.addons.iap.models.iap.authorize(env, key, account_token, credit[, dbuuid, description, credit_template])
+
+    Will authorize everything.
+
+    :param odoo.api.Environment env: used to retrieve the ``iap.endpoint``
+                                     configuration key
+    :param ServiceKey key:
+    :param UserToken token:
+    :param float credit:
+    :param str description:
+    :param Qweb template credit_template:
+
+.. code-block:: python
+  :emphasize-lines: 12
+
+    @route('/deathstar/superlaser', type='json')
+    def superlaser(self, user_account,
+                   coordinates, target,
+                   factor=1.0):
+        """
+        :param factor: superlaser power factor,
+                       0.0 is none, 1.0 is full power
+        """
+        credits = int(MAXIMUM_POWER * factor)
+        description = "We will demonstrate the power of this station on your home planet of Alderaan."
+        #actual IAP stuff
+        transaction_token = authorize(request.env, SERVICE_KEY, user_account, credits, description=description)
+        try:
+            # Beware the power of this laser
+            self.put_galactical_princess_in_sorrow()
+        except Exception as e:
+            # Nevermind ...
+            r = cancel(env,transaction_token, key)
+            raise e
+        else:
+            # We shall rule over the galaxy!
+            capture(env,transaction_token, key, min(credits, 2))
+
+Cancel
+------
+
+.. class:: odoo.addons.iap.models.iap.cancel(env, transaction_token, key)
+    
+    Will cancel an authorized transaction.
+
+    :param odoo.api.Environment env: used to retrieve the ``iap.endpoint``
+                                     configuration key
+    :param str transaction_token:
+    :param ServiceKey key:
+
+.. code-block:: python
+  :emphasize-lines: 16,17,18,19
+
+    @route('/deathstar/superlaser', type='json')
+    def superlaser(self, user_account,
+                   coordinates, target,
+                   factor=1.0):
+        """
+        :param factor: superlaser power factor,
+                       0.0 is none, 1.0 is full power
+        """
+        credits = int(MAXIMUM_POWER * factor)
+        description = "We will demonstrate the power of this station on your home planet of Alderaan."
+        #actual IAP stuff
+        transaction_token = authorize(request.env, SERVICE_KEY, user_account, credits, description=description)
+        try:
+            # Beware the power of this laser
+            self.put_galactical_princess_in_sorrow()
+        except Exception as e:
+            # Nevermind ...
+            r = cancel(env,transaction_token, key)
+            raise e
+        else:
+            # We shall rule over the galaxy!
+            capture(env,transaction_token, key, min(credits, 2))
+
+Capture
+-------
+
+.. class:: odoo.addons.iap.models.iap.capture(env, transaction_token, key, credit)
+
+    Will capture the amount ``credit`` on the given transaction.
+
+    :param odoo.api.Environment env: used to retrieve the ``iap.endpoint``
+                                     configuration key
+    :param str transaction_token:
+    :param ServiceKey key:
+    :param credit:
+
+.. code-block:: python
+  :emphasize-lines: 20,21,22
+
+    @route('/deathstar/superlaser', type='json')
+    def superlaser(self, user_account,
+                   coordinates, target,
+                   factor=1.0):
+        """
+        :param factor: superlaser power factor,
+                       0.0 is none, 1.0 is full power
+        """
+        credits = int(MAXIMUM_POWER * factor)
+        description = "We will demonstrate the power of this station on your home planet of Alderaan."
+        #actual IAP stuff
+        transaction_token = authorize(request.env, SERVICE_KEY, user_account, credits, description=description)
+        try:
+            # Beware the power of this laser
+            self.put_galactical_princess_in_sorrow()
+        except Exception as e:
+            # Nevermind ...
+            r = cancel(env,transaction_token, key)
+            raise e
+        else:
+            # We shall rule over the galaxy!
+            capture(env,transaction_token, key, min(credits, 2))
+
 
 .. _JSON-RPC2: http://www.jsonrpc.org/specification
 .. _Odoo App: https://www.odoo.com/apps
