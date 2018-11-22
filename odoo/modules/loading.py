@@ -151,8 +151,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
     module_count = len(graph)
     _logger.info('loading %d modules...', module_count)
 
-    registry.clear_caches()
-
     # register, instantiate and initialize models for each modules
     t0 = time.time()
     t0_sql = odoo.sql_db.sql_counter
@@ -277,9 +275,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             registry._init_modules.add(package.name)
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
-
-    registry.clear_caches()
-
 
     return loaded_modules, processed_modules
 
