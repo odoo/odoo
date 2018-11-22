@@ -982,6 +982,12 @@ class Cache(object):
         value = self._data[field][record.id].get(key, SpecialValue(None))
         return default if isinstance(value, SpecialValue) else value
 
+    def get_special(self, record, field, default=None):
+        """ Return the special value of ``field`` for ``record``. """
+        key = field.cache_key(record)
+        value = self._data[field][record.id].get(key)
+        return value.get if isinstance(value, SpecialValue) else default
+
     def set_special(self, record, field, getter):
         """ Set the value of ``field`` for ``record`` to return ``getter()``. """
         key = field.cache_key(record)
