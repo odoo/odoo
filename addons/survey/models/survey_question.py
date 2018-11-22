@@ -77,7 +77,7 @@ class SurveyQuestion(models.Model):
     validation_max_float_value = fields.Float('Maximum value')
     validation_min_date = fields.Date('Minimum Date')
     validation_max_date = fields.Date('Maximum Date')
-    validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered has an invalid format."))
+    validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered is not valid."))
     # Constraints on number of answers (matrices)
     constr_mandatory = fields.Boolean('Mandatory Answer')
     constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
