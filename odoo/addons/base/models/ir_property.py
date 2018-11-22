@@ -26,7 +26,7 @@ TYPE2CLEAN = {
     'text': lambda val: val or False,
     'selection': lambda val: val or False,
     'binary': lambda val: val or False,
-    'date': lambda val: val or False,
+    'date': lambda val: val.date() if val else False,
     'datetime': lambda val: val or False,
 }
 
