@@ -183,7 +183,7 @@ if(!the_form.length) {
     // frontend does not load moment locale at all.
     // so wait until DOM ready with locale then init datetimepicker
     ready_with_locale.then(function(){
-        $('.form-control.date').datetimepicker({
+        $('.input-group.date').datetimepicker({
             format : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
             maxDate: moment().add(200, "y"),
