@@ -217,7 +217,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         return _.extend(result, {
             author: lastMessage ? lastMessage.getDisplayedAuthor() : '',
             body: lastMessage ? mailUtils.parseAndTransform(lastMessage.getBody(), mailUtils.inline) : '',
-            date: lastMessage ? lastMessage.getDate() : moment(),
+            date: lastMessage ? lastMessage.getDate() : undefined,
             isMyselfAuthor: this.hasMessages() && this.getLastMessage().isMyselfAuthor(),
         });
     },
