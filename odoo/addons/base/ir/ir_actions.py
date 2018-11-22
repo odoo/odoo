@@ -40,7 +40,7 @@ class IrActions(models.Model):
     help = fields.Html(string='Action Description',
                        help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
                        translate=True)
-    binding_model_id = fields.Many2one('ir.model', ondelete='cascade',
+    binding_model_id = fields.Many2one('ir.model', ondelete='cascade', copy=False,
                                        help="Setting a value makes this action available in the sidebar for the given model.")
     binding_type = fields.Selection([('action', 'Action'),
                                      ('action_form_only', "Form-only"),
