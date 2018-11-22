@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from odoo.tests import common
 
@@ -465,3 +469,32 @@ class TestOnChange(common.TransactionCase):
         result = Message.onchange(value, ['message', 'message_name', 'message_currency'], field_onchange)
 
         self.assertEqual(result['value'], onchange_result)
+
+    def test_onchange_many2one_one2many(self):
+        """ Setting a many2one field should not read the inverse one2many. """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        field_onchange = self.Message._onchange_spec()
+        self.assertEqual(field_onchange.get('discussion'), '1')
+
+        values = {
+            'discussion': discussion.id,
+            'name': "[%s] %s" % ('', self.env.user.name),
+            'body': False,
+            'author': self.env.uid,
+            'size': 0,
+        }
+
+        called = [False]
+        orig_read = type(discussion).read
+
+        def mock_read(self, fields=None, load='_classic_read'):
+            if discussion in self and 'messages' in (fields or ()):
+                called[0] = True
+            return orig_read(self, fields, load)
+
+        # changing 'discussion' on message should not read 'messages' on discussion
+        with patch.object(type(discussion), 'read', mock_read, create=True):
+            self.env.cache.invalidate()
+            self.Message.onchange(values, 'discussion', field_onchange)
+
+        self.assertFalse(called[0], "discussion.messages has been read")
