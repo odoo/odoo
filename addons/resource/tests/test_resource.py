@@ -224,6 +224,15 @@ class TestCalendar(TestResourceCommon):
 
         leave.unlink()
 
+    def test_calendar_working_hours_count(self):
+        calendar = self.env.ref('resource.resource_calendar_std_35h')
+        calendar.tz = 'UTC'
+        res = calendar.get_work_hours_count(
+            fields.Datetime.from_string('2017-05-03 14:03:00'),  # Wednesday (8:00-12:00, 13:00-16:00)
+            fields.Datetime.from_string('2017-05-04 11:03:00'),  # Thursday (8:00-12:00, 13:00-16:00)
+            compute_leaves=False)
+        self.assertEqual(res, 5.0)
+
     def test_calendar_working_hours_24(self):
         self.att_4 = self.env['resource.calendar.attendance'].create({
             'name': 'Att4',

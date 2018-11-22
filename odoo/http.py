@@ -580,6 +580,7 @@ class JsonRequest(WebRequest):
         super(JsonRequest, self).__init__(*args)
 
         self.jsonp_handler = None
+        self.params = {}
 
         args = self.httprequest.args
         jsonp = args.get('jsonp')

@@ -55,7 +55,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         arg_list = (tuple(move_state), tuple(account_type))
         #build the reconciliation clause to see what partner needs to be printed
         reconciliation_clause = '(l.reconciled IS FALSE)'
-        cr.execute('SELECT debit_move_id, credit_move_id FROM account_partial_reconcile where create_date > %s', (date_from,))
+        cr.execute('SELECT debit_move_id, credit_move_id FROM account_partial_reconcile where max_date > %s', (date_from,))
         reconciled_after_date = []
         for row in cr.fetchall():
             reconciled_after_date += [row[0], row[1]]

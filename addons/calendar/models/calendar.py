@@ -1393,7 +1393,6 @@ class Meeting(models.Model):
         meeting_origin = self.browse(real_id)
 
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
-        d_class = fields.Date if data['allday'] else fields.Datetime
         if data.get('rrule'):
             data.update(
                 values,
@@ -1402,8 +1401,8 @@ class Meeting(models.Model):
                 rrule_type=False,
                 rrule='',
                 recurrency=False,
-                final_date=d_class.from_string(data.get('start')) \
-                    + timedelta(hours=values.get('duration', False) or data.get('duration'))
+                final_date=False,
+                end_type=False
             )
 
             # do not copy the id
