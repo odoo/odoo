@@ -19,13 +19,14 @@ class IrHttp(models.AbstractModel):
             # created from another module, e.g. website_form
             if not lead_id:
                 country_code = 'geoip' in request.session and request.session['geoip'].get('country_code')
+                state_code = 'geoip' in request.session and request.session['geoip'].get('region')
                 if country_code:
                     try:
                         url = request.httprequest.url
                         ip_address = request.httprequest.remote_addr
                         rules_excluded = (request.httprequest.cookies.get('rule_ids') or '').split(',')
                         before = time.time()
-                        new_rules_excluded = request.env['crm.reveal.view'].sudo()._create_reveal_view(url, ip_address, country_code, rules_excluded)
+                        new_rules_excluded = request.env['crm.reveal.view'].sudo()._create_reveal_view(url, ip_address, country_code, state_code, rules_excluded)
                         # even when we match, no view may have been created if this is a duplicate
                         _logger.info('Reveal process time: [%s], match rule: [%s?], country code: [%s], ip: [%s]',
                                      time.time() - before, new_rules_excluded == rules_excluded, country_code,

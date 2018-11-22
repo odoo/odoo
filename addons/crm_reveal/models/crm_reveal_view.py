@@ -40,9 +40,9 @@ class CRMRevealView(models.Model):
         domain.append(('create_date', '<', fields.Datetime.to_string(datetime.date.today() - relativedelta(weeks=weeks_valid))))
         self.search(domain).unlink()
 
-    def _create_reveal_view(self, url, ip_address, country_code, rules_excluded):
+    def _create_reveal_view(self, url, ip_address, country_code, state_code, rules_excluded):
         # we are avoiding reveal if reveal_view already created for this IP
-        rules = self.env['crm.reveal.rule']._match_url(url, country_code, rules_excluded)
+        rules = self.env['crm.reveal.rule']._match_url(url, country_code, state_code, rules_excluded)
         if rules:
             query = """
                     INSERT INTO crm_reveal_view (reveal_ip, reveal_rule_id, reveal_state, create_date)
