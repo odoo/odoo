@@ -32,7 +32,13 @@ class BaseModuleUninstall(models.TransientModel):
 
     @api.depends('module_ids')
     def _compute_model_ids(self):
-        ir_models = self._get_models()
+        if self._context.get('is_module_in_settings'):
+            # get only the models related to the module
+            domain = [('model', '=', 'ir.model'), ('module', '=', self.module_id.name)]
+            data = self.env['ir.model.data'].search_read(domain, ['res_id'])
+            ir_models = self.env['ir.model'].browse([item['res_id'] for item in data])
+        else:
+            ir_models = self._get_models()
         ir_models_xids = ir_models._get_external_ids()
         for wizard in self:
             if wizard.module_id:
