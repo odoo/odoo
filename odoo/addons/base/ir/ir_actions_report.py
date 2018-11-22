@@ -44,6 +44,7 @@ def _get_wkhtmltopdf_bin():
 
 # Check the presence of Wkhtmltopdf and return its version at Odoo start-up
 wkhtmltopdf_state = 'install'
+wkhtmltopdf_dpi_zoom_ratio = False
 try:
     process = subprocess.Popen(
         [_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -61,6 +62,8 @@ else:
             wkhtmltopdf_state = 'upgrade'
         else:
             wkhtmltopdf_state = 'ok'
+        if LooseVersion(version) >= LooseVersion('0.12.2'):
+            wkhtmltopdf_dpi_zoom_ratio = True
 
         if config['workers'] == 1:
             _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
@@ -234,14 +237,19 @@ class IrActionsReport(models.Model):
             else:
                 command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
 
+            dpi = None
             if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
-                command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
+                dpi = int(specific_paperformat_args['data-report-dpi'])
             elif paperformat_id.dpi:
                 if os.name == 'nt' and int(paperformat_id.dpi) <= 95:
                     _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
-                    command_args.extend(['--dpi', '96'])
+                    dpi = 96
                 else:
-                    command_args.extend(['--dpi', str(paperformat_id.dpi)])
+                    dpi = paperformat_id.dpi
+            if dpi:
+                command_args.extend(['--dpi', str(dpi)])
+                if wkhtmltopdf_dpi_zoom_ratio:
+                    command_args.extend(['--zoom', str(96.0 / dpi)])
 
             if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
