@@ -15,6 +15,18 @@
         <record model="lunch.product.category" id="categ_pasta">
             <field name="name">Pasta</field>
         </record>
+        <record model="lunch.product.category" id="categ_burger">
+            <field name="name">Burger</field>
+        </record>
+        <record model="lunch.product.category" id="categ_sushi">
+            <field name="name">Sushi</field>
+        </record>
+        <record model="lunch.product.category" id="categ_temaki">
+            <field name="name">Temaki</field>
+        </record>
+        <record model="lunch.product.category" id="categ_chirashi">
+            <field name="name">Chirashi</field>
+        </record>
 
         <record model="res.partner" id="partner_coin_gourmand">
             <field name="name">Coin gourmand</field>
@@ -28,11 +40,107 @@
         <record model="res.partner" id="partner_pizza_inn">
             <field name="name">Pizza Inn</field>
             <field name="city">New Delhi TN</field>
-            <field name="country_id" ref="base.in"/>
+            <field name="country_id" ref="base.us"/>
             <field name="street">#8, 1 st Floor,iscore complex</field>
             <field name="street2">Gandhi Gramam,Gandhi Nagar</field>
             <field name="zip">607308</field>
             <field name="email">pizza.inn@yourcompany.example.com</field>
+        </record>
+
+        <record model="res.partner" id="partner_corner">
+            <field name="name">The Corner</field>
+            <field name="city">Atlanta</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="street">Genessee Ave SW</field>
+            <field name="zip">607409</field>
+            <field name="email">info@corner.com</field>
+        </record>
+
+        <record model="res.partner" id="partner_sushi_shop">
+            <field name="name">Sushi Shop</field>
+            <field name="city">Paris</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="street">Boulevard Saint-Germain</field>
+            <field name="zip">486624</field>
+            <field name="email">order@sushi.com</field>
+        </record>
+
+        <record model="lunch.product" id="product_bacon">
+            <field name="name">Bacon</field>
+            <field name="category_id" eval="str(ref('categ_burger'))"/>
+            <field name="price">7.5</field>
+            <field name="supplier" eval="str(ref('partner_corner'))"/>
+            <field name="description">Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce</field>
+        </record>
+
+        <record model="lunch.product" id="product_cheeseburger">
+            <field name="name">Cheese Burger</field>
+            <field name="category_id" eval="str(ref('categ_burger'))"/>
+            <field name="price">7.0</field>
+            <field name="supplier" eval="str(ref('partner_corner'))"/>
+            <field name="description">Beef, Cheddar, Salad, Fried Onions, BBQ Sauce</field>
+        </record>
+
+        <record model="lunch.product" id="product_chicken_curry">
+            <field name="name">Chicken Curry</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">3.0</field>
+            <field name="supplier" eval="str(ref('partner_corner'))"/>
+        </record>
+
+        <record model="lunch.product" id="product_spicy_tuna">
+            <field name="name">Spicy Tuna</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">3.0</field>
+            <field name="supplier" eval="str(ref('partner_corner'))"/>
+        </record>
+
+        <record model="lunch.product" id="product_mozzarella">
+            <field name="name">Mozzarella</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">3.9</field>
+            <field name="supplier" eval="str(ref('partner_corner'))"/>
+            <field name="description">Mozzarella, Pesto, Tomatoes</field>
+        </record>
+
+        <record model="lunch.product" id="product_club">
+            <field name="name">Club</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">3.4</field>
+            <field name="supplier" eval="str(ref('partner_corner'))"/>
+            <field name="description">Ham, Cheese, Vegetables</field>
+        </record>
+
+        <record model="lunch.product" id="product_maki">
+            <field name="name">Lunch Maki 18pc</field>
+            <field name="category_id" eval="str(ref('categ_sushi'))"/>
+            <field name="price">12.0</field>
+            <field name="supplier" eval="str(ref('partner_sushi_shop'))"/>
+            <field name="description">6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado</field>
+        </record>
+
+        <record model="lunch.product" id="product_salmon">
+            <field name="name">Lunch Salmon 20pc</field>
+            <field name="category_id" eval="str(ref('categ_sushi'))"/>
+            <field name="price">13.80</field>
+            <field name="supplier" eval="str(ref('partner_sushi_shop'))"/>
+            <field name="description">4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon </field>
+        </record>
+
+        <record model="lunch.product" id="product_temaki">
+            <field name="name">Lunch Temaki mix 3pc</field>
+            <field name="category_id" eval="str(ref('categ_temaki'))"/>
+            <field name="price">14.0</field>
+            <field name="supplier" eval="str(ref('partner_sushi_shop'))"/>
+            <field name="description">1 Avocado/Cooked Tuna - 1 Salmon/Eggs - 1 Salmon/Avocado - 1 Tuna/Mango</field>
+        </record>
+
+        <record model="lunch.product" id="product_chirashi">
+            <field name="name">Salmon and Avocado</field>
+            <field name="category_id" eval="str(ref('categ_chirashi'))"/>
+            <field name="price">9.25</field>
+            <field name="supplier" eval="str(ref('partner_sushi_shop'))"/>
+            <field name="description">Shrimp Tempura, Yam Tempura, Chinese Cabbage, Pickled Onions, Sesame Sauce</field>
         </record>
 
         <record model="lunch.product" id="product_cheese_ham">
@@ -83,6 +191,22 @@
             <field name="description">Tomatoes, Mozzarella</field>
         </record>
 
+        <record model="lunch.product" id="product_funghi">
+            <field name="name">Pizza Funghi</field>
+            <field name="category_id" eval="str(ref('categ_pizza'))"/>
+            <field name="price">7.00</field>
+            <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
+            <field name="description">Tomatoes, Mushrooms, Mozzarella</field>
+        </record>
+
+        <record model="lunch.product" id="product_vege">
+            <field name="name">Pizza Vegetarian</field>
+            <field name="category_id" eval="str(ref('categ_pizza'))"/>
+            <field name="price">7.00</field>
+            <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
+            <field name="description">Tomatoes, Mozzarella, Mushrooms, Peppers, Olives</field>
+        </record>
+
         <record model="lunch.product" id="product_italiana">
             <field name="name">Pizza Italiana</field>
             <field name="category_id" eval="str(ref('categ_pizza'))"/>
@@ -107,6 +231,14 @@
             <field name="description">Tomatoes, Basil</field>
         </record>
 
+         <record model="lunch.product" id="product_4formaggi">
+            <field name="name">4 Formaggi</field>
+            <field name="category_id" eval="str(ref('categ_pasta'))"/>
+            <field name="price">5.50</field>
+            <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
+            <field name="description">Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan</field>
+        </record>
+
         <record model="lunch.order" id="order_1">
             <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
@@ -123,6 +255,13 @@
 
         <record model="lunch.order" id="order_3">
             <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="order_line_ids" eval="[]"/>
+            <field name="state">confirmed</field>
+        </record>
+
+        <record model="lunch.order" id="order_4">
+            <field name="user_id" ref="base.user_admin"/>
             <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
             <field name="order_line_ids" eval="[]"/>
             <field name="state">confirmed</field>
@@ -172,6 +311,16 @@
             <field name="order_id" ref="order_3"/>
         </record>
 
+        <record model="lunch.order.line" id="order_line_5">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="product_id" ref="product_4formaggi"/>
+            <field name="price">5.50</field>
+            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="state">confirmed</field>
+            <field name="supplier" ref="partner_pizza_inn"/>
+            <field name="order_id" ref="order_4"/>
+        </record>
+
         <record model="lunch.cashmove" id="cashmove_1">
             <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
@@ -196,6 +345,23 @@
             <field name="description">Payment: 5 lunch tickets (6€)</field>
             <field name="amount">30</field>
             <field name="state">payment</field>
+        </record>
+
+        <record model="lunch.cashmove" id="cashmove_4">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="description">Cash given to HR manager</field>
+            <field name="amount">40</field>
+            <field name="state">payment</field>
+        </record>
+
+        <record model="lunch.cashmove" id="cashmove_5">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="description">Pasta 4 Formaggi</field>
+            <field name="amount">-5.50</field>
+            <field name="order_id" ref="order_4"/>
+            <field name="state">order</field>
         </record>
 
         <record model="lunch.alert" id="alert_1">
