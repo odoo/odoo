@@ -18,7 +18,7 @@ class SnailmailLetter(models.Model):
     _name = 'snailmail.letter'
     _description = 'Snailmail Letter'
 
-    user_id = fields.Many2one('res.users', 'User sending the letter')
+    user_id = fields.Many2one('res.users', 'Sent by')
     model = fields.Char('Model', required=True)
     res_id = fields.Integer('Document ID', required=True)
     partner_id = fields.Many2one('res.partner', string='Recipient', required=True)
@@ -27,6 +27,9 @@ class SnailmailLetter(models.Model):
     report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
 
     attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade')
+    attachment_datas = fields.Binary('Document', related='attachment_id.datas')
+    attachment_fname = fields.Char('Attachment Filename', related='attachment_id.datas_fname')
+    activity_id = fields.Many2one('mail.activity', string='Activity')
     color = fields.Boolean(string='Color', default=lambda self: self.env.user.company_id.snailmail_color)
     duplex = fields.Boolean(string='Both side', default=lambda self: self.env.user.company_id.snailmail_duplex)
     state = fields.Selection([
@@ -40,7 +43,23 @@ class SnailmailLetter(models.Model):
              "If the letter is correctly sent, the status goes in 'Sent',\n"
              "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.")
     info_msg = fields.Char('Information')
+    display_name = fields.Char('Display Name', compute="_compute_display_name")
 
+    reference = fields.Char(string='Related Record', compute='_compute_reference', readonly=True, store=False)
+
+    @api.depends('reference', 'partner_id')
+    def _compute_display_name(self):
+        for letter in self:
+            if letter.attachment_id:
+                letter.display_name = "%s - %s" % (letter.attachment_id.name, letter.partner_id.name)
+            else:
+                letter.display_name = letter.partner_id.name
+
+    @api.depends('model', 'res_id')
+    def _compute_reference(self):
+        for res in self:
+            res.reference = "%s,%s" % (res.model, res.res_id)
+    
     @api.multi
     def _fetch_attachment(self):
         """
@@ -192,7 +211,7 @@ class SnailmailLetter(models.Model):
             'options': {
                 'color': self and self[0].color,
                 'duplex': self and self[0].duplex,
-                'currency_name': self and self[0].company_id.currency_id.name,
+                'currency_name': 'EUR',
             },
             # this will not raise the InsufficientCreditError which is the behaviour we want for now
             'batch': True,
@@ -245,7 +264,7 @@ class SnailmailLetter(models.Model):
             else:
                 # look for existing activities related to snailmail to update or create a new one.
                 # TODO: in following versions, Add a link to a specifc activity on the letter
-                note = _('An error occured when sending the document by post.<br>Error: %s' % \
+                note = _('An error occured when sending the document by post.<br>Error: %s <br>Go to \'Configuration > Management > Snailmail Letters\' to see all letters awaiting dispatch to Snailmail.' % \
                     self._get_error_message(doc['error'] if response['request_code'] == 200 else response['reason']))
 
                 domain = [
@@ -254,8 +273,7 @@ class SnailmailLetter(models.Model):
                     ('res_model_id', '=', self.env['ir.model']._get(letter.model).id),
                     ('activity_type_id', '=', self.env.ref('mail.mail_activity_data_warning').id),
                 ]
-                MailActivity = self.env['mail.activity']
-                activity = MailActivity.search(domain, limit=1)
+                activity = letter.activity_id
 
                 activity_data = {
                     'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
@@ -271,7 +289,8 @@ class SnailmailLetter(models.Model):
                         'res_id': letter.res_id,
                         'res_model_id': self.env['ir.model']._get(letter.model).id,
                     })
-                    MailActivity.create(activity_data)
+                    activity = self.env['mail.activity'].create(activity_data)
+                    letter.write({'activity_id': activity.id})
 
                 letter.write({'info_msg': note, 'state': 'error'})
 
@@ -284,6 +303,11 @@ class SnailmailLetter(models.Model):
     @api.multi
     def cancel(self):
         self.write({'state': 'canceled'})
+
+    @api.multi
+    def unlink(self):
+        self.mapped('activity_id').unlink()
+        return super(SnailmailLetter, self).unlink()
 
     @api.multi
     def _snailmail_estimate(self):
