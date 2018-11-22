@@ -68,6 +68,12 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
             window.location.href = _.isEmpty(self.comparelist_product_ids) ? '/shop' : new_link;
         });
 
+        _.each(self.comparelist_product_ids, function (res) {
+            $('.o_add_compare[data-product-product-id=' + res + ']').hide();
+            $('.o_add_compare[data-product-product-id=' + res + ']').removeClass('d-md-inline-block');
+            $('.o_add_compare[data-product-product-id=' + res + ']').parents('.oe_list').find('.o_in_compare').removeClass('d-none');
+        });
+
         return this._super.apply(this, arguments);
     },
     /**
@@ -109,7 +115,7 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
                 if (!productId) {
                     return;
                 }
-
+                $('.o_add_compare[data-product-product-id=' + productId + ']').prop('disabled', true);
                 self._addNewProducts(productId);
                 website_sale_utils.animateClone(
                     $('#comparelist .o_product_panel_header'),
@@ -118,6 +124,9 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
                     10
                 );
             });
+            $elem.hide();
+            $elem.removeClass('d-md-inline-block');
+            $elem.parents('.oe_list').find('.o_in_compare').removeClass('d-none');
         } else {
             this.$('.o_comparelist_limit_warning').show();
             $('#comparelist .o_product_panel_header').popover('show');
@@ -197,6 +206,15 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
         this._updateCookie();
         $('.o_comparelist_limit_warning').hide();
         this._updateContent('show');
+
+        _.each($('.oe_list'), function (res) {
+            var product_id = $(e.currentTarget).data('product_product_id');
+            if(!$('.o_add_compare[data-product-product-id=' + product_id + ']:visible').length) {
+                $('.o_add_compare[data-product-product-id=' + product_id + ']').addClass('d-md-inline-block');
+                $('.o_add_compare[data-product-product-id=' + product_id + ']').prop('disabled', false);
+                $('.o_add_compare[data-product-product-id=' + product_id + ']').parents('.oe_list').find('.o_in_compare').addClass('d-none');
+            }
+        });
     },
     /**
      * @private

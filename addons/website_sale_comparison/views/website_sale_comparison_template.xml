@@ -9,7 +9,7 @@
     </template>
 
     <template id="add_to_compare" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Comparison List" priority="22">
-        <xpath expr="//div[hasclass('product_price')]" position="inside">
+        <xpath expr="//div[hasclass('o_btn_product_container')]" position="inside">
             <button type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-sm o_add_compare" title="Compare" aria-label="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id if product.product_variant_ids else '0'" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
         </xpath>
     </template>
@@ -70,12 +70,12 @@
                 <div class="container oe_website_sale">
                     <section class="container">
                         <h3>Compare Products</h3>
-                        <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
+                        <table class="table table-bordered table-hover text-center mt16 table-comparator bg-white" id="o_comparelist_table">
                             <thead>
                                 <td t-if="specs.keys()" class='td-top-left'/>
                                 <td t-foreach="products" t-as="product">
                                     <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
-                                        <strong class='float-right'>x</strong>
+                                        <strong class='float-right bg-200 btn-sm pb-1'><i class="fa fa-times text-primary"/></strong>
                                     </a>
                                     <a t-att-href="'/shop/product/%s' % slug(product.product_tmpl_id)">
                                         <img t-attf-src="/web/image/product.product/#{product.id}/image/200x150" class="img img-fluid" style="margin:auto;" alt="Product image"/>

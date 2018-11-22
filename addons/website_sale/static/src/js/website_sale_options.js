@@ -27,6 +27,17 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
         delete this.events['change [data-attribute_exclusions]'];
         delete this.events['change input.js_quantity'];
         delete this.events['click button.js_add_cart_json'];
+
+        if($('.o_grid_products_list').hasClass('shop_nb_columns-2')) {
+            $('.o_snippet_column').removeClass('active');
+            $('.o_snippet_column-2').addClass('active');
+        } else if($('.o_grid_products_list').hasClass('shop_nb_columns-3')) {
+            $('.o_snippet_column').removeClass('active');
+            $('.o_snippet_column-3').addClass('active');
+        } else {
+            $('.o_snippet_column').removeClass('active');
+            $('.o_snippet_column-4').addClass('active');
+        }
     },
 
     //--------------------------------------------------------------------------

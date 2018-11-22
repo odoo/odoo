@@ -86,6 +86,7 @@ options.registry.website_sale = options.Class.extend({
             method: 'search_read',
         }).then(function (data) {
             var $ul = self.$el.find('div[name="style"]');
+            var $ul = self.$el.find('div[name="style"]');
             for (var k in data) {
                 $ul.append(
                     $('<a class="dropdown-item" role="menuitem" data-style="'+data[k]['id']+'" data-toggle-class="'+data[k]['html_class']+'" data-no-preview="true"/>')
@@ -156,6 +157,14 @@ options.registry.website_sale = options.Class.extend({
             params: {
                 id: this.product_tmpl_id,
                 sequence: value,
+            },
+        }).then(this.reload);
+    },
+    nbr_col: function (previewMode, value) {
+        this._rpc({
+            route: '/shop/change_columns_numbers',
+            params: {
+                columns_numbers: value,
             },
         }).then(this.reload);
     }

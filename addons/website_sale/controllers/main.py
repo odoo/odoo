@@ -210,7 +210,7 @@ class WebsiteSale(ProductConfiguratorController):
 
         domain = self._get_search_domain(search, category, attrib_values)
 
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, order=post.get('order'))
+        keep = QueryURL('/shop', category=category and int(category), search=search, ppg=ppg, attrib=attrib_list, order=post.get('order'))
 
         compute_currency, pricelist_context, pricelist = self._get_compute_currency_and_context()
 
@@ -271,6 +271,7 @@ class WebsiteSale(ProductConfiguratorController):
             'keep': keep,
             'parent_category_ids': parent_category_ids,
             'search_categories_ids': search_categories and search_categories.ids,
+            'shop_nb_columns': int(request.env['ir.config_parameter'].sudo().get_param('website_sale.shop_nb_columns', default=4)),
         }
         if category:
             values['main_object'] = category
@@ -668,7 +669,7 @@ class WebsiteSale(ProductConfiguratorController):
             'checkout': values,
             'can_edit_vat': can_edit_vat,
             'country': country,
-            'countries': country.get_website_sale_countries(mode=mode[1]),
+            'countriesf': country.get_website_sale_countries(mode=mode[1]),
             "states": country.get_website_sale_states(mode=mode[1]),
             'error': errors,
             'callback': kw.get('callback'),
@@ -1036,6 +1037,10 @@ class WebsiteSale(ProductConfiguratorController):
             product_tmpl.set_sequence_up()
         elif sequence == "down":
             product_tmpl.set_sequence_down()
+
+    @http.route(['/shop/change_columns_numbers'], type='json', auth="public")
+    def change_columns_numbers(self, columns_numbers):
+        request.env['ir.config_parameter'].sudo().set_param('website_sale.shop_nb_columns', columns_numbers)
 
     @http.route(['/shop/change_size'], type='json', auth="public")
     def change_size(self, id, x, y):

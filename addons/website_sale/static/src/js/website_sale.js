@@ -215,6 +215,40 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             }
         }
 
+        if($('.oe_list').hasClass('o_grid_products_list')){
+            $('.o_apply_list').addClass('o_semi_opacity');
+            $('.o_apply_grid').removeClass('o_semi_opacity');
+        } else {
+            $('.o_product_image').addClass('o_height_170');
+            $('.o_info_product_container').addClass('o_height_line');
+        }
+
+        // Liste view
+        $('.o_apply_list').click(function(){
+            var $parentContainer = $(this).parents('.container');
+            
+            $(this).parent().children('.o_apply_grid').addClass('o_semi_opacity');
+            $(this).removeClass('o_semi_opacity');
+            $parentContainer.find('.oe_list').removeClass('o_grid_products_list');
+            $parentContainer.find('.oe_list').addClass('o_width_list o_height_line');
+            $parentContainer.find('.o_product_image').addClass('o_height_170');
+            $parentContainer.find('.o_info_product_container').addClass('o_height_line');
+        });
+        // grid view
+        $('.o_apply_grid').click(function(){
+            var $parentContainer = $(this).parents('.container');
+            
+            $(this).parent().children('.o_apply_list').addClass('o_semi_opacity');
+            $(this).removeClass('o_semi_opacity');
+            $parentContainer.find('.oe_list').addClass('o_grid_products_list');
+            $parentContainer.find('.oe_list').removeClass('o_width_list o_height_line');
+            $parentContainer.find('.o_product_image').removeClass('o_height_170');
+            $parentContainer.find('.o_info_product_container').removeClass('o_height_line');
+        });
+
+        if($('.o_btn_product_container').children().length == 0){
+            $('.o_btn_product_container').hide();
+        }
         return def;
     },
 

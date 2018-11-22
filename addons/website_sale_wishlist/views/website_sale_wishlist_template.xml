@@ -10,7 +10,7 @@
     </template>
 
     <template id="add_to_wishlist" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Wishlist" priority="20">
-        <xpath expr="//div[hasclass('product_price')]" position="inside">
+        <xpath expr="//div[hasclass('o_btn_product_container')]" position="inside">
             <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
             <button type="button" role="button" class="btn btn-secondary btn-sm o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id if product.product_variant_ids else '0'" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
         </xpath>
@@ -45,12 +45,12 @@
             <div id="wrap" class="js_sale">
                 <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
                 <div class="container oe_website_sale">
-                    <section class="container wishlist-section">
+                    <section class="container wishlist-section mt-4">
                         <h3>My Wishlist</h3>
                         <div class="checkbox">
                             <label class='text-muted'><input type="checkbox" id='b2b_wish' value="1" class="mr8"/>Add product to my cart but keep it in my wishlist</label>
                         </div>
-                        <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator " style="table-layout:auto" id="o_comparelist_table">
+                        <table class="table table-striped table-hover text-center mt16 table-comparator bg-white" style="table-layout:auto" id="o_comparelist_table">
                             <body>
                                 <t t-foreach="wishes" t-as="wish">
                                     <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>

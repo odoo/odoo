@@ -4,19 +4,34 @@
 
     <xpath expr="//div[@id='snippet_options']" position="inside">
         <div data-js='website_sale'
+            data-selector=".o_products_container"
+            data-no-check="true">
+            <div class='dropdown-submenu' role="menuitem" aria-haspopup="true">
+                <a tabindex="-1" href="#" class="dropdown-item">Number of Columns</a>
+                <div class="dropdown-menu o_snippet_column_container" role="menu" data-no-preview="true">
+                    <a href="#" class="dropdown-item o_snippet_column o_snippet_column-2" role="menuitem" data-nbr_col="2">2 Columns</a>
+                    <a href="#" class="dropdown-item o_snippet_column o_snippet_column-3" role="menuitem" data-nbr_col="3">3 Columns</a>
+                    <a href="#" class="dropdown-item o_snippet_column o_snippet_column-4" role="menuitem" data-nbr_col="4">4 Columns</a>
+                </div>
+            </div>
+        </div>
+    </xpath>
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-js='website_sale'
             data-selector=".oe_product.oe_grid"
             data-no-check="true">
-            <div class="dropdown-submenu">
+            <!-- <div class="dropdown-submenu">
                 <a tabindex="-1" href="#" class="dropdown-item">Size</a>
                 <div class="dropdown-menu" role="menu" name="size">
-                    <table>
+                    <table class="o_snippet_table">
                       <tr><td class="selected"></td><td></td><td></td><td></td></tr>
                       <tr><td></td><td></td><td></td><td></td></tr>
                       <tr><td></td><td></td><td></td><td></td></tr>
                       <tr><td></td><td></td><td></td><td></td></tr>
                     </table>
                 </div>
-            </div>
+            </div> -->
             <div class='dropdown-submenu' role="menuitem" aria-haspopup="true">
                 <a tabindex="-1" href="#" class="dropdown-item">Styles</a>
                 <div class="dropdown-menu" role="menu" name="style"/>

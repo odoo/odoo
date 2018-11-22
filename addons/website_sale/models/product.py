@@ -130,6 +130,30 @@ class ProductTemplate(models.Model):
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
+    is_in_cart = fields.Boolean('Is the product in Cart', compute='_compute_is_in_cart')
+    is_in_compare = fields.Boolean('Is the product in Compare', compute='_compute_is_in_compare')
+
+    def _compute_is_in_cart(self):
+        for template in self:
+            is_in_cart = False
+            website = self.env['website'].get_current_website()
+            if website:
+                order = website.sale_get_order()
+                line = order.order_line.filtered(lambda line: line.product_id.product_tmpl_id == template)
+                if line:
+                    is_in_cart = True
+            template.is_in_cart = is_in_cart
+
+    def _compute_is_in_compare(self):
+        for template in self:
+            is_in_compare = False
+            website = self.env['website'].get_current_website()
+            if website:
+                order = website.sale_get_order()
+                line = order.order_line.filtered(lambda line: line.product_id.product_tmpl_id == template)
+                if line:
+                    is_in_compare = True
+            template.is_in_compare = is_in_compare
 
     def _website_price(self):
         # First filter out the ones that have no variant:

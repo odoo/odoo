@@ -41,6 +41,13 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
             }
         });
 
+        $('.o_add_wishlist').each(function() {
+            if($(this).prop('disabled') == true){
+                $(this).hide();
+                $(this).parents('.oe_list').find('.o_in_wishlist').removeClass('d-none');
+            }
+        });
+
         return $.when(def, wishDef);
     },
 
@@ -69,6 +76,9 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
             $el.closest('form').find('.product_template_id').val(),
             false
         );
+
+        $el.hide();
+        $el.parents('.oe_list').find('.o_in_wishlist').removeClass('d-none');
 
         productReady.done(function (productId) {
             productId = parseInt(productId, 10);
