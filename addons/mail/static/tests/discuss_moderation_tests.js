@@ -750,7 +750,7 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
         };
         var metaData = [dbName, 'res.partner'];
         var notification = [metaData, notifData];
-        discuss.call('bus_service', 'trigger', 'notification', [notification]);
+        discuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
         // // check no message
         assert.containsNone(discuss, '.o_thread_message',

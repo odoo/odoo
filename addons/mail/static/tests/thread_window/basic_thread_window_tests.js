@@ -224,7 +224,7 @@ QUnit.test('do not increase unread counter when receiving message with myself as
         channel_ids: [1],
     };
     var notification = [[false, 'mail.channel', 1], messageData];
-    parent.call('bus_service', 'trigger', 'notification', [notification]);
+    parent.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     threadWindowHeaderText = $('.o_thread_window_header').text().replace(/\s/g, "");
 
@@ -267,7 +267,7 @@ QUnit.test('do not increment unread counter with focus on thread window', functi
         channel_ids: [1],
     };
     var notification = [[false, 'mail.channel', 1], messageData];
-    parent.call('bus_service', 'trigger', 'notification', [notification]);
+    parent.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     assert.strictEqual(channel.getUnreadCounter(), 0,
         "thread should not have incremented its unread counter after receiving the message");

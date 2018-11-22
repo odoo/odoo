@@ -132,7 +132,7 @@ MockServer.include({
             };
             var metaData = [dbName, 'res.partner'];
             var notification = [metaData, notifData];
-            this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+            this._widget.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
         } else if (decision === 'accept') {
             // simulate notification back (new accepted message in channel)
             var messages = _.filter(model.records, function (rec) {
@@ -148,7 +148,7 @@ MockServer.include({
                 var notification = [metaData, messageData];
                 notifications.push(notification);
             });
-            this._widget.call('bus_service', 'trigger', 'notification', notifications);
+            this._widget.call('bus_service', 'trigger', 'notification', {notifications: notifications});
         }
     },
     /**
@@ -175,7 +175,7 @@ MockServer.include({
         var header = [null, 'res.partner'];
         var data = { type: 'mark_as_read', message_ids: messageIDs };
         var notifications = [[header, data]];
-        this._widget.call('bus_service', 'trigger', 'notification', notifications);
+        this._widget.call('bus_service', 'trigger', 'notification', {notifications: notifications});
     },
     /**
      * @override

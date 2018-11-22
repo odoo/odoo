@@ -2222,7 +2222,7 @@ QUnit.test('chatter: do not duplicate messages on (un)star message', function (a
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                form.call('bus_service', 'trigger', 'notification', [notification]);
+                form.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
                 return $.when();
             }
             return this._super(route, args);

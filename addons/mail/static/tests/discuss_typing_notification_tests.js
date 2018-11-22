@@ -138,7 +138,7 @@ QUnit.module('Discuss (Typing Notifications)', {
                 is_typing: params.isTyping,
             };
             var notification = [[false, 'mail.channel', params.channelID], typingData];
-            params.widget.call('bus_service', 'trigger', 'notification', [notification]);
+            params.widget.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
         };
 
     },
@@ -359,7 +359,7 @@ QUnit.test('receive message of someone that was typing something', function (ass
             res_id: 1,
         };
         var notification = [[false, 'mail.channel', 1], messageData];
-        discuss.call('bus_service', 'trigger', 'notification', [notification]);
+        discuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
         $general = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
