@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
+"POT-Creation-Date: 2018-12-04 09:24+0000\n"
+"PO-Revision-Date: 2018-12-04 09:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,6 +32,11 @@ msgstr ""
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.lead_message_template
 msgid "(Time Now)"
+msgstr ""
+
+#. module: crm_reveal
+#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
+msgid "1 credit is consumed per visitor matching the website traffic conditions and whose company can be identified.<br/>"
 msgstr ""
 
 #. module: crm_reveal
@@ -62,11 +67,6 @@ msgstr ""
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Opportunities </span>"
-msgstr ""
-
-#. module: crm_reveal
-#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
-msgid "<span> people </span>"
 msgstr ""
 
 #. module: crm_reveal
@@ -240,6 +240,11 @@ msgid "Chemicals"
 msgstr ""
 
 #. module: crm_reveal
+#: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__lead_for
+msgid "Choose whether to track companies only or companies and their contacts"
+msgstr ""
+
+#. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_23
 msgid "Civil Engineering"
 msgstr ""
@@ -292,7 +297,17 @@ msgstr ""
 
 #. module: crm_reveal
 #: selection:crm.reveal.rule,lead_for:0
-msgid "Companies + Contacts"
+msgid "Companies and their Contacts"
+msgstr ""
+
+#. module: crm_reveal
+#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__company_size_min
+msgid "Company Size"
+msgstr ""
+
+#. module: crm_reveal
+#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__company_size_max
+msgid "Company Size Max"
 msgstr ""
 
 #. module: crm_reveal
@@ -410,11 +425,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__create_date
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_seniority__create_date
 msgid "Created on"
-msgstr ""
-
-#. module: crm_reveal
-#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__calculate_credits
-msgid "Credit Used"
 msgstr ""
 
 #. module: crm_reveal
@@ -537,7 +547,7 @@ msgid "Energy Equipment & Services"
 msgstr ""
 
 #. module: crm_reveal
-#: code:addons/crm_reveal/models/crm_reveal_rule.py:73
+#: code:addons/crm_reveal/models/crm_reveal_rule.py:74
 #, python-format
 msgid "Enter Valid Regex."
 msgstr ""
@@ -558,11 +568,6 @@ msgid "Events"
 msgstr ""
 
 #. module: crm_reveal
-#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__extra_contacts
-msgid "Extra Contacts"
-msgstr ""
-
-#. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_45
 msgid "Eyewear"
 msgstr ""
@@ -575,6 +580,21 @@ msgstr ""
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_47
 msgid "Family Services"
+msgstr ""
+
+#. module: crm_reveal
+#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__contact_filter_type
+msgid "Filter On"
+msgstr ""
+
+#. module: crm_reveal
+#: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__filter_on_size
+msgid "Filter companies based on their size."
+msgstr ""
+
+#. module: crm_reveal
+#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__filter_on_size
+msgid "Filter on Size"
 msgstr ""
 
 #. module: crm_reveal
@@ -640,6 +660,11 @@ msgstr ""
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_55
 msgid "Forums"
+msgstr ""
+
+#. module: crm_reveal
+#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
+msgid "From"
 msgstr ""
 
 #. module: crm_reveal
@@ -803,11 +828,6 @@ msgid "IT Services"
 msgstr ""
 
 #. module: crm_reveal
-#: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__lead_for
-msgid "If you track company data, one credit will be consumed per lead/opportunity created. If you track company and contacts data, two credits will be consumed. Such data will be visible in the lead/opportunity."
-msgstr ""
-
-#. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_66
 msgid "Import & Export"
 msgstr ""
@@ -838,13 +858,13 @@ msgid "Industrials & Manufacturing"
 msgstr ""
 
 #. module: crm_reveal
-#: model:ir.model,name:crm_reveal.model_crm_reveal_industry
-msgid "Industry Tag"
+#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__industry_tag_ids
+msgid "Industries"
 msgstr ""
 
 #. module: crm_reveal
-#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__industry_tag_ids
-msgid "Industry Tags"
+#: model:ir.model,name:crm_reveal.model_crm_reveal_industry
+msgid "Industry Tag"
 msgstr ""
 
 #. module: crm_reveal
@@ -1001,12 +1021,6 @@ msgid "Leave empty to always match. Odoo will not create lead if no match"
 msgstr ""
 
 #. module: crm_reveal
-#: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__company_size_max
-#: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__company_size_min
-msgid "Leave it as 0 if you don't want to use this filter."
-msgstr ""
-
-#. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_79
 msgid "Legal Services"
 msgstr ""
@@ -1034,6 +1048,11 @@ msgstr ""
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_81
 msgid "Machinery"
+msgstr ""
+
+#. module: crm_reveal
+#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
+msgid "Make sure you know if you have to be GDPR compliant for storing personal data."
 msgstr ""
 
 #. module: crm_reveal
@@ -1067,13 +1086,8 @@ msgid "Materials"
 msgstr ""
 
 #. module: crm_reveal
-#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__company_size_max
-msgid "Max Company Size"
-msgstr ""
-
-#. module: crm_reveal
 #: sql_constraint:crm.reveal.rule:0
-msgid "Maximum 5 extra contacts are allowed!"
+msgid "Maximum 5 contacts are allowed!"
 msgstr ""
 
 #. module: crm_reveal
@@ -1104,11 +1118,6 @@ msgstr ""
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_88
 msgid "Military"
-msgstr ""
-
-#. module: crm_reveal
-#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__company_size_min
-msgid "Min Company Size"
 msgstr ""
 
 #. module: crm_reveal
@@ -1163,12 +1172,6 @@ msgid "Networking"
 msgstr ""
 
 #. module: crm_reveal
-#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
-msgid "No credit is consumed if the company is not found.<br/>\n"
-"                            1 credit is consumed if the company is found.<br/>"
-msgstr ""
-
-#. module: crm_reveal
 #: model_terms:ir.actions.act_window,help:crm_reveal.crm_reveal_rule_action
 msgid "No rule found"
 msgstr ""
@@ -1181,6 +1184,11 @@ msgstr ""
 #. module: crm_reveal
 #: selection:crm.reveal.view,reveal_state:0
 msgid "Not Found"
+msgstr ""
+
+#. module: crm_reveal
+#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__extra_contacts
+msgid "Number of Contacts"
 msgstr ""
 
 #. module: crm_reveal
@@ -1201,6 +1209,11 @@ msgstr ""
 #. module: crm_reveal
 #: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__country_ids
 msgid "Only visitors of following countries will be converted into leads/opportunities (using GeoIP)."
+msgstr ""
+
+#. module: crm_reveal
+#: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__state_ids
+msgid "Only visitors of following states will be converted into leads/opportunities."
 msgstr ""
 
 #. module: crm_reveal
@@ -1436,6 +1449,11 @@ msgid "Road & Rail"
 msgstr ""
 
 #. module: crm_reveal
+#: selection:crm.reveal.rule,contact_filter_type:0
+msgid "Role"
+msgstr ""
+
+#. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_role__name
 msgid "Role Name"
 msgstr ""
@@ -1491,6 +1509,7 @@ msgid "Semiconductors & Semiconductor Equipment"
 msgstr ""
 
 #. module: crm_reveal
+#: selection:crm.reveal.rule,contact_filter_type:0
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__seniority_id
 msgid "Seniority"
 msgstr ""
@@ -1553,6 +1572,11 @@ msgstr ""
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_view__reveal_state
 msgid "State"
+msgstr ""
+
+#. module: crm_reveal
+#: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__state_ids
+msgid "States"
 msgstr ""
 
 #. module: crm_reveal
@@ -1622,7 +1646,7 @@ msgstr ""
 
 #. module: crm_reveal
 #: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__extra_contacts
-msgid "This is the number of extra contacts to track if their role and seniority match your criteria.Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact."
+msgid "This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
 
 #. module: crm_reveal
@@ -1681,6 +1705,11 @@ msgid "URL Expression"
 msgstr ""
 
 #. module: crm_reveal
+#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
+msgid "Up to"
+msgstr ""
+
+#. module: crm_reveal
 #: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__sequence
 msgid "Used to order the rules with same URL and countries. Rules with a lower sequence number will be processed first."
 msgstr ""
@@ -1736,6 +1765,11 @@ msgid "Wireless Telecommunication Services"
 msgstr ""
 
 #. module: crm_reveal
+#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
+msgid "additional credit(s) are consumed if the company matches this rule."
+msgstr ""
+
+#. module: crm_reveal
 #: model:crm.reveal.role,name:crm_reveal.crm_reveal_role_1
 msgid "ceo"
 msgstr ""
@@ -1748,11 +1782,6 @@ msgstr ""
 #. module: crm_reveal
 #: model:crm.reveal.role,name:crm_reveal.crm_reveal_role_3
 msgid "consulting"
-msgstr ""
-
-#. module: crm_reveal
-#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
-msgid "credits are consumed if the company matches the rule."
 msgstr ""
 
 #. module: crm_reveal
@@ -1773,6 +1802,11 @@ msgstr ""
 #. module: crm_reveal
 #: model:crm.reveal.role,name:crm_reveal.crm_reveal_role_5
 msgid "education"
+msgstr ""
+
+#. module: crm_reveal
+#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
+msgid "employees"
 msgstr ""
 
 #. module: crm_reveal
@@ -1868,5 +1902,10 @@ msgstr ""
 #. module: crm_reveal
 #: model:crm.reveal.role,name:crm_reveal.crm_reveal_role_22
 msgid "sale"
+msgstr ""
+
+#. module: crm_reveal
+#: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
+msgid "to"
 msgstr ""
 

@@ -29,25 +29,26 @@ class CRMRevealRule(models.Model):
 
     # Website Traffic Filter
     country_ids = fields.Many2many('res.country', string='Countries', help='Only visitors of following countries will be converted into leads/opportunities (using GeoIP).')
+    state_ids = fields.Many2many('res.country.state', string='States', help='Only visitors of following states will be converted into leads/opportunities.')
     regex_url = fields.Char(string='URL Expression', help='Regex to track website pages. Leave empty to track the entire website, or / to target the homepage. Example: /page* to track all the pages which begin with /page')
     sequence = fields.Integer(help='Used to order the rules with same URL and countries. '
                                    'Rules with a lower sequence number will be processed first.')
 
     # Company Criteria Filter
-    industry_tag_ids = fields.Many2many('crm.reveal.industry', string='Industry Tags', help='Leave empty to always match. Odoo will not create lead if no match')
-    company_size_min = fields.Integer(string='Min Company Size', help="Leave it as 0 if you don't want to use this filter.")
-    company_size_max = fields.Integer(string='Max Company Size', help="Leave it as 0 if you don't want to use this filter.")
+    industry_tag_ids = fields.Many2many('crm.reveal.industry', string='Industries', help='Leave empty to always match. Odoo will not create lead if no match')
+    filter_on_size = fields.Boolean(string="Filter on Size", default=True, help="Filter companies based on their size.")
+    company_size_min = fields.Integer(string='Company Size', default=0)
+    company_size_max = fields.Integer(default=1000)
 
     # Contact Generation Filter
+    contact_filter_type = fields.Selection([('role', 'Role'), ('seniority', 'Seniority')], string="Filter On", required=True, default='role')
     preferred_role_id = fields.Many2one('crm.reveal.role', string='Preferred Role')
     other_role_ids = fields.Many2many('crm.reveal.role', string='Other Roles')
     seniority_id = fields.Many2one('crm.reveal.seniority', string='Seniority')
-    extra_contacts = fields.Integer(string='Extra Contacts', help='This is the number of extra contacts to track if their role and seniority match your criteria.Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact.')
-
-    calculate_credits = fields.Integer(compute='_compute_credit_count', string='Credit Used', readonly=True)
+    extra_contacts = fields.Integer(string='Number of Contacts', help='This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact.', default=1)
 
     # Lead / Opportunity Data
-    lead_for = fields.Selection([('companies', 'Companies'), ('people', 'Companies + Contacts')], string='Data Tracking', required=True, default='companies', help='If you track company data, one credit will be consumed per lead/opportunity created. If you track company and contacts data, two credits will be consumed. Such data will be visible in the lead/opportunity.')
+    lead_for = fields.Selection([('companies', 'Companies'), ('people', 'Companies and their Contacts')], string='Data Tracking', required=True, default='companies', help='Choose whether to track companies only or companies and their contacts')
     lead_type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], string='Type', required=True, default='opportunity')
     suffix = fields.Char(string='Suffix', help='This will be appended in name of generated lead so you can identify lead/opportunity is generated with this rule')
     team_id = fields.Many2one('crm.team', string='Sales Channel')
@@ -61,7 +62,7 @@ class CRMRevealRule(models.Model):
     # This limits the number of extra contact.
     # Even if more than 5 extra contacts provided service will return only 5 contacts (see service module for more)
     _sql_constraints = [
-        ('limit_extra_contacts', 'check(extra_contacts >= 0 and extra_contacts <= 5)', 'Maximum 5 extra contacts are allowed!'),
+        ('limit_extra_contacts', 'check(extra_contacts >= 1 and extra_contacts <= 5)', 'Maximum 5 contacts are allowed!'),
     ]
 
     @api.constrains('regex_url')
@@ -88,16 +89,6 @@ class CRMRevealRule(models.Model):
     def unlink(self):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         return super(CRMRevealRule, self).unlink()
-
-    @api.depends('extra_contacts', 'lead_for')
-    def _compute_credit_count(self):
-        """ Computes maximum IAP credit can be consumed per lead """
-        credit = 1
-        if self.lead_for == 'people':
-            credit += 1
-            if self.extra_contacts:
-                credit += self.extra_contacts
-        self.calculate_credits = credit
 
     def _compute_leads_count(self):
         leads = self.env['crm.lead'].read_group([
@@ -133,12 +124,14 @@ class CRMRevealRule(models.Model):
             {
                 'id': 0,
                 'url': ***,
-                'country_codes': ['BE', 'US']
+                'country_codes': ['BE', 'US'],
+                'state_codes': [('BE', False), ('US', 'NY'), ('US', 'CA')]
             },
             {
                 'id': 1,
                 'url': ***,
-                'country_codes': ['BE']
+                'country_codes': ['BE'],
+                'state_codes': [('BE', False)]
             }
             ]
         }
@@ -154,10 +147,21 @@ class CRMRevealRule(models.Model):
             elif regex_url == '/':
                 regex_url = '.*/$'  # for home
             countries = rule.country_ids.mapped('code')
+
+            # First apply rules for any state in countries
+            states = [(country_id.code, False) for country_id in rule.country_ids]
+            if rule.state_ids:
+                for state_id in rule.state_ids:
+                    if (state_id.country_id.code, False) in states:
+                        # Remove country because rule doesn't apply to any state
+                        states.remove((state_id.country_id.code, False))
+                    states += [(state_id.country_id.code, state_id.code)]
+                
             rules.append({
                 'id': rule.id,
                 'regex': regex_url,
-                'country_codes': countries
+                'country_codes': countries,
+                'state_codes': states
             })
             for country in countries:
                 country_rules = self._add_to_country(country_rules, country, len(rules) - 1)
@@ -175,16 +179,19 @@ class CRMRevealRule(models.Model):
         country_rules[country].append(rule_index)
         return country_rules
 
-    def _match_url(self, url, country_code, rules_excluded):
+    def _match_url(self, url, country_code, state_code, rules_excluded):
         """
         Return the matching rule based on the country and URL.
         """
         all_rules = self._get_active_rules()
         rules_id = all_rules['country_rules'].get(country_code, [])
+
         rules_matched = []
         for rule_index in rules_id:
             rule = all_rules['rules'][rule_index]
-            if str(rule['id']) not in rules_excluded and re.search(rule['regex'], url):
+            if ((country_code, state_code) in rule['state_codes'] or (country_code, False) in rule['state_codes'])\
+                and str(rule['id']) not in rules_excluded\
+                and re.search(rule['regex'], url):
                 rules_matched.append(rule)
         return rules_matched
 
@@ -274,6 +281,7 @@ class CRMRevealRule(models.Model):
                 'rule_id': rule.id,
                 'lead_for': rule.lead_for,
                 'countries': rule.country_ids.mapped('code'),
+                'filter_on_size': rule.filter_on_size,
                 'company_size_min': rule.company_size_min,
                 'company_size_max': rule.company_size_max,
                 'industry_tags': rule.industry_tag_ids.mapped('reveal_id'),
@@ -281,10 +289,11 @@ class CRMRevealRule(models.Model):
             }
             if rule.lead_for == 'people':
                 data.update({
+                    'contact_filter_type': rule.contact_filter_type,
                     'preferred_role': rule.preferred_role_id.reveal_id or '',
                     'other_roles': rule.other_role_ids.mapped('reveal_id'),
                     'seniority': rule.seniority_id.reveal_id or '',
-                    'extra_contacts': rule.extra_contacts
+                    'extra_contacts': rule.extra_contacts - 1
                 })
             rule_payload[rule.id] = data
         return rule_payload

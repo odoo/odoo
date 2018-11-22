@@ -23,48 +23,51 @@
                             <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
                         </button>
                     </div>
-                    <div>
-                        <div class="alert alert-info pull-right" role="alert">
-                            No credit is consumed if the company is not found.<br/>
-                            1 credit is consumed if the company is found.<br/>
-                            <span attrs="{'invisible': [('lead_for', '!=', 'people')]}"><field name="calculate_credits" class="mb0"/> credits are consumed if the company matches the rule.</span>
-                        </div>
-                    </div>
-                    <div class="oe_title">
+                    <div class="oe_title mb8">
                         <label for="name" class="oe_edit_only"/>
                         <h1 class="o_row">
                             <field name="name" placeholder="e.g. US Visitors"/>
                         </h1>
                     </div>
-                    <group>
-                        <field name="lead_for" widget="radio"/>
-                    </group>
-                    <group>
-                        <group string="Website Traffic Conditions">
-                            <field name="country_ids" widget="many2many_tags"/>
-                            <field name="regex_url" widget="website_urls"/>
-                            <field name="sequence"/>
-                        </group>
-                    </group>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <group>
+                                <field name="lead_for" widget="radio"/>
+                            </group>
+                            <group string="Website Traffic Conditions">
+                                <field name="country_ids" widget="many2many_tags"/>
+                                <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])]}" domain="[('country_id', 'in', country_ids)]"/>
+                                <field name="regex_url" widget="website_urls"/>
+                                <field name="sequence"/>
+                            </group>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info" role="alert">
+                                1 credit is consumed per visitor matching the website traffic conditions and whose company can be identified.<br/>
+                                <span attrs="{'invisible': [('lead_for', '!=', 'people')]}">Up to <field name="extra_contacts" readonly="1" class="mb0"/> additional credit(s) are consumed if the company matches this rule.</span>
+                            </div>
+                            <div class="alert alert-info" role="alert" attrs="{'invisible': [('lead_for', '!=', 'people')]}">
+                                Make sure you know if you have to be GDPR compliant for storing personal data.
+                            </div>
+                        </div>
+                    </div>
                     <group>
                         <group string="Opportunity Generation Conditions">
                             <field name="industry_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"/>
-                            <label for="company_size_min"/>
-                            <div>
-                                <field name="company_size_min" class="oe_inline" />
-                                <span> people </span>
-                            </div>
-                            <label for="company_size_max"/>
-                            <div>
-                                <field name="company_size_max" class="oe_inline" />
-                                <span> people </span>
+                            <field name="filter_on_size"/>
+                            <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
+                            <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
+                                From <field name="company_size_min" class="oe_inline col-sm-3" />
+                                to <field name="company_size_max" class="oe_inline col-sm-3" />
+                                employees
                             </div>
                         </group>
                         <group string="Contact Filter" attrs="{'invisible': [('lead_for', '!=', 'people')]}">
-                            <field name="preferred_role_id" options="{'no_create_edit': True, 'no_quick_create': True}"/>
-                            <field name="other_role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" attrs="{'invisible': [('preferred_role_id','=', False)]}"/>
-                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True}"/>
                             <field name="extra_contacts"/>
+                            <field name="contact_filter_type" widget="radio"/>
+                            <field name="preferred_role_id" attrs="{'invisible': [('contact_filter_type','!=', 'role')]}" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="other_role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" attrs="{'invisible': ['|', ('preferred_role_id','=', False), ('contact_filter_type','!=', 'role')]}"/>
+                            <field name="seniority_id" attrs="{'invisible': [('contact_filter_type','!=', 'seniority')]}" options="{'no_create_edit': True, 'no_quick_create': True}"/>
                         </group>
                     </group>
                     <separator attrs="{'invisible': [('lead_type', '!=', 'lead')]}" string="Lead Data" />
