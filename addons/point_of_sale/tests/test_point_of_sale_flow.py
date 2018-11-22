@@ -569,11 +569,22 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'currency_id': self.env.ref('base.EUR').id,
         })
 
+        def compute_tax(product, price, qty=1, taxes=None):
+            if not taxes:
+                taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.user.id)
+            currency = self.pos_config.pricelist_id.currency_id
+            res = taxes.compute_all(price, currency, qty, product=product)
+            untax = res['total_excluded']
+            return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
+
         # I click on create a new session button
         self.pos_config.open_session_cb()
 
         # I create a PoS order with 2 units of PCSC234 at 450 EUR (Tax Incl)
         # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+
+        untax1, atax1 = compute_tax(self.product3, 450*0.95, 2)
+        untax2, atax2 = compute_tax(self.product4, 300*0.95, 3)
         self.pos_order_pos0 = self.PosOrder.create({
             'company_id': self.company_id,
             'pricelist_id': self.partner1.property_product_pricelist.copy(default={'currency_id': self.env.ref('base.EUR').id}).id,
@@ -585,6 +596,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'discount': 0.0,
                 'qty': 2.0,
                 'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
+                'price_subtotal': untax1,
+                'price_subtotal_incl': untax1 + atax1,
             }), (0, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
@@ -592,28 +605,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'discount': 0.0,
                 'qty': 3.0,
                 'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
-            })]
+                'price_subtotal': untax2,
+                'price_subtotal_incl': untax2 + atax2,
+            })],
+            'amount_tax': atax1 + atax2,
+            'amount_total': untax1 + untax2 + atax1 + atax2,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
         })
-
-        # I check that the total of the order is equal to 450*2 + 300*3*1.05
-        # and the tax of the order is equal to 900 -(450 * 2 / 1.1) +
-        # 300*0.05*3
-        self.assertLess(
-            abs(self.pos_order_pos0.amount_total - (450 * 2 + 300 * 3 * 1.05)),
-            0.01, 'The order has a wrong amount, tax included.')
-
-        self.assertLess(
-            abs(self.pos_order_pos0.amount_tax - (900 - (450 * 2 / 1.1) + 300 * 0.05 * 3)),
-            0.01, 'The order has a wrong tax amount.')
-
-        # I want to add a global discount of 5 percent using the wizard
-
-        self.pos_discount_0 = self.env['pos.discount'].create({'discount': 5.0})
-
-        context = {"active_model": "pos.order", "active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
-
-        # I click the apply button to set the discount on all lines
-        self.pos_discount_0.with_context(context).apply_discount()
 
         # I check that the total of the order is now equal to (450*2 +
         # 300*3*1.05)*0.95
@@ -666,6 +665,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         debit_lines = self.pos_order_pos0.account_move.mapped('line_ids.debit')
         credit_lines = self.pos_order_pos0.account_move.mapped('line_ids.credit')
         amount_currency_lines = self.pos_order_pos0.account_move.mapped('line_ids.amount_currency')
-        self.assertEqual(set(debit_lines), {876.39, 0.0})
-        self.assertEqual(set(credit_lines), {0.0, 21.38, 427.5, 38.87, 388.64})
-        self.assertEqual(set(amount_currency_lines), {1752.75, -42.75, -855.0, -77.73, -777.27})
+        for a, b in zip(sorted(debit_lines), [0.0, 0.0, 0.0, 0.0, 879.55]):
+            self.assertAlmostEqual(a, b)
+        for a, b in zip(sorted(credit_lines), [0.0, 22.5, 40.91, 388.64, 427.5]):
+            self.assertAlmostEqual(a, b)
+        for a, b in zip(sorted(amount_currency_lines), [-855.0, -777.27, -81.82, -45.0, 1752.75]):
+            self.assertAlmostEqual(a, b)

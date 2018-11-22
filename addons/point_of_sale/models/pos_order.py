@@ -358,10 +358,10 @@ class PosOrder(models.Model):
             cur = order.pricelist_id.currency_id
             cur_company = order.company_id.currency_id
             amount_cur_company = 0.0
-            date_order = (order.date_order or fields.Datetime.now())[:10]
+            date_order = order.date_order.date() if order.date_order else fields.Date.today()
             for line in order.lines:
                 if cur != cur_company:
-                    amount_subtotal = cur.with_context(date=date_order).compute(line.price_subtotal, cur_company)
+                    amount_subtotal = cur._convert(line.price_subtotal, cur_company, order.company_id, date_order)
                 else:
                     amount_subtotal = line.price_subtotal
 
@@ -409,7 +409,8 @@ class PosOrder(models.Model):
                 for tax in taxes.compute_all(price, cur, line.qty)['taxes']:
                     if cur != cur_company:
                         round_tax = False if rounding_method == 'round_globally' else True
-                        amount_tax = cur.with_context(date=date_order).compute(tax['amount'], cur_company, round=round_tax)
+                        amount_tax = cur._convert(tax['amount'], cur_company, order.company_id, date_order, round=round_tax)
+                        # amount_tax = cur.with_context(date=date_order).compute(tax['amount'], cur_company, round=round_tax)
                     else:
                         amount_tax = tax['amount']
                     data = {
