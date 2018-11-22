@@ -307,6 +307,99 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('ordered list, sort attribute in context', function (assert) {
+        assert.expect(1);
+        // Equivalent to saving a custom filter
+
+        this.data.foo.fields.foo.sortable = true;
+        this.data.foo.fields.date.sortable = true;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="date"/>' +
+                '</tree>',
+        });
+
+        // Descending order on Foo
+        list.$('th.o_column_sortable:contains("Foo")').click();
+        list.$('th.o_column_sortable:contains("Foo")').click();
+
+        // Ascending order on Date
+        list.$('th.o_column_sortable:contains("Date")').click();
+
+        var listContext = list.getContext();
+        assert.deepEqual(listContext,
+            {
+                orderedBy: [{
+                    name: 'date',
+                    asc: true,
+                }, {
+                    name: 'foo',
+                    asc: false,
+                }]
+            }, 'the list should have the right orderedBy in context');
+        list.destroy();
+    });
+
+    QUnit.test('Loading a filter with a sort attribute', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.fields.foo.sortable = true;
+        this.data.foo.fields.date.sortable = true;
+
+        var searchReads = 0;
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="date"/>' +
+                '</tree>',
+            context: {
+                orderedBy: [{
+                        name: 'date',
+                        asc: true,
+                    }, {
+                        name: 'foo',
+                        asc: false,
+                }]
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReads === 0) {
+                        assert.strictEqual(args.sort, 'date ASC, foo DESC',
+                            'The sort attribute of the filter should be used by the initial search_read');
+                    } else if (searchReads === 1) {
+                        assert.strictEqual(args.sort, 'date DESC, foo ASC',
+                            'The sort attribute of the filter should be used by the next search_read');
+                    }
+                    searchReads += 1;
+                }
+                return this._super.apply(this,arguments);
+            },
+        });
+
+        // Simulate loading a filter
+        list.update({
+            context: {
+                orderedBy: [{
+                        name: 'date',
+                        asc: false,
+                    }, {
+                        name: 'foo',
+                        asc: true,
+                    }]
+                }
+            });
+
+        list.destroy()
+    });
+
     QUnit.test('many2one field rendering', function (assert) {
         assert.expect(1);
 

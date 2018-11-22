@@ -3,20 +3,21 @@
 # * pos_mercury
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Paulius Sladkevičius <paulius@versada.eu>, 2017
-# Martin Trigaux, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
+# Martin Trigaux, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,12 +30,12 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:75
 #, python-format
 msgid "&nbsp;&nbsp;APPROVAL CODE:"
-msgstr "&nbsp;&nbsp;APPROVAL CODE:"
+msgstr "&nbsp;&nbsp;PATVIRTINIMO KODAS:"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Pirkti kortelių skaitytuvą"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -45,20 +46,26 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"<i>Mercury nustatymai</i> nurodo, kokia Mercury sąskaita bus naudojama\n"
+"apdorojant kortelių operacijas pardavimo taške. Mercury konfigūracijos\n"
+"nustatymas įgalins jus įjungti mokėjimus įvairiomis kortelėmis (pvz.,\n"
+"Visa, MasterCard, Discovery, American Express, ...). Po šios \n"
+"konfigūracijos nustatymo turėtumėte ją susieti su pardavimo\n"
+"taško mokėjimo būdu."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:46
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
-msgstr ""
+msgstr "VIRŠ SUMOS"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:60
 #, python-format
 msgid "APPROVAL CODE:"
-msgstr ""
+msgstr "PATVIRTINIMO KODAS:"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
@@ -70,12 +77,12 @@ msgstr "Banko išrašo eilutė"
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:45
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
-msgstr ""
+msgstr "KORTELĖS TURĖTOJAS SUMOKĖS KORTELĖS IŠDAVĖJUI"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "Card Brand"
-msgstr ""
+msgstr "Kortelės rūšis"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_number
@@ -97,14 +104,14 @@ msgstr "Kortelės skaitytuvas"
 #. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Click to configure your card reader."
-msgstr ""
+msgstr "Nustatyti jūsų kortelių skaitytuvą."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:360
 #, python-format
 msgid "Could not read card"
-msgstr ""
+msgstr "Nepavyko nuskaityti kortelės"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
@@ -133,6 +140,9 @@ msgid ""
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr ""
+"Kredito kortelės grąžinimai nepalaikomi. Vietoje to, pasirinkite savo "
+"kortelės mokėjimo būdą, paspauskite \"Patvirtinti\" ir grąžinkite sumą "
+"rankiniu būdu per Vantiv programinį kodą."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_display_name
@@ -161,20 +171,22 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
+"Greitam užsakymų tvarkymui: kortelės perbraukimas mokėjimo lange\n"
+"(nespaudžiant nieko kito) nuskaitys pilną užsakymo sumą nuo kortelės."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:256
 #, python-format
 msgid "Go to payment screen to use cards"
-msgstr ""
+msgstr "Norėdami naudoti korteles, eikite į mokėjimo langą"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:396
 #, python-format
 msgid "Handling transaction..."
-msgstr ""
+msgstr "Tvarkoma operacija..."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_id
@@ -185,7 +197,7 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr ""
+msgstr "Pardavėjo ID jo identifikavimui tiekėjo serveryje"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -193,11 +205,13 @@ msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"Jei dar neturite Mercury sąskaitos, susisiekite su Mercury telefonu \n"
+"+1 (800) 846-4472, kad ją sukurtumėte."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
-msgstr ""
+msgstr "Sąskaitos numeris iš Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
@@ -230,33 +244,33 @@ msgstr "Pardavėjo ID"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid "Merchant Password"
-msgstr ""
+msgstr "Pardavėjo slaptažodis"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Mercury Configurations"
-msgstr ""
+msgstr "Mercury nustatymai"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal_pos_mercury_config_id
 msgid "Mercury Credentials"
-msgstr ""
+msgstr "Mercury duomenys"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Mercury invoice number"
-msgstr ""
+msgstr "Mercury sąskaitos numeris"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_record_no
 msgid "Mercury record number"
-msgstr ""
+msgstr "Mercury įrašo numeris"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Mercury reference number"
-msgstr ""
+msgstr "Mercury nuorodos numeris"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_name
@@ -266,33 +280,33 @@ msgstr "Pavadinimas"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name of this Mercury configuration"
-msgstr ""
+msgstr "Šios Mercury konfigūracijos pavadinimas"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:33
 #, python-format
 msgid "No Mercury configuration associated with the journal."
-msgstr ""
+msgstr "Jokia Mercury konfigūracija nesusieta su žurnalu."
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:21
 #, python-format
 msgid "No opened point of sale session for user %s found"
-msgstr ""
+msgstr "Atidaryta pardavimo taško sesija vartotojui %s nerasta"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr ""
+msgstr "Jokio atsakymo iš Mercury (Mercury neveikia?)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr ""
+msgstr "Jokio atsakymo iš serverio (prisijungta prie tinklo?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -300,109 +314,109 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr ""
+msgstr "Apdorojant operaciją įvyko \"Odoo\" klaida."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
 #, python-format
 msgid "One credit card swipe already pending."
-msgstr ""
+msgstr "Vienas kortelės perbraukimas jau laukia."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
 #, python-format
 msgid "Partially approved"
-msgstr ""
+msgstr "Dalinai patvirtintas"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
-msgstr ""
+msgstr "Pardavėjo slaptažodis jo patvirtinimui mokėjimo tiekėjo serveryje"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_record_no
 msgid "Payment record number from Mercury Pay"
-msgstr ""
+msgstr "Mokėjimo įrašo numeris iš Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
-msgstr ""
+msgstr "Mokėjimo nuorodos numeris iš Mercury Pay"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:416
 #, python-format
 msgid "Please setup your Mercury merchant account."
-msgstr ""
+msgstr "Nustatykite savo Mercury pardavėjo sąskaitą."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "POS užsakymai"
+msgstr "PT užsakymai"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
 #, python-format
 msgid "Refunds not supported"
-msgstr ""
+msgstr "Grąžinimai nepalaikomi"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr ""
+msgstr "Grąžinimas nepavyko, siunčiamas pardavimo anuliavimas..."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:591
 #, python-format
 msgid "Reversal succeeded"
-msgstr ""
+msgstr "Grąžinimas pavyko"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:552
 #, python-format
 msgid "Sending reversal..."
-msgstr ""
+msgstr "Siunčiamas grąžinimas..."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:47
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
-msgstr ""
+msgstr "SU KORTELĖS SAVININKO SUTIKIMU"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "Mokėjimo kortelės rūšies pavadinimas (pvz., Visa, AMEX, ...)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_prefixed_card_number
 msgid "The card number used for the payment."
-msgstr ""
+msgstr "Kortelės numeris, naudojamas mokėjimui."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal_pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
-msgstr ""
+msgstr "Mercury konfigūracija, naudojama šiam žurnalui"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr ""
+msgstr "Paskutiniai 4 mokėjimui naudotos kortelės skaitmenys"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
 msgid "The name of the card owner"
-msgstr ""
+msgstr "Kortelės savininko vardas"
 
 #. module: pos_mercury
 #. openerp-web
@@ -412,13 +426,15 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
+"Tai galėjo sukelti netinkamas perbraukimas arba klaviatūros išdėstymas, nustatytas ne į US\n"
+"QWERTY (neturi būti US International)."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:146
 #, python-format
 msgid "Transaction approved"
-msgstr ""
+msgstr "Operacija patvirtinta"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -428,25 +444,30 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Mercury integracija į pardavimo tašką yra paprasta: tiesiog paspauskite\n"
+"susijusį mokėjimo būdą. Po to suma galės būti pakoreguojama (pvz.,\n"
+"grąžinimui),\n"
+"kaip ir bet kuriam kitam mokėjimo įrašui. Kai mokėjimo įrašas nustatomas,\n"
+"galima kortele perbraukti kortelių skaitytuvą."
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
-msgstr ""
+msgstr "Vantiv sąskaitos"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
 #, python-format
 msgid "VoidSale succeeded"
-msgstr ""
+msgstr "Pardavimo anuliavimas pavyko"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:17
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr ""
+msgstr "LAUKIA PERBRAUKIMO"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -454,6 +475,8 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the POSBox."
 msgstr ""
+"Šiuo metu mes palaikome MagTek Dynamag kortelių skaitytuvą. Jis gali būti\n"
+"tiesiogiai prijungtas prie pardavimo taško įrenginio arba prie POSBox."
 
 #. module: pos_mercury
 #. openerp-web

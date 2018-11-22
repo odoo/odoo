@@ -3,21 +3,22 @@
 # * purchase
 # 
 # Translators:
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
-# DarkwinS Sama <darwinsgt@gmail.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
+# DarkwinS Sama <darwinsgt@gmail.com>, 2018
 # Carlos Vásquez <carlos.vasquez@clearcorp.co.cr>, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
 "Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -64,18 +65,18 @@ msgstr ""
 "    ${object.partner_id.name}\n"
 "% endif\n"
 ",</p><p>\n"
-"Aqui se encuenta, en adjunto, una ${object.state in ('draft', 'sent') and 'solicitud de presupuesto' or 'confirmación de orden de compra'} <strong>${object.name}</strong>\n"
+"Aquí se encuenta, en adjunto, una ${object.state in ('draft', 'sent') and 'solicitud de presupuesto' or 'confirmación de orden de compra'} <strong>${object.name}</strong>\n"
 "% if object.partner_ref:\n"
 "    con referencia: ${object.partner_ref}\n"
 "% endif\n"
 "% if object.origin:\n"
 "    (SdP origen: ${object.origin})\n"
 "% endif\n"
-"con un monto de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"con un importe de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "de ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
-"<p>No dude en contactarnos en caso de tener alguna inquietud.</p>\n"
+"<p>Puede responder a este correo para cualquier pregunta.</p>\n"
 "<p>Saludos cordiales,</p>\n"
 "<p style=\"color:#888888;\">\n"
 "% if object.user_id and object.user_id.signature:\n"

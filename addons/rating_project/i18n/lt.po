@@ -3,17 +3,17 @@
 # * rating_project
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,21 +97,93 @@ msgid ""
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\" /></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Pasitenkinimo apklausa\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Sveiki,</p>\n"
+"                <p>Skirkite minutę mūsų paslaugų, susijusių su užduotimi \"<strong>${object.name}</strong>\"\n"
+"                   , priskirta<strong>${object.rating_get_rated_partner_id().name}</strong>, įvertinimui.</p>\n"
+"                <p>Vertiname jūs atsiliepimus. Jie padeda mums nuolat tobulėti.</p>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:10px 20px\">\n"
+"                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                    <tr>\n"
+"                        <td style=\"text-align:center;\">\n"
+"                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
+"                                Papasakokite, ką galvojate apie mūsų paslaugą:\n"
+"                            </h2>\n"
+"                            <div style=\"text-color: #888888\">(paspauskite vieną iš šių veidukų)</div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:10px 10px;\">\n"
+"                            <table style=\"width:100%;text-align:center;\">\n"
+"                                <tr>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/10\">\n"
+"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/5\">\n"
+"                                            <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/1\">\n"
+"                                            <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding-top:10px;color:#afafaf;\">\n"
+"                % if object.project_id.rating_status == 'stage':\n"
+"                    <p>Gavote šią vartotojo apklausą, nes jūsų užduotis buvo perkelta į etapą <b>${object.stage_id.name}</b></p>\n"
+"                % endif\n"
+"                % if object.project_id.rating_status == 'periodic':\n"
+"                    <p>Ši apklausa yra siunčiama <b>${object.project_id.rating_status_period}</b>, kol užduotis yra <b>${object.stage_id.name}</b> etape.</p>\n"
+"                % endif\n"
+"                <p>Laišką automatiškai atsiuntė<a target=\"_blank\" href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">\"Odoo Projektas\"</a> <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr "${object.project_id.company_id.name}: paslaugų vertinimo užklausa"
+msgstr "${object.project_id.company_id.name}: paslaugų įvertinimo užklausa"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "% užduotyse"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Dar nėra įvertinimo"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -125,6 +197,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Automatiškai pakeisti kanban būseną, kai klientas atsako į atsiliepimo užklausą šiai stadijai.\n"
+"* Teigiamas kliento atsiliepimas pakeis kanban būseną į \"pasiruošęs naujam etapui\" (žalia).\n"
+"* Vidutinis arba neigiamas atsiliepimas pakeis kanban būseną į \"blokuojamas\" (raudona.\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project_report
@@ -153,6 +228,8 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Kliento užuočių/problemų įvertinimai. Jei neturite įvertinimų, pakeiskite "
+"savo projekto nustatymus ir aktyvuokite juos."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
@@ -162,7 +239,7 @@ msgstr "Kliento (-ų) vertinimai"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Daily"
-msgstr "Kas dieną"
+msgstr "Kasdien"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -170,16 +247,18 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
+"Redaguokite projekto etapus ir nustatykite el. laiško\n"
+"šabloną toms stadijoms, kuriose norite aktyvuoti įvertinimą."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Projekto tenkinimo %"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Užduoties tenkinimo %"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -230,7 +309,7 @@ msgstr "Paskutinis įvertinimas: Patenkintas"
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr "Vertinimo nėra"
+msgstr "Nėra įvertinimų"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -243,6 +322,8 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Teigiamų vertinimų per paskutines 30 dienų procentas. Įvertinimų informaciją"
+" rasite \"Daugiau\" meniu."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -260,7 +341,7 @@ msgstr "Projektas"
 #: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
 #: model:ir.cron,name:rating_project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Projektas: Siųsti įvertinimą"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -276,22 +357,22 @@ msgstr "Įvertintos užduotys"
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_form_inherit_rating
 msgid "Rating"
-msgstr "Vertinimas"
+msgstr "Įvertinimas"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Įvertinimo laiško šablonas"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr "Vertinimo pasikartojimas"
+msgstr "Įvertinimo dažnumas"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Įvertinimo užklausos terminas"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
@@ -306,18 +387,18 @@ msgstr "Vertinimas, kai keičiama stadija"
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
-msgstr "Vertinimai"
+msgstr "Įvertinimai"
 
 #. module: rating_project
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "%s įvertinimai"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
 msgid "Ratings on tasks"
-msgstr ""
+msgstr "Užduočių įvertinimai"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
@@ -333,7 +414,7 @@ msgstr "Užduotis"
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr "Užduoties vertinimas"
+msgstr "Užduoties įvertinimas"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -343,12 +424,12 @@ msgstr "Užduoties etapas"
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating_task
 msgid "There is no rating for tasks of this project at the moment."
-msgstr ""
+msgstr "Šiuo metu šio projekto užduotims nėra vertinimų."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment."
-msgstr ""
+msgstr "Šis objektas šiuo metu neturi įvertinimo."
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0

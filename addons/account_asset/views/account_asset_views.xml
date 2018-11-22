@@ -28,18 +28,18 @@
                             <label for="account_asset_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_asset_id" string="Deferred Revenue Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
-                        <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}"/>
+                        <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}" domain="[('company_id', '=', company_id)]"/>
                         <div>
                             <label for="account_depreciation_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_depreciation_id" string="Recognition Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
-                        <field name="account_depreciation_id" nolabel="1"/>
+                        <field name="account_depreciation_id" nolabel="1" domain="[('company_id', '=', company_id)]"/>
                         <div>
                             <label for="account_depreciation_expense_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_depreciation_expense_id" string="Recognition Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
-                        <field name="account_depreciation_expense_id" nolabel="1"/>
-                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="account_depreciation_expense_id" nolabel="1" domain="[('company_id', '=', company_id)]"/>
+                        <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
                     </group>
                     <group string="Periodicity">
                         <field name="method_time" string="Time Method Based On" widget="radio" attrs="{'invisible': [('type','!=','purchase')]}"/>

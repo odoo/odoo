@@ -5,13 +5,15 @@
 # Translators:
 # Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:20+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,11 +35,14 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"URL relativo o assoluto che punta a un'immagine quadrata del proprio marchio"
+" o prodotto, come definito nel profilo Stripe personale. Consultare: "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -47,12 +52,12 @@ msgstr "Numero carta"
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Titolare della carta"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "URL immagine per Checkout"
 
 #. module: payment_stripe
 #. openerp-web
@@ -71,31 +76,31 @@ msgstr "Errore"
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "Scadenza (MM / YY)"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:32
 #, python-format
 msgid "Just one more second, confirming your payment..."
-msgstr ""
+msgstr "Ancora qualche secondo, conferma del pagamento..."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Acquirente di pagamento"
+msgstr "Servizio di pagamento"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transazione Pagamento"
+msgstr "Transazione di pagamento"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:57
 #, python-format
 msgid "Payment error"
-msgstr "Errore pagamento"
+msgstr "Errore di pagamento"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:167
@@ -104,6 +109,8 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"Il problema può essere risolto verificando nuovamente i dettagli della carta"
+" di credito o contattando la propria banca."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
@@ -119,25 +126,25 @@ msgstr "Chiave segreta Stripe"
 #: code:addons/payment_stripe/models/payment.py:165
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "Stripe ha fornito le seguenti informazioni sul problema: \"%s\""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:177
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
-msgstr ""
+msgstr "Stripe: trovati %s ordini con riferimento %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:173
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr ""
+msgstr "Stripe: nessun ordine trovato con riferimento %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:163
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr ""
+msgstr "Siamo spiacenti di comunicare che la transazione è fallita."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token

@@ -569,8 +569,24 @@ class account_payment(models.Model):
             # to avoid loss of precision during the currency rate computations. See revision 20935462a0cabeb45480ce70114ff2f4e91eaf79 for a detailed example.
             total_residual_company_signed = sum(invoice.residual_company_signed for invoice in self.invoice_ids)
             total_payment_company_signed = self.currency_id.with_context(date=self.payment_date).compute(self.amount, self.company_id.currency_id)
-            if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
+            # amout_wo must be positive for out_invoice and in_refund and negative for in_invoice and out_refund in standard use case
+            #               |   total_payment_company_signed   |    total_residual_company_signed    |    amount_wo
+            #----------------------------------------------------------------------------------------------------------------------
+            # in_invoice    |   positive                       |    positive                         |    negative
+            #----------------------------------------------------------------------------------------------------------------------
+            # in_refund     |   positive                       |    negative                         |    positive
+            #----------------------------------------------------------------------------------------------------------------------
+            # out_invoice   |   positive                       |    positive                         |    positive
+            #----------------------------------------------------------------------------------------------------------------------
+            # out_refund    |   positive                       |    negative                         |    negative
+            #----------------------------------------------------------------------------------------------------------------------
+            # DO NOT FORWARD-PORT
+            if self.invoice_ids[0].type == 'in_invoice':
                 amount_wo = total_payment_company_signed - total_residual_company_signed
+            elif self.invoice_ids[0].type == 'in_refund':
+                amount_wo = - total_payment_company_signed - total_residual_company_signed
+            elif self.invoice_ids[0].type == 'out_refund':
+                amount_wo = total_payment_company_signed + total_residual_company_signed
             else:
                 amount_wo = total_residual_company_signed - total_payment_company_signed
             # Align the sign of the secondary currency writeoff amount with the sign of the writeoff

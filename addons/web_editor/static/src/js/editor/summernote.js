@@ -1891,6 +1891,15 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     if (!r) {
         return;
     }
+    // select content since container (that firefox selects) may be removed
+    if (r.so === 0) {
+        r.sc = dom.firstChild(r.sc);
+    }
+    if (dom.nodeLength(r.ec) >= r.eo) {
+        r.ec = dom.lastChild(r.ec);
+        r.eo = dom.nodeLength(r.ec);
+    }
+    r = range.create(r.sc, r.so, r.ec, r.eo);
     r.reRange().select();
 
     if (sTagName === "blockquote" || sTagName === "pre") {
@@ -1904,6 +1913,10 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     for (var i=0; i<nodes.length; i++) {
         if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
+            if ($(ancestor).parent().is('blockquote')) {
+                // firefox may wrap formatting block in blockquote
+                $(ancestor).unwrap();
+            }
             if (!ancestor) {
                 dom.wrap(nodes[i], sTagName);
             } else if (ancestor.tagName.toLowerCase() !== sTagName) {
@@ -2286,7 +2299,8 @@ options.onCreateLink = function (sLinkUrl) {
       // pass
     } else if (sLinkUrl.indexOf('@') !== -1 && sLinkUrl.indexOf(':') === -1) {
       sLinkUrl =  'mailto:' + sLinkUrl;
-    } else if (sLinkUrl.indexOf('://') === -1 && sLinkUrl.indexOf('/') !== 0 && sLinkUrl.indexOf('#') !== 0) {
+    } else if (sLinkUrl.indexOf('://') === -1 && sLinkUrl[0] !== '/'
+               && sLinkUrl[0] !== '#' && sLinkUrl.slice(0, 2) !== '${') {
       sLinkUrl = 'http://' + sLinkUrl;
     }
     return sLinkUrl;
