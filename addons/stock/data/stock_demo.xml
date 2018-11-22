@@ -123,7 +123,11 @@
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field name="name">My Company, Chicago</field>
+            <field name="name">My Company (Chicago)</field>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="name">My Company (San Fransisco)</field>
         </record>
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">
