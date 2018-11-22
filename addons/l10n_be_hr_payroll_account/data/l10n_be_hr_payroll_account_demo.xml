@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Employee Contract -->
+
+        <record id="hr_contract.hr_contract_admin" model="hr.contract">
+            <field name="struct_id" ref="hr_payroll.structure_001"/>
+        </record>
+
+        <record id="hr_contract.hr_contract_qdp" model="hr.contract">
+            <field name="struct_id" ref="hr_payroll.structure_002"/>
+        </record>
+
+        <!-- ++++++++++++++ June ++++++++++++++ -->
+
+        <!-- Payslip batch -->
+        <record id="hr_payslip_batch" model="hr.payslip.run">
+            <field name="name" eval="time.strftime('June %Y')"/>
+            <field name="date_start" eval="time.strftime('%Y-6-1')"/>
+            <field name="date_end" eval="time.strftime('%Y-6-30')"/>
+        </record>
+
+        <!-- Payslip Admin  -->
+        <record id="hr_payslip_admin" model="hr.payslip">
+            <field name="name" eval="'Mitchell Admin ' + time.strftime('June %Y')"/>
+            <field name="contract_id" ref="hr_contract.hr_contract_admin"/>
+            <field name="date_from" eval="time.strftime('%Y-6-1')"/>
+            <field name="date_to" eval="time.strftime('%Y-6-30')"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="struct_id" ref="hr_payroll.structure_001"/>
+            <field name="number">SLIP601</field>
+            <field name="payslip_run_id" ref="hr_payslip_batch"/>
+        </record>
+        <record id="hr_line_admin1" model="hr.payslip.worked_days">
+            <field name="name">Normal working days</field>
+            <field name="code">WORK100</field>
+            <field name="number_of_days">20</field>
+            <field name="number_of_hours">160</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_admin"/>
+            <field name="payslip_id" ref="hr_payslip_admin"/>
+        </record>
+        <record id="hr_line_admin2" model="hr.payslip.worked_days">
+            <field name="name">Sick keave</field>
+            <field name="code">LEAVE200</field>
+            <field name="number_of_days">2</field>
+            <field name="number_of_hours">16</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_admin"/>
+            <field name="payslip_id" ref="hr_payslip_admin"/>
+        </record>
+
+        <!-- Payslip Demo  -->
+        <record id="hr_payslip_demo" model="hr.payslip">
+            <field name="name" eval="'Marc Demo ' + time.strftime('June %Y')"/>
+            <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="date_from" eval="time.strftime('%Y-6-1')"/>
+            <field name="date_to" eval="time.strftime('%Y-6-30')"/>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="struct_id" ref="hr_payroll.structure_002"/>
+            <field name="number">SLIP602</field>
+            <field name="payslip_run_id" ref="hr_payslip_batch"/>
+        </record>
+        <record id="hr_line_demo1" model="hr.payslip.worked_days">
+            <field name="name">Normal working days</field>
+            <field name="code">WORK100</field>
+            <field name="number_of_days">18</field>
+            <field name="number_of_hours">144</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="payslip_id" ref="hr_payslip_demo"/>
+        </record>
+        <record id="hr_line_demo2" model="hr.payslip.worked_days">
+            <field name="name">Extra work</field>
+            <field name="code">WORK200</field>
+            <field name="number_of_days">1.5</field>
+            <field name="number_of_hours">12</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="payslip_id" ref="hr_payslip_demo"/>
+        </record>
+        <record id="hr_line_demo3" model="hr.payslip.worked_days">
+            <field name="name">Legal leave</field>
+            <field name="code">LEAVE100</field>
+            <field name="number_of_days">4</field>
+            <field name="number_of_hours">32</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="payslip_id" ref="hr_payslip_demo"/>
+        </record>
+
+        <!-- ++++++++++++++ May ++++++++++++++ -->
+
+        <!-- Payslip batch -->
+        <record id="hr_payslip_batch_may" model="hr.payslip.run">
+            <field name="name" eval="time.strftime('May %Y')"/>
+            <field name="date_start" eval="time.strftime('%Y-5-1')"/>
+            <field name="date_end" eval="time.strftime('%Y-5-31')"/>
+        </record>
+
+        <!-- Payslip Admin  -->
+        <record id="hr_payslip_admin_may" model="hr.payslip">
+            <field name="name" eval="'Mitchell Admin ' + time.strftime('May %Y')"/>
+            <field name="contract_id" ref="hr_contract.hr_contract_admin"/>
+            <field name="date_from" eval="time.strftime('%Y-5-1')"/>
+            <field name="date_to" eval="time.strftime('%Y-5-31')"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="struct_id" ref="hr_payroll.structure_001"/>
+            <field name="number">SLIP501</field>
+            <field name="payslip_run_id" ref="hr_payslip_batch_may"/>
+        </record>
+        <record id="hr_line_admin1_may" model="hr.payslip.worked_days">
+            <field name="name">Normal working days</field>
+            <field name="code">WORK100</field>
+            <field name="number_of_days">22</field>
+            <field name="number_of_hours">175</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_admin"/>
+            <field name="payslip_id" ref="hr_payslip_admin_may"/>
+        </record>
+
+        <!-- Payslip Demo  -->
+        <record id="hr_payslip_demo_may" model="hr.payslip">
+            <field name="name" eval="'Marc Demo ' + time.strftime('May %Y')"/>
+            <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="date_from" eval="time.strftime('%Y-5-1')"/>
+            <field name="date_to" eval="time.strftime('%Y-5-31')"/>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="struct_id" ref="hr_payroll.structure_002"/>
+            <field name="number">SLIP502</field>
+            <field name="payslip_run_id" ref="hr_payslip_batch_may"/>
+        </record>
+        <record id="hr_line_demo1_may" model="hr.payslip.worked_days">
+            <field name="name">Normal working days</field>
+            <field name="code">WORK100</field>
+            <field name="number_of_days">20</field>
+            <field name="number_of_hours">16</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="payslip_id" ref="hr_payslip_demo_may"/>
+        </record>
+        <record id="hr_line_demo2_may" model="hr.payslip.worked_days">
+            <field name="name">Extra work</field>
+            <field name="code">WORK200</field>
+            <field name="number_of_days">0.5</field>
+            <field name="number_of_hours">4</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="payslip_id" ref="hr_payslip_demo_may"/>
+        </record>
+        <record id="hr_line_demo3_may" model="hr.payslip.worked_days">
+            <field name="name">Sick Leave</field>
+            <field name="code">LEAVE200</field>
+            <field name="number_of_days">1</field>
+            <field name="number_of_hours">8</field>
+            <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="payslip_id" ref="hr_payslip_demo_may"/>
+        </record>
+</odoo>
+
