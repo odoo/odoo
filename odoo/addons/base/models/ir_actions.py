@@ -234,6 +234,9 @@ class IrActionsActWindow(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
+        for vals in vals_list:
+            if not vals.get('name') and vals.get('res_model'):
+                vals['name'] = self.env[vals['res_model']]._description
         return super(IrActionsActWindow, self).create(vals_list)
 
     @api.multi
