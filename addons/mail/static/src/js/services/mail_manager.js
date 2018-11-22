@@ -1108,8 +1108,9 @@ var MailManager =  AbstractService.extend({
      * Sort previews
      *
      *      1. unread,
-     *      2. two-user thread,
-     *      3. date,
+     *      2. dated previews
+     *      3. two-user thread,
+     *      4. date,
      *
      * @private
      * @param {Object[]} previews
@@ -1118,13 +1119,10 @@ var MailManager =  AbstractService.extend({
     _sortPreviews: function (previews) {
         var res = previews.sort(function (p1, p2) {
             var unreadDiff = Math.min(1, p2.unreadCounter) - Math.min(1, p1.unreadCounter);
+            var datedDiff = !!p2.date - !!p1.date;
             var isTwoUserThreadDiff = p2.isTwoUserThread - p1.isTwoUserThread;
-            var dateDiff = (!!p2.date - !!p1.date) ||
-                              (
-                                p2.date &&
-                                p2.date.diff(p1.date)
-                              );
-            return  unreadDiff || isTwoUserThreadDiff || dateDiff;
+            var dateDiff = p2.date && p2.date.diff(p1.date);
+            return  unreadDiff || datedDiff || isTwoUserThreadDiff || dateDiff;
         });
         return res;
     },
