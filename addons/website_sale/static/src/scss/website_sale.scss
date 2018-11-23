@@ -40,6 +40,7 @@
 
     .o_product_image {
         text-align: center;
+        transition: .3s ease;
         img {
             max-width: 100%;
             max-height: 100%;
@@ -481,10 +482,6 @@ a.no-decoration {
     box-shadow: 0 0 5px 10px rgba(240,8,0,0.4)!important;
 }
 
-#wrapwrap {
-    background-color: $gray-200;
-}
-
 .o_semi_opacity {
     opacity: .5;
 }
@@ -528,7 +525,6 @@ a.no-decoration {
     float:left;
     transition: ease .4s;
     .oe_product_cart {
-        box-shadow: 0 0 20px 0 rgba(0, 0, 0, .02);
         transition: .4s ease;
         padding: 0;
     }
@@ -557,9 +553,10 @@ a.no-decoration {
             position: absolute;
             bottom: 0;
             left: 0;
-            background-color: $gray-100;
+            /*background-color: $gray-200;*/
             transition: .3s ease;
             z-index: 5;
+            text-decoration: none;
             .oe_subdescription {
                 display: none;
             }
@@ -593,17 +590,25 @@ a.no-decoration {
         transform: scale(1);
         z-index: 9;
         .oe_product_cart {
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, .02);
+            box-shadow: 0 0 60px 0 rgba(0, 0, 0, .1);
         }
-        .o_container_product .o_info_product_container {
-            height: 100% !important;
-            background-color: $gray-400;
-            .oe_subdescription {
-                display: block;
-                color: $gray-700 !important;
+        form{
+            height: 30% !important;
+        }
+        .o_container_product{
+            .o_info_product_container {
+                height: 70% !important;
+                .oe_subdescription {
+                    display: block;
+                    color: $gray-700 !important;
+                }
+                h4 span {
+                    color: theme-color('primary') !important;
+                    text-decoration: underline;
+                }
             }
-            h4 a {
-                color: theme-color('primary') !important;
+            .o_product_image{
+                height: 25%;
             }
         }
     }
@@ -624,6 +629,7 @@ a.no-decoration {
         }
         form {
             height: 50%;
+            transition: .3s ease;
         }
     }
 .oe_list {

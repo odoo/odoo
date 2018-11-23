@@ -669,7 +669,7 @@ class WebsiteSale(ProductConfiguratorController):
             'checkout': values,
             'can_edit_vat': can_edit_vat,
             'country': country,
-            'countriesf': country.get_website_sale_countries(mode=mode[1]),
+            'countries': country.get_website_sale_countries(mode=mode[1]),
             "states": country.get_website_sale_states(mode=mode[1]),
             'error': errors,
             'callback': kw.get('callback'),

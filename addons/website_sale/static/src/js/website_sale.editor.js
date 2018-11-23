@@ -86,7 +86,6 @@ options.registry.website_sale = options.Class.extend({
             method: 'search_read',
         }).then(function (data) {
             var $ul = self.$el.find('div[name="style"]');
-            var $ul = self.$el.find('div[name="style"]');
             for (var k in data) {
                 $ul.append(
                     $('<a class="dropdown-item" role="menuitem" data-style="'+data[k]['id']+'" data-toggle-class="'+data[k]['html_class']+'" data-no-preview="true"/>')
