@@ -1,6 +1,7 @@
 odoo.define('web.mixins_tests', function (require) {
 "use strict";
 
+var core = require('web.core');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -86,6 +87,36 @@ QUnit.module('core', {}, function () {
         assert.verifySteps(['child1_w_event', 'parent_w_event', 'child2_w_event']);
 
         parentInstance.destroy();
+    });
+
+    QUnit.test('perform a trigger properly bu bus', function (assert) {
+        assert.expect(2);
+
+        var widget = Widget.extend({
+            bindEvent: function() {
+                core.bus.on('call_by_bus', this, this.onCallByBus);
+            },
+            onCallByBus: function(ev) {
+                assert.step('called_by_bus');
+                return ev;
+            }
+        });
+
+        // widget instance
+        var widgetInstance = new widget();
+        // intercept the call_by_bus in widget instance
+        testUtils.intercept(widgetInstance, 'call_by_bus', function (ev) {
+            assert.strictEqual(ev.data.isWorking, true,
+                "should have sent proper data");
+        },true);
+
+        // Listen to call_by_bus on bus.
+        widgetInstance.bindEvent();
+
+        core.bus.trigger('call_by_bus', {isWorking: true});
+        assert.verifySteps(['called_by_bus']);
+
+        widgetInstance.destroy();
     });
 
 
