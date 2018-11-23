@@ -33,7 +33,7 @@ class Survey(models.Model):
     is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=False)
     # content
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
-    user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True)
+    user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
     # security / access
     auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
