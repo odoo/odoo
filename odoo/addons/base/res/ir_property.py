@@ -179,10 +179,11 @@ class Property(models.Model):
                 LEFT JOIN {} r ON substr(p.value_reference, %s)::integer=r.id
                 WHERE p.fields_id=%s
                     AND (p.company_id=%s OR p.company_id IS NULL)
+                    AND p.value_reference ilike %s
                     AND (p.res_id IN %s OR p.res_id IS NULL)
                 ORDER BY p.company_id NULLS FIRST
             """.format(comodel._table)
-            params = [model_pos, value_pos, field_id, company_id]
+            params = [model_pos, value_pos, field_id, company_id, comodel._name + ',%']
             clean = comodel.browse
 
         elif field.type in TYPE2FIELD:
