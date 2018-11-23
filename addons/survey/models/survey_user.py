@@ -29,7 +29,7 @@ class SurveyUserInput(models.Model):
     _description = 'Survey User Input'
 
     # description
-    survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='restrict')
+    survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
     input_type = fields.Selection([
         ('manually', 'Manually'), ('link', 'Link')],
         string='Answer Type', default='manually', required=True, readonly=True,
@@ -98,7 +98,7 @@ class SurveyUserInputLine(models.Model):
     _rec_name = 'user_input_id'
 
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True)
-    question_id = fields.Many2one('survey.question', string='Question', ondelete='restrict', required=True)
+    question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', required=True)
     page_id = fields.Many2one(related='question_id.page_id', string="Page", readonly=False)
     survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
     skipped = fields.Boolean('Skipped')
