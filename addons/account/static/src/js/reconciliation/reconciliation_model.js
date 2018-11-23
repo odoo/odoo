@@ -107,7 +107,7 @@ var StatementModel = BasicModel.extend({
         this.valuenow = 0;
         this.valuemax = 0;
         this.alreadyDisplayed = [];
-        this.defaultDisplayQty = 10;
+        this.defaultDisplayQty = options && options.defaultDisplayQty || 10;
         this.limitMoveLines = options && options.limitMoveLines || 5;
     },
 
@@ -1148,6 +1148,17 @@ var ManualModel = StatementModel.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Return a boolean telling if load button needs to be displayed or not
+     *
+     * @returns {boolean} true if load more button needs to be displayed
+     */
+    hasMoreLines: function () {
+        if (this.manualLines.length > this.pagerIndex) {
+            return true;
+        }
+        return false;
+    },
+    /**
      * load data from
      * - 'account.move.line' fetch the lines to reconciliate
      * - 'account.account' fetch all account code
@@ -1206,10 +1217,12 @@ var ManualModel = StatementModel.extend({
                             context: context,
                         })
                         .then(function (result) {
-                            var defs = _.map(result, self._formatLine.bind(self, context.mode));
+                            self.manualLines = result;
                             self.valuenow = 0;
-                            self.valuemax = Object.keys(self.lines).length;
-                            return $.when.apply($, defs);
+                            self.valuemax = Object.keys(self.manualLines).length;
+                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            self.pagerIndex = lines.length;
+                            return self.loadData(lines);
                         });
                 case 'accounts':
                     return self._rpc({
@@ -1219,10 +1232,12 @@ var ManualModel = StatementModel.extend({
                             context: context,
                         })
                         .then(function (result) {
-                            var defs = _.map(result, self._formatLine.bind(self, 'accounts'));
+                            self.manualLines = result;
                             self.valuenow = 0;
-                            self.valuemax = Object.keys(self.lines).length;
-                            return $.when.apply($, defs);
+                            self.valuemax = Object.keys(self.manualLines).length;
+                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            self.pagerIndex = lines.length;
+                            return self.loadData(lines);
                         });
                 default:
                     var partner_ids = context.partner_ids;
@@ -1238,15 +1253,45 @@ var ManualModel = StatementModel.extend({
                             context: context,
                         })
                         .then(function (result) {
-                            var defs = _.map(result.accounts, self._formatLine.bind(self, 'accounts'));
-                            defs = defs.concat(_.map(result.customers, self._formatLine.bind(self, 'customers')));
-                            defs = defs.concat(_.map(result.suppliers, self._formatLine.bind(self, 'suppliers')));
+                            // Flatten the result
+                            self.manualLines = [].concat(result.accounts, result.customers, result.suppliers)
                             self.valuenow = 0;
-                            self.valuemax = Object.keys(self.lines).length;
-                            return $.when.apply($, defs);
+                            self.valuemax = Object.keys(self.manualLines).length;
+                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            self.pagerIndex = lines.length;
+                            return self.loadData(lines);
                         });
             }
         });
+    },
+    /**
+     * Load more partners/accounts
+     *
+     * @param {integer} qty quantity to load
+     * @returns {Deferred}
+     */
+    loadMore: function(qty) {
+        if (qty === undefined) {
+            qty = this.defaultDisplayQty;
+        }
+        var lines = this.manualLines.splice(this.pagerIndex, qty);
+        this.pagerIndex += qty;
+        return this.loadData(lines);
+    },
+    /**
+     * Method to load informations on lines
+     *
+     * @param {Array} lines manualLines to load
+     * @returns {Deferred}
+     */
+    loadData: function(lines) {
+        var self = this;
+        var defs = [];
+        _.each(lines, function (l) {
+            defs.push(self._formatLine(l.mode, l))
+        });
+        return $.when.apply($, defs);
+
     },
     /**
      * Mark the account or the partner as reconciled

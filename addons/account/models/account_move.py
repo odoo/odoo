@@ -631,12 +631,19 @@ class AccountMoveLine(models.Model):
             allowed_ids = set(self.env['res.partner'].browse(ids).ids)
             rows = [row for row in rows if row['partner_id'] in allowed_ids]
 
+        # Keep mode for future use in JS
+        if res_type == 'account':
+            mode = 'accounts'
+        else:
+            mode = 'customers' if account_type == 'receivable' else 'suppliers'
+
         # Fetch other data
         for row in rows:
             account = self.env['account.account'].browse(row['account_id'])
             row['currency_id'] = account.currency_id.id or account.company_id.currency_id.id
             partner_id = is_partner and row['partner_id'] or None
             row['reconciliation_proposition'] = self.get_reconciliation_proposition(account.id, partner_id)
+            row['mode'] = mode
 
         # Return the partners with a reconciliation proposition first, since they are most likely to
         # be reconciled.
