@@ -2470,6 +2470,45 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('prevent drag and drop if grouped by date/datetime field', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].date = '2017-01-08';
+        this.data.partner.records[1].date = '2017-01-09';
+        this.data.partner.records[2].date = '2017-02-08';
+        this.data.partner.records[3].date = '2017-02-10';
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['date:month'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+                        "1st column should contain 2 records of January month");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "2nd column should contain 2 records of February month");
+
+        // drag&drop a record in another column
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        testUtils.dragAndDrop($record, $group);
+
+        // should not drag&drop record
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 2,
+                        "Should remain same records in first column(2 records)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
+                        "Should remain same records in 2nd column(2 record)");
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with default_group_by', function (assert) {
         assert.expect(7);
         this.data.partner.records.product_id = 1;
