@@ -393,8 +393,9 @@ var ProxyStatusWidget = StatusWidget.extend({
         
         this.set_smart_status(this.pos.proxy.get('status'));
 
-        this.pos.proxy.on('change:status',this,function(eh,status){ //FIXME remove duplicate changes 
-            self.set_smart_status(status.newValue);
+        this.pos.proxy.on('change:status', this, function (ev) { //FIXME remove duplicate changes 
+            ev.stopPropagation();
+            self.set_smart_status(ev.data.newValue);
         });
 
         this.$el.click(function(){

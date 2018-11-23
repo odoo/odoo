@@ -127,8 +127,9 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
 
         this.set_connection_status('disconnected');
 
-        this.on('change:status',this,function(eh,status){
-            status = status.newValue;
+        this.on('change:status', this, function (ev) {
+            ev.stopPropagation();
+            status = ev.data.newValue;
             if(status.status === 'connected'){
                 self.print_receipt();
             }
