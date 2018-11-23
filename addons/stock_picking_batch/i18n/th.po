@@ -1,360 +1,466 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * stock_picking_wave
-#
+# * stock_picking_batch
+# 
 # Translators:
-#, fuzzy
+# Martin Trigaux, 2018
+# Seksan Poltree <seksan.poltree@gmail.com>, 2018
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+# Prawit Boonthue <prawit.boonthue@gmail.com>, 2018
+# LAO <sumonchai@gmail.com>, 2018
+# Ekasit Saichompu <ekasitb@gmail.com>, 2018
+# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-04-03 15:14+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
-"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
-"Language: th\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. module: stock_picking_wave
-#: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
-msgid "Add pickings to a picking wave"
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Lot/Serial Number</strong>"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
-msgid "Add pickings to wave"
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Package</strong>"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
-#: model:ir.actions.act_window,name:stock_picking_wave.picking_to_wave_act
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
-msgid "Add to Wave"
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Responsible:</strong>"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
+msgid "Action Needed"
+msgstr "ต้องดำเนินการ"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Add pickings to batch"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Add to Batch"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Barcode"
+msgstr "บาร์โค้ด"
+
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
+#: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, python-format
+msgid "Batch Picking"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
+msgid "Batch Picking Lines"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
+msgid "Batch Picking Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
+#: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
+msgid "Batch Pickings"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Batch Pickings not finished"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
+msgid "Batch associated to this picking"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Cancel picking"
 msgstr ""
 
-#. module: stock_picking_wave
-#: selection:stock.picking.wave,state:0
+#. module: stock_picking_batch
+#: selection:stock.picking.batch,state:0
 msgid "Cancelled"
 msgstr "ถูกยกเลิก"
 
-#. module: stock_picking_wave
-#: model_terms:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
-msgid "Click to create a Picking Wave."
-msgstr ""
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Commitment Date"
+msgstr "วันที่สัญญาไว้"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm"
 msgstr "ยืนยัน"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm picking"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_create_uid
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_create_uid
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Create a new batch picking"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_uid
 msgid "Created by"
 msgstr "สร้างโดย"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_create_date
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_create_date
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_date
 msgid "Created on"
 msgstr "สร้างเมื่อ"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Destination"
+msgstr "ปลายทาง"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
 msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-#: selection:stock.picking.wave,state:0
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: selection:stock.picking.batch,state:0
 msgid "Done"
-msgstr "เสร็จสมบูรณ์"
+msgstr "เสร็จสิ้น"
 
-#. module: stock_picking_wave
-#: selection:stock.picking.wave,state:0
+#. module: stock_picking_batch
+#: selection:stock.picking.batch,state:0
 msgid "Draft"
-msgstr "ฉบับร่าง"
+msgstr "ร่าง"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Force availability"
-msgstr ""
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "ผู้ติดตาม (ช่องทาง)"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม (คู่ค้า)"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Group By"
 msgstr "จัดกลุ่มโดย"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
 msgid "ID"
 msgstr "รหัส"
 
-#. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate"
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread
+msgid "If checked new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
+msgid "If checked, some messages have a delivery error."
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate with sticks"
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_immediate_transfer
+msgid "Immediate Transfer"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
-msgid "Ice Cream Vanilla"
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:92
+#, python-format
+msgid "Immediate Transfer?"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
-msgid "In Progress"
-msgstr "กำลังดำเนินการ"
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
+msgid "Is Follower"
+msgstr "เป็นผู้ติดตาม"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave___last_update
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave___last_update
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch____last_update
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch____last_update
 msgid "Last Modified on"
 msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_write_uid
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_write_uid
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_uid
 msgid "Last Updated by"
 msgstr "อัพเดทครั้งสุดท้ายโดย"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_write_date
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_write_date
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_date
 msgid "Last Updated on"
 msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_picking_ids
-msgid "List of picking associated to this wave"
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
+msgid "List of picking associated to this batch"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_name
-msgid "Name of the picking wave"
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
+msgid "Main Attachment"
 msgstr ""
 
-#. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
+msgid "Name of the batch picking"
+msgstr ""
+
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:52
 #, python-format
 msgid "Nothing to print."
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_user_id
-msgid "Person responsible for this wave"
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จำนวนกิจกรรม"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+msgid "Number of error"
 msgstr ""
 
-#. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
-#: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
-#, python-format
-msgid "Picking Wave"
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+msgid "Number of messages which requires an action"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_name
-msgid "Picking Wave Name"
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+msgid "Number of messages with delivery error"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.actions.act_window,name:stock_picking_wave.action_picking_wave
-#: model:ir.ui.menu,name:stock_picking_wave.menu_action_picking_wave
-msgid "Picking Waves"
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread_counter
+msgid "Number of unread messages"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
-msgid "Picking Waves not finished"
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__user_id
+msgid "Person responsible for this batch picking"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
-msgid "Picking wave associated to this picking"
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
+msgid "Pick To Backorder"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_picking_ids
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Picking"
+msgstr "การรับสินค้า"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Picking Reference"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
+msgid "Picking to backorder"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Pickings"
-msgstr "การหยิบ"
+msgstr "การรับสินค้า"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr ""
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Print"
+msgstr "พิมพ์"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product"
+msgstr "สินค้า"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity"
+msgstr "จำนวน"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Responsible"
 msgstr "รับผิดชอบ"
 
-#. module: stock_picking_wave
-#: selection:stock.picking.wave,state:0
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#: selection:stock.picking.batch,state:0
 msgid "Running"
 msgstr "กำลังทำงาน"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
-msgid "Search Picking Waves"
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Scheduled Date"
+msgstr "วันที่ถูกกำหนด"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Search Batch Picking"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
-msgid "Select a wave"
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Select a batch"
 msgstr ""
 
-#. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
-"availability before setting this wave to done."
+"availability before setting this batch to done."
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_dry_specu
-#: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos"
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:77
+#, python-format
+msgid "Some products require lots/serial numbers."
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_dry_specu
-#: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos - A belgian speciality"
-msgstr ""
-
-#. module: stock_picking_wave
-#: model:mail.message.subtype,description:stock_picking_wave.mt_wave_state
-#: model:mail.message.subtype,name:stock_picking_wave.mt_wave_state
+#. module: stock_picking_batch
+#: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
+#: model:mail.message.subtype,name:stock_picking_batch.mt_batch_state
 msgid "Stage Changed"
 msgstr "สถานะเปลี่ยนแปลง"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_state
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__state
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "State"
 msgstr "สถานะ"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_tree
-msgid "Stock Picking Waves"
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Status"
+msgstr "สถานะ"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
+msgid "Stock Batch Picking"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model_terms:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Summary:"
+msgstr "สรุป"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
-"The goal of the picking waves is to group operations that may\n"
-"                (needs to) be done together in order to increase their "
-"efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) "
-"or\n"
-"                help the timing management of operations (tasks to be done "
-"at 1pm)."
+"The goal of the batch picking is to group operations that may\n"
+"            (needs to) be done together in order to increase their efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) or\n"
+"            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.model,name:stock_picking_wave.model_stock_picking
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "To take from:"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking
 msgid "Transfer"
 msgstr "การโอน"
 
-#. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:63
 #, python-format
 msgid "Transferred by"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
-msgid "User"
-msgstr "ผู้ใช้งาน"
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_unread
+msgid "Unread Messages"
+msgstr "ข้อความที่ยังไม่ได้อ่าน"
 
-#. module: stock_picking_wave
-#: model_terms:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
-msgid "Wave"
-msgstr ""
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
 
-#~ msgid "Action Needed"
-#~ msgstr "ต้องดำเนินการ"
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความจากเว็บไซต์"
 
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
-
-#~ msgid "Followers"
-#~ msgstr "ผู้ติดตาม"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "ผู้ติดตาม (ช่องทาง)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "ผู้ติดตาม (คู่ค้า)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "Is Follower"
-#~ msgstr "เป็นผู้ติดตาม"
-
-#~ msgid "Last Message Date"
-#~ msgstr "วันที่ข้อความล่าสุด"
-
-#~ msgid "Messages"
-#~ msgstr "ข้อความ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "ข้อความและประวัติการติดต่อ"
-
-#~ msgid "Number of Actions"
-#~ msgstr "จำนวนกิจกรรม"
-
-#~ msgid "Unread Messages"
-#~ msgstr "ข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Website Messages"
-#~ msgstr "ข้อความเว็บไซต์"
-
-#~ msgid "Website communication history"
-#~ msgstr "ประวัติการสื่อสารเว็บไซต์"
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารเว็บไซต์"

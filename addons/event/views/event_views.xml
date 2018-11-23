@@ -343,7 +343,7 @@
                                     </div>
                                     <h4>
                                         <a name="%(act_event_registration_from_event)d" type="action">
-                                            <t t-esc="record.seats_expected.raw_value"> Expected attendees </t>
+                                            <t t-esc="record.seats_expected.raw_value"/> Expected attendees
                                         </a>
                                         <t t-if="(record.seats_reserved.raw_value + record.seats_used.raw_value) > 0 "><br/>
                                             <a name="%(event_event_action_pivot)d" type="action">

@@ -461,6 +461,95 @@ QUnit.module('Search View', {
 
     QUnit.module('Filters Menu');
 
+    QUnit.test('Search date and datetime fields. Support of timezones', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.birth_datetime = {string: "Birth DateTime", type: "datetime", store: true, sortable: true};
+        this.data.partner.records = this.data.partner.records.slice(0,-1); // exclude wrong date record
+
+        function stringToEvent ($element, string) {
+            for (var i = 0; i < string.length; i++) {
+                var keyAscii = string.charCodeAt(i);
+                $element.val($element.val()+string[i]);
+                $element.trigger($.Event('keyup', {which: keyAscii, keyCode:keyAscii}));
+            }
+        }
+
+        var searchReadSequence = 0;
+        var actionManager = createActionManager({
+            actions: [{
+                id: 11,
+                name: 'Partners Action 11',
+                res_model: 'partner',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [9, 'search'],
+            }],
+            archs:  {
+                'partner,3,list': '<tree>' +
+                                      '<field name="foo"/>' +
+                                      '<field name="birthday" />' +
+                                      '<field name="birth_datetime" />' +
+                                '</tree>',
+
+                'partner,9,search': '<search>'+
+                                        '<field name="birthday"/>' +
+                                        '<field name="birth_datetime" />' +
+                                    '</search>',
+            },
+            data: this.data,
+            session: {
+                getTZOffset: function() {
+                    return 360;
+                }
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadSequence === 1) { // The 0th time is at loading
+                        assert.deepEqual(args.domain, [["birthday", "=", "1983-07-15"]],
+                            'A date should stay what the user has input, but transmitted in server\'s format');
+                    } else if (searchReadSequence === 3) { // the 2nd time is at closing the first facet
+                        assert.deepEqual(args.domain, [["birth_datetime", "=", "1983-07-14 18:00:00"]],
+                            'A datetime should be transformed in UTC and transmitted in server\'s format');
+                    }
+                    searchReadSequence+=1;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(11);
+
+        // Date case
+        var $autocomplete = $('.o_searchview_input');
+        stringToEvent($autocomplete, '07/15/1983');
+
+        $autocomplete.trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.equal($('.o_searchview_facet .o_facet_values').text().trim(), '07/15/1983',
+            'The format of the date in the facet should be in locale');
+
+        // Close Facet
+        $('.o_searchview_facet .o_facet_remove').click();
+
+        // DateTime case
+        $autocomplete = $('.o_searchview_input');
+        stringToEvent($autocomplete, '07/15/1983 00:00:00');
+
+        $autocomplete.trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.equal($('.o_searchview_facet .o_facet_values').text().trim(), '07/15/1983 00:00:00',
+            'The format of the datetime in the facet should be in locale');
+
+        actionManager.destroy();
+    });
+
     QUnit.test('add a custom filter works', function (assert) {
         assert.expect(1);
 

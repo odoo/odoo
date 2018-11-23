@@ -6,16 +6,18 @@
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # Emily JIA <eji@odoo.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # 广州救火 <7017511@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: snow wang <147156565@qq.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,43 +113,43 @@ msgstr "自动化"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr "Base Action Rule: check and execute"
+msgstr "基本动作规则:检查并执行"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
 #: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
 msgid "Base Automation: test recursive rule"
-msgstr "基础自动化: test recursive rule"
+msgstr "基础自动化：测试递归的规则"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_create
 #: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
 msgid "Base Automation: test rule on create"
-msgstr "基础自动化: test rule on create"
+msgstr "基础自动化：创建测试规则"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_recompute
 #: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
 msgid "Base Automation: test rule on recompute"
-msgstr "基础自动化: test rule on recompute"
+msgstr "基础自动化：重新计算的测试规则"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_line
 #: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
 msgid "Base Automation: test rule on secondary model"
-msgstr "基础自动化: test rule on secondary model"
+msgstr "基础自动化：二级模型测试规则"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
 msgid "Base Automation: test rule on write"
-msgstr "基础自动化: test rule on write"
+msgstr "基础自动化：写入测试规则"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_check_context
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
-msgstr "基础自动化：test rule on write check context"
+msgstr "基础自动化：写入检查上下文的测试规则"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -184,7 +186,7 @@ msgstr "已取消"
 msgid ""
 "Check this box if this contact is a customer. It can be selected in sales "
 "orders."
-msgstr "如果这个联系人是客户，勾选此项。它就能够在销售订单中被选择。"
+msgstr "如果这个联系人是客户，请勾选此项。它就能够在销售订单中被选择。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -211,7 +213,7 @@ msgstr "以逗号分隔的字段名称列表触发变化"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Create/Write Target Model"
-msgstr "创建/写目标模型"
+msgstr "创建或写入目标模型"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -449,7 +451,7 @@ msgstr "更新时"
 msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
-msgstr "可选的帮助文本，目标视图的说明，比如用途和目的。"
+msgstr "可选的帮助文本为用户提供目标视图的说明，例如它的用法和用途。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__partner_id
@@ -553,7 +555,7 @@ msgstr "记录上用户的技术名称"
 msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
-msgstr "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value)s\" 动作类型"
+msgstr "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value)s\" 动作类型一起使用"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -577,12 +579,12 @@ msgid ""
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
 "服务器操作的类型。 以下值可用：\n"
-"- “执行Python代码”：将被执行的一段python代码\n"
-"- “创建或复制新记录”：用新值创建新记录，或复制数据库中的现有记录\n"
-"- '在记录上写'：更新记录的值\n"
-"- “执行几个动作”：定义触发其他几个服务器动作的动作\n"
-"- “添加追随者”：将追随者添加到记录中（在讨论中可用）\n"
-"- “发送电子邮件”：自动发送电子邮件（在email_template中提供）"
+"-“执行Python代码”：将被执行的一段python代码\n"
+"- “创建或复制新记录”：用新值创建一个新记录，或复制现有数据库中的记录\n"
+"-  “在记录上写”：更新记录的值\n"
+"- “执行几个动作”：定义触发其他服务器的动作\n"
+"-“添加关注者”：将关注者添加到记录中（在论坛中可用）\n"
+"- “发送电子邮件”：自动发送电子邮件（在email_template中可用）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -644,7 +646,7 @@ msgstr "警告"
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr "当需要基于时间条件做计算时，可能使用一个基于工作日的日历去计算是比较合适的."
+msgstr "当需要基于时间条件做计算时，可以使用日历根据工作日计算日期。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
@@ -659,8 +661,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"当条件被触发。\n"
-"如果存在，将由调度器检查。如果为空，将检查创建并更新。"
+"何时触发该条件。\n"
+"                                  如果存在,将由调度程序检查。如果为空，将在创建和更新时检查。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

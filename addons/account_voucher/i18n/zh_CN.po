@@ -4,19 +4,21 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # 广州救火 <7017511@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
 "Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -34,9 +36,9 @@ msgid ""
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
 "* ‘草稿’状态被用来标识新生成的但是还没被确认的凭证\n"
-"* ‘形式’状态被用在凭证还没有凭证号的时候\n"
+"* ‘预制’状态被用在凭证还没有凭证号的时候\n"
 "* ‘已过账’状态用在创建了凭证，生成了相关的凭证号并且该凭证的会计分录也已经生成的时候\n"
-"* “取消’状态被用在已经去小的凭证上"
+"* “取消’状态被用在已经取消的凭证上"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
@@ -57,7 +59,7 @@ msgstr "会计日期"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "会计凭单"
+msgstr "会计凭证"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
@@ -204,7 +206,7 @@ msgstr "草稿"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr "草稿凭单"
+msgstr "凭证草稿"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
@@ -252,7 +254,7 @@ msgstr "ID"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread
 msgid "If checked new messages require your attention."
-msgstr "查看是否有需要你留意的新信息。"
+msgstr "查看是否有需要留意的新信息。"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction
@@ -425,7 +427,7 @@ msgstr "付款方式"
 #: code:addons/account_voucher/models/account_voucher.py:208
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr "请激活选中日记账的 序号（ sequence  ）。"
+msgstr "请激活选择的日记账的序号。"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:211
@@ -550,7 +552,7 @@ msgstr "税率"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_amount
 msgid "Tax Amount"
-msgstr "税率总额"
+msgstr "税金总额"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_correction
@@ -570,7 +572,7 @@ msgstr "被选定产品的相关收入科目或者费用科目"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__reference
 msgid "The partner reference of this document."
-msgstr "这个单子的业务伙伴参照"
+msgstr "本文档的业务伙伴参照"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -677,17 +679,17 @@ msgstr "网站沟通记录"
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr "当采购收据被确认掉，你也可以同时登记这张采购收据的付款"
+msgstr "当采购收据被确认时，你可以登记供应商采购收据的付款"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
-msgstr "当销售收据被确认掉，你也可以同时登记这张销售收据的付款"
+msgstr "当销售收据被确认时，你可以登记客户销售收据的付款"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:457
 #, python-format
 msgid "You must first select a partner."
-msgstr "必须先选择一个客户"
+msgstr "必须先选择一个合作伙伴"

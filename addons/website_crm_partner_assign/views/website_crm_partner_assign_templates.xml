@@ -163,8 +163,7 @@
 <template id="references_block" name="Partner References Block">
     <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
         <h3 id="references">References</h3>
-        <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
-          <t t-if="reference.website_published">
+        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media mt-3">
             <a t-attf-href="/customers/#{slug(reference)}">
                 <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
             </a>
@@ -174,7 +173,6 @@
                 </a>
                 <div t-field='reference.website_short_description'/>
             </div>
-          </t>
         </div>
     </t>
 </template>

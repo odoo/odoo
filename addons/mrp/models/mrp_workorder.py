@@ -287,6 +287,9 @@ class MrpWorkorder(models.Model):
             'location_dest_id': by_product_move.location_dest_id.id,
         }
 
+    def _link_to_quality_check(self, old_move_line, new_move_line):
+        return True
+
     @api.multi
     def record_production(self):
         if not self:
@@ -328,6 +331,7 @@ class MrpWorkorder(models.Model):
             if lots:
                 lots[0].qty_done += move_line.qty_done
                 lots[0].lot_produced_id = self.final_lot_id.id
+                self._link_to_quality_check(move_line, lots[0])
                 move_line.sudo().unlink()
             else:
                 move_line.lot_produced_id = self.final_lot_id.id

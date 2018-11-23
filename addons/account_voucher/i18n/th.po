@@ -3,14 +3,20 @@
 # * account_voucher
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Seksan Poltree <seksan.poltree@gmail.com>, 2018
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+# LAO <sumonchai@gmail.com>, 2018
+# Ekasit Saichompu <ekasitb@gmail.com>, 2018
+# gsong <gsong2014@foxmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: gsong <gsong2014@foxmail.com>, 2018\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_state
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
@@ -28,56 +34,76 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_id
 msgid "Account"
-msgstr ""
+msgstr "บัญชี"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr ""
+msgstr "วันที่บัญชี"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_date
 msgid "Accounting Date"
 msgstr ""
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
+msgstr "ใบสำคัญทางบัญชี"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+msgid "Accounting Voucher Line"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
+msgid "Action Needed"
+msgstr "ต้องดำเนินการ"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_subtotal
 msgid "Amount"
-msgstr ""
+msgstr "จำนวน"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_analytic_id
 msgid "Analytic Account"
 msgstr "บัญชีวิเคราะห์"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "ป้ายกำกับการวิเคราะห์"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
+msgstr "คุณแน่ใจหรือว่าต้องการยกเลิกใบเสร็จรับเงินนี้"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_attachment_count
+msgid "Attachment Count"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
-msgstr ""
+msgstr "วันที่ออกบิล"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Bill Information"
-msgstr ""
+msgstr "ข้อมูลบิล"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__reference
 msgid "Bill Reference"
 msgstr ""
 
@@ -89,7 +115,7 @@ msgstr "ยกเลิก"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "ยกเลิกใบเสร็จรับเงิน"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -97,48 +123,43 @@ msgid "Cancelled"
 msgstr "ถูกยกเลิก"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/models/account_voucher.py:172
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "ไม่สามารถลบใบสำคัญที่ถูกเปิดหรือจ่ายแล้ว"
 
 #. module: account_voucher
-#: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
-msgid "Click to create a sale receipt."
-msgstr ""
-
-#. module: account_voucher
-#: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
-msgid "Click to register a purchase receipt."
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__company_id
 msgid "Company"
 msgstr "บริษัท"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__company_id
 msgid "Company related to this journal"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
+#: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "Create a new sale receipt"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_uid
 msgid "Created by"
 msgstr "สร้างโดย"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_date
 msgid "Created on"
 msgstr "สร้างเมื่อ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__currency_id
 msgid "Currency"
 msgstr "สกุลเงิน"
 
@@ -152,16 +173,16 @@ msgstr "ลูกค้า"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Date"
-msgstr ""
+msgstr "วันที่"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__name
 msgid "Description"
 msgstr "รายละเอียด"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__display_name
 msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
 
@@ -171,27 +192,42 @@ msgstr "ชื่อที่ใช้แสดง"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft"
-msgstr ""
+msgstr "ร่าง"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "ร่างใบสำคัญ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
 msgid "Due Date"
-msgstr ""
+msgstr "วันกำหนดจ่าย"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__account_date
 msgid "Effective date for accounting entries"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "ผู้ติดตาม (ช่องทาง)"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม (คู่ค้า)"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__sequence
 msgid "Gives the sequence of this line when displaying the voucher."
 msgstr ""
 
@@ -203,13 +239,28 @@ msgid "Group By"
 msgstr "จัดกลุ่มโดย"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__id
 msgid "ID"
 msgstr "รหัส"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread
+msgid "If checked new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
@@ -218,67 +269,124 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "โน้ตภายใน"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_is_follower
+msgid "Is Follower"
+msgstr "เป็นผู้ติดตาม"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__journal_id
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Journal"
-msgstr ""
+msgstr "สมุดบัญชี"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__move_id
 msgid "Journal Entry"
-msgstr ""
+msgstr "บันทึกบัญชี"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Journal Items"
-msgstr ""
+msgstr "รายการสมุดบัญชีรายวัน"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher____last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line____last_update
 msgid "Last Modified on"
 msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_uid
 msgid "Last Updated by"
 msgstr "อัพเดทครั้งสุดท้ายโดย"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_date
 msgid "Last Updated on"
 msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:109
+#, python-format
+msgid "Missing Company"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:111
+#, python-format
+msgid "Missing Currency"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__narration
 msgid "Notes"
-msgstr ""
+msgstr "โน้ต"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__number
 msgid "Number"
+msgstr "หมายเลข"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จำนวนกิจกรรม"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error_counter
+msgid "Number of error"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__tax_ids
 msgid "Only for tax excluded from price"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__paid
 msgid "Paid"
-msgstr ""
+msgstr "ชำระแล้ว"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__partner_id
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Partner"
 msgstr "คู่ค้า"
@@ -286,7 +394,7 @@ msgstr "คู่ค้า"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Directly"
-msgstr ""
+msgstr "จ่ายโดยตรง"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -294,23 +402,28 @@ msgid "Pay Later"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__pay_now
 msgid "Payment"
+msgstr "การจ่ายเงิน"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
+msgid "Payment Memo"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
-msgid "Payment Reference"
-msgstr ""
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
+msgid "Payment Method"
+msgstr "วิธีการจ่ายเงิน"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: code:addons/account_voucher/models/account_voucher.py:208
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/models/account_voucher.py:211
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -321,14 +434,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted"
-msgstr ""
+msgstr "ลงบัญชีแล้ว"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "ใบสำคัญการลงบัญชี"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -336,40 +449,47 @@ msgid "Pro-forma"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__product_id
 msgid "Product"
 msgstr "สินค้า"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Purchase"
-msgstr ""
+msgstr "การซื้อ"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
-msgid "Purchase Receipts"
-msgstr ""
+msgstr "ใบจ่ายเงินการจัดซื้อ"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "ใบสำคัญการจัดซื้อ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
 msgid "Quantity"
 msgstr "จำนวน"
 
 #. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Receipts"
+msgstr "การรับ"
+
+#. module: account_voucher
+#: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid "Register a new purchase receipt"
+msgstr ""
+
+#. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Sale"
-msgstr ""
+msgstr "ขาย"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -379,34 +499,28 @@ msgstr "ข้องมูลการขาย"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
-msgid "Sales Receipts"
-msgstr ""
+msgstr "ใบเสร็จการขาย"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Search Vouchers"
-msgstr ""
+msgstr "ค้นหาใบสำคัญ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__sequence
 msgid "Sequence"
-msgstr "กำหนดเลขที่เอกสาร"
+msgstr "ลำดับ"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "กำหนดให้เป็นฉบับร่าง"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__state
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -416,50 +530,50 @@ msgstr "สถานะ"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "สถานะเปลี่ยนแปลง"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "เปลี่ยนสถานะแล้ว"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__tax_ids
 msgid "Tax"
-msgstr ""
+msgstr "ภาษี"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_amount
 msgid "Tax Amount"
-msgstr ""
+msgstr "จำนวนภาษี"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_correction
 msgid "Tax Correction"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__paid
 msgid "The Voucher has been totally paid."
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__account_id
 msgid "The income or expense account related to the selected product."
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__reference
 msgid "The partner reference of this document."
 msgstr ""
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "To Review"
-msgstr ""
+msgstr "จะทบทวน"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__amount
 msgid "Total"
 msgstr "รวม"
 
@@ -467,30 +581,40 @@ msgstr "รวม"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr ""
+msgstr "จำนวนเงินรวม"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__voucher_type
 msgid "Type"
-msgstr ""
+msgstr "ประเภท"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_unit
 msgid "Unit Price"
 msgstr "ราคาต่อหน่วย"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread
+msgid "Unread Messages"
+msgstr "ข้อความที่ยังไม่ได้อ่าน"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Validate"
-msgstr ""
+msgstr "ตรวจสอบ"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Vendor"
-msgstr ""
+msgstr "ผู้จำหน่าย"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -498,41 +622,50 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
+#: code:addons/account_voucher/models/account_voucher.py:116
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__voucher_id
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #, python-format
 msgid "Voucher"
-msgstr ""
+msgstr "ใบสำคัญ"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Voucher Entries"
-msgstr ""
+msgstr "การลงใบสำคัญ"
 
 #. module: account_voucher
-#: model:ir.model,name:account_voucher.model_account_voucher_line
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__line_ids
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
 msgid "Voucher Lines"
-msgstr ""
+msgstr "รายการใบสำคัญ"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr ""
+msgstr "สถิติใบสำคัญ"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr ""
+msgstr "การลงใบสำคัญ"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความจากเว็บไซต์"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารเว็บไซต์"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -549,7 +682,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:377
+#: code:addons/account_voucher/models/account_voucher.py:457
 #, python-format
-msgid "You must first select a partner!"
+msgid "You must first select a partner."
 msgstr ""

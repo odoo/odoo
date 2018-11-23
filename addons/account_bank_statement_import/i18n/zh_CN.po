@@ -4,18 +4,20 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
 # neter ji <jifuyi@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # yuan wenpu <1140021222@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: yuan wenpu <1140021222@qq.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,7 +145,7 @@ msgstr "银行对账单明细"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr "银行设置标准配置"
+msgstr "银行设置手动配置"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
@@ -176,7 +178,7 @@ msgstr "勾选此框，则此日记账下的会计发票或退款不使用同一
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr "则此日记账下的日记账分录或发票可以被作废，勾选此项。"
+msgstr "勾选此项，则此日记账下的日记账分录或发票可以被作废。"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -206,7 +208,7 @@ msgid ""
 "Did you install the module to support this type of file ?"
 msgstr ""
 "提供的文件不对.\n"
-"你有安装支持这文件的模块吗?"
+"你安装了模块来支持这种类型的文件吗？"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_uid
@@ -223,12 +225,12 @@ msgstr "创建时间"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "退款分录序列"
+msgstr "信用证分录序列"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr "退款：下一号码"
+msgstr "信用证：下一号码"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -238,7 +240,7 @@ msgstr "币种"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "退款专用序列"
+msgstr "专用的信用证序列"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
@@ -389,7 +391,7 @@ msgstr "日记账名称"
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
-msgstr "只是点击 OK　来创建科目／日记账并且完成导入。如果导入有错误，点击‘取消’放弃导入。"
+msgstr "单击OK创建帐户/日记账并完成导入。如果存在错误，点击取消来中止导入。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
@@ -431,10 +433,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
-"手动：通过现金、支票或除 Odoo 以外的其他方法获取报酬。\n"
-" 电子方式：在客户线上购买或订阅时（支付令），在已保存的卡中请求交易，通过付款受让人自动获取报酬。\n"
-" 批量存款：\n"
-" 批量存款：几个客户同时支票付款时，可生成批量存款提交到银行中。当在 Odoo 进行编码银行对账单时，建议您协调批量存款与交易之间的关系。从设置中启用该选项。"
+"手动：通过现金、支票或除 Odoo 以外的任何其他方法获取报酬。\n"
+"电子方式：在线购买或订阅时（支付令牌），通过请求客户保存的卡上的交易，通过付款受让人自动获得付款。\n"
+"批量存款：通过生成批量存款立即兑现几个客户的支票，以便提交给银行。在 Odoo 中编码银行对账单时，建议您将交易与批量存款进行核对。从设置中启用此选项。 "
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_ids
@@ -539,7 +540,7 @@ msgstr "用来输入对账单的币种"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "这个日记账中的日记账分录会被用这个前缀命名"
+msgstr "这个日记账中的日记账分录会用这个前缀命名"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
@@ -563,7 +564,7 @@ msgstr "该字段包含此日记账中与信用清单目录数量相关的信息
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr "这个字段包含和这个日记中日记账分录数量相关的信息"
+msgstr "该字段包含和这个日记中日记账分录数量相关的信息"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:117
@@ -592,14 +593,14 @@ msgstr "用于仪表板视图中的日记账排序"
 msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr "现金登记的期末余额与系统计算的有差异时候用来登记损失"
+msgstr "收银机的期末余额与系统计算的有差异时候用来记录损失"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
-msgstr "当现金出纳机的关账余额与系统计算的有差异时，用于登记利润"
+msgstr "当收银机的关账余额与系统计算的有差异时，用于记录利润"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
@@ -607,12 +608,12 @@ msgid ""
 "Whether or not the payments made in this journal should be generated in "
 "draft state, so that the related journal entries are only posted when "
 "performing bank reconciliation."
-msgstr "是否应在汇票状态下生成本日记账中的付款，以便仅在进行银行对账时才张贴相关的日记账分录。"
+msgstr "是否应在汇票状态下生成本日记账中的付款，以便仅在进行银行对账时才对相关的日记账分录过账。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "不管这个日记账是否显示在仪表板"
+msgstr "无论这个日记账是否显示在仪表板"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
@@ -631,7 +632,7 @@ msgstr "您可安装更多文件格式通过"
 msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
-msgstr "您必须为日志设置默认借记帐户和默认信用帐户：%s"
+msgstr "您必须为日记账设置默认借记帐户和默认信用帐户：%s"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

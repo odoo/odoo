@@ -3,22 +3,24 @@
 # * portal
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
+# Martin Trigaux, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # diaojiaolou <124412206@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # 广州救火 <7017511@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +33,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:43
 #, python-format
 msgid "%d days overdue"
-msgstr "%d 天超期"
+msgstr "%d 逾期"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -182,16 +184,16 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        尊敬的 ${object.user_id.name or ''},<br/> <br/>\n"
-"                        You have been given access to ${object.user_id.company_id.name}'s portal.<br/>\n"
-"                        Your login account data is:\n"
+"                        您已经获得了${Obj.UrthyID.ForpYyID.Name }的门户。<br/>\n"
+"                        您的登录帐户数据是:\n"
 "                        <ul>\n"
 "                            <li>Username: ${object.user_id.login or ''}</li>\n"
 "                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "                            <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "                        </ul>\n"
-"                        You can set or change your password via the following url:\n"
+"                        您可以通过以下URL设置或更改密码：\n"
 "                        <ul>\n"
-"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                            <li><a href=\"${object.user_id.signup_url}\">${对象名称}</a></li>\n"
 "                        </ul>\n"
 "                        ${object.wizard_id.welcome_message or ''}\n"
 "                    </div>\n"
@@ -536,7 +538,7 @@ msgstr "Odoo 徽标"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:39
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr "哎哟！出错了。请尝试重新加载页面并登录。"
+msgstr "出错。请尝试重新加载页面并登录。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -579,7 +581,7 @@ msgstr "前一个"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:84
 #, python-format
 msgid "Previous"
-msgstr "以前"
+msgstr "上一页"
 
 #. module: portal
 #. openerp-web
@@ -677,7 +679,7 @@ msgstr "街道"
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr "感谢你！"
+msgstr "谢谢！"
 
 #. module: portal
 #. openerp-web
@@ -709,7 +711,7 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
-"要解决这个错误，你可以： \n"
+"要解决这个错误，您可以： \n"
 "- 更正相关联系人的邮箱\n"
 "- 仅允许拥有唯一的邮箱地址的联系人访问。"
 
@@ -767,7 +769,7 @@ msgstr "写信息"
 #: code:addons/portal/wizard/portal_share.py:71
 #, python-format
 msgid "You are invited to access %s"
-msgstr "你被邀请访问  %s"
+msgstr "您被邀请访问  %s"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -779,31 +781,31 @@ msgstr "您已被邀请访问以下文档："
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "You must be"
-msgstr "你应该"
+msgstr "您应该"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:175
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr "你的个人设置里必须要输入电子邮件地址才能发送邮件"
+msgstr "个人设置中必须输入电子邮件地址才能发送邮件"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr "您的联系人详细信息"
+msgstr "联系人详细信息"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Details"
-msgstr "你的详细信息"
+msgstr "个人详细信息"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr "您的文件"
+msgstr "文件"
 
 #. module: portal
 #. openerp-web
@@ -811,7 +813,7 @@ msgstr "您的文件"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid "Your Name"
-msgstr "你的姓名"
+msgstr "姓名"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -821,7 +823,7 @@ msgstr "您的Odoo账号 ${object.user_id.company_id.name}"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
 msgid "Your contact"
-msgstr "你的联系方式"
+msgstr "联系方式"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

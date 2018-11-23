@@ -3,6 +3,7 @@ odoo.define('mail.basicThreadWindowTests', function (require) {
 
 var mailTestUtils = require('mail.testUtils');
 
+var FormView = require('web.FormView');
 var framework = require('web.framework');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -426,6 +427,99 @@ QUnit.test('show document link of message linked to a document', function (asser
         "message should link to 'Some Document'");
 
     parent.destroy();
+});
+
+QUnit.test('do not autofocus chat window on receiving new direct message', function (assert) {
+    // Receiving a message doesn't make other input loose focus
+    assert.expect(3);
+
+    this.data.partner = {
+        fields: {
+            display_name: { string: "Displayed name", type: "char" },
+        },
+        records: [{
+            id: 1,
+            display_name: "first record",
+        }],
+    };
+
+    this.data['mail.channel'] = {
+        fields: {
+            name: {
+                string: "Name",
+                type: "char",
+                required: true,
+            },
+            channel_type: {
+                string: "Channel Type",
+                type: "selection",
+            },
+            channel_message_ids: {
+                string: "Messages",
+                type: "many2many",
+                relation: 'mail.message'
+            },
+            message_unread_counter: {
+                string: "Amount of Unread Messages",
+                type: "integer"
+            },
+        },
+        records: [{
+            id: 2,
+            name: "DM",
+            channel_type: "chat",
+            message_unread_counter: 0,
+            direct_partner: [{ id: 666, name: 'DemoUser1', im_status: '' }],
+        }],
+    };
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                    '<field name="display_name" />' +
+                '</form>',
+        res_id: 1,
+        services: mailTestUtils.getMailServices(),
+        viewOptions: {
+            mode: 'edit',
+        },
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_join_and_get_info') {
+                return $.when(this.data['mail.channel'].records[0]);
+            }
+            return this._super.apply(this, arguments);
+        }
+    });
+
+    var $formInput = form.$('input');
+    $formInput.focus();
+
+    assert.equal(document.activeElement, $formInput[0],
+        'The form input should have the focus');
+
+    // simulate receiving message from someone else
+    var messageData = {
+        author_id: [5, "Someone else"],
+        body: "<p>Test message</p>",
+        id: 2,
+        model: 'mail.channel',
+        res_id: 1,
+        channel_ids: [2],
+    };
+
+    this.data['mail.message'].records.push(messageData);
+    var notification = [[false, 'mail.channel', 2], messageData];
+    form.call('bus_service', 'trigger', 'notification', [notification]);
+
+    assert.ok($('.o_thread_window.o_in_home_menu').length,
+        'Chat window is opened');
+
+    assert.equal(document.activeElement, $formInput[0],
+        'The form input should have kept the focus on message received');
+
+    form.destroy();
 });
 
 });

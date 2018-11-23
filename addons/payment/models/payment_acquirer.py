@@ -229,7 +229,7 @@ class PaymentAcquirer(models.Model):
         :return: a dictionary to create a account.journal record.
         '''
         self.ensure_one()
-        account_vals = self.env['account.chart.template']._prepare_transfer_account_for_direct_creation(self.name, self.company_id)
+        account_vals = self.company_id.chart_template_id._prepare_transfer_account_for_direct_creation(self.name, self.company_id)
         account = self.env['account.account'].create(account_vals)
         inbound_payment_method_ids = []
         if self.token_implemented and self.payment_flow == 's2s':
@@ -799,7 +799,8 @@ class PaymentTransaction(models.Model):
                 tx._post_process_after_done()
                 self.env.cr.commit()
             except Exception as e:
-                _logger.error("Transaction post processing failed, reason \"%s\"", e)
+                _logger.exception("Transaction post processing failed")
+                self.env.cr.rollback()
 
     @api.model
     def _compute_reference_prefix(self, values):

@@ -292,7 +292,9 @@ var AbstractThreadWindow = Widget.extend({
     updateVisualFoldState: function () {
         if (!this.isFolded()) {
             this._threadWidget.scrollToBottom();
-            this._focusInput();
+            if (this.options.autofocus) {
+                this._focusInput();
+            }
         }
         this._animateFold();
     },

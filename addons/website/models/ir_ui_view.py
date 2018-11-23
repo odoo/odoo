@@ -36,43 +36,61 @@ class View(models.Model):
         websites. Also this way newly created websites will only
         contain the default views.
         '''
-        current_website_id = self._context.get('website_id')
-        if current_website_id:
-            # Optional views are inactive but we need to write them
-            # if their parent is copied
-            for view in self.with_context(active_test=False):
-                if not view.key and not vals.get('key'):
-                    view.with_context(no_cow=True).key = 'website.key_%s' % str(uuid.uuid4())[:6]
-                if not view.website_id and current_website_id and not self._context.get('no_cow'):
-                    # If already a specific view for this generic view, write on it
-                    website_specific_view = view.search([
-                        ('key', '=', view.key),
-                        ('website_id', '=', current_website_id)
-                    ], limit=1)
-                    if not website_specific_view:
-                        # Set key to avoid copy() to generate an unique key as we want the specific view to have the same key
-                        copy_vals = {'website_id': current_website_id, 'key': view.key}
-                        if vals.get('inherit_id'):
-                            copy_vals['inherit_id'] = vals['inherit_id']
-                        website_specific_view = view.copy(copy_vals)
-                        view._create_website_specific_pages_for_view(website_specific_view,
-                                                                     view.env['website'].browse(current_website_id))
+        current_website_id = self.env.context.get('website_id')
+        if not current_website_id or self.env.context.get('no_cow'):
+            return super(View, self).write(vals)
 
-                        for inherit_child in view.inherit_children_ids.filter_duplicate():
-                            # COW won't be triggered if there is already a website_id on the view, we should copy the view ourself
-                            if inherit_child.website_id.id == current_website_id:
-                                inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
-                                # We should unlink website specific view from generic tree as it now copied on specific tree
-                                inherit_child.unlink()
-                            else:
-                                # trigger COW on inheriting views
-                                inherit_child.write({'inherit_id': website_specific_view.id})
+        # We need to consider inactive views when handling multi-website cow
+        # feature (to copy inactive children views, to search for specific
+        # views, ...)
+        for view in self.with_context(active_test=False):
+            # Make sure views which are written in a website context receive
+            # a value for their 'key' field
+            if not view.key and not vals.get('key'):
+                view.with_context(no_cow=True).key = 'website.key_%s' % str(uuid.uuid4())[:6]
 
-                    super(View, website_specific_view).write(vals)
-                    continue
+            # No need of COW if the view is already specific
+            if view.website_id:
                 super(View, view).write(vals)
-        else:
-            super(View, self).write(vals)
+                continue
+
+            # If already a specific view for this generic view, write on it
+            website_specific_view = view.search([
+                ('key', '=', view.key),
+                ('website_id', '=', current_website_id)
+            ], limit=1)
+            if website_specific_view:
+                super(View, website_specific_view).write(vals)
+                continue
+
+            # Set key to avoid copy() to generate an unique key as we want the
+            # specific view to have the same key
+            copy_vals = {'website_id': current_website_id, 'key': view.key}
+            # Copy with the 'inherit_id' field value that will be written to
+            # ensure the copied view's validation works
+            if vals.get('inherit_id'):
+                copy_vals['inherit_id'] = vals['inherit_id']
+            website_specific_view = view.copy(copy_vals)
+
+            view._create_website_specific_pages_for_view(website_specific_view,
+                                                            view.env['website'].browse(current_website_id))
+
+            for inherit_child in view.inherit_children_ids.filter_duplicate():
+                if inherit_child.website_id.id == current_website_id:
+                    # In the case the child was already specific to the current
+                    # website, we cannot just reattach it to the new specific
+                    # parent: we have to copy it there and remove it from the
+                    # original tree. Indeed, the order of children 'id' fields
+                    # must remain the same so that the inheritance is applied
+                    # in the same order in the copied tree.
+                    inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    inherit_child.unlink()
+                else:
+                    # Trigger COW on inheriting views
+                    inherit_child.write({'inherit_id': website_specific_view.id})
+
+            super(View, website_specific_view).write(vals)
+
         return True
 
     @api.multi

@@ -196,7 +196,9 @@ msgstr ""
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr "<div><p>Привіт,</p><p>%s запросив Вас вподобати %s : %s.</p></div>"
+msgstr ""
+"<div><p>Привіт,</p><p>%s запросив вас підписатися на %s документ: "
+"%s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:26
@@ -309,7 +311,7 @@ msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
-"<span class=\"o_stat_text\">вилучити</span>\n"
+"<span class=\"o_stat_text\">Вилучити</span>\n"
 "                                    <span class=\"o_stat_text\">контекстну дію</span>"
 
 #. module: mail
@@ -435,7 +437,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
 msgid "Activated by default when subscribing."
-msgstr "Активується автоматично під час підписування."
+msgstr "Активується автоматично під час підписки."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
@@ -483,7 +485,7 @@ msgstr "Дія"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr "Домішок дій"
+msgstr "Змішення дій"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
@@ -833,7 +835,7 @@ msgstr "Підрахунок прикріплення"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Attachments"
-msgstr "Долучення"
+msgstr "Прикріплення"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__attachment_ids
@@ -877,7 +879,7 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
-"Автор повідомлення.Якщо не встановлено, email_from може містити електронну "
+"Автор повідомлення. Якщо не встановлено, email_from може містити електронну "
 "адресу, яка не відповідає жодному з партнерів."
 
 #. module: mail
@@ -897,7 +899,7 @@ msgstr "Авторизована група"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__auto_delete
 #: model:ir.model.fields,field_description:mail.field_mail_template__auto_delete
 msgid "Auto Delete"
-msgstr "Авто-видалення"
+msgstr "Автоматичне видалення"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
@@ -913,12 +915,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_ids
 msgid "Auto Subscription"
-msgstr "Авто-підписка"
+msgstr "Автоматична підписка"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr "Авто-підписка"
+msgstr "Автоматична підписка"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
@@ -1040,7 +1042,7 @@ msgstr "Скасувати"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr "Скасувати листа"
+msgstr "Скасувати лист"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -1105,7 +1107,7 @@ msgstr "Cc"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Change"
-msgstr "Здача"
+msgstr "Змінити"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
@@ -1308,14 +1310,14 @@ msgstr "Налаштуйте ваші типи дій"
 #: code:addons/mail/static/src/xml/thread.xml:130
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr "Вітаємо, ваша вхідна тека пуста"
+msgstr "Вітаємо, ваша вхідна скринька пуста"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:944
 #, python-format
 msgid "Congratulations, your inbox is empty!"
-msgstr "Вітаємо, ваша вхідна пошта чиста!"
+msgstr "Вітаємо, ваша вхідна скринька пуста!"
 
 #. module: mail
 #: selection:mail.notification,failure_type:0
@@ -1593,7 +1595,7 @@ msgstr "Видалити відправлені електронні листи 
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Delivery Failed"
-msgstr "Невдачна доставка"
+msgstr "Невдала доставка"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2060,7 +2062,7 @@ msgstr "Виконати код Python"
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Execute several actions"
-msgstr "Виконати декілька дій"
+msgstr "Виконати кілька дій"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2082,7 +2084,7 @@ msgstr "Невдалі листи"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Failed"
-msgstr "Невдача"
+msgstr "Невдалося"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:338
@@ -2120,7 +2122,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__starred_partner_ids
 msgid "Favorited By"
-msgstr "В улюблених у"
+msgstr "У закладках у"
 
 #. module: mail
 #. openerp-web
@@ -2329,7 +2331,7 @@ msgstr "Групи"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_guidelines_msg
 msgid "Guidelines"
-msgstr "Путівники"
+msgstr "Керівні принципи"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:448
@@ -2452,7 +2454,7 @@ msgstr "Значок"
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_id
 msgid "Id of the followed resource"
-msgstr "Id ресурсу слідування"
+msgstr "Id джерела підписки"
 
 #. module: mail
 #. openerp-web
@@ -2671,7 +2673,7 @@ msgstr "Запрошення"
 #: code:addons/mail/wizard/invite.py:53
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr "Запрошення відслідковувати %s: %s"
+msgstr "Запрошення на підписку %s: %s"
 
 #. module: mail
 #. openerp-web
@@ -3048,7 +3050,7 @@ msgstr "Форма каналу ел. пошти"
 #: code:addons/mail/models/mail_mail.py:385
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr "Невдача доставки листа"
+msgstr "Невдала доставка листа"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -4836,7 +4838,8 @@ msgstr "Надіслати повідомлення через ел. прошт�
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:397
+#: code:addons/mail/static/src/xml/thread.xml:390
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 #: selection:mail.mail,state:0 selection:mail.notification,email_status:0
 #, python-format
@@ -5983,6 +5986,7 @@ msgstr "Зустрічі учасників"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:43
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"
