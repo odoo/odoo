@@ -200,13 +200,12 @@ if(!the_form.length) {
             allowInputToggle: true,
             keyBinds: null,
         });
+        // Launch prefilling
+        prefill();
+        if(quiz_correction_mode === true){
+            display_scores();
+        }
     });
-
-    // Launch prefilling
-    prefill();
-    if(quiz_correction_mode === true){
-        display_scores();
-    }
 
     console.debug("[survey] Custom JS for survey loaded!");
 
