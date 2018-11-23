@@ -1253,6 +1253,21 @@ var MockServer = Class.extend({
         return true;
     },
     /**
+     * Simulate a 'write_by_domain' operation
+     *
+     * @private
+     * @param {string} model
+     * @param {Array} args
+     */
+    _mockWritebyDomain: function (model, args) {
+        var self = this;
+        var field_changed = args[0][0][0];
+        var records = this._getRecords(model, args[0]);
+        _.each(records, function(record) {
+            self._writeRecord(model, args[1], record.id);
+        });
+    },
+    /**
      * Dispatch a RPC call to the correct helper function
      *
      * @see performRpc
@@ -1336,6 +1351,9 @@ var MockServer = Class.extend({
 
             case 'write':
                 return Promise.resolve(this._mockWrite(args.model, args.args));
+
+            case 'write_by_domain':
+                return Promise.resolve(this._mockWritebyDomain(args.model, args.args));
         }
         var model = this.data[args.model];
         if (model && typeof model[args.method] === 'function') {

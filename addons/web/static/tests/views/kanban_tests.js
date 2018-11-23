@@ -3049,7 +3049,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', async function (assert) {
-        assert.expect(37);
+        assert.expect(42);
 
         testUtils.mock.patch(KanbanRenderer, {
             _renderGrouped: function () {
@@ -3119,10 +3119,15 @@ QUnit.module('Views', {
         testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:last'));
         await testUtils.dom.click(kanban.$('.o_kanban_group:last .o_column_delete'));
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        await testUtils.modal.clickButton('Ok'); // click on confirm
+        await testUtils.modal.clickButton('Move and delete'); // click on confirm
         assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 3,
             'last column should now be [3, "hello"]');
-        assert.containsN(kanban, '.o_kanban_group', 2, "should still have two columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_record').length, 4,
+            "column should contain 4 record");
+        testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:first'));
+        testUtils.dom.click(kanban.$('.o_kanban_group:first .o_column_delete'));
+        testUtils.modal.clickButton('Move and delete'); // click on confirm 
+        assert.containsOnce(kanban, '.o_kanban_group', 1, "should have one columns");
         assert.ok(!_.isNumber(kanban.$('.o_kanban_group:first').data('id')),
             'first column should have no id (Undefined column)');
         // check available actions on 'Undefined' column
@@ -3134,9 +3139,13 @@ QUnit.module('Views', {
             'Undefined column could not be edited');
         assert.ok(!kanban.$('.o_kanban_group:first .o_column_archive_records').length, "Records of undefined column could not be archived");
         assert.ok(!kanban.$('.o_kanban_group:first .o_column_unarchive_records').length, "Records of undefined column could not be restored");
-        assert.verifySteps(['web_read_group', 'unlink', 'web_read_group']);
-        assert.strictEqual(kanban.renderer.widgets.length, 2,
+        assert.verifySteps(['web_read_group', 'write_by_domain', 'unlink', 'web_read_group',
+                            'write_by_domain', 'unlink', 'web_read_group']);
+        assert.strictEqual(kanban.renderer.widgets.length, 1,
             "the old widgets should have been correctly deleted");
+        testUtils.dom.click(kanban.$('.o_column_quick_create .o_quick_create_folded'));
+        kanban.$('.o_column_quick_create input').val('SUH');
+        testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
 
         // test column drag and drop having an 'Undefined' column
         await testUtils.dom.dragAndDrop(
@@ -3145,7 +3154,6 @@ QUnit.module('Views', {
         );
         assert.strictEqual(resequencedIDs, undefined,
             "resequencing require at least 2 not Undefined columns");
-        await testUtils.dom.click(kanban.$('.o_column_quick_create .o_quick_create_folded'));
         kanban.$('.o_column_quick_create input').val('once third column');
         await testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
         var newColumnID = kanban.$('.o_kanban_group:last').data('id');
@@ -3153,14 +3161,14 @@ QUnit.module('Views', {
             kanban.$('.o_kanban_header_title:first'),
             kanban.$('.o_kanban_header_title:last'), {position: 'right'}
         );
-        assert.deepEqual([3, newColumnID], resequencedIDs,
+        assert.deepEqual([1, newColumnID], resequencedIDs,
             "moving the Undefined column should not affect order of other columns");
         await testUtils.dom.dragAndDrop(
             kanban.$('.o_kanban_header_title:first'),
             kanban.$('.o_kanban_header_title:nth(1)'), {position: 'right'}
         );
         await nextTick(); // wait for resequence after drag and drop
-        assert.deepEqual([newColumnID, 3], resequencedIDs,
+        assert.deepEqual([newColumnID, 1], resequencedIDs,
             "moved column should be resequenced accordingly");
         assert.verifySteps(['name_create', 'read', 'read', 'read']);
 
