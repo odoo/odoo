@@ -86,12 +86,9 @@ ImageWidget.include({
                 unsplashurls: self._unsplash.selectedImages,
                 res_model : self.options.res_model,
                 res_id: self.options.res_id,
+                query: self._unsplash.query,
             }
         }).then(function (images) {
-            for (var img in self._unsplash.selectedImages) {
-                self.unsplashAPI.notifyDownload(self._unsplash.selectedImages[img].download_url);
-            }
-
             _.each(images, function (image) {
                 image.src = image.url;
                 image.isDocument = !(/gif|jpe|jpg|png/.test(image.mimetype));
@@ -140,7 +137,7 @@ ImageWidget.include({
             self.$('.unsplash_img_container').html(QWeb.render('web_unsplash.dialog.image.content', { rows: rows }));
             self._highlightSelectedImages();
         }).fail(function (err) {
-            self.$('.unsplash_img_container').html(QWeb.render('web_unsplash.dialog.error.content', err));
+            self.$('.unsplash_img_container').html(QWeb.render('web_unsplash.dialog.error.content', { status: err }));
         }).always(function () {
             self._toggleAttachmentContaines(false);
         });

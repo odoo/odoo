@@ -7,8 +7,8 @@ var ajax = require('web.ajax');
 base.ready().then(function () {
     var unsplash_images = [];
     _.each($('img[src*="/unsplash/"]'), function (img, index) {
-        // get image id from URL (`/unsplash/xYdf5feoI.jpg` -> `xYdf5feoI`)
-        unsplash_images.push(img.src.split('/unsplash/')[1].split('.')[0]);
+        // get image id from URL (`http://www.domain.com:1234/unsplash/xYdf5feoI/lion.jpg` -> `xYdf5feoI`)
+        unsplash_images.push(img.src.split('/unsplash/')[1].split('/')[0]);
     });
     if (unsplash_images.length) {
         ajax.jsonRpc('/web_unsplash/get_app_id', 'call').then(function (appID) {
