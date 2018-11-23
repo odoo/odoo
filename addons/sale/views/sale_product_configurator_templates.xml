@@ -19,7 +19,7 @@
                     <t t-call="sale.variants" />
                     <h2 class="oe_price product_id mt-3" style="white-space: nowrap;"
                         t-att-data-product-id="product.id"
-                        t-esc="product.price if product.price else product.lst_price"
+                        t-esc="product.price"
                         t-options='{
                         "widget": "monetary",
                         "display_currency": to_currency

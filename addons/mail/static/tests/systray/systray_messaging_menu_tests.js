@@ -586,5 +586,44 @@ QUnit.test('grouped preview for needaction messages linked to same document', fu
     messagingMenu.destroy();
 });
 
+QUnit.test("messaging menu widget: channel seen notification", function ( assert ) {
+    assert.expect(4);
+
+    this.data.initMessaging.channel_slots.channel_channel[0].message_unread_counter = 1;
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+
+    messagingMenu.appendTo($('#qunit-fixture'));
+    messagingMenu.$('.dropdown-toggle').click();
+
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
+        "should have correct messaging menu counter (1 unread message in channel)");
+    assert.strictEqual(messagingMenu.$('.o_preview_counter').text().replace(/\s/g, ''),
+        '(1)',
+        "should display 1 unread message on general channel preview");
+
+    // Simulate received channel seen notification
+    var message = {
+        info: 'channel_seen',
+        id: 1,
+        last_message_id: 1,
+    };
+    var notifications = [
+        [['myDB', 'res.partner'], message]
+    ];
+    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
+        "should no longer have a messaging menu counter (no unread message in channel)");
+    assert.strictEqual(messagingMenu.$('.o_preview_counter').text().replace(/\s/g, ''), '',
+        "should no longer display unread message on general channel preview");
+
+    messagingMenu.destroy();
+});
+
 });
 });

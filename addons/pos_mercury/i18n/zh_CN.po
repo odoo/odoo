@@ -6,15 +6,16 @@
 # Martin Trigaux, 2018
 # Youfu Sheng <wdmsyf@sina.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
-# keecome <7017511@qq.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:04+0000\n"
-"PO-Revision-Date: 2018-10-02 10:04+0000\n"
-"Last-Translator: keecome <7017511@qq.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgid ""
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
 "<i>Mercury配置</i>定义在销售点用信用卡进行交易的Mercury账号\n"
-"设置Mercury配置能够让你用不同的付款方式支付（例如Visa， 万事达卡，Discovery，美国快线等等）。配置好之后你应该把他和销售点的付款方式联系起来"
+"设置Mercury配置能够让您用不同的付款方式支付（例如Visa， 万事达卡，Discovery，美国快线等等）。配置好之后你应该把他和销售点的付款方式联系起来"
 
 #. module: pos_mercury
 #. openerp-web
@@ -212,14 +213,14 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr "授权给商人的ID让他能在支付供应商的服务器上支付"
+msgstr "授权给商家ID以便能在支付供应商的服务器上支付"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
-msgstr "如果你还没有Mercury账户，请拨打+1 (800) 846-4472，然后创建一个Mercury账号"
+msgstr "如果您还没有Mercury账户，请拨打+1 (800) 846-4472，然后创建一个Mercury账号"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_invoice_no
@@ -322,14 +323,14 @@ msgstr "未找到用户 %s 的已打开POS会话"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr "Mercury没有响应（Mercury 挂了么？）"
+msgstr "Mercury无响应"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr "服务器没有响应（连接到网络？）"
+msgstr "服务器无响应，请检查网络。"
 
 #. module: pos_mercury
 #. openerp-web
@@ -337,14 +338,14 @@ msgstr "服务器没有响应（连接到网络？）"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr "处理交易事务的ODoo错误"
+msgstr "处理交易事务的Odoo错误"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
 #, python-format
 msgid "One credit card swipe already pending."
-msgstr "已经有一个信用卡在刷了"
+msgstr "有信用卡正在使用中"
 
 #. module: pos_mercury
 #. openerp-web
@@ -369,17 +370,17 @@ msgstr "部分批准"
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__merchant_pwd
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
-msgstr "用于在支付提供商服务器上验证身份的商户密码"
+msgstr "用于在支付供应商服务器上验证身份的商户密码"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_record_no
 msgid "Payment record number from Mercury Pay"
-msgstr "Mercury支付的支付记录号码"
+msgstr "Mercury支付的记录号码"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
-msgstr "Mercury支付的支付参照号码"
+msgstr "Mercury支付的参照号码"
 
 #. module: pos_mercury
 #. openerp-web
@@ -420,7 +421,7 @@ msgstr "退款不支持"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr "逆转失败，发送VoidSale"
+msgstr "反转失败，发送Vo售销…"
 
 #. module: pos_mercury
 #. openerp-web
@@ -446,7 +447,7 @@ msgstr "持卡人协议"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr "支付卡的品牌（例如 Visa ，AMEX……"
+msgstr "支付卡的品牌（例如 Visa ，AMEX……）"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_prefixed_card_number
@@ -466,7 +467,7 @@ msgstr "付款卡的最后4位号码"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line__mercury_card_owner_name
 msgid "The name of the card owner"
-msgstr "卡主的名称"
+msgstr "持卡人姓名"
 
 #. module: pos_mercury
 #. openerp-web
@@ -475,7 +476,7 @@ msgstr "卡主的名称"
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
-msgstr "可能是由于严重的刷卡错误或者你的键盘没有设置为美国标准（不是美国国际标准）"
+msgstr "可能是刷卡严重错误或者输入法没有设置为美国标准（不是美国国际标准）"
 
 #. module: pos_mercury
 #. openerp-web
@@ -516,7 +517,7 @@ msgstr "Vantiv 账户"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
 #, python-format
 msgid "VoidSale succeeded"
-msgstr "VoidSale 成功"
+msgstr "清仓成功"
 
 #. module: pos_mercury
 #. openerp-web

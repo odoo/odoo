@@ -5,20 +5,21 @@
 # Translators:
 # Martin Trigaux, 2018
 # Maie <m@maie.name>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# 珠海-杜哥 <liangjia@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # liyes <bodetools@gmail.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # Ted Wang <feiyuwang2012@gmail.com>, 2018
 # zhining wu <wzn63@21cn.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
 "Last-Translator: snow wang <147156565@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -35,12 +36,12 @@ msgstr "有效"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr "添加一个新的计量单位"
+msgstr "计量单位"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr "添加一个新的度量单位"
+msgstr "计量单位类别"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -102,7 +103,7 @@ msgstr "小时"
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr "这个度量单位的数量大于此类别中的参考度量单位：1 *（本单位）=比率*（参考单位）"
+msgstr "本类别计量单位和参考计量单位相比，大或者小的倍数。1 * (参考单位)=比率 * (本单位)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -158,7 +159,7 @@ msgstr "管理多个计量单位"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "产品量度单位"
+msgstr "产品计量单位"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
@@ -230,12 +231,12 @@ msgstr "类型"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr "度量类型"
+msgstr "计量类型"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr "测量类别的类型"
+msgstr "计量单位的类别"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -331,7 +332,7 @@ msgstr "工作时间"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
-msgstr "每个测量类型只能有一个类别。"
+msgstr "每个计量类型只能有一个类别。"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:28

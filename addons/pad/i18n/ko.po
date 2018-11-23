@@ -3,14 +3,17 @@
 # * pad
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# 최재호 <hwangtog@gmail.com>, 2018
+# Linkup <link-up@naver.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,37 +24,42 @@ msgstr ""
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "API Key"
-msgstr ""
+msgstr "API 키"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
 msgid "Companies"
-msgstr "회사"
+msgstr "회사들"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common_display_name
+#: model:ir.model,name:pad.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common__display_name
 msgid "Display Name"
-msgstr "표시 이름"
+msgstr "이름 표시"
 
 #. module: pad
-#: model:ir.model.fields,help:pad.field_res_company_pad_key
-#: model:ir.model.fields,help:pad.field_res_config_settings_pad_key
+#: model:ir.model.fields,help:pad.field_res_company__pad_key
+#: model:ir.model.fields,help:pad.field_res_config_settings__pad_key
 msgid "Etherpad lite api key."
-msgstr ""
+msgstr "Etherpad 라이트 api 키입니다."
 
 #. module: pad
-#: model:ir.model.fields,help:pad.field_res_company_pad_server
-#: model:ir.model.fields,help:pad.field_res_config_settings_pad_server
+#: model:ir.model.fields,help:pad.field_res_company__pad_server
+#: model:ir.model.fields,help:pad.field_res_config_settings__pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr ""
+msgstr "Etherpad 라이트 서버입니다. 예: beta.primarypad.com"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common_id
+#: model:ir.model.fields,field_description:pad.field_pad_common__id
 msgid "ID"
 msgstr "ID"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common___last_update
+#: model:ir.model.fields,field_description:pad.field_pad_common____last_update
 msgid "Last Modified on"
 msgstr "최근 수정"
 
@@ -60,30 +68,30 @@ msgstr "최근 수정"
 #: code:addons/pad/static/src/js/pad.js:147
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "불러오는 중"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company_pad_key
+#: model:ir.model.fields,field_description:pad.field_res_company__pad_key
 msgid "Pad Api Key"
-msgstr ""
+msgstr "패드 Api "
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_key
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
 msgid "Pad Api Key *"
 msgstr ""
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company_pad_server
+#: model:ir.model.fields,field_description:pad.field_res_company__pad_server
 msgid "Pad Server"
-msgstr ""
+msgstr "패드 서버"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_server
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
 msgid "Pad Server *"
 msgstr ""
 
 #. module: pad
-#: code:addons/pad/models/pad.py:58
+#: code:addons/pad/models/pad.py:57
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -102,6 +110,13 @@ msgstr ""
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "Server"
+msgstr "서버"
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:14
+#, python-format
+msgid "Switch pad"
 msgstr ""
 
 #. module: pad
@@ -109,26 +124,21 @@ msgstr ""
 #: code:addons/pad/static/src/js/pad.js:166
 #, python-format
 msgid "This pad will be initialized on first edit"
-msgstr ""
+msgstr "이 패드는 첫 번째 편집에 초기화됩니다"
 
 #. module: pad
 #. openerp-web
 #: code:addons/pad/static/src/js/pad.js:160
 #, python-format
 msgid "Unable to load pad"
-msgstr ""
+msgstr "패드를 불러올 수 없습니다"
 
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
-msgstr ""
+msgstr "예: beta.primarypad.com"
 
 #. module: pad
 #: model:ir.model,name:pad.model_pad_common
 msgid "pad.common"
-msgstr ""
-
-#. module: pad
-#: model:ir.model,name:pad.model_res_config_settings
-msgid "res.config.settings"
 msgstr ""

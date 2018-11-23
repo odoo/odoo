@@ -3,31 +3,32 @@
 # * website_forum
 # 
 # Translators:
+# Christian <chris@effeci.info>, 2018
+# Cécile Collart <cco@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
+# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Martin Trigaux, 2018
 # Giovanni Perteghella <giovanni@perteghella.org>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
-# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
-# Christian <chris@effeci.info>, 2018
-# Paolo Valier, 2018
-# Cécile Collart <cco@odoo.com>, 2018
+# ginfriz <ginfriz84@hotmail.it>, 2018
+# Pietro Della Notte <pdellanotte@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # David Minneci <david@numeko.it>, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# ginfriz <ginfriz84@hotmail.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
-# Pietro Della Notte <pdellanotte@gmail.com>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
+# Paolo Valier, 2018
+# Martin Trigaux, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: maiolif <maiolif@mgftools.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +77,8 @@ msgid ""
 "(Un)archiving a forum automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
+"Ripristinare un forum dall'archivio ripristina anche tutti i suoi post.\n"
+"Sei sicuro di voler procedere?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
@@ -83,6 +86,8 @@ msgid ""
 "(Un)archiving a post automatically (un)archives its answers. Do you want to "
 "proceed?"
 msgstr ""
+"Ripristinare un post dall'archivio ripristina anche le sue risposte.\n"
+"Sei sicuro di voler procedere?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -1529,7 +1534,7 @@ msgstr "Filtro su"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_post_vote
 msgid "First Relevance Parameter"
-msgstr ""
+msgstr "Primo parametro di rilevanza"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_5
@@ -1847,6 +1852,8 @@ msgstr "Se attivo, alcuni messaggi presentano un errore di consegna. "
 msgid ""
 "If the author has not enough karma, a nofollow attribute is added to links"
 msgstr ""
+"Se l'autore non ha abbastanza karma, ai link viene aggiunto un attributo "
+"nofollow"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -1877,6 +1884,11 @@ msgid ""
 "    However, if your motivation is “I would like others to explain ______ to me”,\n"
 "    then you are probably OK."
 msgstr ""
+"Se ti trovi in uno di questi esempi o se vuoi chiedere\n"
+"    \"Vorrei partecipare ad una discussione su ______”, allora\n"
+"    non dovresti chiedere qui, ma sulla nostra mailing list.\n"
+"    Tuttavia, se vuoi chiedere “Vorrei che gli altri mi spiegassero ______”,\n"
+"    puoi chiederlo qui. "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -2078,7 +2090,7 @@ msgstr "Post moderati"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Moderation Tools"
-msgstr ""
+msgstr "Strumenti di moderazione"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2190,13 +2202,13 @@ msgstr "Non c'è ancora nessun post sul forum."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
 msgid "Nofollow links"
-msgstr ""
+msgstr "Link nofollow"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:511
 #, python-format
 msgid "Not enough karma to retag."
-msgstr ""
+msgstr "Punti karma insufficienti per creare un tag."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -2407,7 +2419,7 @@ msgstr "Tipi di post"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Post Vote"
-msgstr ""
+msgstr "Pubblica un voto"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -2515,17 +2527,17 @@ msgstr "Domanda non trovata!"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_4
 msgid "Question set as favorite by 1 user"
-msgstr ""
+msgstr "Domanda impostata come preferita da 1 utente"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_6
 msgid "Question set as favorite by 25 users"
-msgstr ""
+msgstr "Domanda impostata come preferita da 25 utenti"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_5
 msgid "Question set as favorite by 5 users"
-msgstr ""
+msgstr "Domanda impostata come preferita da 5 utenti"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:345
@@ -2536,7 +2548,7 @@ msgstr "La domanda non può essere vuota."
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Question tools"
-msgstr ""
+msgstr "Strumenti di domanda"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_question_upvote
@@ -2570,7 +2582,7 @@ msgstr "Domande"
 #: code:addons/website_forum/models/forum.py:542
 #, python-format
 msgid "Re: %s"
-msgstr ""
+msgstr "Re: %s"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2695,7 +2707,7 @@ msgstr "Cerca nel post"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_time_decay
 msgid "Second Relevance Parameter"
-msgstr ""
+msgstr "Secondo parametro di rilevanza"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -2744,7 +2756,7 @@ msgstr ""
 #. module: website_forum
 #: selection:gamification.challenge,category:0
 msgid "Settings / Gamification Tools"
-msgstr ""
+msgstr "Impostazioni / Strumenti di gamification"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3088,7 +3100,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Toggle favorite status"
-msgstr ""
+msgstr "Attiva stato preferito"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_count
@@ -3128,12 +3140,12 @@ msgstr "Senza risposta"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
 msgid "Unlink all comments"
-msgstr ""
+msgstr "Scollega tutti i commenti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
 msgid "Unlink own comments"
-msgstr ""
+msgstr "Scollega i tuoi commenti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_unread
@@ -3324,7 +3336,7 @@ msgstr "Meta titolo Sito web"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Immagine OpenGraph"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
@@ -3334,7 +3346,7 @@ msgstr "Messaggio di benvenuto"
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Welcome!"
-msgstr ""
+msgstr "Benvenuto!"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3380,6 +3392,8 @@ msgid ""
 "You already have one pending post.<br/>\n"
 "            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
+"Hai già un post in attesa<br/>\n"
+"            Aspetta che un moderatore convalidi il tuo post precedente prima di continuare. "
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:139
@@ -3641,7 +3655,7 @@ msgstr "dichiarazioni inopportune e inaccettabili"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "insert text link, upload files"
-msgstr ""
+msgstr "inserisci un link di testo, carica file"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -3651,7 +3665,7 @@ msgstr "linguaggio insultante e offensivo"
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
-msgstr ""
+msgstr "è una critica mascherata: \"_____ fa schifo, giusto?\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -3824,6 +3838,8 @@ msgid ""
 "your answer is provided along with the question, and you expect more "
 "answers: “I use ______ for ______, what do you use?”"
 msgstr ""
+"la risposta è fornita con la domanda, e sono attese ulteriori risposte: \"Io"
+" uso_____ per ______, tu che cosa usi?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq

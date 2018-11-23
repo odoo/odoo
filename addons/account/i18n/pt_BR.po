@@ -3,49 +3,51 @@
 # * account
 # 
 # Translators:
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Mateus Lopes <mateus1@gmail.com>, 2018
-# Adriel Kotviski <kotviski@gmail.com>, 2018
-# falexandresilva <falexandresilva@gmail.com>, 2018
-# grazziano <gra.negocia@gmail.com>, 2018
 # Fernanda Gauss Pereira <nanda.gauss@gmail.com>, 2018
 # Franciele Neiva <franciele.neiva@br.ey.com>, 2018
-# Silmar <pinheirosilmar@gmail.com>, 2018
-# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018
-# Raphael Mendonça, 2018
-# danimaribeiro <danimaribeiro@gmail.com>, 2018
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
-# Yannick Belot <yannickbh@gmail.com>, 2018
-# zimbora <alexandre.ruffer@tkobr.com>, 2018
-# Fábio Novais <fabionovais@aptu.com.br>, 2018
-# Gideoni Silva <gd.willian@gmail.com>, 2018
 # Thiago Alves Cavalcante <tkramer.tk@gmail.com>, 2018
 # Rui Andrada <shingonoide@gmail.com>, 2018
 # Anderson Fratuci <ander.frat@gmail.com>, 2018
-# Diego Bittencourt <diegomb86@gmail.com>, 2018
 # Cesar Silveira <cesar.consultant@gmail.com>, 2018
-# Manel Tinoco <maneltinoco@gmail.com>, 2018
-# Marina Jacques <marinajacques@gmail.com>, 2018
 # Raphael Rodrigues <raphael0608@gmail.com>, 2018
 # Kayky de Brito <kayky_debritodossantos@hotmail.com>, 2018
+# Marina Jacques <marinajacques@gmail.com>, 2018
 # mariana rodrigues <mariana12v@gmail.com>, 2018
+# Raphael Mendonça, 2018
 # Maicon Grahl <maicongrahl@hotmail.com>, 2018
 # Clemilton Clementino <clemylton@hotmail.com>, 2018
 # Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2018
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
 # Ademílson F. Tonato <apraqueisso@gmail.com>, 2018
+# Manel Tinoco <maneltinoco@gmail.com>, 2018
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
+# Adriel Kotviski <kotviski@gmail.com>, 2018
+# Gideoni Silva <gd.willian@gmail.com>, 2018
 # Juliene Gomes <juliene_faria@hotmail.com>, 2018
 # Pablo Valentini <pablondrina@gmail.com>, 2018
+# Diego Bittencourt <diegomb86@gmail.com>, 2018
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+# zimbora <alexandre.ruffer@tkobr.com>, 2018
+# Fábio Novais <fabionovais@aptu.com.br>, 2018
+# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018
+# falexandresilva <falexandresilva@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Mateus Lopes <mateus1@gmail.com>, 2018
+# danimaribeiro <danimaribeiro@gmail.com>, 2018
+# grazziano <gra.negocia@gmail.com>, 2018
 # Luiz Carlos Zancanella Junior <junior@zancanella.com.br>, 2018
+# Yannick Belot <yannickbh@gmail.com>, 2018
+# Silmar <pinheirosilmar@gmail.com>, 2018
 # Brenno Martins <emanuel.breno@gmail.com>, 2018
+# Marcelo Costa <marcelo@comdesk.com.br>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Brenno Martins <emanuel.breno@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Marcelo Costa <marcelo@comdesk.com.br>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,7 +147,7 @@ msgstr "15 Dias"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
-msgstr ""
+msgstr "2 Meses"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
@@ -160,7 +162,7 @@ msgstr "Prazo de pagamento: 30% de Adiantamento no Fim do Mês Seguinte"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
-msgstr ""
+msgstr "45 Dias"
 
 #. module: account
 #: code:addons/account/models/account.py:686
@@ -188,6 +190,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Prezado (a) ${object.partner_id.name}<br/><br/>\n"
+"        Obrigado por seu pagamento.\n"
+"        Aqui está o seu recibo de pagamento <strong>${(object.name or '').replace('/','-')}</strong> amounting\n"
+"        to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Caso haja divergências ou dúvidas, não hesite em nos contactar.\n"
+"        <br/><br/>\n"
+"        Atensiosamente,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -221,11 +239,39 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Prezado (a) ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Aqui está sua \n"
+"        % if object.number:\n"
+"            fatura <strong>${object.number}</strong>\n"
+"        % else:\n"
+"            invoice\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        from ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            Esta fatura já está paga.\n"
+"        % else:\n"
+"            Por favor, envie o pagamento o mais cedo possível.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Caso haja divergências ou dúvidas, entre em contato conosco.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr ""
+msgstr "<em>Fatura Rascunho</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -235,7 +281,7 @@ msgstr "<i class=\"fa fa-download\"/> Download"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-fw fa-comments\"/><b>Send message</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Enviar mensagem"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -257,6 +303,8 @@ msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
 "or received.</p>"
 msgstr ""
+"<p>Você pode controlar a fatura do seu fornecedor, baseado no que você "
+"comprou ou recebeu."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -267,6 +315,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                        <strong>Email em massa</strong> nos\n"
+"                                        <span>registros selecionados</span>\n"
+"                                    </span>\n"
+"                                    <span>Seguidores do documento e</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -275,6 +328,9 @@ msgid ""
 " aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
 "-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
+"-md-inline\"> Aguardando o Pagamento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -283,6 +339,9 @@ msgid ""
 "check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Pago</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -291,6 +350,9 @@ msgid ""
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
+"remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Cancelado</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
