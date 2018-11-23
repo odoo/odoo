@@ -17,6 +17,7 @@ var Widget = require('web.Widget');
 var _t = core._t;
 var createView = testUtils.createView;
 var createAsyncView = testUtils.createAsyncView;
+var createActionManager = testUtils.createActionManager;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -315,7 +316,78 @@ QUnit.module('Views', {
                         "should contain an inner group");
         form.destroy();
     });
+    QUnit.test('Form and subview with _view_ref contexts', function (assert) {
+        assert.expect(2);
 
+        this.data.product.fields.partner_type_ids = {string: "one2many field", type: "one2many", relation: "partner_type"},
+        this.data.product.records = [{id: 1, name: 'Tromblon', partner_type_ids: [12,14]}];
+        this.data.partner.records[0].product_id = 1;
+
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'product,false,form': '<form>'+
+                                            '<field name="name"/>'+
+                                            '<field name="partner_type_ids" context="{\'tree_view_ref\': \'some_other_tree_view\'}"/>' +
+                                        '</form>',
+
+                'partner_type,false,list': '<tree>'+
+                                                '<field name="color"/>'+
+                                            '</tree>',
+                'product,false,search': '<search></search>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'load_views') {
+                    var context = args.kwargs.context;
+                    if (args.model === 'product') {
+                        assert.deepEqual(context, {tree_view_ref: 'some_tree_view'},
+                            'The correct _view_ref should have been sent to the server, first time');
+                    }
+                    if (args.model === 'partner_type') {
+                        assert.deepEqual(context, {tree_view_ref: 'some_other_tree_view'},
+                            'The correct _view_ref should have been sent to the server for the subview');
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                     '<field name="name"/>' +
+                     '<field name="product_id" context="{\'tree_view_ref\': \'some_tree_view\'}"/>' +
+                  '</form>',
+            res_id: 1,
+
+            mockRPC: function(route, args) {
+                if (args.method === 'get_formview_action') {
+                    return $.when({
+                        res_id: 1,
+                        type: 'ir.actions.act_window',
+                        target: 'current',
+                        res_model: args.model,
+                        context: args.kwargs.context,
+                        'view_type': 'form',
+                        'view_mode': 'form',
+                        'views': [[false, 'form']],
+                    });
+                }
+                return this._super(route, args);
+            },
+
+            interceptsPropagate: {
+                do_action: function (ev) {
+                    actionManager.doAction(ev.data.action);
+                },
+            },
+        });
+        form.$('.o_field_widget[name="product_id"]').click();
+        form.destroy();
+        actionManager.destroy();
+    });
     QUnit.test('invisible fields are properly hidden', function (assert) {
         assert.expect(4);
 

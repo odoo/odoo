@@ -97,9 +97,14 @@ var FormView = BasicView.extend({
                     while (matches = regex.exec(attrs.context)) {
                         context[matches[1]] = matches[2];
                     }
+
+                    // Remove *_view_ref coming from parent view
+                    var refinedContext = _.pick(self.loadParams.context, function (value, key) {
+                        return key.indexOf('_view_ref') === -1;
+                    });
                     defs.push(parent.loadViews(
                             field.relation,
-                            new Context(context, self.userContext, self.loadParams.context).eval(),
+                            new Context(context, self.userContext, refinedContext).eval(),
                             [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
                         .then(function (views) {
                             for (var viewName in views) {
