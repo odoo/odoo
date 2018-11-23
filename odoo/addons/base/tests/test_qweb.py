@@ -595,8 +595,6 @@ class TestPageSplit(TransactionCase):
             E.div({'style': 'page-break-after: always'}),
             E.table(E.tr({'data-pagebreak': 'before'}), E.tr())
         )
-        print(etree.tostring(rendered))
-        print(etree.tostring(ref))
         self.assertTreesEqual(rendered, ref)
 
     def test_split_after(self):

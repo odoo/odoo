@@ -799,7 +799,8 @@ class PaymentTransaction(models.Model):
                 tx._post_process_after_done()
                 self.env.cr.commit()
             except Exception as e:
-                _logger.error("Transaction post processing failed, reason \"%s\"", e)
+                _logger.exception("Transaction post processing failed")
+                self.env.cr.rollback()
 
     @api.model
     def _compute_reference_prefix(self, values):
