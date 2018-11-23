@@ -417,8 +417,9 @@ class ResourceCalendar(models.Model):
         if not end_dt:
             end_dt = datetime.datetime.combine(start_dt.date(), datetime.time.max)
 
-        start_dt = to_naive_user_tz(start_dt, self.env.user)
-        end_dt = to_naive_user_tz(end_dt, self.env.user)
+        if not self.env.context.get('no_tz_convert', False):
+            start_dt = to_naive_user_tz(start_dt, self.env.user)
+            end_dt = to_naive_user_tz(end_dt, self.env.user)
 
         for day in rrule.rrule(rrule.DAILY,
                                dtstart=start_dt,
