@@ -654,7 +654,7 @@ class SupplierInfo(models.Model):
         help="The minimal quantity to purchase from this vendor, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     price = fields.Float(
         'Price', default=0.0, digits=dp.get_precision('Product Price'),
-        required=True, help="The price to purchase a product")
+        required=True, help="The price to purchase a product, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.user.company_id.id, index=1)
