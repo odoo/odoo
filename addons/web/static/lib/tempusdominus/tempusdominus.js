@@ -563,10 +563,10 @@ var DateTimePicker = function ($, moment) {
         DateTimePicker.prototype._notifyEvent = function _notifyEvent(e) {
             // /!\ ODOO FIX: these next conditions have been modified by odoo
             // FIXME should write a test about the tricky case this handles
-            if (!e.date && !e.oldDate) {
-                return;
-            }
             if (e.type === DateTimePicker.Event.CHANGE) {
+                if (!e.date && !e.oldDate) {
+                    return;
+                }
                 // check _isUTC flag to ensure that we are not comparing apples and oranges
                 var bothUTC = e.date && e.oldDate && e.date._isUTC === e.oldDate._isUTC;
                 if (bothUTC && e.date.isSame(e.oldDate)) {

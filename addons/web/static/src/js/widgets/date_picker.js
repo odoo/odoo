@@ -15,6 +15,7 @@ var DateWidget = Widget.extend({
         'change.datetimepicker': 'changeDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
+        'show.datetimepicker': '_onDateTimePickerShow',
     },
     /**
      * @override
@@ -225,6 +226,18 @@ var DateWidget = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Reacts to the datetimepicker being shown
+     * Could set/verify our widget value
+     * And subsequently update the datetimepicker
+     *
+     * @private
+     */
+    _onDateTimePickerShow: function () {
+        if (this.$input.val().length !== 0 && this.isValid()) {
+            this.$input.select();
+        }
+    },
     /**
      * Prevents 'input' events triggered by the library to bubble up, as they
      * might have unwanted effects (like triggering 'field_changed' events in
