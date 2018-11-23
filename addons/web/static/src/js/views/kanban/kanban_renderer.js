@@ -436,7 +436,8 @@ var KanbanRenderer = BasicRenderer.extend({
     _setState: function (state) {
         this.state = state;
 
-        var groupByField = state.groupedBy[0];
+        // split groupedBy field with ':' as it can be date/datetime field
+        var groupByField = state.groupedBy.length && state.groupedBy[0].split(":")[0];
         var groupByFieldAttrs = state.fields[groupByField];
         var groupByFieldInfo = state.fieldsInfo.kanban[groupByField];
         // Deactivate the drag'n'drop if the groupedBy field:
