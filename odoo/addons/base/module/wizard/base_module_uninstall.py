@@ -30,20 +30,32 @@ class BaseModuleUninstall(models.TransientModel):
         """ Return the models (ir.model) to consider for the impact. """
         return self.env['ir.model'].search([('transient', '=', False)])
 
+    def _get_models_specific_to_module(self):
+        # get only the models related to the module
+        domain = [('model', '=', 'ir.model'), ('module', '=', self.module_id.name)]
+        data = self.env['ir.model.data'].search_read(domain, ['res_id'])
+        return self.env['ir.model'].browse([item['res_id'] for item in data])
+
     @api.depends('module_ids')
     def _compute_model_ids(self):
-        ir_models = self._get_models()
-        ir_models_xids = ir_models._get_external_ids()
+        mail_thread_models = self._get_models()
+        mail_thread_models_xids = mail_thread_models._get_external_ids()
+        module_models = self._get_models_specific_to_module()
+        module_models_xids = module_models._get_external_ids()
+
         for wizard in self:
             if wizard.module_id:
                 module_names = set(wizard._get_modules().mapped('name'))
 
-                def lost(model):
-                    xids = ir_models_xids.get(model.id, ())
-                    return xids and all(xid.split('.')[0] in module_names for xid in xids)
-
+                def lost(model_xids):
+                    def func(model):
+                        xids = model_xids.get(model.id, ())
+                        return xids and all(xid.split('.')[0] in module_names for xid in xids)
+                    return func
                 # find the models that have all their XIDs in the given modules
-                self.model_ids = ir_models.filtered(lost).sorted('name')
+                mail_thread_models = mail_thread_models.filtered(lost(mail_thread_models_xids))
+                module_models = module_models.filtered(lost(module_models_xids))
+                self.model_ids = (mail_thread_models or module_models).sorted('name')
 
     @api.onchange('module_id')
     def _onchange_module_id(self):

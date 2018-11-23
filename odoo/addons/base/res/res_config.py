@@ -412,10 +412,23 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             [('name', '=', module_name.replace("module_", '')),
             ('state', 'in', ['to install', 'installed', 'to upgrade'])])
 
+        ModuleUninstall = self.env.get('base.module.uninstall')
         if modules and not field_value:
-            deps = modules.sudo().downstream_dependencies()
-            dep_names = (deps | modules).mapped('shortdesc')
+            deps = modules.sudo().downstream_dependencies(known_deps=modules)
+            dep_names = (deps.filtered('application') or deps).mapped('shortdesc')
             message = '\n'.join(dep_names)
+
+            additional_message = ""
+            uninstall = ModuleUninstall.create({"module_id": modules.id})
+            for model_id in uninstall.model_ids:
+                if model_id.count:
+                    additional_message += "%s -> %s records\n" % (model_id.name, model_id.count)
+
+            if additional_message:
+                additional_message = "\n\nIn effect, the following documents will be deleted:\n" + additional_message
+
+            message += additional_message
+
             return {
                 'warning': {
                     'title': _('Warning!'),
