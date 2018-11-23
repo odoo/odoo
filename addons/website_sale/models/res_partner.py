@@ -14,7 +14,9 @@ class ResPartner(models.Model):
     def _compute_last_website_so_id(self):
         SaleOrder = self.env['sale.order']
         for partner in self:
-            if request and hasattr(request, 'website') and not any([u._is_public() for u in partner.user_ids]):
+            is_public = any([u._is_public()
+                             for u in partner.with_context(active_test=False).user_ids])
+            if request and hasattr(request, 'website') and not is_public:
                 partner.last_website_so_id = SaleOrder.search([
                     ('partner_id', '=', partner.id),
                     ('team_id.team_type', '=', 'website'),
