@@ -43,12 +43,12 @@ body.l10n_ch_isr #isr {
     left: 0;
 
     overflow: hidden;
-    font-family: "Work Sans", Verdana, Geneva, sans-serif;
-    line-height: 1;
-    font-size: 13px;
+    font-family: OCRB, Courier, monospace;
+    line-height: 0.16in;
+    font-size: 10pt;
 
-    p, address {
-        line-height: 15px;
+    p {
+        margin-bottom: 0;
     }
 
     #voucher {
@@ -84,32 +84,33 @@ body.l10n_ch_isr #isr {
             left: 1.1in;
         }
 
-        /* TODO: remove in master */
-        &#voucher-currency {
-            top: 1.65in;
-
-            font-size: 12px;
-            font-weight: 600;
-        }
-
         &#voucher-amount_units {
-            width: 1.5in;
-            top: 1.84in;
+            width: 1.62in;
+            top: 1.87in;
 
             text-align: right;
             font-size: 14px;
+            letter-spacing: 0.095in;
         }
 
         &#voucher-amount_cents {
             width: 0.4in;
-            top: 1.84in;
-            left: 2in;
+            top: 1.87in;
+            left: 1.96in;
 
             font-size: 14px;
+            letter-spacing: 0.095in;
         }
 
         &#voucher-by {
-            top: 2.18in;
+            top: 2.22in;
+            font-size: 9pt;
+            max-width: 2in;
+
+            #voucher-by_reference_number {
+                font-size: 7.5pt;
+                margin-bottom: 0.05in;
+            }
         }
     }
 
@@ -131,6 +132,10 @@ body.l10n_ch_isr #isr {
 
         &#slip-for-contact {
             top: 0.25in;
+
+            p {
+                margin-bottom: 0;
+            }
         }
 
         &#slip-for-bank {
@@ -146,33 +151,27 @@ body.l10n_ch_isr #isr {
             left: 1.1in;
         }
 
-        /* TODO: remove in master */
-        &#slip-currency {
-            top: 1.65in;
-
-            font-size: 12px;
-            font-weight: 600;
-        }
-
         &#slip-amount_units {
-            width: 1.5in;
-            top: 1.84in;
+            width: 1.62in;
+            top: 1.87in;
 
             text-align: right;
             font-size: 14px;
+            letter-spacing: 0.095in;
         }
 
         &#slip-amount_cents {
             width: 0.4in;
-            top: 1.84in;
-            left: 2in;
+            top: 1.87in;
+            left: 1.96in;
 
             font-size: 14px;
+            letter-spacing: 0.095in;
         }
 
         &#slip-reference {
             width: 3.3in;
-            top: 1.17in;
+            top: 1.2in;
             left: 2.5in;
             text-align: center;
         }
@@ -183,7 +182,7 @@ body.l10n_ch_isr #isr {
         }
 
         &#slip-optical-line {
-            right: 0.3in;
+            right: 0.32in;
             bottom: 0.667in;
 
             /* Positioning is set for OCRB of Tsukurimashou Font Family */
@@ -199,20 +198,6 @@ body.l10n_ch_isr #isr {
                     bottom: 0;
                 }
             }
-        }
-
-        /* TODO: remove in master */
-        &#slip-optical {
-            right: 0.3in;
-            bottom: 0.667in;
-
-            text-align: right;
-
-            /* Letter spacing is set for OCRB of Tsukurimashou Font Family */
-            font-family: OCRB, Courier, monospace;
-            line-height: 0.1in;
-            font-size: 10pt;
-            letter-spacing: -0.3px;
         }
     }
 }

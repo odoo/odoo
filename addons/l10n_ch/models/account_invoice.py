@@ -39,6 +39,10 @@ class AccountInvoice(models.Model):
             middle_part = re.sub('^0*', '', middle_part)
             return currency_code + '-' + middle_part + '-' + trailing_cipher
 
+        def _format_isr_postal_scanline(isr_postal):
+            # format the isr for scanline
+            return isr_postal[:2] + isr_postal[2:-1].rjust(6, '0') + isr_postal[-1:]
+
         for record in self:
             if record.partner_bank_id and record.partner_bank_id.bank_id:
                 isr_postal = False
@@ -51,7 +55,7 @@ class AccountInvoice(models.Model):
                     continue
 
                 if isr_postal:
-                    record.l10n_ch_isr_postal = isr_postal
+                    record.l10n_ch_isr_postal = _format_isr_postal_scanline(isr_postal)
                     record.l10n_ch_isr_postal_formatted = _format_isr_postal(isr_postal)
 
     @api.depends('number', 'partner_bank_id.l10n_ch_postal')
