@@ -50,6 +50,7 @@ class ChangeProductionQty(models.TransientModel):
             qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
             factor = production.product_uom_id._compute_quantity(production.product_qty - qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
+            done_quantities = {move: move.quantity_done for move in production.move_raw_ids}
             for line, line_data in lines:
                 production._update_raw_move(line, line_data)
             operation_bom_qty = {}
@@ -59,6 +60,9 @@ class ChangeProductionQty(models.TransientModel):
             self._update_product_to_produce(production, production.product_qty - qty_produced)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves._action_assign()
+            for move in production.move_raw_ids:
+                if move.quantity_done != done_quantities[move]:
+                    move._set_quantity_done(done_quantities[move])
             for wo in production.workorder_ids:
                 operation = wo.operation_id
                 if operation_bom_qty.get(operation.id):
