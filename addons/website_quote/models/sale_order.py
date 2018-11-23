@@ -276,7 +276,6 @@ class SaleOrderOption(models.Model):
             vals = {
                 'price_unit': self.price_unit,
                 'website_description': self.website_description,
-                'name': self.name,
                 'order_id': order.id,
                 'product_id': self.product_id.id,
                 'layout_category_id': self.layout_category_id.id,
