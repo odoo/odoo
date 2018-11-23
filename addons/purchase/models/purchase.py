@@ -327,6 +327,11 @@ class PurchaseOrder(models.Model):
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
     @api.multi
+    def print_purchase(self):
+        self.write({'state': "purchase"})
+        return self.env.ref('purchase.action_report_purchase_order').report_action(self)
+
+    @api.multi
     def button_approve(self, force=False):
         self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
