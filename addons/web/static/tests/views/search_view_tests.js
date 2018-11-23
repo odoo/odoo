@@ -975,5 +975,66 @@ QUnit.module('Search View', {
         form.destroy();
     });
 
+    QUnit.test('Customizing filter does not close the filter dropdown', function (assert) {
+        assert.expect(4);
+        var self = this;
+
+        _.each(this.data.partner.records.slice(), function (rec) {
+            var copy = _.defaults({}, rec, {id: rec.id + 10 });
+            self.data.partner.records.push(copy);
+        });
+
+        this.data.partner.fields.date_field.searchable = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="bar"/>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            archs: {
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+                'partner,false,search': '<search><field name="date_field"/></search>',
+            },
+            res_id: 1,
+        });
+
+        form.$('.o_input').click();
+        $('.ui-autocomplete .ui-menu-item:contains(Search More)').mouseenter().click();
+
+        var $modal = $('.modal-dialog.modal-lg');
+        assert.strictEqual($modal.length, 1, 'Modal Opened');
+
+        $modal.find('.o_search_options button:contains(Filters)').click();
+
+        var $filterDropDown = $modal.find('.o_dropdown_menu.show');
+
+        $filterDropDown.find('button:contains(Add Custom Filter)').click();
+
+        assert.ok($filterDropDown.find('button:contains(Add Custom Filter)').hasClass('o_open_menu'),
+            'The right dropdown is open');
+
+        var $filterInputs = $filterDropDown.find('.o_input');
+
+        assert.strictEqual($filterInputs.length, 3,
+            'The custom filter builder has 3 elements');
+
+        // We really are interested in the click event
+        // We do it twice on each input to make sure
+        // the parent dropdown doesn't react to any of it
+        _.each($filterInputs, function (input) {
+            var $input = $(input);
+            $input.click();
+            $input.click();
+        });
+
+        assert.ok($filterDropDown.is(':visible'));
+
+        form.destroy();
+    });
+
 });
 });
