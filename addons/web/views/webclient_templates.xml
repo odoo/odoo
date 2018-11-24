@@ -434,6 +434,8 @@
         <t t-call-assets="web.assets_common" t-css="false"/>
         <t t-call-assets="web.assets_backend" t-css="false"/>
 
+        <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
+
         <!-- add lazy-loaded libs to make tests synchronous -->
         <link rel="stylesheet" href="/web/static/lib/fullcalendar/css/fullcalendar.css"/>
         <script type="text/javascript" src="/web/static/lib/fullcalendar/js/fullcalendar.js"></script>
@@ -677,6 +679,16 @@
                         display: inherit;
                     }
                 </style>
+
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
 
