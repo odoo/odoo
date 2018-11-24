@@ -3,13 +3,13 @@
 
 {
     'name': 'Italy - Accounting',
-    'version': '0.2',
+    'version': '0.3',
     'depends': [
         'account',
         'base_iban',
         'base_vat',
     ],
-    'author': 'OpenERP Italian Community',
+    'author': 'Odoo Italian Community',
     'description': """
 Piano dei conti italiano di un'impresa generica.
 ================================================
@@ -17,7 +17,7 @@ Piano dei conti italiano di un'impresa generica.
 Italian accounting chart and localization.
     """,
     'category': 'Localization',
-    'website': 'http://www.openerp-italia.org/',
+    'website': 'https://github.com/OCA/l10n-italy',
     'data': [
         'data/l10n_it_chart_data.xml',
         'data/account.account.template.csv',
