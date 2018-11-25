@@ -30,9 +30,9 @@
 # Simone Rubino <simone.rubino@agilebg.com>, 2018
 # mymage <stefano.consolaro@mymage.it>, 2018
 # Paolo Valier, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:47+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,8 +361,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Questo modulo consente al cassiere di applicare velocemente\n"
-"uno sconto in percentuale al cliente.\n"
+"Questo modulo consente al cassiere di applicare uno sconto\n"
+"percentuale al cliente in modo veloce.\n"
 "\n"
 
 #. module: base
@@ -731,6 +731,9 @@ msgid ""
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
 msgstr ""
+"\n"
+"        Genera fatture elettroniche con numeri personalizzati\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -967,8 +970,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Durante la fatturazione dei timesheet, consente di fatturare tutti i timesheet\n"
-"        associati a un ordine cliente o solo i timesheet convalidati\n"
+"        Nella fatturazione dei fogli ore, consente di fatturare tutti quelli\n"
+"        associati a un ordine cliente o solo quelli convalidati\n"
 "    "
 
 #. module: base
@@ -1043,6 +1046,13 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"    Rendi la lock date irreversibile:\n"
+"\n"
+"    * Non è possibile definire condizioni più severe per i consulenti che per gli utenti. La lock date per i consulenti deve quindi essere impostata prima di quella per gli utenti.\n"
+"    * Non è possibile bloccare un periodo che non è ancora terminato. La lock date per i consulenti deve essere fissata dopo l'ultimo giorno del mese precedente.\n"
+"    * La nuova lock date per i consulenti deve essere impostata dopo quella precedente.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1699,6 +1709,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Gestione degli asset\n"
+"=================\n"
+"Gestione degli asset di un'azienda o di una persona.\n"
+"Tiene traccia degli ammortamenti e crea le corrispondenti registrazioni contabili.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_document
@@ -2059,6 +2076,11 @@ msgid ""
 "\n"
 "This module allows for validate and format phone numbers for leads and contacts."
 msgstr ""
+"\n"
+"Convalida di numeri di telefono CRM\n"
+"============================\n"
+"\n"
+"Questo modulo consente di convalidare et di strutturare i numeri di telefono dei lead e dei contatti. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -2092,6 +2114,31 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed, \n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Piano dei conti per il Venezuela.\n"
+"===============================\n"
+"\n"
+"Il Venezuela non ha un piano dei conti legale, ma quello di default proposto in Odoo dovrebbe essere in linea con le migliori pratiche accettate in Venezuela.\n"
+"\n"
+"Questo modulo è stato testato come base per più di 1000 aziende, perché\n"
+"si basa sull'osservazione del software più comune sul mercato venezuelano.\n"
+"Questo permetterà certamente ai contabili di sentirsi a proprio agio fin dal primo contatto con Odoo.\n"
+"\n"
+"Questo modulo non pretende di essere la localizzazione completa per il Venezuela\n"
+"ma ti aiuta ad iniziare molto rapidamente con Odoo in questo paese.\n"
+"\n"
+"Questo modulo offre:\n"
+"---------------------\n"
+"\n"
+"- Le imposte di base del Venezuela.\n"
+"- I dati di base per lanciare i test di localizzazione della comunità.\n"
+"- La possibilità di creare un'azienda da 0, se le tue esigenze di contabilità sono di base.\n"
+"\n"
+"Consigliamo di installare la contabilità anglosassone per valorizzare le scorte\n"
+"come fa il Venezuale con le fatture in uscita.\n"
+"\n"
+"Se installi questo modulo e selezioni \"Piano dei conti personalizzato\", verrà proposto un piano dei conti di base, \n"
+"ma è necessario definire manualmente le impostazioni predefinite per le imposte\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -2598,6 +2645,10 @@ msgid ""
 "=====================================================\n"
 "        "
 msgstr ""
+"\n"
+"Attiva i tracker UTM nei link condivisi.\n"
+"=====================================================\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_crypt
@@ -2643,6 +2694,15 @@ msgid ""
 "with the street name, the house number, and room number.\n"
 "        "
 msgstr ""
+"\n"
+"Gestione avanzata degli indirizzi\n"
+"=============================\n"
+"\n"
+"Questo modulo contiene tutti i campi aggiuntivi necessari per gestire accuramente gli indirizzi.\n"
+"\n"
+"Per esempio, nei rapporti legali, e per alcuni paesi, il campo Strada deve essere diviso in diversi campi,\n"
+"con il nome della strada, il numero civico e il numero civico della stanza.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_blackbox_be
@@ -2698,6 +2758,17 @@ msgid ""
 "\n"
 "Both goals and badges are flexibles and can be adapted to a large range of modules and actions. When installed, this module creates easy goals to help new users to discover Odoo and configure their user profile.\n"
 msgstr ""
+"\n"
+"Processo di gamification\n"
+"====================\n"
+"Il modulo Gamification fornisce modi per valutare e motivare gli utenti di Odoo.\n"
+"\n"
+"Gli utenti possono essere valutati utilizzando obiettivi numerici o non numerici da raggiungere.\n"
+"Gli **obiettivi** sono assegnati attraverso **sfide** per valutare e confrontare i membri di un team tra loro e nel tempo.\n"
+"\n"
+"Per i successi non numerici, **medaglie** sono assegnate agli utenti. Da un semplice \"grazie\" ad un riconoscimento eccezionale, una medaglia è un modo semplice per esprimere gratitudine ad un utente per il suo lavoro .\n"
+"\n"
+"Gli obiettivi e le medaglie sono entrambi flessibili e possono essere adattati ad una vasta gamma di moduli e azioni. Una volta installato, questo modulo crea semplici obiettivi per aiutare i nuovi utenti a scoprire Odoo e configurare il loro profilo utente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -2741,6 +2812,14 @@ msgid ""
 "    * Company Contribution Management\n"
 "    "
 msgstr ""
+"\n"
+"Sistema retributivo generico integrato alla contabilità.\n"
+"==================================================\n"
+"\n"
+"    * Codifica delle spese\n"
+"    * Codifica dei pagamenti\n"
+"    * Gestione dei contributi dell'azienda\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_push
@@ -2958,6 +3037,12 @@ msgid ""
 "This Module integrates all post commits, pull requests and activity of github issue to channels in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"Integra Github a Odoo Discussione.\n"
+"======================================\n"
+"\n"
+"Questo modulo integra tutte le convalide di pubblicazioni, le richieste di estrazione e l'attività di github nei canali di Odoo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
@@ -3004,6 +3089,11 @@ msgid ""
 "This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Gestione dei costi allo sbarco\n"
+"=======================\n"
+"Questo modulo consente di aggiungere facilmente costi aggiuntivi e di decidere come ripartire questi costi tra i movimenti di magazzino, per tenerne conto nella valutazione delle scorte.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_score
@@ -3076,6 +3166,16 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Supporto con la Live Chat\n"
+"==========================\n"
+"\n"
+"Consente di lasciare widget di messaggistica istantanea su una pagina Web che comunicherà\n"
+"con il server corrente e distribuirà le richieste dei visitatori tra\n"
+"più operatori.\n"
+"Aiuta i tuoi clienti con questa chat e analizza i loro commenti.\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -3089,6 +3189,14 @@ msgid ""
 "* Equipments related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+"Manutenzione nel modulo MRP\n"
+"==================\n"
+"* Manutenzione preventiva contro manutenzione correttiva\n"
+"* Definisci le diverse fasi delle tue richieste di manutenzione\n"
+"* Pianifica le richieste di manutenzione (compresa la regolare manutenzione preventiva)\n"
+"* Attrezzature relative ai workcenter\n"
+"* MTBF, MTTR, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_3way_match
@@ -4252,7 +4360,7 @@ msgstr ""
 "===============\n"
 "\n"
 "Questo modulo sostituisce l'interfaccia Web di Odoo per visualizzare una semplice\n"
-"Homepage che spiega che cos'è una posbox, che mostra il stato e\n"
+"Homepage che spiega che cos'è una posbox, che mostra lo stato e\n"
 "dove si può trovare la documentazione.\n"
 "\n"
 "Se attivi questo modulo, non potrai più accedere\n"
@@ -7687,7 +7795,7 @@ msgstr "Aggiunge un link per modificare una traduzione in Transifex"
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_city
 msgid "Add a many2one field city on addresses"
-msgstr ""
+msgstr "Aggiunge un campo città many2one agli indirizzi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_barcode
@@ -9481,6 +9589,12 @@ msgid "Commercial Entity"
 msgstr "Ente commerciale"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_country_id
+#: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_country_id
+msgid "Commercial Entity's Country"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
 msgid "Common Drinks data for points of sale"
 msgstr "Dati su bevande comuni per il punto vendita"
@@ -10643,7 +10757,7 @@ msgstr "Lettura di Codici a Barre per la Consegna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr "Costi di spedizione"
+msgstr "Costi di consegna"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_demo
@@ -11232,7 +11346,7 @@ msgstr "Server email"
 #: model:ir.module.category,name:base.module_category_mass_mailing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr ""
+msgstr "Marketing via email"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -11582,7 +11696,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
-msgstr ""
+msgstr "Indirizzi estesi"
 
 #. module: base
 #: selection:ir.ui.view,mode:0
@@ -19415,7 +19529,7 @@ msgstr "Progetto, Helpdesk, Timesheet e Ordini di Vendita"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
 msgid "Project, Tasks, Timesheet"
-msgstr "Progetto, Compiti, Timesheet"
+msgstr "Progetto, attività, foglio ore"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -20337,7 +20451,7 @@ msgstr "Pianifica la manutenzione delle macchine e degli attrezzi."
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
 msgid "Schedule timesheet when on leaves"
-msgstr "Programma il foglio ore durante i permessi"
+msgstr "Pianifica il foglio ore durante i permessi"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
@@ -20604,12 +20718,12 @@ msgstr "Sequenza"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_code
 msgid "Sequence Code"
-msgstr ""
+msgstr "Codice sequenza"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_padding
 msgid "Sequence Size"
-msgstr ""
+msgstr "Dimensione sequenza"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -22173,12 +22287,12 @@ msgstr "Fogli ore"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets Validation"
-msgstr "Convalida dei Timesheet"
+msgstr "Conferma dei fogli ore"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr "Comunicazione fogli ore/presenze"
+msgstr "Rendicontazione presenze/fogli ore"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_tz
@@ -22474,6 +22588,9 @@ msgid ""
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
+"Vengono fornite due implementazioni dell'oggetto sequenza: ordinaria e "
+"\"senza spazi\". La seconda è più lenta della prima ma impedisce di avere "
+"salti nella sequenza, possibili invece in quella ordinaria."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_type
@@ -22849,7 +22966,7 @@ msgstr "Usa '1' per si e '0' per no"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_use_date_range
 msgid "Use subsequences per date_range"
-msgstr ""
+msgstr "Usare sottosequenze per date_range"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
@@ -23607,6 +23724,8 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
+"Quando si usano sottosequenze per intervallo data, per usare l'inizio dell'intervallo al posto\n"
+"                                della data corrente basta aggiungere il prefisso \"range_\" alle variabili, es. %(range_year)s invece di %(year)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_copy

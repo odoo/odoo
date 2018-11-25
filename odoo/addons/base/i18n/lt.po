@@ -6499,7 +6499,7 @@ msgstr "Programos:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
@@ -7575,6 +7575,9 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Dukteriniai serverio veiksmai, kurie bus atlikti. Atkreipkite dėmesį, kad "
+"paskutinio grąžinimo grąžinta reikšmė bus naudojama kai bendroji grąžinimo "
+"reikšmė."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -7816,6 +7819,12 @@ msgstr "Komentarai"
 #: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_id
 msgid "Commercial Entity"
 msgstr "Komercinis juridinis asmuo"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_country_id
+#: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_country_id
+msgid "Commercial Entity's Country"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
@@ -11651,6 +11660,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Jei šis vaizdas yra paveldėtas,\n"
+"* Jei teigiamas, vaizdas visada praplečia savo tėvinį vaizdą\n"
+"* Jei neigiamas, vaizdas nepraplečia savo tėvinio, bet tai gali būti įjungta"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -11807,7 +11819,7 @@ msgstr "Programose"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr ""
+msgstr "Pirkimai programoje"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
@@ -15459,6 +15471,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Galioja tik jei šis rodinys paveldimas iš kito (inherit_id nėra False/Null).\n"
+"\n"
+"* Jei plėtinys (standartiškai), jei šis rodinys yra užklausiamas, tikrinamas artimiausias\n"
+"pirminis vaizdas (per inherit_id), tada taikomi visi rodiniai, paveldimi iš jo su šio \n"
+"rodinio modeliu\n"
+"* Jei pirminis, artimiausias pirminis rodinys yra pilna išsprendžiamas (net jei jis naudoja\n"
+"kitokį modelį nei šis), tada šio rodinio paveldėjimo taisyklės\n"
+"(<xpath/>) yra pritaikomos ir rezultatas yra panaudojamas kaip jis būtų šio rodinio\n"
+"tikroji arka.\n"
 
 #. module: base
 #: sql_constraint:res.currency.rate:0
@@ -15592,6 +15613,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"Papildomas pagalbinis tekstas vartotojams, turintis tikslinio rodinio aprašą"
+" su jo panaudojimu ir tikslu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_src_model
@@ -16682,6 +16705,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Pateikite lauką, naudojamą susieti naujai sukurtą įrašą su serverio veiksmo "
+"naudojamu įrašu."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -17894,6 +17919,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Vertės nustatymas padaro šią vertę pasiekiama duotojo modelio šoniniame "
+"meniu."
 
 #. module: base
 #: code:addons/base/res/res_users.py:567
@@ -19620,6 +19647,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Serverio veiksmo tipas. Galimos šios reikšmės:\n"
+"- \"Vykdyti Python kodą\": bus įvykdomas Python kodas\n"
+"- \"Kurti ar kopijuoti naują įrašą\": kuriamas naujas įrašas su naujomis reikšmėmis arba kopijuojamas egzistuojantis duomenų bazės įrašas\n"
+"- \"Rašyti įraše\": atnaujinamos įrašo reikšmės\n"
+"- \"Vykdyti kelis veiksmus\": nustatomas veiksmas, kuris iššaukia kelis kitus serverio veiksmus\n"
+"- \"Pridėti sekėjų\": prie įrašo pridedami sekėjai (pasiekiama Diskusijoje)\n"
+"- \"Siųsti laišką\": automatiškai siunčiamas laiškas (pasiekiama email_template)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint_type
@@ -20783,6 +20817,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
 msgstr ""
+"Parašykite Python kodą, kurį įvykdys veiksmas. Galimus naudoti kintamuosius "
+"ir daugiau informacijos apie Python galite rasti \"Pagalbos\" skiltyje."
 
 #. module: base
 #: model:res.country,name:base.ye
