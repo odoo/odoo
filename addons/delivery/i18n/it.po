@@ -3,7 +3,6 @@
 # * delivery
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
@@ -12,6 +11,7 @@
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # mymage <stefano.consolaro@mymage.it>, 2018
 # 
 msgid ""
@@ -73,7 +73,7 @@ msgstr ""
 "  Codice tracciabilità:\n"
 "  %if object.carrier_tracking_url:\n"
 "    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
-"  %elSE:\n"
+"  %else:\n"
 "    ${object.carrier_tracking_ref}.\n"
 "  %endif\n"
 "%endif\n"
@@ -379,14 +379,14 @@ msgstr "Metodi di consegna"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "Procedura di selezione imballaggio di spedizione"
+msgstr "Procedura di selezione imballaggio di consegna"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
 #: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
-msgstr "Imballaggi di spedizione"
+msgstr "Imballaggi di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
@@ -397,7 +397,7 @@ msgstr "Imballaggio di consegna"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr "Regole per le tariffe di spedizione"
+msgstr "Regole per le tariffe di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id

@@ -51,7 +51,7 @@ msgstr "# nusidėvėjimo įrašų"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr "# partijos eilučių"
+msgstr "# įmokų įrašų"
 
 #. module: account_asset
 #: model:ir.actions.server,name:account_asset.account_asset_cron_ir_actions_server
@@ -73,27 +73,30 @@ msgstr "Sąskaitos įrašas"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
-msgstr "Sąskaita, naudojama turto vertės nusidėvėjimo įrašams registruoti."
+msgstr ""
+"Sąskaita, naudojama turto vertės nusidėvėjimo įrašuose mažinti turto vertei."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
 msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
-msgstr "Sąskaita, skirta registruoti turto nusidėvėjimo sąnaudas."
+msgstr ""
+"Sąskaita, naudojama periodiniuose įrašuose turto dalies įrašymui kaip "
+"išlaidų."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
-msgstr "Sąskaita, skirta registruoti turto pirkimą jo originalia kaina."
+msgstr "Sąskaita, naudojama įrašyti turto pirkimui už jo pradinę kainą."
 
 #. module: account_asset
 #. openerp-web
 #: code:addons/account_asset/static/src/js/account_asset.js:52
 #, python-format
 msgid "Accounting entries waiting for manual verification"
-msgstr "Apskaitos įrašai, laukiantys rankinio patvirtinimo."
+msgstr "Apskaitos įrašai, laukiantys rankinio patvirtinimo"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -120,7 +123,7 @@ msgstr "Nusidėvėjimo eilučių skaičius"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
 msgid "Amount of Installment Lines"
-msgstr "Partijos eilučių kiekis"
+msgstr "Sumos įmokų įrašai"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
@@ -162,7 +165,7 @@ msgstr "Turto pabaigos data"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
 msgid "Asset Method Time"
-msgstr "Ilgalaikio turto metodo laikas"
+msgstr "Ilgalaikio turto būdo laikas"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_name
@@ -256,7 +259,7 @@ msgstr "Uždarytos ilgalaikio turto kortelės"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Assets in draft and open states"
-msgstr "Ilgalaikio turto juodraščiai bei vykdomi"
+msgstr "Ilgalaikis turtas juodraščio ir vykdomoje būsenose"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -313,9 +316,9 @@ msgid ""
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
-"Pasirinkite metodą naudojamą nusidėvėjimo eilučių skaičiavimui.\n"
-"  * Tiesinis: Skaičiuojama pagal: Įsigijimo kaina / Periodų skaičius\n"
-"  * Dvigubo balanso: Skaičiuojama: Likutinė vertė * Nusidėvėjimo procentas"
+"Pasirinkite būdą, naudojamą nusidėvėjimo eilučių skaičiavimui.\n"
+"  * Tiesinis. Skaičiuojamas taip: Įsigijimo kaina / Periodų skaičius\n"
+"  * Proporcingai mažėjantis. Skaičiuojamas taip: Likutinė vertė * Nusidėvėjimo procentas"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
@@ -325,9 +328,9 @@ msgid ""
 "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
-"Pasirinkite metodą, kuris bus naudojamas nusidėvėjimo įrašų datoms ir kiekiams apskaičiuoti.\n"
+"Pasirinkite būdą, kuris bus naudojamas nusidėvėjimo įrašų datoms ir kiekiams apskaičiuoti.\n"
 "  * Įrašų kiekis: fiksuokite įrašų kiekį ir laiką tarp 2 nudėvėjimų.\n"
-"  * Pabaigos data: pasirinkite laiką tarp 2 nudėvėjimų ir datą iki kurios vyks nudėvėjimo procesas."
+"  * Pabaigos data: pasirinkite laiką tarp 2 nudėvėjimų ir datą, iki kurios vyks nudėvėjimo procesas."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -335,8 +338,8 @@ msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
 msgstr ""
-"Pasirinkite periodą, kuriame užregistruoti naudojamo ilgalaikio turto "
-"nusidėvėjimą DK įrašus"
+"Pasirinkite laikotarpį, kuriam norite automatiškai užregistruoti naudojamo "
+"ilgalaikio turto nusidėvėjimą"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -471,13 +474,13 @@ msgstr "Atidėtos pajamos"
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Degressive"
-msgstr "Dvigubo balanso"
+msgstr "Proporcingai mažėjantis"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_progress_factor
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_method_progress_factor
 msgid "Degressive Factor"
-msgstr "Nusidėvėjimo procentas"
+msgstr "Mažėjimo koeficientas"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -622,12 +625,12 @@ msgstr "Generuoti įrašus"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_gross_value
 msgid "Gross Amount"
-msgstr "Įsigijimo kaina"
+msgstr "Bendra suma"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value
 msgid "Gross Value"
-msgstr "Įsigijimo kaina"
+msgstr "Bendra vertė"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -667,8 +670,8 @@ msgid ""
 "from the purchase date instead of the first January / Start date of fiscal "
 "year"
 msgstr ""
-"Indikuoja, kad pirmasis nusidėvėjimo įrašas šiam turtui turi būti daromas "
-"nuo įsigijimo datos, o ne nuo Sausio pirmos / finansinių metų pradžios."
+"Parodo, kad pirmasis nusidėvėjimo įrašas šiam turtui turi būti atliktas nuo "
+"įsigijimo datos, o ne nuo sausio pirmos / finansinių metų pradžios."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_prorata
@@ -676,8 +679,8 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first of January"
 msgstr ""
-"Indikuoja, kad pirmasis nusidėvėjimo įrašas šiam turtui turi būti daromas "
-"nuo įsigijimo datos, o ne nuo Sausio pirmos."
+"Parodo, kad pirmasis nusidėvėjimo įrašas šiam turtui turi būti atliktas nuo "
+"įsigijimo datos, o ne nuo sausio pirmos."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -694,7 +697,7 @@ msgstr "Sąskaitos faktūros eilutė"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr "Tai suma iki kurios gali būti nudėvėtas ilgalaikis turtas."
+msgstr "Planuojama turėti suma, kuri negali nusidėvėti."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -762,7 +765,7 @@ msgstr "Keisti"
 #: model:ir.model,name:account_asset.model_asset_modify
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Modify Asset"
-msgstr "Pakeisti ilgalaikio turto nusidėvėjimo laikotarpį"
+msgstr "Keisti ilgalaikį turtą"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -782,7 +785,7 @@ msgstr "Pasikartojančios mėnesio pajamos"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_remaining_value
 msgid "Next Period Depreciation"
-msgstr "Likutinė vertė"
+msgstr "Sekančio laikotarpio nusidėvėjimas"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_note
@@ -866,7 +869,7 @@ msgstr "Produkto šablonas"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_prorata
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_prorata
 msgid "Prorata Temporis"
-msgstr "Nudėvėjimas nuo pirkimo dienos"
+msgstr "Prorata temporis"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:370
@@ -875,13 +878,13 @@ msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
 msgstr ""
-"Prorata temporis gali būti naudojamas tik  laiko metodui \"nusidėvėjimų "
+"Prorata temporis gali būti naudojamas tik laiko būdui \"nusidėvėjimų "
 "kiekis\"."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Purchase"
-msgstr "Pirkimai"
+msgstr "Pirkimas"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -901,12 +904,12 @@ msgstr "Priežastis"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr "Nusidėvėjimo sąskaita "
+msgstr "Pripažinimo sąskaita "
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
-msgstr "Sukaupto nusidėvėjimo sąskaita "
+msgstr "Pripažinimo pajamų sąskaita"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_code
@@ -942,7 +945,7 @@ msgstr "Pardavimai"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_salvage_value
 msgid "Salvage Value"
-msgstr "Likvidacinė kaina"
+msgstr "Nurašymo vertė"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -952,7 +955,7 @@ msgstr "Ieškoti ilg. turto kategorijoje"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Sell or Dispose"
-msgstr "Parduoti arba nurašyti"
+msgstr "Parduoti arba išmesti"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_sequence
@@ -967,7 +970,7 @@ msgstr "Atstatyti į juodraštį"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_period
 msgid "State here the time between 2 depreciations, in months"
-msgstr "Laikotarpis tarp dviejų nusidėvėjimų, mėnesiais"
+msgstr "Čia mėnesiais nurodykite laiką tarp 2 nusidėvėjimų"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_parent_state
@@ -1065,9 +1068,9 @@ msgid ""
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
-"Kai sukuriamas turtas, jam suteikiama \"Juodraštis\" būsena.\n"
-"Jėigu turtas yra patvirtinimas, jo būsena pakeičiama į \"Veikiantis\" ir nusidevėjimo eilutės gali būti įrašytos į apskaitą.\n"
-"Jūs rankiniu būdu galite uždaryti turtą, kai pasibaigia nusidevėjimas. Jeigu paskutinis nusidevėjimo įrašas yra įrašomas, turtas automatiškai yra uždaromas."
+"Kai turtas sukuriamas, jam suteikiama \"juodraščio\" būsena.\n"
+"Jeigu turtas yra patvirtinamas, jo būsena pakeičiama į \"Veikiantis\" ir nusidėvėjimo eilutės gali būti registruojamos apskaitoje.\n"
+"Galite rankiniu būdu uždaryti turtą, kai nusidėvėjimas pasibaigia. Jeigu paskutinis nusidėvėjimo įrašas yra įrašomas, turtas automatiškai yra uždaromas."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -1096,7 +1099,7 @@ msgstr "Negalite ištrinti užregistruotų nusidėvėjimo eilučių. "
 #: code:addons/account_asset/models/account_asset.py:610
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr "Negalite ištrinti užregistruotų partijos eilučių. "
+msgstr "Negalite trinti registruotų įmokų eilučių."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard

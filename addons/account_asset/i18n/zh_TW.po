@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Michael Yeung, 2017
 # Bill Hsu <hcm86@icloud.com>, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -306,8 +307,8 @@ msgid ""
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
 "選擇計算折舊帳目數量的方法。\n"
-"  * 線形：按照總值/折舊帳目數量計算\n"
-"  * 遞減：按照殘值 X 遞減率計算"
+"  * 線形：按照待攤銷餘額/折舊次數計算\n"
+"  * 遞減：按照待攤銷餘額 X 遞減率計算"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
@@ -317,9 +318,9 @@ msgid ""
 "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
-"選擇用來計算日期和條目數量的方法。\n"
-" * 條目數量：確定 2 次折舊之間的條目數量和時間。\n"
-" * 終止日期：選擇 2 次折舊之間的時間和折舊不會超出的日期。"
+"選擇用於計算折舊明細的日期和次數的方法。\n"
+"折舊次數：設定折舊次數和2次折舊之間的間隔時間\n"
+"結束日期：設定2次折舊的間隔時間和折舊的結束日期"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -617,12 +618,12 @@ msgstr "毛金額"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value
 msgid "Gross Value"
-msgstr "毛值"
+msgstr "淨值"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Gross value of asset"
-msgstr "資產的毛值"
+msgstr "資產的淨值"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -638,7 +639,7 @@ msgstr "分組..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr "集團日記帳分錄"
+msgstr "日記帳分錄分組"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -685,7 +686,7 @@ msgstr "您計劃的量, 不可以折舊。"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Items"
-msgstr "專案"
+msgstr "攤銷分錄"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_journal_id
@@ -787,7 +788,7 @@ msgstr "折舊數量"
 #: selection:account.asset.category,method_time:0
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr "分錄數量"
+msgstr "折舊次數"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
@@ -905,7 +906,7 @@ msgstr "殘留"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value_residual
 msgid "Residual Value"
-msgstr "殘餘價值"
+msgstr "待攤銷餘額"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -926,7 +927,7 @@ msgstr "銷售"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_salvage_value
 msgid "Salvage Value"
-msgstr "折余值"
+msgstr "殘值"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search

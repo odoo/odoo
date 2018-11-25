@@ -103,6 +103,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin:auto;width:100%;\">\n"
+"                    <img src=\"/web/image/res.company/${user.company_id.id}/logo\" style=\"height: auto; width: 80px; margin-top:30px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    <h1 style=\"color:#A9A9A9;\">SAVO KREPŠELYJE TURITE PREKIŲ</h1>\n"
+"                    <p>Ar norėtumėte atlikti savo pirkimą?</p><br/><br/>\n"
+"                    % if object.order_line:\n"
+"                    % for line in object.order_line:\n"
+"                    <hr/>\n"
+"                    <table width=\"100%\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 10px; width:150px;\">\n"
+"                                <img src=\"/web/image/product.product/${line.product_id.id}/image\" height=\"100px\" width=\"100px\"/>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                            </td>\n"
+"                            <td width=\"100px\" align=\"right\">\n"
+"                                ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % endfor\n"
+"                    <hr/>\n"
+"                    % endif\n"
+"                    <br/><br/>\n"
+"                    <center>\n"
+"                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Tęsti užsakymą</a><br/><br/><br/>\n"
+"                        <p><b>Ačiū, kad perkate iš ${user.company_id.name}!</b></p>\n"
+"                    </center>\n"
+"                </div>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -479,6 +510,9 @@ msgid ""
 "                            <span class=\"small\">Advised if you target a local audience</span>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong> Vienodi tarifai</strong> (visi moka tą patį)<br/>\n"
+"                            <span class=\"small\">Siūloma, jei taikote į vietinę auditoriją</span>\n"
+"                            </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -488,7 +522,7 @@ msgstr "<span> &amp; Siuntimas</span>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "<span>Billing</span>"
-msgstr ""
+msgstr "<span>Mokėjimai</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -668,6 +702,8 @@ msgid ""
 "<strong>Reassurance arguments</strong><br/>\n"
 "                            Anticipate your customers questions &amp; worries on practical details like shipping rates &amp; policies, return &amp; replacement policies, payment acquirers &amp; security and your"
 msgstr ""
+"<strong>Patvirtinimo argumentai</strong><br/>\n"
+"Įvertinkite savo klientų klausimus ir rūpesčius dėl praktinių detalių, tokių, kaip pristatymo kaina, politika, grąžinimai, pakeitimo politika, mokėjimų surinkėjai, saugumas ir jūsų"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -694,6 +730,9 @@ msgid ""
 "payment acquirers (check, purchase order, etc.) by renaming 'Wire Transfer' "
 "or duplicating it."
 msgstr ""
+"<strong>Patarimas B2B vartotojams:</strong> galite sukurti naujus, rankiniu "
+"būdu apdorotus mokėjimo surinkėjus (čekis, pirkimo užsakymas ir pan.) "
+"pervadindami \"Piniginę perlaidą\" arba ją sudubliuodami."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -733,6 +772,11 @@ msgid ""
 "be part of a very long and thorough list in your Terms and Conditions "
 "agreements so as to encompass the most amount of negative uses."
 msgstr ""
+"Frazė <b>\"Ribos, ką vartotojas gali daryti\"</b> informuos vartotojus, kad "
+"sutikdami naudotis jūsų paslauga, jie taip pat sutinka ir nedaryti "
+"atitinkamų dalykų. Tai gali būti labai ilgo ir išsamaus sąrašo jūsų "
+"naudojimo sąlygose dalimi, kuri apibrėžia daugelį neigiamų naudojimo "
+"galimybių."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -743,6 +787,10 @@ msgid ""
 " agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
 " of these third parties."
 msgstr ""
+"Frazė <b>\"Nuorodos į kitas svetaines\"</b> informuos vartotojus, kad jūs "
+"nesate atsakingas už trečiųjų šalių svetainių turinį. Ši frazė informuoja "
+"vartotojus, kad jie patys yra atsakingi už susipažinimą ir (ne)sutikimą su "
+"tų trečiųjų šalių naudojimo ir privatumo taisyklėmis."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -752,6 +800,10 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
+"Frazė <b>\"Nutraukimas\"</b> informuos vartotojus, kad vartotojų paskyros "
+"svetainėje ir jų prieiga prie jūsų internetinio puslapio (jei vartotojai "
+"negali turėti paskyros) gali būti vienašališkai nutraukta, jei naudojama "
+"netinkamai."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -1159,6 +1211,9 @@ msgid ""
 "Checked if the sales order can directly be marked as paid, i.e. if the quotation\n"
 "                is sent or confirmed and if the payment acquire is of the type transfer or manual"
 msgstr ""
+"Pažymėta, jei pardavimų užsakymas gali būti tiesiogiai pažymėtas kaip apmokėtas,\n"
+"pvz., jei komercinis pasiūlymas yra išsiunčiamas ar patvirtinamas, ir jei mokėjimo surinkimas\n"
+"yra perkėlimo ar rankinio tipo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -1668,7 +1723,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Free and no setup"
-msgstr ""
+msgstr "Nemokamas ir jokio nustatymo"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1854,6 +1909,16 @@ msgid ""
 "will respond to any DMCA take down notices received and you will take down "
 "the content."
 msgstr ""
+"Jei jūsų svetainė ar mobiliosios programėlės leidžia vartotojams kurti "
+"turinį ir padaryti matomą kitiems, <b>Turinio</b> skiltis informuos "
+"vartotojus, kad jie turi savo sukurto turinio autorines teises. <br/> "
+"\"Turinio\" išsireiškimas dažniausiai mini, kad vartotojai turi suteikti "
+"jums (svetainės ar programėlės kūrėjui) licenciją, pagal kurią jūs "
+"galėtumėte pasidalinti šiuo turiniu savo svetainėje/programėlėje su kitais "
+"vartotojais. <br/>Kadangi vartotojų sukurtas turinys yra viešas kitiems "
+"vartotojams, autorinių teisių pažeidimo skiltis yra naudinga informuojant "
+"vartotojus ir kūrėjus, jog bet koks autorines teises pažeidžiantis turinys "
+"bus pašalintas."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_image
@@ -2207,7 +2272,7 @@ msgstr "Jokia svetainė"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Now to Follow Your Order"
-msgstr ""
+msgstr "Sekant jūsų užsakymą"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_count
@@ -2371,7 +2436,7 @@ msgstr "Mokėjimas<span class=\"chevron\"/>"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.payment_transaction_action_payments_to_capture
 msgid "Payments To Capture"
-msgstr ""
+msgstr "Mokėjimai fiksavimui"
 
 #. module: website_sale
 #. openerp-web
@@ -3076,6 +3141,8 @@ msgid ""
 "Some acquirers like Authorize.net and Ingenico can be used as payment "
 "gateways with your own payment processor."
 msgstr ""
+"Kai kurie surinkėjai, tokie kaip \"Authorize.net\" ar \"Ingenico\", gali "
+"būti naudojami kaip mokėjimo tarpininkai su jūsų mokėjimo apdorotoju."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:536
@@ -3188,7 +3255,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "TIN / VAT"
-msgstr ""
+msgstr "TIN / PVM"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -3256,6 +3323,9 @@ msgid ""
 "several places: Contact us page, website header &amp; footer, printed "
 "business documents like orders and invoices, etc."
 msgstr ""
+"Pirmas žingsnis yra nustatyti jūsų įmonės informacija. Ji naudojama keliose "
+"vietose: kontaktų puslapyje, svetainės antraštėje ir poraštėje, "
+"atspausdintuose dokumentuose (sąskaitos, užsakymai ir pan.)."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
@@ -3305,6 +3375,8 @@ msgid ""
 "The quote should be sent and the payment acquirer type should be manual or "
 "wire transfer"
 msgstr ""
+"Įkainojimas turėtų būti nusiunčiamas ir mokėjimo surinkimo tipas turėtų būti"
+" rankinis ar piniginė perlaida"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner

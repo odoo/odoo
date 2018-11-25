@@ -7,7 +7,6 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Arminas Grigonis <arminas@versada.lt>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Martin Trigaux, 2017
 # Linas Versada <linaskrisiukenas@gmail.com>, 2018
@@ -33,7 +32,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:369
 #, python-format
 msgid " already out"
-msgstr "Nėra"
+msgstr "jau išėjo"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_account_id
@@ -48,7 +47,7 @@ msgstr "Sąskaitos žurnalas"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr "Papildomi pristatymo kaštai"
+msgstr "Papildomi galutiniai kaštai"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -87,12 +86,12 @@ msgstr "Atšauktas"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr "Paspauskite norėdami sukurti naujus pristatymo kaštus."
+msgstr "Paspauskite norėdami sukurti naujus galutinius kaštus."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr "Paspauskite norėdami nustatyti naują pristatymo kaštų tipą."
+msgstr "Paspauskite norėdami nustatyti naują galutinių kaštų tipą."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -102,18 +101,18 @@ msgstr "Skaičiuoti"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_price_unit
 msgid "Cost"
-msgstr "Kaina"
+msgstr "Kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_line_id
 msgid "Cost Line"
-msgstr "Savikainos eilutė"
+msgstr "Kaštų eilutė"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_cost_lines
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
-msgstr "Savikainos eilutės"
+msgstr "Kaštų eilutės"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:91
@@ -122,6 +121,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"Išlaidų ir koregavimo įrašai nesutampa. Turėtumėte perskaičiuoti galutinius "
+"kaštus."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -183,21 +184,26 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Lygu: Kaštai bus padalinti lygiai.\n"
+"Pagal kiekį: Kaštai bus padalinti pagal produkto kiekį.\n"
+"Pagal esamus kaštus: Kaštai bus padalinti pagal produkto esamus kaštus.\n"
+"Pagal svorį: Kaštai bus padalinti pagal jų svorį.\n"
+"Pagal tūrį: Kaštai bus padalinti pagal jų tūrį."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
 msgid "Final Cost"
-msgstr "Galutinė savikaina"
+msgstr "Galutiniai kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost
 msgid "Former Cost"
-msgstr "Buvusi savikaina"
+msgstr "Ankstesni kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost_per_unit
 msgid "Former Cost(Per Unit)"
-msgstr "Buvusi savikaina (vienetui)"
+msgstr "Ankstesni kaštai (vienetui)"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -220,7 +226,7 @@ msgstr "Informacija"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr "Ar yra pristatymo kaštai?"
+msgstr "Yra galutiniai kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
@@ -237,18 +243,18 @@ msgstr "Žurnalo įrašas"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_landed_cost_value
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_id
 msgid "Landed Cost"
-msgstr "Pristatymo kaštai"
+msgstr "Galutiniai kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr "Pristatymo kaštų pavadinimas"
+msgstr "Galutinių kaštų pavadinimas"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 #: model:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Landed Cost Types"
-msgstr "Pristatymo kaštų tipai"
+msgstr "Galutinių kaštų tipai"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -259,17 +265,17 @@ msgstr "Pristatymo kaštų tipai"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
-msgstr "Pristatymo kaštai"
+msgstr "Galutiniai kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr "Pristatymo kaštai yra skaičiuojami pagal pirkimo matavimo vienetus."
+msgstr "Galutiniai kaštai yra skaičiuojami pagal pirkimo matavimo vienetus."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "Pristatymo kaštai patvirtinti"
+msgstr "Galutiniai kaštai patvirtinti"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
@@ -316,25 +322,25 @@ msgstr "Naujas"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
-"Nėra reikšmės koregavimo eilučių. Jums reikėtų perskaičiuoti pristatymo "
+"Nėra reikšmės koregavimo eilučių. Jums reikėtų perskaičiuoti galutinius "
 "kaštus."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:87
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr "Tik juodraštiniai pristatymo kaštai gali būti patvirtinti"
+msgstr "Tik juodraštiniai galutiniai kaštai gali būti patvirtinti"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
 msgid "Pickings"
-msgstr "Važtaraščiai"
+msgstr "Surinkimai"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:312
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
-msgstr "Konfigūruokite atsargų sąnaudų sąskaita produktui: %s."
+msgstr "Konfigūruokite atsargų sąnaudų sąskaitą produktui: %s."
 
 #. module: stock_landed_costs
 #: selection:stock.landed.cost,state:0
@@ -388,12 +394,12 @@ msgstr "Būsena"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr "Atsargų pristatymo kaštai"
+msgstr "Atsargų galutiniai kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Lines"
-msgstr "Atsargų pristatymo kaštų eilutės"
+msgstr "Atsargų galutinių kaštų įrašai"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
@@ -415,10 +421,10 @@ msgid ""
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
-"Pasirinktame važtaraštyje nėra jokių perkėlimų, kad būtų paveikta atvežimo "
-"savikainos. Atvežimo savikaina yra tik produktams sukonfigūruotiems "
-"įvertinti realiuoju laiku su realios kainos savikainos metodu. Įsitikinkite,"
-" kad jis yra, ar pasirinkote tinkamą važtaraštį"
+"Pasirinktame surinkime nėra jokių perkėlimų, kuriuos paveiktų galutiniai "
+"kaštai. Galutiniai kaštai yra galimi tik produktams, sukonfigūruotiems "
+"įvertinti realiuoju laiku su realios kainos savikainos būdu. Įsitikinkite, "
+"kad būdas yra toks ir pasirinkote tinkamą surinkimą."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
@@ -437,8 +443,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
-"Patvirtinti pristatymo kaštai negali būti atšaukti, tačiau galite sukurti "
-"neigiamus pristatymo kaštus, kad juos kompensuotumėte"
+"Patvirtinti galutiniai kaštai negali būti atšaukti, tačiau galite sukurti "
+"neigiamus galutinius kaštus, kad juos kompensuotumėte"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
