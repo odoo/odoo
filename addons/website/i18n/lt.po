@@ -55,7 +55,7 @@ msgstr "&amp;times;"
 #: model:ir.ui.view,arch_db:website.sitemap_index_xml
 #: model:ir.ui.view,arch_db:website.sitemap_xml
 msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
+msgstr "&lt;?xml versija=\"1.0\" kodavimas=\"UTF-8\"?&gt;"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.default_xml
@@ -354,7 +354,7 @@ msgstr "<i class=\"fa fa-magic\"/>Režimas"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-magnet\"/>Float"
-msgstr ""
+msgstr "<i class=\"fa fa-magnet\"/>Pozicija"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1115,7 +1115,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_arch_fs
@@ -1466,7 +1466,7 @@ msgstr "Tęsti"
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
 msgid "Copyright &amp;copy;"
-msgstr ""
+msgstr "Copyright &amp;copy;"
 
 #. module: website
 #. openerp-web
@@ -1923,7 +1923,7 @@ msgstr "Fiksuotas"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Float"
-msgstr "Skaičius su kableliu"
+msgstr "Pozicija"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2295,6 +2295,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Jei šis vaizdas yra paveldėtas,\n"
+"* Jei teigiamas, vaizdas visada praplečia savo tėvinį vaizdą\n"
+"* Jei neigiamas, vaizdas nepraplečia savo tėvinio, bet tai gali būti įjungta"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2641,7 +2644,7 @@ msgstr "Valdyti šį puslapį"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Masonry"
-msgstr ""
+msgstr "Masonry"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
@@ -2783,7 +2786,7 @@ msgstr "Jūsų tinklapio pavadinimas ir ikona"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Namecheap"
-msgstr ""
+msgstr "Namecheap"
 
 #. module: website
 #. openerp-web
@@ -2822,7 +2825,7 @@ msgstr "Palaikymo nėra"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "No-scroll"
-msgstr ""
+msgstr "No-scroll"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2851,7 +2854,7 @@ msgstr "Kalbų skaičius"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "OVH"
-msgstr ""
+msgstr "OVH"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2886,7 +2889,7 @@ msgstr "\"Odoo\" CMS - platus vaizdas"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_floating
 msgid "Odoo CMS- Sample image floating"
-msgstr ""
+msgstr "\"Odoo\" TVS - pavyzdinė paveikslėlio pozicija"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2948,6 +2951,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Galioja tik jei šis rodinys paveldimas iš kito (inherit_id nėra False/Null).\n"
+"\n"
+"* Jei plėtinys (standartiškai), jei šis rodinys yra užklausiamas, tikrinamas artimiausias\n"
+"pirminis vaizdas (per inherit_id), tada taikomi visi rodiniai, paveldimi iš jo su šio \n"
+"rodinio modeliu\n"
+"* Jei pirminis, artimiausias pirminis rodinys yra pilna išsprendžiamas (net jei jis naudoja\n"
+"kitokį modelį nei šis), tada šio rodinio paveldėjimo taisyklės\n"
+"(<xpath/>) yra pritaikomos ir rezultatas yra panaudojamas kaip jis būtų šio rodinio\n"
+"tikroji arka.\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -3090,7 +3102,7 @@ msgstr "Puslapiai"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Panama Sky"
-msgstr ""
+msgstr "Panama Sky"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
@@ -3423,7 +3435,7 @@ msgstr "SEO metaduomenys"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Sails"
-msgstr ""
+msgstr "Sails"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -4070,6 +4082,8 @@ msgid ""
 "User-agent: *\n"
 "Sitemap:"
 msgstr ""
+"User-agent: *\n"
+"Sitemap:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -4813,7 +4827,7 @@ msgstr "Pavadinimas"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "or Edit Master"
-msgstr ""
+msgstr "arba redaguoti pagrindinį"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form

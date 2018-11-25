@@ -3,24 +3,26 @@
 # * website_crm_partner_assign
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Paolo Valier, 2017
-# Luigi Di Naro <gigidn@gmail.com>, 2018
 # Cécile Collart <cco@odoo.com>, 2018
+# Luigi Di Naro <gigidn@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
-# Christian <chris@effeci.info>, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # p_amoruso <p.amoruso@elvenstudio.it>, 2018
+# Paolo Valier, 2018
+# Martin Trigaux, 2018
+# Christian <chris@effeci.info>, 2018
+# nle_odoo, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-09-20 10:25+0000\n"
 "Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +73,7 @@ msgstr ""
 "\n"
 "<ol>\n"
 "% for lead in ctx['partner_leads']:\n"
-"   <li><a href=\"${lead.lead_link}\">${lead.lead_id.name o 'Argomento Imprecisato'}</a>, ${lead.lead_id.partner_name o lead.lead_id.contact_name o 'Nome del Contatto Imprecisato'}, ${lead.lead_id.country_id e lead.lead_id.country_id.name o 'Paese Imprecisato'}, ${lead.lead_id.email_from o 'E-mail Imprecisato'}, ${lead.lead_id.phone o ''} </li></br>\n"
+"   <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Argomento Imprecisato'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Nome del Contatto Imprecisato'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Paese Imprecisato'}, ${lead.lead_id.email_from or 'E-mail Imprecisato'}, ${lead.lead_id.phone or ''} </li></br>\n"
 "% endfor\n"
 "</ol>\n"
 "\n"
@@ -80,7 +82,7 @@ msgstr ""
 "% else:\n"
 "<p>\n"
 "Se non ha ancora accesso al Suo database per favore contatti\n"
-"${ctx['partner_id'].user_id e ctx['partner_id'].user_id.email e 'il Suo account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) o 'noi'}.\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'il Suo account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'noi'}.\n"
 "</p>\n"
 "% endif\n"
 "<p>Il lead sarà trasferito ad un altro partner se Lei non lo contatta prima di 20 giorni.</p>\n"
@@ -89,7 +91,7 @@ msgstr ""
 "<p>Grazie,</p>\n"
 "\n"
 "<pre>\n"
-"${ctx['partner_id'].user_id e ctx['partner_id'].user_id.signature | safe o ''}\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
 "</pre>\n"
 "% if not ctx['partner_id'].user_id:\n"
 "PS: Sembra che non esista un account assegnato a Lei. Per favore, contattici.\n"

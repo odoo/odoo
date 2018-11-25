@@ -17,6 +17,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Paolo Valier, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
 "PO-Revision-Date: 2017-09-20 10:24+0000\n"
-"Last-Translator: Paolo Valier, 2018\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,7 +204,7 @@ msgstr "'%s' non è un intero corretto"
 #: code:addons/web/static/src/js/fields/field_utils.js:504
 #, python-format
 msgid "'%s' is not a correct monetary field"
-msgstr ""
+msgstr "\"%s\" non è un campo monetario corretto"
 
 #. module: web
 #. openerp-web
@@ -231,7 +232,7 @@ msgstr "(senza etichetta)"
 #: code:addons/web/static/src/js/fields/field_utils.js:256
 #, python-format
 msgid "1 record"
-msgstr ""
+msgstr "1 record"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu_secondary
@@ -552,6 +553,8 @@ msgid ""
 "Binary fields can not be exported to Excel unless their content is "
 "base64-encoded. That does not seem to be the case for %s."
 msgstr ""
+"Impossibile esportare %s. I campi binari devono avere il contenuto "
+"codificato in base64 per essere esportati in Excel."
 
 #. module: web
 #. openerp-web
@@ -675,7 +678,7 @@ msgstr "Chiuso"
 #: code:addons/web/static/src/xml/kanban.xml:52
 #, python-format
 msgid "Column title"
-msgstr ""
+msgstr "Titolo colonna"
 
 #. module: web
 #. openerp-web
@@ -889,7 +892,7 @@ msgstr "Elimina"
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:502
 #, python-format
 msgid "Delete row "
-msgstr ""
+msgstr "Elimina riga"
 
 #. module: web
 #. openerp-web
@@ -922,7 +925,7 @@ msgstr "Annulla"
 #: code:addons/web/static/src/js/widgets/data_export.js:336
 #, python-format
 msgid "Do you really want to delete this export template?"
-msgstr ""
+msgstr "Eliminare veramente questo modello esportato?"
 
 #. module: web
 #. openerp-web
@@ -950,7 +953,7 @@ msgstr "Dominio"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:520
 #, python-format
 msgid "Domain error"
-msgstr ""
+msgstr "Errore dominio"
 
 #. module: web
 #. openerp-web
@@ -1018,7 +1021,7 @@ msgstr "Modifica Colonna"
 #: code:addons/web/static/src/xml/base.xml:613
 #, python-format
 msgid "Edit Domain"
-msgstr ""
+msgstr "Modifica dominio"
 
 #. module: web
 #. openerp-web
@@ -1302,6 +1305,9 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"Per compatibilità con Excel, non è possibile esportare i dati se ci sono più di 256 colonne.\n"
+"\n"
+"Suggerimento: provare a invertire gli assi, filtrare ulteriormente o ridurre il numero di misure."
 
 #. module: web
 #. openerp-web
@@ -1408,7 +1414,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:611
 #, python-format
 msgid "Invalid domain"
-msgstr ""
+msgstr "Dominio non valido"
 
 #. module: web
 #. openerp-web
@@ -1430,7 +1436,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/debug_manager.js:208
 #, python-format
 msgid "JS Mobile Tests"
-msgstr ""
+msgstr "Prove JS per cellulare"
 
 #. module: web
 #. openerp-web
@@ -1772,7 +1778,7 @@ msgstr "Nessun metadata disponibile"
 #: code:addons/web/static/src/js/fields/field_utils.js:254
 #, python-format
 msgid "No records"
-msgstr ""
+msgstr "Nessun record"
 
 #. module: web
 #. openerp-web
@@ -1831,7 +1837,7 @@ msgstr "Odoo Apps saranno disponibili presto"
 #: code:addons/web/static/src/js/services/crash_manager.js:157
 #, python-format
 msgid "Odoo Client Error"
-msgstr ""
+msgstr "Errore client Odoo"
 
 #. module: web
 #. openerp-web
@@ -1845,14 +1851,14 @@ msgstr "Odoo Enterprise"
 #: code:addons/web/static/src/js/services/crash_manager.js:119
 #, python-format
 msgid "Odoo Error"
-msgstr ""
+msgstr "Errore Odoo"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:59
 #, python-format
 msgid "Odoo Session Expired"
-msgstr ""
+msgstr "Sessione Odoo scaduta"
 
 #. module: web
 #. openerp-web
@@ -1860,7 +1866,7 @@ msgstr ""
 #: code:addons/web/static/src/js/services/crash_manager.js:198
 #, python-format
 msgid "Odoo Warning"
-msgstr ""
+msgstr "Avviso Odoo"
 
 #. module: web
 #. openerp-web
@@ -1915,6 +1921,8 @@ msgstr "Sono validi solo numeri interi."
 msgid ""
 "Only employee can access this database. Please contact the administrator."
 msgstr ""
+"Solo i dipendenti possono accedere a questo database. Contattare "
+"l'amministratore."
 
 #. module: web
 #. openerp-web
@@ -2122,7 +2130,7 @@ msgstr "Trimestre"
 #: code:addons/web/static/src/js/widgets/model_field_selector.js:455
 #, python-format
 msgid "Relation not allowed"
-msgstr ""
+msgstr "Relazione non ammessa"
 
 #. module: web
 #. openerp-web
@@ -2185,7 +2193,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:222
 #, python-format
 msgid "Run JS Mobile Tests"
-msgstr ""
+msgstr "Esegui prove JS per cellulare"
 
 #. module: web
 #. openerp-web
@@ -2318,7 +2326,7 @@ msgstr "Seleziona <i class=\"fa fa-database\"/>"
 #: code:addons/web/static/src/xml/base.xml:615
 #, python-format
 msgid "Select a model to add a filter."
-msgstr ""
+msgstr "Selezionare un modello per aggiungere un filtro."
 
 #. module: web
 #. openerp-web
@@ -2436,7 +2444,7 @@ msgstr "Accendi"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:567
 #, python-format
 msgid "Syntax error"
-msgstr ""
+msgstr "Errore di sintassi"
 
 #. module: web
 #. openerp-web
@@ -2547,6 +2555,8 @@ msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "
 "(.xls) format. Consider splitting the export."
 msgstr ""
+"Impossibile esportare nel formato Excel 97-2003 (.xls) (%s righe, limite: "
+"65535). Valutare di suddividere l'esportazione."
 
 #. module: web
 #. openerp-web
@@ -2560,7 +2570,7 @@ msgstr "C'è stato un problema durante il caricamento del vostro file"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:459
 #, python-format
 msgid "This domain is not supported."
-msgstr ""
+msgstr "Questo dominio non è supportato."
 
 #. module: web
 #. openerp-web
@@ -2726,7 +2736,7 @@ msgstr "Senza nome"
 #: code:addons/web/static/src/js/views/pivot/pivot_view.js:95
 #, python-format
 msgid "Untitled"
-msgstr ""
+msgstr "Senza titolo"
 
 #. module: web
 #. openerp-web
@@ -2819,18 +2829,18 @@ msgstr ""
 #. module: web
 #: model:ir.ui.view,arch_db:web.qunit_mobile_suite
 msgid "Web Mobile Tests"
-msgstr ""
+msgstr "Test web per dispositivo mobile"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.qunit_suite
 msgid "Web Tests"
-msgstr ""
+msgstr "Test web"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.external_layout_boxed
 #: model:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Web:"
-msgstr ""
+msgstr "Web:"
 
 #. module: web
 #. openerp-web
@@ -2852,7 +2862,7 @@ msgstr "Settimana "
 #: code:addons/web/static/src/js/widgets/rainbow_man.js:32
 #, python-format
 msgid "Well Done!"
-msgstr ""
+msgstr "Ben fatto!"
 
 #. module: web
 #. openerp-web
@@ -3030,7 +3040,7 @@ msgstr "circa un'ora fa"
 #: code:addons/web/static/src/xml/base.xml:644
 #, python-format
 msgid "all records"
-msgstr ""
+msgstr "tutti i record"
 
 #. module: web
 #: model:ir.model,name:web.model_base
@@ -3042,7 +3052,7 @@ msgstr "base"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:28
 #, python-format
 msgid "child of"
-msgstr ""
+msgstr "figlio di"
 
 #. module: web
 #. openerp-web
@@ -3291,7 +3301,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:609
 #, python-format
 msgid "record(s)"
-msgstr ""
+msgstr "record"
 
 #. module: web
 #. openerp-web
