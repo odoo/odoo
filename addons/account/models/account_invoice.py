@@ -1985,7 +1985,7 @@ class AccountPaymentTermLine(models.Model):
     @api.constrains('days')
     def _check_days(self):
         if self.option in ('day_following_month', 'day_current_month') and self.days <= 0:
-            raise ValidationError(_("The day of the month used for this term must be stricly positive."))
+            raise ValidationError(_("The day of the month used for this term must be strictly positive."))
         elif self.days < 0:
             raise ValidationError(_("The number of days used for a payment term cannot be negative."))
 
