@@ -110,11 +110,13 @@ class SurveyUserInputLine(models.Model):
         ('text', 'Text'),
         ('number', 'Number'),
         ('date', 'Date'),
+        ('datetime', 'Datetime'),
         ('free_text', 'Free Text'),
         ('suggestion', 'Suggestion')], string='Answer Type')
     value_text = fields.Char('Text answer')
     value_number = fields.Float('Numerical answer')
     value_date = fields.Date('Date answer')
+    value_datetime = fields.Datetime('Datetime answer')
     value_free_text = fields.Text('Free Text answer')
     value_suggested = fields.Many2one('survey.label', string="Suggested answer")
     value_suggested_row = fields.Many2one('survey.label', string="Row answer")
@@ -253,6 +255,29 @@ class SurveyUserInputLine(models.Model):
         }
         if answer_tag in post and post[answer_tag].strip():
             vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
+        else:
+            vals.update({'answer_type': None, 'skipped': True})
+        old_uil = self.search([
+            ('user_input_id', '=', user_input_id),
+            ('survey_id', '=', question.survey_id.id),
+            ('question_id', '=', question.id)
+        ])
+        if old_uil:
+            old_uil.write(vals)
+        else:
+            old_uil.create(vals)
+        return True
+
+    @api.model
+    def save_line_datetime(self, user_input_id, question, post, answer_tag):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        if answer_tag in post and post[answer_tag].strip():
+            vals.update({'answer_type': 'datetime', 'value_datetime': post[answer_tag]})
         else:
             vals.update({'answer_type': None, 'skipped': True})
         old_uil = self.search([
