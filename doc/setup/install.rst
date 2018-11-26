@@ -181,12 +181,14 @@ This will install Odoo as a service, create the necessary PostgreSQL_ user
 and automatically start the server.
 
 .. danger:: to print PDF reports, you must install wkhtmltopdf_ yourself:
-            the version of wkhtmltopdf_ available in debian repositories does
-            not support headers and footers so it can not be installed
-            automatically. The recommended version is 0.12.1 and is available on
-            `the wkhtmltopdf download page`_, in the archive section. As there
-            is no official release for Debian Jessie, you can find ours on the
-            extra_ section of our nightly server.
+            the version of wkhtmltopdf_ available in Debian repositories does
+            not support headers and footers so it is not used as a direct dependency.
+            The recommended version is 0.12.5 and is available on
+            `the wkhtmltopdf download page`_, in the archive section. Previously
+            recommended version 0.12.1 is a good alternative.
+            More details on the various versions and their respective quirks can be
+            found in our `wiki <https://github.com/odoo/odoo/wiki/Wkhtmltopdf>`_.
+
 
 Configuration
 '''''''''''''
@@ -546,7 +548,7 @@ default db to serve on localhost:8069
     http://www.enterprisedb.com/products-services-training/pgdownload
 .. _Quilt: http://en.wikipedia.org/wiki/Quilt_(software)
 .. _saas: https://www.odoo.com/page/start
-.. _the wkhtmltopdf download page: https://github.com/wkhtmltopdf/wkhtmltopdf/releases/tag/0.12.1
+.. _the wkhtmltopdf download page: https://github.com/wkhtmltopdf/wkhtmltopdf/releases/tag/0.12.5
 .. _UAC: http://en.wikipedia.org/wiki/User_Account_Control
 .. _wkhtmltopdf: http://wkhtmltopdf.org
 .. _pip: https://pip.pypa.io
