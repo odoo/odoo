@@ -238,7 +238,9 @@
 
     <template id="date" name="Date box">
         <div class="form-group">
-            <div class="input-group date" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest">
+            <div class="input-group date" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest"
+                    t-att-data-mindate="question.validation_min_date"
+                    t-att-data-maxdate="question.validation_max_date">
                 <input type="text" class="form-control datetimepicker-input" t-attf-data-target="#datetimepicker_#{question.id}" t-att-name="prefix"/>
                 <div class="input-group-append" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
