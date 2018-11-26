@@ -457,9 +457,9 @@ class IrTranslation(models.Model):
         if not callable(field.translate):
             return
 
-        trans = self.env['ir.translation']
-        outdated = trans
-        discarded = trans
+        Trans = self.env['ir.translation']
+        outdated = Trans
+        discarded = Trans
 
         for record in records:
             # get field value and terms to translate
@@ -469,7 +469,7 @@ class IrTranslation(models.Model):
                 ('type', '=', 'model_terms'),
                 ('name', '=', "%s,%s" % (field.model_name, field.name)),
                 ('res_id', '=', record.id),
-            ], order='id DESC')
+            ], order='value, id DESC')
 
             if not terms:
                 # discard all translations for that field
