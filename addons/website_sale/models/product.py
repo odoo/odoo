@@ -68,6 +68,7 @@ class ProductPublicCategory(models.Model):
     # buttons have consistent styling.
     # In this case, the default image is set by the js code.
     image = fields.Binary(attachment=True, help="This field holds the image used as image for the category, limited to 1024x1024px.")
+    website_description = fields.Html('Category Description', sanitize_attributes=False, translate=html_translate)
     image_medium = fields.Binary(string='Medium-sized image', attachment=True,
                                  help="Medium-sized image of the category. It is automatically "
                                  "resized as a 128x128px image, with aspect ratio preserved. "
