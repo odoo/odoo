@@ -14,6 +14,12 @@ class HrEmployee(models.Model):
     slip_ids = fields.One2many('hr.payslip', 'employee_id', string='Payslips', readonly=True)
     payslip_count = fields.Integer(compute='_compute_payslip_count', string='Payslip Count', groups="hr_payroll.group_hr_payroll_user")
 
+    registration_number = fields.Char('Registration Number of the Employee', copy=False)
+
+    _sql_constraints = [
+        ('unique_registration_number', 'UNIQUE(registration_number, company_id)', 'No duplication of registration numbers is allowed')
+    ]
+
     @api.multi
     def _compute_payslip_count(self):
         for employee in self:

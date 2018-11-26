@@ -66,6 +66,7 @@ class HrPayslip(models.Model):
     payslip_run_id = fields.Many2one('hr.payslip.run', string='Payslip Batches', readonly=True,
         copy=False, states={'draft': [('readonly', False)]})
     payslip_count = fields.Integer(compute='_compute_payslip_count', string="Payslip Computation Details")
+    compute_date = fields.Date('Computed On')
 
     @api.multi
     def _compute_payslip_count(self):
@@ -143,7 +144,7 @@ class HrPayslip(models.Model):
             contracts = payslip.contract_id or \
                 payslip.employee_id._get_contracts(payslip.date_from, payslip.date_to)
             lines = [(0, 0, line) for line in payslip._get_payslip_lines(contracts)]
-            payslip.write({'line_ids': lines, 'number': number, 'state': 'verify'})
+            payslip.write({'line_ids': lines, 'number': number, 'state': 'verify', 'compute_date': fields.Date.today()})
         return True
 
     @api.model
