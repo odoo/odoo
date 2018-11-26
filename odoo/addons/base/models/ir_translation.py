@@ -469,7 +469,7 @@ class IrTranslation(models.Model):
                 ('type', '=', 'model_terms'),
                 ('name', '=', "%s,%s" % (field.model_name, field.name)),
                 ('res_id', '=', record.id),
-            ])
+            ], order='id DESC')
 
             if not terms:
                 # discard all translations for that field
@@ -494,8 +494,10 @@ class IrTranslation(models.Model):
                         outdated += trans
 
         # process outdated and discarded translations
-        outdated.write({'state': 'to_translate'})
-        discarded.unlink()
+        if outdated:
+            outdated.write({'state': 'to_translate'})
+        if discarded:
+            discarded.unlink()
 
     @api.model
     @tools.ormcache_context('model_name', keys=('lang',))
