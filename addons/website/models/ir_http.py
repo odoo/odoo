@@ -237,25 +237,22 @@ class Http(models.AbstractModel):
                 html = request.env['ir.ui.view'].render_template('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
-    @classmethod
-    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
+    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='datas_fname', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None, related_id=None, access_mode=None, env=None):
-        env = env or request.env
+                       access_token=None):
         obj = None
         if xmlid:
-            obj = cls._xmlid_to_obj(env, xmlid)
-        elif id and model in env:
-            obj = env[model].browse(int(id))
+            obj = self._xmlid_to_obj(self.env, xmlid)
+        elif id and model in self.env:
+            obj = self.env[model].browse(int(id))
         if obj and 'website_published' in obj._fields:
-            if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
-                env = env(user=SUPERUSER_ID)
-        return super(Http, cls).binary_content(
+            if self.env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
+                self.sudo()
+        return super(Http, self).binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype=default_mimetype, access_token=access_token, related_id=related_id,
-            access_mode=access_mode, env=env)
+            default_mimetype=default_mimetype, access_token=access_token)
 
     @classmethod
     def _xmlid_to_obj(cls, env, xmlid):

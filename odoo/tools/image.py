@@ -75,11 +75,9 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     asked_width, asked_height = size
     if upper_limit:
         if asked_width:
-            if asked_width >= image.size[0]:
-                asked_width = image.size[0]
+            asked_width = min(asked_width, image.size[0])
         if asked_height:
-            if asked_height >= image.size[1]:
-                asked_height = image.size[1]
+            asked_height = min(asked_height, image.size[1])
 
         if image.size[0] >= image.size[1]:
             asked_height = None
@@ -187,7 +185,7 @@ def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', fi
 # ----------------------------------------
 # Crop Image
 # ----------------------------------------
-def crop_image(data, type='top', ratio=False, size=None, image_format=None):
+def crop_image(data, type='top', ratio=None, size=None, image_format=None):
     """ Used for cropping image and create thumbnail
         :param data: base64 data of image.
         :param type: Used for cropping position possible
@@ -318,6 +316,29 @@ def image_resize_images(vals, big_name='image', medium_name='image_medium', smal
                         avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True, sizes=sizes))
     elif big_name in vals or medium_name in vals or small_name in vals:
         vals[big_name] = vals[medium_name] = vals[small_name] = False
+
+def limited_image_resize(content, width=None, height=None, crop=False, upper_limit=False, avoid_if_small=False):
+    """
+    :param content: bytes (should be an image)
+    """
+    if content:
+        signatures = [b'\xFF\xD8\xFF', b'\x89PNG\r\n\x1A\n']
+        decoded_content = base64.b64decode(content)
+        is_image = any(decoded_content.startswith(signature) for signature in signatures)
+        if (width or height) and is_image:
+            height = int(height or 0)
+            width = int(width or 0)
+            if crop:
+                return crop_image(content, type='center', size=(width, height), ratio=(1, 1))
+            else:
+                if not upper_limit:
+                    # resize maximum 500*500
+                    width = min(width, 500)
+                    height = min(height, 500)
+                return image_resize_image(
+                    base64_source=content, size=(width or None, height or None), encoding='base64', upper_limit=upper_limit,
+                    avoid_if_small=avoid_if_small)
+    return content
 
 def image_data_uri(base64_source):
     """This returns data URL scheme according RFC 2397
