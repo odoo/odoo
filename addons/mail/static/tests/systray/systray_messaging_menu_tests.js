@@ -616,7 +616,7 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
     var notifications = [
         [['myDB', 'mail.channel', 1], message]
     ];
-    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
+    messagingMenu.call('bus_service', 'trigger', 'notification', {notifications: notifications});
 
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
         "should no longer have a messaging menu counter (no unread message in channel)");

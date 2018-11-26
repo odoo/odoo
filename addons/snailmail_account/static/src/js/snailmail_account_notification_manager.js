@@ -15,9 +15,9 @@ var SnailmailNotificationManager =  AbstractService.extend({
         this.call('bus_service', 'onNotification', this, this._onNotification);
     },
 
-    _onNotification: function (notifs) {
+    _onNotification: function (ev) {
         var self = this;
-        _.each(notifs, function (notif) {
+        _.each(ev.data.notifications, function (notif) {
             var model = notif[0][1];
             var type = notif[1].type;
             if (model === 'res.partner' && type === 'snailmail_invalid_address') {

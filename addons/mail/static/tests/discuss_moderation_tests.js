@@ -831,7 +831,7 @@ QUnit.test('no crash when load-more fetching "accepted" message twice', function
         $general.click();
 
         // simulate search
-        discuss.trigger_up('search', {
+        discuss.trigger('search', {
             domains: [['author_id', '=', 100]],
         });
 

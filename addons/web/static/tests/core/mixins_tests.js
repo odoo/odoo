@@ -137,7 +137,7 @@ QUnit.module('core', {}, function () {
                 "should have sent proper data");
         },true);
 
-        // Listen to change:status on bus.
+        // Listen to change:status on widgetInstance.
         widgetInstance.bindChangeEvent();
 
         // set new value to status property which should trigger change:status event

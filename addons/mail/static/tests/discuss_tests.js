@@ -456,7 +456,7 @@ QUnit.test('@ mention with special chars', function (assert) {
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel', 1], data];
-                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
                 receiveMessageDef.resolve();
                 return $.when(42);
             }
