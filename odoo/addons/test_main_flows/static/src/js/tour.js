@@ -58,8 +58,8 @@ tour.register('main_flow_tour', {
     content: _t('Uncheck Buy'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Make To Order")',
-    content: _t('Uncheck  Make To Order'),
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Replenish on Order (MTO)")',
+    content: _t('Uncheck  Replenish on Order (MTO)'),
     position: 'right',
 }, {
     trigger: '.o_notebook a:contains("General Information")',
@@ -114,8 +114,8 @@ tour.register('main_flow_tour', {
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Make To Order")',
-    content: _t('Check Make To Order'),
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Replenish on Order (MTO)")',
+    content: _t('Check Replenish on Order (MTO)'),
     position: 'right',
 }, {
     trigger: '.o_notebook a:contains("Purchase")',
