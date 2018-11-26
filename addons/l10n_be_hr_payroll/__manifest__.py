@@ -25,4 +25,5 @@ Belgian Payroll Rules.
         'data/l10n_be_hr_payroll_data.xml',
         'views/res_config_settings_views.xml',
     ],
+    'auto_install': True,
 }

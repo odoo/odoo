@@ -5,8 +5,24 @@
         <t t-foreach="docs" t-as="o">
             <t t-call="web.external_layout">
                 <div class="page">
-                    <h2>Pay Slip</h2>
-                    <p t-field="o.name"/>
+                    <h2 t-field="o.name"/>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Company Information</strong></td>
+                            <td>
+                                <div><span t-field="o.company_id.name"/></div>
+                                <div><span t-field="o.company_id.street"/></div>
+                                <div><span t-field="o.company_id.street2" t-if="o.company_id.street2"/></div>
+                                <div>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id"/>
+                                    <span t-field="o.company_id.zip"/>
+                                </div>
+                                <div><span t-field="o.company_id.country_id"/></div>
+                            </td>
+                        </tr>
+                    </table>
 
                     <table class="table table-sm table-bordered">
                         <tr>
@@ -40,6 +56,22 @@
                             <td><strong>Date To</strong></td>
                             <td><span t-field="o.date_to"/></td>
                         </tr>
+                        <tr>
+                            <td><strong>Computed On</strong></td>
+                            <td><span t-field="o.compute_date"/></td>
+                            <td><strong>Registration Number</strong></td>
+                            <td><span t-field="o.employee_id.registration_number"/></td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm">
+                        <tr>
+                            <td><strong>Basic Salary</strong></td>
+                            <td>
+                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                            </td>
+                        </tr>
                     </table>
 
                     <table class="table table-sm">
@@ -47,21 +79,33 @@
                             <tr>
                                 <th>Code</th>
                                 <th>Name</th>
+                                <th>Number of Hours</th>
+                                <th>Number of Days</th>
                                 <th>Quantity/rate</th>
                                 <th>Amount</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                                <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                            <tr t-foreach="o.worked_days_line_ids" t-as="worked_days">
+                                <td><span t-field="worked_days.code"/></td>
+                                <td><span t-field="worked_days.name"/></td>
+                                <td><span t-field="worked_days.number_of_hours"/></td>
+                                <td><span t-field="worked_days.number_of_days"/></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
                                 <td><span t-field="line.code"/></td>
                                 <td><span t-field="line.name"/></td>
+                                <td></td>
+                                <td></td>
                                 <td><span t-field="line.quantity"/></td>
                                 <td><span t-esc="line.amount"
                                           t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
                                 <td><span t-esc="line.total"
                                           t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
-
                             </tr>
                         </tbody>
                     </table>
