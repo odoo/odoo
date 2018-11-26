@@ -51,6 +51,7 @@ class StockMoveLine(models.Model):
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
     reference = fields.Char(related='move_id.reference', store=True, related_sudo=False, readonly=False)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
+    origin = fields.Char(related='move_id.origin', string='Source')
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
 
     @api.one
