@@ -513,6 +513,85 @@ QUnit.test('@ mention with special chars', function (assert) {
     });
 });
 
+QUnit.test('@ mention in mailing channel', function (assert) {
+    assert.expect(8);
+    var done = assert.async();
+
+    var fetchListenersDef = $.Deferred();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+                mass_mailing: true,
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_fetch_listeners') {
+                fetchListenersDef.resolve();
+                return $.when([
+                    {id: 1, name: 'Admin'},
+                ]);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+
+        // click on general
+        $general.click();
+        // 1st composer: basic composer (hidden), 2nd composer: extended (shown)
+        var $input = discuss.$('textarea.o_composer_text_field').eq(1);
+        assert.ok($input.length, "should display a composer input");
+
+        // Simulate '@' typed by user with mocked Window.getSelection
+        // Note: focus is needed in order to trigger rpc 'channel_fetch_listeners'
+        $input.focus();
+        $input.val("@");
+        $input.trigger('keyup');
+
+        fetchListenersDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+                assert.strictEqual(discuss.$('.dropup.o_composer_mention_dropdown.show').length, 1,
+                "dropup menu for partner mentions should be open");
+
+                var $mention = discuss.$('.o_mention_proposition');
+                assert.strictEqual($mention.length, 1,
+                    "should display 1 partner mention proposition");
+
+                // correct mention proposition
+                assert.ok($mention.hasClass('active'),
+                    "partner mention should be active");
+                assert.strictEqual($mention.data('id'), 1,
+                    "partner mention should link to the correct partner id");
+                assert.strictEqual($mention.find('.o_mention_name').text(), "Admin",
+                    "partner mention should display the correct partner name");
+
+                // equivalent to $mentionPropositions.find('active').click();
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
+
+                assert.ok($input.is(':focus'), "composer body should have focus");
+                assert.notOk(discuss.$('.o_composer_subject').is(':focus'));
+
+                discuss.destroy();
+                done();
+        });
+    });
+});
+
 QUnit.test('no crash focusout emoji button', function (assert) {
     assert.expect(3);
     var done = assert.async();
