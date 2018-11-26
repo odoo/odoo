@@ -316,9 +316,12 @@ class ProductProduct(models.Model):
     @api.multi
     def write(self, values):
         ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
-        res = super(ProductProduct, self).write(values)
+        products_to_set = self.env['product.product']
         if 'standard_price' in values:
-            self._set_standard_price(values['standard_price'])
+            products_to_set = self.filtered(lambda product: product.standard_price != values['standard_price'])
+        res = super(ProductProduct, self).write(values)
+        if products_to_set:
+            products_to_set._set_standard_price(values['standard_price'])
         return res
 
     @api.multi
