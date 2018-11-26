@@ -1100,7 +1100,7 @@ class Menu(models.Model):
         if vals.get('url') == '/default-main-menu':
             return super(Menu, self).create(vals)
 
-        if vals.get('website_id'):
+        if 'website_id' in vals:
             return super(Menu, self).create(vals)
         elif self._context.get('website_id'):
             vals['website_id'] = self._context.get('website_id')
