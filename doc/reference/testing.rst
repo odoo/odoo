@@ -296,6 +296,14 @@ The web UI has many useful features: it can run only some submodules, or
 filter tests that match a string. It can show every assertions, failed or passed,
 rerun specific tests, ...
 
+.. warning::
+
+    While the test suite is running, make sure that:
+
+    - your browser window is focused,
+    - it is not zoomed in/out. It needs to have exactly 100% zoom level.
+
+    If this is not the case, some tests will fail, without a proper explanation.
 
 Testing Infrastructure
 ----------------------
