@@ -203,6 +203,9 @@
                     <div class="row mt-3">
                         <div class="d-none" id="products_grid_before"></div>
                         <div class="col-lg-12" id="products_grid">
+                            <div t-if="category" class="mb16" id="category_header">
+                                <div t-field="category.website_description"/>
+                            </div>
                             <table width="100%">
                                 <tbody>
                                     <tr t-ignore="true">
