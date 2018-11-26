@@ -23,8 +23,7 @@
     </template>
 
     <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" active="True" name="Product attributes table">
-        <xpath expr="//hr[@id='hr_product_attributes_simple']" position="replace"/>
-        <xpath expr="//p[@id='product_attributes_simple']" position="replace"/>
+        <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
         <xpath expr="//div[@id='product_full_description']" position="after">
             <section class="container" id="product_full_spec">
                 <t t-set="atts" t-value="product.get_variant_groups()"/>
