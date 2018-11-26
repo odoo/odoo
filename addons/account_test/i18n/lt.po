@@ -3,18 +3,20 @@
 # * account_test
 # 
 # Translators:
+# Rytis Štreimikis <r.streimikis@hotmail.lt>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Martin Trigaux, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Rytis Štreimikis <r.streimikis@hotmail.lt>, 2017
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Rytis Štreimikis <r.streimikis@hotmail.lt>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +43,12 @@ msgstr "<strong>Pavadinimas:</strong>"
 #: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Askaitos testas"
+msgstr "Apskaitos testas"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "Apskaitos testai"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
@@ -57,6 +59,8 @@ msgstr "Aktyvus"
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
+"Patikrinti, ar perkėlimų eilutės yra balansuotos ir turi tą pačią datą bei "
+"laikotarpį"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -64,11 +68,14 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
+"Banko išraše patikrinti, kad uždarymo balansas = pradžios balansas + išrašo "
+"eilučių suma"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
+"Patikrinti, ar apmokėtos/sudengtos sąskaitos nėra \"Atidarytoje\" būsenoje"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -76,6 +83,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
+"Patikrinti, ar sudengti sąskaitos perkėlimai, kurie nustato mokėtinas ir "
+"gautinas sąskaitas, priklauso sudengtoms sąskaitoms"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -83,16 +92,18 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
 msgstr ""
+"Patikrinti, ar sudengta sąskaita pardavimams/pirkimams sudengė įrašus "
+"mokėtinoms ir gautinoms sąskaitoms"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "Patikrinti balansą: Debeto suma = Kredito suma"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr ""
+msgstr "Norėdami sukurti apskaitos testą, paspauskite."
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -123,6 +134,24 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
+"Kodas visada turėtų nustatyti kintamąjį pavadinimu \"result\", turintį jūsų testo rezultatą, kuris gali būti sąrašas ar žodynas. Jei \"rezultatas\" yra tuščias sąrašas, tai reiškia, kad testas pavyko. Kitu atveju,\n"
+"jis bandys išversti ir atspausdinti tai, kas yra \"rezultato\" viduje.\n"
+"\n"
+"Jei jūsų testo rezultatas yra žodynas, galite nustatyti kintamąjį pavadinimu \"column_order\", kad pasirinktumėte, kokia tvarka norite spausdinti rezultato turinį.\n"
+"\n"
+"Jei prireiktų, savo kode galite naudoti ir šiuos kintamuosius:\n"
+"    * cr: duomenų bazės kursorius\n"
+"    * uid: esamo vartotojo ID\n"
+"\n"
+"Visais atvejais, kodas turi būti parašytas Python išraiškomis su teisingomis įtraukomis (jei reikalingos).\n"
+"\n"
+"Pavyzdys: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -190,43 +219,46 @@ msgstr "Seka"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "Testas 1: Bendras balansas"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "Testas 3: Perkėlimo eilutės"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
+"Testas 5.1: Mokėtinos ir gautinos sudengtų sąskaitų-faktūrų apskaitos "
+"eilutės "
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
 msgstr ""
+"Testas 5.2: Sudengtos sąskaitos-faktūros ir mokėtinos/gautinos sąsaitos"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "Testas 6: Sąskaitų būsenos"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "Testas 7: Banko išrašų uždarymo balansas"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
 msgid "Test Description"
-msgstr ""
+msgstr "Testo aprašas"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
 msgid "Test Name"
-msgstr ""
+msgstr "Testo pavadinimas"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -238,14 +270,14 @@ msgstr "Testai"
 #: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "Testas atliktas sėkmingai"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr ""
+msgstr "accounting.assert.test"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr ""
+msgstr "report.account_test.report_accounttest"
