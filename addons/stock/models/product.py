@@ -402,7 +402,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     responsible_id = fields.Many2one(
-        'res.users', string='Responsible', default=lambda self: self.env.uid, required=True,
+        'res.users', string='Responsible',
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     type = fields.Selection(selection_add=[('product', 'Storable Product')])
     property_stock_production = fields.Many2one(
@@ -443,7 +443,7 @@ class ProductTemplate(models.Model):
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
-        help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO, etc.")
+        help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     # TDE FIXME: really used ?
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
