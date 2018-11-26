@@ -413,7 +413,6 @@ return {
     ParentedMixin: ParentedMixin,
     EventDispatcherMixin: EventDispatcherMixin,
     PropertiesMixin: PropertiesMixin,
-    OdooEvent: OdooEvent
 };
 
 });

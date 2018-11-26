@@ -2,7 +2,6 @@ odoo.define('web.mixins_tests', function (require) {
 "use strict";
 
 var core = require('web.core');
-var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -95,49 +94,45 @@ QUnit.module('core', {}, function () {
 
         var widget = Widget.extend({
             bindEvent: function() {
-                core.bus.on('call_by_bus', this, this.onCallByBus);
+                core.bus.on('call_by_bus', this, this._onCallByBus);
             },
-            onCallByBus: function(ev) {
-                assert.step('called_by_bus');
-                return ev;
-            }
+            _onCallByBus: function(ev) {
+                assert.strictEqual(ev.data.isWorking, true,
+                "should have sent proper data");
+                assert.strictEqual(ev.constructor.name, "OdooEvent",
+                    "Bus event triggered with OdooEvent");
+                return true;
+            },
         });
 
         // widget instance
         var widgetInstance = new widget();
-        // intercept the call_by_bus in widget instance
-        testUtils.intercept(widgetInstance, 'call_by_bus', function (ev) {
-            assert.strictEqual(ev.data.isWorking, true,
-                "should have sent proper data");
-        },true);
 
         // Listen to call_by_bus on bus.
         widgetInstance.bindEvent();
 
         core.bus.trigger('call_by_bus', {isWorking: true});
-        assert.verifySteps(['called_by_bus']);
 
         widgetInstance.destroy();
     });
 
     QUnit.test('perform a trigger change:something properly', function (assert) {
-        assert.expect(4);
+        assert.expect(2);
 
         var widget = Widget.extend({
             bindChangeEvent: function() {
                 this.on('change:status', this, this.onChangeStatus);
             },
             onChangeStatus: function(ev) {
-                assert.step('called_change_event');
                 return ev;
             }
         });
-        var OdooEvent = mixins.OdooEvent;
         // widget instance
         var widgetInstance = new widget();
         // intercept the call_by_bus in widget instance
         testUtils.intercept(widgetInstance, 'change:status', function (ev) {
-            assert.ok(ev instanceof OdooEvent, "ev must be instance of OdooEvent");
+            assert.strictEqual(ev.constructor.name, "OdooEvent",
+                "ev must be instance of OdooEvent");
             assert.strictEqual(ev.data.newValue, "suh",
                 "should have sent proper data");
         },true);
@@ -145,8 +140,8 @@ QUnit.module('core', {}, function () {
         // Listen to change:status on bus.
         widgetInstance.bindChangeEvent();
 
+        // set new value to status property which should trigger change:status event
         widgetInstance.set('status', "suh");
-        assert.verifySteps(['called_change_event']);
 
         widgetInstance.destroy();
     });

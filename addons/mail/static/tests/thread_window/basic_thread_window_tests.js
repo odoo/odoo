@@ -511,7 +511,7 @@ QUnit.test('do not autofocus chat window on receiving new direct message', funct
 
     this.data['mail.message'].records.push(messageData);
     var notification = [[false, 'mail.channel', 2], messageData];
-    form.call('bus_service', 'trigger', 'notification', [notification]);
+    form.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     assert.ok($('.o_thread_window.o_in_home_menu').length,
         'Chat window is opened');
