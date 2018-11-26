@@ -86,7 +86,7 @@ class SaleOrder(models.Model):
                 order._create_delivery_line(order.carrier_id, price_unit)
         return True
 
-    def _create_delivery_line(self, carrier, price_unit):
+    def _create_delivery_line(self, carrier, price_unit, price_unit_in_description=False):
         SaleOrderLine = self.env['sale.order.line']
         if self.partner_id:
             # set delivery detail in the customer language
@@ -105,14 +105,27 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
-            'price_unit': price_unit,
             'tax_id': [(6, 0, taxes_ids)],
             'is_delivery': True,
         }
+        if price_unit_in_description:
+            values['price_unit'] = 0
+            values['name'] += _(' (Estimated Cost: %s )') % self._format_currency_amount(price_unit)
+        else:
+            values['price_unit'] = price_unit
+
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
         sol = SaleOrderLine.sudo().create(values)
         return sol
+
+    def _format_currency_amount(self, amount):
+        pre = post = u''
+        if self.currency_id.position == 'before':
+            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=self.currency_id.symbol or '')
+        else:
+            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=self.currency_id.symbol or '')
+        return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
 
     @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines',
                  'order_line.is_delivery', 'order_line.is_downpayment', 'order_line.product_id.invoice_policy')

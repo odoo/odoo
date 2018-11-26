@@ -84,6 +84,7 @@
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                             </group>
                             <group name="delivery_details">
+                                <field name="invoice_policy" widget="radio" attrs="{'invisible': [('delivery_type', 'in', ('fixed', 'base_on_rule'))]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
                                     <field name="margin" class="oe_inline"/>%
