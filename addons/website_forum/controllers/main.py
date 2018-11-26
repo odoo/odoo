@@ -341,7 +341,7 @@ class WebsiteForum(http.Controller):
     def post_create(self, forum, post_parent=None, post_type=None, **post):
         if post_type == 'question' and not post.get('post_name', ''):
             return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
-        if post.get('content', '') == '<p class="fa fa-user"><br></p>':
+        if post.get('content', '') == '<p></p>':
             return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Question should not be empty.')})
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
@@ -481,7 +481,7 @@ class WebsiteForum(http.Controller):
         Post = request.env['forum.post']
         domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
         if kwargs.get('spam_post'):
-            domain += [('name', 'like', kwargs.get('spam_post'))]
+            domain += [('name', 'ilike', kwargs.get('spam_post'))]
         flagged_posts_ids = Post.search(domain, order='write_date DESC')
 
         values = self._prepare_forum_values(forum=forum)
@@ -571,7 +571,6 @@ class WebsiteForum(http.Controller):
         dom = [('karma', '>', 1), ('website_published', '=', True)] 
         if searches.get('user'):
             dom += [('name', 'ilike', searches.get('user'))]
-            print('search = ', dom)
         user_obj = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
         users = [[] for i in range(len(user_obj) // 3 + 1)]

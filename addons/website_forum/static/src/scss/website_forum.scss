@@ -1,7 +1,3 @@
-#wrapwrap{
-    background-color: $gray-200;
-}
-
  .tag_post{
     max-width: 20%;
     span{
@@ -225,10 +221,44 @@ a.no-decoration {
     float: none;
     opacity: 1;
     font-weight: 300;
-    padding: .15rem .75rem 0;
+    /*padding: .15rem .75rem 0;*/
     line-height: 1.5;
 }
-
+.dropleft .close.comment_delete:hover{
+    opacity: 1;
+}
+.dropleft .dropdown-item:active{
+    color: $white !important;
+}
+.dropleft .dropdown-item:active:hover{
+    color: $white !important;
+}
+.o_icon_before{
+    position: relative;
+    padding-left: 30px !important;
+}
+.o_icon_before:before{
+    content: "\f044";
+    display: block;
+    position: absolute;
+    top: 9px;
+    left: 11px;
+    font-family: FontAwesome;
+    color: theme-color('primary');
+    font-size: .8rem;
+}
+.o_trash_icon:before{
+    content: "\f014";
+}
+.o_flag_icon:before{
+    content: "\f024";
+}
+.o_close_icon:before{
+    content: "\f00d";
+}
+.o_magic_icon:before{
+    content: "\f0d0";
+}
 .country_flag {
     max-height: 13px;
     width: auto !important;

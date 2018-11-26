@@ -138,31 +138,29 @@
                     </div>
                     <div class="card border-0" t-if="question">
                         <h5 class="card-header bg-secondary h6 font-weight-bold">Writer</h5>
-                        <div class="card-body o_card_people">
+                        <div class="card-body o_card_people bg-light border rounded-bottom">
                              <div class="float-left px-0 py-0 o_people_photo_container rounded mr-2" t-attf-style="background-image: url('/forum/user/#{question.create_uid.id}/avatar">
                             </div>
                             <b><i class="fa fa-diamond text-secondary mr-2"/><t t-esc="question.create_uid.sudo().karma"/></b>
                             <h5><a t-attf-href="/forum/#{slug(forum)}/user/#{question.create_uid.sudo().id}" t-field="question.create_uid" t-options='{"widget": "contact", "fields": ["name", "country_id"]}' class="d-inline font-weight-bold text-secondary"/></h5>
                         </div>
                     </div>
-                    <!-- <t t-if="not len(question.tag_ids)&lt;=0"> -->
-                        <div class="card mt-3 border-0" t-if="question and not len(question.tag_ids)&lt;=0">
-                            <t t-if="len(question.tag_ids)&lt;=1">
-                                <h5 class="card-header bg-secondary h6 font-weight-bold">Tag</h5>
+                    <div class="card mt-3 border-0" t-if="question and not len(question.tag_ids)&lt;=0">
+                        <t t-if="len(question.tag_ids)&lt;=1">
+                            <h5 class="card-header bg-secondary h6 font-weight-bold">Tag</h5>
+                        </t>
+                        <t t-else="">
+                            <h5 class="card-header bg-secondary h6 font-weight-bold">Tags</h5>
+                        </t>
+                        <div class="card-body bg-light border rounded-bottom">
+                            <t t-foreach="question.tag_ids" t-as="tag">
+                                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge bg-200 border px-2 py-1" t-field="tag.name"/>
                             </t>
-                            <t t-else="">
-                                <h5 class="card-header bg-secondary h6 font-weight-bold">Tags</h5>
-                            </t>
-                            <div class="card-body">
-                                <t t-foreach="question.tag_ids" t-as="tag">
-                                    <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge bg-200 border px-2 py-1" t-field="tag.name"/>
-                                </t>
-                            </div>
                         </div>
-                    <!-- </t> -->
+                    </div>
                     <div class="card mt-3 border-0" t-if="question">
                         <h5 class="card-header bg-secondary h6 font-weight-bold">Keep Informed</h5>
-                        <div class="card-body o_subscribe_post">
+                        <div class="card-body o_subscribe_post bg-light rounded-bottom border">
                             <t t-call="website_mail.follow">
                                 <t t-set="object" t-value="question"/>
                                 <t t-set="div_class" t-value="'mx-auto'"/>
@@ -174,7 +172,7 @@
                     </div>
                     <div class="card mt-3 border-0" id="about_forum">
                         <h5 class="card-header bg-secondary h6 font-weight-bold">About This Community</h5>
-                        <div class="card-body">
+                        <div class="card-body bg-light border  rounded-bottom">
                             <span t-field="forum.description"/>
                             <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="btn btn-primary mt-3"><i class="fa fa-arrow-right"/> Read Guidelines</a>
                             <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="btn btn-primary mt-3"><i class="fa fa-arrow-right"/> Back to <span t-field="forum.name"/></a>
@@ -182,7 +180,7 @@
                     </div>
                     <div class="card mt-3 border-0" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
                         <h5 class="card-header bg-secondary h6 font-weight-bold">Moderation Tools</h5>
-                        <div class="card-body">
+                        <div class="card-body border bg-light rounded-bottom">
                             <a t-attf-href="/forum/#{slug(forum)}/validation_queue" class="text-dark"><i class="fa fa-check-square-o mr-3 text-primary"/><strong><t t-esc="forum.count_posts_waiting_validation"/></strong> waiting for validation</a>
                             <hr style="margin-top:4px;margin-bottom:0;padding-bottom:4px;" />
                             <a t-attf-href="/forum/#{slug(forum)}/flagged_queue" class="text-dark"><i class="fa fa-flag mr-3 text-primary"/><strong id="count_flagged_posts"><t t-esc="forum.count_flagged_posts"/></strong> post<t t-if="forum.count_flagged_posts&gt;1">s</t> flagged</a>
@@ -266,7 +264,7 @@
 </template>
 
 <template id="display_post">
-    <div class="question pb24 pt24 px-3 mb8 bg-white rounded">
+    <div class="question pb24 pt24 px-3 mb8 bg-light rounded border">
         <div class="float-left">
             <t t-call="website_forum.vote">
                 <t t-set="post" t-value="question"/>
@@ -801,7 +799,7 @@
 
                 <div class="clearfix">
                     <t t-if="question.can_answer">
-                        <ul class="float-right list-inline mb0 bg-white rounded py-1 pl-2 pr-3" id="options">
+                        <ul class="float-right list-inline mb0 bg-light border rounded py-1 pl-2 pr-3" id="options">
                             <li t-if="question.state == 'close'" class="list-inline-item" title="Reopen">
                                 <t t-call="website_forum.link_button">
                                     <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
@@ -851,7 +849,7 @@
                                 </t>
                             </li>
                             <li t-if="question.active" class="list-inline-item" title="Flag">
-                                <a t-attf-style="cursor: pointer;#{not question.can_flag and 'color:#999;' or ''}"
+                                <a t-attf-style="cursor: pointer;#{not question.can_flag and 'display:none;' or ''}"
                                     t-attf-class="flag fa #{not question.can_flag and 'karma_required fa-flag-o' or 'fa-flag'}"
                                     t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
                                     t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag"
@@ -860,12 +858,12 @@
                             </li>
                         </ul>
                     </t>
-                    <ul class="list-inline mb0 bg-white rounded px-3 py-2 float-left">
+                    <ul class="list-inline mb0 bg-light rounded px-3 py-2 float-left border">
                         <t t-if="question.can_answer">
                             <li class="list-inline-item">
-                                <a t-attf-class="text-dark o_none_underline #{not question.can_answer and 'karma_required text-muted' or ''}"  
-                                t-att-data-karma="question.forum_id.karma_answer"   
-                                href="#post_reply"><i class=" fa fa-reply text-primary mr-1"/> <b>Reply</b></a>   
+                                <a t-attf-class="text-dark o_none_underline #{not question.can_answer and 'karma_required text-muted' or ''}"
+                                t-att-data-karma="question.forum_id.karma_answer"
+                                href="#post_reply"><i class=" fa fa-reply text-primary mr-1"/> <b>Reply</b></a>
                             </li>
                         </t>
                         <li class="list-inline-item">
@@ -908,7 +906,7 @@
 
 <template id="post_answers">
     <a t-attf-id="answer-#{str(answer.id)}"/>
-    <div t-attf-class="forum_answer bg-white rounded px-3 py-3" t-attf-id="answer_#{answer.id}" >
+    <div t-attf-class="forum_answer bg-light border rounded px-3 py-3" t-attf-id="answer_#{answer.id}" >
         <div  t-if="answer.is_correct" class="validate_answer">
             <div class="bg-success d-block"></div>
             <span title="Question has accepted answer" role="img" aria-label="Question has accepted answer"><i class="fa fa-check-circle text-success bg-white"/></span>
@@ -927,48 +925,36 @@
         </div>
         <div class="question-block offset-1">
             <t t-if="answer.can_comment">
-                <div class="dropdown dropleft float-right">
+                <div class="dropdown dropleft float-right border rounded">
                   <a class="btn bg-white" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-ellipsis-v text-primary"/>
                   </a>
                   <div class="dropdown-menu py-0 shadow" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item border-bottom py-2">
-                        <i class="fa fa-pencil-square-o text-primary d-inline float-left pt-1"/>
-                        <t t-call="website_forum.link_button">
-                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
-                            <t t-set="label">Edit</t>
-                            <t t-set="classes" t-value="'text-dark py-0'"/>
-                            <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
-                        </t>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
+                        <t t-set="label">Edit</t>
+                        <t t-set="classes" t-value="'text-dark dropdown-item border-bottom py-2 o_icon_before o_edit_icon'"/>
+                        <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
+                    </t>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/delete'"/>
+                        <t t-set="label">Delete</t>
+                        <t t-set="classes" t-value="'text-dark dropdown-item border-bottom py-2 o_icon_before o_trash_icon'"/>
+                        <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
+                    </t>
+                    <a t-attf-style="cursor: pointer;#{not answer.can_flag and 'display:none;' or ''}"
+                        t-attf-class="dropdown-item border-bottom py-2 o_icon_before o_flag_icon flag  #{not answer.can_flag and 'karma_required' or ''}"
+                        t-attf-data-karma="#{not answer.can_flag and answer.forum_id.karma_flag or 0}"
+                        t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(answer)}/flag">
+                        <t t-if="answer.state == 'flagged'">Flagged</t>
+                        <t t-if="answer.state != 'flagged'">Flag</t>
                     </a>
-                    <div class="dropdown-item border-bottom py-2">
-                        <i class="fa fa-trash-o text-primary d-inline float-left pt-1"/>
-                        <t t-call="website_forum.link_button">
-                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/delete'"/>
-                            <t t-set="label">Delete</t>
-                            <t t-set="classes" t-value="'text-dark py-0'"/>
-                            <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
-                        </t>
-                    </div>
-                    <div class="dropdown-item border-bottom py-2">
-                        <i t-attf-class="fa fa-flag text-primary d-inline float-left pt-1"/>
-                        <a t-attf-style="cursor: pointer;#{not answer.can_flag and 'color:#999;' or ''}"
-                                t-attf-class="flag  #{not answer.can_flag and 'karma_required' or ''}"
-                                t-attf-data-karma="#{not answer.can_flag and answer.forum_id.karma_flag or 0}"
-                                t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(answer)}/flag">
-                                <t t-if="answer.state == 'flagged'">Flagged</t>
-                                <t t-if="answer.state != 'flagged'">Flag</t>
-                            </a>
-                        </div>
-                    <div class="dropdown-item py-2">
-                        <i t-attf-class="fa fa-magic text-primary d-inline float-left pt-1"/>
-                        <t t-call="website_forum.link_button">
-                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/convert_to_comment'"/>
-                            <t t-set="label">Convert as a comment</t>
-                            <t t-set="classes" t-value="'text-dark py-0'"/>
-                            <t t-set="karma" t-value="not answer.can_comment_convert and answer.karma_comment_convert or 0"/>
-                        </t>
-                    </div>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/convert_to_comment'"/>
+                        <t t-set="label">Convert as a comment</t>
+                        <t t-set="classes" t-value="'text-dark py-0 dropdown-item py-2 o_icon_before o_magic_icon'"/>
+                        <t t-set="karma" t-value="not answer.can_comment_convert and answer.karma_comment_convert or 0"/>
+                    </t>
                   </div>
                 </div>
             </t>
@@ -1069,32 +1055,26 @@
 <template id="post_comment">
     <div class="row clearfix">
         <div class="col-md-12">
-            <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment bg-100 py-3 pl-4 pr-2 rounded mb-2 border">
-                <div class="dropdown dropleft float-right">
-                  <a class="btn  bg-100" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment bg-white py-3 pl-4 pr-2 rounded mb-2 border">
+                <div t-attf-class="dropdown dropleft float-right border rounded">
+                  <a class="btn btn-sm bg-100" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-ellipsis-v text-primary"/>
                   </a>
                   <div class="dropdown-menu py-0 shadow" aria-labelledby="dropdownMenuButton">
-                    <div class="dropdown-item border-bottom py-2">
-                        <i class="fa fa-trash-o d-inline float-left pt-1 text-primary"/>
-                        <t t-call="website_forum.link_button">
-                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
-                            <t t-set="label">Delete</t>
-                            <t t-set="aria-label">Delete</t>
-                            <t t-set="title">Delete</t>
-                            <t t-set="classes" t-value="'close comment_delete'"/>
-                            <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
-                        </t>
-                    </div>
-                    <div class="dropdown-item py-2">
-                        <i class="fa fa-magic d-inline float-left pt-1 text-primary"/>
-                        <t t-call="website_forum.link_button">
-                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) +  '/convert_to_answer'"/>
-                            <t t-set="label">Convert as a answer</t>
-                            <t t-set="classes" t-value="'py-0 text-dark'"/>
-                            <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
-                        </t>
-                    </div>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
+                        <t t-set="label">Delete</t>
+                        <t t-set="aria-label">Delete</t>
+                        <t t-set="title">Delete</t>
+                        <t t-set="classes" t-value="'close comment_delete dropdown-item border-bottom py-2 font-weight-normal o_icon_before o_trash_icon'"/>
+                        <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
+                    </t>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) +  '/convert_to_answer'"/>
+                        <t t-set="label">Convert as a answer</t>
+                        <t t-set="classes" t-value="'py-0 text-dark dropdown-item py-2 font-weight-normal o_icon_before o_magic_icon'"/>
+                        <t t-set="karma" t-value="not answer.can_comment_convert and answer.karma_comment_convert or 0"/>
+                    </t>
                   </div>
                 </div>
                 <small class="text-muted">
@@ -1285,14 +1265,14 @@
                 </div>
             </div>
         </div>
-        <div t-foreach="posts_ids" t-as="question" class="mb16 post_to_validate bg-white rounded px-3 py-4">
+        <div t-foreach="posts_ids" t-as="question" class="mb16 post_to_validate bg-light border rounded px-3 py-4">
 
             <div class="col-md-2 col-sm-4 o_js_validation_queue float-left mb-3">
                 <div class="text-center border-right pr-4">
-                    <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" title="Validate" aria-label="Validate" class="d-block border rounded col-12 px-1 py-1 mb-1 border-success"><i class="fa fa-check text-success"/></a>
-                    <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" title="Refuse" aria-label="Refuse" class="d-block border rounded col-12 px-1 py-1 mb-1 border-danger"><i class="fa fa-times text-danger"/></a>
-                    <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="d-block border rounded col-12 px-1 py-1 pb-1 mb-1 border-danger"><i class="fa fa-times text-danger"/></a>
-                    <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive" class="d-block border rounded col-12 px-1 py-1 border-danger"><i class="fa fa-times text-danger"/></a>
+                    <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" title="Validate" aria-label="Validate" class="d-block border rounded col-12 px-1 py-1 mb-1 border-success bg-white"><i class="fa fa-check text-success"/></a>
+                    <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" title="Refuse" aria-label="Refuse" class="d-block border rounded col-12 px-1 py-1 mb-1 border-danger bg-white"><i class="fa fa-times text-danger"/></a>
+                    <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="d-block border rounded col-12 px-1 py-1 pb-1 mb-1 border-danger bg-white"><i class="fa fa-times text-danger"/></a>
+                    <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive" class="d-block border rounded col-12 px-1 py-1 border-danger bg-white"><i class="fa fa-times text-danger"/></a>
                 </div>
             </div>
             <div class="col-md-10 col-sm-12 float-right">
@@ -1333,7 +1313,7 @@
         </div>
         <div t-foreach="users" t-as="row_users" class="row">
             <div t-foreach="row_users" t-as="u" class="col-xl-4 col-md-6 col-sm-12 px-3">
-                <div  class="rounded bg-white o_card_people d-block mb-4 col-12 pb-3">
+                <div  class="rounded bg-white o_card_people d-block mb-4 col-12 pb-3 border">
                     <div class="card-header o_people d-block rounded-top bg-100 border-0 px-3 py-3 row">
                         <b><i class="text-secondary mr-1 fa fa-diamond"/><t t-esc="u.karma"/></b>
                         <div class="o_people_photo_container rounded float-left mr-3" t-attf-style="background-image: url('/forum/user/#{u.id}/avatar')">
@@ -1388,7 +1368,7 @@
             <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="js_website_submit_form col-12 px-0" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
-                <div class="col-3 float-left rounded bg-white o_card_people">
+                <div class="col-3 float-left rounded bg-light border o_card_people">
                     <div class="o_people_photo_container rounded o_edit_profil" t-attf-style="background-image: url('/forum/user/#{user.id}/avatar')"></div>
                     <div class="text-center col-10 offset-1 px-0">
                         <a href="#" class="o_forum_profile_pic_edit" aria-label="Edit">
@@ -1406,7 +1386,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-9 float-right row bg-white rounded pt-4 mb-3">
+                <div class="col-9 float-right row bg-light border rounded pt-4 mb-3">
                     <input name="user_id" t-att-value="user.id" type="hidden"/>
                     <div class="form-group col-12">
                         <label class="text-secondary mb-1 d-block" for="user_name"><b>Real name</b></label>
@@ -1474,7 +1454,7 @@
                 t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit">Edit<i class="fa fa-angle-right ml-2"/></a>
         </div>
         <div class="o_profile_main">
-            <div class="col-md-4 pb16 rounded mb-5 d-block float-left o_card_people bg-white">
+            <div class="col-md-4 pb16 rounded mb-5 d-block float-left o_card_people bg-white border">
                 <div class="card-header o_people d-block rounded-top bg-100 border-0 px-3 py-3 row">
                     <div class="o_people_photo_container rounded float-left mr-3" t-attf-style="background-image: url('/forum/user/#{user.id}/avatar')">
                     </div>
@@ -1507,7 +1487,7 @@
             </div>
             <div class="col-md-8 rounded float-left d-inline-block pr-0">
                 <b class="text-muted">Contribution</b>
-                <div class="bg-white rounded px-3 py-3 mt-1 mb-4">
+                <div class="rounded px-3 py-3 mt-1 mb-4 bg-light border">
                     <div class="col-12 d-block px-0">
                         <div class="col-4 d-inline-block px-0">
                             <b class="text-secondary">Member since</b>
@@ -1523,7 +1503,7 @@
                 </div>
 
                 <b class="text-muted">Bio</b>
-                <div class="bg-white rounded px-3 py-3 mt-1 mb-4">
+                <div class="rounded px-3 py-3 mt-1 mb-4 bg-light border">
                     <div class=" col-12 d-block">
                         <div class="col-4 d-inline-block px-0">
                             <b class="text-secondary">Location</b>
@@ -1546,7 +1526,7 @@
                 </div>
 
                 <b class="text-muted">Introduction</b>
-                <div class="bg-white px-3 py-3 mt-1 mb-4 rounded">
+                <div class="bg-light border px-3 py-3 mt-1 mb-4 rounded">
                     <div><span t-field="user.partner_id.website_description" class="oe_no_empty"/></div>
                 </div>
             </div>
