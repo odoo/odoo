@@ -465,7 +465,7 @@ class IrTranslation(models.Model):
             # get field value and terms to translate
             value = record[field.name]
             terms = set(field.get_trans_terms(value))
-            record_trans = trans.search([
+            record_trans = Trans.search([
                 ('type', '=', 'model_terms'),
                 ('name', '=', "%s,%s" % (field.model_name, field.name)),
                 ('res_id', '=', record.id),
