@@ -989,5 +989,71 @@ QUnit.test('mark all messages as read from Inbox', function (assert) {
     });
 });
 
+QUnit.test('drag and drop file in composer', function (assert) {
+    assert.expect(8);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+
+        // click on general
+        testUtils.dom.click($general);
+
+        // first composer is active (basic), 2nd is hidden (extended)
+        var $composer = discuss.$('.o_thread_composer').first();
+        assert.containsNone($composer, '.o_attachments_list',
+            "should not display any attachment on the composer initially");
+        assert.containsOnce($composer, '.o_file_drop_zone_container',
+            "should have a dropzone to drag-and-drop files");
+
+        var $dropZoneContainer = $composer.find('.o_file_drop_zone_container');
+        assert.isNotVisible($dropZoneContainer,
+            "dropzone should not be visible");
+
+        testUtils.file.createFile({
+            name: 'text.txt',
+            content: 'hello, world',
+            contentType: 'text/plain',
+        }).then(function (file) {
+            testUtils.file.dragoverFile($dropZoneContainer, file);
+            assert.isVisible($dropZoneContainer,
+                "dropzone should be visible");
+
+            testUtils.file.dropFile($dropZoneContainer, file);
+            assert.containsOnce($composer, '.o_attachments_list',
+                "should display some attachments on the composer");
+            assert.containsOnce($composer, '.o_attachment',
+                "should display one attachment on the composer");
+
+            var filename = $('.o_attachment').find('.caption').first().text().trim();
+            assert.strictEqual(filename, 'text.txt',
+                "should display the correct filename");
+            assert.hasClass($('.o_attachment_uploaded i'), 'fa-check',
+                "text file should have been uploaded");
+
+            discuss.destroy();
+            done();
+        });
+    });
+});
+
 });
 });

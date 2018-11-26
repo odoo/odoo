@@ -16,6 +16,7 @@ var session = require('web.session');
 var testUtilsCreate = require('web.test_utils_create');
 var testUtilsDom = require('web.test_utils_dom');
 var testUtilsFields = require('web.test_utils_fields');
+var testUtilsFile = require('web.test_utils_file');
 var testUtilsForm = require('web.test_utils_form');
 var testUtilsGraph = require('web.test_utils_graph');
 var testUtilsKanban = require('web.test_utils_kanban');
@@ -97,6 +98,11 @@ return $.when(
             editInput: testUtilsFields.editInput,
             editSelect: testUtilsFields.editSelect,
             editAndTrigger: testUtilsFields.editAndTrigger,
+        },
+        file: {
+            createFile: testUtilsFile.createFile,
+            dragoverFile: testUtilsFile.dragoverFile,
+            dropFile: testUtilsFile.dropFile,
         },
 
         createActionManager: testUtilsCreate.createActionManager,
