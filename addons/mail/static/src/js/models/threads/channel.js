@@ -217,19 +217,9 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         return _.extend(result, {
             author: lastMessage ? lastMessage.getDisplayedAuthor() : '',
             body: lastMessage ? mailUtils.parseAndTransform(lastMessage.getBody(), mailUtils.inline) : '',
-            date: lastMessage ? lastMessage.getDate() : moment(),
+            date: lastMessage ? lastMessage.getDate() : undefined,
             isMyselfAuthor: this.hasMessages() && this.getLastMessage().isMyselfAuthor(),
         });
-    },
-    /**
-     * Returns the title to display in thread window's headers.
-     * For channels, the title is prefixed with "#".
-     *
-     * @override
-     * @returns {string|Object} the name of the thread by default (see getName)
-     */
-    getTitle: function () {
-        return "#" + this._super.apply(this, arguments);
     },
     /**
      * Get the UUID of the channel.

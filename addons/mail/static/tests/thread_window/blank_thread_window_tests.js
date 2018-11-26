@@ -229,7 +229,7 @@ QUnit.test('open new DM chat from blank thread window', function (assert) {
     selectDef.then(function () {
         assert.strictEqual($('.o_thread_window').length, 1,
             "should be a single window");
-        assert.strictEqual($('.o_thread_window_title').text().trim(), "#DemoUser1",
+        assert.strictEqual($('.o_thread_window_title').text().trim(), "DemoUser1",
             "should have thread window of the DM chat with 'DemoUser1'");
         assert.strictEqual($('.o_composer_text_field').length, 1,
             "should have a composer in the DM chat window");
@@ -285,7 +285,7 @@ QUnit.test('open already detached DM chat from blank thread window', function (a
 
     assert.strictEqual($('.o_thread_window').length, 1,
         "should be a single window");
-    assert.strictEqual($('.o_thread_window_title').text().trim(), "#DemoUser1",
+    assert.strictEqual($('.o_thread_window_title').text().trim(), "DemoUser1",
         "should have thread window of the DM chat with 'DemoUser1'");
     assert.strictEqual($('.o_composer_text_field').length, 1,
         "should have a composer in the DM chat window");
@@ -304,7 +304,7 @@ QUnit.test('open already detached DM chat from blank thread window', function (a
     selectDef.then(function () {
         assert.strictEqual($('.o_thread_window').length, 1,
             "should now have a single thread window open");
-        assert.strictEqual($('.o_thread_window_title').text().trim(), "#DemoUser1",
+        assert.strictEqual($('.o_thread_window_title').text().trim(), "DemoUser1",
             "the remaining thread window should be the DM chat with 'DemoUser1'");
 
         self.unpatchAutocomplete();
