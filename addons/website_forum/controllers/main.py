@@ -12,7 +12,6 @@ from datetime import datetime
 
 from odoo import http, modules, SUPERUSER_ID, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.web.controllers.main import binary_content
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.http import request
 
@@ -591,7 +590,8 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True, sitemap=False)
     def user_avatar(self, user_id=0, **post):
-        status, headers, content = binary_content(model='res.users', id=user_id, field='image_medium', default_mimetype='image/png', env=request.env(user=SUPERUSER_ID))
+        status, headers, content = request.env['ir.http'].sudo().binary_content(
+            model='res.users', id=user_id, field='image_medium', default_mimetype='image/png')
 
         if not content:
             img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')

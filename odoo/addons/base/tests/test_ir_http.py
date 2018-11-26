@@ -19,7 +19,6 @@ class test_ir_http_mimetype(common.TransactionCase):
             id=attachment.id,
             mimetype=None,
             default_mimetype='application/octet-stream',
-            env=self.env
         )
         mimetype = dict(headers).get('Content-Type')
         self.assertEqual(mimetype, 'image/gif')
@@ -35,7 +34,6 @@ class test_ir_http_mimetype(common.TransactionCase):
             id=attachment.id,
             mimetype=None,
             default_mimetype='application/octet-stream',
-            env=self.env
         )
         mimetype = dict(headers).get('Content-Type')
         # TODO: fix and change it in master, should be image/gif
@@ -53,7 +51,6 @@ class test_ir_http_mimetype(common.TransactionCase):
             id=partner.id,
             field='image',
             default_mimetype='application/octet-stream',
-            env=self.env
         )
         mimetype = dict(headers).get('Content-Type')
         self.assertEqual(mimetype, 'image/gif')
@@ -75,7 +72,6 @@ class test_ir_http_mimetype(common.TransactionCase):
             id=prop.id,
             field='value_binary',
             default_mimetype='application/octet-stream',
-            env=self.env
         )
         mimetype = dict(headers).get('Content-Type')
         self.assertEqual(mimetype, 'image/gif')
@@ -92,11 +88,10 @@ class test_ir_http_mimetype(common.TransactionCase):
         defaults = {
             'id': attachment.id,
             'default_mimetype': 'image/gif',
-            'env': public_user.sudo(public_user.id).env,
         }
 
         def test_access(**kwargs):
-            status, _, _ = self.env['ir.http'].binary_content(
+            status, _, _ = self.env['ir.http'].sudo(public_user.id).binary_content(
                 **dict(defaults, **kwargs)
             )
             return status
