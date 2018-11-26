@@ -202,6 +202,7 @@
                     <t t-if="question.question_type == 'textbox'"><t t-call="survey.textbox"/></t>
                     <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
                     <t t-if="question.question_type == 'date'"><t t-call="survey.date"/></t>
+                    <t t-if="question.question_type == 'datetime'"><t t-call="survey.datetime"/></t>
                     <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
                     <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
                     <t t-if="question.question_type == 'matrix'"><t t-call="survey.matrix"/></t>
@@ -249,6 +250,20 @@
             <div class="input-group date" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest"
                     t-att-data-mindate="question.validation_min_date"
                     t-att-data-maxdate="question.validation_max_date">
+                <input type="text" class="form-control datetimepicker-input" t-attf-data-target="#datetimepicker_#{question.id}" t-att-name="prefix"/>
+                <div class="input-group-append" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="datetime" name="DateTime box">
+        <div class="form-group">
+            <div class="input-group date" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest"
+                    t-att-data-mindate="question.validation_min_datetime"
+                    t-att-data-maxdate="question.validation_max_datetime"
+                    t-att-data-questiontype="question.question_type">
                 <input type="text" class="form-control datetimepicker-input" t-attf-data-target="#datetimepicker_#{question.id}" t-att-name="prefix"/>
                 <div class="input-group-append" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -377,6 +392,7 @@
                                     <t t-if="question.question_type == 'textbox'"><t t-call="survey.textbox"/></t>
                                     <t t-if="question.question_type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
                                     <t t-if="question.question_type == 'date'"><t t-call="survey.date"/></t>
+                                    <t t-if="question.question_type == 'datetime'"><t t-call="survey.datetime"/></t>
                                     <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
                                     <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
                                     <t t-if="question.question_type == 'matrix'"><t t-call="survey.matrix"/></t>
