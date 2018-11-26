@@ -45,6 +45,12 @@ class DeliveryCarrier(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, readonly=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
 
+    invoice_policy = fields.Selection([
+        ('estimated', 'Estimated cost'),
+        ('real', 'Real cost')
+    ], string='Invoicing Policy', default='estimated', required=True,
+    help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\nReal Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery.")
+
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
     state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States')
     zip_from = fields.Char('Zip From')

@@ -186,12 +186,33 @@ class StockPicking(models.Model):
         msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
 
+    def _get_new_delivery_price(self):
+        if self.carrier_id.integration_level != 'rate_and_ship':
+            res = self.carrier_id.rate_shipment(self.sale_id)
+            if res['success']:
+                self.carrier_price = res['price']
+            else:
+                raise UserError(_("Unable to update the delivery price because of: ") + res['error_message'])
+
     @api.multi
     def _add_delivery_cost_to_so(self):
         self.ensure_one()
         sale_order = self.sale_id
+        # if there isn't a delivery line on the SO yet
         if sale_order.invoice_shipping_on_delivery:
-            sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
+            self._get_new_delivery_price()  # fill `self.carrier_price` if needed
+            sale_order._create_delivery_line(self.carrier_id, self.carrier_price, price_unit_in_description=False)
+        else:
+            # we only want to update the price of the delivery line if the invoice
+            # policy is 'Real' but we chose not to if the user updated it in the meantime
+            delivery_line = sale_order.order_line.filtered(lambda line: line.is_delivery)
+            if self.carrier_id.invoice_policy == 'real' and delivery_line.currency_id.is_zero(delivery_line.price_unit):
+                self._get_new_delivery_price()
+                delivery_line.write({
+                    'price_unit': self.carrier_price,
+                    # remove the estimated price from the description
+                    'name': sale_order.carrier_id.with_context(lang=self.partner_id.lang).name,
+                })
 
     @api.multi
     def open_website_url(self):
