@@ -16,15 +16,15 @@ class SaleOrder(models.Model):
     @api.depends('carrier_id', 'order_line')
     def _compute_delivery_price(self):
         for order in self:
-            if order.state != 'draft':
+            if order.state not in ('draft', 'sale'):
                 # We do not want to recompute the shipping price of an already validated/done SO
                 continue
             elif order.carrier_id.delivery_type != 'grid' and not order.order_line:
                 # Prevent SOAP call to external shipping provider when SO has no lines yet
                 continue
             else:
-                order.delivery_price = order.company_id.currency_id.with_context(date=order.date_order).compute(
-                    order.carrier_id.with_context(order_id=order.id).price, order.pricelist_id.currency_id)
+                price_without_conversion = order.carrier_id.with_context(order_id=order.id).price
+                order.delivery_price = order.currency_id.with_context(date=order.date_order).compute(price_without_conversion, order.company_id.currency_id)
 
     @api.onchange('partner_id')
     def onchange_partner_id_dtype(self):
@@ -76,6 +76,8 @@ class SaleOrder(models.Model):
 
     def _create_delivery_line(self, carrier, price_unit):
         SaleOrderLine = self.env['sale.order.line']
+        if self.company_id.currency_id.id != self.pricelist_id.currency_id.id:
+            price_unit = self.company_id.currency_id.with_context(date=self.date_order).compute(price_unit, self.pricelist_id.currency_id)
         if self.partner_id:
             # set delivery detail in the customer language
             carrier = carrier.with_context(lang=self.partner_id.lang)
