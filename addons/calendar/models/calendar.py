@@ -353,12 +353,10 @@ class AlarmManager(models.AbstractModel):
 
     @api.model
     def get_next_mail(self):
-        now = fields.Datetime.to_string(fields.Datetime.now())
-        last_notif_mail = self.env['ir.config_parameter'].sudo().get_param('calendar.last_notif_mail', default=now)
+        last_notif_mail = fields.Datetime.to_string(self.env.context.get('lastcall') or fields.Datetime.now())
 
-        try:
-            cron = self.env['ir.model.data'].sudo().get_object('calendar', 'ir_cron_scheduler_alarm')
-        except ValueError:
+        cron = self.env.ref('calendar.ir_cron_scheduler_alarm', raise_if_not_found=False)
+        if not cron:
             _logger.error("Cron for " + self._name + " can not be identified !")
             return False
 
@@ -397,7 +395,6 @@ class AlarmManager(models.AbstractModel):
                 last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, 0, 'email', after=last_notif_mail, missing=True)
                 for alert in last_found:
                     self.do_mail_reminder(alert)
-        self.env['ir.config_parameter'].sudo().set_param('calendar.last_notif_mail', now)
 
     @api.model
     def get_next_notif(self):
