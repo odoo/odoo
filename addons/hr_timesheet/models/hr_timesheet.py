@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AccountAnalyticLine(models.Model):
@@ -53,6 +54,8 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, vals):
+        if self.validated:
+            raise ValidationError("Cannot updated validated timesheet.")
         vals = self._timesheet_preprocess(vals)
         return super(AccountAnalyticLine, self).write(vals)
 
