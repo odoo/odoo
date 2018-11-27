@@ -59,19 +59,12 @@ class HrPayslip(models.Model):
     note = fields.Text(string='Internal Note', readonly=True, states={'draft': [('readonly', False)]})
     contract_id = fields.Many2one('hr.contract', string='Contract', readonly=True,
         states={'draft': [('readonly', False)]})
-    details_by_salary_rule_category = fields.One2many('hr.payslip.line',
-        compute='_compute_details_by_salary_rule_category', string='Details by Salary Rule Category')
     credit_note = fields.Boolean(string='Credit Note', readonly=True,
         states={'draft': [('readonly', False)]},
         help="Indicates this payslip has a refund of another")
     payslip_run_id = fields.Many2one('hr.payslip.run', string='Payslip Batches', readonly=True,
         copy=False, states={'draft': [('readonly', False)]})
     payslip_count = fields.Integer(compute='_compute_payslip_count', string="Payslip Computation Details")
-
-    @api.multi
-    def _compute_details_by_salary_rule_category(self):
-        for payslip in self:
-            payslip.details_by_salary_rule_category = payslip.mapped('line_ids').filtered(lambda line: line.category_id)
 
     @api.multi
     def _compute_payslip_count(self):

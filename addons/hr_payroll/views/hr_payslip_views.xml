@@ -230,17 +230,7 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Details By Salary Rule Category">
-                        <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]">
-                            <tree string="Payslip Lines" decoration-info="total == 0">
-                                <field name="category_id"/>
-                                <field name="name"/>
-                                <field name="code"/>
-                                <field name="total"/>
-                            </tree>
-                        </field>
-                   </page>
-                   <page string="Accounting Information">
+                    <page string="Accounting Information">
                         <group>
                             <group string="Miscellaneous">
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -253,7 +243,7 @@
                         <div colspan="4">
                             <field name="note" placeholder="Add an internal note..."/>
                         </div>
-                   </page>
+                    </page>
                 </notebook>
                 </sheet>
             </form>
