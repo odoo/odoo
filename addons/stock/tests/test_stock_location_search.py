@@ -7,7 +7,7 @@ class TestStockLocationSearch(common.TransactionCase):
     def setUp(self):
         super(TestStockLocationSearch, self).setUp()
         self.location = self.env['stock.location']
-        self.location_barcode = self.env.ref('stock.stock_location_3')
+        self.location_barcode = self.env.ref('stock.stock_location_14')
         self.location_barcode_id = self.location_barcode.id
         self.barcode = self.location_barcode.barcode
         self.name = self.location_barcode.name

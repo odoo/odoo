@@ -4,12 +4,14 @@
         <record id="stock_location_14" model="stock.location">
             <field name="name">Shelf 2</field>
             <field name="posx">0</field>
+            <field name="barcode">2601985</field>
             <field name="location_id" model="stock.location"
                 eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
         <record id="stock_location_components" model="stock.location">
             <field name="name">Shelf 1</field>
             <field name="posx">0</field>
+            <field name="barcode">2601892</field>
             <field name="location_id" model="stock.location"
                 eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>

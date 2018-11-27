@@ -33,7 +33,6 @@ class Location(models.Model):
         ('internal', 'Internal Location'),
         ('customer', 'Customer Location'),
         ('inventory', 'Inventory Loss'),
-        ('procurement', 'Procurement'),
         ('production', 'Production'),
         ('transit', 'Transit Location')], string='Location Type',
         default='internal', index=True, required=True,
@@ -42,14 +41,12 @@ class Location(models.Model):
              "\n* Internal Location: Physical locations inside your own warehouses,"
              "\n* Customer Location: Virtual location representing the destination location for products sent to your customers"
              "\n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)"
-             "\n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (vendor or production) is not known yet. This location should be empty when the procurement scheduler has finished running."
              "\n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products"
              "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
         'stock.location', 'Parent Location', index=True, ondelete='cascade',
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('stock.location', 'location_id', 'Contains')
-    partner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the location if not internal")
     comment = fields.Text('Additional Information')
     posx = fields.Integer('Corridor (X)', default=0, help="Optional localization details, for information purpose only")
     posy = fields.Integer('Shelves (Y)', default=0, help="Optional localization details, for information purpose only")
@@ -77,6 +74,11 @@ class Location(models.Model):
         else:
             self.complete_name = self.name
 
+    @api.onchange('usage')
+    def _onchange_usage(self):
+        if self.usage not in ('internal', 'inventory'):
+            self.scrap_location = False
+
     def write(self, values):
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
@@ -97,6 +99,13 @@ class Location(models.Model):
                     " Please unreserve the products first."
                 ))
         if 'active' in values:
+            if values['active'] == False:
+                for location in self:
+                    warehouses = self.env['stock.warehouse'].search([('active', '=', True), '|', ('lot_stock_id', '=', location.id), ('view_location_id', '=', location.id)])
+                    if warehouses:
+                        raise UserError(_("You cannot archive the location %s as it is"
+                        " used by your warehouse %s") % (location.display_name, warehouses[0].display_name))
+
             if not self.env.context.get('do_not_check_quant'):
                 children_location = self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', self.ids)])
                 internal_children_locations = children_location.filtered(lambda l: l.usage == 'internal')
