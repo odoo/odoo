@@ -59,6 +59,7 @@
         width: 100%;
         height: 100%;
         padding: 20px 35px;
+        transition: .3s ease;
     }
 
     .oe_subdescription {
@@ -547,18 +548,19 @@ a.no-decoration {
             max-width: 100%;
             flex: 100%;
             display: block;
-            padding: 10px 10%;
             text-align: center;
             height: 50% !important;
+            min-height: 50%;
             position: absolute;
             bottom: 0;
             left: 0;
-            /*background-color: $gray-200;*/
             transition: .3s ease;
             z-index: 5;
             text-decoration: none;
+            align-items: center;
             .oe_subdescription {
                 display: none;
+                transition: .3s ease;
             }
         }
         .o_published_btn {
@@ -581,34 +583,21 @@ a.no-decoration {
     .o_not_on_grid {
         display: none;
     }
-    .o_btn_product_container {
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid $gray-200;
-    }
     &:hover {
-        transform: scale(1);
         z-index: 9;
         .oe_product_cart {
             box-shadow: 0 0 60px 0 rgba(0, 0, 0, .1);
         }
-        form{
-            height: 30% !important;
-        }
         .o_container_product{
             .o_info_product_container {
-                height: 70% !important;
+                align-items: center;
+                height: auto !important;
+                min-height: 50%;
+                background-color: $gray-100;
                 .oe_subdescription {
                     display: block;
                     color: $gray-700 !important;
                 }
-                h4 span {
-                    color: theme-color('primary') !important;
-                    text-decoration: underline;
-                }
-            }
-            .o_product_image{
-                height: 25%;
             }
         }
     }
@@ -636,10 +625,9 @@ a.no-decoration {
     transition: ease .4s;
 }
 .oe_list:hover {
-    transform: scale(1.04);
     z-index: 9;
     .oe_product_cart {
-        box-shadow: 0 0 40px 0 rgba(0, 0, 0, .2);
+        box-shadow: 0 0 60px 0 rgba(0, 0, 0, .1);
     }
 }
 .nav-pills .nav-item:last-child {
@@ -650,7 +638,7 @@ a.no-decoration {
 .o_height_line {
     height: auto !important;
 }
-.o_height_170 {
+.o_height_inner_line {
     height: 170px !important;
 }
 .o_width_list {
@@ -659,6 +647,10 @@ a.no-decoration {
 }
 .o_product_image_full {
     display: none;
+}
+
+.o_link_product_info:hover{
+    text-decoration: none;
 }
 
 .o_in_cart{

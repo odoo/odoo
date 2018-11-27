@@ -219,7 +219,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             $('.o_apply_list').addClass('o_semi_opacity');
             $('.o_apply_grid').removeClass('o_semi_opacity');
         } else {
-            $('.o_product_image').addClass('o_height_170');
+            $('.o_product_image').addClass('o_height_inner_line');
             $('.o_info_product_container').addClass('o_height_line');
         }
 
@@ -231,7 +231,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             $(this).removeClass('o_semi_opacity');
             $parentContainer.find('.oe_list').removeClass('o_grid_products_list');
             $parentContainer.find('.oe_list').addClass('o_width_list o_height_line');
-            $parentContainer.find('.o_product_image').addClass('o_height_170');
+            $parentContainer.find('.o_product_image').addClass('o_height_inner_line');
             $parentContainer.find('.o_info_product_container').addClass('o_height_line');
         });
         // grid view
@@ -242,7 +242,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             $(this).removeClass('o_semi_opacity');
             $parentContainer.find('.oe_list').addClass('o_grid_products_list');
             $parentContainer.find('.oe_list').removeClass('o_width_list o_height_line');
-            $parentContainer.find('.o_product_image').removeClass('o_height_170');
+            $parentContainer.find('.o_product_image').removeClass('o_height_inner_line');
             $parentContainer.find('.o_info_product_container').removeClass('o_height_line');
         });
 

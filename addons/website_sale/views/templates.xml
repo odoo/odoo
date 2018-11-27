@@ -115,26 +115,28 @@
                     <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
                 </a>
                 <a itemprop="url" t-att-href="product_href" class="col-5 col-md-3 o_product_image_full rounded-top" t-attf-style="background-image: url('{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image');"></a>
-                <section class="col-7 o_info_product_container d-flex flex-wrap align-items-center rounded-bottom">
+                <section class="col-7 o_info_product_container d-flex flex-wrap rounded-bottom px-0 pb-3">
                     <div class="col-12 px-0">
-                        <h4 class="mt-2 mb-0">
-                            <a itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" class="text-secondary"/>
-                            <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-secondary btn-sm btn-danger" title="This product is unpublished.">Unpublished</a>
-                        </h4>
-                        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
-                            <b>
-                                <t t-if="product.product_variant_id and product.website_price_difference and website.get_current_pricelist().discount_policy=='without_discount'">
-                                    <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
-                                </t>
+                        <a t-att-href="product_href" class="btn-block px-3 pt-3 pb-2 o_link_product_info">
+                            <h4 class="mt-2 mb-0">
+                                <span itemprop="name" t-att-content="product.name" t-field="product.name" class="text-secondary"/>
+                                <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-secondary btn-sm btn-danger" title="This product is unpublished.">Unpublished</a>
+                            </h4>
+                            <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
+                                <b>
+                                    <t t-if="product.product_variant_id and product.website_price_difference and website.get_current_pricelist().discount_policy=='without_discount'">
+                                        <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+                                    </t>
 
-                                <div class="d-block">
-                                    <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                                    <span itemprop="price" style="display:none;" t-esc="product.website_price" />
-                                    <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
-                                </div>
-                            </b>
-                        </div>
-                        <div class="o_btn_product_container" />
+                                    <div class="d-block text-dark font-weight-light">
+                                        <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                        <span itemprop="price" style="display:none;" t-esc="product.website_price" />
+                                        <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+                                    </div>
+                                </b>
+                            </div>
+                        </a>
+                        <div class="o_btn_product_container mx-3 pt-2 border-top" />
                     </div>
                 </section>
                 <t t-if="show_publish">
@@ -244,9 +246,6 @@
                                         <t t-if="td_product">
                                             <t t-set="product" t-value="td_product['product']" />
                                             <t t-set="good_col" t-value="int(12/shop_nb_columns)" />
-                                            <!-- TODO we need to replace colspan by and rowspan by data -->
-                                            <!-- This part is if we reactivate the changer size of the individual div -->
-                                            <!-- <div t-att-colspan="td_product['x'] != 1 and td_product['x']" t-att-rowspan="td_product['y'] != 1 and td_product['y']" t-attf-class="oe_product oe_grid o_grid_products_list oe_list p-2 oe-height-#{td_product['y']*2} #{ td_product['class'] } col-xl-#{td_product['x']*good_col} col-md-#{td_product['x']*6} col-#{td_product['x']*12}"> -->
                                             <div t-attf-class="oe_product oe_grid o_grid_products_list oe_list p-2 oe-height-2 #{ td_product['class'] } col-xl-#{good_col} col-md-6 col-12  shop_nb_columns-#{shop_nb_columns}" t-att-data-product_id="product.id">
                                                 <div class="oe_product_cart bg-white rounded" t-att-data-publish="product.website_published and 'on' or 'off'">
                                                     <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] &gt; 2" />
@@ -421,13 +420,6 @@
 
     <template id="products_list_view" inherit_id="website_sale.products" active="False" customize_show="True" name="List View">
         <xpath expr="//div[@id='products_grid']//div" position="replace">
-            <!-- <t t-foreach="products" t-as="product">
-                <div class="oe_product oe_list oe_product_cart border-0 col-12 mb-3" t-att-data-publish="product.website_published and 'on' or 'off'">
-                    <t t-call="website_sale.products_item">
-                        <t t-set="show_publish" t-value="True" />
-                    </t>
-                </div>
-            </t> -->
             <div id="wrap" class="js_sale  col-12 px-0">
                 <div class="oe_structure" id="oe_structure_website_sale_products_1"/>
                 <div class="container py-2 oe_website_sale">
