@@ -21,6 +21,8 @@ class Partner(models.Model):
 
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
     channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
+    # override the field to track the visibility of user
+    user_id = fields.Many2one(tracking=True)
 
     @api.multi
     def message_get_suggested_recipients(self):
