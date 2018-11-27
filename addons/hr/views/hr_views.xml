@@ -180,6 +180,7 @@
                     <field name="department_id" operator="child_of"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
                     <field name="job_id" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
