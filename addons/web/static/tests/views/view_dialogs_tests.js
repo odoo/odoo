@@ -420,6 +420,65 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('propagate can_create onto the search popup o2m', function (assert) {
+        assert.expect(3);
+
+        this.data.instrument.records = [
+            {id: 1, name: 'Tromblon1'},
+            {id: 2, name: 'Tromblon2'},
+            {id: 3, name: 'Tromblon3'},
+            {id: 4, name: 'Tromblon4'},
+            {id: 5, name: 'Tromblon5'},
+            {id: 6, name: 'Tromblon6'},
+            {id: 7, name: 'Tromblon7'},
+            {id: 8, name: 'Tromblon8'},
+        ];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                     '<field name="name"/>' +
+                     '<field name="instrument" can_create="false"/>' +
+                  '</form>',
+            res_id: 1,
+            archs: {
+                'instrument,false,list': '<tree>'+
+                                                '<field name="name"/>'+
+                                            '</tree>',
+                'instrument,false,search': '<search>'+
+                                                '<field name="name"/>'+
+                                            '</search>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+
+            mockRPC: function(route, args) {
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        form.$('.o_field_widget[name="instrument"] .o_input').click();
+
+        assert.notOk($('.ui-autocomplete a:contains(Create and Edit)').length,
+            'Create and edit not present in dropdown');
+
+        $('.ui-autocomplete a:contains(Search More)').trigger('mouseenter').trigger('click');
+
+        var $modal = $('.modal-dialog.modal-lg');
+
+        assert.strictEqual($modal.length, 1, 'Modal present');
+
+        assert.strictEqual($modal.find('.modal-footer button').text(), "Cancel",
+            'Only the cancel button is present in modal');
+
+        form.destroy();
+    });
 });
 
 });
