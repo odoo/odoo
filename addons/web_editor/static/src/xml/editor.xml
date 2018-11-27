@@ -57,18 +57,6 @@
             <li class="nav-item"><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-attf-class="nav-link#{widget.noDocuments ? ' d-none' : ''}">Document</a></li>
             <li class="nav-item"><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-attf-class="nav-link#{widget.noIcons ? ' d-none' : ''}">Pictogram</a></li>
             <li class="nav-item"><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-attf-class="nav-link#{widget.noVideos ? ' d-none' : ''}">Video</a></li>
-            <li class="nav-item ml-auto search">
-                <div class="form-group">
-                    <input class="form-control" id="icon-search" type="search"/>
-                    <span class="fa fa-search" title="Search" role="img" aria-label="Search"/>
-                </div>
-            </li>
-            <li class="nav-item search">
-                <div class="btn-group">
-                    <a role="button" class="btn btn-secondary disabled previous" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
-                    <a role="button" class="btn btn-secondary disabled next" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
-                </div>
-            </li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
@@ -91,37 +79,81 @@
             <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
             <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
             <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
-            <div class="o_media_image_card card w-100">
-                <div class="card-body p-0">
-                    <div class="form-inline">
-                        <input type="file" class="d-none" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
+            <div class="mt-4 w-100">
+                <div class="mb-4">
+                    <div class="o_submenu"></div>
+                </div>
+                <div class="form-text"/>
+                <div class="existing-attachments">
+                    <t t-call="web_editor.dialog.image.existing"/>
+                </div>
+                <div class="mt-4 text-center o_load_elements mx-auto">
+                    <button class="btn btn-primary o_load_more" type="button">Load more...</button>
+                    <div class="mt-4 o_load_done_msg d-none">
+                        <span><i>All attachments have been loaded</i></span>
+                    </div>
+                </div>
+            </div>
+            <iframe class="o_file_upload_iframe d-none" t-att-name="iframeName"/>
+        </form>
+    </t>
+    <t t-name="web_editor.dialog.files.submenu">
+        <div class="o_submenu">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-inline row no-gutters">
+                        <input type="file" class="d-none o_file_input" name="upload" t-att-accept="accept" multiple="multiple"/>
                         <input type="hidden" name="disable_optimization" value=""/>
-                        <div class="btn-group">
-                            <button class="btn btn-primary o_upload_image_button" type="button">Upload an image</button>
-                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" type="button">
-                                <span class="sr-only">Alternate Upload</span>
+                        <div class="btn-group o_btn_group_image">
+                            <button class="btn btn-primary o_upload_media_button" type="button">
+                                <t t-if="isDocument">Upload a document</t>
+                                <t t-else="">Upload an image</t>
                             </button>
-                            <div class="dropdown-menu" role="menu">
-                                <a role="menuitem" class="dropdown-item o_upload_image_button_no_optimization">Upload image without optimization</a>
-                            </div>
+                            <t t-if="!isDocument">
+                                <button class="btn btn-primary dropdown-toggle dropdown-toggle-split o_media_optimization" data-toggle="dropdown" type="button">
+                                    <span class="sr-only">Alternate Upload</span>
+                                </button>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" class="dropdown-item o_upload_media_button_no_optimization">Upload image without optimization</a>
+                                </div>
+                            </t>
                         </div>
-                        <span class="text-muted">— or —</span>
-                        <label for="imageurl">Add an image URL</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control url" id="imageurl" name="url" placeholder="https://www.odoo.com/logo.png" style="width: 250px;"/>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-secondary o_upload_image_url_button" disabled="disabled">Add</button>
+                        <div class="input-group col-8 ml-2">
+                            <input type="text" class="form-control url col-7" name="url" t-attf-placeholder="https://www.odoo.com/#{isDocument ? 'mydocument' : 'logo.png'}"/>
+                            <div class="input-group-append ml-2">
+                                <button type="button" class="btn btn-sm btn-secondary o_upload_media_url_button" disabled="disabled">
+                                    <t t-if="isDocument">Add document</t>
+                                    <t t-else="">Add image</t>
+                                </button>
+                            </div>
+                            <div class="ml-2 o_size_fa_icon">
+                                <span class="success-url text-success d-none fa fa-check" title="The URL seems valid"/>
+                                <t t-if="isDocument">
+                                    <span class="error-url text-danger d-none fa fa-times" title="This URL does not seem to work"/>
+                                </t>
+                                <t t-else="">
+                                    <span class="warning-url text-warning d-none fa fa-warning" title="The URL provided does not contain any image. It will be added in the document section."/>
+                                </t>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-sm text-right">
+                    <ul class="list-unstyled row">
+                        <li class="nav-item ml-auto col-6 search">
+                            <div class="form-group o_search_div">
+                                <t t-set="searchPlaceholder">
+                                    <t t-if="isDocument">Search a document</t>
+                                    <t t-else="">Search an image</t>
+                                </t>
+                                <input class="form-control w-100" id="icon-search" type="search" t-att-placeholder="searchPlaceholder.trim()"/>
+                                <span class="fa fa-search" title="Search" role="img" aria-label="Search"/>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="form-text"/>
-            <div class="existing-attachments">
-                <t t-call="web_editor.dialog.image.existing"/>
-            </div>
-            <iframe class="d-none" t-att-name="iframeName"/>
-        </form>
+        </div>
     </t>
     <t t-name="web_editor.dialog.image.existing">
         <div role="dialog" class="modal" tabindex="-1">
@@ -136,19 +168,22 @@
                         <div class="form-text"/>
                     </main>
                     <footer class="modal-footer">
-                        <a data-dismiss="modal" href="#" aria-label="Discard">Discard</a>
+                        <button data-dismiss="modal" type="button" aria-label="Discard">Discard</button>
                     </footer>
                 </div>
             </div>
         </div>
     </t>
-    <t t-name="web_editor.dialog.image.existing.content">
+    <t t-name="web_editor.dialog.files.existing.content">
         <div class="existing-attachments">
-            <div class="row mt16" t-as="row" t-foreach="rows">
+            <div class="row mt16 ml-auto" t-as="row" t-foreach="rows">
                 <div class="col-2 o_existing_attachment_cell" t-as="attachment" t-foreach="row">
-                    <i t-if="attachment.res_model === 'ir.ui.view'" class="fa fa-times o_existing_attachment_remove" title="This file is a public view attachment" role="img" aria-label="This file is a public view attachment" t-att-data-id="attachment.id"/>
-                    <i t-else="" class="fa fa-times o_existing_attachment_remove" title="This file is attached to the current record" role="img" aria-label="This file is attached to the current record" t-att-data-id="attachment.id"/>
+                    <i t-if="attachment.res_model === 'ir.ui.view'" class="fa fa-trash o_existing_attachment_remove" title="This file is a public view attachment" role="img" aria-label="This file is a public view attachment" t-att-data-id="attachment.id"/>
+                    <i t-else="" class="fa fa-trash o_existing_attachment_remove" title="This file is attached to the current record" role="img" aria-label="This file is attached to the current record" t-att-data-id="attachment.id"/>
                     <div class="o_attachment_border" t-att-style="attachment.res_model === 'ir.ui.view' ? null : 'border: 1px solid #5cb85c;'"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" class="o_image o_image_loading"/></div>
+                    <t t-if="isDocument">
+                        <small class="o_file_name"><t t-esc="attachment.name"/></small>
+                    </t>
                 </div>
             </div>
         </div>
@@ -169,7 +204,15 @@
 
     <!-- Icon choosing part of the Media Dialog -->
     <t t-name="web_editor.dialog.font-icons">
-        <form action="#">
+        <form action="#" class="mt-2">
+            <div class="d-flex flex-row-reverse">
+                <li class="nav-item search list-unstyled col-3 p-2">
+                    <div class="form-group">
+                        <input class="form-control" id="icon-search" type="search" placeholder="Search a pictogram"/>
+                        <span class="fa fa-search" title="Search" role="img" aria-label="Search"/>
+                    </div>
+                </li>
+            </div>
             <div class="font-icons-icons">
                 <t t-call="web_editor.dialog.font-icons.icons">
                     <t t-set="iconsParser" t-value="widget.iconsParser"/>
@@ -189,42 +232,46 @@
     </t>
 
     <!-- Video choosing part of the Media Dialog -->
-    <div t-name="web_editor.dialog.video" class="card">
-        <form action="#" class="form-inline card-body">
+    <div t-name="web_editor.dialog.video" class="o_video_dialog_container mt-4">
+        <form action="#" class="form-inline w-100">
             <div class="o_video_dialog_form">
-                <div class="form-group" id="o_video_form_group">
-                    <label class="mt8" for="o_video_text">Video code <small class="text-muted">(URL or Embed)</small></label>
+                <div class="form-group mb-2" id="o_video_form_group">
+                    <label>Video code </label>
+                    <small class="ml-1 form-text text-muted"> (URL or Embed)</small>
+                    <label class="ml-2 col-form-label o_validate_feedback position-static" for="o_video_text">
+                        <i class="fa fa-check text-success" role="img" aria-label="Checked" title="Checked"/>
+                        <i class="fa fa-exclamation-triangle text-danger" role="img" aria-label="Attention" title="Attention"/>
+                    </label>
                     <textarea class="form-control url" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
-                    <label class="col-form-label o_validate_feedback" for="o_video_text"><i class="fa fa-check" role="img" aria-label="Checked" title="Checked"/><i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"/></label>
                 </div>
                 <div class="text-right">
                     <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Instagram</i></b>, <b><i>Vine.co</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
                 </div>
-                <div class="o_video_dialog_options d-none mt48">
-                    <small class="text-muted">Options</small>
-                    <ul class="list-group">
-                        <li class="list-group-item o_yt_option o_vim_option o_dm_option">
-                            <label class="o_switch mb0"><input id="o_video_autoplay" type="checkbox"/><span/>Autoplay</label>
-                        </li>
-                        <li class="list-group-item o_yt_option o_vim_option">
-                            <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
-                        </li>
-                        <li class="list-group-item o_yt_option o_dm_option">
-                            <label class="o_switch mb0"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
-                        </li>
-                        <li class="list-group-item o_yt_option">
-                            <label class="o_switch mb0"><input id="o_video_hide_fullscreen" type="checkbox"/><span/>Hide fullscreen button</label>
-                        </li>
-                        <li class="list-group-item o_yt_option">
-                            <label class="o_switch mb0"><input id="o_video_hide_yt_logo" type="checkbox"/><span/>Hide Youtube logo</label>
-                        </li>
-                        <li class="list-group-item o_dm_option">
-                            <label class="o_switch mb0"><input id="o_video_hide_dm_logo" type="checkbox"/><span/>Hide Dailymotion logo</label>
-                        </li>
-                        <li class="list-group-item o_dm_option">
-                            <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
-                        </li>
-                    </ul>
+                <div class="o_video_dialog_options d-none mt-4">
+                    <div class="option_title mb-2 d-flex">
+                        <label>Options</label>
+                    </div>
+                    <div class="o_yt_option o_vim_option o_dm_option d-flex">
+                        <label class="o_switch mb0"><input id="o_video_autoplay" type="checkbox"/><span/>Autoplay</label>
+                    </div>
+                    <div class="o_yt_option o_vim_option d-flex">
+                        <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
+                    </div>
+                    <div class="o_yt_option o_dm_option d-flex">
+                        <label class="o_switch mb0"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
+                    </div>
+                    <div class="o_yt_option d-flex">
+                        <label class="o_switch mb0"><input id="o_video_hide_fullscreen" type="checkbox"/><span/>Hide fullscreen button</label>
+                    </div>
+                    <div class="o_yt_option d-flex">
+                        <label class="o_switch mb0"><input id="o_video_hide_yt_logo" type="checkbox"/><span/>Hide Youtube logo</label>
+                    </div>
+                    <div class="o_dm_option d-flex">
+                        <label class="o_switch mb0"><input id="o_video_hide_dm_logo" type="checkbox"/><span/>Hide Dailymotion logo</label>
+                    </div>
+                    <div class="o_dm_option d-flex">
+                        <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
+                    </div>
                 </div>
             </div>
             <div id="video-preview">
@@ -307,7 +354,7 @@
                 <div class="form-group text-center">
                     <label>Preview</label>
                     <div style="overflow: auto; max-width: 100%; max-height: 200px;">
-                        <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
+                        <a href="#" type="button" id="link-preview" aria-label="Preview" title="Preview"/>
                     </div>
                 </div>
             </div>
