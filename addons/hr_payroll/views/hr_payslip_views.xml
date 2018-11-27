@@ -263,7 +263,7 @@
                 <field name="payslip_run_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Employees" name="employee_id" context="{'group_by':'employee_id'}"/>
-                    <filter string="PaySlip Batch" name="payslip_run_id" context="{'group_by':'payslip_run_id'}"/>
+                    <filter string="PaySlip Batch" name="group_by_batch" context="{'group_by':'payslip_run_id'}"/>
                     <filter string="Companies" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <filter string="States" name="state" context="{'group_by':'state'}"/>
                 </group>
@@ -276,6 +276,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="view_hr_payslip_filter"/>
+        <field name="context">{'search_default_group_by_batch': 1}</field>
     </record>
 
     <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_payroll_root" groups="hr_payroll.group_hr_payroll_user"/>
