@@ -129,8 +129,9 @@ var ProductConfiguratorFormController = FormController.extend({
             self.optionalProductsModal.on('options_empty', null,
                 self._onModalOptionsEmpty.bind(self));
 
-            self.optionalProductsModal.on('update_quantity', null,
-                self._onOptionsUpdateQuantity.bind(self));
+            self.optionalProductsModal.on('update_quantity', null, function (ev) {
+                self._onOptionsUpdateQuantity(ev.data.quantity);
+            });
 
             self.optionalProductsModal.on('confirm', null,
                 self._onModalConfirm.bind(self));

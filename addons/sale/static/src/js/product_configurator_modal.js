@@ -458,7 +458,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             this.onChangeAddQuantity(ev);
         }
 
-        this.trigger('update_quantity', qty);
+        this.trigger('update_quantity', {quantity: qty});
     }
 });
 
