@@ -71,8 +71,12 @@ class MrpBom(models.Model):
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_product_recursion(self):
         for bom in self:
-            if bom.bom_line_ids.filtered(lambda x: x.product_id.id == bom.product_id.id):
-                raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
+            if bom.product_id:
+                if bom.bom_line_ids.filtered(lambda x: x.product_id == bom.product_id):
+                    raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
+            else:
+                if bom.bom_line_ids.filtered(lambda x: x.product_id.product_tmpl_id == bom.product_tmpl_id):
+                    raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -150,12 +154,12 @@ class MrpBom(models.Model):
 
         boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
         lines_done = []
-        V |= set([product.id])
+        V |= set([product.product_tmpl_id.id])
 
         bom_lines = [(bom_line, product, quantity, False) for bom_line in self.bom_line_ids]
         for bom_line in self.bom_line_ids:
-            V |= set([bom_line.product_id.id])
-            graph[product.id].append(bom_line.product_id.id)
+            V |= set([bom_line.product_id.product_tmpl_id.id])
+            graph[product.product_tmpl_id.id].append(bom_line.product_id.product_tmpl_id.id)
         while bom_lines:
             current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]
@@ -169,10 +173,10 @@ class MrpBom(models.Model):
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
                 bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
                 for bom_line in bom.bom_line_ids:
-                    graph[current_line.product_id.id].append(bom_line.product_id.id)
-                    if bom_line.product_id.id in V and check_cycle(bom_line.product_id.id, {key: False for  key in V}, {key: False for  key in V}, graph):
+                    graph[current_line.product_id.product_tmpl_id.id].append(bom_line.product_id.product_tmpl_id.id)
+                    if bom_line.product_id.product_tmpl_id.id in V and check_cycle(bom_line.product_id.product_tmpl_id.id, {key: False for  key in V}, {key: False for  key in V}, graph):
                         raise UserError(_('Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!'))
-                    V |= set([bom_line.product_id.id])
+                    V |= set([bom_line.product_id.product_tmpl_id.id])
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
                 # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
