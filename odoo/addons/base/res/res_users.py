@@ -822,7 +822,8 @@ class GroupsView(models.Model):
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
-            if len(set(order.itervalues())) == len(gs):
+            # and implied groups are more than one.
+            if len(set(order.itervalues())) == len(gs) and len(gs) > 1:
                 return (app, 'selection', gs.sorted(key=order.get))
             else:
                 return (app, 'boolean', gs)
