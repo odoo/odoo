@@ -62,6 +62,7 @@ class ir_cron(models.Model):
     numbercall = fields.Integer(string='Number of Calls', default=1, help='How many times the method is called,\na negative number indicates no limit.')
     doall = fields.Boolean(string='Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts.")
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
+    lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
     @api.model
@@ -121,7 +122,9 @@ class ir_cron(models.Model):
         """
         try:
             with api.Environment.manage():
-                cron = api.Environment(job_cr, job['user_id'], {})[cls._name]
+                cron = api.Environment(job_cr, job['user_id'], {
+                    'lastcall': fields.Datetime.from_string(job['lastcall'])
+                })[cls._name]
                 # Use the user's timezone to compare and compute datetimes,
                 # otherwise unexpected results may appear. For instance, adding
                 # 1 month in UTC to July 1st at midnight in GMT+2 gives July 30
@@ -142,8 +145,12 @@ class ir_cron(models.Model):
                 addsql = ''
                 if not numbercall:
                     addsql = ', active=False'
-                cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                                (fields.Datetime.to_string(nextcall.astimezone(pytz.UTC)), numbercall, job['id']))
+                cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s, lastcall=%s"+addsql+" WHERE id=%s",(
+                    fields.Datetime.to_string(nextcall.astimezone(pytz.UTC)),
+                    numbercall,
+                    fields.Datetime.to_string(now.astimezone(pytz.UTC)),
+                    job['id']
+                ))
                 cron.invalidate_cache()
 
         finally:
