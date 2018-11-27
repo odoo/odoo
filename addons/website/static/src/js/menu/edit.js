@@ -80,7 +80,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 self.$welcomeMessage.remove();
             }
             var $wrapwrap = $('#wrapwrap'); // TODO find this element another way
-            $wrapwrap.find('.oe_structure.oe_empty, [data-oe-type="html"]').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+            var $htmlEditable = $wrapwrap.find('.oe_structure.oe_empty, [data-oe-type="html"]').not('[data-editor-message]');
+            $htmlEditable.attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
             var def = $.Deferred();
             self.trigger_up('animation_start_demand', {
                 editableMode: true,
