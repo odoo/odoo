@@ -3,22 +3,26 @@ odoo.define('web_unsplash.image_widgets', function (require) {
 
 var core = require('web.core');
 var UnsplashAPI = require('unsplash.api');
-
-var ImageWidget = require('web_editor.widget').ImageWidget;
+var weWidgets = require('web_editor.widget');
 var QWeb = core.qweb;
 
 var unsplashAPI = null;
 
-ImageWidget.include({
-    xmlDependencies: ImageWidget.prototype.xmlDependencies.concat(
+weWidgets.ImageWidget.include({
+    xmlDependencies: weWidgets.ImageWidget.prototype.xmlDependencies.concat(
         ['/web_unsplash/static/src/xml/unsplash_image_widget.xml']
     ),
-    events: _.extend({}, ImageWidget.prototype.events, {
-        'input input.unsplash_search': '_onChangeUnsplashSearch',
+    events: _.extend({}, weWidgets.ImageWidget.prototype.events, {
         'dblclick .unsplash_img_container [data-imgid]': '_onUnsplashImgDblClick',
         'click .unsplash_img_container [data-imgid]': '_onUnsplashImgClick',
         'click button.save_unsplash': '_onSaveUnsplash',
+        'click button.access_key': '_onSetAccessKey',
+        'click .o_load_more': '_onLoadMore',
+        'click .o_search_from_unsplash': '_onSearchFromUnsplash',
+        'click .o_search_an_image': '_onSearchImage',
+        'keyup input#icon-search, .o_dropdown_search': '_onPressKeySearch',
     }),
+
     /**
      * @override
      */
@@ -28,6 +32,7 @@ ImageWidget.include({
             isMaxed: false,
             query: false,
         };
+
         // TODO This is a `hack` to prevent the UnsplashAPI to be destroyed every time
         //      the media dialog is closed.
         //      Indeed, UnsplashAPI has a cache system to recude unsplash call, it is
@@ -84,7 +89,7 @@ ImageWidget.include({
             route: '/web_unsplash/attachment/add',
             params: {
                 unsplashurls: self._unsplash.selectedImages,
-                res_model : self.options.res_model,
+                res_model: self.options.res_model,
                 res_id: self.options.res_id,
                 query: self._unsplash.query,
             }
@@ -134,7 +139,7 @@ ImageWidget.include({
                 .values()
                 .value();
 
-            self.$('.unsplash_img_container').html(QWeb.render('web_unsplash.dialog.image.content', { rows: rows }));
+            self.$('.unsplash_img_container').html(QWeb.render('web_unsplash.dialog.image.content', {rows: rows}));
             self._highlightSelectedImages();
         }).fail(function (err) {
             self.$('.unsplash_img_container').html(QWeb.render('web_unsplash.dialog.error.content', { status: err }));
@@ -146,9 +151,25 @@ ImageWidget.include({
      * @private
      */
     _toggleAttachmentContaines: function (hideUnsplash) {
-        this.$('.existing-attachments').toggleClass('o_hidden', !hideUnsplash);
-        this.$('.unsplash_img_container').toggleClass('o_hidden', hideUnsplash);
+        this.$('.existing-attachments').toggleClass('d-none', !hideUnsplash);
+        this.$('.unsplash_img_container').toggleClass('d-none', hideUnsplash);
+        this.$('.o_load_more').toggleClass('d-none', hideUnsplash);
+        this.$('.o_load_done_msg').toggleClass('d-none', !hideUnsplash);
         this.trigger_up('update_control_panel');
+    },
+    /**
+     * @private
+     */
+     _toggleLoadMoreBtnUnsplash: function (display) {
+        this.$('.o_load_done_msg').toggleClass('d-none', display);
+    },
+    /**
+     * @private
+     */
+    _toggleSearchDropdown: function (show) {
+        var inputValue = this.$('#icon-search').val();
+        this.$('.o_search_value_input').text(inputValue);
+        this.$('.o_dropdown_search').toggleClass('show', show);
     },
 
     //--------------------------------------------------------------------------
@@ -189,15 +210,16 @@ ImageWidget.include({
     _onChangeUnsplashSearch: _.debounce(function () {
         // oldPage saves the original image widget pager.
         // Emptying the unsplash search will set the pager to its previous state
-        this._unsplash.query = this.$('.unsplash_search').val().trim();
+        this._unsplash.query = this.$('#icon-search').val().trim();
         if (this._unsplash.query) {
             this.oldPage = this.page;
             this.page = 1;
             this._renderImages();
         } else {
-            this.page = this.oldPage || 0;
+            this.page = this.oldPage || 1;
             this._toggleAttachmentContaines(true);
         }
+        this._toggleLoadMoreBtnUnsplash(true);
     }, 1000),
     /**
      * @private
@@ -205,14 +227,14 @@ ImageWidget.include({
     _onUnsplashImgClick: function (ev) {
         var imgid = $(ev.currentTarget).data('imgid');
         var url = $(ev.currentTarget).data('url');
-        var download_url = $(ev.currentTarget).data('download-url');
+        var downloadUrl = $(ev.currentTarget).data('download-url');
         if (!this.multiImages) {
             this._unsplash.selectedImages = {};
         }
         if (imgid in this._unsplash.selectedImages) {
             delete this._unsplash.selectedImages[imgid];
         } else {
-            this._unsplash.selectedImages[imgid] = {url: url, download_url: download_url};
+            this._unsplash.selectedImages[imgid] = {url: url, downloadUrl: downloadUrl};
         }
         this._highlightSelectedImages();
     },
@@ -222,5 +244,61 @@ ImageWidget.include({
     _onUnsplashImgDblClick: function (ev) {
         this.trigger_up('save_request');
     },
+    /**
+     * @private
+     */
+    _onLoadMore: function () {
+        this._unsplash.query = this.$('#icon-search').val().trim();
+        this._loadMoreImages();
+    },
+    /**
+     * @private
+     */
+    _onSearchFromUnsplash: function () {
+        this.$('.o_dropdown_search').removeClass('show');
+        this._toggleAttachmentContaines(false);
+        this._onChangeUnsplashSearch();
+    },
+    /**
+     * @private
+     */
+    _onSearchImage: function () {
+        var searchText = this.$('#icon-search').val().trim();
+        this._unsplash.query = false;
+        this.search(searchText);
+        this.$('.o_dropdown_search').removeClass('show');
+        this._toggleAttachmentContaines(true);
+        this._renderImages();
+    },
+    /**
+     * @private
+     */
+    _onPressKeySearch: function (ev) {
+        var $searchAnImage = this.$('button.dropdown-item.o_search_an_image');
+        switch (ev.which) {
+            case $.ui.keyCode.ENTER:
+                $searchAnImage.focus();
+                break;
+            case $.ui.keyCode.UP:
+                $searchAnImage.focus();
+                break;
+            case $.ui.keyCode.DOWN:
+                $searchAnImage.next().focus();
+                break;
+            default: return;
+        }
+        ev.preventDefault();
+    },
+    /**
+     * @override
+     */
+    _onSearchInput: function (ev) {
+        if (!this.options.document) {
+            this._toggleSearchDropdown(true);
+        } else {
+            this.search($(ev.currentTarget).val() || '');
+        }
+    },
 });
+
 });
