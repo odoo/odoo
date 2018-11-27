@@ -440,6 +440,7 @@ class MrpProduction(models.Model):
         if move:
             if quantity > 0:
                 move[0].write({'product_uom_qty': quantity})
+                move.unit_factor = quantity / move.raw_material_production_id.product_qty
             elif quantity < 0:  # Do not remove 0 lines
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
