@@ -449,6 +449,8 @@ odoo.define('website_forum.website_forum', function (require) {
 
     ajax.loadXML("/website_forum/static/src/xml/website_forum_share_templates.xml", core.qweb);
 
+    $('.o_select_spam_character').hide();
+
     var $spam = $('#spamSearch');
     $spam.on('keyup', function(ev) {
         var to_search = $(ev.currentTarget).val();
@@ -462,6 +464,12 @@ odoo.define('website_forum.website_forum', function (require) {
             $('div.post_spam').html(QWeb.render('website_forum.spam_search_name', {
                 posts: o,
             }));
+
+            if($('.o_spam_character:visible').length == 0){
+                $('.o_select_spam_character').hide();
+            } else{
+                $('.o_select_spam_character').show();
+            }
         });
      })
 

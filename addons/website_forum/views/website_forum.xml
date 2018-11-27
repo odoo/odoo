@@ -1189,6 +1189,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body bg-100">
+                        <button type="button" class="fa fa-times btn btn-sm btn-secondary o_close_spam" data-dismiss="modal"></button>
                         <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active spam_menu" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="true">User</a>
@@ -1244,14 +1245,13 @@
                             </div>
                             <div class="tab-pane fade" id="character" role="tabpanel" aria-labelledby="character-tab">
                                 <input type="text" t-att-data-spam-ids='str(posts_ids.ids)' id="spamSearch" placeholder="Search.." title="Spam all post" class="mb-2 border rounded px-2 py-1 mr-2"/>
-                                <a href="#" class="btn btn-primary all_select_spam">Select all</a>
+                                <a href="#" class="btn btn-primary all_select_spam o_select_spam_character">Select all</a>
                                 <div class="post_spam"></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer d-block">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Validate</button>
+                        <button type="button" class="btn btn-primary">Mark as spam</button>
                     </div>
                 </div>
             </div>
