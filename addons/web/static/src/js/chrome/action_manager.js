@@ -360,9 +360,6 @@ var ActionManager = Widget.extend({
                 // update the internal state and the DOM
                 self._pushController(controller, options);
 
-                // toggle the fullscreen mode for actions in target='fullscreen'
-                self._toggleFullscreen();
-
                 // store the action into the sessionStorage so that it can be
                 // fully restored on F5
                 self.call('session_storage', 'setItem', 'current_action', action._originalAction);
@@ -751,6 +748,9 @@ var ActionManager = Widget.extend({
             action: this.getCurrentAction(),
             controller: controller,
         });
+
+        // toggle the fullscreen mode for actions in target='fullscreen'
+        this._toggleFullscreen();
     },
     /**
      * Pushes the given state, with additional information about the given
