@@ -1,408 +1,532 @@
 odoo.define('website_links.website_links', function (require) {
 'use strict';
 
-require('web.dom_ready');
-var ajax = require('web.ajax');
 var core = require('web.core');
-var rpc = require('web.rpc');
 var Widget = require('web.Widget');
-var base = require('web_editor.base');
-var weContext = require('web_editor.context');
+var sAnimations = require('website.content.snippets.animation');
 
-var qweb = core.qweb;
 var _t = core._t;
 
-var exports = {};
+var SelectBox = Widget.extend({
+    xmlDependencies: ['/website_links/static/src/xml/recent_link.xml'],
+    events: {
+        'change': '_onChange',
+    },
 
-if (!$('.o_website_links_create_tracked_url').length) {
-    return $.Deferred().reject("DOM doesn't contain '.o_website_links_create_tracked_url'");
-}
-
-    var SelectBox = Widget.extend({
-        init: function (obj) {
-            this.obj = obj;
-        },
-        start: function (element, placeholder) {
-            var self = this;
-            this.element = element;
-            this.placeholder = placeholder;
-
-            this.fetch_objects().then(function (results) {
-                self.objects = results;
-
-                element.select2({
-                    placeholder: self.placeholder,
-                    allowClear: true,
-                    createSearchChoice: function (term) {
-                        if (self.object_exists(term)) { return null; }
-
-                        return {id:term, text:_.str.sprintf("Create '%s'", term)};
-                    },
-                    createSearchChoicePosition: 'bottom',
-                    multiple: false,
-                    data: self.objects,
-                });
-
-                element.on('change', function (e) {
-                    self.on_change(e);
-                });
+    /**
+     * @constructor
+     * @param {Object} parent
+     * @param {Object} obj
+     * @param {String} placeholder
+     */
+    init: function (parent, obj, placeholder) {
+        this._super.apply(this, arguments);
+        this.obj = obj;
+        this.placeholder = placeholder;
+    },
+    /**
+     * @override
+     */
+    willStart: function () {
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
+        defs.push(this._rpc({
+            model: this.obj,
+            method: 'search_read',
+        }).then(function (result) {
+            self.objects = _.map(result, function (val) {
+                return {id: val.id, text: val.name};
             });
-        },
-        fetch_objects: function () {
-            return rpc.query({
-                    model: this.obj,
-                    method: 'search_read',
-                    context: weContext.get(), // TODO use this._rpc
-                })
-                .then(function (result) {
-                    return _.map(result, function (val) {
-                        return {id: val.id, text:val.name};
-                    });
-                });
-        },
-        object_exists: function (query) {
-            return _.find(this.objects, function (val) {
-                return val.text.toLowerCase() === query.toLowerCase();
-            }) !== undefined;
-        },
-        on_change: function (e) {
-            if (e.added && _.isString(e.added.id)) {
-                this.create_object(e.added.id);
-            }
-        },
-        create_object: function (name) {
-            var self = this;
-
-            return rpc.query({
-                    model: this.obj,
-                    method: 'create',
-                    args: [{name:name}],
-                    context: weContext.get(), // TODO use this._rpc
-                })
-                .then(function (record) {
-                    self.element.attr('value', record);
-                    self.objects.push({'id': record, 'text': name});
-                });
-        },
-    });
-
-    var RecentLinkBox = Widget.extend({
-        template: 'website_links.RecentLink',
-        events: {
-            'click .btn_shorten_url_clipboard':'toggle_copy_button',
-            'click .o_website_links_edit_code':'edit_code',
-            'click .o_website_links_ok_edit':function (e) {
-                e.preventDefault();
-                this.submit_code();
+        }));
+        return $.when.apply($, defs);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        this.$el.select2({
+            placeholder: self.placeholder,
+            allowClear: true,
+            createSearchChoice: function (term) {
+                if (self._objectExists(term)) {
+                    return null;
+                }
+                return {id: term, text: _.str.sprintf("Create '%s'", term)};
             },
-            'click .o_website_links_cancel_edit': function (e) {
-                e.preventDefault();
-                this.cancel_edit();
-            },
-            'submit #o_website_links_edit_code_form': function (e) {
-                e.preventDefault();
-                this.submit_code();
-            },
-        },
-        init: function (parent, link_obj) {
-            this._super(parent);
-            this.link_obj = link_obj;
-            this.animating_copy = false;
-        },
-        start: function () {
-            new ClipboardJS(this.$('.btn_shorten_url_clipboard').get(0));
-            return this._super.apply(this, arguments);
-        },
-        toggle_copy_button: function () {
-            var self = this;
+            createSearchChoicePosition: 'bottom',
+            multiple: false,
+            data: self.objects,
+        });
+    },
 
-            if (!this.animating_copy) {
-                this.animating_copy = true;
-                var top = this.$('.o_website_links_short_url').position().top;
-                this.$('.o_website_links_short_url').clone()
-                    .css('position', 'absolute')
-                    .css('left', 15)
-                    .css('top', top-2)
-                    .css('z-index', 2)
-                    .removeClass('o_website_links_short_url')
-                    .addClass('animated-link')
-                    .insertAfter(this.$('.o_website_links_short_url'))
-                    .animate({
-                        opacity: 0,
-                        top: "-=20",
-                    }, 500, function () {
-                        self.$('.animated-link').remove();
-                        self.animating_copy = false;
-                    });
-            }
-        },
-        remove: function () {
-            this.getParent().remove_link(this);
-        },
-        notification: function (message) {
-            this.$('.notification').append('<strong>' + message + '</strong>');
-        },
-        edit_code: function () {
-            var init_code = this.$('#o_website_links_code').html();
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-            this.$('#o_website_links_code').html("<form style='display:inline;' id='o_website_links_edit_code_form'><input type='hidden' id='init_code' value='" + init_code + "'/><input type='text' id='new_code' value='" + init_code + "'/></form>");
-            this.$('.o_website_links_edit_code').hide();
-            this.$('.copy-to-clipboard').hide();
-            this.$('.o_website_links_edit_tools').show();
-        },
-        cancel_edit: function () {
-            this.$('.o_website_links_edit_code').show();
-            this.$('.copy-to-clipboard').show();
-            this.$('.o_website_links_edit_tools').hide();
-            this.$('.o_website_links_code_error').hide();
+    /**
+     * @private
+     * @param {String} query
+     */
+    _objectExists: function (query) {
+        return _.find(this.objects, function (val) {
+            return val.text.toLowerCase() === query.toLowerCase();
+        }) !== undefined;
+    },
+    /**
+     * @private
+     * @param {String} name
+     */
+    _createObject: function (name) {
+        var self = this;
+        return this._rpc({
+            model: this.obj,
+            method: 'create',
+            args: [{name: name}],
+        }).then(function (record) {
+            self.$el.attr('value', record);
+            self.objects.push({'id': record, 'text': name});
+        });
+    },
 
-            var old_code = this.$('#o_website_links_edit_code_form #init_code').val();
-            this.$('#o_website_links_code').html(old_code);
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-            this.$('#code-error').remove();
-            this.$('#o_website_links_code form').remove();
-        },
-        submit_code: function () {
-            var self = this;
+    /**
+     * @private
+     * @param {Object} ev
+     */
+    _onChange: function (ev) {
+        if (!ev.added || !_.isString(ev.added.id)) {
+            return;
+        }
+        this._createObject(ev.added.id);
+    },
+});
 
-            var init_code = this.$('#o_website_links_edit_code_form #init_code').val();
-            var new_code = this.$('#o_website_links_edit_code_form #new_code').val();
+var RecentLinkBox = Widget.extend({
+    template: 'website_links.RecentLink',
+    events: {
+        'click .btn_shorten_url_clipboard': '_toggleCopyButton',
+        'click .o_website_links_edit_code': '_editCode',
+        'click .o_website_links_ok_edit': '_onLinksOkClick',
+        'click .o_website_links_cancel_edit': '_onLinksCancelClick',
+        'submit #o_website_links_edit_code_form': '_onSubmitCode',
+    },
 
-            if (new_code === '') {
-                self.$('.o_website_links_code_error').html("The code cannot be left empty");
+    /**
+     * @constructor
+     * @param {Object} parent
+     * @param {Object} obj
+     */
+    init: function (parent, obj) {
+        this._super.apply(this, arguments);
+        this.link_obj = obj;
+        this.animating_copy = false;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        new ClipboardJS(this.$('.btn_shorten_url_clipboard').get(0));
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _toggleCopyButton: function () {
+        if (this.animating_copy) {
+            return;
+        }
+
+        var self = this;
+        this.animating_copy = true;
+        var top = this.$('.o_website_links_short_url').position().top;
+        this.$('.o_website_links_short_url').clone()
+            .css('position', 'absolute')
+            .css('left', 15)
+            .css('top', top - 2)
+            .css('z-index', 2)
+            .removeClass('o_website_links_short_url')
+            .addClass('animated-link')
+            .insertAfter(this.$('.o_website_links_short_url'))
+            .animate({
+                opacity: 0,
+                top: '-=20',
+            }, 500, function () {
+                self.$('.animated-link').remove();
+                self.animating_copy = false;
+            });
+    },
+    /**
+     * @private
+     * @param {String} message
+     */
+    _notification: function (message) {
+        this.$('.notification').append('<strong>' + message + '</strong>');
+    },
+    /**
+     * @private
+     */
+    _editCode: function () {
+        var initCode = this.$('#o_website_links_code').html();
+        this.$('#o_website_links_code').html('<form style="display:inline;" id="o_website_links_edit_code_form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>');
+        this.$('.o_website_links_edit_code').hide();
+        this.$('.copy-to-clipboard').hide();
+        this.$('.o_website_links_edit_tools').show();
+    },
+    /**
+     * @private
+     */
+    _cancelEdit: function () {
+        this.$('.o_website_links_edit_code').show();
+        this.$('.copy-to-clipboard').show();
+        this.$('.o_website_links_edit_tools').hide();
+        this.$('.o_website_links_code_error').hide();
+
+        var oldCode = this.$('#o_website_links_edit_code_form #init_code').val();
+        this.$('#o_website_links_code').html(oldCode);
+
+        this.$('#code-error').remove();
+        this.$('#o_website_links_code form').remove();
+    },
+    /**
+     * @private
+     */
+    _submitCode: function () {
+        var self = this;
+
+        var initCode = this.$('#o_website_links_edit_code_form #init_code').val();
+        var newCode = this.$('#o_website_links_edit_code_form #new_code').val();
+
+        if (newCode === '') {
+            self.$('.o_website_links_code_error').html(_t("The code cannot be left empty"));
+            self.$('.o_website_links_code_error').show();
+            return;
+        }
+
+        function showNewCode(newCode) {
+            self.$('.o_website_links_code_error').html('');
+            self.$('.o_website_links_code_error').hide();
+
+            self.$('#o_website_links_code form').remove();
+
+            // Show new code
+            var host = self.$('#o_website_links_host').html();
+            self.$('#o_website_links_code').html(newCode);
+
+            // Update button copy to clipboard
+            self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + newCode);
+
+            // Show action again
+            self.$('.o_website_links_edit_code').show();
+            self.$('.copy-to-clipboard').show();
+            self.$('.o_website_links_edit_tools').hide();
+        }
+
+        if (initCode === newCode) {
+            showNewCode(newCode);
+        } else {
+            this._rpc({
+                route: '/website_links/add_code',
+                params: {
+                    init_code: initCode,
+                    new_code: newCode,
+                },
+            }).then(function (result) {
+                showNewCode(result[0].code);
+            }, function () {
                 self.$('.o_website_links_code_error').show();
-                return;
-            }
+                self.$('.o_website_links_code_error').html(_t("This code is already taken"));
+            });
+        }
+    },
 
-            function show_new_code(new_code) {
-                self.$('.o_website_links_code_error').html('');
-                self.$('.o_website_links_code_error').hide();
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-                self.$('#o_website_links_code form').remove();
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onLinksOkClick: function (ev) {
+        ev.preventDefault();
+        this._submitCode();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onLinksCancelClick: function (ev) {
+        ev.preventDefault();
+        this._cancelEdit();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onSubmitCode: function (ev) {
+        ev.preventDefault();
+        this._submitCode();
+    },
+});
 
-                // Show new code
-                var host = self.$('#o_website_links_host').html();
-                self.$('#o_website_links_code').html(new_code);
+var RecentLinks = Widget.extend({
 
-                // Update button copy to clipboard
-                self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + new_code);
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-                // Show action again
-                self.$('.o_website_links_edit_code').show();
-                self.$('.copy-to-clipboard').show();
-                self.$('.o_website_links_edit_tools').hide();
-            }
+    /**
+     * @private
+     */
+    getRecentLinks: function (filter) {
+        var self = this;
+        return this._rpc({
+            route: '/website_links/recent_links',
+            params: {
+                filter: filter,
+                limit: 20,
+            },
+        }).then(function (result) {
+            _.each(result.reverse(), function (link) {
+                self._addLink(link);
+            });
+            self._updateNotification();
+        }, function () {
+            var message = _t("Unable to get recent links");
+            self.$el.append('<div class="alert alert-danger">' + message + '</div>');
+        });
+    },
+    /**
+     * @private
+     */
+    _addLink: function (link) {
+        var nbLinks = this.getChildren().length;
+        var recentLinkBox = new RecentLinkBox(this, link);
+        recentLinkBox.prependTo(this.$el);
+        $('.link-tooltip').tooltip();
 
-            if (init_code === new_code) {
-                show_new_code(new_code);
-            }
-            else {
-                ajax.jsonRpc('/website_links/add_code', 'call', {'init_code':init_code, 'new_code':new_code})
-                    .then(function (result) {
-                        show_new_code(result[0].code);
-                    })
-                    .fail(function () {
-                        self.$('.o_website_links_code_error').show();
-                        self.$('.o_website_links_code_error').html("This code is already taken");
-                    }) ;
-            }
-        },
-    });
+        if (nbLinks === 0) {
+            this._updateNotification();
+        }
+    },
+    /**
+     * @private
+     */
+    removeLinks: function () {
+        _.invoke(this.getChildren(), 'destroy');
+    },
+    /**
+     * @private
+     */
+    _updateNotification: function () {
+        if (this.getChildren().length === 0) {
+            var message = _t("You don't have any recent links.");
+            $('.o_website_links_recent_links_notification').html('<div class="alert alert-info">' + message + '</div>');
+        } else {
+            $('.o_website_links_recent_links_notification').empty();
+        }
+    },
+});
 
-    var RecentLinks = Widget.extend({
-        init: function () {
-            this._super();
-        },
-        get_recent_links: function (filter) {
-            var self = this;
+sAnimations.registry.websiteLinks = sAnimations.Class.extend({
+    selector: '.o_website_links_create_tracked_url',
+    read_events: {
+        'click #filter-newest-links': '_onFilterNewestLinksClick',
+        'click #filter-most-clicked-links': '_onFilterMostClickedLinksClick',
+        'click #filter-recently-used-links': '_onFilterRecentlyUsedLinksClick',
+        'click #generated_tracked_link a': '_onGeneratedTrackedLinkClick',
+        'keyup #url': '_onUrlKeyUp',
+        'click #btn_shorten_url': '_onShortenUrlButtonClick',
+        'submit #o_website_links_link_tracker_form': '_onFormSubmit',
+    },
 
-            ajax.jsonRpc('/website_links/recent_links', 'call', {'filter':filter, 'limit':20})
-                .then(function (result) {
-                    _.each(result.reverse(), function (link) {
-                        self.add_link(link);
-                    });
-
-                    self.update_notification();
-                })
-                .fail(function () {
-                    var message = _t("Unable to get recent links");
-                    self.$el.append("<div class='alert alert-danger'>" + message + "</div>");
-                });
-        },
-        add_link: function (link) {
-            var nb_links = this.getChildren().length;
-
-            var recent_link_box = new RecentLinkBox(this, link);
-            recent_link_box.prependTo(this.$el);
-            $('.link-tooltip').tooltip();
-
-            if (nb_links === 0) {
-                this.update_notification();
-            }
-        },
-        remove_links: function () {
-            _.invoke(this.getChildren(), 'remove');
-        },
-        remove_link: function (link) {
-            link.destroy();
-        },
-        update_notification: function () {
-            if (this.getChildren().length === 0) {
-                var message = _t("You don't have any recent links.");
-                $('.o_website_links_recent_links_notification').html("<div class='alert alert-info'>" + message + "</div>");
-            }
-            else {
-                $('.o_website_links_recent_links_notification').empty();
-            }
-        },
-    });
-
-    ajax.loadXML('/website_links/static/src/xml/recent_link.xml', qweb);
-
-    base.ready().done(function () {
+    /**
+     * @override
+     */
+    start: function () {
+        var defs = [this._super.apply(this, arguments)];
 
         // UTMS selects widgets
-        var campaign_select = new SelectBox('utm.campaign');
-        campaign_select.start($("#campaign-select"), _t('e.g. Promotion of June, Winter Newsletter, ..'));
+        var campaignSelect = new SelectBox(this, 'utm.campaign', _t("e.g. Promotion of June, Winter Newsletter, .."));
+        defs.push(campaignSelect.attachTo($('#campaign-select')));
 
-        var medium_select = new SelectBox('utm.medium');
-        medium_select.start($("#channel-select"), _t('e.g. Newsletter, Social Network, ..'));
+        var mediumSelect = new SelectBox(this, 'utm.medium', _t("e.g. Newsletter, Social Network, .."));
+        defs.push(mediumSelect.attachTo($('#channel-select')));
 
-        var source_select = new SelectBox('utm.source');
-        source_select.start($("#source-select"), _t('e.g. Search Engine, Website page, ..'));
+        var sourceSelect = new SelectBox(this, 'utm.source', _t("e.g. Search Engine, Website page, .."));
+        defs.push(sourceSelect.attachTo($('#source-select')));
 
         // Recent Links Widgets
-        var recent_links = new RecentLinks();
-            recent_links.appendTo($("#o_website_links_recent_links"));
-            recent_links.get_recent_links('newest');
-
-        $('#filter-newest-links').click(function () {
-            recent_links.remove_links();
-            recent_links.get_recent_links('newest');
-        });
-
-        $('#filter-most-clicked-links').click(function () {
-            recent_links.remove_links();
-            recent_links.get_recent_links('most-clicked');
-        });
-
-        $('#filter-recently-used-links').click(function () {
-            recent_links.remove_links();
-            recent_links.get_recent_links('recently-used');
-        });
+        this.recentLinks = new RecentLinks();
+        defs.push(this.recentLinks.appendTo($('#o_website_links_recent_links')));
+        this.recentLinks.getRecentLinks('newest');
 
         // Clipboard Library
-        new ClipboardJS($("#btn_shorten_url").get(0));
+        new ClipboardJS($('#btn_shorten_url').get(0));
 
-        $("#generated_tracked_link a").click(function () {
-            $("#generated_tracked_link a").text("Copied").removeClass("btn-primary").addClass("btn-success");
-            setTimeout(function () {
-                $("#generated_tracked_link a").text("Copy").removeClass("btn-success").addClass("btn-primary");
-            }, '5000');
-        });
+        this.url_copy_animating = false;
 
-        $('#url').on('keyup', function (e) {
-            if ($('#btn_shorten_url').hasClass('btn-copy') && e.which !== 13) {
-                $('#btn_shorten_url').removeClass('btn-success btn-copy').addClass('btn-primary').html('Get tracked link');
-                $('#generated_tracked_link').css('display', 'none');
-                $('.o_website_links_utm_forms').show();
-            }
-        });
+        $('[data-toggle="tooltip"]').tooltip();
 
-        var url_copy_animating = false;
-        $('#btn_shorten_url').click(function () {
-            if ($('#btn_shorten_url').hasClass('btn-copy')) {
-                if (!url_copy_animating) {
-                    url_copy_animating = true;
+        return $.when.apply($, defs);
+    },
 
-                    $('#generated_tracked_link').clone()
-                        .css('position', 'absolute')
-                        .css('left', '78px')
-                        .css('bottom', '8px')
-                        .css('z-index', 2)
-                        .removeClass('#generated_tracked_link')
-                        .addClass('url-animated-link')
-                        .appendTo($('#generated_tracked_link'))
-                        .animate({
-                            opacity: 0,
-                            bottom: "+=20",
-                        }, 500, function () {
-                            $('.url-animated-link').remove();
-                            url_copy_animating = false;
-                        });
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onFilterNewestLinksClick: function () {
+        this.recentLinks.removeLinks();
+        this.recentLinks.getRecentLinks('newest');
+    },
+    /**
+     * @private
+     */
+    _onFilterMostClickedLinksClick: function () {
+        this.recentLinks.removeLinks();
+        this.recentLinks.getRecentLinks('most-clicked');
+    },
+    /**
+     * @private
+     */
+    _onFilterRecentlyUsedLinksClick: function () {
+        this.recentLinks.removeLinks();
+        this.recentLinks.getRecentLinks('recently-used');
+    },
+    /**
+     * @private
+     */
+    _onGeneratedTrackedLinkClick: function () {
+        $('#generated_tracked_link a').text(_t("Copied")).removeClass('btn-primary').addClass('btn-success');
+        setTimeout(function () {
+            $('#generated_tracked_link a').text(_t("Copy")).removeClass('btn-success').addClass('btn-primary');
+        }, 5000);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onUrlKeyUp: function (ev) {
+        if (!$('#btn_shorten_url').hasClass('btn-copy') || ev.which === 13) {
+            return;
+        }
+
+        $('#btn_shorten_url').removeClass('btn-success btn-copy').addClass('btn-primary').html('Get tracked link');
+        $('#generated_tracked_link').css('display', 'none');
+        $('.o_website_links_utm_forms').show();
+    },
+    /**
+     * @private
+     */
+    _onShortenUrlButtonClick: function () {
+        if (!$('#btn_shorten_url').hasClass('btn-copy') || this.url_copy_animating) {
+            return;
+        }
+
+        var self = this;
+        this.url_copy_animating = true;
+        $('#generated_tracked_link').clone()
+            .css('position', 'absolute')
+            .css('left', '78px')
+            .css('bottom', '8px')
+            .css('z-index', 2)
+            .removeClass('#generated_tracked_link')
+            .addClass('url-animated-link')
+            .appendTo($('#generated_tracked_link'))
+            .animate({
+                opacity: 0,
+                bottom: '+=20',
+            }, 500, function () {
+                $('.url-animated-link').remove();
+                self.url_copy_animating = false;
+            });
+    },
+    /**
+     * Add the RecentLinkBox widget and send the form when the user generate the link
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onFormSubmit: function (ev) {
+        ev.preventDefault();
+
+        if ($('#btn_shorten_url').hasClass('btn-copy')) {
+            return;
+        }
+
+        ev.stopPropagation();
+
+        // Get URL and UTMs
+        var campaignID = $('#campaign-select').attr('value');
+        var mediumID = $('#channel-select').attr('value');
+        var sourceID = $('#source-select').attr('value');
+
+        var params = {};
+        params.url = $('#url').val();
+        if (campaignID !== '') {
+            params.campaign_id = parseInt(campaignID);
+        }
+        if (mediumID !== '') {
+            params.medium_id = parseInt(mediumID);
+        }
+        if (sourceID !== '') {
+            params.source_id = parseInt(sourceID);
+        }
+
+        $('#btn_shorten_url').text(_t("Generating link..."));
+
+        this._rpc({
+            route: '/website_links/new',
+            params: params,
+        }).then(function (result) {
+            if ('error' in result) {
+                // Handle errors
+                if (result.error === 'empty_url') {
+                    $('.notification').html('<div class="alert alert-danger">The URL is empty.</div>');
+                } else if (result.error === 'url_not_found') {
+                    $('.notification').html('<div class="alert alert-danger">URL not found (404)</div>');
+                } else {
+                    $('.notification').html('<div class="alert alert-danger">An error occur while trying to generate your link. Try again later.</div>');
                 }
+            } else {
+                // Link generated, clean the form and show the link
+                var link = result[0];
+
+                $('#btn_shorten_url').removeClass('btn-primary').addClass('btn-success btn-copy').html('Copy');
+                $('#btn_shorten_url').attr('data-clipboard-text', link.short_url);
+
+                $('.notification').html('');
+                $('#generated_tracked_link').html(link.short_url);
+                $('#generated_tracked_link').css('display', 'inline');
+
+                this.recentLinks._addLink(link);
+
+                // Clean URL and UTM selects
+                $('#campaign-select').select2('val', '');
+                $('#channel-select').select2('val', '');
+                $('#source-select').select2('val', '');
+
+                $('.o_website_links_utm_forms').hide();
             }
         });
+    },
+});
 
-        // Add the RecentLinkBox widget and send the form when the user generate the link
-        $("#o_website_links_link_tracker_form").submit(function (event) {
-
-            if ($('#btn_shorten_url').hasClass('btn-copy')) {
-                event.preventDefault();
-                return;
-            }
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            // Get URL and UTMs
-            var campaign_id = $('#campaign-select').attr('value');
-            var medium_id = $('#channel-select').attr('value');
-            var source_id = $('#source-select').attr('value');
-
-            var params = {};
-            params.url = $("#url").val();
-            if (campaign_id !== '') { params.campaign_id = parseInt(campaign_id); }
-            if (medium_id !== '') { params.medium_id = parseInt(medium_id); }
-            if (source_id !== '') { params.source_id = parseInt(source_id); }
-
-            $('#btn_shorten_url').text(_t('Generating link...'));
-
-            ajax.jsonRpc("/website_links/new", 'call', params)
-                .then(function (result) {
-                    if ('error' in result) {
-                        // Handle errors
-                        if (result.error === 'empty_url')  {
-                            $('.notification').html("<div class='alert alert-danger'>The URL is empty.</div>");
-                        }
-                        else if (result.error === 'url_not_found') {
-                            $('.notification').html("<div class='alert alert-danger'>URL not found (404)</div>");
-                        }
-                        else {
-                            $('.notification').html("<div class='alert alert-danger'>An error occur while trying to generate your link. Try again later.</div>");
-                        }
-                    }
-                    else {
-                        // Link generated, clean the form and show the link
-                        var link = result[0];
-
-                        $('#btn_shorten_url').removeClass('btn-primary').addClass('btn-success btn-copy').html('Copy');
-                        $('#btn_shorten_url').attr('data-clipboard-text', link.short_url);
-
-                        $('.notification').html('');
-                        $('#generated_tracked_link').html(link.short_url);
-                        $('#generated_tracked_link').css('display', 'inline');
-
-                        recent_links.add_link(link);
-
-                        // Clean URL and UTM selects
-                        $('#campaign-select').select2('val', '');
-                        $('#channel-select').select2('val', '');
-                        $('#source-select').select2('val', '');
-
-                        $('.o_website_links_utm_forms').hide();
-                    }
-                });
-        });
-
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip();
-        });
-    });
-
-    exports.SelectBox = SelectBox;
-    exports.RecentLinkBox = RecentLinkBox;
-    exports.RecentLinks = RecentLinks;
-
-return exports;
+return {
+    SelectBox: SelectBox,
+    RecentLinkBox: RecentLinkBox,
+    RecentLinks: RecentLinks,
+};
 });
