@@ -33,6 +33,7 @@ from lxml import etree, html
 
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain
+from odoo.tools import freeze_time
 from odoo.tools import single_email_re
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
@@ -357,6 +358,9 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     # turns out this thing may not be quite as useful as we thought...
     def assertItemsEqual(self, a, b, msg=None):
         self.assertCountEqual(a, b, msg=None)
+
+    def patch_now(self, t):
+        return freeze_time(t)
 
 
 class TransactionCase(BaseCase):

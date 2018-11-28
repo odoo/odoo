@@ -17,6 +17,7 @@ try:
 except ImportError:
     import xmlrpclib
 from contextlib import contextmanager
+from datetime import datetime
 from glob import glob
 from os.path import abspath, dirname, join
 from sys import stdout, stderr
@@ -30,7 +31,7 @@ from tempfile import NamedTemporaryFile
 exec(open(join(dirname(__file__), '..', 'odoo', 'release.py'), 'rb').read())
 version = version.split('-')[0].replace('saas~','')
 docker_version = version.replace('+', '')
-timestamp = time.strftime("%Y%m%d", time.gmtime())
+timestamp = datetime.utcnow().strftime("%Y%m%d")
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
 GPGID = os.getenv('GPGID')
 PUBLISH_DIRS = {
