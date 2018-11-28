@@ -405,15 +405,19 @@ class Picking(models.Model):
     def _compute_has_packages(self):
         self.has_packages = self.move_line_ids.filtered(lambda ml: ml.result_package_id)
 
-    @api.multi
     def _compute_show_check_availability(self):
+        """ According to `picking.show_check_availability`, the "check availability" button will be
+        displayed in the form view of a picking.
+        """
         for picking in self:
-            has_moves_to_reserve = any(
+            if picking.immediate_transfer or not picking.is_locked or picking.state not in ('confirmed', 'waiting', 'assigned'):
+                picking.show_check_availability = False
+                continue
+            picking.show_check_availability = any(
                 move.state in ('waiting', 'confirmed', 'partially_available') and
                 float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding)
                 for move in picking.move_lines
             )
-            picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting', 'assigned') and has_moves_to_reserve
 
     @api.multi
     @api.depends('state', 'move_lines')
@@ -421,7 +425,7 @@ class Picking(models.Model):
         for picking in self:
             if not picking.move_lines and not picking.package_level_ids:
                 picking.show_mark_as_todo = False
-            elif not (picking.immediate_transfer) and picking.state == 'draft':
+            elif not picking.immediate_transfer and picking.state == 'draft':
                 picking.show_mark_as_todo = True
             elif picking.state != 'draft' or not picking.id:
                 picking.show_mark_as_todo = False

@@ -479,7 +479,7 @@ class StockMove(models.Model):
                 show_source_location=self.location_id.child_ids and self.picking_type_id.code != 'incoming',
                 show_destination_location=self.location_dest_id.child_ids and self.picking_type_id.code != 'outgoing',
                 show_package=not self.location_id.usage == 'supplier',
-                show_reserved_quantity=self.state != 'done'
+                show_reserved_quantity=self.state != 'done' and not self.picking_id.immediate_transfer
             ),
         }
 
