@@ -449,6 +449,8 @@ class Users(models.Model):
     @api.model
     def check_credentials(self, password):
         """ Override this method to plug additional authentication methods"""
+        if not password:
+            raise AccessDenied()
         user = self.sudo().search([('id', '=', self._uid), ('password', '=', password)])
         if not user:
             raise AccessDenied()
