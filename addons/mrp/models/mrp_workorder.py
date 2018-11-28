@@ -40,7 +40,7 @@ class MrpWorkorder(models.Model):
         help='Technical: used in views only.')
     production_availability = fields.Selection(
         'Stock Availability', readonly=True,
-        related='production_id.availability', store=True,
+        related='production_id.reservation_state', store=True,
         help='Technical: used in views and domains only.')
     production_state = fields.Selection(
         'Production State', readonly=True,
@@ -239,7 +239,7 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         MoveLine = self.env['stock.move.line']
         tracked_moves = self.move_raw_ids.filtered(
-            lambda move: move.state not in ('done', 'cancel') and move.product_id.tracking != 'none' and move.product_id != self.production_id.product_id and move.bom_line_id)
+            lambda move: move.state not in ('done', 'cancel') and move.product_id.tracking != 'none' and move.product_id != self.production_id.product_id)
         for move in tracked_moves:
             qty = move.unit_factor * self.qty_producing
             if move.product_id.tracking == 'serial':
@@ -307,7 +307,7 @@ class MrpWorkorder(models.Model):
         # (the new workorder tablet view allows registering consumed quantities for untracked components)
         # we assume that only the theoretical quantity was used
         for move in self.move_raw_ids:
-            if move.has_tracking == 'none' and (move.state not in ('done', 'cancel')) and move.bom_line_id\
+            if move.has_tracking == 'none' and (move.state not in ('done', 'cancel'))\
                         and move.unit_factor and not move.move_line_ids.filtered(lambda ml: not ml.done_wo):
                 rounding = move.product_uom.rounding
                 if self.product_id.tracking != 'none':
@@ -428,7 +428,6 @@ class MrpWorkorder(models.Model):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
         if self.production_id.state != 'progress':
             self.production_id.write({
-                'state': 'progress',
                 'date_start': datetime.now(),
             })
         timeline.create({
