@@ -2914,6 +2914,41 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many from a model that has been sorted', function (assert) {
+        assert.expect(1);
+
+        /* On a standard list view, sort your records by a field
+         * Click on a record which contains a x2m with multiple records in it
+         * The x2m shouldn't take the orderedBy of the parent record (the one on the form)
+         */
+
+        this.data.partner.records[0].turtles = [3, 2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            context: {
+                orderedBy: [{
+                    name: 'foo',
+                    asc: false,
+                }]
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_one2many[name=turtles] tbody').text().trim(), "kawablip",
+            'The o2m should not have been sorted.');
+
+        form.destroy();
+    });
+
     QUnit.test('O2M List with pager, decoration and default_order: add and cancel adding', function (assert) {
         assert.expect(3);
 
