@@ -4,6 +4,7 @@ odoo.define('payment.payment_form', function (require) {
     var ajax = require('web.ajax');
     var config = require('web.config');
     var core = require('web.core');
+    var dom = require('web.dom');
     var Dialog = require("web.Dialog");
     var Widget = require("web.Widget");
     var rpc = require("web.rpc");
@@ -23,6 +24,11 @@ odoo.define('payment.payment_form', function (require) {
             this._super.apply(this, arguments);
             this.options = _.extend(options || {}, {
             });
+
+            // TODO simplify this using the 'async' keyword in the events
+            // property definition as soon as this widget is converted in
+            // frontend widget.
+            this.payEvent = dom.makeButtonHandler(this.payEvent);
         },
 
         start: function () {
@@ -95,7 +101,7 @@ odoo.define('payment.payment_form', function (require) {
                     }
 
                     // do the call to the route stored in the 'data_set' input of the acquirer form, the data must be called 'create-route'
-                    ajax.jsonRpc(ds.dataset.createRoute, 'call', form_data).then(function (data) {
+                    return ajax.jsonRpc(ds.dataset.createRoute, 'call', form_data).then(function (data) {
                         // if the server has returned true
                         if (data.result) {
                             // and it need a 3DS authentication
@@ -106,7 +112,7 @@ odoo.define('payment.payment_form', function (require) {
                             else {
                                 checked_radio.value = data.id; // set the radio value to the new card id
                                 form.submit();
-                                return;
+                                return $.Deferred();
                             }
                         }
                         // if the server has returned false, we display an error
@@ -146,7 +152,7 @@ odoo.define('payment.payment_form', function (require) {
                         // if the user wants to save his credit card info
                         var form_save_token = acquirer_form.find('input[name="o_payment_form_save_token"]').prop('checked');
                         // then we call the route to prepare the transaction
-                        ajax.jsonRpc($tx_url[0].value, 'call', {
+                        return ajax.jsonRpc($tx_url[0].value, 'call', {
                             'acquirer_id': parseInt(acquirer_id),
                             'save_token': form_save_token,
                             'access_token': self.options.accessToken,
@@ -168,6 +174,7 @@ odoo.define('payment.payment_form', function (require) {
                                 $(newForm).find('input[data-remove-me]').remove(); // remove all the input that should be removed
                                 if(action_url) {
                                     newForm.submit(); // and finally submit the form
+                                    return $.Deferred();
                                 }
                             }
                             else {
@@ -194,6 +201,7 @@ odoo.define('payment.payment_form', function (require) {
                 }
                 else {  // if the user is using an old payment then we just submit the form
                     form.submit();
+                    return $.Deferred();
                 }
             }
             else {
