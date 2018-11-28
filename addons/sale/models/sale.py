@@ -746,12 +746,15 @@ class SaleOrderLine(models.Model):
                  'invoice_lines.invoice_id.refund_invoice_ids.state',
                  'invoice_lines.invoice_id.refund_invoice_ids.amount_total')
     def _compute_invoice_amount(self):
+        refund_lines_product = self.env['account.invoice.line']
         for line in self:
             # Invoice lines referenced by this line
             invoice_lines = line.invoice_lines.filtered(lambda l: l.invoice_id.state in ('open', 'paid'))
             # Refund invoices linked to invoice_lines
             refund_invoices = invoice_lines.mapped('invoice_id.refund_invoice_ids').filtered(lambda inv: inv.state in ('open', 'paid'))
-            refund_invoice_lines = refund_invoices.mapped('invoice_line_ids').filtered(lambda l: l.product_id == line.product_id)
+            refund_invoice_lines = (refund_invoices.mapped('invoice_line_ids') - refund_lines_product).filtered(lambda l: l.product_id == line.product_id)
+            if refund_invoice_lines:
+                refund_lines_product |= refund_invoice_lines
             # If the currency of the invoice differs from the sale order, we need to convert the values
             if line.invoice_lines and line.invoice_lines[0].currency_id \
                     and line.invoice_lines[0].currency_id != line.currency_id:
