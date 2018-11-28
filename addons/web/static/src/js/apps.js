@@ -75,7 +75,7 @@ var Apps = AbstractAction.extend({
         }
 
         var dispatcher = {
-            'event': function(m) { self.trigger('message:' + m.event, m); },
+            'event': function(m) { self.trigger('message:' + m.event, {m: m}); },
             'action': function(m) {
                 self.do_action(m.action).then(function(r) {
                     var w = self.$ifr[0].contentWindow;
@@ -120,7 +120,7 @@ var Apps = AbstractAction.extend({
             self.uniq = _.uniqueId('apps');
             $(window).on("message." + self.uniq, self.proxy('_on_message'));
 
-            self.on('message:ready', self, function(m) {
+            self.on('message:ready', self, function(ev) {
                 var w = this.$ifr[0].contentWindow;
                 var act = {
                     type: 'ir.actions.client',
@@ -133,13 +133,13 @@ var Apps = AbstractAction.extend({
                 w.postMessage({type:'action', action: act}, client.origin);
             });
 
-            self.on('message:set_height', self, function(m) {
-                this.$ifr.height(m.height);
+            self.on('message:set_height', self, function(ev) {
+                this.$ifr.height(ev.data.m.height);
             });
 
             self.on('message:blockUI', self, function() { framework.blockUI(); });
             self.on('message:unblockUI', self, function() { framework.unblockUI(); });
-            self.on('message:warn', self, function(m) {self.do_warn(m.title, m.message, m.sticky); });
+            self.on('message:warn', self, function(ev) {self.do_warn(ev.data.m.title, ev.data.m.message, ev.data.m.sticky); });
 
             self.$ifr.appendTo(self.$('.o_content')).css(css).addClass('apps-client');
 
