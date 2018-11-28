@@ -3332,7 +3332,7 @@ var BasicModel = AbstractModel.extend({
             model: params.modelName,
             offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
             openGroupByDefault: params.openGroupByDefault,
-            orderedBy: params.orderedBy || (params.context && params.context.orderedBy) || [],
+            orderedBy: params.orderedBy || [],
             orderedResIDs: params.orderedResIDs,
             parentID: params.parentID,
             rawContext: params.rawContext,
