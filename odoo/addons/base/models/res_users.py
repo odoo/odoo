@@ -258,6 +258,11 @@ class Users(models.Model):
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count')
 
+    record_access_read = fields.Integer('# Read', compute='_compute_record_access', groups='base.group_erp_manager')
+    record_access_write = fields.Integer('# Write', compute='_compute_record_access', groups='base.group_erp_manager')
+    record_access_create = fields.Integer('# Create', compute='_compute_record_access', groups='base.group_erp_manager')
+    record_access_unlink = fields.Integer('# Unlink', compute='_compute_record_access', groups='base.group_erp_manager')
+
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
@@ -278,6 +283,72 @@ class Users(models.Model):
             Users = self.sudo()
             for uid, pw in cr.fetchall():
                 Users.browse(uid).password = pw
+
+    def action_open_read_record(self):
+        return self._action_open_record('read')
+
+    def action_open_write_record(self):
+        return self._action_open_record('write')
+
+    def action_open_create_record(self):
+        return self._action_open_record('create')
+
+    def action_open_unlink_record(self):
+        return self._action_open_record('unlink')
+
+    def _action_open_record(self, mode):
+        self.ensure_one()
+        if self.env.uid != SUPERUSER_ID:
+            return UserError(_('Only Super Admin can perform this action.'))
+        if self.env.user.company_id != self.company_id:
+            return UserError(_('You need to put in the same company of the user.'))
+        model = self.env.context.get('access_current_model')
+        if not model:
+            return
+        env = self.env(user=self.id)
+        Model = env[model].sudo(user=self.id)
+        IrRule = env['ir.rule'].sudo(user=self.id)
+
+        if Model.check_access_rights(mode, raise_exception=False):
+            where_clause, where_params, tables = self.env['ir.rule'].domain_get(Model._name, mode)
+            query = "SELECT {}.id FROM {}".format(Model._table, ",".join(tables),)
+            if where_clause:
+                query += "WHERE {}".format(" AND ".join(where_clause),)
+            self.env.cr.execute(query, where_params)
+            res = [row[0] for row in self.env.cr.fetchall()]
+            print(res)
+            if res:
+                return {
+                    'name': _('Record %s access of %s (%s) for %s') % (mode, Model._name, model, self.name),
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'res_model': model,
+                    'type': 'ir.actions.act_window',
+                    'domain': [('id', 'in', res)],
+                    'target': 'current',
+                }
+        return
+
+    def _compute_record_access(self):
+        model = self.env.context.get('access_current_model')
+        if not model:
+            return
+        Model = self.env[model]
+        for user in self:
+            Model = self.env[model].sudo(user=user.id)
+            IrRule = self.env['ir.rule'].sudo(user=user.id)
+            for mode in ('read', 'write', 'create', 'unlink'):
+                result = 0
+                if Model.check_access_rights(mode, raise_exception=False):
+                    where_clause, where_params, tables = IrRule.domain_get(Model._name, mode)
+                    query = "SELECT COUNT({}.id) FROM {}".format(Model._table, ",".join(tables),)
+                    if where_clause:
+                        query += "WHERE {}".format(" AND ".join(where_clause),)
+                    self.env.cr.execute(query, where_params)
+                    res = self.env.cr.fetchone()
+                    if res:
+                        result = res[0]
+                user.update({'record_access_%s' % mode: result})
 
     def _set_password(self):
         ctx = self._crypt_context()

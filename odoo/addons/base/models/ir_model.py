@@ -109,6 +109,26 @@ class IrModel(models.Model):
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
     count = fields.Integer(compute='_compute_count', string="Count (incl. archived)",
                            help="Total number of records in this model")
+    user_access_count = fields.Integer(compute='_compute_user_access_count')
+
+    @api.depends('access_ids')
+    def _compute_user_access_count(self):
+        for model in self:
+            model.user_access_count = len(model.mapped('access_ids.group_id.users'))
+
+    def action_show_user_access(self):
+        self.ensure_one()
+        users = self.mapped('access_ids.group_id.users')
+        return {
+            'name': _('Users Access of %s (%s)') % (self.name, self.model),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'res.users',
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', users.ids)],
+            'context': {'access_current_model': self.model},
+            'target': 'current',
+        }
 
     @api.depends()
     def _inherited_models(self):

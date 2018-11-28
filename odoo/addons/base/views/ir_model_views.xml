@@ -26,6 +26,11 @@
             <field name="arch" type="xml">
                 <form string="Model Description">
                   <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_show_user_access" class="oe_stat_button" icon="fa-check-square" type="object" groups="base.group_erp_manager,base.group_no_one">
+                            <field name="user_access_count" widget="statinfo" string="Users Access"/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
