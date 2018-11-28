@@ -1068,5 +1068,84 @@ QUnit.test('mark all messages as read from Inbox', function (assert) {
     });
 });
 
+QUnit.test('reply to message from inbox', function (assert) {
+    var done = assert.async();
+    assert.expect(11);
+
+    var self = this;
+    this.data['mail.message'].records = [{
+        author_id: [5, 'Demo User'],
+        body: '<p>test 1</p>',
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+        res_id: 100,
+        model: 'some.document',
+        record_name: 'SomeDocument',
+    }];
+    this.data.initMessaging = {
+        needaction_inbox_counter: 1,
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_post') {
+                assert.step(args.method);
+                assert.strictEqual(args.model, 'some.document',
+                    "should post message to correct document model");
+                assert.strictEqual(args.args[0], 100,
+                    "should post message to correct document ID");
+
+                self.data['mail.message'].records.push({
+                    author_id: [3, 'Me'],
+                    body: args.kwargs.body,
+                    id: 2,
+                    res_id: 100,
+                    model: 'some.document',
+                    record_name: 'SomeDocument',
+                });
+                return $.when(2);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        assert.strictEqual(discuss.$('.o_mail_discuss_item.o_active').data('thread-id'),
+            'mailbox_inbox',
+            "Inbox should be selected by default");
+        assert.containsOnce(discuss, '.o_thread_message',
+            "should display a single message in inbox");
+        assert.strictEqual(discuss.$('.o_thread_message').data('message-id'), 1,
+            "message should be linked to correct message");
+        assert.containsOnce(discuss.$('.o_thread_message'), '.o_thread_message_reply',
+            "should display the reply icon for message linked to a document");
+
+        testUtils.dom.click(discuss.$('.o_thread_message_reply'));
+        var $composer = discuss.$('.o_thread_composer_extended');
+        assert.isVisible($composer,
+            "extended composer should become visible");
+        assert.strictEqual($composer.find('.o_composer_subject input').val(),
+            'Re: SomeDocument',
+            "composer should have copied document name as subject of message");
+
+        var $textarea = $composer.find('.o_composer_input textarea').first();
+        testUtils.fields.editInput($textarea, 'someContent');
+        assert.containsOnce($composer, '.o_composer_button_send',
+            "should have button to send reply message");
+        testUtils.dom.click($composer.find('.o_composer_button_send'));
+
+        assert.verifySteps(['message_post']);
+
+        discuss.destroy();
+        done();
+    });
+});
+
 });
 });

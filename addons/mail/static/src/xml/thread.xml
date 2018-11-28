@@ -338,7 +338,7 @@
                         <i t-if="options.displayStars and !message.isSystemNotification() and !message.needsModeration()"
                             t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
                             t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as Todo"/>
-                       <i t-if="message.originatesFromChannel() and options.displayReplyIcons"
+                       <i t-if="message.isLinkedToDocumentThread() and options.displayReplyIcons"
                            class="fa fa-reply o_thread_icon o_thread_message_reply"
                            t-att-data-message-id="message.getID()" title="Reply" role="img" aria-label="Reply"/>
                         <i t-if="message.isNeedaction() and options.displayMarkAsRead"

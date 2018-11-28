@@ -525,7 +525,7 @@ class Home(http.Controller):
             request.env['res.users']._invalidate_session_cache()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
-        return http.redirect_with_hash(self._login_redirect(uid))
+        return http.local_redirect(self._login_redirect(uid), keep_hash=True)
 
 class WebClient(http.Controller):
 
