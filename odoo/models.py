@@ -2920,6 +2920,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self.env['ir.property'].search([('res_id', '=', False), ('value_reference', 'in', refs)]):
             raise UserError(_('Unable to delete this document because it is used as a default property'))
 
+        # save the list of ids for the logger
+        unlink_ids = self.ids
+
         # Delete the records' properties.
         with self.env.norecompute():
             self.check_access_rule('unlink')
@@ -2968,7 +2971,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             self.recompute()
 
         # auditing: deletions are infrequent and leave no trace in the database
-        _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
+        _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, unlink_ids)
 
         return True
 
