@@ -1,0 +1,228 @@
+@include media-breakpoint-down(sm) {
+
+    .clearfix {
+        width: 100% !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .note-editor {
+        .note-toolbar-wrapper, .note-toolbar {
+            z-index: inherit !important;
+            height: inherit !important;
+        }
+
+        .note-statusbar {
+            display: none;
+        }
+
+        // Use for provide display to user a scroll
+        .note-toolbar-scrollable.note-toolbar-wrapper.scrollable-start::before {
+            width: 12px;
+            height: 21px;
+            content: '<';
+            background-color: $o-brand-primary;
+            color: #fff;
+            padding: 0 0;
+            position: absolute;
+            left: 0;
+            top: 9px;
+            text-align: center;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+
+        .note-toolbar-scrollable.note-toolbar-wrapper.scrollable-end::after {
+            width: 12px;
+            height: 21px;
+            content: '>';
+            background-color: $o-brand-primary;
+            color: #fff;
+            padding: 0 0;
+            position: absolute;
+            right: 0;
+            top: 9px;
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        .note-toolbar {
+
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+
+            .note-btn-group.note-para {
+                .note-btn-group.show > .dropdown-menu.show {
+                    position: fixed !important;
+                }
+            }
+
+            // dropdown fullscreen
+            .note-btn-group:not(.note-para) {
+                .note-btn-group.show > .dropdown-menu.show {
+                    position: fixed !important;
+                    top: 0 !important;
+                    transform: none !important;
+                    width: 100%;
+                    height: 100%;
+                    overflow-y: auto;
+                }
+
+                // cancel button
+                .note-btn-group.show > .dropdown-menu.show::before {
+                    width: 100%;
+                    padding: 5px;
+                    float: left;
+                    border-color: white;
+                    color: #00A09D;
+                    font-size: 1.3em;
+                    text-align: center;
+                    content: attr(cancel);
+                }
+
+                .note-table {
+                    > .note-dimension-picker {
+                        margin-top: 35px;
+                    }
+                }
+            }
+
+            .note-style.btn-group, .note-fontsize.btn-group {
+                .dropdown-menu {
+                    height: 150px;
+                    overflow-y: auto;
+                }
+            }
+
+            .note-color.btn-group .dropdown-menu {
+                .note-color-row {
+                    height: inherit !important;
+                }
+
+                .note-color-btn {
+                    width: 11%;
+                    height: 0;
+                    padding-top: 9%;
+                    margin-left: 4px;
+                }
+
+                .note-color-btn.btn {
+                    width: 100%;
+                }
+            }
+
+            .btn-group {
+                display: contents;
+            }
+        }
+
+        .note-editable {
+            width: 100%;
+            min-height: 400px !important;
+            @media (orientation: landscape) {
+                min-height: 350px !important;
+            }
+        }
+
+
+        .note-fore-color.show, .note-bg-color.show {
+
+            .dropdown-menu.show {
+
+                height: 100%;
+                width: 98%;
+                @media (orientation: landscape) {
+                    width: 96%;
+                }
+
+                transform: translate3d(8px, 0px, 0px) !important;
+                overflow-y: auto;
+
+                .note-color-palette button.note-color-btn {
+                    width: 12% !important;
+                }
+            }
+        }
+    }
+
+    .note-popover {
+        z-index: inherit !important;
+    }
+
+    // adapt dialog select media
+    .o_technical_modal > .o_select_media_dialog {
+
+        max-width: inherit !important;
+
+        .modal-dialog, .model-content {
+            height: 100%;
+        }
+
+        .modal-body .nav .nav-item.search {
+            width: 100%;
+
+            .btn-group {
+                display: flex;
+                justify-content: space-around;
+                padding: 5px;
+            }
+        }
+
+        .form-inline {
+            .btn-group {
+                width: 100%;
+
+                .btn.btn-primary:not(.dropdown-toggle) {
+                    width: 90%;
+                }
+            }
+
+            > .input-group.ml-2 {
+                margin-left: 0 !important;
+
+                > .input-group-append {
+                    width: 100%;
+
+                    > .btn {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+
+        // attachment cells
+        .existing-attachments > .row {
+            flex-direction: column;
+
+            > .o_existing_attachment_cell {
+                flex: initial;
+                max-width: 100%;
+
+                > .o_existing_attachment_remove {
+                    opacity: inherit;
+                    top: 10px;
+                }
+            }
+        }
+
+        // select media dialog unsplash error
+        #editor-media-image {
+            .unsplash_img_container {
+                .unsplash_error {
+                    .mx-auto {
+                        width: 100%;
+
+                        .form-group {
+                            input.w-100 {
+                                min-width: 100px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
