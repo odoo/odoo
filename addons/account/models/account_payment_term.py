@@ -110,7 +110,7 @@ class AccountPaymentTermLine(models.Model):
     def _check_days(self):
         for term_line in self:
             if term_line.option in ('day_following_month', 'day_current_month') and term_line.days <= 0:
-                raise ValidationError(_("The day of the month used for this term must be stricly positive."))
+                raise ValidationError(_("The day of the month used for this term must be strictly positive."))
             elif term_line.days < 0:
                 raise ValidationError(_("The number of days used for a payment term cannot be negative."))
 
