@@ -424,7 +424,7 @@ QUnit.test('@ mention in channel', function (assert) {
 });
 
 QUnit.test('@ mention with special chars', function (assert) {
-    assert.expect(9);
+    assert.expect(10);
     var done = assert.async();
     var fetchListenersDef = $.Deferred();
     var receiveMessageDef = $.Deferred();
@@ -506,6 +506,12 @@ QUnit.test('@ mention with special chars', function (assert) {
                         assert.strictEqual(discuss.$('.o_thread_message_content a').text(),
                             "@\u0405pëciãlUser<&>\"`' \u30C4",
                             "should have correct mention link in the message content");
+                        $input.val("@");
+                        $input.trigger('keyup');
+                        var $mention = discuss.$('.o_mention_proposition');
+                        assert.strictEqual($mention.find('.o_mention_name').text(),
+                            '\u0405pëciãlUser<&>"`\' \u30C4',
+                            "first partner mention should still display the correct partner name");
                         discuss.destroy();
                         done();
                 });
