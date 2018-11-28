@@ -31,6 +31,11 @@ QUnit.module('Services', {
         };
     },
     afterEach: function () {
+        // The Notification Service has a side effect: it adds a div inside
+        // document.body.  We could implement a cleanup mechanism for services,
+        // but this seems a little overkill since services are not supposed to
+        // be destroyed anyway.
+        $('.o_notification_manager').remove();
         testUtils.mock.unpatch(Notification);
     }
 }, function () {
