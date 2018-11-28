@@ -887,7 +887,7 @@ class Picking(models.Model):
                         visited_documents[(document, responsible)] = visited
             grouped_moves = grouped_moves.items()
         else:
-            raise UserError(_('Unknow stream.'))
+            raise UserError(_('Unknown stream.'))
 
         documents = {}
         for (parent, responsible), moves in grouped_moves:
