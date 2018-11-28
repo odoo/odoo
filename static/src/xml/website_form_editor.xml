@@ -102,24 +102,38 @@
     <!-- Date Field -->
     <t t-name="website_form_editor.field_date">
         <t t-call="website_form_editor.field">
-            <input
-                type="text"
-                class="form-control o_website_form_input o_website_form_date"
-                t-att-name="field.name"
-                t-att-required="field.required"
-            />
+            <t t-set="datepickerID" t-value="_.uniqueId('datepicker')"/>
+            <div class="o_website_form_date input-group date" t-att-id="datepickerID" data-target-input="nearest">
+                <input
+                        type="text"
+                        class="form-control datetimepicker-input o_website_form_input"
+                        t-attf-data-target="##{datepickerID}"
+                        t-att-name="field.name"
+                        t-att-required="field.required"
+                />
+                <div class="input-group-append" t-attf-data-target="##{datepickerID}" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
         </t>
     </t>
 
     <!-- Datetime Field -->
     <t t-name="website_form_editor.field_datetime">
         <t t-call="website_form_editor.field">
-            <input
-                type="text"
-                class="form-control o_website_form_input o_website_form_datetime"
-                t-att-name="field.name"
-                t-att-required="field.required"
-            />
+            <t t-set="datetimepickerID" t-value="_.uniqueId('datetimepicker')"/>
+            <div class="o_website_form_datetime input-group date" t-att-id="datetimepickerID" data-target-input="nearest">
+                <input
+                        type="text"
+                        class="form-control datetimepicker-input o_website_form_input"
+                        t-attf-data-target="##{datetimepickerID}"
+                        t-att-name="field.name"
+                        t-att-required="field.required"
+                />
+                <div class="input-group-append" t-attf-data-target="##{datetimepickerID}" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
         </t>
     </t>
 
