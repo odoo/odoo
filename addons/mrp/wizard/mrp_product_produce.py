@@ -65,7 +65,6 @@ class MrpProductProduce(models.TransientModel):
         self.check_finished_move_lots()
         if self.production_id.state == 'confirmed':
             self.production_id.write({
-                'state': 'progress',
                 'date_start': datetime.now(),
             })
         return {'type': 'ir.actions.act_window_close'}
@@ -126,7 +125,7 @@ class MrpProductProduce(models.TransientModel):
     def _onchange_product_qty(self):
         lines = []
         qty_todo = self.product_uom_id._compute_quantity(self.product_qty, self.production_id.product_uom_id, round=False)
-        for move in self.production_id.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.bom_line_id):
+        for move in self.production_id.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and (m.bom_line_id or m.product_uom_qty)):
             qty_to_consume = float_round(qty_todo * move.unit_factor, precision_rounding=move.product_uom.rounding)
             for move_line in move.move_line_ids:
                 if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:

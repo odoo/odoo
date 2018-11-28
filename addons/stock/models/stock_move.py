@@ -145,7 +145,7 @@ class StockMove(models.Model):
     restrict_partner_id = fields.Many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'")
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
-    has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking', readonly=False)
+    has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits=dp.get_precision('Product Unit of Measure'), inverse='_quantity_done_set')
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations', readonly=False)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
@@ -614,7 +614,7 @@ class StockMove(models.Model):
             .filtered(lambda move: move.state not in ['cancel', 'done'])\
             .sorted(key=lambda move: (sort_map.get(move.state, 0), move.product_uom_qty))
         # The picking should be the same for all moves.
-        if moves_todo[0].picking_id.move_type == 'one':
+        if moves_todo[0].picking_id and moves_todo[0].picking_id.move_type == 'one':
             most_important_move = moves_todo[0]
             if most_important_move.state == 'confirmed':
                 return 'confirmed' if most_important_move.product_uom_qty else 'assigned'

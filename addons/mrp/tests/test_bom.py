@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import exceptions
+from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
 from odoo.tools import float_compare, float_round
@@ -202,7 +203,7 @@ class TestBoM(TestMrpCommon):
             'name': 'Clothes'})
 
         # Create BOM
-        test_bom = self.env['mrp.bom'].create({
+        self.env['mrp.bom'].create({
             'product_tmpl_id': product_template.id,
             'product_qty': 1.0,
             'type': 'normal',
@@ -223,11 +224,10 @@ class TestBoM(TestMrpCommon):
         for comb in combination.keys():
             consu_product_ids = combination[comb]
             product = product_template.product_variant_ids.filtered(lambda x:  all(value in comb for value in x.attribute_value_ids))
-            mrp_order = MrpProduction.create({
-                    'product_uom_id': product.uom_id.id,
-                    'product_id': product.id,
-                    'bom_id': test_bom.id,
-                })
+            mrp_order_form = Form(self.env['mrp.production'])
+            mrp_order_form.product_id = product
+            mrp_order = mrp_order_form.save()
+
             # Check consumed materials in production order.
             self.assertEqual(mrp_order.move_raw_ids.mapped('product_id').ids, consu_product_ids)
 

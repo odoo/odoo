@@ -14,9 +14,9 @@
                     <field name="origin"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity"/>
                     <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
-                    <field name="availability"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="state"/>
+                    <field name="reservation_state"/>
                 </tree>
             </field>
         </record>
@@ -36,18 +36,18 @@
                 <form string="Manufacturing Orders">
                 <header>
                     <field name="consumed_less_than_planned" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('check_to_done', '=', False), ('consumed_less_than_planned', '=', True)]}" string="Mark as Done" type="object" class="oe_highlight"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('check_to_done', '=', False), ('consumed_less_than_planned', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight" confirm="You have consumed less material than what was planned. Are you sure you want to close this MO?"/>
-                    <button name="action_assign" attrs="{'invisible': ['|', ('availability', 'in', ('assigned', 'none')), ('is_locked', '=', False)]}" string="Check availability" type="object" class="oe_highlight"/>
+                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'to_close'), ('consumed_less_than_planned', '=', True)]}" string="Mark as Done" type="object" class="oe_highlight"/>
+                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'to_close'), ('consumed_less_than_planned', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight" confirm="You have consumed less material than what was planned. Are you sure you want to close this MO?"/>
+                    <button name="action_confirm" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_locked', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight"/>
+                    <button name="action_assign" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('draft', 'done', 'cancel')), ('reservation_state', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', '!=', 'confirmed'), ('routing_id', '=', False), ('is_locked', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
-                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', '|', ('is_locked', '=', False), ('check_to_done', '=', True), ('availability', 'not in', ['partially_available', 'assigned']), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
-                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', '|', ('is_locked', '=', False), ('check_to_done', '=', True), ('availability', '!=', 'waiting'), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object"/>
+                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', '!=', 'assigned'), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
+                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', 'not in', ('confirmed', 'waiting')), ('routing_id', '!=', False)]}" string="Produce" type="object"/>
                     <button name="post_inventory" string="Post Inventory" type="object" attrs="{'invisible': [('post_visible', '=', False)]}" groups="base.group_no_one"/>
-                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('done','cancel')), ('check_to_done', '=', True)]}"/>
-                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '|', ('availability', '=', 'none'), ('state', 'in', ('cancel')), ('is_locked', '=', False)]}"/>
+                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', '|', ('is_locked', '=', False), ('state', 'in', ('done','cancel'))]}"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', ('state', 'in', ('cancel', 'draft')), ('is_locked', '=', False)]}"/>
                     <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
-                    <span class="badge badge-danger" attrs="{'invisible': ['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', ('confirmed','progress'))]}">Raw materials not available!</span>
-                    <field name="state" widget="statusbar" statusbar_visible="confirmed,progress,done"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', '|', ('state', '=', 'cancel'), ('id', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to correct what has been consumed or produced."/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="mrp.group_mrp_manager" type="object"/>
                 </header>
@@ -80,18 +80,16 @@
                     </div>
                     <group>
                         <group>
-                            <field name="has_moves" invisible="1"/>
-                            <field name="check_to_done" invisible="1"/>
                             <field name="id" invisible="1"/>
-                            <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal')]"/>
+                            <field name="product_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal')]"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
-                                <field name="product_qty" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                <field name="product_qty" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
-                                    string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('id', '=', False)]}"/>
+                                    string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}"/>
                             </div>
                             <field name="bom_id"
                                 domain="['&amp;', '|',
@@ -100,7 +98,7 @@
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False),
                                                 ('type', '=', 'normal')]"
-                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
@@ -108,29 +106,35 @@
                             <field name="date_planned_finished" invisible="1"/>
                             <field name="user_id"/>
                             <field name="origin"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Consumed Materials">
-                            <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'confirmed', 'default_raw_material_production_id': id}" attrs="{'readonly': [('is_locked', '=', True)]}">
+                            <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_locked', '=', True)]}">
                                 <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="not is_done and quantity_done==product_uom_qty" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty">
                                     <field name="product_id" required="1"/>
                                     <field name="name" invisible="1"/>
                                     <field name="unit_factor" invisible="1"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
+                                    <field name="date" invisible="1"/>
+                                    <field name="date_expected" invisible="1"/>
+                                    <field name="picking_type_id" invisible="1"/>
                                     <field name="has_tracking" invisible="1"/>
+                                    <field name="operation_id" invisible="1"/>
                                     <field name="needs_lots" readonly="1" groups="stock.group_production_lot"/>
                                     <field name="is_done" invisible="1"/>
+                                    <field name="bom_line_id" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
                                     <field name="location_id" invisible="1"/>
+                                    <field name="warehouse_id" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="product_uom_qty" string="To Consume"/>
-                                    <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)], 'column_invisible': [('parent.state', '=', 'done')]}" string="Reserved"/>
-                                    <field name="quantity_done" string="Consumed" readonly="1"/>
+                                    <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)], 'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" string="Reserved"/>
+                                    <field name="quantity_done" string="Consumed" attrs="{'column_invisible': [('parent.state', '=', 'draft')]}" readonly="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -150,16 +154,16 @@
                                 Use the Produce button or process the work orders to create some finished products.
                             </p>
                         </page>
-                        <page string="Miscellaneous" groups="stock.group_stock_multi_locations, base.group_no_one">
+                        <page string="Miscellaneous">
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
-                                    <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                    <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
-                                <group>
-                                    <field name="availability" groups="base.group_no_one"/>
-                                </group>
+                            </group>
+                            <group>
+                                <field name="reservation_state"/>
                             </group>
                         </page>
                     </notebook>
@@ -251,15 +255,19 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                     <field name="name" string="Production" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
-                    <filter string="To Do" name="todo" domain="[('state','in',('confirmed', 'planned','progress'))]"
+                    <filter string="To Do" name="todo" domain="[('state','in',('draft', 'confirmed', 'planned','progress', 'to_close'))]"
                         help="Manufacturing Orders which are in confirmed state."/>
                     <separator/>
-                    <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
-                    <filter string="Waiting for Materials" name="waiting" domain="[('availability', '=', 'waiting')]"/>
-                    <filter string="Planned" name="planned" domain="[('state','=','planned')]" groups="mrp.group_mrp_routings"/>
-                    <filter string="In Progress" name="inprogress" domain="[('state','=','progress')]"
-                        help="Manufacturing Orders which are currently in production."/>
-                    <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                    <filter string="Draft" name="filter_draft" domain="[('state','=','draft')]"/>
+                    <filter string="Confirmed" name="filter_confirmed" domain="[('state','=','confirmed')]"/>
+                    <filter string="Planned" name="filter_planned" domain="[('state','=','planned')]" groups="mrp.group_mrp_routings"/>
+                    <filter string="In Progress" name="filter_in_progress" domain="[('state','=','progress')]"/>
+                    <filter string="To Close" name="filter_to_close" domain="[('state', '=', 'to_close')]"/>
+                    <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
+                    <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
+                    <separator/>
+                    <filter string="Waiting for Material" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
+                    <filter string="Material Available" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
                     <filter string="Late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'confirmed')]"
                         name="late" help="Production started late"/>
@@ -286,6 +294,7 @@
                         <filter string="Routing" name="routing" domain="[]" context="{'group_by':'routing_id'}" groups="mrp.group_mrp_routings"/>
                         <filter string="Scheduled Date" name="scheduled_date" domain="[]" context="{'group_by':'date_planned_start'}" help="Scheduled Date by Month"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Material Availability" name="groupby_reservation_state" domain="[]" context="{'group_by': 'reservation_state'}"/>
                     </group>
                </search>
             </field>

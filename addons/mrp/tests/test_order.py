@@ -11,29 +11,25 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 class TestMrpOrder(TestMrpCommon):
 
     def test_access_rights_manager(self):
-        man_order = self.env['mrp.production'].sudo(self.user_mrp_manager).create({
-            'name': 'Stick-0',
-            'product_id': self.product_4.id,
-            'product_uom_id': self.product_4.uom_id.id,
-            'product_qty': 5.0,
-            'bom_id': self.bom_1.id,
-            'location_src_id': self.location_1.id,
-            'location_dest_id': self.warehouse_1.wh_output_stock_loc_id.id,
-        })
+        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_manager))
+        man_order_form.product_id = self.product_4
+        man_order_form.product_qty = 5.0
+        man_order_form.bom_id = self.bom_1
+        man_order_form.location_src_id = self.location_1
+        man_order_form.location_dest_id = self.warehouse_1.wh_output_stock_loc_id
+        man_order = man_order_form.save()
         man_order.action_cancel()
         self.assertEqual(man_order.state, 'cancel', "Production order should be in cancel state.")
         man_order.unlink()
 
     def test_access_rights_user(self):
-        man_order = self.env['mrp.production'].sudo(self.user_mrp_user).create({
-            'name': 'Stick-0',
-            'product_id': self.product_4.id,
-            'product_uom_id': self.product_4.uom_id.id,
-            'product_qty': 5.0,
-            'bom_id': self.bom_1.id,
-            'location_src_id': self.location_1.id,
-            'location_dest_id': self.warehouse_1.wh_output_stock_loc_id.id,
-        })
+        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_user))
+        man_order_form.product_id = self.product_4
+        man_order_form.product_qty = 5.0
+        man_order_form.bom_id = self.bom_1
+        man_order_form.location_src_id = self.location_1
+        man_order_form.location_dest_id = self.warehouse_1.wh_output_stock_loc_id
+        man_order = man_order_form.save()
         man_order.action_cancel()
         self.assertEqual(man_order.state, 'cancel', "Production order should be in cancel state.")
         man_order.unlink()
@@ -62,16 +58,18 @@ class TestMrpOrder(TestMrpCommon):
         test_date_planned = Dt.now() - timedelta(days=1)
         test_quantity = 2.0
         self.bom_1.routing_id = False
-        man_order = self.env['mrp.production'].sudo(self.user_mrp_user).create({
-            'name': 'Stick-0',
-            'product_id': self.product_4.id,
-            'product_uom_id': self.product_4.uom_id.id,
-            'product_qty': test_quantity,
-            'bom_id': self.bom_1.id,
-            'date_planned_start': test_date_planned,
-            'location_src_id': self.location_1.id,
-            'location_dest_id': self.warehouse_1.wh_output_stock_loc_id.id,
-        })
+        man_order_form = Form(self.env['mrp.production'].sudo(self.user_mrp_user))
+        man_order_form.product_id = self.product_4
+        man_order_form.bom_id = self.bom_1
+        man_order_form.product_uom_id = self.product_4.uom_id
+        man_order_form.product_qty = test_quantity
+        man_order_form.date_planned_start = test_date_planned
+        man_order_form.location_src_id = self.location_1
+        man_order_form.location_dest_id = self.warehouse_1.wh_output_stock_loc_id
+        man_order = man_order_form.save()
+
+        self.assertEqual(man_order.state, 'draft', "Production order should be in draft state.")
+        man_order.action_confirm()
         self.assertEqual(man_order.state, 'confirmed', "Production order should be in confirmed state.")
 
         # check production move
@@ -174,14 +172,12 @@ class TestMrpOrder(TestMrpCommon):
         self.operation_1.write({'time_cycle_manual': 20})
         (self.operation_2 | self.operation_3).write({'time_cycle_manual': 10})
 
-        man_order = self.env['mrp.production'].create({
-            'name': 'MO-Test',
-            'product_id': self.product_6.id,
-            'product_uom_id': self.product_6.uom_id.id,
-            'product_qty': 48,
-            'bom_id': self.bom_3.id,
-        })
-
+        man_order_form = Form(self.env['mrp.production'])
+        man_order_form.product_id = self.product_6
+        man_order_form.bom_id = self.bom_3
+        man_order_form.product_qty = 48
+        man_order_form.product_uom_id = self.product_6.uom_id
+        man_order = man_order_form.save()
         # reset quantities
         self.product_1.type = "product"
         self.env['stock.change.product.qty'].create({
@@ -194,8 +190,9 @@ class TestMrpOrder(TestMrpCommon):
             'tracking': 'none',
         })
         # assign consume material
+        man_order.action_confirm()
         man_order.action_assign()
-        self.assertEqual(man_order.availability, 'waiting', "Production order should be in waiting state.")
+        self.assertEqual(man_order.reservation_state, 'confirmed', "Production order should be in waiting state.")
 
         # check consume materials of manufacturing order
         self.assertEqual(len(man_order.move_raw_ids), 4, "Consume material lines are not generated proper.")
@@ -247,7 +244,7 @@ class TestMrpOrder(TestMrpCommon):
         man_order.action_assign()
 
         # Check production order status after assign.
-        self.assertEqual(man_order.availability, 'assigned', "Production order should be in assigned state.")
+        self.assertEqual(man_order.reservation_state, 'assigned', "Production order should be in assigned state.")
         # Plan production order.
         man_order.button_plan()
 
@@ -302,18 +299,20 @@ class TestMrpOrder(TestMrpCommon):
         """
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_4).unlink()
+        self.bom_3.ready_to_produce = 'all_available'
 
-        production_2 = self.env['mrp.production'].create({
-            'name': 'MO-Test001',
-            'product_id': self.product_6.id,
-            'product_qty': 5.0,
-            'bom_id': self.bom_3.id,
-            'product_uom_id': self.product_6.uom_id.id,
-        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = self.bom_3
+        production_form.product_qty = 5.0
+        production_form.product_uom_id = self.product_6.uom_id
+        production_2 = production_form.save()
+
+        production_2.action_confirm()
         production_2.action_assign()
 
         # check sub product availability state is waiting
-        self.assertEqual(production_2.availability, 'waiting', 'Production order should be availability for waiting state')
+        self.assertEqual(production_2.reservation_state, 'confirmed', 'Production order should be availability for waiting state')
 
         # Update Inventory
         inventory_wizard = self.env['stock.change.product.qty'].create({
@@ -324,7 +323,7 @@ class TestMrpOrder(TestMrpCommon):
 
         production_2.action_assign()
         # check sub product availability state is partially available
-        self.assertEqual(production_2.availability, 'partially_available', 'Production order should be availability for partially available state')
+        self.assertEqual(production_2.reservation_state, 'confirmed', 'Production order should be availability for partially available state')
 
         # Update Inventory
         inventory_wizard = self.env['stock.change.product.qty'].create({
@@ -335,18 +334,18 @@ class TestMrpOrder(TestMrpCommon):
 
         production_2.action_assign()
         # check sub product availability state is assigned
-        self.assertEqual(production_2.availability, 'assigned', 'Production order should be availability for assigned state')
+        self.assertEqual(production_2.reservation_state, 'assigned', 'Production order should be availability for assigned state')
 
     def test_empty_routing(self):
         """ Check what happens when you work with an empty routing"""
         routing = self.env['mrp.routing'].create({'name': 'Routing without operations',
                                         'location_id': self.warehouse_1.wh_input_stock_loc_id.id,})
         self.bom_3.routing_id = routing.id
-        production = self.env['mrp.production'].create({'name': 'MO test',
-                                           'product_id': self.product_6.id,
-                                           'product_qty': 3,
-                                           'bom_id': self.bom_3.id,
-                                           'product_uom_id': self.product_6.uom_id.id,})
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.product_qty = 3
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
         self.assertEqual(production.routing_id.id, False, 'The routing field should be empty on the mo')
         self.assertEqual(production.move_raw_ids[0].location_id.id, self.warehouse_1.wh_input_stock_loc_id.id, 'Raw moves start location should have altered.')
 
@@ -402,14 +401,13 @@ class TestMrpOrder(TestMrpCommon):
         inventory.action_validate()
 
         # create a mo for this bom
-        mo_custom_laptop = self.env['mrp.production'].create({
-            'product_id': custom_laptop.id,
-            'product_qty': 2,
-            'product_uom_id': unit,
-            'bom_id': bom_custom_laptop.id
-        })
+        mo_custom_laptop_form = Form(self.env['mrp.production'])
+        mo_custom_laptop_form.product_id = custom_laptop
+        mo_custom_laptop_form.product_qty = 2
+        mo_custom_laptop = mo_custom_laptop_form.save()
+        mo_custom_laptop.action_confirm()
         mo_custom_laptop.action_assign()
-        self.assertEqual(mo_custom_laptop.availability, 'assigned')
+        self.assertEqual(mo_custom_laptop.reservation_state, 'assigned')
 
         # produce one item, call `post_inventory`
         context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
@@ -444,11 +442,13 @@ class TestMrpOrder(TestMrpCommon):
                                         (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
                                         (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
                                         ]})
-        production = self.env['mrp.production'].create({'name': 'MO efficiency test',
-                                           'product_id': self.product_6.id,
-                                           'product_qty': 20,
-                                           'bom_id': bom_eff.id,
-                                           'product_uom_id': self.product_6.uom_id.id,})
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom_eff
+        production_form.product_qty = 20
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        production.action_confirm()
         #Check the production order has the right quantities
         self.assertEqual(production.move_raw_ids[0].product_qty, 41, 'The quantity should be rounded up')
         self.assertEqual(production.move_raw_ids[1].product_qty, 84, 'The quantity should be rounded up')
@@ -637,19 +637,19 @@ class TestMrpOrder(TestMrpCommon):
 
         plastic_laminate.tracking = 'serial'
 
-        mo = self.env['mrp.production'].create({
-            'name': 'Dozen Plastic Laminate',
-            'product_id': plastic_laminate.id,
-            'product_uom_id': dozen.id,
-            'product_qty': 1,
-            'bom_id': bom.id,
-        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = plastic_laminate
+        mo_form.bom_id = bom
+        mo_form.product_uom_id = dozen
+        mo_form.product_qty = 1
+        mo = mo_form.save()
 
         final_product_lot = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': plastic_laminate.id,
         })
 
+        mo.action_confirm()
         mo.action_assign()
         self.assertEqual(mo.move_raw_ids.product_qty, 12, '12 units should be reserved.')
 

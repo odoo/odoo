@@ -26,13 +26,13 @@ class TestProcurement(TestMrpCommon):
         #    Product2 12 Unit
         # -----------------------
 
-        production_product_6 = self.env['mrp.production'].create({
-            'name': 'MO/Test-00002',
-            'product_id': self.product_6.id,
-            'product_qty': 24,
-            'bom_id': self.bom_3.id,
-            'product_uom_id': self.product_6.uom_id.id,
-        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = self.bom_3
+        production_form.product_qty = 24
+        production_form.product_uom_id = self.product_6.uom_id
+        production_product_6 = production_form.save()
+        production_product_6.action_confirm()
         production_product_6.action_assign()
 
         # check production state is Confirmed
@@ -45,7 +45,7 @@ class TestProcurement(TestMrpCommon):
         produce_product_4 = self.env['mrp.production'].search([('product_id', '=', self.product_4.id),
                                                                ('move_dest_ids', '=', move_raw_product4[0].id)])
         # produce product
-        self.assertEqual(produce_product_4.availability, 'waiting', "Consume material not available")
+        self.assertEqual(produce_product_4.reservation_state, 'confirmed', "Consume material not available")
 
         # Create production order
         # -------------------------
@@ -61,7 +61,7 @@ class TestProcurement(TestMrpCommon):
         produce_product_4.action_assign()
         self.assertEqual(produce_product_4.product_qty, 8, "Wrong quantity of finish product.")
         self.assertEqual(produce_product_4.product_uom_id, self.uom_dozen, "Wrong quantity of finish product.")
-        self.assertEqual(produce_product_4.availability, 'assigned', "Consume material not available")
+        self.assertEqual(produce_product_4.reservation_state, 'assigned', "Consume material not available")
 
         # produce product4
         # ---------------
@@ -91,7 +91,7 @@ class TestProcurement(TestMrpCommon):
 
         # ------------------------------------
 
-        self.assertEqual(production_product_6.availability, 'assigned', "Consume material not available")
+        self.assertEqual(production_product_6.reservation_state, 'assigned', "Consume material not available")
         produce_form = Form(self.env['mrp.product.produce'].with_context({
             'active_id': production_product_6.id,
             'active_ids': [production_product_6.id],
@@ -125,12 +125,11 @@ class TestProcurement(TestMrpCommon):
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
 
-        # create MO, but check it raises error as components are in make to order and not everyone has 
+        # create MO, but check it raises error as components are in make to order and not everyone has
         with self.assertRaises(UserError):
-            production_product_4 = self.env['mrp.production'].create({
-                'name': 'MO/Test-00002',
-                'product_id': self.product_4.id,
-                'product_qty': 1,
-                'bom_id': self.bom_1.id,
-                'product_uom_id': self.product_4.uom_id.id,
-            })
+            production_form = Form(self.env['mrp.production'])
+            production_form.product_id = self.product_4
+            production_form.product_uom_id = self.product_4.uom_id
+            production_form.product_qty = 1
+            production_product_4 = production_form.save()
+            production_product_4.action_confirm()
