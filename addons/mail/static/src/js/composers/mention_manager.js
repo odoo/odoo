@@ -378,9 +378,9 @@ var MentionManager = Widget.extend({
         var textInput = this._composer.$input.val();
         var id = $(ev.currentTarget).data('id');
         var suggestions = _.flatten(this.get('mention_suggestions'));
-        var selectedSuggestion = _.find(suggestions, function (s) {
+        var selectedSuggestion = _.clone(_.find(suggestions, function (s) {
             return s.id === id;
-        });
+        }));
         var substitution = selectedSuggestion.substitution;
         if (!substitution) {
             // no substitution string given, so use the mention name instead
