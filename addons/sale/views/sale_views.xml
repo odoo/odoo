@@ -271,8 +271,8 @@
                     <group>
                         <group>
                             <field name="partner_id" widget="res_partner_many2one" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
-                            <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
-                            <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
+                            <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice', 'sort_partner_id': partner_id}" options='{"always_reload": True}'  widget="many2one_icon"/>
+                            <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery', 'sort_partner_id': partner_id}" options='{"always_reload": True}'  widget="many2one_icon"/>
                         </group>
                         <group>
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
@@ -1048,7 +1048,7 @@
                         <field name="team_id"/>
                     </xpath>
                     <xpath expr="//field[@name='partner_id']" position="after">
-                       <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address"/>
+                       <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery', 'sort_partner_id': partner_id}"  widget="many2one_icon"/>
                    </xpath>
                     <xpath expr="//field[@name='discount']" position="attributes">
                         <attribute name="groups">sale.group_discount_per_so_line</attribute>

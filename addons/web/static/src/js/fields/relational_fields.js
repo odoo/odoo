@@ -93,6 +93,7 @@ var M2ODialog = Dialog.extend({
 var FieldMany2One = AbstractField.extend({
     supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
+    search_method: 'name_search',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         'closed_unset': '_onDialogClosedUnset',
         'field_changed': '_onFieldChanged',
@@ -469,7 +470,7 @@ var FieldMany2One = AbstractField.extend({
 
         this._rpc({
             model: this.field.relation,
-            method: "name_search",
+            method: this.search_method,
             kwargs: {
                 name: search_val,
                 args: domain,
@@ -479,15 +480,7 @@ var FieldMany2One = AbstractField.extend({
             }})
             .then(function (result) {
                 // possible selections for the m2o
-                var values = _.map(result, function (x) {
-                    x[1] = self._getDisplayName(x[1]);
-                    return {
-                        label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
-                        value: x[1],
-                        name: x[1],
-                        id: x[0],
-                    };
-                });
+                var values = self._formatSelectionVals(result);
 
                 // search more... if more results than limit
                 if (values.length > self.limit) {
@@ -545,6 +538,25 @@ var FieldMany2One = AbstractField.extend({
             });
 
         return def;
+    },
+    /**
+    * Proccess the selection list received from the name_search
+    *
+    * @private
+    * @param {Array} result list of suggections
+    * @returns {Array}
+    */
+    _formatSelectionVals: function (result) {
+        var self = this;
+        return _.map(result, function (x) {
+            x[1] = self._getDisplayName(x[1]);
+            return {
+                label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
+                value: x[1],
+                name: x[1],
+                id: x[0],
+            };
+        });
     },
     /**
      * all search/create popup handling
@@ -728,6 +740,29 @@ var FieldMany2One = AbstractField.extend({
     _onSearchCreatePopup: function (event) {
         var data = event.data;
         this._searchCreatePopup(data.view_type, false, this._createContext(data.value));
+    },
+});
+
+var FieldMany2OneIcon = FieldMany2One.extend({
+    search_method: 'name_search_icon',
+    /**
+     * @override
+     */
+    _formatSelectionVals: function (result) {
+        var self = this;
+        return _.map(result, function (x) {
+            x[1] = self._getDisplayName(x[1]);
+            var label = _.str.escapeHTML(x[1].trim()) || data.noDisplayContent;
+            if (x[2]) {
+                label = _.str.sprintf(("%s <i class='%s o_m2o_icon'>"), x[1],  x[2]);
+            }
+            return {
+                label: label,
+                value: x[1],
+                name: x[1],
+                id: x[0],
+            };
+        });
     },
 });
 
@@ -2743,6 +2778,7 @@ var FieldReference = FieldMany2One.extend({
 
 return {
     FieldMany2One: FieldMany2One,
+    FieldMany2OneIcon: FieldMany2OneIcon,
     KanbanFieldMany2One: KanbanFieldMany2One,
     ListFieldMany2One: ListFieldMany2One,
 

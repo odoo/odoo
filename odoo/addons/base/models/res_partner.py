@@ -672,42 +672,57 @@ class Partner(models.Model):
         self = self.sudo(name_get_uid or self.env.uid)
         if args is None:
             args = []
-        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+        if (name or self._context.get('sort_partner_id')) and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             self.check_access_rights('read')
             where_query = self._where_calc(args)
             self._apply_ir_rules(where_query, 'read')
             from_clause, where_clause, where_clause_params = where_query.get_sql()
-            where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
 
-            # search on the name of the contacts and of its company
-            search_name = name
-            if operator in ('ilike', 'like'):
-                search_name = '%%%s%%' % name
-            if operator in ('=ilike', '=like'):
-                operator = operator[1:]
+            query = """SELECT id
+                        FROM res_partner
+                    """
+            # Manage WHERE clause
+            if name:
+                query += where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
+                query += """ ({email} {operator} {percent}
+                            OR {display_name} {operator} {percent}
+                            OR {reference} {operator} {percent}
+                            OR {vat} {operator} {percent})
+                         """
+                # search on the name of the contacts and of its company
+                search_name = name
+                if operator in ('ilike', 'like'):
+                    search_name = '%%%s%%' % name
+                if operator in ('=ilike', '=like'):
+                    operator = operator[1:]
+                where_clause_params += [search_name] * 4
+            else:
+                query += where_clause and (" WHERE %s " % where_clause) or ""
 
             unaccent = get_unaccent_wrapper(self.env.cr)
 
-            query = """SELECT id
-                         FROM res_partner
-                      {where} ({email} {operator} {percent}
-                           OR {display_name} {operator} {percent}
-                           OR {reference} {operator} {percent}
-                           OR {vat} {operator} {percent})
-                           -- don't panic, trust postgres bitmap
-                     ORDER BY {display_name} {operator} {percent} desc,
-                              {display_name}
-                    """.format(where=where_str,
-                               operator=operator,
-                               email=unaccent('email'),
-                               display_name=unaccent('display_name'),
-                               reference=unaccent('ref'),
-                               percent=unaccent('%s'),
-                               vat=unaccent('vat'),)
+            # Manage ORDER BY
+            order_by = []
+            query += " ORDER BY "
+            if self._context.get('sort_partner_id'):
+                partner_to_sort = self.browse([self._context.get('sort_partner_id')])
+                if partner_to_sort.exists() and partner_to_sort.commercial_partner_id:
+                    order_by.append(" commercial_partner_id = %s desc ")
+                    where_clause_params.append(partner_to_sort.id)
+            if name:
+                order_by.append("{display_name} {operator} {percent} desc, {display_name} ")
+                where_clause_params.append(search_name)
+            else:
+                order_by.append(" {display_name} ")
+            query += ','.join(order_by)
+            query = query.format(
+                operator=operator,
+                email=unaccent('email'),
+                display_name=unaccent('display_name'),
+                reference=unaccent('ref'),
+                percent=unaccent('%s'),
+                vat=unaccent('vat'))
 
-            where_clause_params += [search_name]*3  # for email / display_name, reference
-            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name)]  # for vat
-            where_clause_params += [search_name]  # for order by
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)
@@ -719,6 +734,14 @@ class Partner(models.Model):
             else:
                 return []
         return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+
+    @api.model
+    def _generate_order_by(self, order_spec, query):
+        if not order_spec and self._context.get('sort_partner_id'):
+            partner_to_sort = self.browse([self._context.get('sort_partner_id')])
+            if partner_to_sort.exists() and partner_to_sort.commercial_partner_id:
+                return ' ORDER BY commercial_partner_id = %s desc, display_name' % partner_to_sort.commercial_partner_id.id
+        return super(Partner, self)._generate_order_by(order_spec, query)
 
     @api.model
     def find_or_create(self, email):

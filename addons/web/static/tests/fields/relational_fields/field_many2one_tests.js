@@ -688,6 +688,40 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2one field with address type icon in dropdown', function (assert) {
+            assert.expect(2);
+
+            var form = createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partners">' +
+                    '<sheet>' +
+                    '<group>' +
+                    '<field name="trululu" widget="many2one_icon"/>' +
+                    '</group>' +
+                    '</sheet>' +
+                    '</form>',
+                res_id: 2,
+                mockRPC: function (route, args) {
+                    if (args.method === 'name_search_icon') {
+                        return $.when([
+                            [1, "first record", "fa fa-truck"],
+                            [2, "second record", ""]
+                        ]);
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            testUtils.form.clickEdit(form);
+            var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+            testUtils.fields.many2one.clickOpenDropdown('trululu');
+            assert.strictEqual($dropdown.find('li:first i.fa').hasClass('fa fa-truck'), true, 'First dropdown item should contain truck icon');
+            assert.strictEqual($dropdown.find('li:eq(1) i.fa').length, 0, 'Second dropdown item should not contain any icon');
+            form.destroy();
+        });
+
         QUnit.test('many2one in non edit mode', function (assert) {
             assert.expect(3);
 

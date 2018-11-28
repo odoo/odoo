@@ -78,3 +78,13 @@ class Base(models.AbstractModel):
                 data[group_by_value][field_value] += 1
 
         return data
+
+    @api.model
+    def name_search_icon(self, name, args=None, operator='ilike', limit=100):
+        """
+        Used to display icons in the many2one dropdown. This method use name_search internally.
+        It just add font class at third position in the tuple like (id, display_value, font class)
+        You need to override this method from the model to add font classes.
+        """
+        res = self.name_search(name, args, operator=operator, limit=limit)
+        return [(r[0], r[1], "") for r in res]
