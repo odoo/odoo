@@ -183,9 +183,8 @@ odoo.define('website_forum.website_forum', function (require) {
             })
             .done(function() {
                 var left = $('.o_js_validation_queue:visible').length;
-                var type = $('h2.o_page_header a.active').data('type');
                 $('#count_post').text(left);
-                $('#moderation_tools a[href*="/'+type+'_"]').find('strong').text(left);
+                $('#moderation_tools a[href*="/question_"]').find('strong').text(left);
             });
 
     });
@@ -267,76 +266,6 @@ odoo.define('website_forum.website_forum', function (require) {
         return true;
     });
 
-    $('.link_url, .o_forum_post_link').on('change', function (ev) {  // keep .link_url for compat
-        ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        var display_error = function(){
-            var $warning = $('<div class="alert alert-danger alert-dismissable" style="position:absolute; margin-top: -180px; margin-left: 90px;">'+
-                '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                'Please enter valid URL. Example: http://www.odoo.com'+
-                '</div>');
-            $link.parent().append($warning);
-            $link.parents('form').find('button')[0].disabled = true;
-
-        };
-        var url = $link.val();
-        if (url.search("^http(s?)://.*")) {
-            url = 'http://'+url;
-        }
-
-        // https://gist.github.com/dperini/729294
-        var regex = new RegExp(
-          "^" +
-            // protocol identifier
-            "(?:(?:https?|ftp)://)" +
-            // user:pass authentication
-            "(?:\\S+(?::\\S*)?@)?" +
-            "(?:" +
-              // IP address exclusion
-              // private & local networks
-              "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
-              "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
-              "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
-              // IP address dotted notation octets
-              // excludes loopback network 0.0.0.0
-              // excludes reserved space >= 224.0.0.0
-              // excludes network & broacast addresses
-              // (first & last IP address of each class)
-              "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
-              "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
-              "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
-            "|" +
-              // host name
-              "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
-              // domain name
-              "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
-              // TLD identifier
-              "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
-              // TLD may end with dot
-              "\\.?" +
-            ")" +
-            // port number
-            "(?::\\d{2,5})?" +
-            // resource path
-            "(?:[/?#]\\S*)?" +
-          "$", "i"
-        );
-
-        if(regex.test(url)){
-            ajax.jsonRpc("/forum/get_url_title", 'call', {'url': url}).then(function (data) {
-                if (data) {
-                    $("input[name='post_name']")[0].value = data;
-                    $link.parents('form').find('button')[0].disabled = false;
-                } else {
-                    display_error();
-                }
-
-            });
-        } else {
-            display_error();
-        }
-    });
-
     $('input.js_select2').select2({
         tags: true,
         tokenSeparators: [",", " ", "_"],
@@ -393,7 +322,7 @@ odoo.define('website_forum.website_forum', function (require) {
         },
     });
 
-    $('textarea.load_editor').each(function () {
+    $('textarea.load_editor').each(function() {
         var $textarea = $(this);
         var editor_karma = $textarea.data('karma') || 30;  // default value for backward compatibility
         if (!$textarea.val().match(/\S/)) {
@@ -423,13 +352,11 @@ odoo.define('website_forum.website_forum', function (require) {
         });
     });
     // Select all spam visible character
-    var $selectSpam = $('.all_select_spam');
+    $('.all_select_spam').on('click', function(){
 
-    $selectSpam.click(function(selectInput){
-        var $selectInput = $(selectInput);
         var $inputSpam = $(this).parents('.tab-pane').find('input:visible');
 
-        if($inputSpam.prop('checked') == false) {
+        if ($inputSpam.prop('checked') === false) {
             $inputSpam.prop('checked', true);
             $(this).html(_t('Unselect all'));
         } else {
@@ -437,13 +364,9 @@ odoo.define('website_forum.website_forum', function (require) {
             $(this).html(_t('Select all'));
         }
     });
-    // Unselect all when you click on the menu (to don't have conflict)
-    var $spamLink = $('.spam_menu');
 
-    $spamLink.click(function(spamMenu){
-        var $spamMenu = $(spamMenu);
-        var $spamAllInput = $(this).parents('.modal-body').find('input');
-        $spamAllInput.prop('checked', false);
+    $('.spam_menu').on('click', function() {
+        $(this).parents('.modal-body').find('input').prop('checked', false);
         $(this).parents('.modal-body').find('.all_select_spam').html(_t('Select all'));
     });
 
@@ -451,10 +374,9 @@ odoo.define('website_forum.website_forum', function (require) {
 
     $('.o_select_spam_character').hide();
 
-    var $spam = $('#spamSearch');
-    $spam.on('keyup', function(ev) {
+    $('#spamSearch').on('keyup', _.debounce(function (ev) {
         var to_search = $(ev.currentTarget).val();
-        var spam_ids = $(ev.currentTarget).data('spam-ids')
+        var spam_ids = $(ev.currentTarget).data('spam-ids');
         return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'forum.post',
             method: 'search_read',
@@ -471,6 +393,6 @@ odoo.define('website_forum.website_forum', function (require) {
                 $('.o_select_spam_character').show();
             }
         });
-     })
+     }, 500));
 
 });
