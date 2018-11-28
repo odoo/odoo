@@ -248,19 +248,6 @@ class PosConfig(models.Model):
         if self.env['account.journal'].search_count([('id', 'in', self.journal_ids.ids), ('company_id', '!=', self.company_id.id)]):
             raise ValidationError(_("The method payments and the point of sale must belong to the same company."))
 
-    @api.constrains('pricelist_id', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'journal_ids')
-    def _check_currencies(self):
-        if self.pricelist_id not in self.available_pricelist_ids:
-            raise ValidationError(_("The default pricelist must be included in the available pricelists."))
-        if any(self.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != self.currency_id)):
-            raise ValidationError(_("All available pricelists must be in the same currency as the company or"
-                                    " as the Sales Journal set on this point of sale if you use"
-                                    " the Accounting application."))
-        if self.invoice_journal_id.currency_id and self.invoice_journal_id.currency_id != self.currency_id:
-            raise ValidationError(_("The invoice journal must be in the same currency as the Sales Journal or the company currency if that is not set."))
-        if any(self.journal_ids.mapped(lambda journal: journal.currency_id and journal.currency_id != self.currency_id)):
-            raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
-
     @api.constrains('company_id', 'available_pricelist_ids')
     def _check_companies(self):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
@@ -447,7 +434,6 @@ class PosConfig(models.Model):
             self._check_company_journal()
             self._check_company_invoice_journal()
             self._check_company_payment()
-            self._check_currencies()
             self.current_session_id = self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id
