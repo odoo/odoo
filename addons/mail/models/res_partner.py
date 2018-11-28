@@ -78,7 +78,7 @@ class Partner(models.Model):
 
         company = user.company_id
         if record and hasattr(record, 'company_id'):
-            company = record.company_id
+            company = record.company_id.sudo()
 
         return {
             'message': message,

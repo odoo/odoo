@@ -72,3 +72,23 @@ class TestAccountEntry(TestExpenseCommon):
         self.assertEquals(len(self.analytic_account.line_ids), 1, "Analytic Account should have only one line")
         self.assertAlmostEquals(self.analytic_account.line_ids[0].amount, -636.36, "Amount on the only AAL is wrong")
         self.assertEquals(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
+
+    def test_expense_from_email(self):
+        user_demo = self.env.ref('base.user_demo')
+        self.tax.price_include = False
+
+        message_parsed = {
+            'message_id': 'the-world-is-a-ghetto',
+            'subject': '[AT] 9876',
+            'email_from': 'demo@yourcompany.example.com',
+            'to': 'catchall@yourcompany.com',
+            'body': "Don't you know, that for me, and for you",
+            'attachments': [],
+        }
+
+        expense = self.env['hr.expense'].message_new(message_parsed)
+
+        self.assertEquals(expense.product_id, self.product)
+        self.assertEquals(expense.tax_ids.ids, [self.tax.id])
+        self.assertEquals(expense.total_amount, 10863.60)
+        self.assertTrue(expense.employee_id in user_demo.employee_ids)
