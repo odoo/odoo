@@ -88,7 +88,8 @@ class TestAccountEntry(TestExpenseCommon):
 
         expense = self.env['hr.expense'].message_new(message_parsed)
 
-        self.assertEquals(expense.product_id, self.product)
-        self.assertEquals(expense.tax_ids.ids, [self.tax.id])
-        self.assertEquals(expense.total_amount, 10863.60)
+        air_ticket = self.env.ref("hr_expense.air_ticket")
+        self.assertEquals(expense.product_id, air_ticket)
+        self.assertEquals(expense.tax_ids.ids, [])
+        self.assertEquals(expense.total_amount, 9876.0)
         self.assertTrue(expense.employee_id in user_demo.employee_ids)
