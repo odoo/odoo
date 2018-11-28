@@ -12,7 +12,7 @@ require('website_sale.website_sale');
 sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfiguratorMixin, {
     selector: '.oe_website_sale',
     read_events: {
-        'click #add_to_cart, #products_grid .product_price .a-submit': '_onClickAdd',
+        'click #add_to_cart, #products_grid .product_price .a-submit': 'async _onClickAdd',
     },
 
     /**
@@ -21,7 +21,6 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
     init: function () {
         this._super.apply(this, arguments);
 
-        this._handleAdd = _.debounce(this._handleAdd.bind(this), 200, true);
         this.isWebsite = true;
 
         delete this.events['change [data-attribute_exclusions]'];
@@ -42,7 +41,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
-        this._handleAdd($(ev.currentTarget).closest('form'));
+        return this._handleAdd($(ev.currentTarget).closest('form'));
     },
 
     /**
@@ -69,7 +68,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
             false
         );
 
-        productReady.done(function (productId){
+        return productReady.done(function (productId){
             $form.find(productSelector.join(', ')).val(productId);
 
             self.rootProduct = {
@@ -92,6 +91,8 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
             self.optionalProductsModal.on('update_quantity', null, self._onOptionsUpdateQuantity.bind(self));
             self.optionalProductsModal.on('confirm', null, self._onModalConfirm.bind(self));
             self.optionalProductsModal.on('back', null, self._onModalBack.bind(self));
+
+            return self.optionalProductsModal.opened();
         });
     },
 
