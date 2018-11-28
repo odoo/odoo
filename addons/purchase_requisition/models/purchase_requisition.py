@@ -257,8 +257,8 @@ class PurchaseOrder(models.Model):
         self.order_line = order_lines
 
     @api.multi
-    def button_confirm(self):
-        res = super(PurchaseOrder, self).button_confirm()
+    def button_approve(self, force=False):
+        res = super(PurchaseOrder, self).button_approve(force=force)
         for po in self:
             if not po.requisition_id:
                 continue
