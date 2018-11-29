@@ -365,6 +365,7 @@ var StatementModel = BasicModel.extend({
                     var handle = _.uniqueId('rline');
                     self.lines[handle] = {
                         id: res.st_line.id,
+                        partner_id: res.st_line.partner_id,
                         handle: handle,
                         reconciled: false,
                         mode: 'inactive',
@@ -1008,6 +1009,11 @@ var StatementModel = BasicModel.extend({
                                 'display_name': line.reconciliation_proposition[0].partner_name,
                             }, true);
                         }
+                    }else if(!line.st_line.partner_id && line.partner_id && line.partner_name){
+                        return self.changePartner(line.handle, {
+                            'id': line.partner_id,
+                            'display_name': line.partner_name,
+                        }, true);
                     }
                     return true;
                 })
@@ -1386,7 +1392,6 @@ var ManualModel = StatementModel.extend({
             }
             line.reconciliation_proposition = [];
         });
-
         if (process_reconciliations.length) {
             def = self._rpc({
                     model: 'account.reconciliation.widget',
