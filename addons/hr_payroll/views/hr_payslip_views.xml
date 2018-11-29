@@ -157,7 +157,7 @@
                     <field name="number"/>
                     <field name="struct_id" attrs="{'required':[('contract_id','!=',False)]}"/>
                     <field name="name"/>
-                    <field name="credit_note"/>
+                    <field name="credit_note" invisible="1"/>
                 </group>
                 <notebook>
                     <page string="Worked Days &amp; Inputs">
@@ -255,12 +255,14 @@
         <field name="model">hr.payslip</field>
         <field name="arch" type="xml">
             <search string="Search Payslips">
+                <field name="employee_id"/>
                 <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
                 <field name="date_from"/>
+                <field name="payslip_run_id"/>
                 <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                 <filter string="Done" name="done" domain="[('state','=','done')]" help="Done Slip"/>
-                <field name="employee_id"/>
-                <field name="payslip_run_id"/>
+                <separator/>
+                <filter string="Credit Notes" name="credit_note" domain="[('credit_note', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Employees" name="employee_id" context="{'group_by':'employee_id'}"/>
                     <filter string="PaySlip Batch" name="group_by_batch" context="{'group_by':'payslip_run_id'}"/>
