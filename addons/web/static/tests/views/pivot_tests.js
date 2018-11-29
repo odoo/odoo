@@ -130,6 +130,52 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot rendering with string attribute on field', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.foo = {string: "Foo", type: "integer", store: true};
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot string="Partners">' +
+                        '<field name="foo" string="BAR" type="measure"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('.o_pivot_measure_row').text(), "BAR",
+                    "the displayed name should be the one set in the string attribute");
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot rendering with invisible attribute on field', function (assert) {
+        assert.expect(2);
+        // when invisible, a field should neither be an active measure,
+        // nor be a selectable measure.
+        _.extend(this.data.partner.fields, {
+            foo: {string: "Foo", type: "integer", store: true},
+            foo2: {string: "Foo2", type: "integer", store: true}
+        })
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot string="Partners">' +
+                        '<field name="foo" type="measure"/>' +
+                        '<field name="foo2" type="measure" invisible="True"/>' +
+                '</pivot>',
+        });
+
+        // there should be only one displayed measure as the other one is invisible
+        assert.containsOnce(pivot, '.o_pivot_measure_row');
+        // there should be only one measure besides count, as the other one is invisible
+        assert.containsN(document.body, '.dropdown-item', 2);
+
+        pivot.destroy();
+    });
+
     QUnit.test('pivot view without "string" attribute', function (assert) {
         assert.expect(1);
 
