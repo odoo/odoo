@@ -18,53 +18,48 @@ class HrPayslipEmployees(models.TransientModel):
 
     employee_ids = fields.Many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees',
                                     domain=lambda self: self._get_available_contracts_domain(),
-                                    default=lambda self: self._get_employees())
-
+                                    default=lambda self: self._get_employees(), required=True)
 
     @api.multi
     def compute_sheet(self):
-        payslips = self.env['hr.payslip']
-        [data] = self.read()
-        active_id = self.env.context.get('active_id')
-        if active_id:
-            [run_data] = self.env['hr.payslip.run'].browse(active_id).read(['date_start', 'date_end', 'credit_note'])
-            from_date = run_data.get('date_start')
-            to_date = run_data.get('date_end')
-        else:
+        self.ensure_one()
+        if not self.env.context.get('active_id'):
             from_date = datetime.strptime(self.env.context.get('default_date_start'), '%Y-%m-%d')
-            to_date = datetime.strptime(self.env.context.get('default_date_end'), '%Y-%m-%d')
+            end_date = datetime.strptime(self.env.context.get('default_date_end'), '%Y-%m-%d')
             payslip_run = self.env['hr.payslip.run'].create({
                 'name': from_date.strftime('%B %Y'),
                 'date_start': from_date,
-                'date_end': to_date,
+                'date_end': end_date,
             })
+        else:
+            payslip_run = self.env['hr.payslip.run'].browse(self.env.context.get('active_id'))
 
-            active_id = payslip_run.id
-            [run_data] = payslip_run.read(['date_start', 'date_end', 'credit_note'])
-
-        if not data['employee_ids']:
+        if not self.employee_ids:
             raise UserError(_("You must select employee(s) to generate payslip(s)."))
-        for employee in self.env['hr.employee'].browse(data['employee_ids']):
-            slip_data = self.env['hr.payslip'].onchange_employee_id(from_date, to_date, employee.id, contract_id=False)
-            res = {
-                'employee_id': employee.id,
-                'name': slip_data['value'].get('name'),
-                'struct_id': slip_data['value'].get('struct_id'),
-                'contract_id': slip_data['value'].get('contract_id'),
-                'payslip_run_id': active_id,
-                'input_line_ids': [(0, 0, x) for x in slip_data['value'].get('input_line_ids')],
-                'worked_days_line_ids': [(0, 0, x) for x in slip_data['value'].get('worked_days_line_ids')],
-                'date_from': from_date,
-                'date_to': to_date,
-                'credit_note': run_data.get('credit_note'),
-                'company_id': employee.company_id.id,
-            }
-            payslips += self.env['hr.payslip'].create(res)
-        payslips.compute_sheet()
 
-        return {'type': 'ir.actions.act_window',
+        payslips = self.env['hr.payslip']
+        Payslip = self.env['hr.payslip']
+        for employee in self.employee_ids:
+            values = Payslip.default_get(Payslip.fields_get())
+            values.update({
+                'employee_id': employee.id,
+                'date_from': payslip_run.date_start,
+                'date_to': payslip_run.date_end,
+                'credit_note': payslip_run.credit_note,
+                'payslip_run_id': payslip_run.id,
+            })
+            payslip = self.env['hr.payslip'].new(values)
+            payslip.onchange_employee()
+            payslip.onchange_contract()
+            values = payslip._convert_to_write(payslip._cache)
+            payslips += Payslip.create(values)
+        payslips.compute_sheet()
+        payslip_run.state = 'verify'
+
+        return {
+            'type': 'ir.actions.act_window',
             'res_model': 'hr.payslip.run',
             'view_type': 'form',
             'views': [[False, 'form']],
-            'res_id': active_id,
+            'res_id': payslip_run.id,
         }
