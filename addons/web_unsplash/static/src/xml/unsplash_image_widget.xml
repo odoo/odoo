@@ -7,19 +7,23 @@
     </t>
 </t>
 
-<t t-extend="web_editor.dialog.files.submenu">
-    <t t-jquery=".o_search_div" t-operation="append">
-        <div class="dropdown-menu o_dropdown_search w-100" style="background-color:#efefef;">
-            <button class="dropdown-item o_search_an_image o_size_dropdown_item" type="button">
+<t t-name="web_unsplash.dialog.media.search_icon" t-extend="">
+    <div class="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle o_we_search_icon" data-toggle="dropdown">
+            <i class="fa fa-search"/>
+            <span/>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <button class="dropdown-item o_search_an_image" type="button">
                 Search among my images for:
                 <div class="font-weight-bold o_search_value_input"></div>
             </button>
-            <button class="dropdown-item o_search_from_unsplash o_size_dropdown_item" type="button">
+            <button class="dropdown-item o_search_from_unsplash" type="button">
                 Search from Unsplash for:
                 <div class="font-weight-bold o_search_value_input"></div>
             </button>
         </div>
-    </t>
+    </div>
 </t>
 
 <t t-name="web_unsplash.dialog.image.content">
@@ -39,16 +43,14 @@
 </t>
 
 <t t-name="web_unsplash.dialog.error.credentials">
-    <h4 class="text-muted">
-        <t t-esc="title"/>
-    </h4>
+    <h4><t t-esc="title"/></h4>
     <div class="details">
         <t t-esc="subtitle"/>
-        <div class="form-group btn-group mt-4 access_key_box">
+        <div class="form-group mt-4 access_key_box">
             <input type="text" class="form-control w-100" id="accessKeyInput" placeholder="Paste your access key here"/>
         </div>
         <a href="https://www.odoo.com/documentation/user/general/unsplash/unsplash_access_key.html" target="_blank"><i class="fa fa-arrow-right"/> Generate an access key</a>
-        <div class="form-group btn-group mt-4 access_key_box">
+        <div class="form-group mt-4 access_key_box">
             <input type="text" class="form-control w-100" id="appIdInput" placeholder="Paste your application ID here"/>
         </div>
         <a href="https://www.odoo.com/documentation/user/general/unsplash/unsplash_application_id.html" target="_blank"><i class="fa fa-arrow-right"/> How to find my Unsplash Application ID?</a>
@@ -57,8 +59,8 @@
 </t>
 
 <t t-name="web_unsplash.dialog.error.content">
-    <div class="row mt16 text-muted unsplash_error">
-        <div class="m-auto text-center">
+    <div class="d-flex mt-2 unsplash_error">
+        <div class="mx-auto text-center">
             <t t-if="status == 'key_not_found'">
                 <t t-call="web_unsplash.dialog.error.credentials">
                     <t t-set="title">

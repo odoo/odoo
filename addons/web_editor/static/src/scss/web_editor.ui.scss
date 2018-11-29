@@ -1291,29 +1291,8 @@ body .modal {
         max-width: 80%;
 
         .modal-body {
-            .nav-tabs .active > a[href="#editor-media-icon"] {
-                background-color: white;
-            }
-
-            li.search {
-                .form-group {
-                    position: relative;
-                    margin: 0 10px 0 0;
-                    > input {
-                        padding-right: 30px;
-                    }
-                    > span {
-                        @include o-position-absolute(7px, 7px);
-                        font-size: 1.3em;
-                    }
-                }
-            }
-
-            .card {
-                border-color: gray('200');
-                border-top-width: 0;
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
+            .tab-pane {
+                min-height: 300px;
             }
 
             .o_existing_attachment_cell {
@@ -1357,8 +1336,6 @@ body .modal {
                 }
             }
             .font-icons-icons {
-                padding: 20px 0;
-
                 > span {
                     text-align: center;
                     font-size: 22px;
@@ -1377,34 +1354,14 @@ body .modal {
             }
 
             #editor-media-image, #editor-media-document {
-                .card {
-                    label {
-                        margin: auto 10px;
-                    }
-
-                    .btn-group {
-                        margin-right: 10px;
-                    }
-                }
-                .o_size_fa_icon {
-                    font-size: 1.4rem;
-                }
-                .o_size_dropdown_item {
-                    font-size: 0.9rem;
+                .o_we_url_input {
+                    width: 300px;
                 }
             }
 
             // VIDEO TAB
-            #editor-media-video .o_video_dialog_container {
-                padding: 0;
-                display: flex;
-                flex-flow: row wrap;
-
+            #editor-media-video {
                 .o_video_dialog_form {
-                    flex: 1 1 auto;
-                    min-width: 0;
-                    padding: 20px;
-
                     #o_video_form_group {
                         position: relative;
                         width: 100%;
@@ -1416,17 +1373,17 @@ body .modal {
                             overflow-y: scroll;
                         }
 
-                        > .o_validate_feedback {
+                        .o_validate_feedback {
                             @include o-position-absolute(auto, 10px, 10px);
 
                             > .fa {
                                 display: none;
                             }
                         }
-                        &.o_has_error > .o_validate_feedback > .fa-exclamation-triangle {
+                        &.o_has_error .o_validate_feedback > .fa-exclamation-triangle {
                             display: block;
                         }
-                        &.o_has_success > .o_validate_feedback > .fa-check {
+                        &.o_has_success .o_validate_feedback > .fa-check {
                             display: block;
                         }
                     }
@@ -1434,12 +1391,8 @@ body .modal {
 
                 #video-preview {
                     position: relative;
-                    flex: 1 0 50%;
-                    display: flex;
-                    flex-flow: column nowrap;
-                    justify-content: center;
 
-                    @include o-we-preview-box(0 19px);
+                    @include o-we-preview-box();
                     border: none;
 
                     .media_iframe_video {
@@ -1504,6 +1457,7 @@ body .modal {
 
         .o_bg_img_opt_cover_edition {
             @include o-we-preview-box;
+            padding: 0 25px 25px 25px;
 
             h6 {
                 color: white;
