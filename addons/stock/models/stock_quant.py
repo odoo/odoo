@@ -336,6 +336,11 @@ class StockQuant(models.Model):
         except Error as e:
             _logger.info('an error occured while merging quants: %s', e.pgerror)
 
+    @api.model
+    def _quant_tasks(self):
+        self._merge_quants()
+        self._unlink_zero_quants()
+
 
 class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
