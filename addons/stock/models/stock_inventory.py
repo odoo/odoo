@@ -193,7 +193,7 @@ class Inventory(models.Model):
         # The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory
         # as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
         # as quants cannot be reuse from inventory location (users can still manually move the products before/after the inventory if they want).
-        self.mapped('move_ids').filtered(lambda move: move.state != 'done')._action_done()
+        self.mapped('move_ids').filtered(lambda move: move.state != 'done')._action_done(owner_id=self.mapped('line_ids.partner_id'))
 
     def action_check(self):
         """ Checks the inventory and computes the stock move to do """

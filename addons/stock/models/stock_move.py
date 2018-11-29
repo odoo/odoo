@@ -1081,7 +1081,7 @@ class StockMove(models.Model):
     def _unreserve_initial_demand(self, new_move):
         pass
 
-    def _action_done(self, cancel_backorder=False):
+    def _action_done(self, cancel_backorder=False, owner_id=None):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
         moves = self.exists().filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_todo = self.env['stock.move']
@@ -1123,7 +1123,7 @@ class StockMove(models.Model):
                 move._unreserve_initial_demand(new_move)
                 if cancel_backorder:
                     self.env['stock.move'].browse(new_move)._action_cancel()
-        moves_todo.mapped('move_line_ids')._action_done()
+        moves_todo.mapped('move_line_ids')._action_done(owner_id=owner_id)
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
         for result_package in moves_todo\

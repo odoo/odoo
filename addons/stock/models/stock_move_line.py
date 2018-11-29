@@ -38,7 +38,7 @@ class StockMoveLine(models.Model):
         ondelete='restrict', required=False,
         help="If set, the operations are packed into this package")
     date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
-    owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
+    owner_id = fields.Many2one('res.partner', 'From Owner', help="When validating the transfer, the products will be taken from this owner.")
     location_id = fields.Many2one('stock.location', 'From', required=True)
     location_dest_id = fields.Many2one('stock.location', 'To', required=True)
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
@@ -360,7 +360,7 @@ class StockMoveLine(models.Model):
             moves._recompute_state()
         return res
 
-    def _action_done(self, cancel_backorder=False):
+    def _action_done(self, cancel_backorder=False, owner_id=None):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
         location.
@@ -444,9 +444,9 @@ class StockMoveLine(models.Model):
                     untracked_qty = Quant._get_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                     if untracked_qty:
                         taken_from_untracked_qty = min(untracked_qty, abs(quantity))
-                        Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
-                        Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
-                Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
+                        Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=owner_id)
+                        Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=owner_id)
+                Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=owner_id, in_date=in_date)
             done_ml |= ml
         # Reset the reserved quantity as we just moved it to the destination location.
         (self - ml_to_delete).with_context(bypass_reservation_update=True).write({

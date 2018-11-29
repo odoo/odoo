@@ -286,9 +286,9 @@ class Picking(models.Model):
         help='Technical field used to compute whether the validate should be shown.')
 
     owner_id = fields.Many2one(
-        'res.partner', 'Owner',
+        'res.partner', 'Assign owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help="Default Owner")
+        help="When validating the transfer, the products will be assigned to this owner.")
     printed = fields.Boolean('Printed')
     is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
@@ -525,13 +525,6 @@ class Picking(models.Model):
         self.mapped('move_lines').unlink() # Checks if moves are not done
         return super(Picking, self).unlink()
 
-    # Actions
-    # ----------------------------------------
-
-    @api.one
-    def action_assign_owner(self):
-        self.move_line_ids.write({'owner_id': self.owner_id.id})
-
     @api.multi
     def do_print_picking(self):
         self.write({'printed': True})
@@ -622,7 +615,7 @@ class Picking(models.Model):
                     new_move._action_confirm()
                     todo_moves |= new_move
                     #'qty_done': ops.qty_done})
-        todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
+        todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'), owner_id=self.mapped('owner_id'))
         self.write({'date_done': fields.Datetime.now()})
         return True
 

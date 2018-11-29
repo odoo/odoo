@@ -349,9 +349,9 @@ class StockMove(models.Model):
                 'price_unit': price_unit if self._is_dropshipped() else -price_unit,
             })
 
-    def _action_done(self, cancel_backorder=False):
+    def _action_done(self, cancel_backorder=False, owner_id=None):
         self.product_price_update_before_done()
-        res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
+        res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder, owner_id=owner_id)
         for move in res:
             # Apply restrictions on the stock move to be able to make
             # consistent accounting entries.
