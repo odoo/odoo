@@ -143,7 +143,7 @@ class HrPayslip(models.Model):
     def get_worked_day_lines(self, contracts, date_from, date_to):
         """
         @param contract: Browse record of contracts
-        @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
+        @return: returns a list of dict containing the worked days that should be applied for the given contract between date_from and date_to
         """
         res = []
         # fill only if the contract as a working schedule linked
@@ -169,25 +169,6 @@ class HrPayslip(models.Model):
 
         return res
 
-
-    @api.model
-    def get_inputs(self, contracts, date_from, date_to):
-        res = []
-
-        structures = contracts.get_all_structures()
-        rule_ids = structures.get_all_rules()
-        sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
-        inputs = self.env['hr.salary.rule'].browse(sorted_rule_ids).mapped('input_ids')
-
-        for contract in contracts:
-            for input in inputs:
-                input_data = {
-                    'name': input.name,
-                    'code': input.code,
-                    'contract_id': contract.id,
-                }
-                res += [input_data]
-        return res
 
     # YTI TODO: pass recordset as argument
     @api.model
@@ -303,10 +284,10 @@ class HrPayslip(models.Model):
             contracts = employee._get_contracts(date_from, date_to)
         else:
             if contract_id:
-                #set the list of contract for which the input have to be filled
+                #set the list of contract for which the worked days have to be filled
                 contracts = self.env['hr.contract'].browse(contract_id)
             else:
-                #if we don't give the contract, then the input to fill should be for all current contracts of the employee
+                #if we don't give the contract, then the worked days to fill should be for all current contracts of the employee
                 contracts = employee._get_contracts(date_from, date_to)
 
         if not contracts:
@@ -321,13 +302,9 @@ class HrPayslip(models.Model):
         res['value'].update({
             'struct_id': struct.id,
         })
-        #computation of the salary input
+        #computation of the salary worked days
         worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
-        input_line_ids = self.get_inputs(contracts, date_from, date_to)
-        res['value'].update({
-            'worked_days_line_ids': worked_days_line_ids,
-            'input_line_ids': input_line_ids,
-        })
+        res['value'].update({'worked_days_line_ids': worked_days_line_ids})
         return res
 
     @api.onchange('employee_id', 'date_from', 'date_to')
@@ -356,18 +333,13 @@ class HrPayslip(models.Model):
             return
         self.struct_id = self.contract_id.struct_id
 
-        #computation of the salary input
+        #computation of the salary worked days
         worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
         for r in worked_days_line_ids:
             worked_days_lines += worked_days_lines.new(r)
         self.worked_days_line_ids = worked_days_lines
 
-        input_line_ids = self.get_inputs(contracts, date_from, date_to)
-        input_lines = self.input_line_ids.browse([])
-        for r in input_line_ids:
-            input_lines += input_lines.new(r)
-        self.input_line_ids = input_lines
         return
 
     @api.onchange('contract_id')
@@ -411,7 +383,7 @@ class HrPayslipLine(models.Model):
     amount_fix = fields.Float(related='salary_rule_id.amount_fix', readonly=True)
     amount_percentage = fields.Float(related='salary_rule_id.amount_percentage', readonly=True)
     appears_on_payslip = fields.Boolean(related='salary_rule_id.appears_on_payslip', readonly=True)
-    category_id = fields.Many2one(related='salary_rule_id.category_id', readonly=True)
+    category_id = fields.Many2one(related='salary_rule_id.category_id', readonly=True, store=True)
     register_id = fields.Many2one(related='salary_rule_id.register_id', readonly=True, store=True)
 
     @api.depends('quantity', 'amount', 'rate')
@@ -443,7 +415,7 @@ class HrPayslipWorkedDays(models.Model):
     number_of_days = fields.Float(string='Number of Days')
     number_of_hours = fields.Float(string='Number of Hours')
     contract_id = fields.Many2one('hr.contract', string='Contract', required=True,
-        help="The contract for which applied this input")
+        help="The contract for which applied this worked days")
 
 
 class HrPayslipInput(models.Model):
