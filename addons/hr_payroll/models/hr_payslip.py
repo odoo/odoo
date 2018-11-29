@@ -129,7 +129,7 @@ class HrPayslip(models.Model):
             contracts = payslip.contract_id or \
                 payslip.employee_id._get_contracts(payslip.date_from, payslip.date_to)
             lines = [(0, 0, line) for line in payslip._get_payslip_lines(contracts)]
-            payslip.write({'line_ids': lines, 'number': number})
+            payslip.write({'line_ids': lines, 'number': number, 'state': 'verify'})
         return True
 
     @api.model
