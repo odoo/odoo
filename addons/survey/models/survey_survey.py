@@ -337,9 +337,9 @@ class Survey(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'name': "Results of the Survey",
+            'name': "Test Survey",
             'target': 'self',
-            'url': self.with_context(relative_url=True).public_url + "/phantom"
+            'url': '/survey/test/%s' % self.id,
         }
 
     @api.multi
@@ -351,4 +351,3 @@ class Survey(models.Model):
                     'search_default_completed': 1})
         action['context'] = ctx
         return action
-

@@ -15,7 +15,6 @@ _logger = logging.getLogger(__name__)
 
 
 class Survey(http.Controller):
-    # HELPER METHODS #
 
     def _check_bad_cases(self, survey, token=None):
         # In case of bad survey, redirect to surveys list
@@ -49,22 +48,26 @@ class Survey(http.Controller):
                 return request.render("survey.notopen")
         return None
 
-    ## ROUTES HANDLERS ##
+    @http.route('/survey/test/<model("survey.survey"):survey>', type='http', auth='user', website=True)
+    def survey_test(self, survey, token=None):
+        """ Test mode for surveys: create a test answer, only for managers or officers
+        testing their surveys """
+        if request.env.user.has_group('survey.group_survey_manager') or \
+                request.env.user.has_group('survey.group_survey_user') and survey.create_uid == request.env.user:
+            user_input = request.env['survey.user_input'].create({
+                'survey_id': survey.id,
+                'test_entry': True
+            })
+            return request.redirect('/survey/start/%s/%s' % survey.id, user_input.token)
+        return werkzeug.utils.redirect('/')
 
-    # Survey start
     @http.route(['/survey/start/<model("survey.survey"):survey>',
                  '/survey/start/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='public', website=True)
-    def start_survey(self, survey, token=None, **post):
+    def survey_start(self, survey, token=None, **post):
+        """ Start a survey by providing a token linked to an answer or generate
+        a new token if access is allowed """
         UserInput = request.env['survey.user_input']
-
-        # Test mode
-        if token and token == "phantom":
-            _logger.info("[survey] Phantom mode")
-            user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.render('survey.survey_init', data)
-        # END Test mode
 
         # Controls if the survey can be displayed
         errpage = self._check_bad_cases(survey, token=token)
