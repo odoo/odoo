@@ -37,8 +37,10 @@ class Currency(models.Model):
     position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
         string='Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     date = fields.Date(compute='_compute_date')
-    currency_unit_label = fields.Char(string="Currency Unit", help="Currency Unit Name")
-    currency_subunit_label = fields.Char(string="Currency Subunit", help="Currency Subunit Name")
+    currency_unit_label = fields.Char(string="Currency Unit", help="Currency Unit Name",
+                                      translate=True)
+    currency_subunit_label = fields.Char(string="Currency Subunit", help="Currency Subunit Name",
+                                         translate=True)
 
     _sql_constraints = [
         ('unique_name', 'unique (name)', 'The currency code must be unique!'),
