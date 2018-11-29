@@ -38,6 +38,7 @@
         'report/mrp_report_bom_structure.xml',
         'report/mrp_production_templates.xml',
         'report/report_stock_rule.xml',
+        'report/mrp_zebra_production_templates.xml',
     ],
     'qweb': ['static/src/xml/mrp.xml'],
     'demo': [
