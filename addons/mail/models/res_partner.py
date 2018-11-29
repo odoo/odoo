@@ -46,7 +46,7 @@ class Partner(models.Model):
             if message.add_sign:
                 signature = "<p>-- <br/>%s</p>" % message.author_id.name
 
-        company = record.company_id if record and 'company_id' in record else user.company_id
+        company = record.company_id.sudo() if record and 'company_id' in record else user.company_id
         if company.website:
             website_url = 'http://%s' % company.website if not company.website.lower().startswith(('http:', 'https:')) else company.website
         else:
