@@ -310,7 +310,7 @@ class SaleOrder(models.Model):
                     # Can't remove the lines directly as we might be in a recordset loop
                     lines_to_remove += lines
                 else:
-                    value.update(price_unit=0.0)
+                    values.update(price_unit=0.0)
                     order.write({'order_line': [(1, line.id, values) for line in lines]})
             return lines_to_remove
 
