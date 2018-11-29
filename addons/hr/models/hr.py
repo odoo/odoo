@@ -4,6 +4,7 @@ from random import choice
 from string import digits
 import base64
 import logging
+from werkzeug import url_encode
 
 from odoo import api, fields, models
 from odoo import tools, _
@@ -202,6 +203,12 @@ class Employee(models.Model):
     color = fields.Integer('Color Index', default=0)
     barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", copy=False)
     pin = fields.Char(string="PIN", help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).", copy=False)
+    departure_reason = fields.Selection([
+        ('fired', 'Fired'),
+        ('resigned', 'Resigned'),
+        ('retired', 'Retired')
+    ], string="Departure Reason")
+    departure_description = fields.Text(string="Additional Information")
 
     _sql_constraints = [('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee.")]
 
@@ -256,6 +263,8 @@ class Employee(models.Model):
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         tools.image_resize_images(vals)
         employee = super(Employee, self).create(vals)
+        url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
+        employee._message_log(_('<b>Congratulations !</b> May I recommand you to setup an <a href="%s">onboarding plan ?</a>') % (url))
         if employee.department_id:
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', employee.department_id.id)
@@ -285,7 +294,25 @@ class Employee(models.Model):
         resources = self.mapped('resource_id')
         super(Employee, self).unlink()
         return resources.unlink()
-    
+
+    def toggle_active(self):
+        res = super(Employee, self).toggle_active()
+        self.filtered(lambda employee: employee.active).write({
+            'departure_reason': False,
+            'departure_description': False,
+        })
+        if len(self) == 1 and not self.active:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Register Departure'),
+                'res_model': 'hr.departure.wizard',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'active_id': self.id},
+            }
+        return res
+
     @api.multi
     def generate_random_barcode(self):
         for i in self: i.barcode = "".join(choice(digits) for i in range(8))
