@@ -98,6 +98,7 @@ var AbstractView = Class.extend({
             modelName: params.modelName,
             res_id: params.currentId,
             res_ids: params.ids,
+            orderedBy: params.context ? params.context.orderedBy : [],
         };
         if (params.modelName) {
             this.loadParams.modelName = params.modelName;

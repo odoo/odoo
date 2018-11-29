@@ -2732,6 +2732,48 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('x2many default_order multiple fields', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.records = [
+            {int_field: 10, id: 1, display_name: "record1"},
+            {int_field: 12, id: 2, display_name: "record2"},
+            {int_field: 11, id: 3, display_name: "record3"},
+            {int_field: 12, id: 4, display_name: "record4"},
+            {int_field: 10, id: 5, display_name: "record5"},
+            {int_field: 10, id: 6, display_name: "record6"},
+            {int_field: 11, id: 7, display_name: "record7"},
+        ];
+
+        this.data.partner.records[0].p = [1, 7, 4, 5, 2, 6, 3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                        '<field name="p" >' +
+                            '<tree default_order="int_field,id">' +
+                                '<field name="id"/>' +
+                                '<field name="int_field"/>' +
+                            '</tree>' +
+                        '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        var $recordList = form.$('.o_field_x2many_list .o_data_row');
+        var expectedOrderId = ['1', '5', '6', '3', '7', '2', '4'];
+
+        _.each($recordList, function(record, index) {
+            var $record = $(record);
+            assert.strictEqual($record.find('.o_data_cell').eq(0).text(), expectedOrderId[index],
+                'The record should be the right place. Index: ' + index);
+        });
+
+        form.destroy();
+    });
+
     QUnit.test('many2many list add *many* records, remove, re-add', function (assert) {
         assert.expect(5);
 
@@ -2868,6 +2910,41 @@ QUnit.module('relational_fields', {
         // Only those two should have been called
         // name_get on trululu would trigger an traceback
         assert.verifySteps(['default_get partner', 'onchange partner']);
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many from a model that has been sorted', function (assert) {
+        assert.expect(1);
+
+        /* On a standard list view, sort your records by a field
+         * Click on a record which contains a x2m with multiple records in it
+         * The x2m shouldn't take the orderedBy of the parent record (the one on the form)
+         */
+
+        this.data.partner.records[0].turtles = [3, 2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            context: {
+                orderedBy: [{
+                    name: 'foo',
+                    asc: false,
+                }]
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_one2many[name=turtles] tbody').text().trim(), "kawablip",
+            'The o2m should not have been sorted.');
 
         form.destroy();
     });

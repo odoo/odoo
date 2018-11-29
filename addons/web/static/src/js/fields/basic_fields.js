@@ -2014,6 +2014,18 @@ var FieldProgressBar = AbstractField.extend({
             this.$('.o_progressbar_value').focus().select();
         }
     },
+    /**
+     * The progress bar has more than one field/value to deal with
+     * i.e. max_value
+     *
+     * @override
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        var new_max_value = this.recordData[this.nodeOptions.max_value];
+        this.max_value =  new_max_value !== undefined ? new_max_value : this.max_value;
+    },
     isSet: function () {
         return true;
     },
