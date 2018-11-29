@@ -45,8 +45,7 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 // ============    'Preview' component Mixins    ===============
 // Create a "preview" work-area to edit/customize specific elements
 
-@mixin o-we-preview-box($padding: 0px 25px 25px 25px, $color-text: white) {
-    padding: $padding;
+@mixin o-we-preview-box($color-text: white) {
     border-top: 1px solid black;
     border-bottom: 1px solid white;
     background-image: linear-gradient(-150deg, $o-we-color-dark, $o-we-color-darker);
