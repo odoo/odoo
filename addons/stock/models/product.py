@@ -363,6 +363,14 @@ class Product(models.Model):
         action['context'] = {'default_product_id': self.id}
         return action
 
+    def action_open_quants(self):
+        self.ensure_one()
+        self.env['stock.quant']._quant_tasks()
+        action = self.env.ref('stock.product_open_quants').read()[0]
+        action['domain'] = [('product_id', '=', self.id)]
+        action['context'] = {'search_default_internal_loc': 1}
+        return action
+
     @api.model
     def get_theoretical_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, to_uom=None):
         product_id = self.env['product.product'].browse(product_id)
@@ -564,6 +572,7 @@ class ProductTemplate(models.Model):
                 }
 
     def action_open_quants(self):
+        self.env['stock.quant']._quant_tasks()
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
         action['domain'] = [('product_id', 'in', products.ids)]

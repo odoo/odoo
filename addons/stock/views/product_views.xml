@@ -196,9 +196,9 @@
                     </header>
                     <button name="toggle_active" position="before">
                         <button class="oe_stat_button"
-                               name="%(product_open_quants)d"
+                               name="action_open_quants"
                                icon="fa-building-o"
-                               type="action" attrs="{'invisible':[('type', '!=', 'product')]}">
+                               type="object" attrs="{'invisible':[('type', '!=', 'product')]}">
                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value">
                                         <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
