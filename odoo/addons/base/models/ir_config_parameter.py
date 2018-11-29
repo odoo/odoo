@@ -83,7 +83,8 @@ class IrConfigParameter(models.Model):
         if param:
             old = param.value
             if value is not False and value is not None:
-                param.write({'value': value})
+                if str(value) != old:
+                    param.write({'value': value})
             else:
                 param.unlink()
             return old

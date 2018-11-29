@@ -80,13 +80,16 @@
         margin-left: $tmp-gap-base;
 
         & + .o_org_chart_group_down {
-            margin-left: $tmp-gap-base*2;
+            padding-left: $tmp-gap-base*2;
+
+            &:before {
+                margin-left: $tmp-gap-base;
+            }
         }
     }
 
     .o_org_chart_group_down {
-        margin-left: $tmp-gap-base;
-        padding-right: $tmp-gap-base;
+        padding-left: $tmp-gap-base;
 
         &:before {
             @include o-hr-org-chart-line;
@@ -94,7 +97,7 @@
             height: 100%;
             @include o-position-absolute(
                 $top: $o-hr-org-chart-entry-v-gap*-1,
-                $left: $tmp-gap-base*-0.5 + $o-hr-org-chart-entry-pic-size*0.1 + $o-hr-org-chart-entry-line-w*0.5
+                $left: $tmp-gap-base*0.5 + $o-hr-org-chart-entry-pic-size*0.1 + $o-hr-org-chart-entry-line-w*0.5
             );
         }
 

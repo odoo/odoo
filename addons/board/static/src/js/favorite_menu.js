@@ -56,7 +56,7 @@ FavoriteMenu.include({
         var self = this;
         var search_data = this.searchview.build_search_data();
         var context = new Context(this.searchview.dataset.get_context() || []);
-        var domain = this.searchview.dataset.get_domain() || [];
+        var domain = [];
 
         _.each(search_data.contexts, context.add, context);
         _.each(search_data.domains, function (d) {

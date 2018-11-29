@@ -84,6 +84,7 @@
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">750.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
         </record>
 
     </data>

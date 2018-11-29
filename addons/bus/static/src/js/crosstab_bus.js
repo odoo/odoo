@@ -105,7 +105,7 @@ var CrossTabBus = Longpolling.extend({
 
             $(window).on('unload.' + this._id, this._onUnload.bind(this));
 
-            if (!this._callLocalStorage('getItem', 'peers')) {
+            if (!this._callLocalStorage('getItem', 'master')) {
                 this._startElection();
             }
 
@@ -252,6 +252,7 @@ var CrossTabBus = Longpolling.extend({
             //we're next in queue. Electing as master
             this.lastHeartbeat = now;
             this._callLocalStorage('setItem', 'heartbeat', this.lastHeartbeat);
+            this._callLocalStorage('setItem', 'master', true);
             this._isMasterTab = true;
             this.startPolling();
             this.trigger('become_master');
@@ -297,7 +298,7 @@ var CrossTabBus = Longpolling.extend({
         var value = JSON.parse(e.newValue);
         var key = e.key;
 
-        if (this._isRegistered && key === this._generateKey('peers') && !value) {
+        if (this._isRegistered && key === this._generateKey('master') && !value) {
             //master was unloaded
             this._startElection();
         }
@@ -341,7 +342,7 @@ var CrossTabBus = Longpolling.extend({
 
         // unload master
         if (this._isMasterTab) {
-            this._callLocalStorage('removeItem', 'peers');
+            this._callLocalStorage('removeItem', 'master');
         }
     },
 });

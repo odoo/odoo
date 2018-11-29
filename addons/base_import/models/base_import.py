@@ -885,6 +885,8 @@ class Import(models.TransientModel):
         try:
             if dryrun:
                 self._cr.execute('ROLLBACK TO SAVEPOINT import')
+                # cancel all changes done to the registry/ormcache
+                self.pool.reset_changes()
             else:
                 self._cr.execute('RELEASE SAVEPOINT import')
         except psycopg2.InternalError:
