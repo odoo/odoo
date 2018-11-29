@@ -74,6 +74,7 @@ class TestHrPayrollAccount(common.TransactionCase):
         self.hr_payslip = self.env['hr.payslip'].create({
             'employee_id': self.hr_employee_john.id,
             'journal_id': self.ref('hr_payroll_account.expenses_journal'),
+            'name': 'Test Payslip',
         })
 
     def test_00_hr_payslip(self):

@@ -112,6 +112,19 @@ class HrPayslip(models.Model):
             'context': {}
         }
 
+    @api.model
+    def create(self, vals):
+        res = super(HrPayslip, self).create(vals)
+        if not res.payslip_run_id:
+            self.env['hr.payslip.run'].create({
+                'name': res.name,
+                'date_start': res.date_from,
+                'date_end': res.date_to,
+                'slip_ids': [(4, res.id)],
+                'state': 'close',
+            })
+        return res
+
     @api.multi
     def unlink(self):
         if any(self.filtered(lambda payslip: payslip.state not in ('draft', 'cancel'))):
