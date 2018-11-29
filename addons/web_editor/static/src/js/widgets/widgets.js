@@ -110,7 +110,7 @@ var AltDialog = Dialog.extend({
 var MediaWidget = Widget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     events: {
-        'input input#icon-search': '_onSearchInput',
+        'input input.o_we_search': '_onSearchInput',
     },
 
     /**
@@ -120,7 +120,7 @@ var MediaWidget = Widget.extend({
         this._super.apply(this, arguments);
         this.media = media;
         this.$media = $(media);
-        this._onSearchInput = _.debounce(this._onSearchInput, 250);
+        this._onSearchInput = _.debounce(this._onSearchInput, 500);
     },
 
     //--------------------------------------------------------------------------
@@ -135,17 +135,6 @@ var MediaWidget = Widget.extend({
             return;
         }
         this._clear();
-    },
-    /**
-     * @todo comment
-     */
-    getControlPanelConfig: function () {
-        return {
-            searchEnabled: true,
-            pagerEnabled: true,
-            pagerLeftEnabled: false,
-            pagerRightEnabled: false,
-        };
     },
     /**
      * @abstract
@@ -185,6 +174,7 @@ var MediaWidget = Widget.extend({
      */
     _onSearchInput: function (ev) {
         this.search($(ev.currentTarget).val() || '');
+        this.hasSearched = true;
     },
 });
 
@@ -198,11 +188,11 @@ var ImageWidget = MediaWidget.extend({
         'click .o_upload_media_button_no_optimization': '_onUploadButtonNoOptimizationClick',
         'change input[type=file]': '_onImageSelection',
         'click .o_upload_media_url_button': '_onUploadURLButtonClick',
-        'input input.url': '_onChangeInputURL',
+        'input input.o_we_url_input': '_onURLInputChange',
         'click .existing-attachments [data-src]': '_onImageClick',
         'dblclick .existing-attachments [data-src]': '_onImageDblClick',
         'click .o_existing_attachment_remove': '_onRemoveClick',
-        'click .o_load_more': '_onLoadMore',
+        'click .o_load_more': '_onLoadMoreClick',
     }),
 
     IMAGES_PER_ROW: 6,
@@ -214,7 +204,8 @@ var ImageWidget = MediaWidget.extend({
     init: function (parent, media, options) {
         this._super.apply(this, arguments);
 
-        this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.IMAGES_ROWS;
+        this.imagesRows = this.IMAGES_ROWS;
+        this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.imagesRows;
 
         this.options = options;
         this.accept = options.accept || (options.document ? '*/*' : 'image/*');
@@ -251,7 +242,7 @@ var ImageWidget = MediaWidget.extend({
         var def = this._super.apply(this, arguments);
         var self = this;
 
-        this._renderImages();
+        this._renderImages(true);
 
         var o = {
             url: null,
@@ -354,7 +345,7 @@ var ImageWidget = MediaWidget.extend({
     search: function (needle, noRender) {
         var self = this;
         if (!noRender) {
-            this.$('input.url').val('').trigger('input').trigger('change');
+            this.$('input.o_we_url_input').val('').trigger('input').trigger('change');
         }
         // TODO: Expand this for adding SVG
         var domain = this.domain.concat(['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]]);
@@ -403,6 +394,7 @@ var ImageWidget = MediaWidget.extend({
             });
             if (!noRender) {
                 self._renderImages();
+                self._adaptLoadMore();
             }
         });
     },
@@ -411,6 +403,14 @@ var ImageWidget = MediaWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _adaptLoadMore: function () {
+        var noMoreImgToLoad = this.IMAGES_DISPLAYED_TOTAL >= this.records.length;
+        this.$('.o_load_more').toggleClass('d-none', noMoreImgToLoad);
+        this.$('.o_load_done_msg').toggleClass('d-none', !noMoreImgToLoad);
+    },
     /**
      * @override
      */
@@ -435,30 +435,37 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _renderImages: function () {
+    _loadMoreImages: function (forceSearch) {
+        this.imagesRows += 2;
+        this.IMAGES_DISPLAYED_TOTAL = this.imagesRows * this.IMAGES_PER_ROW;
+        if (!forceSearch) {
+            this._renderImages();
+            this._adaptLoadMore();
+        } else {
+            this.search(this.$('.o_we_search').val() || '');
+        }
+    },
+    /**
+     * @private
+     */
+    _renderImages: function (withEffect) {
         var self = this;
         var rows = _(this.records).chain()
             .slice(0, this.IMAGES_DISPLAYED_TOTAL)
             .groupBy(function (a, index) { return Math.floor(index / self.IMAGES_PER_ROW); })
             .values()
             .value();
-        var noMoreImgToLoad = this.IMAGES_DISPLAYED_TOTAL >= this.records.length;
 
-        this.$('.o_load_more').toggleClass('d-none', noMoreImgToLoad);
-        this.$('.o_load_done_msg').toggleClass('d-none', !noMoreImgToLoad);
         this.$('.form-text').empty();
 
-        //Rendering menu & content for 'Image' or 'Document' tab
-        var templateMenu = 'web_editor.dialog.files.submenu';
-        var templateContent = 'web_editor.dialog.files.existing.content';
-        this.$('.o_submenu').replaceWith(QWeb.render(templateMenu, {
-            accept: this.accept,
-            isDocument: this.options.document,
-        }));
-        this.$('.existing-attachments').replaceWith(QWeb.render(templateContent, {
-            rows: rows,
-            isDocument: this.options.document,
-        }));
+        // Render menu & content
+        this.$('.existing-attachments').replaceWith(
+            QWeb.render('web_editor.dialog.files.existing.content', {
+                rows: rows,
+                isDocument: this.options.document,
+                withEffect: withEffect,
+            })
+        );
 
         var $divs = this.$('.o_image');
         var imageDefs = _.map($divs, function (el) {
@@ -474,11 +481,13 @@ var ImageWidget = MediaWidget.extend({
                 return def;
             }
         });
-        $.when.apply($, imageDefs).then(function () {
-            _.delay(function () {
-                $divs.removeClass('o_image_loading');
-            }, 400);
-        });
+        if (withEffect) {
+            $.when.apply($, imageDefs).then(function () {
+                _.delay(function () {
+                    $divs.removeClass('o_image_loading');
+                }, 400);
+            });
+        }
         this._highlightSelectedImages();
     },
     /**
@@ -547,16 +556,9 @@ var ImageWidget = MediaWidget.extend({
             }
         });
         this.$el.submit();
-        // Emptying file inputs
+
+        // Empty file input
         this.$('.o_file_input').val('');
-    },
-    /**
-     * @private
-     */
-    _loadMoreImages: function () {
-        this.IMAGES_ROWS += 2;
-        this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_ROWS * this.IMAGES_PER_ROW;
-        this._renderImages();
     },
 
     //--------------------------------------------------------------------------
@@ -596,8 +598,7 @@ var ImageWidget = MediaWidget.extend({
      */
     _onRemoveClick: function (ev) {
         var self = this;
-        var message = _t("Are you sure you want to delete this file ?");
-        DialogBase.confirm(this, message, {
+        DialogBase.confirm(this, _t("Are you sure you want to delete this file ?"), {
             confirm_callback: function () {
                 var $helpBlock = this.$('.form-text').empty();
                 var $a = $(ev.currentTarget);
@@ -616,7 +617,7 @@ var ImageWidget = MediaWidget.extend({
                         return;
                     }
                     $helpBlock.replaceWith(QWeb.render('web_editor.dialog.image.existing.error', {
-                        views: prevented[id]
+                        views: prevented[id],
                     }));
                 });
             }
@@ -625,33 +626,29 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _onChangeInputURL: function (ev) {
+    _onURLInputChange: function (ev) {
         var $input = $(ev.currentTarget);
-        var $button = $input.next('.input-group-append').children();
+        var $button = this.$('.o_upload_media_url_button');
+        var $success = this.$('.o_we_url_success');
+        var $warning = this.$('.o_we_url_warning');
+        var $error = this.$('.o_we_url_error');
+
         var inputValue = $input.val();
         var emptyValue = (inputValue === '');
-        var $warning = this.$('.warning-url');
-        var $success = this.$('.success-url');
-        var $error = this.$('.error-url');
-        var $btn = this.$('.o_upload_media_url_button');
-        var regex = /^(?:https?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
-        var isURL = regex.test(inputValue);
-        var showWarningOrError = (inputValue.length !== 0 ? isURL : !isURL);
+
+        var isURL = /^.+\..+$/.test(inputValue); // TODO improve
+        var isImage = _.any(['.gif', '.jpe', '.jpg', '.png'], function (format) {
+            return inputValue.endsWith(format);
+        });
 
         $button.toggleClass('btn-secondary', emptyValue).toggleClass('btn-primary', !emptyValue)
-               .prop('disabled', emptyValue);
-
+               .prop('disabled', !isURL);
         if (!this.options.document) {
-            _.each(['.gif', '.jpe', '.jpg', '.png'], function (format) {
-                var endsWith = inputValue.endsWith(format);
-                $button.text(endsWith ? _t("Add image") : _t("Add as document"));
-            });
-        } else {
-            $btn.prop('disabled', !isURL);
+            $button.text((isURL && !isImage) ? _t("Add as document") : _t("Add image"));
         }
         $success.toggleClass('d-none', !isURL);
-        $warning.toggleClass('d-none', showWarningOrError);
-        $error.toggleClass('d-none', showWarningOrError);
+        $warning.toggleClass('d-none', !isURL || this.options.document || isImage);
+        $error.toggleClass('d-none', emptyValue || isURL);
     },
     /**
      * @private
@@ -675,8 +672,16 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _onLoadMore: function () {
+    _onLoadMoreClick: function () {
         this._loadMoreImages();
+    },
+    /**
+     * @override
+     */
+    _onSearchInput: function () {
+        this.imagesRows = this.IMAGES_ROWS;
+        this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.imagesRows;
+        this._super.apply(this, arguments);
     },
 });
 
@@ -725,14 +730,6 @@ var IconWidget = MediaWidget.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    getControlPanelConfig: function () {
-        return _.extend(this._super.apply(this, arguments), {
-            pagerEnabled: false,
-        });
-    },
     /**
      * @override
      */
@@ -849,11 +846,11 @@ var IconWidget = MediaWidget.extend({
  */
 var VideoWidget = MediaWidget.extend({
     template: 'web_editor.dialog.video',
-    events: {
+    events: _.extend({}, MediaWidget.prototype.events || {}, {
         'change .o_video_dialog_options input': '_onUpdateVideoOption',
         'input textarea#o_video_text': '_onVideoCodeInput',
         'change textarea#o_video_text': '_onVideoCodeChange',
-    },
+    }),
 
     /**
      * @constructor
@@ -891,15 +888,6 @@ var VideoWidget = MediaWidget.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    getControlPanelConfig: function () {
-        return _.extend(this._super.apply(this, arguments), {
-            searchEnabled: false,
-            pagerEnabled: false,
-        });
-    },
     /**
      * @override
      */
@@ -1075,7 +1063,6 @@ var VideoWidget = MediaWidget.extend({
 
         // Hide the entire options box if no options are available
         $optBox.toggleClass('d-none', $optBox.find('div:not(.d-none)').length === 0);
-        $('.option_title').toggleClass('d-none');
 
         if (query.type === 'yt') {
             // Youtube only: If 'hide controls' is checked, hide 'fullscreen'
