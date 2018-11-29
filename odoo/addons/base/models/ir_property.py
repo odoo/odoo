@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import datetime
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 from odoo.tools import ormcache
 
 TYPE2FIELD = {
@@ -12,7 +12,7 @@ TYPE2FIELD = {
     'integer': 'value_integer',
     'text': 'value_text',
     'binary': 'value_binary',
-    'many2one': 'value_reference',
+    'many2one': 'value_integer',
     'date': 'value_datetime',
     'datetime': 'value_datetime',
     'selection': 'value_text',
@@ -30,94 +30,83 @@ TYPE2CLEAN = {
     'datetime': lambda val: val or False,
 }
 
+class MysteryField(fields.Field):
+    type = 'mystery'
 
 class Property(models.Model):
     _name = 'ir.property'
     _description = 'Company Property'
 
-    name = fields.Char(index=True)
-    res_id = fields.Char(string='Resource', index=True, help="If not set, acts as a default value for new resources",)
+    res_id = fields.Integer(string='Resource', index=True, help="If 0, acts as a default value for new resources", required=True, default=0)
     company_id = fields.Many2one('res.company', string='Company', index=True)
+
     fields_id = fields.Many2one('ir.model.fields', string='Field', ondelete='cascade', required=True, index=True)
+    name = fields.Char(store=True, related='fields_id.name', index=True)
+    type = fields.Selection(store=True, readonly=True, related='fields_id.ttype', index=True)
+    model = fields.Char(store=True, readonly=True, related='fields_id.model', index=True)
+
     value_float = fields.Float()
     value_integer = fields.Integer()
     value_text = fields.Text()  # will contain (char, text)
     value_binary = fields.Binary()
-    value_reference = fields.Char()
     value_datetime = fields.Datetime()
-    type = fields.Selection([('char', 'Char'),
-                             ('float', 'Float'),
-                             ('boolean', 'Boolean'),
-                             ('integer', 'Integer'),
-                             ('text', 'Text'),
-                             ('binary', 'Binary'),
-                             ('many2one', 'Many2One'),
-                             ('date', 'Date'),
-                             ('datetime', 'DateTime'),
-                             ('selection', 'Selection'),
-                             ],
-                            required=True,
-                            default='many2one',
-                            index=True)
 
-    @api.multi
-    def _update_values(self, values):
-        if 'value' not in values:
-            return values
-        value = values.pop('value')
+    value = MysteryField(compute='_compute_value', inverse='_set_value')
 
-        prop = None
-        type_ = values.get('type')
-        if not type_:
-            if self:
-                prop = self[0]
-                type_ = prop.type
-            else:
-                type_ = self._fields['type'].default(self)
+    @api.depends('type', 'value_float', 'value_integer', 'value_text', 'value_binary', 'value_datetime', 'fields_id.relation')
+    def _compute_value(self):
+        for prop in self:
+            prop.value = False
+            prop_type = prop.type
 
-        field = TYPE2FIELD.get(type_)
-        if not field:
-            raise UserError(_('Invalid type'))
-
-        if field == 'value_reference':
-            if not value:
-                value = False
-            elif isinstance(value, models.BaseModel):
-                value = '%s,%d' % (value._name, value.id)
-            elif isinstance(value, int):
-                field_id = values.get('fields_id')
-                if not field_id:
-                    if not prop:
-                        raise ValueError()
-                    field_id = prop.fields_id
+            if prop_type in ('char', 'text', 'selection'):
+                prop.value = prop.value_text
+            elif prop_type == 'float':
+                prop.value = prop.value_float
+            elif prop_type == 'boolean':
+                prop.value = bool(prop.value_integer)
+            elif prop_type == 'integer':
+                prop.value = prop.value_integer
+            elif prop_type == 'binary':
+                prop.value = prop.value_binary
+            elif prop_type == 'many2one':
+                m = self.env[prop.fields_id.relation]
+                if not prop.value_integer:
+                    prop.value = m
                 else:
-                    field_id = self.env['ir.model.fields'].browse(field_id)
+                    prop.value = m.browse(prop.value_integer).exists()
+            elif prop_type == 'datetime':
+                prop.value = prop.value_datetime
+            elif prop_type == 'date':
+                if prop.value_datetime:
+                    prop.value = fields.Date.to_string(fields.Datetime.from_string(prop.value_datetime))
 
-                value = '%s,%d' % (field_id.sudo().relation, value)
-
-        values[field] = value
-        return values
+    def _set_value(self):
+        for prop in self:
+            val = prop.value
+            if prop.type == 'date' and isinstance(val, datetime.date):
+                val = datetime.datetime.combine(val, datetime.time())
+            prop[TYPE2FIELD[prop.type]] = val
 
     @api.multi
     def write(self, values):
-        # if any of the records we're writing on has a res_id=False *or*
-        # we're writing a res_id=False on any record
+        # if any of the records we're writing on has a res_id=0 *or*
+        # we're writing a res_id=0 on any record
         default_set = False
         if self._ids:
             self.env.cr.execute(
-                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s AND res_id IS NULL)', [self._ids])
+                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s AND res_id = 0)', [self._ids])
             default_set = self.env.cr.rowcount == 1 or any(
-                v.get('res_id') is False
+                v.get('res_id') == 0
                 for v in values
             )
-        r = super(Property, self).write(self._update_values(values))
+        r = super(Property, self).write(values)
         if default_set:
             self.clear_caches()
         return r
 
     @api.model_create_multi
     def create(self, vals_list):
-        vals_list = [self._update_values(vals) for vals in vals_list]
         created_default = any(not v.get('res_id') for v in vals_list)
         r = super(Property, self).create(vals_list)
         if created_default:
@@ -129,7 +118,7 @@ class Property(models.Model):
         default_deleted = False
         if self._ids:
             self.env.cr.execute(
-                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s)',
+                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s AND res_id = 0)',
                 [self._ids]
             )
             default_deleted = self.env.cr.rowcount == 1
@@ -137,33 +126,6 @@ class Property(models.Model):
         if default_deleted:
             self.clear_caches()
         return r
-
-    @api.multi
-    def get_by_record(self):
-        self.ensure_one()
-        if self.type in ('char', 'text', 'selection'):
-            return self.value_text
-        elif self.type == 'float':
-            return self.value_float
-        elif self.type == 'boolean':
-            return bool(self.value_integer)
-        elif self.type == 'integer':
-            return self.value_integer
-        elif self.type == 'binary':
-            return self.value_binary
-        elif self.type == 'many2one':
-            if not self.value_reference:
-                return False
-            model, resource_id = self.value_reference.split(',')
-            return self.env[model].browse(int(resource_id)).exists()
-        elif self.type == 'datetime':
-            return self.value_datetime
-        elif self.type == 'date':
-            if not self.value_datetime:
-                return False
-            return fields.Date.to_string(fields.Datetime.from_string(self.value_datetime))
-        return False
-
     @api.model
     def get(self, name, model, res_id=False):
         if not res_id:
@@ -174,7 +136,7 @@ class Property(models.Model):
 
         p = self._get_property(name, model, res_id=res_id)
         if p:
-            return p.get_by_record()
+            return p.value
         return False
 
     # only cache Property.get(res_id=False) as that's
@@ -184,10 +146,10 @@ class Property(models.Model):
     COMPANY_KEY = "self.env.context.get('force_company') or self.env['res.company']._company_default_get(model).id"
     @ormcache(COMPANY_KEY, 'name', 'model')
     def _get_default_property(self, name, model):
-        prop = self._get_property(name, model, res_id=False)
+        prop = self._get_property(name, model, res_id=0)
         if not prop:
             return None, False
-        v = prop.get_by_record()
+        v = prop.value
         if prop.type != 'many2one':
             return prop.type, v
         return 'many2one', v and (v._name, v.id)
@@ -226,35 +188,28 @@ class Property(models.Model):
 
         if field.type == 'many2one':
             comodel = self.env[field.comodel_name]
-            model_pos = len(model) + 2
-            value_pos = len(comodel._name) + 2
-            # retrieve values: both p.res_id and p.value_reference are formatted
-            # as "<rec._name>,<rec.id>"; the purpose of the LEFT JOIN is to
-            # return the value id if it exists, NULL otherwise
+            # left join to check that the record linked through value_intger
+            # exists, and return NULL otherwise
             query = """
-                SELECT substr(p.res_id, %s)::integer, r.id
+                SELECT p.res_id, r.id
                 FROM ir_property p
-                LEFT JOIN {} r ON substr(p.value_reference, %s)::integer=r.id
+                LEFT JOIN {} r ON (p.value_integer = r.id)
                 WHERE p.fields_id=%s
-                    AND (p.company_id=%s OR p.company_id IS NULL)
-                    AND (p.res_id IN %s OR p.res_id IS NULL)
-                ORDER BY p.company_id NULLS FIRST
+                  AND (p.company_id=%s OR p.company_id IS NULL)
+                  AND (p.res_id IN %s OR p.res_id = 0)
+                ORDER BY p.company_id NULLS FIRST 
             """.format(comodel._table)
-            params = [model_pos, value_pos, field_id, company_id]
             clean = comodel.browse
 
         elif field.type in TYPE2FIELD:
-            model_pos = len(model) + 2
-            # retrieve values: p.res_id is formatted as "<rec._name>,<rec.id>"
             query = """
-                SELECT substr(p.res_id, %s)::integer, p.{}
+                SELECT p.res_id, p.{}
                 FROM ir_property p
                 WHERE p.fields_id=%s
                     AND (p.company_id=%s OR p.company_id IS NULL)
-                    AND (p.res_id IN %s OR p.res_id IS NULL)
+                    AND (p.res_id IN %s OR p.res_id = 0)
                 ORDER BY p.company_id NULLS FIRST
             """.format(TYPE2FIELD[field.type])
-            params = [model_pos, field_id, company_id]
             clean = TYPE2CLEAN[field.type]
 
         else:
@@ -263,13 +218,12 @@ class Property(models.Model):
         # retrieve values
         cr = self.env.cr
         result = {}
-        refs = {"%s,%s" % (model, id) for id in ids}
-        for sub_refs in cr.split_for_in_conditions(refs):
-            cr.execute(query, params + [sub_refs])
+        for sub_ids in cr.split_for_in_conditions(ids):
+            cr.execute(query, [field_id, company_id, sub_ids])
             result.update(cr.fetchall())
 
         # remove default value, add missing values, and format them
-        default = result.pop(None, None)
+        default = result.pop(0, None)
         for id in ids:
             result[id] = clean(result.get(id, default))
         return result
@@ -302,35 +256,34 @@ class Property(models.Model):
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
         field_id = self._cr.fetchone()[0]
         company_id = self.env.context.get('force_company') or self.env['res.company']._company_default_get(model, field_id).id
-        refs = {('%s,%s' % (model, id)): id for id in values}
         props = self.search([
             ('fields_id', '=', field_id),
             ('company_id', '=', company_id),
-            ('res_id', 'in', list(refs)),
+            ('res_id', 'in', list(values)),
         ])
+
+        cleaned = {k: clean(v) for k, v in values.items()}
 
         # modify existing properties
         for prop in props:
-            id = refs.pop(prop.res_id)
-            value = clean(values[id])
+            value = cleaned[prop.res_id]
             if value == default_value:
                 # avoid prop.unlink(), as it clears the record cache that can
                 # contain the value of other properties to set on record!
                 prop.check_access_rights('unlink')
                 prop.check_access_rule('unlink')
                 self._cr.execute("DELETE FROM ir_property WHERE id=%s", [prop.id])
-            elif value != clean(prop.get_by_record()):
+            elif value != clean(prop.value):
                 prop.write({'value': value})
 
         # create new properties for records that do not have one yet
         vals_list = []
-        for ref, id in refs.items():
-            value = clean(values[id])
+        for id, value in cleaned.items():
             if value != default_value:
                 vals_list.append({
                     'fields_id': field_id,
                     'company_id': company_id,
-                    'res_id': ref,
+                    'res_id': id,
                     'name': name,
                     'value': value,
                     'type': self.env[model]._fields[name].type,
@@ -346,23 +299,16 @@ class Property(models.Model):
         field = self.env[model]._fields[name]
         if field.type == 'many2one':
             comodel = field.comodel_name
-            def makeref(value):
-                return value and '%s,%s' % (comodel, value)
             if operator == "=":
-                value = makeref(value)
                 # if searching properties not set, search those not in those set
-                if value is False:
+                if not value:
                     default_matches = True
-            elif operator in ('!=', '<=', '<', '>', '>='):
-                value = makeref(value)
-            elif operator in ('in', 'not in'):
-                value = [makeref(v) for v in value]
             elif operator in ('=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike'):
                 # most probably inefficient... but correct
                 target = self.env[comodel]
                 target_names = target.name_search(value, operator=operator, limit=None)
                 target_ids = [n[0] for n in target_names]
-                operator, value = 'in', [makeref(v) for v in target_ids]
+                operator, value = 'in', target_ids
         elif field.type in ('integer', 'float'):
             # No record is created in ir.property if the field's type is float or integer with a value
             # equal to 0. Then to match with the records that are linked to a property field equal to 0,
@@ -395,8 +341,7 @@ class Property(models.Model):
         good_ids = []
         for prop in props:
             if prop.res_id:
-                res_model, res_id = prop.res_id.split(',')
-                good_ids.append(int(res_id))
+                good_ids.append(prop.res_id)
             else:
                 default_matches = True
 
@@ -404,11 +349,7 @@ class Property(models.Model):
             return [('id', 'not in', good_ids)]
         elif default_matches:
             # exclude all records with a property that does not match
-            all_ids = []
-            props = self.search(domain + [('res_id', '!=', False)])
-            for prop in props:
-                res_model, res_id = prop.res_id.split(',')
-                all_ids.append(int(res_id))
+            all_ids = self.search(domain + [('res_id', '!=', 0)]).mapped('res_id')
             bad_ids = list(set(all_ids) - set(good_ids))
             return [('id', 'not in', bad_ids)]
         else:

@@ -3077,15 +3077,29 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self.check_access_rights('unlink')
 
+        # the ORM apparently doesn't want to join on a search, so use raw sql to get a single query instead of two
+        self.env.cr.execute("""
+        SELECT exists(
+            SELECT 1
+            FROM ir_property p
+            LEFT JOIN ir_model_fields f ON (p.fields_id = f.id)
+            WHERE p.res_id = 0
+              AND f.ttype = 'many2one'
+              AND f.relation = %s
+              AND p.value_integer = any(%s)
+        )
+        """, (self._name, self.ids))
         # Check if the records are used as default properties.
-        refs = ['%s,%s' % (self._name, i) for i in self.ids]
-        if self.env['ir.property'].search([('res_id', '=', False), ('value_reference', 'in', refs)]):
+        if self.env.cr.fetchone()[0]:
             raise UserError(_('Unable to delete this document because it is used as a default property'))
 
         # Delete the records' properties.
         with self.env.norecompute():
             self.check_access_rule('unlink')
-            self.env['ir.property'].search([('res_id', 'in', refs)]).sudo().unlink()
+            self.env['ir.property'].sudo().search([
+                ('model', '=', self._name),
+                ('res_id', 'in', self.ids),
+            ]).unlink()
 
             cr = self._cr
             Data = self.env['ir.model.data'].sudo().with_context({})

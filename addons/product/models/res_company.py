@@ -19,8 +19,7 @@ class ResCompany(models.Model):
             })
         field = self.env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
         product_property = self.env['ir.property'].create({
-            'name': 'property_product_pricelist',
-            'value_reference': 'product.pricelist,%s' % pricelist.id,
+            'value': pricelist,
             'fields_id': field.id
         })
         # multi-company security rules prevents access
@@ -62,9 +61,8 @@ class ResCompany(models.Model):
                     })
                     field = self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_product_pricelist')])
                     self.env['ir.property'].create({
-                        'name': 'property_product_pricelist',
                         'company_id': company.id,
-                        'value_reference': 'product.pricelist,%s' % pricelist.id,
+                        'value': pricelist,
                         'fields_id': field.id
                     })
         return super(ResCompany, self).write(values)

@@ -63,9 +63,8 @@
         </record>
 
         <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
-            <field name="name">property_delivery_carrier_id</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier_id')]"/>
-            <field name="value" eval="'delivery.carrier,'+str(ref('normal_delivery_carrier'))"/>
+            <field name="fields_id" ref="delivery.field_res_partner__property_delivery_carrier_id"/>
+            <field name="value" ref="normal_delivery_carrier"/>
         </record>
     </data>
 </odoo>

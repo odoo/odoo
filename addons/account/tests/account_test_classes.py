@@ -32,17 +32,14 @@ class AccountingTestCase(HttpCase):
             [('model', '=', 'product.template'), ('name', '=', property_name)], limit=1)
         property_id = self.env['ir.property'].search([
             ('company_id', '=', company_id.id),
-            ('name', '=', property_name),
-            ('res_id', '=', None),
+            ('res_id', '=', 0),
             ('fields_id', '=', field_id.id)], limit=1)
         account_id = self.env['account.account'].search([('company_id', '=', company_id.id)], limit=1)
-        value_reference = 'account.account,%d' % account_id.id
-        if property_id and not property_id.value_reference:
-            property_id.value_reference = value_reference
+        if property_id and not property_id.value_integer:
+            property_id.value = account_id.id
         else:
             self.env['ir.property'].create({
-                'name': property_name,
                 'company_id': company_id.id,
                 'fields_id': field_id.id,
-                'value_reference': value_reference,
+                'value': account_id.id,
             })

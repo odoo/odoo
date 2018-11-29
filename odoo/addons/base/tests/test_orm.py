@@ -213,7 +213,7 @@ class TestORM(TransactionCase):
         p1 = self.env['res.partner'].sudo(user).create({'name': 'Zorro'})
         p1_prop = self.env['ir.property'].sudo(user).create({
             'name': 'Slip en laine',
-            'res_id': 'res.partner,{}'.format(p1.id),
+            'res_id': p1.id,
             'fields_id': self.env['ir.model.fields'].search([
                 ('model', '=', 'res.partner'), ('name', '=', 'ref')], limit=1).id,
             'value_text': 'Nain poilu',

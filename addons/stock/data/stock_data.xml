@@ -69,14 +69,12 @@
     Properties
     -->
         <record forcecreate="True" id="property_stock_supplier" model="ir.property">
-            <field name="name">property_stock_supplier</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_supplier')]"/>
-            <field eval="'stock.location,'+str(stock_location_suppliers)" name="value"/>
+            <field name="fields_id" ref="stock.field_res_partner__property_stock_supplier"/>
+            <field name="value" ref="stock_location_suppliers"/>
         </record>
         <record forcecreate="True" id="property_stock_customer" model="ir.property">
-            <field name="name">property_stock_customer</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
-            <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
+            <field name="fields_id" ref="stock.field_res_partner__property_stock_customer"/>
+            <field name="value" ref="stock_location_customers"/>
         </record>
 
 

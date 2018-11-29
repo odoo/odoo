@@ -44,10 +44,9 @@ class Company(models.Model):
                 'company_id': company.id,
             })
             self.env['ir.property'].create({
-                'name': 'property_stock_inventory_%s' % company.name,
                 'fields_id': inventory_loss_product_template_field.id,
                 'company_id': company.id,
-                'value': 'stock.location,%d' % inventory_loss_location.id,
+                'value': inventory_loss_location.id,
             })
 
     def _create_production_location(self):
@@ -61,10 +60,9 @@ class Company(models.Model):
                 'company_id': company.id,
             })
             self.env['ir.property'].create({
-                'name': 'property_stock_inventory_%s' % company.name,
                 'fields_id': production_product_template_field.id,
                 'company_id': company.id,
-                'value': 'stock.location,%d' % production_location.id,
+                'value': production_location.id,
             })
 
     def _create_scrap_location(self):

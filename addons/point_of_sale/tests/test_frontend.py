@@ -22,10 +22,11 @@ class TestUi(odoo.tests.HttpCase):
                                                  'user_type_id': env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
         field = env['ir.model.fields']._get('res.partner', 'property_account_receivable_id')
-        env['ir.property'].create({'name': 'property_account_receivable_id',
-                                   'company_id': main_company.id,
-                                   'fields_id': field.id,
-                                   'value': 'account.account,' + str(account_receivable.id)})
+        env['ir.property'].create({
+           'company_id': main_company.id,
+           'fields_id': field.id,
+           'value': account_receivable
+        })
 
         # test an extra price on an attribute
         pear = env.ref('point_of_sale.whiteboard')
@@ -301,10 +302,9 @@ class TestUi(odoo.tests.HttpCase):
         # so the js tests can expect deterministically this pricelist when selecting a customer.
         field = env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
         env['ir.property'].search([
-            ('name', '=', 'property_product_pricelist'),
             ('fields_id', '=', field.id),
-            ('res_id', '=', False)
-        ]).write({'value_reference': 'product.pricelist,%s' % public_pricelist.id})
+            ('res_id', '=', 0)
+        ]).write({'value': public_pricelist.id})
 
         # open a session, the /pos/web controller will redirect to it
         main_pos_config.open_session_cb()

@@ -683,10 +683,9 @@
         </record>
 
         <record forcecreate="True" id="property_product_pricelist_demo" model="ir.property">
-            <field name="name">property_product_pricelist</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
-            <field name="value" eval="'product.pricelist,'+str(ref('list0'))"/>
-            <field name="res_id" eval="'res.partner,'+str(ref('base.partner_demo'))"/>
+            <field name="fields_id" ref="product.field_res_partner__property_product_pricelist"/>
+            <field name="value" ref="list0"/>
+            <field name="res_id" ref="base.partner_demo"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
 

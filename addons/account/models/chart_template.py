@@ -7,6 +7,8 @@ from odoo.exceptions import UserError
 
 import logging
 
+from odoo.osv import expression
+
 _logger = logging.getLogger(__name__)
 
 def migrate_set_tags_and_taxes_updatable(cr, registry, module):
@@ -191,11 +193,21 @@ class AccountChartTemplate(models.Model):
                 raise UserError(_('Could not install new chart of account as there are already accounting entries existing.'))
 
             # delete accounting properties
-            prop_values = ['account.account,%s' % (account_id,) for account_id in existing_accounts.ids]
+            domain = [
+                ('fields_id.relation', '=', 'account.account'),
+                ('value_integer', 'in', existing_accounts.ids)
+            ]
             existing_journals = self.env['account.journal'].search([('company_id', '=', company.id)])
             if existing_journals:
-                prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
-            accounting_props = self.env['ir.property'].search([('value_reference', 'in', prop_values)])
+                domain = expression.OR([
+                    domain,
+                    [
+                        ('fields_id.relation', '=', 'account.journal'),
+                        ('value_integer', 'in', existing_journals.id),
+                    ]
+                ])
+
+            accounting_props = self.env['ir.property'].search(domain)
             if accounting_props:
                 accounting_props.unlink()
 
@@ -448,16 +460,15 @@ class AccountChartTemplate(models.Model):
         ]
         for record in todo_list:
             account = getattr(self, record[0])
-            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+            value = acc_template_ref[account.id] if account else False
             if value:
                 field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
                 vals = {
-                    'name': record[0],
                     'company_id': company.id,
                     'fields_id': field.id,
                     'value': value,
                 }
-                properties = PropertyObj.search([('name', '=', record[0]), ('company_id', '=', company.id)])
+                properties = PropertyObj.search([('fields_id', '=', field.id), ('company_id', '=', company.id)])
                 if properties:
                     #the property exist: modify it
                     properties.write(vals)

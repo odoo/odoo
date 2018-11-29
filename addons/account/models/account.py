@@ -333,8 +333,10 @@ class AccountAccount(models.Model):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot perform this action on an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
-        values = ['account.account,%s' % (account_id,) for account_id in self.ids]
-        partner_prop_acc = self.env['ir.property'].search([('value_reference', 'in', values)], limit=1)
+        partner_prop_acc = self.env['ir.property'].search([
+            ('fields_id.relation', '=', 'account.account'),
+            ('value_integer', 'in', self.ids),
+        ], limit=1)
         if partner_prop_acc:
             raise UserError(_('You cannot remove/deactivate an account which is set on a customer or vendor.'))
         return super(AccountAccount, self).unlink()

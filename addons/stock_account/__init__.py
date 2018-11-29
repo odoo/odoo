@@ -41,7 +41,7 @@ def _configure_journals(cr, registry):
                     ('model', '=', 'product.category'),
                     ('relation', '=', 'account.journal')], limit=1).id,
                 'company_id': company_id.id,
-                'value': 'account.journal,' + str(journal_id)
+                'value': journal_id
             }
             env['ir.property'].create(vals)
 
@@ -54,18 +54,16 @@ def _configure_journals(cr, registry):
 
         for record in todo_list:
             account = getattr(company_id, record)
-            value = account and 'account.account,' + str(account.id) or False
-            if value:
+            if account:
                 field_id = env['ir.model.fields'].search([
-                  ('name', '=', record),
-                  ('model', '=', 'product.category'),
-                  ('relation', '=', 'account.account')
+                    ('name', '=', record),
+                    ('model', '=', 'product.category'),
+                    ('relation', '=', 'account.account')
                 ], limit=1).id
                 vals = {
-                    'name': record,
                     'company_id': company_id.id,
                     'fields_id': field_id,
-                    'value': value,
+                    'value': account,
                 }
                 properties = env['ir.property'].search([
                     ('name', '=', record),
@@ -86,9 +84,8 @@ def _configure_journals(cr, registry):
         if account_id:
             xml_id = 'stock_account.property_stock_valuation_account_id'
             vals = {
-                'name': 'property_stock_valuation_account_id',
                 'fields_id': fields_id,
-                'value': 'account.account,'+str(account_id),
+                'value': account_id,
                 'company_id': env.ref('base.main_company').id,
             }
             env['ir.property']._load_records([dict(xml_id=xml_id, values=vals)])

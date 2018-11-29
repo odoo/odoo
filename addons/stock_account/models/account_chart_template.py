@@ -23,12 +23,11 @@ class AccountChartTemplate(models.Model):
         if value:
             field = self.env['ir.model.fields'].search([('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')], limit=1)
             vals = {
-                'name': 'property_stock_journal',
                 'company_id': company.id,
                 'fields_id': field.id,
-                'value': 'account.journal,%s' % value.id,
+                'value': value,
             }
-            properties = PropertyObj.search([('name', '=', 'property_stock_journal'), ('company_id', '=', company.id)])
+            properties = PropertyObj.search([('fields_id', '=', field.id), ('company_id', '=', company.id)])
             if properties:
                 # the property exist: modify it
                 properties.write(vals)
@@ -43,20 +42,19 @@ class AccountChartTemplate(models.Model):
         ]
         for record in todo_list:
             account = getattr(self, record)
-            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+            value = acc_template_ref[account.id] if account else False
             if value:
                 field = self.env['ir.model.fields'].search([('name', '=', record), ('model', '=', 'product.category'), ('relation', '=', 'account.account')], limit=1)
                 vals = {
-                    'name': record,
                     'company_id': company.id,
                     'fields_id': field.id,
                     'value': value,
                 }
-                properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)], limit=1)
+                properties = PropertyObj.search([('fields_id', '=', field.id), ('company_id', '=', company.id)], limit=1)
                 if not properties:
                     # create the property
                     PropertyObj.create(vals)
-                elif not properties.value_reference:
+                elif not properties.value_integer:
                     # update the property if False
                     properties.write(vals)
 
