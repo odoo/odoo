@@ -30,12 +30,121 @@
             groups="group_hr_manager"
             sequence="100"/>
 
+        <record id="search_view_plan" model="ir.ui.view">
+            <field name="name">hr.plan.search</field>
+            <field name="model">hr.plan</field>
+            <field name="arch" type="xml">
+                <search string="Plan">
+                </search>
+            </field>
+        </record>
+
+        <record id="view_plan_tree" model="ir.ui.view">
+            <field name="name">hr.plan.tree</field>
+            <field name="model">hr.plan</field>
+            <field name="arch" type="xml">
+                <tree string="Planning">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_plan_form" model="ir.ui.view">
+            <field name="name">hr.plan.form</field>
+            <field name="model">hr.plan</field>
+            <field name="arch" type="xml">
+                <form string="Planning">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group string="Activities">
+                            <field name="plan_activity_type_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="responsible"/>
+                                    <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_plan_activity_form" model="ir.ui.view">
+            <field name="name">hr.plan.activity.type.form</field>
+            <field name="model">hr.plan.activity.type</field>
+            <field name="arch" type="xml">
+                <form string="Planning">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="activity_type_id"/>
+                            <field name="responsible"/>
+                            <field name="responsible_id" attrs="{'invisible': [('responsible', '!=', 'other')]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="plan_listing" model="ir.actions.act_window">
+            <field name="name">Planning</field>
+            <field name="res_model">hr.plan</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="search_view_plan"/>
+        </record>
+
+        <record id="plan_type_listing" model="ir.actions.act_window">
+            <field name="name">Planning type</field>
+            <field name="res_model">hr.plan.activity.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="menu_config_plan"
+            name="Activity Planning"
+            parent="menu_human_resources_configuration"
+            groups="group_hr_manager"
+            sequence="100"/>
+
+        <menuitem
+            id="menu_config_plan_types"
+            name="Planning Types"
+            action="plan_type_listing"
+            parent="menu_config_plan"
+            groups="base.group_no_one"
+            sequence="99"/>
+
+        <menuitem
+            id="menu_config_plan_plan"
+            name="Plans"
+            action="plan_listing"
+            parent="menu_config_plan"
+            groups="group_hr_manager"
+            sequence="100"/>
+
         <!-- Employee -->
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <form string="Employee">
+                    <header>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" groups="hr.group_hr_user"
@@ -73,6 +182,10 @@
                                         <field name="coach_id"/>
                                         <field name="resource_calendar_id" required="1"/>
                                         <field name="tz"/>
+                                    </group>
+                                    <group string="Departure" attrs="{'invisible': [('active', '=', True)]}">
+                                        <field name="departure_reason"/>
+                                        <field name="departure_description"/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -200,46 +313,46 @@
              </field>
          </record>
 
-    <record id="hr_kanban_view_employees" model="ir.ui.view">
-        <field name="name">hr.employee.kanban</field>
-        <field name="model">hr.employee</field>
-        <field name="priority">10</field>
-        <field name="arch" type="xml">
-            <kanban class="o_hr_employee_kanban">
-                <field name="id"/>
-                <field name="message_follower_ids"/>
-                <field name="message_ids"/>
-                <field name="message_needaction_counter"/>
-                <templates>
-                    <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                        <!-- Medium employee's picture -->
-                        <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_medium', record.id.raw_value)})" role="img"/>
-                        <!-- Employee's picture optimized for mobile -->
-                        <div class="o_kanban_image d-md-none rounded-circle" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_small', record.id.raw_value)})" role="img"/>
+        <record id="hr_kanban_view_employees" model="ir.ui.view">
+            <field name="name">hr.employee.kanban</field>
+            <field name="model">hr.employee</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban">
+                    <field name="id"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                    <field name="message_needaction_counter"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                            <!-- Medium employee's picture -->
+                            <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_medium', record.id.raw_value)})" role="img"/>
+                            <!-- Employee's picture optimized for mobile -->
+                            <div class="o_kanban_image d-md-none rounded-circle" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_small', record.id.raw_value)})" role="img"/>
 
-                        <div class="oe_kanban_details">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title">
-                                        <field name="name"/>
-                                    </strong>
-                                    <span t-if="record.job_id.raw_value" class="o_kanban_record_subtitle"><field name="job_id"/></span>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <span t-if="record.job_id.raw_value" class="o_kanban_record_subtitle"><field name="job_id"/></span>
+                                    </div>
                                 </div>
+                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <ul>
+                                    <li id="last_login"/>
+                                    <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                </ul>
                             </div>
-                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <ul>
-                                <li id="last_login"/>
-                                <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
-                            </ul>
                         </div>
-                    </div>
-                    </t>
-                </templates>
-            </kanban>
+                        </t>
+                    </templates>
+                </kanban>
 
-        </field>
-    </record>
+            </field>
+        </record>
 
         <record id="open_view_employee_tree" model="ir.actions.act_window">
             <field name="name">Employees Structure</field>
