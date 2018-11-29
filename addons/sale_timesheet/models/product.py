@@ -85,3 +85,17 @@ class ProductTemplate(models.Model):
             self.service_type = 'timesheet'
         elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.onchange('service_tracking')
+    def _onchange_service_tracking(self):
+        if self.service_tracking == 'no':
+            self.project_id = False
+            self.project_template_id = False
+        elif self.service_tracking == 'task_global_project':
+            self.project_template_id = False
+        elif self.service_tracking in ['task_new_project', 'project_only']:
+            self.project_id = False
