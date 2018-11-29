@@ -84,8 +84,8 @@ class TestAccountEntry(TestExpenseCommon):
 
         message_parsed = {
             'message_id': 'the-world-is-a-ghetto',
-            'subject': '[AT] 9876',
-            'email_from': 'demo@yourcompany.example.com',
+            'subject': '[EXP_AF] 9876',
+            'email_from': 'mark.brown23@example.com',
             'to': 'catchall@yourcompany.com',
             'body': "Don't you know, that for me, and for you",
             'attachments': [],
