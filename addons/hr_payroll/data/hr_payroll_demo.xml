@@ -82,29 +82,6 @@
             <field name="sequence" eval="16"/>
          </record>
 
-        <record id="hr_salary_rule_sales_commission" model="hr.salary.rule">
-            <field name="amount_select">code</field>
-            <field name="code">SALE</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">Get 1% of sales</field>
-            <field name="sequence" eval="17"/>
-            <field name="amount_python_compute">result = ((inputs.SALEURO and inputs.SALEURO.amount) + (inputs.SALASIA and inputs.SALASIA.amount)) * 0.01</field>
-         </record>
-
-        <!-- Rule Inputs -->
-
-        <record id="hr_rule_input_sale_a" model="hr.rule.input">
-            <field name="code">SALEURO</field>
-            <field name="name">Sales to Europe</field>
-            <field name="input_id" ref="hr_salary_rule_sales_commission"/>
-        </record>
-
-        <record id="hr_rule_input_sale_b" model="hr.rule.input">
-            <field name="code">SALASIA</field>
-            <field name="name">Sales to Asia</field>
-            <field name="input_id" ref="hr_salary_rule_sales_commission"/>
-        </record>
-
         <!-- Salary Structure -->
 
          <record id="structure_001" model="hr.payroll.structure">
