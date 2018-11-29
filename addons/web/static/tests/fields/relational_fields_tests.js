@@ -6207,6 +6207,51 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many, onchange, edition and multipage...', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [[5]].concat(obj.turtles);
+            }
+        };
+
+        this.data.partner.records[0].turtles = [1,2,3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom" limit="2">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method + ' ' + args.model)
+                return this._super(route, args);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.verifySteps([
+            'read partner',
+            'read turtle',
+            'default_get turtle',
+            'onchange partner',
+            'default_get turtle',
+            'onchange partner',
+        ]);
+        form.destroy();
+    });
+
     QUnit.test('one2many with CREATE onchanges correctly refreshed', function (assert) {
         assert.expect(5);
 
