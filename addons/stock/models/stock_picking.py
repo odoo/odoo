@@ -6,7 +6,7 @@ import json
 import time
 
 from itertools import groupby
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
@@ -943,7 +943,7 @@ class Picking(models.Model):
             self.env['mail.activity'].create({
                 'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
                 'note': note,
-                'user_id': responsible.id,
+                'user_id': responsible.id or SUPERUSER_ID,
                 'res_id': parent.id,
                 'res_model_id': self.env['ir.model'].search([('model', '=', parent._name)], limit=1).id,
             })
