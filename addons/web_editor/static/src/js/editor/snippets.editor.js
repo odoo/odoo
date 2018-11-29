@@ -336,6 +336,7 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
+        this.trigger_up('snippet_cloned', {$target: $clone});
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.
