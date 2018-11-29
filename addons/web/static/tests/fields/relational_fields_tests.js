@@ -193,9 +193,6 @@ QUnit.module('relational_fields', {
     });
 
 
-        form.destroy();
-    });
-
     QUnit.test('one2many from a model that has been sorted', function (assert) {
         assert.expect(1);
 
@@ -227,6 +224,10 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_field_one2many[name=turtles] tbody').text().trim(), "kawablip",
             'The o2m should not have been sorted.');
+
+        form.destroy();
+    });
+
     QUnit.test('onchange on unloaded record clearing posterious change', function (assert) {
         // when we got onchange result for fields of record that were not
         // already available because they were in a inline view not already
