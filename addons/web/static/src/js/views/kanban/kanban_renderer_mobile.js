@@ -20,6 +20,10 @@ if (!config.device.isMobile) {
 }
 
 KanbanRenderer.include({
+    custom_events:  _.extend({}, KanbanRenderer.prototype.custom_events, {
+        kanban_column_swipe_left: '_mobileSwipeLeft',
+        kanban_column_swipe_right: '_mobileSwipeRight'
+    }),
     events: _.extend({}, KanbanRenderer.prototype.events, {
         'click .o_kanban_mobile_tab': '_onMobileTabClicked',
     }),
@@ -110,16 +114,31 @@ KanbanRenderer.include({
      * @param {KanbanColumn} column
      */
     _enableSwipe: function () {
-        var self = this;
         var currentColumn = this.widgets[this.activeColumnIndex];
         currentColumn.$el.swipe({
-            swipeLeft: function () {
-                self._moveToGroup(self.activeColumnIndex + 1, self.ANIMATE);
-            },
-            swipeRight: function () {
-                self._moveToGroup(self.activeColumnIndex - 1, self.ANIMATE);
-            }
+            swipeLeft: this._mobileSwipeLeft.bind(this),
+            swipeRight: this._mobileSwipeRight.bind(this)
         });
+    },
+    /**
+     * swipe current stage to left side
+     *
+     * @private
+     */
+    _mobileSwipeLeft: function () {
+        if ((this.activeColumnIndex + 1) < this.$('.o_kanban_group').length) {
+            this._moveToGroup(this.activeColumnIndex + 1, this.ANIMATE);
+        }
+    },
+    /**
+     * swipe current stage to right side
+     *
+     * @private
+     */
+    _mobileSwipeRight: function () {
+        if (this.activeColumnIndex > 0) {
+            this._moveToGroup(this.activeColumnIndex - 1, this.ANIMATE);
+        }
     },
     /**
      * Moves to the given kanban column

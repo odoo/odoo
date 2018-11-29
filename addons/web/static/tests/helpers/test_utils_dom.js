@@ -1,4 +1,4 @@
-odoo.define('web.test_utils_dom', function () {
+odoo.define('web.test_utils_dom', function (require) {
 "use strict";
 
 /**
@@ -10,6 +10,7 @@ odoo.define('web.test_utils_dom', function () {
  * testUtils file.
  */
 
+var concurrency = require('web.concurrency');
 
 /**
  * simulate a drag and drop operation between 2 jquery nodes: $el and $to.
@@ -25,11 +26,17 @@ odoo.define('web.test_utils_dom', function () {
  *   an object with two attributes (top and left))
  * @param {boolean} [options.disableDrop=false] whether to trigger the drop action
  * @param {boolean} [options.continueMove=false] whether to trigger the
+ * @param {string} [options.isNativeDragAndDrop=false] whether to trigger jQuery mouse events or use native events
+ * @param {string} [options.isExtraMousemove=false] whether to trigger extra mousemove
+ * @returns {Deferred}
  *   mousedown action (will only work after another call of this function with
  *   without this option)
  */
 function dragAndDrop($el, $to, options) {
+    // debugger
+    var def = $.Deferred();
     var position = (options && options.position) || 'center';
+    var isNativeDragAndDrop = (options && options.nativeDragAndDrop);
     var elementCenter = $el.offset();
     var toOffset = $to.offset();
 
@@ -39,7 +46,7 @@ function dragAndDrop($el, $to, options) {
     } else {
         toOffset.top += $to.outerHeight() / 2;
         toOffset.left += $to.outerWidth() / 2;
-        var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
+        var vertical_offset = (toOffset.top < elementCenter.top) ? -2 : 2;
         if (position === 'top') {
             toOffset.top -= $to.outerHeight() / 2 + vertical_offset;
         } else if (position === 'bottom') {
@@ -57,39 +64,68 @@ function dragAndDrop($el, $to, options) {
         toOffset.left += bound.left;
         toOffset.top += bound.top;
     }
-    $el.trigger($.Event("mouseenter"));
-    if (!(options && options.continueMove)) {
-        elementCenter.left += $el.outerWidth() / 2;
-        elementCenter.top += $el.outerHeight() / 2;
-
-        $el.trigger($.Event("mousedown", {
-            which: 1,
-            pageX: elementCenter.left,
-            pageY: elementCenter.top
-        }));
-    }
-
-    $el.trigger($.Event("mousemove", {
-        which: 1,
-        pageX: toOffset.left,
-        pageY: toOffset.top
-    }));
-
-    if (!(options && options.disableDrop)) {
-        $el.trigger($.Event("mouseup", {
+    if (isNativeDragAndDrop) {
+        // Need to trigger extra mousemove, like literally we have to trigger mousemove two times
+        // if dropping area is available after two or more element
+        // for example drag and drop from 1st stage to 3rd or 4th or any stage after 3rd stage
+        // https://github.com/RubaXa/Sortable/issues/1303#issuecomment-379166526
+        // var isExtraMousemove = (options && options.extraMousemove);
+        // in case of extra mousemove (two times) first mousemove shouldn't be till $to element
+        // var left = toOffset.left;
+        // $el.trigger($.Event("mouseenter"));
+        triggerPositionalMouseEvent(elementCenter.left, elementCenter.top, 'mouseenter', $el[0]);
+        triggerPositionalMouseEvent(elementCenter.left, elementCenter.top, 'mousedown', $el[0]);
+        triggerPositionalMouseEvent(toOffset.left, toOffset.top , 'mousemove', $to[0]);
+        // if (isExtraMousemove) {
+        //     concurrency.delay(50).then(function () {
+        //         triggerPositionalMouseEvent(toOffset.left, toOffset.top, 'mousemove', $to[0]);
+        //         return concurrency.delay(50);
+        //     }).then(function () {
+        //         triggerPositionalMouseEvent(toOffset.left, toOffset.top, 'mouseup', $to[0]);
+        //         def.resolve();
+        //     });
+        // } else {
+            concurrency.delay(50).then(function () {
+                triggerPositionalMouseEvent(toOffset.left, toOffset.top, 'mouseup', $el[0]);
+                def.resolve();
+            });
+        // }
+    } else {
+        $el.trigger($.Event("mouseenter"));
+        if (!(options && options.continueMove)) {
+            elementCenter.left += $el.outerWidth() / 2;
+            elementCenter.top += $el.outerHeight() / 2;
+    
+            $el.trigger($.Event("mousedown", {
+                which: 1,
+                pageX: elementCenter.left,
+                pageY: elementCenter.top
+            }));
+        }
+    
+        $el.trigger($.Event("mousemove", {
             which: 1,
             pageX: toOffset.left,
             pageY: toOffset.top
         }));
-    } else {
-        // It's impossible to drag another element when one is already
-        // being dragged. So it's necessary to finish the drop when the test is
-        // over otherwise it's impossible for the next tests to drag and
-        // drop elements.
-        $el.on("remove", function () {
-            $el.trigger($.Event("mouseup"));
-        });
+    
+        if (!(options && options.disableDrop)) {
+            $el.trigger($.Event("mouseup", {
+                which: 1,
+                pageX: toOffset.left,
+                pageY: toOffset.top
+            }));
+        } else {
+            // It's impossible to drag another element when one is already
+            // being dragged. So it's necessary to finish the drop when the test is
+            // over otherwise it's impossible for the next tests to drag and
+            // drop elements.
+            $el.on("remove", function () {
+                $el.trigger($.Event("mouseup"));
+            });
+        }
     }
+    return $.when(def);
 }
 
 /**
@@ -118,9 +154,9 @@ function triggerMouseEvent($el, type) {
  * @param {integer} y
  * @param {string} type a mouse event type, such as 'mousedown' or 'mousemove'
  */
-function triggerPositionalMouseEvent(x, y, type) {
+function triggerPositionalMouseEvent(x, y, type, el) {
     var ev = document.createEvent("MouseEvent");
-    var el = document.elementFromPoint(x, y);
+    el = el || document.elementFromPoint(x,y);
     ev.initMouseEvent(
         type,
         true /* bubble */,

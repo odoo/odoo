@@ -32,6 +32,11 @@
                 <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
             </div>
         </div>
+        <!--
+            A sortable-item can not at the same time be a sortable, for nested sortable wrapping container needed.
+            https://stackoverflow.com/q/49443635/8595953
+        -->
+        <div class="o_kanban_record_wrap"></div>
         <div t-if="widget.remaining > 0" class="o_kanban_load_more">
             <t t-call="KanbanView.LoadMore"/>
         </div>
