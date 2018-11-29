@@ -925,7 +925,7 @@
                 <div t-if="question.post_type == 'question'" class="mt4">
                     <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'} #{not answer.can_accept and 'karma_required' or ''}"
                         t-attf-data-karma="#{answer.karma_accept}"
-                        aria-label="Send answer" title="Send answer"
+                        aria-label="Send answer" title="Accept answer"
                         t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
                 </div>
             </t>
