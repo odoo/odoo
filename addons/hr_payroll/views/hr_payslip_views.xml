@@ -360,12 +360,20 @@
         <field name="arch" type="xml">
             <form string="Payslips Batches">
             <header>
-                <button name="close_payslip_run" type="object" string="Close" states="draft" class="oe_highlight"/>
                 <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" class="oe_highlight"/>
-                <button string="Set to Draft" name="draft_payslip_run" type="object" states="close" />
+                <button name="close_payslip_run" type="object" string="Validate" states="verify" class="oe_highlight"/>
+                <button string="Set to Draft" name="draft_payslip_run" type="object" states="close"/>
                 <field name="state" widget="statusbar"/>
             </header>
             <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_open_payslips" class="oe_stat_button" icon="fa-book" type="object" help="Generated Payslips" attrs="{'invisible': [('payslip_count', '=', 0)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="payslip_count"/></span>
+                            <span class="o_stat_text">Payslips</span>
+                         </div>
+                    </button>
+                </div>
                 <label for="name" class="oe_edit_only"/>
                 <h1>
                     <field name="name"/>
@@ -377,15 +385,6 @@
                      </div>
                     <field name="credit_note"/>
                 </group>
-                <separator string="Payslips"/>
-                <field name="slip_ids">
-                    <tree>
-                        <field name="number"/>
-                        <field name="employee_id"/>
-                        <field name="name"/>
-                        <field name="state"/>
-                    </tree>
-                </field>
             </sheet>
             </form>
         </field>
