@@ -128,12 +128,12 @@
         <field name="arch" type="xml">
             <form string="Payslip">
             <header>
-                <button string="Confirm" name="action_payslip_done" type="object" states="draft" class="oe_highlight"/>
+                <button string="Confirm" name="action_payslip_done" type="object" states="verify" class="oe_highlight"/>
                 <button string="Refund" name="refund_sheet" states="confirm,done" type='object' />
                 <button string="Set to Draft" name="action_payslip_draft" type="object" states="cancel"/>
                 <button string="Compute Sheet" name="compute_sheet" type="object" states="draft" class="oe_highlight"/>
-                <button string="Cancel Payslip" name="action_payslip_cancel" type="object" states="draft,hr_check,confirm,verify"/>
-                <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                <button string="Cancel Payslip" name="action_payslip_cancel" type="object" states="draft,confirm,verify"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,verify,confirm"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
