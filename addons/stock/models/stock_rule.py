@@ -55,8 +55,8 @@ class StockRule(models.Model):
     delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
     partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
     propagate = fields.Boolean(
-        'Propagate cancel and split', default=True,
-        help="When ticked, if the move is splitted or cancelled, the next move will be too.")
+        'Cancel Next Move', default=True,
+        help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
