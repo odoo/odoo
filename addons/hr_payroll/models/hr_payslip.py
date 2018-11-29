@@ -156,7 +156,6 @@ class HrPayslip(models.Model):
                         'code': benefit_type.code,
                         'number_of_days': hours / calendar.hours_per_day, # n_days returned by benefit_days_data doesn't make sense for extra work
                         'number_of_hours': hours,
-                        'contract_id': contract.id,
                     }
                     res.append(line)
 
@@ -407,7 +406,7 @@ class HrPayslipWorkedDays(models.Model):
     code = fields.Char(required=True, help="The code that can be used in the salary rules")
     number_of_days = fields.Float(string='Number of Days')
     number_of_hours = fields.Float(string='Number of Hours')
-    contract_id = fields.Many2one('hr.contract', string='Contract', required=True,
+    contract_id = fields.Many2one(related='payslip_id.contract_id', string='Contract', required=True,
         help="The contract for which applied this worked days")
 
 
@@ -423,7 +422,7 @@ class HrPayslipInput(models.Model):
     amount = fields.Float(help="It is used in computation. For e.g. A rule for sales having "
                                "1% commission of basic salary for per product can defined in expression "
                                "like result = inputs.SALEURO.amount * contract.wage*0.01.")
-    contract_id = fields.Many2one('hr.contract', string='Contract', required=True,
+    contract_id = fields.Many2one(related='payslip_id.contract_id', string='Contract', required=True,
         help="The contract for which applied this input")
 
 
