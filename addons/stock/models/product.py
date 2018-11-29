@@ -396,7 +396,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     responsible_id = fields.Many2one(
-        'res.users', string='Responsible',
+        'res.users', string='Responsible', default=lambda self: self.env.uid,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     type = fields.Selection(selection_add=[('product', 'Storable Product')])
     property_stock_production = fields.Many2one(
