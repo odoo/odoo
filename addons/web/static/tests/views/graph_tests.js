@@ -341,7 +341,7 @@ QUnit.module('Views', {
             assert.notOk(graph.$('text:contains(red)').length,
                         "should not contain a text element with color in legend");
 
-            testUtils.graph.reload(graph, {groupBy: ['color_id']});
+            testUtils.graph.reload(graph, {viewGroupBys: {graphGroupBy: ['color_id']}});
 
             return concurrency.delay(0);
         }).then(function () {
@@ -403,7 +403,7 @@ QUnit.module('Views', {
                 },
             }, "context should be correct");
 
-            testUtils.graph.reload(graph, {groupBy: ['product_id', 'color_id']}); // change groupbys
+            testUtils.graph.reload(graph, {viewGroupBys: {graphGroupBy: ['product_id', 'color_id']}}); // change groupbys
 
             return concurrency.delay(0);
         }).then(function () {

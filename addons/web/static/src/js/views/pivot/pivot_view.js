@@ -104,6 +104,14 @@ var PivotView = AbstractView.extend({
             activeMeasures = ['__count'].concat(activeMeasures);
         }
 
+        // give highest priority to graph_groupbys if given in action context
+        // then group_by key of action context then type='row/col' fields of graph view for groupBys
+        if (params.action && params.action.context && params.action.context.pivot_row_groupby && params.action.context.pivot_row_groupby.length) {
+            rowGroupBys = params.action.context.pivot_row_groupby;
+        } else if (params.action && params.action.context && params.action.context.group_by && params.action.context.group_by.length) {
+            rowGroupBys = params.action.context.group_by;
+        }
+
         this.loadParams.measures = activeMeasures;
         this.loadParams.colGroupBys = colGroupBys;
         this.loadParams.rowGroupBys = rowGroupBys;
@@ -111,6 +119,7 @@ var PivotView = AbstractView.extend({
         this.loadParams.default_order = params.default_order || this.arch.attrs.default_order;
 
         this.rendererParams.widgets = widgets;
+        this.loadParams.groupedBy = params.viewGroupBys ? params.viewGroupBys.pivotRowGroupBy : this.loadParams.groupedBy;
 
         this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
         this.controllerParams.enableLinking = !this.arch.attrs.disable_linking;

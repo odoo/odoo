@@ -1,6 +1,7 @@
 odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
+var concurrency = require('web.concurrency');
 var ReportClientAction = require('report.client_action');
 var NotificationService = require('web.NotificationService');
 var AbstractAction = require('web.AbstractAction');
@@ -3636,6 +3637,65 @@ QUnit.module('ActionManager', {
                             "search_read |,foo,ilike,m,foo,ilike,o"]);
 
         actionManager.destroy();
+    });
+
+    QUnit.test('correctly apply pivot_row_groupby/graph_groupbys from action context when switching view', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+        _.findWhere(this.actions, {id: 3}).context = "{'pivot_row_groupby': 'foo', 'graph_groupbys': 'bar'}";
+        this.actions[2].views.splice(1, 1, [false, 'graph']);
+        this.actions[2].views.splice(2, 1, [false, 'pivot']);
+        this.archs['partner,false,pivot'] = '<pivot><field name="foo"/></pivot>';
+        this.archs['partner,false,graph'] = '<graph string="Partners"><field name="foo"/></graph>';
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(3);
+        assert.hasClass($('.o_control_panel .o_cp_switch_list'), 'active', "list button in control panel is active");
+        assert.doesNotHaveClass($('.o_control_panel .o_cp_switch_graph'), 'active', "graph button in control panel is not active");
+        // switch to pivot view
+        testUtils.dom.click($('.o_control_panel .o_cp_switch_pivot'));
+        assert.strictEqual($('.o_pivot_header_cell_closed').length, 6, "should be grouped by 'foo' in pivot view");
+        // switch to graph view
+        testUtils.dom.click( $('.o_control_panel .o_cp_switch_graph'));
+        actionManager.on_attach_callback();
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual($('.nvd3-svg text:contains(Second record)').length, 1, "should be grouped by 'bar' in graph view");
+            actionManager.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('correctly apply group_by if pivot_row_groupby/graph_groupbys not in action context for pivot/graph view', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+        _.findWhere(this.actions, {id: 3}).context = "{'group_by': 'foo'}";
+        this.actions[2].views.splice(1, 1, [false, 'graph']);
+        this.actions[2].views.splice(2, 1, [false, 'pivot']);
+        this.archs['partner,false,pivot'] = '<pivot><field name="foo"/></pivot>';
+        this.archs['partner,false,graph'] = '<graph string="Partners"><field name="foo"/></graph>';
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            debug: true,
+        });
+        actionManager.doAction(3);
+        assert.hasClass($('.o_control_panel .o_cp_switch_list'), 'active', "list button in control panel is active");
+        assert.doesNotHaveClass($('.o_control_panel .o_cp_switch_graph'), 'active', "graph button in control panel is not active");
+        // switch to pivot view
+        testUtils.dom.click($('.o_control_panel .o_cp_switch_pivot'));
+        assert.strictEqual($('.o_pivot_header_cell_closed').length, 6, "should be grouped by 'foo'");
+        // switch to graph view
+        testUtils.dom.click( $('.o_control_panel .o_cp_switch_graph'));
+        actionManager.on_attach_callback();
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual($('.nvd3-svg text:contains(yop)').length, 1, "should be grouped by 'foo'");
+            actionManager.destroy();
+            done();
+        });
     });
 });
 

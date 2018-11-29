@@ -407,6 +407,63 @@ ActionManager.include({
         return this.loadViews(action.res_model, action.context, views, options);
     },
     /**
+     * Overrides to handle the 'keepSearchView' option. If set to true, the
+     * search view of the current action will be re-used in the new action, i.e.
+     * the environment (domain, context, groupby) will be shared between both
+     * actions.
+     *
+     * @override
+     */
+    _preprocessAction: function (action, options) {
+        this._super.apply(this, arguments);
+        if (action.type === 'ir.actions.act_window' && options.keepSearchView) {
+            action._keepSearchView = true;
+        }
+    },
+    /**
+     * Processes the search data sent by the search view.
+     *
+     * @private
+     * @param {Object} action
+     * @param {Object} searchData
+     * @param {Object} [searchData.contexts=[]]
+     * @param {Object} [searchData.domains=[]]
+     * @param {Object} [searchData.groupbys=[]]
+     * @param {Object} [searchData.viewGroupBys={}]
+     * @returns {Object} an object with keys 'context', 'domain', 'groupBy', 'viewGroupBys'
+     * @returns {Object} an object with keys 'context', 'domain', 'groupBy'
+     */
+    _processSearchData: function (action, searchData) {
+        var contexts = searchData.contexts;
+        var domains = searchData.domains;
+        var groupbys = searchData.groupbys;
+        var action_context = action.context || {};
+        var results = pyUtils.eval_domains_and_contexts({
+            domains: [action.domain || []].concat(domains || []),
+            contexts: [action_context].concat(contexts || []),
+            group_by_seq: groupbys || [],
+            eval_context: this.userContext,
+        });
+        var groupBy = results.group_by.length ?
+                        results.group_by :
+                        (action.context.group_by || []);
+        groupBy = (typeof groupBy === 'string') ? [groupBy] : groupBy;
+
+        if (results.error) {
+            throw new Error(_.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
+                            JSON.stringify(results.error)));
+        }
+
+        var context = _.omit(results.context, 'time_ranges');
+
+        return {
+            context: context,
+            domain: results.domain,
+            groupBy: groupBy,
+            viewGroupBys: searchData.viewGroupBys,
+        };
+    },
+    /**
      * Overrides to handle the case of 'ir.actions.act_window' actions, i.e.
      * destroys all controllers associated to the given action, and its search
      * view.
