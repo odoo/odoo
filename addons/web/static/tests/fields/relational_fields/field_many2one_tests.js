@@ -1787,6 +1787,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('X2Many sequence list in modal', function (assert) {
+            var done = assert.async();
             assert.expect(5);
 
             this.data.partner.fields.sequence = { string: 'Sequence', type: 'integer' };
@@ -1849,6 +1850,10 @@ QUnit.module('fields', {}, function () {
                     return this._super.apply(this, arguments);
                 },
             }).then(function (form) {
+
+                // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+                var $view = $('#qunit-fixture').contents();
+                $view.prependTo('body');
                 testUtils.form.clickEdit(form);
                 testUtils.dom.click(form.$('.o_data_cell'));
                 testUtils.dom.click(form.$('.o_external_button'));
@@ -1862,15 +1867,17 @@ QUnit.module('fields', {}, function () {
                     'There should be 2 sequence handlers');
 
                 testUtils.dom.dragAndDrop($handles.eq(1), $modal.find('tbody tr').first(),
-                    { position: 'top' });
+                    { position: 'top', nativeDragAndDrop: true }).then(function () {
+                    // Saving the modal and then the original model
+                    testUtils.dom.click($modal.find('.modal-footer .btn-primary'));
+                    testUtils.form.clickSave(form);;
 
-                // Saving the modal and then the original model
-                testUtils.dom.click($modal.find('.modal-footer .btn-primary'));
-                testUtils.form.clickSave(form);;
+                    assert.verifySteps(['onchange sequence', 'partner_type write']);
 
-                assert.verifySteps(['onchange sequence', 'partner_type write']);
-
-                form.destroy();
+                    $view.remove();
+                    form.destroy();
+                    done();
+                });
             });
         });
 

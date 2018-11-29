@@ -311,9 +311,9 @@ tour.register('main_flow_tour', {
     trigger: ".o_kanban_group:first .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
     position: "right",
-    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
+    run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))",
+    trigger: ".o_kanban_group:eq(2) .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("Click on an opportunity to zoom to it."),
     position: "bottom",
 }, {

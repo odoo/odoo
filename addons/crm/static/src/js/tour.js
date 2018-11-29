@@ -35,7 +35,7 @@ tour.register('crm_tour', {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
     position: "right",
-    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
+    run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
     trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
     extra_trigger: ".o_opportunity_kanban",

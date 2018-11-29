@@ -72,6 +72,11 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 event.data.callback(session);
             }
         },
+        get_scrollable_parent: function (event) {
+            if (event.data.callback) {
+                event.data.callback(this.action_manager.$el);
+            }
+        },
         do_action: function (event) {
             this.do_action(event.data.action, event.data.options || {}).then(function (result) {
                 if (event.data.on_success) {

@@ -13,6 +13,7 @@ var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 
 var _t = core._t;
 var QWeb = core.qweb;
+var Sortable = window.Sortable;
 
 var KanbanColumn = Widget.extend({
     template: 'KanbanView.Group',
@@ -104,41 +105,68 @@ var KanbanColumn = Widget.extend({
         }
         this.$header.find('.o_kanban_header_title').tooltip();
 
-        if (!config.device.isMobile) {
-            // deactivate sortable in mobile mode.  It does not work anyway,
-            // and it breaks horizontal scrolling in kanban views.  Someday, we
-            // should find a way to use the touch events to make sortable work.
-            this.$el.sortable({
-                connectWith: '.o_kanban_group',
-                containment: this.draggable ? false : 'parent',
-                revert: 0,
-                delay: 0,
-                items: '> .o_kanban_record:not(.o_updating)',
-                helper: 'clone',
-                cursor: 'move',
-                over: function () {
-                    self.$el.addClass('o_kanban_hover');
-                },
-                out: function () {
-                    self.$el.removeClass('o_kanban_hover');
-                },
-                update: function (event, ui) {
-                    var record = ui.item.data('record');
-                    var index = self.records.indexOf(record);
-                    record.$el.removeAttr('style');  // jqueryui sortable add display:block inline
-                    if (index >= 0) {
-                        if ($.contains(self.$el[0], record.$el[0])) {
-                            // resequencing records
-                            self.trigger_up('kanban_column_resequence', {ids: self._getIDs()});
-                        }
-                    } else {
-                        // adding record to this column
-                        ui.item.addClass('o_updating');
-                        self.trigger_up('kanban_column_add_record', {record: record, ids: self._getIDs()});
+        var scrollDelay = 0;
+        var $scrollableParent = this._getScrollableParent();
+        new Sortable(this.$('.o_kanban_record_wrap')[0], {
+            group: {
+                name: '.o_kanban_record_wrap',
+                pull: self.draggable,
+            },
+            ghostClass: 'oe_kanban_card_ghost',
+            chosenClass: 'o_kanban_record_chosen',
+            draggable: '.o_kanban_record:not(.o_updating)',
+            scroll: config.device.isMobile ? true  : $scrollableParent && $scrollableParent[0],
+            // bubbleScroll: true,
+            scrollSpeed: 20,
+            scrollSensitivity: 40,
+            delay: config.device.isMobile ? 200 : 0,
+            forceFallback: true,
+            fallbackClass: 'o_kanban_record_clone',
+            rotateElement: 'o_kanban_record_clone', // just pass fallbackClass to rotate
+            scrollFn: config.device.isMobile ? function (offsetX, offsetY, originalEvent, touchEvt, hoverTargetEl) {
+                // rubaxa calls scrollFn on each 24 miliseconds, 24 seconds are fix we can not configure it
+                // we need to add such custom logic to increase delay
+                // MSH: we should fork rubaxa and do some customization as per our need, as it has too rigid timeout and some rigid code
+                if (offsetX !== 0) { // while dragging horizontally
+                    scrollDelay += 1;
+                    if (scrollDelay > 50) {
+                        var swipeTo = offsetX > 0 ? 'left' : 'right';
+                        self.trigger_up("kanban_column_swipe_" + swipeTo);
+                        scrollDelay = 0;
                     }
+                } else if (offsetY !== 0) { // while dragging vertically
+                    self.$el.scrollTop(self.$el.scrollTop() + offsetY);
                 }
-            });
-        }
+            } : false,
+            onStart: function () {
+                if (config.device.isMobile) {
+                    self.$el.swipe('disable');
+                }
+            },
+            onAdd: function (event) {
+                var $item = $(event.item);
+                var record = $item.data('record');
+                if ($(event.to).parent().data('id') !== $(event.from).parent().data('id')) {
+                    // adding record to this column
+                    $(event.item).addClass('o_updating');
+                    self.trigger_up('kanban_column_add_record', {record: record, ids: self._getIDs()});
+                } else {
+                    $item.remove();
+                }
+            },
+            onUpdate: function (event) {
+                var record = $(event.item).data('record');
+                if ($.contains(self.$el[0], record.$el[0])) {
+                    // resequencing records
+                    self.trigger_up('kanban_column_resequence', {ids: self._getIDs()});
+                }
+            },
+            onEnd: function () {
+                if (config.device.isMobile) {
+                    self.$el.swipe('enable');
+                }
+            },
+        });
         this.$el.click(function (event) {
             if (self.folded) {
                 self._onToggleFold(event);
@@ -226,6 +254,24 @@ var KanbanColumn = Widget.extend({
         return !this.records.length;
     },
 
+    /**
+     * triggers get_scrollable_parent to find scrollable parent element
+     * get_scrollable_parent event is hanled by parents to return specific scrollable element
+     * else action_manager element is returned
+     *
+     * @private
+     * @returns {jQuery|undefined} scrollable parent element
+     */
+    _getScrollableParent: function () {
+        var $scrollableParent;
+        this.trigger_up('get_scrollable_parent', {
+            callback: function ($scrollable_parent) {
+                $scrollableParent = $scrollable_parent;
+            }
+        });
+        return $scrollableParent;
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -250,7 +296,7 @@ var KanbanColumn = Widget.extend({
             if ($load_more.length) {
                 return record.insertBefore($load_more);
             } else {
-                return record.appendTo(this.$el);
+                return record.appendTo(this.$('.o_kanban_record_wrap'));
             }
         }
     },

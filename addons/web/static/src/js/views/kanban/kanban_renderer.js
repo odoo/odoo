@@ -12,6 +12,7 @@ var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 
 var qweb = core.qweb;
+var Sortable = window.Sortable;
 
 function findInNode(node, predicate) {
     if (predicate(node)) {
@@ -321,16 +322,18 @@ var KanbanRenderer = BasicRenderer.extend({
         }
         if (this.groupedByM2O) {
             // Enable column sorting
-            this.$el.sortable({
-                axis: 'x',
-                items: '> .o_kanban_group',
+            var $scrollableParent = this._getScrollableParent();
+            new Sortable(this.el, {
                 handle: '.o_kanban_header_title',
-                cursor: 'move',
-                revert: 150,
-                delay: 100,
-                tolerance: 'pointer',
-                forcePlaceholderSize: true,
-                stop: function () {
+                ghostClass: 'o_kanban_group_ghost',
+                dragoverBubble: true,
+                sort: true,
+                draggable: '.o_kanban_group',
+                scroll: $scrollableParent && $scrollableParent[0],
+                // dragoverBubble: true,
+                forceFallback: true,
+                fallbackClass: 'o_kanban_group_clone',
+                onEnd: function (event) {
                     var ids = [];
                     self.$('.o_kanban_group').each(function (index, u) {
                         // Ignore 'Undefined' column
@@ -472,6 +475,23 @@ var KanbanRenderer = BasicRenderer.extend({
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
     },
+   /**
+     * triggers get_scrollable_parent to find scrollable parent element
+     * get_scrollable_parent event is hanled by parents to return specific scrollable element
+     * else action_manager element is returned
+     *
+     * @private
+     * @returns {jQuery|undefined} scrollable parent element
+     */
+    _getScrollableParent: function () {
+        var $scrollableParent;
+        this.trigger_up('get_scrollable_parent', {
+            callback: function ($scrollable_parent) {
+                $scrollableParent = $scrollable_parent;
+            }
+        });
+        return $scrollableParent;
+    },
     /**
      * Moves the focus on the first card of the next column in a given direction
      * This ignores the folded columns and skips over the empty columns.
@@ -481,7 +501,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * @param {string} direction  contains either 'LEFT' or 'RIGHT'
      */
     _focusOnCardInColumn: function(eventTarget, direction) {
-        var currentColumn = eventTarget.parentElement;
+        var currentColumn = !this.state.groupedBy.length ? eventTarget.parentElement : eventTarget.parentElement.parentElement;
         var hasSelectedACard = false;
         var cannotSelectAColumn = false;
         while (!hasSelectedACard && !cannotSelectAColumn) {

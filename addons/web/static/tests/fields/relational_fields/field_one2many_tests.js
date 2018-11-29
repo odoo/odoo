@@ -159,7 +159,7 @@ QUnit.module('fields', {}, function () {
     }, function () {
         QUnit.module('FieldOne2Many');
 
-        QUnit.test('New record with a o2m also with 2 new records, ordered, and resequenced', function (assert) {
+        QUnit.test('New record with a o2m also with 2 new records, ordered, and resequenced', async function (assert) {
             assert.expect(3);
 
             // Needed to have two new records in a single stroke
@@ -194,20 +194,24 @@ QUnit.module('fields', {}, function () {
                     return this._super(route, args);
                 },
             });
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
 
             // change the int_field through drag and drop
             // that way, we'll trigger the sorting and the name_get
             // of the lines of "p"
-            testUtils.dom.dragAndDrop(
+            await testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
-                { position: 'top' }
+                { position: 'top', nativeDragAndDrop: true }
             );
 
             // Only those two should have been called
             // name_get on trululu would trigger an traceback
             assert.verifySteps(['default_get partner', 'onchange partner']);
 
+            $view.remove();
             form.destroy();
         });
 
@@ -639,7 +643,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('embedded one2many with handle widget', function (assert) {
+        QUnit.test('embedded one2many with handle widget', async function (assert) {
             assert.expect(10);
 
             var nbConfirmChange = 0;
@@ -673,6 +677,9 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             testUtils.mock.intercept(form, "field_changed", function (event) {
                 assert.step(event.data.changes.turtles.data.turtle_int.toString());
             }, true);
@@ -687,10 +694,10 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(nbConfirmChange, 0, "should not have confirmed any change yet");
 
             // Drag and drop the second line in first position
-            testUtils.dom.dragAndDrop(
+            await testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
-                { position: 'top' }
+                { position: 'top', nativeDragAndDrop: true }
             );
 
             assert.strictEqual(nbConfirmChange, 1, "should have confirmed changes only once");
@@ -715,6 +722,7 @@ QUnit.module('fields', {}, function () {
 
             testUtils.mock.unpatch(ListRenderer);
 
+            $view.remove();
             form.destroy();
         });
 
@@ -848,7 +856,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('onchange for embedded one2many with handle widget', function (assert) {
+        QUnit.test('onchange for embedded one2many with handle widget', async function (assert) {
             assert.expect(2);
 
             this.data.partner.records[0].turtles = [1, 2, 3];
@@ -886,22 +894,26 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             testUtils.form.clickEdit(form);
 
             // Drag and drop the second line in first position
-            testUtils.dom.dragAndDrop(
+            await testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
-                { position: 'top' }
+                { position: 'top', nativeDragAndDrop: true }
             );
 
             assert.strictEqual(turtleOnchange, 2, "should trigger one onchange per line updated");
             assert.strictEqual(partnerOnchange, 1, "should trigger only one onchange on the parent");
 
+            $view.remove();
             form.destroy();
         });
 
-        QUnit.test('onchange for embedded one2many with handle widget using same sequence', function (assert) {
+        QUnit.test('onchange for embedded one2many with handle widget using same sequence', async function (assert) {
             assert.expect(4);
 
             this.data.turtle.records[0].turtle_int = 1;
@@ -943,6 +955,9 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             testUtils.form.clickEdit(form);
 
 
@@ -950,10 +965,10 @@ QUnit.module('fields', {}, function () {
                 "should have the 3 rows in the correct order");
 
             // Drag and drop the second line in first position
-            testUtils.dom.dragAndDrop(
+            await testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
-                { position: 'top' }
+                { position: 'top', nativeDragAndDrop: true }
             );
 
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
@@ -961,10 +976,11 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(turtleOnchange, 3, "should update all lines");
 
             testUtils.form.clickSave(form);;
+            $view.remove();
             form.destroy();
         });
 
-        QUnit.test('onchange (with command 5) for embedded one2many with handle widget', function (assert) {
+        QUnit.test('onchange (with command 5) for embedded one2many with handle widget', async function (assert) {
             assert.expect(3);
 
             var ids = [];
@@ -1004,6 +1020,9 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             testUtils.dom.click(form.$('.o_pager_next'));
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
                 "should have the 3 rows in the correct order");
@@ -1013,10 +1032,10 @@ QUnit.module('fields', {}, function () {
             testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:first input:first'), 'blurp');
 
             // Drag and drop the third line in second position
-            testUtils.dom.dragAndDrop(
+            await testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(2),
                 form.$('.o_field_one2many tbody tr').eq(1),
-                { position: 'top' }
+                { nativeDragAndDrop: true }
             );
 
             assert.strictEqual(form.$('.o_data_cell').text(), "blurpkawablip", "should display to record in 'turtle_int' order");
@@ -1027,10 +1046,11 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_data_cell:not(.o_handle_cell)').text(), "blurpkawablip",
                 "should display to record in 'turtle_int' order");
 
+            $view.remove();
             form.destroy();
         });
 
-        QUnit.test('onchange with modifiers for embedded one2many on the second page', function (assert) {
+        QUnit.test('onchange with modifiers for embedded one2many on the second page', async function (assert) {
             assert.expect(7);
 
             var data = this.data;
@@ -1089,6 +1109,9 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             testUtils.form.clickEdit(form);
 
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
@@ -1111,20 +1134,20 @@ QUnit.module('fields', {}, function () {
             testUtils.form.clickEdit(form);
 
             // Drag and drop the third line in second position
-            testUtils.dom.dragAndDrop(
+            await testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(2),
                 form.$('.o_field_one2many tbody tr').eq(1),
-                { position: 'top' }
+                { position: 'top', nativeDragAndDrop: true }
             );
 
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#30#31#32#33#34#35#36#37#38",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
             // Drag and drop the third line in second position
-            testUtils.dom.dragAndDrop(
+            await testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(2),
                 form.$('.o_field_one2many tbody tr').eq(1),
-                { position: 'top' }
+                { position: 'top', nativeDragAndDrop: true }
             );
 
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
@@ -1140,6 +1163,7 @@ QUnit.module('fields', {}, function () {
             assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
 
+            $view.remove();
             form.destroy();
         });
 
@@ -1544,7 +1568,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('embedded one2many with handle widget with minimum setValue calls', function (assert) {
+        QUnit.test('embedded one2many with handle widget with minimum setValue calls', async function (assert) {
             var done = assert.async();
             assert.expect(20);
 
@@ -1590,7 +1614,11 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             testUtils.mock.intercept(form, "field_changed", function (event) {
+                // debugger
                 assert.step(form.model.get(event.data.changes.turtles.id).res_id);
             }, true);
 
@@ -1600,15 +1628,15 @@ QUnit.module('fields', {}, function () {
             var positions = [
                 [6, 0, 'top', [3, 6, 1, 2, 5, 7, 4]], // move the last to the first line
                 [5, 1, 'top', [7, 6, 1, 2, 5]], // move the penultimate to the second line
-                [2, 5, 'center', [1, 2, 5, 6]], // move the third to the penultimate line
+                [2, 6, 'center', [1, 2, 5, 6]], // move the third to the penultimate line
             ];
-            function dragAndDrop() {
+            async function dragAndDrop() {
                 var pos = positions.shift();
 
-                testUtils.dom.dragAndDrop(
+                await testUtils.dom.dragAndDrop(
                     form.$('.ui-sortable-handle').eq(pos[0]),
                     form.$('tbody tr').eq(pos[1]),
-                    { position: pos[2] }
+                    { position: pos[2], nativeDragAndDrop: true }
                 );
 
                 steps = steps.concat(pos[3]);
@@ -1631,6 +1659,7 @@ QUnit.module('fields', {}, function () {
                         { id: 4, turtle_foo: "a1", turtle_int: 8 }
                     ], "sequences must be apply correctly");
 
+                    $view.remove();
                     form.destroy();
                     done();
                 }
@@ -1639,7 +1668,7 @@ QUnit.module('fields', {}, function () {
             dragAndDrop();
         });
 
-        QUnit.test('embedded one2many (editable list) with handle widget', function (assert) {
+        QUnit.test('embedded one2many (editable list) with handle widget', async function (assert) {
             assert.expect(8);
 
             this.data.partner.records[0].p = [1, 2, 4];
@@ -1664,6 +1693,9 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             testUtils.mock.intercept(form, "field_changed", function (event) {
                 assert.step(event.data.changes.p.data.int_field.toString());
             }, true);
@@ -1676,10 +1708,10 @@ QUnit.module('fields', {}, function () {
                 "should still have the 3 rows in the correct order");
 
             // Drag and drop the second line in first position
-            testUtils.dom.dragAndDrop(
+            await testUtils.dom.dragAndDrop(
                 form.$('.ui-sortable-handle').eq(1),
                 form.$('tbody tr').first(),
-                { position: 'top' }
+                { position: 'top', nativeDragAndDrop: true }
             );
 
             assert.verifySteps(["0", "1"],
@@ -1697,6 +1729,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
                 "should still have the 3 rows in the new order");
 
+            $view.remove();
             form.destroy();
         });
 
@@ -7021,7 +7054,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('one2many with sequence field, fetch name_get from empty list, field text', function (assert) {
+        QUnit.test('one2many with sequence field, fetch name_get from empty list, field text', async function (assert) {
             // There was a bug where a RPC would fail because no route was set.
             // The scenario is:
             // - create a new parent model, which has a one2many
@@ -7065,6 +7098,9 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             // starting condition
             assert.strictEqual($('.o_data_cell:nth-child(2)').text(), "");
 
@@ -7082,13 +7118,14 @@ QUnit.module('fields', {}, function () {
 
             assert.equal($handles.length, 3, 'There should be 3 sequence handlers');
 
-            testUtils.dom.dragAndDrop($handles.eq(1),
+            await testUtils.dom.dragAndDrop($handles.eq(1),
                 form.$('tbody tr').first(),
-                { position: 'top' }
+                { position: 'top', nativeDragAndDrop: true }
             );
 
             assert.strictEqual($('.o_data_cell:nth-child(2)').text(), inputText2 + inputText1);
 
+            $view.remove();
             form.destroy();
         });
 
@@ -7237,7 +7274,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.test('onchange in a one2many with non inline view on an existing record', function (assert) {
+        QUnit.test('onchange in a one2many with non inline view on an existing record', async function (assert) {
             assert.expect(6);
 
             this.data.partner.fields.sequence = { string: 'Sequence', type: 'integer' };
@@ -7267,10 +7304,14 @@ QUnit.module('fields', {}, function () {
                 viewOptions: { mode: 'edit' },
             });
 
+            // need to prepend view on body because html5 drag and drop is not working if view is not available in DOM
+            var $view = $('#qunit-fixture').contents();
+            $view.prependTo('body');
             // swap 2 lines in the one2many
-            testUtils.dom.dragAndDrop(form.$('.ui-sortable-handle:eq(1)'), form.$('tbody tr').first(),
-                { position: 'top' });
+            await testUtils.dom.dragAndDrop(form.$('.ui-sortable-handle:eq(1)'), form.$('tbody tr').first(),
+                { position: 'top', nativeDragAndDrop: true });
             assert.verifySteps(['load_views', 'read', 'read', 'onchange', 'onchange']);
+            $view.remove();
             form.destroy();
         });
 

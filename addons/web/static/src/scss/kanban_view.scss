@@ -1,6 +1,7 @@
 
 // ------- Kanban View Layout -------
 .o_kanban_view {
+    user-select: none;
     display: flex;
     align-content: stretch;
     overflow-x: visible;
@@ -192,6 +193,18 @@
     // Provide a basic style for different kanban record layouts
     // ---------------------------------------------------------
     .oe_kanban_card, .o_kanban_record {
+        &.oe_kanban_card_ghost {
+            opacity: 0;
+        }
+        &.o_kanban_record_chosen {
+            box-shadow: 0 5px 25px -10px black;
+            @include transition(box-shadow 0.3s);
+        }
+        &.o_kanban_record_clone {
+            // Used !important becuae rubaxa generates cloned element with inline style
+            opacity: 1 !important;
+            rotation: rotate(-3deg);
+        }
         // -------  v11 Layout + generic layouts (~v10) -------
         // Kanban Record - Dropdown
         .o_dropdown_kanban {
@@ -379,7 +392,21 @@
     // Kanban Grouped Layout - Column default
     .o_kanban_group {
         flex: 0 0 auto;
+        // display: flex;
+        // flex-flow: column nowrap;
         padding: 0 $o-kanban-group-padding $o-kanban-group-padding $o-kanban-group-padding;
+        &.o_kanban_group_ghost {
+            opacity: 0;
+        }
+        &.o_kanban_group_clone {
+            box-shadow: 0 0 30px -10px black;
+            opacity: 1 !important;
+        }
+        .o_kanban_record_wrap {
+            flex: 1;
+            // add minimum height for testcase
+            min-height: 300px;
+        }
 
         .o_kanban_header > .o_kanban_header_title {
             @include o-kanban-header-title;
@@ -437,7 +464,7 @@
         }
     }
 
-    &.ui-sortable .o_kanban_header_title {
+    .o_kanban_header_title {
         cursor: move;
     }
 
@@ -449,6 +476,12 @@
 
         & + .o_kanban_group.o_column_folded {
             margin-left: 1px;
+        }
+        .o_kanban_record_wrap {
+            z-index: 2;
+            .oe_kanban_card_ghost, .o_kanban_record {
+                display: none;
+            }
         }
 
         .o_kanban_header_title {
