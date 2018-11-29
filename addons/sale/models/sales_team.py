@@ -39,13 +39,28 @@ class CrmTeam(models.Model):
     def _compute_quotations_to_invoice(self):
         non_website_teams = self.filtered(lambda team: team.team_type != 'website')
         if non_website_teams:
-            quotation_data = self.env['sale.report'].read_group([
+            query = self.env['sale.order']._where_calc([
                 ('team_id', 'in', non_website_teams.ids),
                 ('state', 'in', ['draft', 'sent']),
-            ], ['price_total', 'team_id', 'name'], ['team_id', 'name'], lazy=False)
+            ])
+            self.env['sale.order']._apply_ir_rules(query, 'read')
+            _, where_clause, where_clause_args = query.get_sql()
+            select_query = """
+                SELECT team_id, count(*), sum(amount_total /
+                    CASE COALESCE(currency_rate, 0)
+                    WHEN 0 THEN 1.0
+                    ELSE currency_rate
+                    END
+                ) as amount_total
+                FROM sale_order
+                WHERE %s
+                GROUP BY team_id
+            """ % where_clause
+            self.env.cr.execute(select_query, where_clause_args)
+            quotation_data = self.env.cr.dictfetchall()
             for datum in quotation_data:
-                self.browse(datum['team_id'][0]).quotations_amount += datum['price_total']
-                self.browse(datum['team_id'][0]).quotations_count += 1
+                self.browse(datum['team_id']).quotations_amount = datum['amount_total']
+                self.browse(datum['team_id']).quotations_count = datum['count']
 
     @api.multi
     def _compute_sales_to_invoice(self):
