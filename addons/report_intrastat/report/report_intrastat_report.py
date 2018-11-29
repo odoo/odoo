@@ -36,7 +36,7 @@ class ReportIntrastat(models.Model):
                     intrastat.id as intrastat_id,
                     upper(inv_country.code) as code,
                     sum(case when inv_line.price_unit is not null
-                            then inv_line.price_unit * inv_line.quantity
+                            then inv_line.price_unit * (1.0 - coalesce(inv_line.discount, 0.0) / 100.0) * inv_line.quantity
                             else 0
                         end) as value,
                     sum(
