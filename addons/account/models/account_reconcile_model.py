@@ -684,6 +684,8 @@ class AccountReconcileModel(models.Model):
                             new_aml_dicts = reconciliation_results['new_aml_dicts']
                             if reconciliation_results['open_balance_dict']:
                                 new_aml_dicts.append(reconciliation_results['open_balance_dict'])
+                            if not line.partner_id and partner:
+                                line.partner_id = partner
                             counterpart_moves = line.process_reconciliation(
                                 counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
                                 payment_aml_rec=reconciliation_results['payment_aml_rec'],
@@ -715,6 +717,8 @@ class AccountReconcileModel(models.Model):
                         new_aml_dicts = reconciliation_results['new_aml_dicts']
                         if reconciliation_results['open_balance_dict']:
                             new_aml_dicts.append(reconciliation_results['open_balance_dict'])
+                        if not line.partner_id and partner:
+                            line.partner_id = partner
                         counterpart_moves = line.process_reconciliation(
                             counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
                             payment_aml_rec=reconciliation_results['payment_aml_rec'],
