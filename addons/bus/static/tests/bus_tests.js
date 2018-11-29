@@ -214,4 +214,106 @@ QUnit.module('Bus', {
 
         }, 3);
     });
+
+    QUnit.test('cross tab bus elect new master on master unload', function (assert) {
+        var done = assert.async();
+        assert.expect(8);
+
+        // master
+        var pollDeferredMaster = $.Deferred();
+
+        var parentMaster = new Widget();
+        testUtils.addMockEnvironment(parentMaster, {
+            data: {},
+            services: {
+                bus_service: BusService,
+                local_storage: LocalStorageServiceMock,
+            },
+            mockRPC: function (route, args) {
+                if (route === '/longpolling/poll') {
+                    assert.step(['master', route, args.channels.join(',')]);
+
+                    pollDeferredMaster = $.Deferred();
+                    pollDeferredMaster.abort = (function () {
+                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
+                    }).bind(pollDeferredMaster);
+                    return pollDeferredMaster;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        var master = new Widget(parentMaster);
+        master.appendTo($('#qunit-fixture'));
+
+        master.call('bus_service', 'onNotification', master, function (notifications) {
+            assert.step(['master', 'notification', notifications]);
+        });
+        master.call('bus_service', 'addChannel', 'lambda');
+
+        // slave
+        setTimeout(function () {
+            var parentSlave = new Widget();
+            var pollDeferredSlave = $.Deferred();
+            testUtils.addMockEnvironment(parentSlave, {
+                data: {},
+                services: {
+                    bus_service: BusService,
+                    local_storage: LocalStorageServiceMock,
+                },
+                mockRPC: function (route, args) {
+                    if (route === '/longpolling/poll') {
+                        assert.step(['slave', route, args.channels.join(',')]);
+
+                        pollDeferredSlave = $.Deferred();
+                        pollDeferredSlave.abort = (function () {
+                            this.reject({message: "XmlHttpRequestError abort"}, $.Event());
+                        }).bind(pollDeferredSlave);
+                        return pollDeferredSlave;
+                    }
+                    return this._super.apply(this, arguments);
+                }
+            });
+
+            var slave = new Widget(parentSlave);
+            slave.appendTo($('#qunit-fixture'));
+
+            slave.call('bus_service', 'onNotification', slave, function (notifications) {
+                assert.step(['slave', 'notification', notifications]);
+            });
+            slave.call('bus_service', 'addChannel', 'lambda');
+
+            pollDeferredMaster.resolve([{
+                id: 1,
+                channel: 'lambda',
+                message: 'beta',
+            }]);
+
+            // simulate unloading master
+            master.call('bus_service', '_onUnload');
+
+            pollDeferredSlave.resolve([{
+                id: 2,
+                channel: 'lambda',
+                message: 'gamma',
+            }]);
+
+            assert.verifySteps([
+                ["master", "/longpolling/poll", "lambda"],
+                ["master", "notification", [["lambda", "beta"]]],
+                ["slave", "notification", [["lambda", "beta"]]],
+                ["master", "/longpolling/poll", "lambda"],
+                ["slave", "/longpolling/poll", "lambda"],
+                ["slave", "notification", [["lambda", "gamma"]]],
+                ["slave", "/longpolling/poll", "lambda"],
+            ]);
+
+            parentMaster.destroy();
+            parentSlave.destroy();
+
+            done();
+
+        }, 3);
+    });
+
 });});

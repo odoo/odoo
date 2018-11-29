@@ -845,7 +845,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         ids = []
         messages = []
         ModelData = self.env['ir.model.data']
-        ModelData.clear_caches()
 
         # list of (xid, vals, info) for records to be created in batch
         batch = []
@@ -927,6 +926,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
+            # cancel all changes done to the registry/ormcache
+            self.pool.reset_changes()
 
         return {'ids': ids, 'messages': messages}
 

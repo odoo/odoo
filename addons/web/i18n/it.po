@@ -3,11 +3,9 @@
 # * web
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Luca Tralli, 2018
 # Pietro Della Notte <pdellanotte@gmail.com>, 2018
-# efraimbiffi <eab@odoo.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
@@ -180,7 +178,7 @@ msgstr "'%s' non è un intero corretto"
 #: code:addons/web/static/src/js/fields/field_utils.js:548
 #, python-format
 msgid "'%s' is not a correct monetary field"
-msgstr ""
+msgstr "\"%s\" non è un campo monetario corretto"
 
 #. module: web
 #. openerp-web
@@ -230,7 +228,7 @@ msgstr "(senza etichetta)"
 #: code:addons/web/static/src/js/fields/field_utils.js:283
 #, python-format
 msgid "1 record"
-msgstr ""
+msgstr "1 record"
 
 #. module: web
 #. openerp-web
@@ -344,7 +342,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:1126
 #, python-format
 msgid "Add Custom Filter"
-msgstr "Aggiungi filtro"
+msgstr "Aggiungi filtro personalizzato"
 
 #. module: web
 #. openerp-web
@@ -358,14 +356,14 @@ msgstr "Aggiungi gruppo personalizzato"
 #: code:addons/web/static/src/xml/kanban.xml:49
 #, python-format
 msgid "Add a Column"
-msgstr ""
+msgstr "Aggiungi una colonna"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1130
 #, python-format
 msgid "Add a condition"
-msgstr "Aggiungi un filtro"
+msgstr "Aggiungi una condizione"
 
 #. module: web
 #. openerp-web
@@ -660,6 +658,8 @@ msgid ""
 "Binary fields can not be exported to Excel unless their content is "
 "base64-encoded. That does not seem to be the case for %s."
 msgstr ""
+"Impossibile esportare %s. I campi binari devono avere il contenuto "
+"codificato in base64 per essere esportati in Excel."
 
 #. module: web
 #. openerp-web
@@ -1167,7 +1167,7 @@ msgstr "Descrizione"
 #: code:addons/web/static/src/xml/report.xml:18
 #, python-format
 msgid "Discard"
-msgstr "Annulla"
+msgstr "Abbandona"
 
 #. module: web
 #. openerp-web
@@ -1349,7 +1349,7 @@ msgstr "Errore, password non modificata."
 #: code:addons/web/static/src/xml/kanban.xml:62
 #, python-format
 msgid "Esc to discard"
-msgstr ""
+msgstr "Esc per abbandonare"
 
 #. module: web
 #. openerp-web
@@ -1391,14 +1391,14 @@ msgstr ""
 #: code:addons/web/static/src/js/views/list/list_controller.js:149
 #, python-format
 msgid "Export"
-msgstr "Esportazione"
+msgstr "Esporta"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:209
 #, python-format
 msgid "Export Data"
-msgstr "Esporta dati"
+msgstr "Esportazione dati"
 
 #. module: web
 #. openerp-web
@@ -1671,28 +1671,28 @@ msgstr "Premere INVIO per"
 #: code:addons/web/static/src/xml/base.xml:431
 #, python-format
 msgid "Hit ENTER to CREATE"
-msgstr "Premere INVIO per CREA"
+msgstr "Premere INVIO per CREARE"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:423
 #, python-format
 msgid "Hit ENTER to SAVE"
-msgstr "Premere INVIO per SALVA"
+msgstr "Premere INVIO per SALVARE"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:424
 #, python-format
 msgid "Hit ESCAPE to DISCARD"
-msgstr ""
+msgstr "Premere ESCAPE per ABBANDONARE"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker.xml:41
 #, python-format
 msgid "Hue"
-msgstr ""
+msgstr "Tonalità"
 
 #. module: web
 #. openerp-web
@@ -1772,7 +1772,7 @@ msgstr ""
 #: code:addons/web/static/src/js/tools/debug_manager.js:209
 #, python-format
 msgid "JS Mobile Tests"
-msgstr ""
+msgstr "Test JS per cellulare"
 
 #. module: web
 #. openerp-web
@@ -1900,7 +1900,7 @@ msgstr "Blu chiaro"
 #: code:addons/web/static/src/xml/colorpicker.xml:49
 #, python-format
 msgid "Lightness %"
-msgstr ""
+msgstr "Luminosità %"
 
 #. module: web
 #. openerp-web
@@ -2134,14 +2134,14 @@ msgstr "Altro"
 #: code:addons/web/static/src/xml/base.xml:1415
 #, python-format
 msgid "Move Down"
-msgstr "Muovi Giù"
+msgstr "Sposta in basso"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1414
 #, python-format
 msgid "Move Up"
-msgstr "Muovi Su"
+msgstr "Sposta in alto"
 
 #. module: web
 #. openerp-web
@@ -2403,7 +2403,7 @@ msgstr "Solo tu"
 #: code:addons/web/static/src/xml/colorpicker.xml:55
 #, python-format
 msgid "Opacity %"
-msgstr ""
+msgstr "Opacità %"
 
 #. module: web
 #. openerp-web
@@ -2550,14 +2550,14 @@ msgstr "pivot"
 #: code:addons/web/static/src/js/views/list/list_renderer.js:352
 #, python-format
 msgid "Please click on the \"save\" button first."
-msgstr ""
+msgstr "Prima fare clic sul pulsante \"Salva\"."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:177
 #, python-format
 msgid "Please enter save field list name"
-msgstr "Inserire il nome per l'elenco salvato"
+msgstr "Inserire il nome dell'elenco campi da salvare"
 
 #. module: web
 #. openerp-web
@@ -2571,7 +2571,7 @@ msgstr "Selezionare i campi da esportare..."
 #: code:addons/web/static/src/js/widgets/data_export.js:464
 #, python-format
 msgid "Please select fields to save export list..."
-msgstr "Selezionare l'elenco dei campi da esportare..."
+msgstr "Selezionare i campi da salvare nell'elenco di esportazione..."
 
 #. module: web
 #. openerp-web
@@ -2793,21 +2793,21 @@ msgstr "Ripristina"
 #: code:addons/web/static/src/xml/base.xml:240
 #, python-format
 msgid "Run Click Everywhere Test"
-msgstr "Esegui prova \"Fare clic ovunque\""
+msgstr "Esegui test \"Fare clic ovunque\""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:239
 #, python-format
 msgid "Run JS Mobile Tests"
-msgstr "Esegui prove JS per dispositivo mobile"
+msgstr "Esegui test JS per dispositivo mobile"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:238
 #, python-format
 msgid "Run JS Tests"
-msgstr "Esegui prove JS"
+msgstr "Esegui test JS"
 
 #. module: web
 #. openerp-web
@@ -2877,14 +2877,14 @@ msgstr "Salva un record"
 #: code:addons/web/static/src/xml/base.xml:1443
 #, python-format
 msgid "Save as:"
-msgstr "Salva come:"
+msgstr "Salvare come: "
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1358
 #, python-format
 msgid "Save current search"
-msgstr "Salvare la ricerca corrente"
+msgstr "Salva la ricerca corrente"
 
 #. module: web
 #. openerp-web
@@ -2898,7 +2898,7 @@ msgstr "Salva predefinito"
 #: code:addons/web/static/src/xml/base.xml:1419
 #, python-format
 msgid "Save fields list"
-msgstr "Salva l'elenco dei campi"
+msgstr "Salva elenco campi"
 
 #. module: web
 #. openerp-web
@@ -2942,7 +2942,7 @@ msgstr "Cerca ancora..."
 #: code:addons/web/static/src/xml/base.xml:1231
 #, python-format
 msgid "Search..."
-msgstr "Cerca..."
+msgstr "Ricerca..."
 
 #. module: web
 #. openerp-web
@@ -3113,7 +3113,7 @@ msgstr "Accendi"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:583
 #, python-format
 msgid "Syntax error"
-msgstr ""
+msgstr "Errore di sintassi"
 
 #. module: web
 #. openerp-web
@@ -3206,7 +3206,8 @@ msgid ""
 "The record has been modified, your changes will be discarded. Do you want to"
 " proceed?"
 msgstr ""
-"Il documento è stato modificato, le modifiche verranno eliminate. Procedere?"
+"Il documento è stato modificato, verranno abbandonate le modifiche. "
+"Procedere?"
 
 #. module: web
 #. openerp-web
@@ -3233,6 +3234,8 @@ msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "
 "(.xls) format. Consider splitting the export."
 msgstr ""
+"Impossibile esportare nel formato Excel 97-2003 (.xls) (%s righe, limite: "
+"65535). Valutare di suddividere l'esportazione."
 
 #. module: web
 #. openerp-web
@@ -3482,7 +3485,7 @@ msgstr "Senza titolo"
 #: code:addons/web/static/src/xml/base.xml:1393
 #, python-format
 msgid "Update data (import-compatible export)"
-msgstr ""
+msgstr "Aggiornare i dati (compatibile con l'importazione)"
 
 #. module: web
 #. openerp-web
@@ -3496,7 +3499,7 @@ msgstr "Aggiorna adesso"
 #: code:addons/web/static/src/xml/base.xml:1577
 #, python-format
 msgid "Upgrade to enterprise"
-msgstr ""
+msgstr "Avanza a Enterprise"
 
 #. module: web
 #. openerp-web
@@ -3542,7 +3545,7 @@ msgstr "Utilizzare come predefinita"
 #: code:addons/web/static/src/xml/base.xml:1387
 #, python-format
 msgid "Use data in a spreadsheet (export all data)"
-msgstr ""
+msgstr "Usare i dati in un foglio di calcolo (esportare tutti i dati)"
 
 #. module: web
 #. openerp-web
@@ -3584,14 +3587,14 @@ msgstr "Visualizza metadati"
 #: code:addons/web/static/src/xml/base.xml:606
 #, python-format
 msgid "Warning"
-msgstr "Avviso"
+msgstr "Attenzione"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/attach_document.js:87
 #, python-format
 msgid "Warning : You have to save first before attaching a file."
-msgstr ""
+msgstr "Attenzione: prima di allegare un file è necessario salvare."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.benchmark_suite
@@ -3601,12 +3604,12 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
 msgid "Web Mobile Tests"
-msgstr ""
+msgstr "Test web per dispositivo mobile"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
 msgid "Web Tests"
-msgstr ""
+msgstr "Test web"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
@@ -3634,7 +3637,7 @@ msgstr "Ben fatto!"
 #: code:addons/web/static/src/xml/base.xml:1383
 #, python-format
 msgid "What do you want to do?"
-msgstr "Cosa vuoi fare?"
+msgstr "Cosa si intende fare?"
 
 #. module: web
 #. openerp-web
