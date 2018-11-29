@@ -49,7 +49,9 @@ class HrEmployee(models.Model):
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):
         for employee in self:
-            employee.last_attendance_id = employee.attendance_ids and employee.attendance_ids[0] or False
+            employee.last_attendance_id = self.env['hr.attendance'].search([
+                ('employee_id', '=', employee.id),
+            ], limit=1)
 
     @api.depends('last_attendance_id.check_in', 'last_attendance_id.check_out', 'last_attendance_id')
     def _compute_attendance_state(self):
