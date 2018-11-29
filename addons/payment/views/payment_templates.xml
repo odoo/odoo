@@ -137,7 +137,7 @@
                         <i class="fa fa-lock"> Pay</i>
                     </t>
                 </button>
-                <button t-if="mode == 'manage' and acquirers.filtered(lambda x: x.payment_flow == 's2s')" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
+                <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
                     <i class="fa fa-plus-circle"> Add new card</i>
                 </button>
             </div>
