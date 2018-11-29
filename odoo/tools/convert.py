@@ -250,8 +250,8 @@ form: module.record_id""" % (xml_id,)
                 modcnt = self.env['ir.module.module'].search_count([('name', '=', module), ('state', '=', 'installed')])
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
-    def _tag_delete(self, rec, _data_node):
-        d_model = rec["model"]
+    def _tag_delete(self, rec):
+        d_model = rec.get("model")
         records = self.env[d_model]
 
         d_search = rec.get("search")
