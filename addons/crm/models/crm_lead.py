@@ -433,6 +433,14 @@ class Lead(models.Model):
             'default_team_id': self.team_id.id,
             'default_name': self.name,
         }
+        action['domain'] = [('opportunity_id', '=', self.id)]
+        return action
+
+    @api.model
+    def action_your_meetings(self):
+        action = self.env.ref('crm.crm_lead_my_meetings_action').read()[0]
+        my_opportunities = self.search([('user_id', '=', self.env.user.id)])
+        action['domain'] = [('opportunity_id', 'in', my_opportunities.ids)]
         return action
 
     @api.multi

@@ -17,4 +17,26 @@
         </field>
     </record>
 
+    <!-- My Meetings -->
+     <record model="ir.actions.act_window" id="crm_lead_my_meetings_action">
+        <field name="name">Meetings</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="calendar.view_calendar_event_calendar"/>
+    </record>
+
+    <record id="action_your_meetings" model="ir.actions.server">
+        <field name="name">Crm: My Meetings</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_your_meetings()</field>
+    </record>
+
+    <menuitem
+        id="menu_crm_meetings"
+        action="action_your_meetings"
+        name="My Meetings"
+        parent="crm_menu_sales"
+        sequence="3"/>
+
 </odoo>
