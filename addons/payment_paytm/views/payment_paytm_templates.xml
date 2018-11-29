@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="paytm_form">
+        <div>
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+            <input type="hidden" name="MID" t-att-value="MID"/>
+            <input type="hidden" name="WEBSITE" t-att-value="WEBSITE"/>
+            <input type="hidden" name="ORDER_ID" t-att-value="ORDER_ID"/>
+            <input type="hidden" name="CUST_ID" t-att-value="CUST_ID"/>
+            <input type="hidden" name="MOBILE_NO" t-att-value="MOBILE_NO"/>
+            <input type="hidden" name="EMAIL" t-att-value="EMAIL"/>
+            <input type="hidden" name="INDUSTRY_TYPE_ID" t-att-value="INDUSTRY_TYPE_ID"/>
+            <input type="hidden" name="CHANNEL_ID" t-att-value="CHANNEL_ID"/>
+            <input type="hidden" name="TXN_AMOUNT" t-att-value="TXN_AMOUNT"/>
+            <input type="hidden" name="CALLBACK_URL" t-att-value="CALLBACK_URL"/>
+            <input type="hidden" name="CHECKSUMHASH" t-att-value="CHECKSUMHASH"/>
+        </div>
+    </template>
+</odoo>
