@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n.it</field>
+        <field name="model">account.tax</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page" position="inside">
+                <group>
+                    <field name="VAT_due_date"/>
+                    <field name="has_exoneration" readonly="False"/>
+                    <field name="kind_exoneration" attrs="{'invisible': [('has_exoneration', '=', False)]}"/>
+                    <field name="law_reference" attrs="{'invisible': [('has_exoneration', '=', False)]}"/>
+                </group>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="res_partner_form_l10n_it" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.it</field>
+        <field name="model">res.partner</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="pec_email" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="codice_fiscale" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="pa_index" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="res_company_form_l10n_it" model="ir.ui.view">
+        <field name="name">res.company.form.l10n.it</field>
+        <field name="model">res.company</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//div[hasclass('o_address_format')]" position="after">
+                <field name="mail_pec_server_id"/>
+                <field name="address_send_fatturapa"/>
+                <field name="address_recipient_fatturapa"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="codice_fiscale"/>
+                <field name="tax_system"/>
+            </xpath>
+            <xpath expr="//page" position="after">
+                <page string="Electronic Invoicing">
+                    <group>
+                        <separator string="Economic and Administrative Index" colspan="4"/>
+                        <div colspan="4">
+                            The seller/provider is a company listed on the register of companies and as
+                            such must also indicate the registration data on all documents (art. 2250, Italian
+                            Civil Code)
+                        </div>
+                        <group>
+                            <field name="has_eco_admin_index" string="Company listed on the register of companies"/>
+                        </group>
+                        <group attrs="{'invisible': [('has_eco_admin_index', '=', False)]}">
+                            <field name="eco_admin_index_office"/>
+                            <field name="eco_admin_index_number"/>
+                            <field name="eco_admin_index_share_capital"/>
+                            <field name="eco_admin_index_sole_shareholder"/>
+                            <field name="eco_admin_index_liquidation_state"/>
+                        </group>
+                    </group>
+                    <group>
+                        <separator string="Tax representative" colspan="4"/>
+                        <div colspan="4">
+                            The seller/provider is a non-resident subject which carries out transactions in Italy
+                            with relevance for VAT purposes and which takes avail of a tax representative in Italy
+                        </div>
+                        <group>
+                            <field name="has_tax_representative" string="Company have a tax representative"/>
+                        </group>
+                        <group attrs="{'invisible': [('has_tax_representative', '=', False)]}">
+                            <field name="tax_representative_partner_id"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="invoice_supplier_tree_l10n_it" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.tree.l10n.it</field>
+        <field name="model">account.invoice</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="send_state" invisible="1" widget="label_selection" options="{'classes': {'to_send': 'default', 'invalid': 'danger', 'sent': 'warning',
+                                            'delivered': 'success', 'delivered_accepted': 'success', 'delivered_refused': 'success', 'delivered_expired': 'success', 'failed_delivery': 'success'}}"/>
+
+                <button icon="fa-paper-plane-o" class="btn-outline-warning disabled" aria-label="Sent" title="Sent" attrs="{'invisible': [('send_state', '!=', 'sent')]}"/>
+                <button icon="fa-exclamation-triangle" class="btn-outline-danger disabled" aria-label="Error" title="Error" attrs="{'invisible': [('send_state', '!=', 'invalid')]}"/>
+                <button icon="fa-check" class="btn-outline-success disabled" aria-label="Delivered" title="Delivered" attrs="{'invisible': [('send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}"/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="invoice_kanban_l10n_it" model="ir.ui.view">
+        <field name="name">account.invoice.kanban.l10n.it</field>
+        <field name="model">account.invoice</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.invoice_kanban"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="send_state"/>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="inside">
+                <i class="text-success fa fa-plus-circle" t-if="record.send_state.raw_value == 'new'"/>
+                <i class="text-warning fa fa-paper-plane-o" t-if="record.send_state.raw_value == 'sent'"/>
+                <i class="text-danger fa fa-exclamation-triangle" t-if="record.send_state.raw_value == 'invalid'"/>
+                <i class="text-success fa fa-check" t-if="['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'].indexOf(record.send_state.raw_value) >= 0" />
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="account_invoice_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.invoice.form.l10n.it</field>
+        <field name="model">account.invoice</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//button[@name='preview_invoice']" position="after">
+                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': [('send_state', '!=', 'invalid')]}" class="btn btn-primary" string="Resend"/>
+                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': ['|',('state', 'in', ['draft', 'cancel']),('send_state', 'not in', ['to_send', False])]}" class="btn btn-primary" string="Send"/>
+            </xpath>
+            <xpath expr="//field[@name='type']" position="before">
+                <div class="alert alert-success" role="alert" attrs="{'invisible': [('send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
+                    <i class="fa fa-check" aria-label="Delivered" title="Delivered"></i> <field name="send_state" readonly="1"/>
+                </div>
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('send_state', '!=', 'sent')]}">
+                    <i class="fa fa-paper-plane-o"/> E-Invoice sent, waiting for a response
+                </div>
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('send_state', '!=', 'invalid')]}">
+                    <i class="fa fa-exclamation-triangle"/> E-Invoice check failed. You can modify the invoice, and resend it.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_tax_ids']" position="after">
+                <field name="ddt_line_ids" widget="many2many_tags" domain="[('id','in', parent.ddt_ids)]" groups="l10n_it.group_multiple_ddt_account"/>
+            </xpath>
+            <xpath expr="//page[@name='other_info']" position="after">
+                <page string="Electronic Invoicing">
+                    <group>
+                        <group>
+                            <field name="stamp_duty"/>
+                            <field name="ddt_ids" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="ddt_id" groups="l10n_it.group_single_ddt_account"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="document_order_data_line_ids" nolabel="1" widget="one2many_list" mode="tree">
+                            <tree string="Invoice Lines" editable="top" create="true" delete="true">
+                                <field name="document_order_data"/>
+                                <field name="document_id"/>
+                                <field name="date_document_id"/>
+                                <field name="document_project_code_cup"/>
+                                <field name="document_tender_code_cig"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="account_invoice_supplier_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.form.l10n.it</field>
+        <field name="model">account.invoice</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='date_due']" position="replace">
+                <field name="date_due" attrs="{'readonly': [('state', 'in', ['open', 'in_payment', 'paid'])]}" force_save="1"/>
+            </xpath>
+            <xpath expr="//page[@name='other_info']" position="after">
+                <page string="Electronic Invoicing">
+                    <group>
+                        <group>
+                            <field name="stamp_duty"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="document_order_data_line_ids" nolabel="1" widget="one2many_list" mode="tree">
+                            <tree string="Invoice Lines" editable="top" create="true" delete="true">
+                                <field name="document_order_data"/>
+                                <field name="document_id"/>
+                                <field name="date_document_id"/>
+                                <field name="document_project_code_cup"/>
+                                <field name="document_tender_code_cig"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_l10n_it" model="ir.ui.view">
+        <field name="name">account.invoice.select.l10n.it</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='late']" position="after">
+                <separator/>
+                <filter name="error" string="E-invoice error" domain="[('send_state', '=', 'invalid')]"/>
+                <filter name="sent" string="E-invoice sent" domain="[('send_state', '=', 'sent')]"/>
+                <filter name="no_sent" string="E-invoice to send" domain="[('send_state', 'in', ['to_send',False])]"/>
+                <filter name="delivered" string="E-invoice delivered" domain="[('send_state', 'in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]"/>
+            </xpath>
+            <xpath expr="//filter[@name='status']" position="after">
+                <filter name="send_status" string="Send status" context="{'group_by':'send_state'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_payment_term_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.payment.term.form.l10n.it</field>
+        <field name="model">account.payment.term</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_payment_term_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="payment_method"/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="view_payment_term_tree_l10n_it" model="ir.ui.view">
+        <field name="name">account.payment.term.tree.l10n.it</field>
+        <field name="model">account.payment.term</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_payment_term_tree"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="payment_method"/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="view_account_payment_term_kanban_l10n_it" model="ir.ui.view">
+        <field name="name">account.payment.term.kanban.l10n.it</field>
+        <field name="model">account.payment.term</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_account_payment_term_kanban"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="payment_method"/>
+            </xpath>
+            <xpath expr="//div//div" position="after">
+                <t t-esc="record.payment_method.value"/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_l10n_it" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_it</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invoicing_settings']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="group_multiple_ddt"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="group_multiple_ddt" string="Multiple DDT"/>
+                        <div class="text-muted">
+                            Add multiple DDT on invoice lines
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_it_ddt" model="ir.ui.view">
+        <field name="name">ddt.form.l10n.it</field>
+        <field name="model">l10n.it.ddt</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="transport_document_date"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_it_ddt_list_view" model="ir.ui.view">
+      <field name="name">l10n.it.ddt.list.view</field>
+      <field name="model">l10n.it.ddt</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="transport_document_date"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_ddt_account" model="ir.actions.act_window">
+        <field name="name">Transport Document</field>
+        <field name="res_model">l10n.it.ddt</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="l10n_it_ddt_list_view"/>
+    </record>
+
+    <menuitem
+            name="DDT"
+            parent="account.account_account_menu"
+            action="action_ddt_account"
+            id="menu_action_ddt_account"
+            sequence="15"
+            groups="base.group_no_one"/>
+</odoo>

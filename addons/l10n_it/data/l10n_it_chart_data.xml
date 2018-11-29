@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data noupdate="1">
+        <!-- Sequence e-invoicing -->
+        <record id="sequence_account_it_invoice" model="ir.sequence">
+            <field name="name">E-invoices sequence</field>
+            <field name="code">account.it.invoice</field>
+            <field name="prefix"></field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">5</field>
+        </record>
+    </data>
         <!-- Chart Template -->
         <record id="l10n_it_chart_template_generic" model="account.chart.template">
             <field name="name">Italy - Generic Chart of Accounts</field>
