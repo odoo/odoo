@@ -37,6 +37,12 @@ class CompanyLDAP(models.Model):
         help="Request secure TLS/SSL encryption when connecting to the LDAP server. "
              "This option requires a server with STARTTLS enabled, "
              "otherwise all authentication attempts will fail.")
+    ldap_chase_referrals = fields.Boolean(
+        "Chase Referrals",
+        default=True,
+        help="You probably want to turn this off if you are using "
+             "MS Active Directory, to avoid weird failures.",
+    )
 
     def _get_ldap_dicts(self):
         """
@@ -53,6 +59,7 @@ class CompanyLDAP(models.Model):
             'ldap_server',
             'ldap_server_port',
             'ldap_binddn',
+            'ldap_chase_referrals',
             'ldap_password',
             'ldap_filter',
             'ldap_base',
@@ -74,6 +81,8 @@ class CompanyLDAP(models.Model):
         uri = 'ldap://%s:%d' % (conf['ldap_server'], conf['ldap_server_port'])
 
         connection = ldap.initialize(uri)
+        if not conf["ldap_chase_referrals"]:
+            connection.set_option(ldap.OPT_REFERRALS, ldap.OPT_OFF)
         if conf['ldap_tls']:
             connection.start_tls_s()
         return connection
