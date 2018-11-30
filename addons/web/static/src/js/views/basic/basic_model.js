@@ -3507,7 +3507,7 @@ var BasicModel = AbstractModel.extend({
                         (record.fieldsInfo[viewType || record.viewType][fieldName]);
         if (fieldInfo) {
             var rawModifiers = fieldInfo.modifiers || {};
-            var modifiers = this._evalModifiers(record, rawModifiers);
+            var modifiers = this._evalModifiers(record, _.pick(rawModifiers, 'readonly'));
             return modifiers.readonly && !fieldInfo.force_save;
         } else {
             return false;
@@ -3559,7 +3559,7 @@ var BasicModel = AbstractModel.extend({
                 var field = element.fields[fieldName];
                 var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
                 var rawModifiers = fieldInfo.modifiers || {};
-                var modifiers = self._evalModifiers(record, rawModifiers);
+                var modifiers = self._evalModifiers(record, _.pick(rawModifiers, 'required'));
                 if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
                     isValid = false;
                 }
