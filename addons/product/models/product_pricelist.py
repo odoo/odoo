@@ -155,7 +155,7 @@ class Pricelist(models.Model):
             (prod_tmpl_ids, prod_ids, categ_ids, self.id, date, date))
 
         item_ids = [x[0] for x in self._cr.fetchall()]
-        items = self.env['product.pricelist.item'].browse(item_ids)
+        items = self.env['product.pricelist.item'].search([('id', 'in', item_ids)])
         results = {}
         for product, qty, partner in products_qty_partner:
             results[product.id] = 0.0
