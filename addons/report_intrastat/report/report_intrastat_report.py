@@ -40,8 +40,8 @@ class ReportIntrastat(models.Model):
                             else 0
                         end) as value,
                     sum(
-                        case when uom.category_id != puom.category_id then (pt.weight * inv_line.quantity)
-                        else (pt.weight * inv_line.quantity * uom.factor) end
+                        case when uom.category_id != puom.category_id then (coalesce(nullif(pp.weight, 0), pt.weight) * inv_line.quantity)
+                        else (coalesce(nullif(pp.weight, 0), pt.weight) * inv_line.quantity * uom.factor) end
                     ) as weight,
                     sum(
                         case when uom.category_id != puom.category_id then inv_line.quantity
