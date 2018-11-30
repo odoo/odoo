@@ -23,7 +23,7 @@ QUnit.module('Sales Team Dashboard', {
 });
 
 QUnit.test('edit target with several o_kanban_primary_bottom divs', function (assert) {
-    assert.expect(4);
+    assert.expect(6);
 
     var kanban = createView({
         View: KanbanView,
@@ -33,6 +33,7 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs', function (as
                 '<templates>' +
                     '<t t-name="kanban-box">' +
                         '<div class="container o_kanban_card_content">' +
+                            '<field name="invoiced_target" />' +
                             '<a href="#" class="sales_team_target_definition o_inline_link">' +
                                 'Click to define a target</a>' +
                             '<div class="col-12 o_kanban_primary_bottom"/>' +
@@ -46,9 +47,12 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs', function (as
                 assert.strictEqual(args.args[1].invoiced_target, 123,
                     "new value is correctly saved");
             }
+            if (args.method === 'read') { // Read happens after the write
+                assert.deepEqual(args.args[1], ['invoiced_target', 'display_name'],
+                    'the read (after write) should ask for invoiced_target');
+            }
             return this._super.apply(this, arguments);
         },
-
     });
 
     assert.strictEqual(kanban.$('.o_kanban_view .sales_team_target_definition').length, 1,
@@ -63,6 +67,54 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs', function (as
     kanban.$('.o_kanban_primary_bottom:last input').focus();
     kanban.$('.o_kanban_primary_bottom:last input').val('123');
     kanban.$('.o_kanban_primary_bottom:last input').blur();
+
+    assert.strictEqual(kanban.$('.o_kanban_record').text(), "123Click to define a target",
+        'The kanban record should display the updated target value');
+
+    kanban.destroy();
+});
+
+QUnit.test('edit target supports push Enter', function (assert) {
+    assert.expect(3);
+
+    var kanban = createView({
+        View: KanbanView,
+        model: 'crm.team',
+        data: this.data,
+        arch: '<kanban>' +
+                '<templates>' +
+                    '<t t-name="kanban-box">' +
+                        '<div class="container o_kanban_card_content">' +
+                            '<field name="invoiced_target" />' +
+                            '<a href="#" class="sales_team_target_definition o_inline_link">' +
+                                'Click to define a target</a>' +
+                            '<div class="col-12 o_kanban_primary_bottom"/>' +
+                            '<div class="col-12 o_kanban_primary_bottom bottom_block"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates>' +
+              '</kanban>',
+        mockRPC: function (route, args) {
+            if (args.method === 'write') {
+                assert.strictEqual(args.args[1].invoiced_target, 123,
+                    "new value is correctly saved");
+            }
+            if (args.method === 'read') { // Read happens after the write
+                assert.deepEqual(args.args[1], ['invoiced_target', 'display_name'],
+                    'the read (after write) should ask for invoiced_target');
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    kanban.$('a.sales_team_target_definition').click();
+
+    kanban.$('.o_kanban_primary_bottom:last input').focus();
+    kanban.$('.o_kanban_primary_bottom:last input').val('123');
+    kanban.$('.o_kanban_primary_bottom:last input').trigger($.Event('keydown', {which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER}));
+
+    assert.strictEqual(kanban.$('.o_kanban_record').text(), "123Click to define a target",
+        'The kanban record should display the updated target value');
 
     kanban.destroy();
 });

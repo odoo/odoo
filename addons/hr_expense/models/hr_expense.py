@@ -461,6 +461,7 @@ class HrExpense(models.Model):
             'employee_id': employee.id,
             'product_id': product.id,
             'product_uom_id': product.uom_id.id,
+            'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id],
             'quantity': 1,
             'unit_amount': price,
             'company_id': employee.company_id.id,

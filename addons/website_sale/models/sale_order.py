@@ -46,7 +46,7 @@ class SaleOrder(models.Model):
         abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
         abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
-            domain = order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
+            domain = order.date_order and order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
             order.is_abandoned_cart = bool(domain)
 
     def _search_abandoned_cart(self, operator, value):
