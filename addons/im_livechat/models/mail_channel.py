@@ -48,11 +48,10 @@ class MailChannel(models.Model):
             should be added to the notification, since the user cannot be listining to the channel.
         """
         notifications = super(MailChannel, self)._channel_message_notifications(message)
-        message_values_dict = notifications[0][1] if len(notifications) else dict(message.message_format()[0])
         for channel in self:
             # add uuid for private livechat channels to allow anonymous to listen
-            if channel.channel_type == 'livechat':
-                notifications.append([channel.uuid, message_values_dict])
+            if channel.channel_type == 'livechat' and channel.public == 'private':
+                notifications.append([channel.uuid, notifications[0][1]])
         if not message.author_id:
             unpinned_channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: not cp.is_pinned)
             if unpinned_channel_partner:
