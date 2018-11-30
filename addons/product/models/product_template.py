@@ -83,7 +83,7 @@ class ProductTemplate(models.Model):
         help = "Cost used for stock valuation in standard price and as a first price to set in average/FIFO.")
 
     volume = fields.Float(
-        'Volume', compute='_compute_volume', inverse='_set_volume', store=True)
+        'Volume', compute='_compute_volume', inverse='_set_volume', digits=dp.get_precision('Volume'), store=True)
     volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', default=_get_default_volume_uom)
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
