@@ -623,13 +623,6 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _prepare_account_payment_vals(self):
         self.ensure_one()
-
-        communication = []
-        for invoice in self.invoice_ids:
-            inv_communication = invoice.type in ('in_invoice', 'in_refund') and invoice.reference or invoice.number
-            if invoice.origin:
-                communication.append('%s (%s)' % (inv_communication, invoice.origin))
-
         return {
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
@@ -642,7 +635,7 @@ class PaymentTransaction(models.Model):
             'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
             'payment_token_id': self.payment_token_id and self.payment_token_id.id or None,
             'payment_transaction_id': self.id,
-            'communication': ' / '.join(communication),
+            'communication': self.reference,
         }
 
     @api.multi
