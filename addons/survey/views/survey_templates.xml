@@ -26,7 +26,7 @@
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" class="oe_no_empty" />
                         <div t-if='survey.quizz_mode'>You scored <t t-esc="user_input.quizz_score" /> points.</div>
-                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">review your answers</a>.</div>
+                        <div>If you wish, you can <a t-att-href="'/survey/print/%s?token=%s' % (slug(survey), token)">review your answers</a>.</div>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,9 @@
                 <div class="container">
                     <div class="jumbotron mt32">
                         <h1>Login required</h1>
-                        <p>This survey is open only to registered people. Please <a t-attf-href="/web/login?redirect=%2Fsurvey%2Fstart%2F#{ slug(survey) }%2F#{token}">log in</a>.</p>
+                        <p>This survey is open only to registered people. Please
+                            <a t-att-href="'/web/login?redirect=%s' % ('/survey/start/%s?token=%s' % (survey, token))">log in</a>.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -167,7 +169,11 @@
             <div t-field='page.description' class="oe_no_empty"/>
         </div>
 
-        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (slug(survey), token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (slug(survey), token, slug(page))" t-att-data-validate="'/survey/validate/%s' % (slug(survey))" t-att-data-submit="'/survey/submit/%s' % (slug(survey))">
+        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)"
+                t-att-action="'/survey/fill/%s/%s' % (slug(survey), token)"
+                t-att-data-prefill="'/survey/prefill/%s/%s?page_id=%s' % (slug(survey), token, page.id)"
+                t-att-data-validate="'/survey/validate/%s/%s' % (slug(survey), token)"
+                t-att-data-submit="'/survey/submit/%s/%s' % (slug(survey), token)">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <input type="hidden" name="token" t-att-value="token" />
@@ -455,20 +461,20 @@
             <tbody>
                 <t t-set="text_result" t-value="prepare_result"/>
                 <tr t-foreach="text_result" t-as="user_input">
-                    <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                    <td><a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
                     <t t-if="question.question_type == 'free_text'">
                         <td>
-                            <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_free_text"></a><br/>
+                            <a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_free_text"></a><br/>
                         </td>
                     </t>
                     <t t-if="question.question_type == 'textbox'">
                         <td>
-                            <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_text"></a><br/>
+                            <a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_text"></a><br/>
                         </td>
                     </t>
                     <t t-if="question.question_type == 'date'">
                         <td>
-                            <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_date"></a><br/>
+                            <a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_date"></a><br/>
                         </td>
                     </t>
                 </tr>
@@ -489,7 +495,7 @@
             </thead>
             <tbody>
                 <tr t-foreach="comments" t-as="user_input">
-                    <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                    <td><a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
                         <td>
                             <span t-field="user_input.value_text"></span><br/>
                         </td>
@@ -673,7 +679,7 @@
                     </thead>
                     <tbody>
                         <tr class="d-none" t-foreach="number_result['input_lines']" t-as="user_input">
-                            <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                            <td><a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
                             <td><span t-field="user_input.value_number"></span><br/></td>
                         </tr>
                     </tbody>

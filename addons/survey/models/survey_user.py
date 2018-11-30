@@ -92,7 +92,7 @@ class SurveyUserInput(models.Model):
             'type': 'ir.actions.act_url',
             'name': "View Answers",
             'target': 'self',
-            'url': '%s/%s' % (self.print_url, self.token)
+            'url': '%s?token=%s' % (self.print_url, self.token)
         }
 
     @api.multi
