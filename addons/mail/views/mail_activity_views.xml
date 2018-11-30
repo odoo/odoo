@@ -110,9 +110,10 @@
                 <field name="res_model_id"/>
                 <field name="summary"/>
                 <field name="activity_type_id"/>
+                <field name="user_id"/>
                 <separator/>
                 <filter string="My Activities" name="activities_my"
-                        domain="[('create_uid', '=', uid)]"/>
+                        domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Late Activities" name="activities_overdue"
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -127,6 +128,7 @@
                     <filter string="Deadline" context="{'group_by': 'date_deadline'}"/>
                     <filter string="Created By" context="{'group_by': 'create_uid'}"/>
                     <filter string="Activity Type" context="{'group_by': 'activity_type_id'}"/>
+                    <filter string="Assigned to" context="{'group_by': 'user_id'}"/>
                 </group>
             </search>
         </field>
