@@ -268,7 +268,7 @@ class Survey(models.Model):
         """ Open the website page with the survey form """
         self.ensure_one()
         token = self.env.context.get('survey_token')
-        trail = "/%s" % token if token else ""
+        trail = "?token=%s" % token if token else ""
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
@@ -312,7 +312,7 @@ class Survey(models.Model):
         """ Open the website page with the survey printable view """
         self.ensure_one()
         token = self.env.context.get('survey_token')
-        trail = "/" + token if token else ""
+        trail = "?token=%s" % token if token else ""
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",

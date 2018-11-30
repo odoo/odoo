@@ -17,8 +17,8 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
     def _access_page(self, survey, token):
         return self.url_open('/survey/fill/%s/%s' % (survey.id, token))
 
-    def _access_submit(self, survey, post_data):
-        return self.url_open('/survey/submit/%s' % survey.id, data=post_data)
+    def _access_submit(self, survey, token, post_data):
+        return self.url_open('/survey/submit/%s/%s' % (survey.id, token), data=post_data)
 
     def _find_csrf_token(self, text):
         csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
@@ -108,7 +108,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
             page0_q1.id: {'value': [44.0]},
         }
         post_data = self._format_submission_data(page_0, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
-        r = self._access_submit(survey, post_data)
+        r = self._access_submit(survey, answer_token, post_data)
         self.assertResponse(r, 200)
         answers.invalidate_cache()  # TDE note: necessary as lots of sudo in controllers messing with cache
 
@@ -127,7 +127,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
             page1_q0.id: {'value': [page1_q0.labels_ids.ids[0], page1_q0.labels_ids.ids[1]]},
         }
         post_data = self._format_submission_data(page_1, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
-        r = self._access_submit(survey, post_data)
+        r = self._access_submit(survey, answer_token, post_data)
         self.assertResponse(r, 200)
         answers.invalidate_cache()  # TDE note: necessary as lots of sudo in controllers messing with cache
 

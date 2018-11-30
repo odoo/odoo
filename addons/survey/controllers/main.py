@@ -58,13 +58,11 @@ class Survey(http.Controller):
                 'survey_id': survey.id,
                 'test_entry': True
             })
-            return request.redirect('/survey/start/%s/%s' % (survey.id, user_input.token))
+            return request.redirect('/survey/start/%s?token=%s' % (survey.id, user_input.token))
         return werkzeug.utils.redirect('/')
 
-    @http.route(['/survey/start/<model("survey.survey"):survey>',
-                 '/survey/start/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', website=True)
-    def survey_start(self, survey, token=None, **post):
+    @http.route('/survey/start/<model("survey.survey"):survey>', type='http', auth='public', website=True)
+    def survey_start(self, survey, token=None):
         """ Start a survey by providing a token linked to an answer or generate
         a new token if access is allowed """
         UserInput = request.env['survey.user_input']
@@ -97,12 +95,8 @@ class Survey(http.Controller):
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
 
-    # Survey displaying
-    @http.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>',
-                 '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
-                type='http', auth='public', website=True)
-    def fill_survey(self, survey, token, prev=None, **post):
-        '''Display and validates a survey'''
+    @http.route('/survey/fill/<model("survey.survey"):survey>/<string:token>', type='http', auth='public', website=True)
+    def survey_display_page(self, survey, token, prev=None):
         Survey = request.env['survey.survey']
         UserInput = request.env['survey.user_input']
 
@@ -131,8 +125,8 @@ class Survey(http.Controller):
             return request.render('survey.survey', data)
         elif user_input.state == 'done':  # Display success message
             return request.render('survey.sfinished', {'survey': survey,
-                                                               'token': token,
-                                                               'user_input': user_input})
+                                                       'token': token,
+                                                       'user_input': user_input})
         elif user_input.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
             page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=flag)
@@ -148,17 +142,15 @@ class Survey(http.Controller):
         else:
             return request.render("survey.403", {'survey': survey})
 
-    # AJAX prefilling of a survey
-    @http.route(['/survey/prefill/<model("survey.survey"):survey>/<string:token>',
-                 '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
-                type='http', auth='public', website=True)
-    def prefill(self, survey, token, page=None, **post):
+    @http.route('/survey/prefill/<model("survey.survey"):survey>/<string:token>', type='http', auth='public', website=True)
+    def survey_get_answers(self, survey, token, page_id=None):
+        """ TDE NOTE: original comment: # AJAX prefilling of a survey -> AJAX / http ?? """
         UserInputLine = request.env['survey.user_input_line']
         ret = {}
 
         # Fetch previous answers
-        if page:
-            previous_answers = UserInputLine.sudo().search([('user_input_id.token', '=', token), ('page_id', '=', page.id)])
+        if page_id:
+            previous_answers = UserInputLine.sudo().search([('user_input_id.token', '=', token), ('page_id', '=', page_id)])
         else:
             previous_answers = UserInputLine.sudo().search([('user_input_id.token', '=', token)])
 
@@ -190,10 +182,9 @@ class Survey(http.Controller):
                     _logger.warning("[survey] No answer has been found for question %s marked as non skipped" % answer_tag)
         return json.dumps(ret, default=str)
 
-    # AJAX scores loading for quiz correction mode
-    @http.route(['/survey/scores/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', website=True)
-    def get_scores(self, survey, token, page=None, **post):
+    @http.route('/survey/scores/<model("survey.survey"):survey>/<string:token>', type='http', auth='public', website=True)
+    def survey_get_scores(self, survey, token, page_id=None):
+        """ TDE NOTE: original comment: # AJAX scores loading for quiz correction mode -> AJAX / http ?? """
         ret = {}
 
         # Fetch answers
@@ -205,9 +196,9 @@ class Survey(http.Controller):
             ret.update({answer.question_id.id: tmp_score + answer.quizz_mark})
         return json.dumps(ret)
 
-    # AJAX submission of a page
-    @http.route(['/survey/submit/<model("survey.survey"):survey>'], type='http', methods=['POST'], auth='public', website=True)
-    def submit(self, survey, **post):
+    @http.route('/survey/submit/<model("survey.survey"):survey>/<string:token>', type='http', methods=['POST'], auth='public', website=True)
+    def survey_submit(self, survey, token, **post):
+        """ TDE NOTE: original comment: # AJAX submission of a page -> AJAX / http ?? """
         _logger.debug('Incoming data: %s', post)
         page_id = int(post['page_id'])
         questions = request.env['survey.question'].search([('page_id', '=', page_id)])
@@ -225,7 +216,7 @@ class Survey(http.Controller):
         else:
             # Store answers into database
             try:
-                user_input = request.env['survey.user_input'].sudo().search([('token', '=', post['token'])], limit=1)
+                user_input = request.env['survey.user_input'].sudo().search([('token', '=', token)], limit=1)
             except KeyError:  # Invalid token
                 return request.render("survey.403", {'survey': survey})
             user_id = request.env.user.id if user_input.input_type != 'link' else SUPERUSER_ID
@@ -242,27 +233,23 @@ class Survey(http.Controller):
             else:
                 vals.update({'state': 'skip'})
             user_input.sudo(user=user_id).write(vals)
-            ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
+            ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, token)
             if go_back:
-                ret['redirect'] += '/prev'
+                ret['redirect'] += '?prev=prev'
         return json.dumps(ret)
 
-    # Printing routes
-    @http.route(['/survey/print/<model("survey.survey"):survey>',
-                 '/survey/print/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', website=True)
-    def print_survey(self, survey, token=None, **post):
+    @http.route('/survey/print/<model("survey.survey"):survey>', type='http', auth='public', website=True)
+    def survey_print(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
-        return request.render('survey.survey_print',
-                                      {'survey': survey,
-                                       'token': token,
-                                       'page_nr': 0,
-                                       'quizz_correction': True if survey.quizz_mode and token else False})
+        return request.render('survey.survey_print', {
+            'survey': survey,
+            'token': token,
+            'page_nr': 0,
+            'quizz_correction': True if survey.quizz_mode and token else False})
 
-    @http.route(['/survey/results/<model("survey.survey"):survey>'],
-                type='http', auth='user', website=True)
-    def survey_reporting(self, survey, token=None, **post):
+    @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
+    def survey_report(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
         result_template = 'survey.result'
         current_filters = []
@@ -275,12 +262,12 @@ class Survey(http.Controller):
             post.pop('finished')
             filter_finish = True
         if post or filter_finish:
-            filter_data = self.get_filter_data(post)
+            filter_data = self._get_filter_data(post)
             current_filters = survey.filter_input_ids(filter_data, filter_finish)
             filter_display_data = survey.get_filter_display_data(filter_data)
         return request.render(result_template,
                                       {'survey': survey,
-                                       'survey_dict': self.prepare_result_dict(survey, current_filters),
+                                       'survey_dict': self._prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,
                                        'current_filters': current_filters,
                                        'filter_display_data': filter_display_data,
@@ -324,7 +311,7 @@ class Survey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
-    def prepare_result_dict(self, survey, current_filters=None):
+    def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
         current_filters = current_filters if current_filters else []
         Survey = request.env['survey.survey']
@@ -336,14 +323,14 @@ class Survey(http.Controller):
                     'question': question,
                     'input_summary': Survey.get_input_summary(question, current_filters),
                     'prepare_result': Survey.prepare_result(question, current_filters),
-                    'graph_data': self.get_graph_data(question, current_filters),
+                    'graph_data': self._get_graph_data(question, current_filters),
                 }
 
                 page_dict['question_ids'].append(question_dict)
             result['page_ids'].append(page_dict)
         return result
 
-    def get_filter_data(self, post):
+    def _get_filter_data(self, post):
         """Returns data used for filtering the result"""
         filters = []
         for ids in post:
@@ -360,9 +347,9 @@ class Survey(http.Controller):
         total = ceil(total_record / float(limit))
         return range(1, int(total + 1))
 
-    def get_graph_data(self, question, current_filters=None):
+    def _get_graph_data(self, question, current_filters=None):
         '''Returns formatted data required by graph library on basis of filter'''
-        # TODO refactor this terrible method and merge it with prepare_result_dict
+        # TODO refactor this terrible method and merge it with _prepare_result_dict
         current_filters = current_filters if current_filters else []
         Survey = request.env['survey.survey']
         result = []
