@@ -58,6 +58,7 @@ class HrEmployee(models.Model):
                         'date_stop': interval[1].astimezone(pytz.utc),
                         'benefit_type_id': benefit_type_id.id,
                         'employee_id': employee.id,
+                        'state': 'confirmed',
                     })
 
             new_benefits.compute_conflicts_leaves_to_approve()
