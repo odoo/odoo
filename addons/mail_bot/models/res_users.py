@@ -15,3 +15,12 @@ class Users(models.Model):
             ('idle', 'Idle'),
             ('disabled', 'Disabled'),
         ], string="OdooBot Status", readonly=True, required=True, default="not_initialized")  # keep track of the state: correspond to the code of the last message sent
+
+    def __init__(self, pool, cr):
+        super(Users, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        type(self).SELF_WRITEABLE_FIELDS.extend(['odoobot_state'])
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        type(self).SELF_READABLE_FIELDS.extend(['odoobot_state'])
