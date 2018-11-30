@@ -953,6 +953,8 @@ QUnit.module('Views', {
     QUnit.test('aggregates are formatted according to field widget', function (assert) {
         assert.expect(1);
 
+       this.data.foo.records.push({id: 5, foo: "john", qux: 0.08});
+       this.data.foo.records.push({id: 6, foo: "mark", qux: 0.06});
         var list = createView({
             View: ListView,
             model: 'foo',
@@ -963,7 +965,7 @@ QUnit.module('Views', {
                 '</tree>',
         });
 
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '19:24',
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '19:33',
             "total should be formatted as a float_time");
 
         list.destroy();

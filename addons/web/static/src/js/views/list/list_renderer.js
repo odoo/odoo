@@ -153,7 +153,13 @@ var ListRenderer = BasicRenderer.extend({
                 if (func === 'avg') {
                     aggregateValue += value;
                 } else if (func === 'sum') {
-                    aggregateValue += value;
+                    if(column.attrs.widget == 'float_time') {
+                        var hour = Math.floor(value);
+                        var min = Math.round((value % 1) * 60) / 60;
+                        aggregateValue += (hour + min);
+                    } else {
+                        aggregateValue += value;
+                    }
                 } else if (func === 'max') {
                     aggregateValue = Math.max(aggregateValue, value);
                 } else if (func === 'min') {
