@@ -181,7 +181,7 @@ options.registry.blog_cover = options.Class.extend({
             onlyImages: true,
             firstFilters: ['background']
         }, $image, $image[0]).open();
-        editor.on('save', this, function (event, img) {
+        editor.on('save', this, function (event) {
             var src = $image.attr('src');
             this.$image.css('background-image', src ? ('url(' + src + ')') : '');
             if (!this.$target.hasClass('cover')) {

@@ -129,9 +129,8 @@ var ProductConfiguratorFormController = FormController.extend({
             self.optionalProductsModal.on('options_empty', null,
                 self._onModalOptionsEmpty.bind(self));
 
-            self.optionalProductsModal.on('update_quantity', null, function (ev) {
-                self._onOptionsUpdateQuantity(ev.data.quantity);
-            });
+            self.optionalProductsModal.on('update_quantity', null,
+                 self._onOptionsUpdateQuantity.bind(self));
 
             self.optionalProductsModal.on('confirm', null,
                 self._onModalConfirm.bind(self));
@@ -161,12 +160,13 @@ var ProductConfiguratorFormController = FormController.extend({
      * when quantity is updated in the optional products window
      *
      * @private
-     * @param {integer} quantity
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.quantity
      */
-    _onOptionsUpdateQuantity: function (quantity) {
+    _onOptionsUpdateQuantity: function (ev) {
         this.$el
             .find('input[name="add_qty"]')
-            .val(quantity)
+            .val(ev.data.quantity)
             .trigger('change');
     },
 

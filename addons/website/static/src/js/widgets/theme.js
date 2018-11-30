@@ -271,8 +271,8 @@ var ThemeCustomizeDialog = Dialog.extend({
         var $image = $('<img/>');
         var editor = new widgets.MediaDialog(this, {onlyImages: true, firstFilters: ['background']}, null, $image[0]);
 
-        editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
-            var src = $(media).attr('src');
+        editor.on('save', this, function (ev) { // TODO use scss customization instead (like for user colors)
+            var src = $(ev.data.data).attr('src');
             self._rpc({
                 model: 'ir.model.data',
                 method: 'get_object_reference',

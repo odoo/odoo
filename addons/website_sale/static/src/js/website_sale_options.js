@@ -126,13 +126,14 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
      * when quantity is updated in the optional products window
      *
      * @private
-     * @param {integer} quantity
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.quantity
      */
-    _onOptionsUpdateQuantity: function (quantity) {
+    _onOptionsUpdateQuantity: function (ev) {
         this.$form
             .find('input[name="add_qty"]')
             .first()
-            .val(quantity)
+            .val(ev.data.quantity)
             .trigger('change');
     },
 

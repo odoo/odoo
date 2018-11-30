@@ -46,7 +46,7 @@ var Dialog = DialogBase.extend({
             self.$('input:first').focus();
         });
         this.on('closed', this, function () {
-            this.trigger(this.destroyAction, this.final_data || null);
+            this.trigger(this.destroyAction, {data: this.final_data || null});
         });
     },
 
