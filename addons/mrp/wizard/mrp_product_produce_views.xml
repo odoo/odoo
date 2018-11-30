@@ -11,6 +11,7 @@
                             <field name="serial" invisible="1"/>
                             <field name="production_id" invisible="1"/>
                             <field name="product_id" readonly="1"/>
+                            <field name="is_pending_production" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty" attrs="{'readonly': [('serial', '=', True)]}"/>
@@ -39,8 +40,10 @@
                         </field>
                     </group>
                     <footer>
-                        <button name="do_produce" type="object" string="Record Production" class="btn-primary"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button name="continue_production" attrs="{'invisible':[('is_pending_production', '=', False)]}" type="object" string="Continue" class="btn-primary"/>
+                        <button name="do_produce" type="object" string="Save" class="btn-default btn-secondary" attrs="{'invisible':[('is_pending_production', '=', False)]}"/>
+                        <button name="do_produce" type="object" string="Save" class="btn-primary" attrs="{'invisible':[('is_pending_production', '=', True)]}"/>
+                        <button string="Discard" class="btn-default btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>

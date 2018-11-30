@@ -559,7 +559,7 @@ tour.register('main_flow_tour', {
     content: _t("Produce"),
     position: "bottom",
 }, {
-    trigger:  ".modal-footer .btn-primary:first",
+    trigger:  ".modal-footer .btn-primary:nth-child(3)",
     content: _t('Record Production'),
     position: 'bottom',
 }, {
