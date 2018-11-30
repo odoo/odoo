@@ -59,7 +59,7 @@ class MrpRoutingWorkcenter(models.Model):
     time_mode = fields.Selection([
         ('auto', 'Compute based on real time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
-        default='auto')
+        default='manual')
     time_mode_batch = fields.Integer('Based on', default=10)
     time_cycle_manual = fields.Float(
         'Manual Duration', default=60,
