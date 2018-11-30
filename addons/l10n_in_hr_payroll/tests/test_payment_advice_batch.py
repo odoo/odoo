@@ -21,7 +21,7 @@ class TestPaymentAdviceBatch(TestPaymentAdviceBase):
         payslip_employee.with_context(active_id=payslip_run.id).compute_sheet()
 
         # I check that the Payslip Batch is in "Draft"
-        self.assertEqual(payslip_run.state, 'draft')
+        self.assertEqual(payslip_run.state, 'verify')
 
         # Now I close Payslip Batch
         payslip_run.write({'state': 'close'})

@@ -19,13 +19,4 @@
             print_report_name="'Payslip - %s' % (object.employee_id.name)"
         />
 
-        <report
-            id="payslip_details_report"
-            model="hr.payslip"
-            string="PaySlip Details"
-            report_type="qweb-pdf"
-            name="hr_payroll.report_payslipdetails" 
-            file="hr_payroll.report_payslipdetails"
-            print_report_name="'Payslip Details - %s' % (object.employee_id.name)"
-        />
 </odoo>
