@@ -21,8 +21,8 @@ class SaleOrder(models.Model):
         'account.incoterms', 'Incoterms',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     picking_policy = fields.Selection([
-        ('direct', 'Deliver each product when available'),
-        ('one', 'Deliver all products at once')],
+        ('direct', 'As soon as possible'),
+        ('one', 'When all products are ready')],
         string='Shipping Policy', required=True, readonly=True, default='direct',
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}
         ,help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "

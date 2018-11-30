@@ -200,12 +200,12 @@ class Picking(models.Model):
         ('cancel', 'Cancelled'),
     ], string='Status', compute='_compute_state',
         copy=False, index=True, readonly=True, store=True, track_visibility='onchange',
-        help=" * Draft: not confirmed yet and will not be scheduled until confirmed.\n"
-             " * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
-             " * Waiting: if it is not ready to be sent because the required products could not be reserved.\n"
-             " * Ready: products are reserved and ready to be sent. If the shipping policy is 'As soon as possible' this happens as soon as anything is reserved.\n"
-             " * Done: has been processed, can't be modified or cancelled anymore.\n"
-             " * Cancelled: has been cancelled, can't be confirmed anymore.")
+        help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
+             " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+             " * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
+             " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+             " * Done: The transfer has been processed.\n"
+             " * Cancelled: The transfer has been cancelled.")
 
     group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
