@@ -36,12 +36,6 @@ class HrBenefit(models.Model):
         ('_unique', 'unique (employee_id, date_start, date_stop, benefit_type_id)', "Benefit already exists for this attendence"),
     ]
 
-    @api.model
-    def create(self, vals):
-        vals['state'] = 'confirmed'
-        return super(HrBenefit, self).create(vals)
-
-
     @api.constrains('date_stop', 'duration')
     def _check_validity_benefit_ends(self):
         """ verifies if benefit has an end. """
@@ -72,6 +66,14 @@ class HrBenefit(models.Model):
         for benefit in self:
             if benefit.date_start and benefit.duration:
                 benefit.date_stop = benefit.date_start + relativedelta(hours=benefit.duration)
+
+    def write(self, vals):
+        if 'state' in vals:
+            if vals['state'] == 'draft':
+                vals['active'] = True
+            if vals['state'] == 'cancelled':
+                vals['active'] = False
+        return super(HrBenefit, self).write(vals)
 
     @api.multi
     def check_if_error(self):
@@ -156,28 +158,6 @@ class HrBenefit(models.Model):
             'res_model': 'hr.leave',
             'views': [[False, 'form']],
         }
-
-    @api.multi
-    def action_draft(self):
-        for benefit in self:
-            if benefit.state not in ['confirmed', 'cancelled']:
-                raise UserError(_('Benefit state must be "Confirmed" or "Cancelled" in order to be reset to draft.'))
-            benefit.write({
-                'state': 'draft',
-                'active': True,
-            })
-        return True
-
-    @api.multi
-    def action_cancel(self):
-        for benefit in self:
-            if benefit.state not in ['confirmed']:
-                raise UserError(_('Benefit state must be "Confirmed" in order to be cancelled.'))
-            benefit.write({
-                'state': 'cancelled',
-                'active': False,
-            })
-        return True
 
     def split_by_day(self):
         """

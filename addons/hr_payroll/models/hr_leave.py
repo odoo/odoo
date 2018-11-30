@@ -24,6 +24,7 @@ class HrLeave(models.Model):
                 'benefit_type_id': benefit_type.id,
                 'employee_id': leave.employee_id.id,
                 'leave_id': self.id,
+                'state': 'confirmed',
             })
 
     @api.multi
@@ -52,6 +53,7 @@ class HrLeave(models.Model):
                     'date_stop': benefit_stop,
                     'benefit_type_id': benefit_type.id,
                     'employee_id': employee.id,
+                    'state': 'confirmed',
                 })
             benefits.unlink()
 
