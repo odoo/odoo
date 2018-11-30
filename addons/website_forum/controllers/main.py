@@ -334,11 +334,6 @@ class WebsiteForum(http.Controller):
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="user", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, **post):
-        if not post.get('post_name', ''):
-            return request.render('website.http_error', {
-                'status_code': _('Bad Request'),
-                'status_message': _('Title should not be empty.')
-            })
         if post.get('content', '') == '<p><br></p>':
             return request.render('website.http_error', {
                 'status_code': _('Bad Request'),

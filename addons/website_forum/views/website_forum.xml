@@ -25,7 +25,7 @@
 <template id="link_button">
     <form method="POST" t-att-action="url" t-attf-class="#{form_classes}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <button t-attf-class="fa btn btn-link o_none_underline #{classes} #{karma and 'karma_required text-muted' or ''}" t-attf-data-karma="#{karma}">
+        <button t-attf-class="fa btn btn-link o_none_underline #{classes} #{karma and 'karma_required text-muted' or ''}" t-attf-data-karma="#{karma}" t-att-title="title">
             <t t-esc="label"/></button>
     </form>
 </template>
@@ -714,43 +714,49 @@
                         <t t-if="question.state == 'close'" t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
                             <t t-set="label"></t>
+                            <t t-set="title">Reopen</t>
                             <t t-set="classes" t-value="'fa-undo'"/>
                             <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                         </t>
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
                             <t t-set="label"></t>
+                            <t t-set="title">Edit</t>
                             <t t-set="classes" t-value="'fa-pencil-square-o'"/>
                             <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
                         </t>
                         <t t-if="question.state != 'close'" t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
                             <t t-set="label"></t>
+                            <t t-set="title">Close</t>
                             <t t-set="classes" t-value="'fa-times'"/>
                             <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                         </t>
                         <t t-if="question.active" t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
                             <t t-set="label"></t>
+                            <t t-set="title">Delete</t>
                             <t t-set="classes" t-value="'fa-trash-o'"/>
                             <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                         </t>
                         <t t-if="not question.active and question.state != 'offensive'" t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
                             <t t-set="label"></t>
+                            <t t-set="title">Undelete</t>
                             <t t-set="classes" t-value="'fa-upload'"/>
                             <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                         </t>
                         <t t-if="not question.active and question.state == 'offensive'" t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/validate'"/>
                             <t t-set="label"></t>
+                            <t t-set="title">Validate</t>
                             <t t-set="classes" t-value="'fa-upload'"/>
                             <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                         </t>
                         <a t-if="question.active" t-attf-style="cursor: pointer;#{not question.can_flag and 'display:none;' or ''}"
                             t-attf-class="flag px-3 py-2 #{not question.can_flag and 'karma_required' or ''}"
                             t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
-                            t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag"
+                            t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag" title="Flag"
                             ><i t-attf-class="text-primary fa #{not question.can_flag and 'karma_required fa-flag-o' or 'fa-flag'}"/>
                         </a>
                     </div>
@@ -1073,10 +1079,10 @@
         </h2>
         <div class="modal fade" id="markAllAsSpam" tabindex="-1" role="dialog" aria-labelledby="markAllAsSpam" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-body bg-100">
-                        <button type="button" class="fa fa-times btn btn-sm btn-secondary o_close_spam" data-dismiss="modal"></button>
-                        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+                <div class="modal-dialog modal-content">
+                    <div class="modal-header pb-0">
+                        <button type="button" class="close o_close_spam" data-dismiss="modal"><i class="fa fa-close"/></button>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active spam_menu" id="user-tab" data-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true">User</a>
                             </li>
@@ -1087,6 +1093,8 @@
                                 <a class="nav-link spam_menu" id="character-tab" data-toggle="tab" href="#spam_character" role="tab" aria-controls="spam_character" aria-selected="false">Typical Character</a>
                             </li>
                         </ul>
+                    </div>
+                    <div class="modal-body bg-100">
                         <div class="tab-content" id="o_tab_content_spam">
                             <div class="tab-pane fade show active" id="spam_user" role="tabpanel" aria-labelledby="user-tab">
                                 <a href="#" class="btn btn-primary all_select_spam mb-2">Select all</a>
