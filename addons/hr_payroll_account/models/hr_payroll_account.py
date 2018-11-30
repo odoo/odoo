@@ -69,7 +69,7 @@ class HrPayslip(models.Model):
                 'journal_id': slip.journal_id.id,
                 'date': date,
             }
-            for line in slip.details_by_salary_rule_category:
+            for line in slip.line_ids.filtered(lambda line: line.category_id):
                 amount = slip.credit_note and -line.total or line.total
                 if float_is_zero(amount, precision_digits=precision):
                     continue

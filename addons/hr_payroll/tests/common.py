@@ -18,7 +18,6 @@ class TestPayslipBase(TransactionCase):
         self.prof_tax_rule_id = self.ref('hr_payroll.hr_salary_rule_professionaltax1')
         self.pf_rule_id = self.ref('hr_payroll.hr_salary_rule_providentfund1')
         self.mv_rule_id = self.ref('hr_payroll.hr_salary_rule_meal_voucher')
-        self.comm_rule_id = self.ref('hr_payroll.hr_salary_rule_sales_commission')
 
         # I create a new employee "Richard"
         self.richard_emp = self.env['hr.employee'].create({
@@ -36,7 +35,7 @@ class TestPayslipBase(TransactionCase):
             'company_id': self.ref('base.main_company'),
             'rule_ids': [(4, self.hra_rule_id), (4, self.conv_rule_id),
                          (4, self.prof_tax_rule_id), (4, self.pf_rule_id),
-                         (4, self.mv_rule_id), (4, self.comm_rule_id)],
+                         (4, self.mv_rule_id)],
         })
 
         # I create a contract for "Richard"

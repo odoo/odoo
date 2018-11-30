@@ -135,7 +135,7 @@ class HrSalaryRule(models.Model):
                     # rules: object containing the rules code (previously computed)
                     # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
                     # worked_days: object containing the computed worked days
-                    # inputs: object containing the computed inputs
+                    # inputs: object containing the computed inputs.
 
                     # Note: returned value have to be set in the variable 'result'
 
@@ -170,7 +170,6 @@ class HrSalaryRule(models.Model):
     child_ids = fields.One2many('hr.salary.rule', 'parent_rule_id', string='Child Salary Rule', copy=True)
     register_id = fields.Many2one('hr.contribution.register', string='Contribution Register',
         help="Eventual third party involved in the salary payment of the employees.")
-    input_ids = fields.One2many('hr.rule.input', 'input_id', string='Inputs', copy=True)
     note = fields.Text(string='Description')
 
     @api.constrains('parent_rule_id')
@@ -239,11 +238,3 @@ class HrSalaryRule(models.Model):
             except:
                 raise UserError(_('Wrong python condition defined for salary rule %s (%s).') % (self.name, self.code))
 
-
-class HrRuleInput(models.Model):
-    _name = 'hr.rule.input'
-    _description = 'Salary Rule Input'
-
-    name = fields.Char(string='Description', required=True)
-    code = fields.Char(required=True, help="The code that can be used in the salary rules")
-    input_id = fields.Many2one('hr.salary.rule', string='Salary Rule Input', required=True)

@@ -59,19 +59,12 @@ class HrPayslip(models.Model):
     note = fields.Text(string='Internal Note', readonly=True, states={'draft': [('readonly', False)]})
     contract_id = fields.Many2one('hr.contract', string='Contract', readonly=True,
         states={'draft': [('readonly', False)]})
-    details_by_salary_rule_category = fields.One2many('hr.payslip.line',
-        compute='_compute_details_by_salary_rule_category', string='Details by Salary Rule Category')
     credit_note = fields.Boolean(string='Credit Note', readonly=True,
         states={'draft': [('readonly', False)]},
         help="Indicates this payslip has a refund of another")
     payslip_run_id = fields.Many2one('hr.payslip.run', string='Payslip Batches', readonly=True,
         copy=False, states={'draft': [('readonly', False)]})
     payslip_count = fields.Integer(compute='_compute_payslip_count', string="Payslip Computation Details")
-
-    @api.multi
-    def _compute_details_by_salary_rule_category(self):
-        for payslip in self:
-            payslip.details_by_salary_rule_category = payslip.mapped('line_ids').filtered(lambda line: line.category_id)
 
     @api.multi
     def _compute_payslip_count(self):
@@ -119,6 +112,19 @@ class HrPayslip(models.Model):
             'context': {}
         }
 
+    @api.model
+    def create(self, vals):
+        res = super(HrPayslip, self).create(vals)
+        if not res.payslip_run_id:
+            self.env['hr.payslip.run'].create({
+                'name': res.name,
+                'date_start': res.date_from,
+                'date_end': res.date_to,
+                'slip_ids': [(4, res.id)],
+                'state': 'close',
+            })
+        return res
+
     @api.multi
     def unlink(self):
         if any(self.filtered(lambda payslip: payslip.state not in ('draft', 'cancel'))):
@@ -136,14 +142,14 @@ class HrPayslip(models.Model):
             contracts = payslip.contract_id or \
                 payslip.employee_id._get_contracts(payslip.date_from, payslip.date_to)
             lines = [(0, 0, line) for line in payslip._get_payslip_lines(contracts)]
-            payslip.write({'line_ids': lines, 'number': number})
+            payslip.write({'line_ids': lines, 'number': number, 'state': 'verify'})
         return True
 
     @api.model
     def get_worked_day_lines(self, contracts, date_from, date_to):
         """
         @param contract: Browse record of contracts
-        @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
+        @return: returns a list of dict containing the worked days that should be applied for the given contract between date_from and date_to
         """
         res = []
         # fill only if the contract as a working schedule linked
@@ -151,63 +157,23 @@ class HrPayslip(models.Model):
             day_from = datetime.combine(fields.Date.from_string(date_from), time.min)
             day_to = datetime.combine(fields.Date.from_string(date_to), time.max)
 
-            # compute leave days
-            leaves = {}
             calendar = contract.resource_calendar_id
-            tz = timezone(calendar.tz)
-            day_leave_intervals = contract.employee_id.list_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
-            for day, hours, leave in day_leave_intervals:
-                holiday = leave.holiday_id
-                current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
-                    'name': holiday.holiday_status_id.name,
-                    'sequence': 5,
-                    'code': holiday.holiday_status_id.code or holiday.holiday_status_id.name,
-                    'number_of_days': 0.0,
-                    'number_of_hours': 0.0,
-                    'contract_id': contract.id,
-                })
-                current_leave_struct['number_of_hours'] += hours
-                work_hours = calendar.get_work_hours_count(
-                    tz.localize(datetime.combine(day, time.min)),
-                    tz.localize(datetime.combine(day, time.max)),
-                    compute_leaves=False,
-                )
-                if work_hours:
-                    current_leave_struct['number_of_days'] += hours / work_hours
 
-            # compute worked days
-            work_data = contract.employee_id.get_work_days_data(day_from, day_to, calendar=contract.resource_calendar_id)
-            attendances = {
-                'name': _("Normal Working Days paid at 100%"),
-                'sequence': 1,
-                'code': 'WORK100',
-                'number_of_days': work_data['days'],
-                'number_of_hours': work_data['hours'],
-                'contract_id': contract.id,
-            }
+            benefit_types = self.env['hr.benefit.type'].search([('code', '!=', False)])
+            for benefit_type in benefit_types:
+                hours = contract.employee_id.get_benefit_days_data(benefit_type, day_from, day_to)['hours']
+                if hours:
+                    line = {
+                        'name': benefit_type.name,
+                        'sequence': benefit_type.sequence,
+                        'code': benefit_type.code,
+                        'number_of_days': hours / calendar.hours_per_day, # n_days returned by benefit_days_data doesn't make sense for extra work
+                        'number_of_hours': hours,
+                    }
+                    res.append(line)
 
-            res.append(attendances)
-            res.extend(leaves.values())
         return res
 
-    @api.model
-    def get_inputs(self, contracts, date_from, date_to):
-        res = []
-
-        structures = contracts.get_all_structures()
-        rule_ids = structures.get_all_rules()
-        sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
-        inputs = self.env['hr.salary.rule'].browse(sorted_rule_ids).mapped('input_ids')
-
-        for contract in contracts:
-            for input in inputs:
-                input_data = {
-                    'name': input.name,
-                    'code': input.code,
-                    'contract_id': contract.id,
-                }
-                res += [input_data]
-        return res
 
     # YTI TODO: pass recordset as argument
     @api.model
@@ -289,67 +255,6 @@ class HrPayslip(models.Model):
 
         return list(result_dict.values())
 
-    # YTI TODO To rename. This method is not really an onchange, as it is not in any view
-    # employee_id and contract_id could be browse records. Contract_id should be a record
-    @api.multi
-    def onchange_employee_id(self, date_from, date_to, employee_id=False, contract_id=False):
-        #defaults
-        res = {
-            'value': {
-                'line_ids': [],
-                #delete old input lines
-                'input_line_ids': [(2, x,) for x in self.input_line_ids.ids],
-                #delete old worked days lines
-                'worked_days_line_ids': [(2, x,) for x in self.worked_days_line_ids.ids],
-                #'details_by_salary_head':[], TODO put me back
-                'name': '',
-                'contract_id': False,
-                'struct_id': False,
-            }
-        }
-        if (not employee_id) or (not date_from) or (not date_to):
-            return res
-        ttyme = datetime.combine(fields.Date.from_string(date_from), time.min)
-        employee = self.env['hr.employee'].browse(employee_id)
-        locale = self.env.context.get('lang') or 'en_US'
-        res['value'].update({
-            'name': _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale))),
-            'company_id': employee.company_id.id,
-        })
-
-        contracts = self.env['hr.contract']
-        if not self.env.context.get('contract'):
-            #fill with the first contract of the employee
-            contracts = employee._get_contracts(date_from, date_to)
-        else:
-            if contract_id:
-                #set the list of contract for which the input have to be filled
-                contracts = self.env['hr.contract'].browse(contract_id)
-            else:
-                #if we don't give the contract, then the input to fill should be for all current contracts of the employee
-                contracts = employee._get_contracts(date_from, date_to)
-
-        if not contracts:
-            return res
-        contract = contracts[0]
-        res['value'].update({
-            'contract_id': contract.id
-        })
-        struct = contract.struct_id
-        if not struct:
-            return res
-        res['value'].update({
-            'struct_id': struct.id,
-        })
-        #computation of the salary input
-        worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
-        input_line_ids = self.get_inputs(contracts, date_from, date_to)
-        res['value'].update({
-            'worked_days_line_ids': worked_days_line_ids,
-            'input_line_ids': input_line_ids,
-        })
-        return res
-
     @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
 
@@ -376,18 +281,13 @@ class HrPayslip(models.Model):
             return
         self.struct_id = self.contract_id.struct_id
 
-        #computation of the salary input
+        #computation of the salary worked days
         worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
         for r in worked_days_line_ids:
             worked_days_lines += worked_days_lines.new(r)
         self.worked_days_line_ids = worked_days_lines
 
-        input_line_ids = self.get_inputs(contracts, date_from, date_to)
-        input_lines = self.input_line_ids.browse([])
-        for r in input_line_ids:
-            input_lines += input_lines.new(r)
-        self.input_line_ids = input_lines
         return
 
     @api.onchange('contract_id')
@@ -431,7 +331,7 @@ class HrPayslipLine(models.Model):
     amount_fix = fields.Float(related='salary_rule_id.amount_fix', readonly=True)
     amount_percentage = fields.Float(related='salary_rule_id.amount_percentage', readonly=True)
     appears_on_payslip = fields.Boolean(related='salary_rule_id.appears_on_payslip', readonly=True)
-    category_id = fields.Many2one(related='salary_rule_id.category_id', readonly=True)
+    category_id = fields.Many2one(related='salary_rule_id.category_id', readonly=True, store=True)
     register_id = fields.Many2one(related='salary_rule_id.register_id', readonly=True, store=True)
 
     @api.depends('quantity', 'amount', 'rate')
@@ -462,8 +362,8 @@ class HrPayslipWorkedDays(models.Model):
     code = fields.Char(required=True, help="The code that can be used in the salary rules")
     number_of_days = fields.Float(string='Number of Days')
     number_of_hours = fields.Float(string='Number of Hours')
-    contract_id = fields.Many2one('hr.contract', string='Contract', required=True,
-        help="The contract for which applied this input")
+    contract_id = fields.Many2one(related='payslip_id.contract_id', string='Contract', required=True,
+        help="The contract for which applied this worked days")
 
 
 class HrPayslipInput(models.Model):
@@ -478,7 +378,7 @@ class HrPayslipInput(models.Model):
     amount = fields.Float(help="It is used in computation. For e.g. A rule for sales having "
                                "1% commission of basic salary for per product can defined in expression "
                                "like result = inputs.SALEURO.amount * contract.wage*0.01.")
-    contract_id = fields.Many2one('hr.contract', string='Contract', required=True,
+    contract_id = fields.Many2one(related='payslip_id.contract_id', string='Contract', required=True,
         help="The contract for which applied this input")
 
 
@@ -491,7 +391,8 @@ class HrPayslipRun(models.Model):
         states={'draft': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('close', 'Close'),
+        ('verify', 'Verify'),
+        ('close', 'Done'),
     ], string='Status', index=True, readonly=True, copy=False, default='draft')
     date_start = fields.Date(string='Date From', required=True, readonly=True,
         states={'draft': [('readonly', False)]}, default=lambda self: fields.Date.to_string(date.today().replace(day=1)))
@@ -501,6 +402,11 @@ class HrPayslipRun(models.Model):
     credit_note = fields.Boolean(string='Credit Note', readonly=True,
         states={'draft': [('readonly', False)]},
         help="If its checked, indicates that all payslips generated from here are refund payslips.")
+    payslip_count = fields.Integer(compute='_compute_payslip_count')
+
+    def _compute_payslip_count(self):
+        for payslip_run in self:
+            payslip_run.payslip_count = len(self.slip_ids)
 
     @api.multi
     def draft_payslip_run(self):
@@ -510,3 +416,13 @@ class HrPayslipRun(models.Model):
     def close_payslip_run(self):
         self.mapped('slip_ids').filtered(lambda payslip: payslip.state != 'done').action_payslip_done()
         return self.write({'state': 'close'})
+
+    def action_open_payslips(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "hr.payslip",
+            "views": [[False, "tree"], [False, "form"]],
+            "domain": [['id', 'in', self.slip_ids.ids]],
+            "name": "Payslips",
+        }
