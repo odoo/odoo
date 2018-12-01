@@ -149,10 +149,17 @@ class TestOnChange(common.TransactionCase):
             (5,),
             (1, message1.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
+                'body': "ABC",
+                'author': USER.name_get()[0],
+                'size': 3,
+                'important': False,
             }),
             (1, message2.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "XYZ",          # this must be sent back
+                'author': USER.name_get()[0],
+                'size': 3,
+                'important': False,
             }),
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
@@ -262,11 +269,16 @@ class TestOnChange(common.TransactionCase):
             'name': partner2.name,
             'lines': [
                 (5,),
-                (1, line1.id, {'name': partner2.name,
-                               'partner': (partner2.id, partner2.name)}),
-                (0, 0, {'name': partner2.name,
-                        'partner': (partner2.id, partner2.name),
-                        'tags': [(5,)]}),
+                (1, line1.id, {
+                    'name': partner2.name,
+                    'partner': (partner2.id, partner2.name),
+                    'tags': [(5,)],
+                }),
+                (0, 0, {
+                    'name': partner2.name,
+                    'partner': (partner2.id, partner2.name),
+                    'tags': [(5,)],
+                }),
             ],
         })
 
@@ -286,11 +298,16 @@ class TestOnChange(common.TransactionCase):
             'name': partner2.name,
             'lines': [
                 (5,),
-                (1, line1.id, {'name': partner2.name,
-                               'partner': (partner2.id, partner2.name)}),
-                (0, 0, {'name': partner2.name,
-                        'partner': (partner2.id, partner2.name),
-                        'tags': [(5,), (0, 0, {'name': 'Tag'})]}),
+                (1, line1.id, {
+                    'name': partner2.name,
+                    'partner': (partner2.id, partner2.name),
+                    'tags': [(5,)],
+                }),
+                (0, 0, {
+                    'name': partner2.name,
+                    'partner': (partner2.id, partner2.name),
+                    'tags': [(5,), (0, 0, {'name': 'Tag'})],
+                }),
             ],
         }
         self.assertEqual(result['value'], expected_value)
@@ -439,7 +456,14 @@ class TestOnChange(common.TransactionCase):
 
         self.assertEqual(
             result['value']['important_emails'],
-            [(5,), (1, email.id, {'name': u'[Foo Bar] %s' % USER.name})],
+            [(5,), (1, email.id, {
+                'name': u'[Foo Bar] %s' % USER.name,
+                'body': BODY,
+                'author': USER.name_get()[0],
+                'size': len(BODY),
+                'important': True,
+                'email_to': demo.email,
+            })],
         )
 
     def test_onchange_related(self):
