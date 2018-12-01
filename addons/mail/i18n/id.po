@@ -3,29 +3,31 @@
 # * mail
 # 
 # Translators:
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
-# William Surya Permana <zarambie_game@yahoo.com>, 2016
-# Martin Trigaux, 2016
-# Dedi Santoso <dedisantoso@yahoo.com>, 2016
 # Deddy Ddr <deddy.ddr@gmail.com>, 2016
-# Edy Kend <edy@azmall.co.id>, 2016
-# Febrasari Almania <febrasari.almania@gmail.com>, 2016
-# Bonny Useful <bonny.useful@gmail.com>, 2016
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2016
 # Dhaman <dhaman@indonesian-odoo.com>, 2016
 # Andhitia Rama <andhitia.r@gmail.com>, 2016
+# Dedi Santoso <dedisantoso@yahoo.com>, 2016
+# Edy Kend <edy@azmall.co.id>, 2016
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
+# William Surya Permana <zarambie_game@yahoo.com>, 2016
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Febrasari Almania <febrasari.almania@gmail.com>, 2016
 # Ngalim Siregar <ngalim.siregar@gmail.com>, 2016
 # Rachmat Aditiya <raditiya@me.com>, 2016
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
+# Bonny Useful <bonny.useful@gmail.com>, 2017
 # Gusti Rini <gustirini@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Gusti Rini <gustirini@gmail.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:22+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2018\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -295,6 +297,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s mengundang %(new_partner)s ke "
+"<a href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550
@@ -367,6 +372,10 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
+"<p><b>Tulis pesan</b> kepada anggota saluran ini.</p> <p>Anda dapat "
+"memanggil seseorang dengan <i>'@'</i> atau menyambungkan saluran lain dengan"
+" <i>'#'</i>. Mulai pesan Anda dengan <i>'/'</i> untuk melihat perintah yang "
+"dapat dilakukan.</p>"
 
 #. module: mail
 #. openerp-web
@@ -377,6 +386,9 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
+"<p>Saluran memudahkan Anda mengelola informasi dari berbagai topik dan "
+"grup.</p> <p>Coba <b>buat saluran Anda</b> (mis. penjualan, pemasaran, "
+"produk XYZ, ngopi setelah kerja, dll).</p>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -388,6 +400,12 @@ msgid ""
 "                            </span>\n"
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                <strong>Email massal</strong> pada\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">data yang dipilih</span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">penyaring saat ini</span>.\n"
+"                            </span>\n"
+"                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Pengikut dari dokumen dan</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -395,6 +413,8 @@ msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Tambah</span>\n"
+"                                    <span class=\"o_stat_text\">Tindakan Konteks</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -402,6 +422,8 @@ msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Hapus</span>\n"
+"                                    <span class=\"o_stat_text\">Tindakan Konteks</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
@@ -441,6 +463,8 @@ msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
 msgstr ""
+"Kode singkat adalah tombol pintas untuk keyboard. Misalnya, jika Anda "
+"mengetik #gm, maka akan diubah menjadi \"Good Morning\"."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
@@ -566,7 +590,7 @@ msgstr "Tambah kanal"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add channels to notify..."
-msgstr ""
+msgstr "Tambah saluran yang akan diberitahu..."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -667,12 +691,14 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"Balasan tidak masuk di thread diskusi dokumen sumber. Ini akan mempengaruhi "
+"id pesan yang dihasilkan."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_model_id
 msgid "Applies to"
-msgstr ""
+msgstr "Terapkan untuk"
 
 #. module: mail
 #. openerp-web
@@ -704,11 +730,13 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Lampiran terkait dengan dokumen melalui model / res_id dan dengan pesan "
+"melalui kolom ini."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Employees"
-msgstr ""
+msgstr "Karyawan Terotentikasi"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -727,7 +755,7 @@ msgstr "Penulis"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Author Signature (mass mail only)"
-msgstr ""
+msgstr "Tanda Tangan Pembuat (hanya untuk email massal)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_id
@@ -747,7 +775,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_author_avatar
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Avatar penulis"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_group_public_id
@@ -781,7 +809,7 @@ msgstr "Tersedia untuk surat massal"
 #: code:addons/mail/static/src/xml/followers.xml:87
 #, python-format
 msgid "Be careful with channels following internal notifications"
-msgstr ""
+msgstr "Hati-hati dengan saluran yang mengikuti notifikasi internal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_body_html
@@ -801,7 +829,7 @@ msgstr "Bouncing"
 #. module: mail
 #: selection:mail.notification,email_status:0
 msgid "Bounced"
-msgstr ""
+msgstr "Kembali"
 
 #. module: mail
 #. openerp-web
@@ -826,12 +854,12 @@ msgstr "Dibatalkan"
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
 msgid "Canned Response"
-msgstr ""
+msgstr "Tanggapan Singkat"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
-msgstr ""
+msgstr "Tanggapan Singkat / Kode Singkat"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_email_cc
@@ -842,7 +870,7 @@ msgstr "Penerima pesan carbon copy"
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_cc
 #: model:ir.model.fields,help:mail.field_mail_template_email_cc
 msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr ""
+msgstr "Cc penerima email (dapat menggunakan placeholder)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_cc
@@ -859,7 +887,7 @@ msgstr "Ubah"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
 msgid "Changed Field"
-msgstr ""
+msgstr "Kolom yang Diubah"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_channel_id
@@ -871,7 +899,7 @@ msgstr "Saluran"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
 msgid "Channel Type"
-msgstr ""
+msgstr "Tipe Saluran"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
@@ -900,7 +928,7 @@ msgstr "Saluran"
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
 #: model:ir.ui.menu,name:mail.mail_channel_partner_menu
 msgid "Channels/Partner"
-msgstr ""
+msgstr "Saluran/Rekanan"
 
 #. module: mail
 #. openerp-web
@@ -908,17 +936,17 @@ msgstr ""
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
 #, python-format
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "Diskusi Chat"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Chat Shortcode"
-msgstr ""
+msgstr "Kode Singkat Chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_child_ids
@@ -936,24 +964,26 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Choose an example"
-msgstr ""
+msgstr "Pilih salah satu contoh"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:340
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
+"Klik di sini untuk menambahkan %(document)s baru atau kirim email ke: "
+"%(email_link)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:356
 #, python-format
 msgid "Click here to add new %s"
-msgstr ""
+msgstr "Klik di sini untuk menambahkan %s baru"
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Click to define a new chat shortcode."
-msgstr ""
+msgstr "Klik untuk mendefinisikan kode singkat baru."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -963,12 +993,12 @@ msgstr "Ditutup"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr ""
+msgstr "Cc alamat penerima dipisahkan dengan koma"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr ""
+msgstr "Cc id rekanan penerima dipisahkan dengan koma"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_partner_to
@@ -977,11 +1007,12 @@ msgstr ""
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
+"Id rekanan penerima dipisahkan dengan koma (dapat menggunakan placeholder)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr ""
+msgstr "Alamat penerima yang dipisahkan dengan koma"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_to
@@ -989,6 +1020,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr ""
+"Alamat penerima dipisahkan dengan koma (dapat menggunakan placeholder)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1015,7 +1047,7 @@ msgstr "Mode Kompisisi"
 #: code:addons/mail/static/src/xml/thread.xml:24
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr ""
+msgstr "Selamat, kotak pesan Anda kosong"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1034,32 +1066,32 @@ msgstr "Daftar Isi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_fold_state
 msgid "Conversation Fold State"
-msgstr ""
+msgstr "Status Tampilan Percakapan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "Percakapan dikecilkan"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:14
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "Percakapan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,help:mail.field_res_users_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Jumlah email kembali untuk kontak ini"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:316
 #, python-format
 msgid "Create %s"
-msgstr ""
+msgstr "Buat %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
@@ -1196,7 +1228,7 @@ msgstr "Tanggal pesan terakhir diposting pada catatan."
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr ""
+msgstr "Kepada"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_default
@@ -1220,7 +1252,7 @@ msgstr "Nilai default"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_use_default_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_use_default_to
 msgid "Default recipients"
-msgstr ""
+msgstr "Penerima baku"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_use_default_to
@@ -1230,24 +1262,27 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
+"Penerima baku untuk data ini:\n"
+"- rekanan (gunakan id rekanan atau kolom partner_id) ATAU\n"
+"- email (gunakan email_from atau kolom email)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "Hapus Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Hapus Salinan Pesan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "Hapus email terkirim (hanya untuk email massal)"
 
 #. module: mail
 #. openerp-web
@@ -1283,7 +1318,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:44
 #, python-format
 msgid "Direct Messages"
-msgstr ""
+msgstr "Pesan Langsung"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
@@ -1328,6 +1363,8 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
+"Tampilkan pilihan pada dokumen terkait untuk membuka wisaya komposisi dengan"
+" contoh ini"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete_message
@@ -1336,6 +1373,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Jangan simpan salinan email di riwayat komunikasi dokumen (hanya untuk email"
+" massal)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -1345,7 +1384,7 @@ msgstr "Pengikut dokumen"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Dynamic Placeholder Generator"
-msgstr ""
+msgstr "Pembuat Placeholder Dinamik"
 
 #. module: mail
 #. openerp-web
@@ -1383,7 +1422,7 @@ msgstr "Email alias"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
-msgstr ""
+msgstr "Konfigurasi Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_notify_email
@@ -1394,7 +1433,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Email Preview"
-msgstr ""
+msgstr "Pratinjau Email"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1404,7 +1443,7 @@ msgstr "Penelusuran email"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_email_status
 msgid "Email Status"
-msgstr ""
+msgstr "Status Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_template_id
@@ -1414,7 +1453,7 @@ msgstr "Template Email"
 #. module: mail
 #: model:ir.model,name:mail.model_email_template_preview
 msgid "Email Template Preview"
-msgstr ""
+msgstr "Pratinjau Contoh Email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template
@@ -1444,6 +1483,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"Alamat email pengirim. Kolom ini digunakan ketika tidak ada rekanan cocok "
+"yang ditemukan dan menggantikan kolom author_id di kotak chat."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1480,12 +1521,12 @@ msgstr "Error selama komunikasi dengan penerbit garansi."
 msgid ""
 "Error without exception. Probably due do sending an email without computed "
 "recipients."
-msgstr ""
+msgstr "Eror tanpa sebab. Mungkin karena mengirim email tanpa penerima."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a channel cannot follow twice the same object."
-msgstr ""
+msgstr "Eror, sebuah saluran tidak dapat mengikuti objek yang sama dua kali."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
@@ -1497,6 +1538,8 @@ msgstr "Kesalahan, mitra tidak mengikuti dua kali objek yang sama."
 msgid ""
 "Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
+"Eror: Seorang pengikut haruslah rekanan atau saluran (tapi tidak kedua-"
+"duanya)."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
@@ -1527,13 +1570,13 @@ msgstr "Gagal"
 #: code:addons/mail/models/mail_template.py:363
 #, python-format
 msgid "Failed to render template %r using values %r"
-msgstr ""
+msgstr "Gagal untuk render contoh %r menggunakan nilai %r"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_failure_reason
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr ""
+msgstr "Alasan Gagal"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_failure_reason
@@ -1541,6 +1584,8 @@ msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
 msgstr ""
+"Alasan gagal. Ini biasanya pengecualian yang disampaikan oleh server email, "
+"dan disimpan untuk membantu debug masalah yang berkaitan dengan pesan."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred_partner_ids
@@ -1548,7 +1593,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_starred_partner_ids
 msgid "Favorited By"
-msgstr ""
+msgstr "Difavoritkan Oleh"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_object_field
@@ -1559,12 +1604,12 @@ msgstr "kolom"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field_desc
 msgid "Field Description"
-msgstr ""
+msgstr "Deskripsi Kolom"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field_type
 msgid "Field Type"
-msgstr ""
+msgstr "Tipe Kolom"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_relation_field
@@ -1584,6 +1629,7 @@ msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
+"Ekspresi placeholder akhir, akan disalin pada kolom contoh yang diinginkan."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -1824,7 +1870,7 @@ msgstr "Dari"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Gateway"
-msgstr ""
+msgstr "Gateway"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:46
@@ -1913,7 +1959,7 @@ msgstr "ID dari sumber diikuti"
 #: code:addons/mail/static/src/xml/client_action.xml:112
 #, python-format
 msgid "Idle"
-msgstr ""
+msgstr "Senggang"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_unread
@@ -2059,6 +2105,8 @@ msgid ""
 "If checked, the user's signature will be appended to the text version of the"
 " message"
 msgstr ""
+"Jika dicentang, tanda tangan pengguna akan ditambahkan ke versi teks dari "
+"pesan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_opt_out
@@ -2068,6 +2116,10 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
 msgstr ""
+"Jika opt-out dicentang, kontak ini telah menolak untuk menerima email untuk "
+"email massal dan info dari pemasaran. Penyaring 'Tersedia untuk Email "
+"Massal' mengizinkan pengguna untuk menyaring rekanan ketika membuat email "
+"massal."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_scheduled_date
@@ -2075,6 +2127,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
+"Jika diatur, pengelola antrian akan mengirim email setelah tanggal tersebut."
+" Jika kosong, email akan dikirimkan secepatnya."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2083,6 +2137,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
+"Jika diatur, pengelola antrian akan mengirim email setelah tanggal tersebut."
+" Jika kosong, email akan dikirimkan secepatnya. Placeholder Jinja2 dapat "
+"digunakan."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
@@ -2138,12 +2195,14 @@ msgid ""
 "Invalid record set: should be called as model (without records) or on "
 "single-record recordset"
 msgstr ""
+"Set data tidak sah: seharusnya dipanggil sebagai model (tanpa data) atau "
+"pada data tunggal"
 
 #. module: mail
 #: code:addons/mail/controllers/main.py:43
 #, python-format
 msgid "Invalid token in route %s"
-msgstr ""
+msgstr "Token tidak sah pada rute %s"
 
 #. module: mail
 #. openerp-web
@@ -2171,7 +2230,7 @@ msgstr "Undang"
 #: code:addons/mail/static/src/js/followers.js:143
 #, python-format
 msgid "Invite Follower"
-msgstr ""
+msgstr "Undang Pengikut"
 
 #. module: mail
 #. openerp-web
@@ -2179,14 +2238,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:134
 #, python-format
 msgid "Invite people"
-msgstr ""
+msgstr "Undang orang-orang"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:649
 #, python-format
 msgid "Invite people to #%s"
-msgstr ""
+msgstr "Undang orang-orang ke #%s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2196,7 +2255,7 @@ msgstr "Mengundang wizard"
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Invited people only"
-msgstr ""
+msgstr "Khusus untuk pengikut yang diundang"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_is_follower
@@ -2270,27 +2329,27 @@ msgstr "Notifikasi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_read
 msgid "Is Read"
-msgstr ""
+msgstr "Dibaca"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
-msgstr ""
+msgstr "Disubskripsi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
 msgid "Is a member"
-msgstr ""
+msgstr "Anggota"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_pinned
 msgid "Is pinned on the interface"
-msgstr ""
+msgstr "Dipermanenkan di antarmuka"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "Gabung"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -2393,7 +2452,7 @@ msgstr "Terakhir diubah pada"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_last_seen_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_seen_message_id
 msgid "Last Seen"
-msgstr ""
+msgstr "Terakhir Aktif"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
@@ -2447,13 +2506,13 @@ msgstr "cuti"
 #: code:addons/mail/static/src/xml/client_action.xml:101
 #, python-format
 msgid "Leave this channel"
-msgstr ""
+msgstr "Keluar dari saluran ini"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_channel_ids
 msgid ""
 "List of channels that will be added as listeners of the current document."
-msgstr ""
+msgstr "Daftar saluran yang akan ditambahkan sebagai pengikut dokumen ini."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_partner_ids
@@ -2465,36 +2524,36 @@ msgstr "Daftar mitra yang akan ditambahkan sebagai pengikut dokumen saat ini."
 #: code:addons/mail/models/mail_channel.py:663
 #, python-format
 msgid "List users in the current channel"
-msgstr ""
+msgstr "Tampilkan daftar pengguna di saluran ini"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_channel_id
 msgid "Listener"
-msgstr ""
+msgstr "Pendengar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_partner_ids
 msgid "Listeners"
-msgstr ""
+msgstr "Pendengar"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
-msgstr ""
+msgstr "Percakapan Aktual"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
-msgstr ""
+msgstr "Log"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr ""
+msgstr "Log sebuah catatan. Pengikut tidak akan diberikan notifikasi."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
@@ -2521,7 +2580,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Mail Channel Form"
-msgstr ""
+msgstr "Formulir Saluran Pesan"
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:318
@@ -2532,7 +2591,7 @@ msgstr "Pengiriman e-mail yang gagal"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr ""
+msgstr "Nilai Lacak Pesan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
@@ -2542,28 +2601,28 @@ msgstr "Mail telah dibuat untuk memberitahu orang-orang mail.message yang ada"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_emails_partner_info_form
 msgid "Mailing Opt-Out"
-msgstr ""
+msgstr "Opt-Out Email"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:135
 #, python-format
 msgid "Mark all as read"
-msgstr ""
+msgstr "Tandai semua sebagai sudah dibaca"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:135
 #, python-format
 msgid "Mark all read"
-msgstr ""
+msgstr "Tandai semua sebagai sudah dibaca"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:121
 #, python-format
 msgid "Mark as Read"
-msgstr ""
+msgstr "Tandai sebagai Sudah Dibaca"
 
 #. module: mail
 #. openerp-web
@@ -2616,12 +2675,12 @@ msgstr "Pesan"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_mail_message_id
 msgid "Message ID"
-msgstr ""
+msgstr "ID Pesan"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Notifikasi Pesan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_record_name
@@ -2651,7 +2710,7 @@ msgstr "Referensi pesan, seperti pengidentifikasi pesan sebelumnya"
 #: code:addons/mail/static/src/xml/client_action.xml:124
 #, python-format
 msgid "Message sent in \""
-msgstr ""
+msgstr "Pesan dikirim di \""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_name
@@ -2788,6 +2847,8 @@ msgstr "Cari pesan"
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
+"Pesan dapat ditandai <b>bintang</b> untuk mengingatkan Anda agar "
+"memeriksanya lagi belakangan."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_internal
@@ -2795,6 +2856,8 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr ""
+"Pesan dengan subtipe internal akan terlihat hanya oleh karyawan, yaitu "
+"anggota dari kelompok base_user"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_res_model
@@ -2846,6 +2909,8 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
+"Nama yang digunakan untuk berkas laporan yang dibuat (dapat memakai placeholder)\n"
+"Ekstensi tidak perlu dimasukkan dan akan diambil dari tipe laporan."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction
@@ -2858,12 +2923,12 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_needaction
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
-msgstr ""
+msgstr "Butuh Tindakan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_res_partner_id
 msgid "Needaction Recipient"
-msgstr ""
+msgstr "Penerima Butuh Tindakan"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -2873,32 +2938,32 @@ msgstr "Tidak pernah"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_char
 msgid "New Value Char"
-msgstr ""
+msgstr "Nilai Karakter Baru"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_datetime
 msgid "New Value Datetime"
-msgstr ""
+msgstr "Nilai Datetime Baru"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_float
 msgid "New Value Float"
-msgstr ""
+msgstr "Nilai Desimal Baru"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_integer
 msgid "New Value Integer"
-msgstr ""
+msgstr "Nilai Bilangan Bulat Baru"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_monetary
 msgid "New Value Monetary"
-msgstr ""
+msgstr "Nilai Mata Uang Baru"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_text
 msgid "New Value Text"
-msgstr ""
+msgstr "Nilai Teks Baru"
 
 #. module: mail
 #. openerp-web
@@ -2908,56 +2973,56 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:24
 #, python-format
 msgid "New message"
-msgstr ""
+msgstr "Pesan baru"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:146
 #, python-format
 msgid "New messages"
-msgstr ""
+msgstr "Pesan baru"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:25
 #, python-format
 msgid "New messages appear here."
-msgstr ""
+msgstr "Pesan baru muncul di sini."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:79
 #, python-format
 msgid "New people"
-msgstr ""
+msgstr "Orang baru"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/followers.js:218
 #, python-format
 msgid "No follower"
-msgstr ""
+msgstr "Tidak ada pengikut"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:16
 #, python-format
 msgid "No matches found"
-msgstr ""
+msgstr "Tidak ada hasil cocok yang ditemukan"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:17
 #, python-format
 msgid "No message matches your search. Try to change your search filters."
-msgstr ""
+msgstr "Tidak ada pesan yang cocok dengan pencarian Anda"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:28
 #, python-format
 msgid "No starred message"
-msgstr ""
+msgstr "Tidak ada pesan ditandai bintang"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
@@ -2977,7 +3042,7 @@ msgstr "Catatan"
 #: code:addons/mail/static/src/xml/thread.xml:72
 #, python-format
 msgid "Note by"
-msgstr ""
+msgstr "Catatan oleh"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -3208,13 +3273,15 @@ msgstr "Odoo"
 msgid ""
 "Odoo has now the permission to send you native notifications on this device."
 msgstr ""
+"Odoo sekarang memiliki izin untuk mengirimkan Anda notifikasi pada perangkat"
+" ini."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "Odoo needs your permission to"
-msgstr ""
+msgstr "Odoo memerlukan izin Anda untuk"
 
 #. module: mail
 #. openerp-web
@@ -3224,6 +3291,8 @@ msgid ""
 "Odoo will not have the permission to send native notifications on this "
 "device."
 msgstr ""
+"Odoo tidak memiliki izin untuk mengirimkan Anda notifikasi pada perangkat "
+"ini."
 
 #. module: mail
 #. openerp-web
@@ -3235,32 +3304,32 @@ msgstr "Offline"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_char
 msgid "Old Value Char"
-msgstr ""
+msgstr "Nilai Karakter Lama"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_datetime
 msgid "Old Value DateTime"
-msgstr ""
+msgstr "Nilai Datetime Lama"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_float
 msgid "Old Value Float"
-msgstr ""
+msgstr "Nilai Desimal Lama"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_integer
 msgid "Old Value Integer"
-msgstr ""
+msgstr "Nilai Bilangan Bulat Lama"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_monetary
 msgid "Old Value Monetary"
-msgstr ""
+msgstr "Nilai Mata Uang Lama"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_text
 msgid "Old Value Text"
-msgstr ""
+msgstr "Nilai Teks Lama"
 
 #. module: mail
 #. openerp-web
@@ -3270,6 +3339,8 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
+"Jika pesan telah ditandai bintang, Anda dapat kembali dan meninjaunya kapan "
+"saja di sini."
 
 #. module: mail
 #. openerp-web
@@ -3305,14 +3376,14 @@ msgstr "Dokumen tua terbuka"
 #: code:addons/mail/static/src/xml/client_action.xml:138
 #, python-format
 msgid "Open channel settings"
-msgstr ""
+msgstr "Buka pengaturan saluran"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:48
 #, python-format
 msgid "Open chat"
-msgstr ""
+msgstr "Buka chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
@@ -3340,12 +3411,14 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
+"Server opsional untuk email keluar. Jika tidak diatur, server dengan "
+"prioritas yang lebih tinggi akan digunakan."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_report_template
 #: model:ir.model.fields,field_description:mail.field_mail_template_report_template
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Laporan opsional untuk dicetak dan dilampirkan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_lang
@@ -3356,12 +3429,16 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
 msgstr ""
+"Terjemahan bahasa opsional (kode ISO) yang dipilih ketika mengirim email. "
+"Jika tidak diatur, versi Bahasa Inggris yang akan digunakan. Isinya "
+"seharusnya berupa ekspresi placeholder yang menyediakan bahasa yang sesuai, "
+"mis: ${object.partner_id.lang}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,help:mail.field_mail_template_null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "Nilai optional yang digunakan jika kolom target kosong"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3390,7 +3467,7 @@ msgstr "Server keluar"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
-msgstr ""
+msgstr "Kesampingkan email penulis"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_user_id
@@ -3446,6 +3523,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
+"Subtipe induk, digunakan untuk subskripsi otomatis. Kolom ini tidak "
+"dinamakan dengan benar. Contoh pada proyek, parent_id dari subtipe proyek "
+"mengacu pada subtipe yang terkait dengan tugas."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -3455,7 +3535,7 @@ msgstr "Rekanan"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Partner Mass Mailing"
-msgstr ""
+msgstr "Email Massal Rekanan"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:39
@@ -3467,6 +3547,8 @@ msgstr "Profil Mitra biru"
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
+"Rekanan yang tidak meminta untuk tidak dimasukkan dalam kampanye email "
+"massal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
@@ -3474,7 +3556,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_needaction_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "Rekanan yang Butuh Tindakan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_auto_delete
@@ -3488,14 +3570,14 @@ msgstr "Menghapus email ini setelah mengirimnya, untuk menghemat ruang"
 #: code:addons/mail/static/src/js/client_action.js:128
 #, python-format
 msgid "Permission denied"
-msgstr ""
+msgstr "Izin ditolak"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:130
 #, python-format
 msgid "Permission granted"
-msgstr ""
+msgstr "Izin dikabulkan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image
@@ -3506,7 +3588,7 @@ msgstr "Foto"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template_copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Ekspresi Placeholder"
 
 #. module: mail
 #. openerp-web
@@ -3547,6 +3629,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Kebijakan untuk mengirimkan pesan di dokumen menggunakan mailgateway.\n"
+"- semua orang: setiap orang dapat mengirim\n"
+"- rekanan: hanya rekanan yang diijinkan\n"
+"- pengikut: hanya pengikut dokumen terkait\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_notify_email
@@ -3568,13 +3654,13 @@ msgstr "Disajikan oleh"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preferred reply address"
-msgstr ""
+msgstr "Alamat email balasan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_reply_to
 #: model:ir.model.fields,help:mail.field_mail_template_reply_to
 msgid "Preferred response address (placeholders may be used here)"
-msgstr ""
+msgstr "Alamat email tanggapan (placeholder dapat digunakan di sini)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -3584,7 +3670,7 @@ msgstr "Pratinjau"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Preview of"
-msgstr ""
+msgstr "Pratinjau dari"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_public
@@ -3597,14 +3683,14 @@ msgstr "Privasi"
 #: code:addons/mail/static/src/xml/client_action.xml:53
 #, python-format
 msgid "Private Channels"
-msgstr ""
+msgstr "Saluran Privat"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Saluran Publik"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3615,7 +3701,7 @@ msgstr "Balas:"
 #. module: mail
 #: selection:mail.notification,email_status:0
 msgid "Ready to Send"
-msgstr ""
+msgstr "Siap Dikirim"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3674,7 +3760,7 @@ msgstr "Contoh"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Related Message"
-msgstr ""
+msgstr "Pesan Terkait"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_partner_id
@@ -3690,6 +3776,7 @@ msgstr "Bidang hubungan"
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
+"Hapus tindakan konteks untuk menggunakan contoh ini pada dokumen terkait"
 
 #. module: mail
 #. openerp-web
@@ -3731,7 +3818,7 @@ msgstr "Balas-Ke"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_report_name
 #: model:ir.model.fields,field_description:mail.field_mail_template_report_name
 msgid "Report Filename"
-msgstr ""
+msgstr "Nama Berkas Laporan"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -3763,7 +3850,7 @@ msgstr "SMTP Server"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_res_id
 msgid "Sample Document"
-msgstr ""
+msgstr "Contoh Dokumen"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -3780,7 +3867,7 @@ msgstr "Simpan sebagai template baru"
 #: code:addons/mail/static/src/js/chat_window.js:36
 #, python-format
 msgid "Say something"
-msgstr ""
+msgstr "Katakan sesuatu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
@@ -3792,7 +3879,7 @@ msgstr "Tanggal terjadwal"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Tanggal Pengiriman yang Direncanakan"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3811,11 +3898,13 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
+"Pilih kolom target dari model dokumen terkait.\n"
+"Jika berupa kolom relasi, Anda dapat memilih kolom target pada tujuan relasi."
 
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Selected group of users"
-msgstr ""
+msgstr "Kelompok pengguna yang dipilih"
 
 #. module: mail
 #. openerp-web
@@ -3834,7 +3923,7 @@ msgstr "Kirim Email"
 #: code:addons/mail/models/mail_template.py:247
 #, python-format
 msgid "Send Mail (%s)"
-msgstr ""
+msgstr "Kirim Email (%s)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -3852,7 +3941,7 @@ msgstr "Kirim pesan"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_email_send
 msgid "Send messages by email"
-msgstr ""
+msgstr "Kirim pesan melalui email"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_from
@@ -3862,13 +3951,16 @@ msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
 msgstr ""
+"Alamat pengirim (placeholder dapat digunakan di sini). Jika tidak diatur, "
+"nilai baku yang dipakai adalah email alias penulis jika ada, atau alamat "
+"email."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:97
 #, python-format
 msgid "Sends messages by email"
-msgstr ""
+msgstr "Kirim pesan melalui email"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3879,7 +3971,7 @@ msgstr "Terkirim"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_email
 msgid "Sent by Email"
-msgstr ""
+msgstr "Dikirim Melalui Email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_sequence
@@ -3902,7 +3994,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.mail_shortcode_view_form
 #: model:ir.ui.view,arch_db:mail.mail_shortcode_view_tree
 msgid "Shortcodes"
-msgstr ""
+msgstr "Kode Singkat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_source
@@ -3913,7 +4005,7 @@ msgstr "Jalan Pintas"
 #: code:addons/mail/models/mail_channel.py:632
 #, python-format
 msgid "Show an helper message"
-msgstr ""
+msgstr "Tampilkan pesan penolong"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3925,7 +4017,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_act_window
 #: model:ir.model.fields,field_description:mail.field_mail_template_ref_ir_act_window
 msgid "Sidebar action"
-msgstr ""
+msgstr "Tindakan sidebar"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_ref_ir_act_window
@@ -3934,6 +4026,8 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"Tindakan sidebar untuk membuat contoh ini tersedia pada data model dokumen "
+"terkait"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_ref_ir_value
@@ -3951,6 +4045,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Gambar ukuran kecil dari kontak. Secara otomatis diubah ukurannya menjadi "
+"64x64px, dengan rasio aspek yang dipertahankan. Gunakan kolom ini ketika "
+"gambar ukuran kecil diperlukan."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_small
@@ -3971,7 +4068,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
 msgid "Smiley"
-msgstr ""
+msgstr "Smiley"
 
 #. module: mail
 #. openerp-web
@@ -3996,13 +4093,13 @@ msgstr "Status"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_model_object_field
 msgid "Sub-field"
-msgstr ""
+msgstr "Sub-kolom"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_object
 msgid "Sub-model"
-msgstr ""
+msgstr "Sub-model"
 
 #. module: mail
 #. openerp-web
@@ -4024,7 +4121,7 @@ msgstr "Judul"
 #: model:ir.model.fields,help:mail.field_mail_template_subject
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Subject (placeholders may be used here)"
-msgstr ""
+msgstr "Judul (placeholder dapat digunakan di sini)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -4041,7 +4138,7 @@ msgstr "Subyek:"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_substitution
 msgid "Substitution"
-msgstr ""
+msgstr "Substitusi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_subtype_id
@@ -4069,7 +4166,7 @@ msgstr "Notifikasi sistem"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.wizard_email_template_preview
 msgid "Template Preview"
-msgstr ""
+msgstr "Pratinjau Contoh"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -4097,7 +4194,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "Kode html yang di-\"escape\" menggantikan jalan pintas"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4155,13 +4252,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr ""
+msgstr "Jalan pintas yang harus digantikan pada Pesan Chat"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Tipe dokumen yang dapat digunakan dengan contoh ini"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4173,7 +4270,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "Ini"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
@@ -4190,6 +4287,8 @@ msgid ""
 "This group is visible by non members. Invisible groups can add members "
 "through the invite button."
 msgstr ""
+"Kelompok ini keliatan juga oleh yang bukan anggota. Kelompok yang tidak "
+"kelihatan dapat menambah anggota dengan tombol undang."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -4206,7 +4305,7 @@ msgstr "Kepada"
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_to
 msgid "To (Emails)"
-msgstr ""
+msgstr "Kepada (Email)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_partner_to
@@ -4258,6 +4357,9 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Nilai yang dilacak disimpan pada model yang terpisah. Kolom ini memungkinkan"
+" Anda untuk merekonstruksi ulang pelacakan dan membuat statistik untuk "
+"model."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4268,13 +4370,13 @@ msgstr "pelacakan"
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr ""
+msgstr "Nilai Pelacakan"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr ""
+msgstr "Nilai Pelacakan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_tracking_value_ids
@@ -4282,7 +4384,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Nilai Pelacakan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_message_type
@@ -4302,6 +4404,7 @@ msgstr "UUID:"
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
 msgstr ""
+"Tidak dapat mengirim email, silahkan konfigurasi alamat email pengirim."
 
 #. module: mail
 #. openerp-web
@@ -4456,21 +4559,21 @@ msgstr "Penghitung Pesan yang Belum Dibaca"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Unread messages"
-msgstr ""
+msgstr "Pesan yang belum dibaca"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:136
 #, python-format
 msgid "Unstar all"
-msgstr ""
+msgstr "Hapus semua bintang"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:136
 #, python-format
 msgid "Unstar all messages"
-msgstr ""
+msgstr "Hapus semua bintang pesan"
 
 #. module: mail
 #. openerp-web
@@ -4484,14 +4587,14 @@ msgstr "Berhenti Berlangganan"
 #: code:addons/mail/static/src/xml/client_action.xml:137
 #, python-format
 msgid "Unsubscribe from channel"
-msgstr ""
+msgstr "Berhenti subskripsi dari saluran ini"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:186
 #, python-format
 msgid "Uploading"
-msgstr ""
+msgstr "Mengunggah"
 
 #. module: mail
 #. openerp-web
@@ -4533,7 +4636,7 @@ msgstr "Pengguna"
 #: code:addons/mail/models/mail_channel.py:676
 #, python-format
 msgid "Users in this channel: %s %s and you."
-msgstr ""
+msgstr "Pengguna pada saluran ini: %s %s dan Anda."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:672
@@ -4559,6 +4662,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"Ketika kolom relasi dipilih sebagai kolom pertama, kolom ini memungkinkan "
+"Anda untuk memilih kolom target dari model dokumen tujuan (sub-model)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -4567,6 +4672,8 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"Ketika kolom relasi dipilih sebagai kolom pertama, kolom ini menampilkan "
+"model dokumen dari kolom relasi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
@@ -4577,34 +4684,34 @@ msgstr "Apakah pesan adalah catatan internal yang (modus komentar saja)"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Who can follow the group's activities?"
-msgstr ""
+msgstr "Siapa yang dapat mengikuti aktivitas kelompok?"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/composer.xml:18
 #, python-format
 msgid "Write something..."
-msgstr ""
+msgstr "Tulis sesuatu..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:233
 #, python-format
 msgid "Yesterday"
-msgstr ""
+msgstr "Kemarin"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:78
 #, python-format
 msgid "You added <b>%s</b> to the conversation."
-msgstr ""
+msgstr "Anda menambahkan <b>%s</b> ke percakapan."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:673
 #, python-format
 msgid "You are alone in this channel."
-msgstr ""
+msgstr "Anda sendirian pada saluran ini."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:642
@@ -4625,6 +4732,8 @@ msgstr "Anda berada di saluran <b>#%s</b>."
 msgid ""
 "You can mark any message as 'starred', and it shows up in this channel."
 msgstr ""
+"Anda dapat menandai pesan manapun sebagai 'Ditandai Bintang', dan pesan "
+"tersebut akan muncul pada saluran ini."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:45
@@ -4653,18 +4762,20 @@ msgid ""
 "You could also add a new %(document)s by sending an email to: "
 "%(email_link)s."
 msgstr ""
+"Anda juga dapat menambahkan %(document)s baru dengan mengirimkan email ke: "
+"%(email_link)s."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "Anda telah ditugaskan ke"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:620
 #, python-format
 msgid "You have been invited to: "
-msgstr ""
+msgstr "Anda telah diundang ke:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_attachment_ids
@@ -4673,20 +4784,22 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
+"Anda dapat melampirkan berkas pada contoh ini, yang akan ditambahkan ke "
+"semua email yang dibuat melalui contoh ini"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:516
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
-msgstr ""
+msgstr "Anda menghapus \"pin\" percakapan Anda dengan <b>%s</b>."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:514
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
-msgstr ""
+msgstr "Anda membatalkan subskripsi dari <b>%s</b>."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4699,7 +4812,7 @@ msgstr ""
 #: code:addons/mail/models/ir_actions.py:33
 #, python-format
 msgid "Your template should define email_from"
-msgstr ""
+msgstr "Contoh Anda harus mendefinisikan email_from"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:968
@@ -4721,7 +4834,7 @@ msgstr "base.config.settings"
 #. module: mail
 #: model:mail.channel,name:mail.channel_2
 msgid "board-meetings"
-msgstr ""
+msgstr "pertemuan dewan pengurus"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4731,7 +4844,7 @@ msgstr "oleh"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "created"
-msgstr ""
+msgstr "dibuat"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:313
@@ -4744,7 +4857,7 @@ msgstr "dokumen"
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "enable desktop notifications"
-msgstr ""
+msgstr "aktifkan notifikasi desktop"
 
 #. module: mail
 #. openerp-web
@@ -4756,17 +4869,17 @@ msgstr "pengikut"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "from:"
-msgstr ""
+msgstr "dari:"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
 msgid "general"
-msgstr ""
+msgstr "umum"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr ""
+msgstr "telah"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -4799,13 +4912,13 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "model %s tidak menerima pembuatan dokumen"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
-msgstr ""
+msgstr "model %s tidak menerima pembaruan dokumen"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:931
@@ -4813,11 +4926,12 @@ msgstr ""
 msgid ""
 "model %s does not accept document update, fall back on document creation"
 msgstr ""
+"model %s tidak menerima pembaruan dokumen, kembali ke pembuatan dokumen"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "modified"
-msgstr ""
+msgstr "dimodifikasi"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
@@ -4829,7 +4943,7 @@ msgstr "mycompany.odoo.com"
 #: code:addons/mail/static/src/js/thread.js:20
 #, python-format
 msgid "now"
-msgstr ""
+msgstr "sekarang"
 
 #. module: mail
 #. openerp-web
@@ -4846,23 +4960,25 @@ msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
 msgstr ""
+"membuat pesan tanpa model harusnya dengan res_id yang kosong (pesan "
+"pribadi), menerima %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
 #, python-format
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
-msgstr ""
+msgstr "membuat pesan tanpa model harusnya dengan parent_id (pesan pribadi)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
-msgstr ""
+msgstr "publisher_warranty.contract"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
-msgstr ""
+msgstr "rd"
 
 #. module: mail
 #. openerp-web
@@ -4881,30 +4997,31 @@ msgstr "selengkapnya"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "record:"
-msgstr ""
+msgstr "data:"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:935
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr ""
+msgstr "membalas pada dokumen yang hilang (%s,%s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr ""
+"membalas pada dokumen yang hilang (%s,%s), kembali ke pembuatan dokumen baru"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
-msgstr ""
+msgstr "reset thread_id"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
 msgid "sales"
-msgstr ""
+msgstr "penjualan"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
@@ -4922,10 +5039,10 @@ msgstr "melewatkan"
 #: code:addons/mail/static/src/xml/chatter.xml:25
 #, python-format
 msgid "this document"
-msgstr ""
+msgstr "dokumen ini"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:906
 #, python-format
 msgid "unknown target model %s"
-msgstr ""
+msgstr "model target tidak diketahui %s"
