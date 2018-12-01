@@ -3,21 +3,22 @@
 # * pos_restaurant
 # 
 # Translators:
-# Martin Trigaux, 2016
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # Rytis Štreimikis <r.streimikis@hotmail.lt>, 2016
 # Rolandas <info@paninfo.lt>, 2016
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
+# Martin Trigaux, 2016
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
-"PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:26+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,7 @@ msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
 msgstr ""
+"Fono paveikslėlis, naudojamas aukšto išdėstymo parodyme pardavimo taške."
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -38,6 +40,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
+"Restorano aukštas rodo vietą, kur aptarnaujami klientai, čia galite nustatyti stalus\n"
+"ir jų pozicijas."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_active
@@ -64,22 +68,22 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_name
 msgid "An internal identification of a table"
-msgstr ""
+msgstr "Vidinė stalo identifikacija"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_name
 msgid "An internal identification of the printer"
-msgstr ""
+msgstr "Vidinė spausdintuvo identifikacija"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_name
 msgid "An internal identification of the restaurant floor"
-msgstr ""
+msgstr "Vidinė restorano erdvės identifikacija"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Appearance"
-msgstr ""
+msgstr "Išvaizda"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -153,12 +157,12 @@ msgstr "Pakeitimai negali būti išsaugoti"
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Click to add a Restaurant Floor."
-msgstr ""
+msgstr "Pridėti restorano erdvę."
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid "Click to add a Restaurant Order Printer."
-msgstr ""
+msgstr "Pridėti restorano užsakymų spausdintuvą."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_color
@@ -208,6 +212,10 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Kiekvienas užsakymų spausdintuvas turi IP adresą, kuris nurodo\n"
+"PosBox/įrangą, kur galima rasti spausdintuvą ir produktų kategorijų\n"
+"sąrašą. Užsakymų spausdintuvas spausdins atnaujinimus tik produktams,\n"
+"kurie priklauso vienai iš jo kategorijų."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
@@ -222,13 +230,13 @@ msgstr "Aukštas"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_name
 msgid "Floor Name"
-msgstr ""
+msgstr "Erdvės pavadinimas"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
 msgid "Floor Plans"
-msgstr ""
+msgstr "Erdvės planai"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -275,7 +283,7 @@ msgstr "ID"
 msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
-msgstr ""
+msgstr "Jei neigiama, stalas bus išjungtas ir nepasiekiamas pardavimo taške"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor___last_update
@@ -346,7 +354,7 @@ msgstr "Užsakymas"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_printer_ids
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
 msgid "Order Printers"
-msgstr ""
+msgstr "Užsakymų spausdintuvai"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
@@ -354,11 +362,14 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "                order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
+"Restoranai ir barai naudoja užsakymų spausdintuvus užsakymų\n"
+"atnaujinimų spausdinimui virtuvėje/bare, kai padavėjas atnaujina\n"
+"užsakymą."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_orderline_notes
 msgid "Orderline Notes"
-msgstr ""
+msgstr "Užsakymo pastabos"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer_form
@@ -392,7 +403,7 @@ msgstr "Spausdinti"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_product_categories_ids
 msgid "Printed Product Categories"
-msgstr ""
+msgstr "Spausdintos produktų kategorijos"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_name
@@ -402,45 +413,45 @@ msgstr "Spausdintuvo pavadinimas"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "Proxy IP Address"
-msgstr ""
+msgstr "Proxy IP adresas"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:551
 #, python-format
 msgid "Removing a table cannot be undone"
-msgstr ""
+msgstr "Stalo pašalinimas negali būti atšaukiamas"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Restaurant Floor"
-msgstr ""
+msgstr "Restorano erdvė"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_floor_ids
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_tree
 msgid "Restaurant Floors"
-msgstr ""
+msgstr "Restorano erdvės"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
-msgstr ""
+msgstr "Restorano užsakymų spausdintuvai"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Restaurant Table"
-msgstr ""
+msgstr "Restorano stalas"
 
 #. module: pos_restaurant
 #: selection:restaurant.table,shape:0
 msgid "Round"
-msgstr ""
+msgstr "Apvalus"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_seats
 msgid "Seats"
-msgstr ""
+msgstr "Vietos"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_sequence
@@ -452,12 +463,12 @@ msgstr "Seka"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:71
 #, python-format
 msgid "Served by"
-msgstr ""
+msgstr "Aptarnauja"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_shape
 msgid "Shape"
-msgstr ""
+msgstr "Forma"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -493,14 +504,14 @@ msgstr "Stalas"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_name
 msgid "Table Name"
-msgstr ""
+msgstr "Stalo pavadinimas"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:471
 #, python-format
 msgid "Table Name ?"
-msgstr ""
+msgstr "Stalo pavadinimas ?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_table_ids
@@ -519,11 +530,12 @@ msgstr "Tel:"
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
 msgstr ""
+"Spausdintuvo programinės įrangos proxy IP adresas arba tinklo pavadinimas"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr ""
+msgstr "Šiuo užsakymu aptarnautų klientų skaičius."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_background_color
@@ -531,16 +543,17 @@ msgid ""
 "The background color of the floor layout, (must be specified in a html-"
 "compatible format)"
 msgstr ""
+"Erdvės išdėstymo fono spalva (turi būti nurodoma HTML palaikomu formatu)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_seats
 msgid "The default number of customer served at this table."
-msgstr ""
+msgstr "Numatytasis prie šio stalo aptarnaujamų klientų skaičius."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_table_ids
 msgid "The list of tables in this floor"
-msgstr ""
+msgstr "Stalų, esančių šioje erdvėje, sąrašas"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
@@ -550,43 +563,43 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id
 msgid "The table where this order was served"
-msgstr ""
+msgstr "Stalas, prie kurio buvo aptarnautas šis užsakymas"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
-msgstr ""
+msgstr "Stalo spalva, išreikšta tinkama CSS kodo \"background\" reikšme"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_height
 msgid "The table's height in pixels"
-msgstr ""
+msgstr "Stalo aukštis taškais"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_h
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr ""
+msgstr "Stalo horizontali pozicija taškais nuo kairės pusės iki stalo vidurio"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr ""
+msgstr "Stalo vertikali pozicija taškais nuo viršaus iki stalo vidurio"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_width
 msgid "The table's width in pixels"
-msgstr ""
+msgstr "Stalo plotis taškais"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
-msgstr ""
+msgstr "Ši erdvė dar neturi stalų, naudokite"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -598,7 +611,7 @@ msgstr "Pervesti"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
 msgid "Used to sort Floors"
-msgstr ""
+msgstr "Naudojama erdvių rūšiavimui"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -647,14 +660,14 @@ msgstr "su"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:17
 #, python-format
 msgid "at table"
-msgstr ""
+msgstr "lentelėje"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
-msgstr ""
+msgstr "mygtuką redagavimo juostoje, kad sukurtumėte naujus stalus."
 
 #. module: pos_restaurant
 #. openerp-web

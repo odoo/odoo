@@ -3,29 +3,30 @@
 # * base
 # 
 # Translators:
-# Martin Trigaux, 2016
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
-# Anatolij, 2016
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2016
-# Arminas Grigonis <arminas@versada.lt>, 2016
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2016
 # Zygi Mantus <zygimantus@gmail.com>, 2016
+# Arminas Grigonis <arminas@versada.lt>, 2016
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2016
+# Anatolij, 2016
 # Rolandas <info@paninfo.lt>, 2016
-# Naglis Jonaitis, 2016
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2016
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Martin Trigaux, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Eimantas <eimantas@focusate.eu>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Naglis Jonaitis, 2018
 # Vytautas Stanaitis <vytautas@basas.lt>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 07:12+0000\n"
-"PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: Vytautas Stanaitis <vytautas@basas.lt>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:14+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6248,7 +6249,7 @@ msgstr "Aplikacijos:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
@@ -7215,6 +7216,9 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Dukteriniai serverio veiksmai, kurie bus atlikti. Atkreipkite dėmesį, kad "
+"paskutinio grąžinimo grąžinta reikšmė bus naudojama kai bendroji grąžinimo "
+"reikšmė."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -10779,6 +10783,8 @@ msgid ""
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"Jei nustatyta, šis laukas bus laikomas retoje serijavimo lauko struktūroje, "
+"vietoje to, kad turėtų savo duomenų bazės stulpelį. "
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -10821,6 +10827,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Jei šis vaizdas yra paveldėtas,\n"
+"* Jei teigiamas, vaizdas visada praplečia savo tėvinį vaizdą\n"
+"* Jei neigiamas, vaizdas nepraplečia savo tėvinio, bet tai gali būti įjungta"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -13327,7 +13336,7 @@ msgstr "Biuro reikmenys"
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
-msgstr ""
+msgstr "Ogone mokėjimo surinkėjas"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -13428,6 +13437,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Galioja tik jei šis rodinys paveldimas iš kito (inherit_id nėra False/Null).\n"
+"\n"
+"* Jei plėtinys (standartiškai), jei šis rodinys yra užklausiamas, tikrinamas artimiausias\n"
+"pirminis vaizdas (per inherit_id), tada taikomi visi rodiniai, paveldimi iš jo su šio \n"
+"rodinio modeliu\n"
+"* Jei pirminis, artimiausias pirminis rodinys yra pilna išsprendžiamas (net jei jis naudoja\n"
+"kitokį modelį nei šis), tada šio rodinio paveldėjimo taisyklės\n"
+"(<xpath/>) yra pritaikomos ir rezultatas yra panaudojamas kaip jis būtų šio rodinio\n"
+"tikroji arka.\n"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:885
@@ -13481,6 +13499,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"Papildomas pagalbinis tekstas vartotojams, turintis tikslinio rodinio aprašą"
+" su jo panaudojimu ir tikslu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_src_model
@@ -13815,7 +13835,7 @@ msgstr "Pirkėjas: Buckaroo įgyvendinimas"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_ogone
 msgid "Payment Acquirer: Ogone Implementation"
-msgstr ""
+msgstr "Mokėjimo surinkėjas: Ogone diegimas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
@@ -15183,7 +15203,7 @@ msgstr "Išsaugoti kaip priedo priešdėlį"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_maintenance
 msgid "Schedule and manage maintenance on machine and tools."
-msgstr ""
+msgstr "Planuoti ir valdyti mašinų ir įrankių priežiūrą."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
@@ -15438,7 +15458,7 @@ msgstr "Serializacijos laukas"
 #: code:addons/models.py:339
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "Serijavimo laukas \"%s\" nerastas retame lauke \"%s\"!"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -15963,7 +15983,7 @@ msgstr "Gatvė 2"
 #: model:ir.module.module,description:base.module_payment_stripe
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Stripe Payment Acquirer"
-msgstr ""
+msgstr "Stripe mokėjimo surinkėjas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
@@ -18440,6 +18460,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
 msgstr ""
+"Parašykite Python kodą, kurį įvykdys veiksmas. Galimus naudoti kintamuosius "
+"ir daugiau informacijos apie Python galite rasti \"Pagalbos\" skiltyje."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
