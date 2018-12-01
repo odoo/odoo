@@ -895,7 +895,7 @@ class Task(models.Model):
             'search_default_project_id': self.env.context.get('project_id', self.subtask_project_id.id),
         })
         action['context'] = ctx
-        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
+        action['domain'] = [('parent_id', '=', self.id), ('id', '!=', self.id)]
         return action
 
 
