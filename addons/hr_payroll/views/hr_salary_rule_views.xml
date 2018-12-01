@@ -163,6 +163,7 @@
         <field name="arch" type="xml">
             <tree string="Contribution Registers">
                 <field name="name" />
+                <field name="company_id"  groups="base.group_multi_company" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>
@@ -191,6 +192,7 @@
         <field name="arch" type="xml">
             <search string="Contribution Registers">
                 <field name="name" string="Contribution Registers"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </search>
         </field>
     </record>
@@ -203,6 +205,7 @@
                 <group name="general_info">
                     <field name="name"/>
                     <field name="partner_id"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
                 </group>
                 <newline/>
                 <group name="description">
@@ -282,6 +285,7 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="category_id" invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>

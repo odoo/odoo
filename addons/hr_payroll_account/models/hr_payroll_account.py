@@ -6,15 +6,36 @@ from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 
 
+REGISTER_PARTNER_FIELD = 'hr_register_partner_{}_id'
+X_REGISTER_PARTNER_FIELD = 'x_hr_register_partner_{}_id'
+
 class HrPayslipLine(models.Model):
     _inherit = 'hr.payslip.line'
+
+    def _get_register_group_target_model(self, register_group):
+        targets = {
+            'health': self.slip_id.employee_id,
+            'pension': self.slip_id.employee_id,
+            'unemployment': self.slip_id.employee_id,
+        }
+        return targets.get(register_group)
 
     def _get_partner_id(self, credit_account):
         """
         Get partner_id of slip line to use in account_move_line
         """
         # use partner of salary rule or fallback on employee's address
-        register_partner_id = self.salary_rule_id.register_id.partner_id
+
+        partner_group = self.salary_rule_id.register_id.partner_group
+        if partner_group:
+            target_model = self._get_register_group_target_model(partner_group)
+            res_partner = self.env['res.partner']
+            register_partner_id = (
+                getattr(target_model, REGISTER_PARTNER_FIELD.format(partner_group), res_partner) or
+                getattr(target_model, X_REGISTER_PARTNER_FIELD.format(partner_group), res_partner)
+            )
+        else:
+            register_partner_id = self.salary_rule_id.register_id.partner_id
         partner_id = register_partner_id.id or self.slip_id.employee_id.address_home_id.id
         if credit_account:
             if register_partner_id or self.salary_rule_id.account_credit.internal_type in ('receivable', 'payable'):
@@ -23,6 +44,7 @@ class HrPayslipLine(models.Model):
             if register_partner_id or self.salary_rule_id.account_debit.internal_type in ('receivable', 'payable'):
                 return partner_id
         return False
+
 
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'

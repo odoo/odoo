@@ -76,6 +76,21 @@ class HrContributionRegister(models.Model):
     register_line_ids = fields.One2many('hr.payslip.line', 'register_id',
         string='Register Line', readonly=True)
     note = fields.Text(string='Description')
+    partner_group = fields.Selection('_get_register_group_sel', 'Contribution group')
+
+    def _get_register_group_sel(self):
+        return [
+            ('health', 'Healthcare system'),
+            ('pension', 'Pension fund'),
+            ('unemployment', 'Unemployment fund')
+        ]
+
+    @api.onchange('partner_group', 'partner_id')
+    def onchange_register_group(self):
+        if self.partner_group:
+            self.partner_id = False
+        if self.partner_id:
+            self.partner_group = False
 
 
 class HrSalaryRuleCategory(models.Model):
