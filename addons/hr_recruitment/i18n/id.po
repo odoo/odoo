@@ -3,26 +3,28 @@
 # * hr_recruitment
 # 
 # Translators:
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Dhaman <dhaman@indonesian-odoo.com>, 2016
-# William Surya Permana <zarambie_game@yahoo.com>, 2016
 # Budi Iskandar <budiiskandar11@gmail.com>, 2016
-# Febrasari Almania <febrasari.almania@gmail.com>, 2016
-# Deddy Ddr <deddy.ddr@gmail.com>, 2016
 # Edy Kend <edy@azmall.co.id>, 2016
-# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2016
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
+# William Surya Permana <zarambie_game@yahoo.com>, 2016
+# Deddy Ddr <deddy.ddr@gmail.com>, 2016
 # Andhitia Rama <andhitia.r@gmail.com>, 2016
+# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2016
+# Febrasari Almania <febrasari.almania@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
 # Ngalim Siregar <ngalim.siregar@gmail.com>, 2016
 # Gusti Rini <gustirini@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Gusti Rini <gustirini@gmail.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:21+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2018\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,31 +68,39 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Kepada seluruh karyawan,</p>\n"
+"<p>Saya ingin mengumumkan bahwa <strong> ${object.name} </strong> akan bergabung dengan kita sebagai ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    di departemen ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Tolong bantu dia untuk dapat segera beradaptasi dengan lingkungan kerjanya yang baru.</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Contact:</b>"
-msgstr ""
+msgstr "<b>Kontak:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Degree:</b>"
-msgstr ""
+msgstr "<b>Gelar:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Departement:</b>"
-msgstr ""
+msgstr "<b>Departemen:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "<span class=\"o_stat_text\">Meetings</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Pertemuan</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Pelacak</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -130,6 +140,8 @@ msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
 msgstr ""
+"Tambahkan kolom untuk menentukan ajaran <b>wawancara tahap</b>.<br/><i>mis. "
+"Baru&gt; Kualitas&gt;  &gt; Wawancara Pertama&gt; Merekrut</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -149,7 +161,7 @@ msgstr "Alias kontak keamanan"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
 msgid "Alias ID"
-msgstr ""
+msgstr "ID Alias"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
@@ -212,6 +224,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"Pelamar dan lampiran CV mereka akan dibuat otomatis ketika email dikirim.\n"
+"                Jika Anda memasang modul manajemen dokumen, semua lamaran akan diberikan indeks secara otomatis,\n"
+"                supaya Anda dapat mencarinya dengan mudah melalui kontennya."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -244,7 +259,7 @@ msgstr "Lamaran menolak"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application(s)"
-msgstr ""
+msgstr "Aplikasi"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
@@ -351,7 +366,7 @@ msgstr "KatagoriPelamar"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job position."
-msgstr ""
+msgstr "Klik disini untuk membuat posisi pekerjaan baru."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -362,7 +377,7 @@ msgstr "Klik untuk menambahkan karyawan baru."
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Click to add a new stage in the recruitment process."
-msgstr ""
+msgstr "Klik untuk menambahkan tahapan baru pada proses perekrutan"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
@@ -430,7 +445,7 @@ msgstr "Kontrak"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposal"
-msgstr ""
+msgstr "Kontrak Proposal"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
@@ -456,18 +471,20 @@ msgstr "Buat Karyawan"
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create a Job Position"
-msgstr ""
+msgstr "Buat posisi pekerjaan"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Create alias"
-msgstr ""
+msgstr "Buat alias"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Membuat beberapa nama alias yang akan memungkinkan anda untuk melacak dimana"
+" pelamar itu berasal"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -533,6 +550,9 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
+"Mendefinisikan tahap anda disini dari proses perekrutan:\n"
+"            telepon kualitifkasi, wawancara pertama, wawancara kedua, tolak,\n"
+"            diterima."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -630,6 +650,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
 msgstr ""
+"Jangan lupa untuk spesifikasi departemen anda jika ada proses perekrutan\n"
+"           Ini berbeda menurut posisi pekerjaan"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_from
@@ -684,7 +706,7 @@ msgstr "Sangat bagus"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_expected_employee
 msgid "Expected Employee"
-msgstr ""
+msgstr "Pegawai yang diperkirakan"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected
@@ -724,7 +746,7 @@ msgstr "Wawancara Pertama"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
-msgstr ""
+msgstr "Sembunyikan di Saluran Perekrutan"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -820,17 +842,17 @@ msgstr "Pekerjaan"
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr ""
+msgstr "Pekerjaan Kampanye"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Job Email"
-msgstr ""
+msgstr "Email Pekerjaan"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
 msgid "Job ID"
-msgstr ""
+msgstr "ID Pekerjaan"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
@@ -845,12 +867,12 @@ msgstr "Posisi"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
 msgid "Job Position Created"
-msgstr ""
+msgstr "Buat posisi kerja"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
-msgstr ""
+msgstr "Buat Posisi kerja"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
@@ -863,7 +885,7 @@ msgstr "Posisi Pekerjaan"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Spesifik pekerjaan"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -878,7 +900,7 @@ msgstr "Formulir Rekrutmen Pekerjaan"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 msgid "Jobs Sources"
-msgstr ""
+msgstr "Sumber Pekerjaan"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant___last_update
@@ -930,6 +952,7 @@ msgstr "Terakhir Diperbaharui pada"
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
 msgstr ""
+"Kita telah melihat <b>saluran aplikasi</b> untuk posisi pekerjaan ini."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -985,17 +1008,17 @@ msgstr "Baru Pemohon"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr ""
+msgstr "Aplikasi Baru"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
 msgid "New Application"
-msgstr ""
+msgstr "Aplikasi Baru"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
 msgid "New Applications"
-msgstr ""
+msgstr "Aplikasi Baru"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:416
@@ -1006,22 +1029,22 @@ msgstr "Karyawan baru%s Dipekerjakan"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "New Hired"
-msgstr ""
+msgstr "Karyawan Baru"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_hired_employee
 msgid "New Hired Employee"
-msgstr ""
+msgstr "Pegawai Karyawan Baru"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
 msgid "Newly Hired Employees"
-msgstr ""
+msgstr "Karyawan Yang Baru Diterima"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee_newly_hired_employee
 msgid "Newly hired employee"
-msgstr ""
+msgstr "Karyawan yang baru diterima"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_title_action
@@ -1047,7 +1070,7 @@ msgstr "Tidak ada subjek"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "No document yet."
-msgstr ""
+msgstr "Belum ada dokumen"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1071,6 +1094,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo membantu anda melacak pelamar dalam proses rekutmen\n"
+"                proses dan tindaklanjuti sebuah operasi: pertemuan, wawancara, etc."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -1078,6 +1103,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo membantu anda melacak pelamar dalam proses rekutmen\n"
+" proses dan tindaklanjuti sebuah operasi: pertemuan, wawancara, etc."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -1098,11 +1125,14 @@ msgid ""
 "                  and manage the recruitment process related to the job\n"
 "                  position."
 msgstr ""
+"Setelah posisi pekerjaan dibuat, Anda dapat melacak aplikasi\n"
+"                  dan mengelola proses rekutmen terkait dengan pekerjaan\n"
+"                  posisi"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Ongoing"
-msgstr ""
+msgstr "Terus-menerus"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1159,6 +1189,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Kebijakan untuk mengirimkan pesan di dokumen menggunakan mailgateway.\n"
+"- semua orang: setiap orang dapat mengirim\n"
+"- rekanan: hanya rekanan yang diijinkan\n"
+"- pengikut: hanya pengikut dokumen terkait\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_probability
@@ -1215,7 +1249,7 @@ msgstr "Rekrutmen Bertanggung Jawab"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "Recruitments"
-msgstr ""
+msgstr "Rekutmen"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
@@ -1240,7 +1274,7 @@ msgstr "Ditolak"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Buka Kembali Aplikasi"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1360,6 +1394,8 @@ msgstr "Alamat Email spesifik"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Pekerjaan tertentu menggunakan tahap ini. Pekerjaan yang lain tidak "
+"menggunakan tahap ini."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1388,7 +1424,7 @@ msgstr "Perubahan tahap"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_name
 msgid "Stage name"
-msgstr ""
+msgstr "Nama tahap"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -1414,7 +1450,7 @@ msgstr "Tahapan"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start Recruitment"
-msgstr ""
+msgstr "Mulai Rekrutmen"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1442,7 +1478,7 @@ msgstr "Tag"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_availability
 msgid "The date at which the applicant will be available to start working"
-msgstr ""
+msgstr "tanggal yang ditentukan dimana pelamar mulai bersedia bekerja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
@@ -1489,6 +1525,8 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Alias ini dapat berupa email atau url untuk semua sumber. Ketika pelamar "
+"tiba di sini melalui alias ini, Anda akan mengetahui dari mana asalnya."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1533,6 +1571,9 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Menu ini membantu Anda mencari lamaran dan surat motivasi\n"
+"                Odoo otomatis membuat indeks berkas .PDF, .DOC, DOCX, .TXT\n"
+"                sehingga Anda dapat mencari kata kunci dari konten berkas ini."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1551,6 +1592,8 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Coba untuk mengirim email ke alamat ini, itu akan membuat sebuah aplikasi "
+"secara otomatis"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1585,7 +1628,7 @@ msgstr "Menggunakan template"
 #: code:addons/hr_recruitment/static/src/js/tour.js:25
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
+msgstr "Gunakan remah roti untuk <b>kembali ke dashboard</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
@@ -1609,6 +1652,7 @@ msgstr "Sangat Baik"
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
 msgstr ""
+"Ingin <b>mulai merekrut</b> seperti professional?<i>Mulai sekarang.</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1618,7 +1662,7 @@ msgstr "Email Watchers"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "Selamat datang $(object.name)"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
