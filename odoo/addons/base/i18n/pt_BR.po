@@ -3,35 +3,37 @@
 # * base
 # 
 # Translators:
-# danimaribeiro <danimaribeiro@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Clemilton Clementino <clemylton@hotmail.com>, 2018
-# Mateus Lopes <mateus1@gmail.com>, 2018
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
-# grazziano <gra.negocia@gmail.com>, 2018
 # Fábio Novais <fabionovais@aptu.com.br>, 2018
-# Silmar <pinheirosilmar@gmail.com>, 2018
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
 # Adriel Kotviski <kotviski@gmail.com>, 2018
 # Franciele Neiva <franciele.neiva@br.ey.com>, 2018
-# Raphael Rodrigues <raphael0608@gmail.com>, 2018
-# falexandresilva <falexandresilva@gmail.com>, 2018
 # Diego Bittencourt <diegomb86@gmail.com>, 2018
 # guisantos23 <guisantos23@yahoo.com.br>, 2018
 # Pablo Valentini <pablondrina@gmail.com>, 2018
+# nle_odoo, 2018
 # Thiago MACÊDO <thiago95macedo@gmail.com>, 2018
 # Caio Leonardo Mendes de Sousa <caleozao@gmail.com>, 2018
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
-# Gideoni Silva <gd.willian@gmail.com>, 2018
+# Clemilton Clementino <clemylton@hotmail.com>, 2018
+# falexandresilva <falexandresilva@gmail.com>, 2018
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+# danimaribeiro <danimaribeiro@gmail.com>, 2018
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
+# Raphael Rodrigues <raphael0608@gmail.com>, 2018
 # Walter Tambeuhien Frey <cwegroup@gmail.com>, 2018
+# Gideoni Silva <gd.willian@gmail.com>, 2018
+# grazziano <gra.negocia@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Mateus Lopes <mateus1@gmail.com>, 2018
 # Yannick Belot <yannickbh@gmail.com>, 2018
+# Silmar <pinheirosilmar@gmail.com>, 2018
 # Brenno Martins <emanuel.breno@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
-"PO-Revision-Date: 2018-10-08 07:02+0000\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Brenno Martins <emanuel.breno@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -6286,6 +6288,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -7799,11 +7806,6 @@ msgid ""
 msgstr ""
 "Tem certeza de que deseja executar a lista da junção automática de seus "
 "contatos?"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -9554,7 +9556,7 @@ msgstr "Valor do Contexto"
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
 msgstr ""
-"Dicionário de contexto como expressão Python, vazio por padrão(Default: { })"
+"Dicionário de contexto como expressão Python, vazio por padrão(Default: {})"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_contract
@@ -10491,8 +10493,8 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
 msgstr ""
 
 #. module: base
@@ -10635,7 +10637,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -11054,8 +11055,6 @@ msgstr "ESC / POS Hardware driver"
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
 msgid "EU Mini One Stop Shop (MOSS)"
 msgstr ""
-"Extensão não reconhecida: deve ser uma destas .csv, .po, or .tgz (received "
-".%s)."
 
 #. module: base
 #: sql_constraint:ir.model:0
@@ -14963,7 +14962,6 @@ msgstr "Carregar Tradução"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr ""
 
@@ -17674,6 +17672,11 @@ msgstr ""
 "essa ação"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "Abrir Aplicativos"
@@ -18419,6 +18422,13 @@ msgstr "Plano de contas SNC para Portugal"
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
 msgstr ""
 
 #. module: base
@@ -20455,7 +20465,7 @@ msgstr "Ordenar por"
 #: code:addons/models.py:3978
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr "Classificando campo% s não foi encontrado no modelo% s"
+msgstr "Classificando campo %s não foi encontrado no modelo %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__src_model
@@ -23322,6 +23332,11 @@ msgstr ""
 #: model:res.country,name:base.ye
 msgid "Yemen"
 msgstr "Iêmen"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee

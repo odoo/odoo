@@ -3,6 +3,7 @@
 # * base
 # 
 # Translators:
+# nle_odoo, 2018
 # Josep Sànchez <papapep@gmx.com>, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
@@ -14,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
@@ -5631,6 +5632,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -7198,11 +7204,6 @@ msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
 msgstr ""
 "Està segur d'executar la llista de fusions automàtiques dels seus contactes?"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -9898,8 +9899,8 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
 msgstr ""
 
 #. module: base
@@ -10041,7 +10042,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -14419,7 +14419,6 @@ msgstr "Carrega una traducció"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr ""
 
@@ -17286,6 +17285,11 @@ msgstr ""
 "Només els usuaris amb els següents permisos estan autoritzats a fer això"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "Obrir Aplicacions"
@@ -18036,6 +18040,13 @@ msgstr "Pla de comptes SNC per Portugal"
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
 msgstr ""
 
 #. module: base
@@ -21977,8 +21988,8 @@ msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: "
 "%s"
 msgstr ""
-"Impossible processar el mòdul \"% s\" perquè no es va resoldre la "
-"dependència externa:% s"
+"Impossible processar el mòdul \"%s\" perquè no es va resoldre la dependència"
+" externa: %s"
 
 #. module: base
 #: code:addons/base/models/ir_module.py:338
@@ -21988,7 +21999,7 @@ msgid ""
 "%s"
 msgstr ""
 "Impossible actualitzar el mòdul \"%s\" perquè hi ha una dependència externa "
-"no resolta:% s"
+"no resolta: %s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -23032,6 +23043,11 @@ msgstr ""
 #: model:res.country,name:base.ye
 msgid "Yemen"
 msgstr "Iemen"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee

@@ -3,45 +3,47 @@
 # * base
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Jan Meyer, 2018
-# e2f <projects@e2f.com>, 2018
+# Christian Oechsner <carinachristian@gmail.com>, 2018
+# n3niu, 2018
+# Constantin Ehrenstein <transifex@skiller.eu>, 2018
+# Pascal <paesce@gentlemansclub.de>, 2018
+# Philipp Hug <philipp@hug.cx>, 2018
+# Mathias Neef <mn@copado.de>, 2018
+# Renzo Meister, 2018
+# Andi, 2018
+# Tom, 2018
+# nle_odoo, 2018
+# Martin K <martinkuenz@gmail.com>, 2018
+# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2018
+# Florian R. A. Angermeier <fa@brunner.at>, 2018
+# e2f_KAZ <e2fKAZ@outlook.com>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
 # Ralf Hilgenstock <rh@dialoge.info>, 2018
 # Wolfgang Taferner, 2018
-# Gab_Odoo <gab@odoo.com>, 2018
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
+# Henry Mineehen <info@mineehen.de>, 2018
 # Anja Funk <anja.funk@afimage.de>, 2018
-# Rudolf Schnapka <rs@techno-flex.de>, 2018
 # Tina Rittmüller <tr@ife.de>, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Niki Waibel, 2018
 # Bülent Tiknas <btiknas@googlemail.com>, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
-# Florian R. A. Angermeier <fa@brunner.at>, 2018
-# Christian Oechsner <carinachristian@gmail.com>, 2018
-# n3niu, 2018
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
-# Constantin Ehrenstein <transifex@skiller.eu>, 2018
-# Mathias Neef <mn@copado.de>, 2018
-# Renzo Meister, 2018
-# Pascal <paesce@gentlemansclub.de>, 2018
-# Martin K <martinkuenz@gmail.com>, 2018
-# Philipp Hug <philipp@hug.cx>, 2018
-# Andi, 2018
-# Tom, 2018
-# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2018
-# e2f_KAZ <e2fKAZ@outlook.com>, 2018
-# Henry Mineehen <info@mineehen.de>, 2018
-# Johannes Croe <jcr@odoo.com>, 2018
+# Gab_Odoo <gab@odoo.com>, 2018
+# Rudolf Schnapka <rs@techno-flex.de>, 2018
+# Jan Meyer, 2018
 # Jan Brodersen <4rmitxes@gmail.com>, 2018
+# Johannes Croe <jcr@odoo.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# darenkster <inactive+darenkster@transifex.com>, 2018
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
 # m sc <michael.schuett.lwl@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
-"PO-Revision-Date: 2018-10-08 07:02+0000\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: m sc <michael.schuett.lwl@gmail.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -7326,6 +7328,11 @@ msgstr ""
 "neuen Menüs zu sehen. (Strg+T dann Strg+R)</span>"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -7707,7 +7714,7 @@ msgstr ""
 "Produkte). Der numerische Inhalt eines Musters wird zwischen geschweiften Klammern angegeben (Sonderzeichen '{' und \n"
 "'}'). Der Inhalt der geschweiften Klammern muss eine Folge von 'N's sein (die den gesamten Teil der numerischen \n"
 "Inhalt darstellen), gefolgt von einer Folge von 'D's (die den dezimalen Teil des numerischen Inhalts darstellen). \n"
-"Definieren wir zum Beispiel eine neue Regel für gewichtete Produkte, deren Muster '21.....{NNDDDD} ist. Da\n"
+"Definieren wir zum Beispiel eine neue Regel für gewichtete Produkte, deren Muster '21.....{NNDDD} ist. Da\n"
 "wir von einer EAN-13-Kodierung für Produkt-Barcodes ausgehen, muss die Kodierung dieser Regel ebenfalls EAN-13 sein.\n"
 "\n"
 "Nehmen wir nun an, dass wir einen Barcode für ein bestimmtes gewogenes Produkt schreiben wollen, zum Beispiel Orangen. Wir müssen zuerst \n"
@@ -7720,7 +7727,7 @@ msgstr ""
 "numerische Inhaltswert dieses Barcodes ist '02750', und die korrekte Prüfsumme ist '6'). Beim Scannen wird dieser \n"
 "Barcode entspricht der Regel Gewogenes Produkt (da mit '21' beginnt). Der numerische Inhalt wird extrahiert, \n"
 "und durch eine Folge von '0' ersetzt. Für den erhaltenen Barcode wird dann die richtige Prüfsumme berechnet. \n"
-"('210000001000004') und das entsprechende Produkt (Orangen) wird aus der Produkte-Tabelle abgerufen.\n"
+"('2100001000004') und das entsprechende Produkt (Orangen) wird aus der Produkte-Tabelle abgerufen.\n"
 "\n"
 "Hinweis: Die Sonderzeichen '{' und '}' in Mustern werden zur Kennzeichnung numerischer Inhalte verwendet. Bis \n"
 "in einem Muster explizit '{' oder '}' angeben, müssen sie escaped werden.\n"
@@ -9154,11 +9161,6 @@ msgid ""
 msgstr ""
 "Sind Sie sicher, dass Sie Ihre Kontakte an Hand dieser Liste zusammenführen "
 "möchten?"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr "Sind Sie sicher, dass Sie diesen Demodaten laden wollen ?"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -11862,8 +11864,8 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
 msgstr ""
 
 #. module: base
@@ -12005,7 +12007,6 @@ msgstr ""
 "Folge: %s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -12190,7 +12191,7 @@ msgstr ""
 "\n"
 "Sie können ein Zeichenfolgenmuster im Python-Stil mit allen Feldern der Adresse verwenden (beispielsweise „%(street)s“, um das Feld „street“ anzuzeigen) plus\n"
 "%(state_name)s: Name des Staates\n"
-"%(country_code)s: Code des Staates\n"
+"%(state_code)s: Code des Staates\n"
 "%(country_name)s: Name des Landes\n"
 "%(country_code)s: Code des Landes"
 
@@ -16592,7 +16593,6 @@ msgstr "Eine Übersetzung laden"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr ""
 
@@ -19860,6 +19860,11 @@ msgid ""
 msgstr "Nur Benutzer mit dem folgenden Zugriffslevel sind zur Zeit berechtigt"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "Öffne Apps"
@@ -20645,6 +20650,13 @@ msgstr "Kontenplan der SNC für Portugal."
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
 msgstr ""
 
 #. module: base
@@ -24715,7 +24727,7 @@ msgstr "Unbekannter Fehler beim Import:"
 #: code:addons/base/models/ir_model.py:469
 #, python-format
 msgid "Unknown field %r in dependency %r"
-msgstr "Unbekanntes Feld %s in Abhängigkeit %s"
+msgstr "Unbekanntes Feld %r in Abhängigkeit %r"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:426
@@ -25692,6 +25704,11 @@ msgid "Yemen"
 msgstr "Jemen"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee
 msgid "Yodlee"
 msgstr "Yodlee"
@@ -25851,7 +25868,7 @@ msgid ""
 "You try to upgrade the module %s that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
-"Sie versuchen ein Modul zu aktualisieren, das vom Modul %s abhängt.\n"
+"Sie versuchen das Modul %s zu aktualisieren, das vom Modul %s abhängt.\n"
 "Dieses Modul ist aber nicht in Ihrem System vorhanden."
 
 #. module: base

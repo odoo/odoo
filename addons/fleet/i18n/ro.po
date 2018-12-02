@@ -3,14 +3,16 @@
 # * fleet
 # 
 # Translators:
+# nle_odoo, 2018
 # Martin Trigaux, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -662,6 +664,11 @@ msgstr "Inlocuirea Motorului Ferestrei de la Usa/Regulatorului"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
 msgid "Doors Number"
 msgstr "Număr de uși"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_downgraded
+msgid "Downgraded"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
@@ -1366,6 +1373,11 @@ msgid "Name of contract to renew soon"
 msgstr "Numele contractului care va fi reinnoit in curand"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_new_request
+msgid "New Request"
+msgstr "Cerere nouă"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1555,6 +1567,11 @@ msgid "Options"
 msgstr "Opțiuni"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_ordered
+msgid "Ordered"
+msgstr "Comandat"
+
+#. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
 msgid "Other"
 msgstr "Altul"
@@ -1673,6 +1690,11 @@ msgid "Refueling Details"
 msgstr "Detalii alimentare"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_registered
+msgid "Registered"
+msgstr ""
+
+#. module: fleet
 #: code:addons/fleet/models/fleet_vehicle_cost.py:209
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1706,6 +1728,11 @@ msgid "Reporting"
 msgstr "Raportare"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_reserve
+msgid "Reserve"
+msgstr "Rezervă"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
 msgid "Residual Value"
 msgstr "Valoare reziduală"
@@ -1718,7 +1745,7 @@ msgstr "Valoare reziduala (fara TVA)"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_19
 msgid "Residual value in %"
-msgstr "Valoarea reziduala în %s"
+msgstr "Valoarea reziduala în %"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__user_id
@@ -2226,6 +2253,11 @@ msgstr "Furnizor"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vendors"
 msgstr "Furnizori"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_waiting_list
+msgid "Waiting List"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
