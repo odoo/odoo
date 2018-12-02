@@ -1247,12 +1247,12 @@ msgstr "Tikrinti pasiekiamumą"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_has_packages
 msgid "Check the existence of destination packages on move lines"
-msgstr ""
+msgstr "Tikrinti tikslo pakuočių egzistavimą perkėlimo eilutėse"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_move_line_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr ""
+msgstr "Tikrinti pakavimo operacijos egzistavimą perkėlimo eilutėse"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_return_location
@@ -2250,7 +2250,7 @@ msgstr "Atlikti perkėlimai pagal datą"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Don’t propagate scheduling changes through chains of operations"
-msgstr ""
+msgstr "Neiškelti planavimo pokyčių per operacijų grandines"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2830,6 +2830,8 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
+"Jei šis laukelis pažymėtas, paėmimo eilutės atvaizduos detalias atsargų "
+"operacijas. Jei ne, paėmimo eilutės atvaizduos atsargų operacijų visumą."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_create_lots
@@ -3815,7 +3817,7 @@ msgstr "Valdyti pakuotes"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr ""
+msgstr "Valdyti inventoriaus stūmimo ir traukimo procesus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4112,6 +4114,8 @@ msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)!"
 msgstr ""
+"Nėra produktų grąžinimui (tik eilutės, kurios yra atliktoje būsenoje ir nėra"
+" pilnai grąžintos, gali būti grąžintos)!"
 
 #. module: stock
 #: code:addons/stock/models/procurement.py:67
@@ -4181,6 +4185,8 @@ msgid ""
 "Odoo handles <strong>advanced push/pull routes configuration</strong>, for "
 "example:"
 msgstr ""
+"\"Odoo\" tvarko <strong>išsamią stūmimo/traukimo maršrutų konfigūraciją "
+"</strong>, pavyzdžiui:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4279,7 +4285,7 @@ msgstr "Tik vienas produktas"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Ongoing Package Creation: Content"
-msgstr ""
+msgstr "Vykstantis pakuočių kūrimas: Turinys"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_name
@@ -4302,6 +4308,8 @@ msgid ""
 "Operation Type determines the way the picking should be shown in the view, "
 "reports, ..."
 msgstr ""
+"Operacijos tipas nustato, kaip paėmimai turėtų būti atvaizduojami "
+"rodiniuose, peržiūrose ir kt."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
@@ -4395,12 +4403,12 @@ msgstr "Kilmė"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Origin Moves"
-msgstr ""
+msgstr "Pirminiai perkėlimai"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_origin_returned_move_id
 msgid "Origin return move"
-msgstr ""
+msgstr "Pirminio grąžinimo perkėlimas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_original_location_id
@@ -4739,7 +4747,7 @@ msgstr "Paėmimo sąrašai"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Picking Moves"
-msgstr ""
+msgstr "Paėmimo perkėlimai"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
@@ -4769,7 +4777,7 @@ msgstr "Paėmimai grupėms"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings that are late on scheduled time"
-msgstr ""
+msgstr "Paėmimai, kurie vėluoja pagal suplanuotą laiką"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -5254,7 +5262,7 @@ msgstr "Kiekis sumažėjo!"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr ""
+msgstr "Kiekis atsargose, kuris gali būti rezervuotas šiam perkėlimui"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_qty
@@ -5441,7 +5449,7 @@ msgstr "Registruoti partijas, pakuotes, vietą"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr ""
+msgstr "Likusios paėmimo dalys dalinai apdorotos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_removal
@@ -5464,13 +5472,13 @@ msgstr "Pašalinimo strategija %s neįgyvendinta."
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_max_qty
 msgid "Reordering Max Qty"
-msgstr ""
+msgstr "Pakartotinio užsakymo maks. kiek."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_min_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_min_qty
 msgid "Reordering Min Qty"
-msgstr ""
+msgstr "Pakartotinio užsakymo min. kiek."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_warehouse_2_stock_warehouse_orderpoint
@@ -5598,7 +5606,7 @@ msgstr "%s sugrįžimas"
 #: code:addons/stock/wizard/stock_picking_return.py:151
 #, python-format
 msgid "Returned Picking"
-msgstr ""
+msgstr "Grąžintas paėmimas"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -5778,7 +5786,7 @@ msgstr "Ieškoti nurašymų"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
 msgid "Search Stock Location Paths"
-msgstr ""
+msgstr "Ieškoti atsargų vietų keliuose"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:115
@@ -5961,7 +5969,7 @@ msgstr "Gabenti tiesiai iš atsargų (tik gabenimas)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping Connectors"
-msgstr ""
+msgstr "Siuntimo jungimai"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
@@ -6082,7 +6090,7 @@ msgstr "Šaltinis:"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
 msgid "Source location is action=move"
-msgstr ""
+msgstr "Šaltinio vieta yra veiksmas=perkėlimas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_lot_id
@@ -6366,6 +6374,9 @@ msgid ""
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
 msgstr ""
+"Techninis laukas, naudojamas produkto kaštų, nustatytų paėmimo patvirtinime "
+"(kai naudojamas įkainojimo būdas yra \"vidutinė kainą\" arba \"realus\"), "
+"įrašymui. Reikšmė pateikiama įmonės valiuta ir produkto matavimo vienetais."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_produce_line_ids
@@ -6570,6 +6581,9 @@ msgid ""
 "                                   rounding precision of your unit of "
 "measure."
 msgstr ""
+"Produktui \"%s\" atliktas kiekis neatitinka matavimo vienete \"%s\" nurodyto"
+" apvalinimo tikslumo. Pakeiskite atliktą kiekį arba savo matavimo vieneto "
+"apvalinimo tikslumą."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6586,6 +6600,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
+"Norima operacija negali būti apdorota dėl programavimo klaidos, nustatant "
+"\"product_qty\" lauką vietoje \"product_uom_qty\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:151
@@ -6594,7 +6610,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:157
 #, python-format
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "Pasirinkti inventoriaus pasirinkimai nėra suderinti."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_picking_id
@@ -6668,6 +6684,9 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
+"Tai yra numatytoji tikslo vieta, kai rankiniu būdu sukuriate šio operacijos "
+"tipo paėmimą. Vis tik, įmanoma pakeisti tai ir nustatyti padėjimą į kitą "
+"vietą. Jei laukas tuščias, bus tikrinama kliento vieta partneryje."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_src_id
@@ -6677,6 +6696,9 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
+"Tai yra numatytoji šaltinio vieta, kai rankiniu būdu sukuriate šio "
+"operacijos tipo paėmimą. Vis tik, įmanoma pakeisti tai ir nustatyti padėjimą"
+" į kitą vietą. Jei laukas tuščias, bus tikrinama tiekėjo vieta partneryje."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -6763,6 +6785,10 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
+"Panašu, kad šis paėmimas susietas su kita operacija. Jei gaunate prekes, "
+"kurias dabar grąžinate, nustatykite <b>atvirkštinį</b> paėmimą, kad "
+"išvengtumėte pakartotinio logistikos taisyklių taikymo (tai sukurtų "
+"dubliuotas operacijas)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty_new_quantity
@@ -7424,6 +7450,10 @@ msgid ""
 " can be overridden by the routes on the Product/Product Categories or by the"
 " Preferred Routes on the Procurement"
 msgstr ""
+"Kai šiam maršrutui pasirenkamas sandėlis, šis maršrutas turėtų būti laikomas"
+" numatytuoju, kai produktai pereina jį. Ši elgsena gali būti perrašoma "
+"maršrutų, esančių produktuose ar produktų kategorijose, arba pageidautinuose"
+" maršrutuose planiniuose užsakymuose."
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -7465,6 +7495,8 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
+"Kai paėmimas nėra atliktas, tai leidžia pradinio poreikio keitimą. Kai "
+"paėmimas atliktas, tai leidžia atliktų kiekių keitimą."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -7503,7 +7535,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr ""
+msgstr "Ar perkėlimas buvo pridėtas po paėmimo patvirtinimo"
 
 #. module: stock
 #: model:product.product,name:stock.test_quant_product
@@ -7524,6 +7556,9 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"Negalite keisti produkto, susieto su serijiniu ar partijos numeriu, jei su "
+"tuo numeriu jau buvo sukurti atsargų perkėlimai. Tai sukeltų nestabilumus "
+"jūsų atsargose."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:37
@@ -7555,6 +7590,11 @@ msgid ""
 "                    routes can be assigned to a product, a product category or be fixed\n"
 "                    on procurement or sales order."
 msgstr ""
+"Čia galite nustatyti pagrindinius maršrutus, kurie eina\n"
+"per jūsų sandėlį ir kurie nustato jūsų produktų procesus.\n"
+"Šie maršrutai gali būti priskirti produktui, produktų\n"
+"kategorijai arba būti fiksuoti planiniam užsakymui\n"
+"ar pardavimų užsakymui."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -7622,6 +7662,8 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
+"Negalite ištrinti produktų perkėlimų, jei paėmimas jau atliktas. Galite tik "
+"koreguoti atliktus kiekius."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:152
@@ -7667,6 +7709,9 @@ msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
 msgstr ""
+"Negalite pakeisti vietos tipo ar naudoti jos kaip nurašymo vietos, nes šioje"
+" vietoje yra rezervuotų produktų. Pirmiausia, panaikinkite produktų "
+"rezervaciją."
 
 #. module: stock
 #: code:addons/stock/models/product.py:606
@@ -7675,6 +7720,8 @@ msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Negalite keisti šio matavimo vieneto santykio, nes produktai su šiuo "
+"matavimo vienetu jau buvo perkelti arba yra rezervuoti."
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:75
