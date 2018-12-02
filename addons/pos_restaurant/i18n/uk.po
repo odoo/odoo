@@ -3,17 +3,16 @@
 # * pos_restaurant
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Zoriana Zaiats, 2018
 # ТАрас <tratatuta@i.ua>, 2018
-# Bohdan Lisnenko, 2018
+# Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -75,7 +74,7 @@ msgstr "<span>Готівка (USD):</span>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr "<strong>Найменування поверху: </strong>"
+msgstr "<strong>Назва залу: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -378,7 +377,7 @@ msgstr "План залу"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Floors"
-msgstr "Поверхи"
+msgstr "Зали"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -386,7 +385,7 @@ msgstr "Поверхи"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:149
 #, python-format
 msgid "Green"
-msgstr "Зелена"
+msgstr "Зелений"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -409,7 +408,7 @@ msgstr "Людей"
 #: code:addons/pos_restaurant/static/src/js/floors.js:946
 #, python-format
 msgid "Guests ?"
-msgstr "Людей?"
+msgstr "Гості?"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -447,7 +446,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__module_pos_restaurant
 msgid "Is a Bar/Restaurant"
-msgstr "Є Баром/рестораном"
+msgstr "Є баром/рестораном"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor____last_update
@@ -493,7 +492,7 @@ msgstr "Логотип"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
-msgstr "Управління замовленнями на столи"
+msgstr "Керуйте замовленнями на столи"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.minute_maid
@@ -609,17 +608,17 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_id
 msgid "Point of Sale"
-msgstr "Касовий термінал"
+msgstr "Точка продажу"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Налаштування касового терміналу"
+msgstr "Налаштування точки продажу"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Замовлення касового терміналу"
+msgstr "Замовлення точки продажу"
 
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
@@ -713,7 +712,7 @@ msgstr "Принтери друку замовлень ресторану"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_printer
 msgid "Restaurant Printer"
-msgstr ""
+msgstr "Ресторанний принетр"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
@@ -739,7 +738,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__seats
 #, python-format
 msgid "Seats"
-msgstr "Місць"
+msgstr "Місця"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -829,7 +828,7 @@ msgstr "Столи"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:54
 #, python-format
 msgid "Tel:"
-msgstr "тел.:"
+msgstr "Тел.:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -839,7 +838,7 @@ msgstr "IP адреса або ім'я хоста апаратного прок�
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr "Кількість клієнтів що обслуговувались цим замовленням. "
+msgstr "Кількість клієнтів, які обслуговувались цим замовленням. "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
@@ -866,7 +865,7 @@ msgstr "Зали ресторану обслуговуються цією точ
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
 msgid "The table where this order was served"
-msgstr "Столик де обслуговувалось замовлення. "
+msgstr "Столик, де обслуговувалося замовлення. "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
@@ -925,7 +924,7 @@ msgstr "Товар чайових"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Tips"
-msgstr "Підказки"
+msgstr "Чайові"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -950,7 +949,7 @@ msgstr ""
 #: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
 #: model:product.template,uom_name:pos_restaurant.water_product_template
 msgid "Unit(s)"
-msgstr "шт"
+msgstr "Штука(и)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
@@ -991,7 +990,7 @@ msgstr "З"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:152
 #, python-format
 msgid "Yellow"
-msgstr "Жовта"
+msgstr "Жовтий"
 
 #. module: pos_restaurant
 #. openerp-web

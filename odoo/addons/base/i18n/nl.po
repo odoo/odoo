@@ -12,16 +12,16 @@
 # Martin Trigaux, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7749,6 +7749,11 @@ msgstr ""
 " nieuwe menu's te zien (CTRL+T en daarna CTRL+R).</span>"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr "<span class=\"text-white text-uppercase\">Gevarenzone</span>"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -9590,11 +9595,6 @@ msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
 msgstr ""
 "Weet u zeker dat u het samenvoegen van de lijst contacten wilt starten?"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr "Bent u zeker dat u demo data wilt inladen?"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -12312,11 +12312,11 @@ msgstr "Demo installatie fouten"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
 msgstr ""
-"Demo-gegevens mogen alleen worden gebruikt in testdatabases. Zodra ze zijn "
-"geladen, kunnen ze niet worden verwijderd."
+"Demo data zou alleen gebruikt moeten worden op test databases!\n"
+"Eenmaal de demo data geladen is kan deze niet verwijderd worden!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
@@ -12460,7 +12460,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -12697,7 +12696,7 @@ msgstr "Djibouti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Do you want to remove this configuration panel?"
-msgstr "Wilt u dit configuratie paneel verwijderen?"
+msgstr "Wilt u dit configuratiepaneel verwijderen?"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -14688,7 +14687,7 @@ msgstr ""
 #: code:addons/base/models/res_config.py:742
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "Ga naar het configuratie paneel"
+msgstr "Ga naar het configuratiepaneel"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
@@ -15773,7 +15772,7 @@ msgstr "Implementatie van sparse velden."
 #. module: base
 #: model:ir.module.module,summary:base.module_auth_password_policy
 msgid "Implements basic password policy configuration & check"
-msgstr "Implementeert basis wachtwoord policy configuratie en controles"
+msgstr "Implementeert basis wachtwoordbeleid configuratie en controles"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_blackbox_be
@@ -17147,7 +17146,6 @@ msgstr "Vertaling inladen"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr "Laad demo data"
 
@@ -20914,6 +20912,11 @@ msgstr ""
 "Alleen gebruikers met de volgende toegangsrechten zijn hiervoor gemachtigd"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr "Oeps, nee!"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "Open apps"
@@ -21819,6 +21822,15 @@ msgstr ""
 "Gelieve een e-mail te configureren voor de huidige gebruiker om het "
 "verzenden van een e-mail bericht te simuleren via deze uitgaande email "
 "server."
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
+msgstr ""
+"Bevestig alsjeblieft dat u van deze database een demo database wilt maken, "
+"deze optie is <b>onomkeerbaar</b>."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1231
@@ -26905,6 +26917,11 @@ msgstr ""
 #: model:res.country,name:base.ye
 msgid "Yemen"
 msgstr "Jemen"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr "Ja, ik begrijp de risico's"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee

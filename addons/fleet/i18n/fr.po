@@ -3,25 +3,26 @@
 # * fleet
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # Agathe Mollé <molleagathe@gmail.com>, 2018
 # Richard Mathot <rim@odoo.com>, 2018
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
 # Maxime Solinas <msolinas@t2o.ca>, 2018
 # Xavier Symons <xsy@openerp.com>, 2018
+# Martin Trigaux, 2018
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Xavier Symons <xsy@openerp.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -672,6 +673,11 @@ msgstr "Remplacement du moteur/régulateur de la fenêtre de la portière"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
 msgid "Doors Number"
 msgstr "Nombre de portes"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_downgraded
+msgid "Downgraded"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
@@ -1388,6 +1394,11 @@ msgid "Name of contract to renew soon"
 msgstr "Nom du contrat à renouveler prochainement"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_new_request
+msgid "New Request"
+msgstr "Nouvelle demande"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1577,6 +1588,11 @@ msgid "Options"
 msgstr "Options"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_ordered
+msgid "Ordered"
+msgstr "Commandée"
+
+#. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
 msgid "Other"
 msgstr "Autre"
@@ -1695,6 +1711,11 @@ msgid "Refueling Details"
 msgstr "Détails du ravitaillement en carburant"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_registered
+msgid "Registered"
+msgstr ""
+
+#. module: fleet
 #: code:addons/fleet/models/fleet_vehicle_cost.py:209
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1726,6 +1747,11 @@ msgstr "Replacement du véhicule"
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting
 msgid "Reporting"
 msgstr "Analyse"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_reserve
+msgid "Reserve"
+msgstr "Réserver"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
@@ -2260,6 +2286,11 @@ msgstr "Fournisseur"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vendors"
 msgstr "Fournisseurs"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_waiting_list
+msgid "Waiting List"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left

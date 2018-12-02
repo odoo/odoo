@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -7149,6 +7149,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -8665,11 +8670,6 @@ msgstr ""
 "Sei sicuro di eseguire la lista della fusione automatica dei tuoi contatti?"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.ar
 msgid "Argentina"
 msgstr "Argentina"
@@ -9683,8 +9683,8 @@ msgid ""
 msgstr ""
 "Modificare l'azienda di un contatto solo se non impostata correttamente fin "
 "dall'inizio. Se un contatto esistente inizia a lavorare per una nuova "
-"azienda creare un nuovo contatto appartenente all'azienda stessa. Per "
-"annullare le modifiche usare il pulsante \"Abbandona\"."
+"azienda creare un nuovo contatto che appartenga a quest'ultima. Per "
+"annullare questa modifica usare il pulsante \"Abbandona\"."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:705
@@ -11350,8 +11350,8 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
 msgstr ""
 
 #. module: base
@@ -11495,7 +11495,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -15867,7 +15866,6 @@ msgstr "Carica traduzione"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr "Caricare dati dimostrativi"
 
@@ -19129,6 +19127,11 @@ msgstr ""
 "questo"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "Applicazioni Aperte"
@@ -19917,6 +19920,13 @@ msgstr "Plano de contas SNC para Portugal"
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
 msgstr ""
 
 #. module: base
@@ -24951,6 +24961,11 @@ msgstr ""
 #: model:res.country,name:base.ye
 msgid "Yemen"
 msgstr "Yemen"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee
