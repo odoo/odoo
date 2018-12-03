@@ -64,7 +64,7 @@ class MrpWorkorder(models.Model):
         compute='_compute_is_produced')
 
     state = fields.Selection([
-        ('pending', 'Pending'),
+        ('pending', 'Waiting for another WO'),
         ('ready', 'Ready'),
         ('progress', 'In Progress'),
         ('done', 'Finished'),
@@ -230,8 +230,14 @@ class MrpWorkorder(models.Model):
 
     @api.multi
     def write(self, values):
-        if ('date_planned_start' in values or 'date_planned_finished' in values) and any(workorder.state == 'done' for workorder in self):
+        if list(values.keys()) != ['time_ids'] and any(workorder.state == 'done' for workorder in self):
             raise UserError(_('You can not change the finished work order.'))
+        if 'date_planned_start' in values or 'date_planned_finished' in values:
+            for workorder in self:
+                start_date = fields.Datetime.to_datetime(values.get('date_planned_start')) or workorder.date_planned_start
+                end_date = fields.Datetime.to_datetime(values.get('date_planned_finished')) or workorder.date_planned_finished
+                if start_date and end_date and start_date > end_date:
+                    raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
         return super(MrpWorkorder, self).write(values)
 
     def _generate_lot_ids(self):
