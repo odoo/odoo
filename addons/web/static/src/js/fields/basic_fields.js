@@ -1960,11 +1960,10 @@ var StateSelectionWidget = AbstractField.extend({
      * @override
      */
     _render: function () {
-        var self = this;
         var states = this._prepareDropdownValues();
         // Adapt "FormSelection"
         // Like priority, default on the first possible value if no value is given.
-        var currentState = _.findWhere(states, {name: self.value}) || states[0];
+        var currentState = _.findWhere(states, {name: this.value}) || states[0];
         this.$('.o_status')
             .removeClass('o_status_red o_status_green')
             .addClass(currentState.state_class)
@@ -1979,6 +1978,10 @@ var StateSelectionWidget = AbstractField.extend({
         var $dropdown = this.$('.dropdown-menu');
         $dropdown.children().remove(); // remove old items
         $items.appendTo($dropdown);
+
+        // Disable edition if the field is readonly
+        var isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        this.$('a[data-toggle=dropdown]').toggleClass('disabled', isReadonly || false);
     },
 
     //--------------------------------------------------------------------------

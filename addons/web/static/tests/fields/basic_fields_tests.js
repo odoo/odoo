@@ -4418,6 +4418,27 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('state_selection widget with readonly modifier', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="selection" widget="state_selection" readonly="1"/></form>',
+            res_id: 1,
+        });
+
+        assert.hasClass(form.$('.o_selection'), 'o_readonly_modifier');
+        assert.hasClass(form.$('.o_selection > a'), 'disabled');
+        assert.isNotVisible(form.$('.dropdown-menu.state'));
+
+        testUtils.dom.click(form.$('.o_selection > a'));
+        assert.isNotVisible(form.$('.dropdown-menu.state'));
+
+        form.destroy();
+    });
+
     QUnit.test('state_selection widget in editable list view', function (assert) {
         assert.expect(32);
 
