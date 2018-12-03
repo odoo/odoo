@@ -2581,7 +2581,7 @@ class TestStockValuation(TransactionCase):
         move1._action_assign()
         move1.move_line_ids.qty_done = 1.0
         move1.move_line_ids.owner_id = self.owner1.id
-        move1._action_done()
+        move1._action_done(owner_id=self.owner1)
 
         self.assertAlmostEqual(self.product1.qty_available, 1.0)
         self.assertAlmostEqual(self.product1.qty_at_date, 0.0)
@@ -2887,7 +2887,7 @@ class TestStockValuation(TransactionCase):
         move1._action_assign()
         move1.move_line_ids.qty_done = 1.0
         move1.move_line_ids.owner_id = self.owner1.id
-        move1._action_done()
+        move1._action_done(owner_id=self.owner1)
 
         self.assertAlmostEqual(self.product1.qty_available, 1.0)
         self.assertAlmostEqual(self.product1.qty_at_date, 0.0)
@@ -2910,7 +2910,7 @@ class TestStockValuation(TransactionCase):
         move1._action_assign()
         move1.move_line_ids.qty_done = 1.0
         move1.move_line_ids.owner_id = self.owner1.id
-        move1._action_done()
+        move1._action_done(owner_id=self.owner1)
 
         self.assertAlmostEqual(self.product1.qty_available, 1.0)
         self.assertAlmostEqual(self.product1.qty_at_date, 0.0)
@@ -2934,7 +2934,7 @@ class TestStockValuation(TransactionCase):
         move1._action_assign()
         move1.move_line_ids.qty_done = 1.0
         move1.move_line_ids.owner_id = self.owner1.id
-        move1._action_done()
+        move1._action_done(owner_id=self.owner1)
 
         self.assertAlmostEqual(self.product1.qty_available, 1.0)
         self.assertAlmostEqual(self.product1.qty_at_date, 0.0)
