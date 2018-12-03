@@ -68,11 +68,10 @@ class MailChannel(models.Model):
                 channel_info['operator_pid'] = partner_name
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
-            # add the anonymous name
-            if channel.anonymous_name:
-                channel_infos_dict[channel.id]['anonymous_name'] = channel.anonymous_name
             # add the last message date
             if channel.channel_type == 'livechat':
+                # add the anonymous or partner name
+                channel_infos_dict[channel.id]['correspondent_name'] = channel._channel_get_livechat_partner_name()
                 last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)
                 if last_msg:
                     channel_infos_dict[channel.id]['last_message_date'] = last_msg.date
@@ -84,6 +83,15 @@ class MailChannel(models.Model):
         pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('is_pinned', '=', True)]).mapped('channel_id')
         values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('id', 'in', pinned_channels.ids)]).channel_info()
         return values
+
+    def _channel_get_livechat_partner_name(self):
+        if self.livechat_operator_id in self.channel_partner_ids:
+            partners = self.channel_partner_ids - self.livechat_operator_id
+            if partners:
+                return ', '.join(partners.mapped('name'))
+        if self.anonymous_name:
+            return self.anonymous_name
+        return _("Visitor")
 
     @api.model
     def remove_empty_livechat_sessions(self):
