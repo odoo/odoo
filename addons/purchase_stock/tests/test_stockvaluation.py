@@ -53,7 +53,7 @@ class TestStockValuation(TransactionCase):
         purchase order before validating the receipt, the value of the received goods should be set
         according to the last unit cost.
         """
-        self.product1.product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
@@ -96,7 +96,7 @@ class TestStockValuation(TransactionCase):
         purchase order and the standard price of the product before validating the receipt, the
         value of the received goods should be set according to the last standard price.
         """
-        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
 
         # set a standard price
         self.product1.product_tmpl_id.standard_price = 10
@@ -149,7 +149,7 @@ class TestStockValuation(TransactionCase):
 
         eur_currency = self.env.ref('base.EUR')
 
-        self.product1.product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
         # default currency is USD, create a purchase order in EUR
         po1 = self.env['purchase.order'].create({
@@ -212,7 +212,7 @@ class TestStockValuation(TransactionCase):
         """ Check that the extra move when over processing a receipt is correctly merged back in
         the original move.
         """
-        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
@@ -246,7 +246,7 @@ class TestStockValuation(TransactionCase):
         """ Check that the backordered move when under processing a receipt correctly keep the
         price unit of the original move.
         """
-        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
@@ -321,8 +321,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
     def test_fifo_anglosaxon_return(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
         price_diff_account = self.env['account.account'].create({
             'name': 'price diff account',
@@ -421,8 +421,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
     def test_anglosaxon_valuation(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
         price_diff_account = self.env['account.account'].create({
             'name': 'price diff account',

@@ -35,7 +35,6 @@
                     <field name="list_price" position="after">
                         <field name="valuation" invisible="1" readonly="1"/>
                         <field name="cost_method" invisible="1" readonly="1"/>
-                        <field name="property_cost_method" invisible="1"/>
                     </field>
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
@@ -49,15 +48,6 @@
                             class="oe_link oe_read_only"/>
                         </div>
                     </field>
-                    <group name="accounting" position="inside">
-                        <group name="property_inventory_valuation"  string="Stock Valuation" attrs="{'invisible': ['|', ('type','=','service'), ('valuation', '!=', 'real_time')]}" groups="account.group_account_user">
-                            <field name="property_valuation" invisible="1"/>
-                            <field name="property_stock_account_input"
-                                domain="[('deprecated', '=', False)]"/>
-                            <field name="property_stock_account_output"
-                                domain="[('deprecated', '=', False)]"/>
-                        </group>
-                    </group>
                 </data>
             </field>
         </record>

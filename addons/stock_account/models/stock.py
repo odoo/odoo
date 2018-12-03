@@ -476,8 +476,6 @@ class StockMove(models.Model):
     def _run_fifo_vacuum(self):
         # Call `_fifo_vacuum` on concerned moves
         fifo_valued_products = self.env['product.product']
-        fifo_valued_products |= self.env['product.template'].search([('property_cost_method', '=', 'fifo')]).mapped(
-            'product_variant_ids')
         fifo_valued_categories = self.env['product.category'].search([('property_cost_method', '=', 'fifo')])
         fifo_valued_products |= self.env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
         moves_to_vacuum = self.env['stock.move']
