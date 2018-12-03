@@ -23,52 +23,73 @@
     }
 }
 .o_report_layout_boxed {
-    // This is not a general rule since the id is not used in all the reports,
-    // we should make a general structure for report body to use it everywhere
-    #informations {
-        border: 1px solid gray('700');
-        padding-top: 10px;
-        margin: 0;
-    }
     > h2 {
         text-transform: uppercase;
     }
     table {
         border: 1px solid gray('700');
         thead {
+            border-bottom: 2px solid gray('700');
             tr th {
-                border-bottom: 3px solid gray('700') !important;
                 text-transform: uppercase;
+                border: 1px solid gray('700');
             }
         }
         tbody {
             color: gray('700');
             tr {
                 td {
+                    // remove border-top from standard layout
                     border-top: none;
                     border-right: 1px solid gray('700');
                 }
-                td:last-child {
+                &.o_line_section td,
+                &.o_line_note td,
+                &.is-subtotal td {
+                    border-top: 1px solid gray('700');
+                    border-bottom: 1px solid gray('700');
+                }
+                &.o_line_section td {
+                    background-color: gray('700');
+                    color: #fff;
+                }
+                &.is-subtotal,
+                td.o_price_total {
                     background-color: gray('200');
                 }
             }
         }
     }
+    /* compat 12.0 */
+    .page > table:not(.o_main_table) tr td:last-child {
+        background-color: gray('200');
+    }
+    /* compat 12.0 */
+    .row:not(#total) > div > table tr:not(:first-child):not(:last-child) td:last-child {
+        background-color: gray('200');
+    }
     /*Total table*/
-    .row > .col-4 > table {
-        td {
-            border-right: none;
-        }
-        tr:last-child td, tr:first-child td {
-            /*we could get rid of this rule if .border-black td would be terminated in report.scss*/
-            border-top: none !important;
-        }
-        tr:first-child td {
-            background-color: transparent;
-        }
-        tr:last-child td {
-            background-color: gray('700');
-            color: #fff;
+    /* row div rule compat 12.0 */
+    .row > div > table,
+    div#total table {
+        tr {
+            &:first-child,
+            &.o_subtotal {
+                border-bottom: 1px solid gray('700');
+
+                td:first-child {
+                    border-right: none;
+                }
+            }
+            &:last-child td,
+            &.o_total td {
+                background-color: gray('700');
+                color: #fff;
+
+                &:first-child {
+                    border-right: none;
+                }
+            }
         }
     }
 }
