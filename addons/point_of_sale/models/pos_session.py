@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -9,6 +10,7 @@ class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
     _description = 'Point of Sale Session'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
@@ -281,6 +283,7 @@ class PosSession(models.Model):
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise UserError(_("The journal type for your payment method should be bank or cash."))
                 st.with_context(ctx).sudo().button_confirm_bank()
+                session.activity_unlink(['point_of_sale.mail_activity_old_session'])
         self.with_context(ctx)._confirm_orders()
         self.write({'state': 'closed'})
         return {
@@ -332,3 +335,24 @@ class PosSession(models.Model):
             action['res_id'] = cashbox_id
 
         return action
+
+    @api.model
+    def _alert_old_session(self):
+        # If the session is open for more then one week,
+        # log a next activity to close the session.
+        sessions = self.search([('start_at', '<=', (fields.datetime.now() - timedelta(days=7))), ('state', '!=', 'closed')])
+        for session in sessions:
+            if self.env['mail.activity'].search_count([('res_id', '=', session.id), ('res_model', '=', 'pos.session')]) == 0:
+                session.activity_schedule('point_of_sale.mail_activity_old_session',
+                        user_id=session.user_id.id, note=_("Your PoS Session is open since ") + fields.Date.to_string(session.start_at)
+                        + _(", we advise you to close it and to create a new one."))
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
+        super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
+        self.env['pos.session']._alert_old_session()
+        if use_new_cursor:
+            self.env.cr.commit()
