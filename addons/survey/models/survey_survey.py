@@ -60,7 +60,7 @@ class Survey(models.Model):
         """ Computes a public URL for the survey """
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for survey in self:
-            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
+            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.id))
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -75,6 +75,58 @@ class Survey(models.Model):
         title = _("%s (copy)") % (self.title)
         default = dict(default or {}, title=title)
         return super(Survey, self).copy_data(default)
+
+    @api.multi
+    def _create_answer(self, user=False, partner=False, email=False, test_entry=False, **additional_vals):
+        """ Main entry point to get a token back or create a new one. This method
+        does check for current user access in order to explicitely validate
+        security.
+
+          :param user: target user asking for a token; it might be void or a
+                       public user in which case an email is welcomed;
+          :param email: email of the person asking the token is no user exists;
+        """
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+
+        tokens = self.env['survey.user_input']
+        for survey in self:
+            if partner and not user and partner.user_ids:
+                user = partner.user_ids[0]
+
+            survey._check_answer_creation(user, partner, email, test_entry=test_entry)
+            answer_vals = {
+                'survey_id': survey.id,
+                'test_entry': test_entry,
+            }
+            if user and not user._is_public:
+                answer_vals['partner_id'] = user.partner_id.id
+                answer_vals['email'] = user.email
+            elif partner:
+                answer_vals['partner_id'] = partner.id
+                answer_vals['email'] = partner.email
+            else:
+                answer_vals['email'] = email
+
+            answer_vals.update(additional_vals)
+            tokens += tokens.create(answer_vals)
+
+        return tokens
+
+    @api.multi
+    def _check_answer_creation(self, user, partner, email, test_entry=False):
+        """ Ensure conditions to create new tokens are met. """
+        self.ensure_one()
+        if test_entry:
+            if not user.has_group('survey.group_survey_manager') or not user.has_group('survey.group_survey_user'):
+                raise UserError(_('Creating test token is not allowed for you.'))
+        else:
+            if not self.active:
+                raise UserError(_('Creating token for archived surveys is not allowed.'))
+            elif self.is_closed:
+                raise UserError(_('Creating token for closed surveys is not allowed.'))
+            if self.auth_required and (not user or user._is_public()):
+                raise UserError(_('Creating token for external users is not allowed for surveys requesting authentication.'))
 
     @api.model
     def next_page(self, user_input, page_id, go_back=False):
