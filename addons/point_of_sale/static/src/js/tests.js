@@ -44,7 +44,11 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         };
     }
 
-    var steps = [{
+    var steps = [{ // Leave category displayed by default
+        content: "click category switch",
+        trigger: ".js-category-switch",
+        run: 'click',
+    }, {
         content: 'waiting for loading to finish',
         trigger: '.o_main_content:has(.loader:hidden)',
         run: function () {
@@ -209,6 +213,7 @@ shelf have not (their price was manually overriden)",
     }, {
         content: "confirm closing the frontend",
         trigger: ".header-button",
+        run: function() {}, //it's a check,
     }]);
 
     Tour.register('pos_pricelist', { test: true, url: '/pos/web' }, steps);
@@ -298,6 +303,10 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: "next order",
             trigger: '.button.next:visible',
+        }, { // Leave category displayed by default
+            content: "click category switch",
+            trigger: ".js-category-switch",
+            run: 'click',
         }];
     }
 
@@ -305,6 +314,10 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
             content: 'waiting for loading to finish',
             trigger: '.o_main_content:has(.loader:hidden)',
             run: function () {}, // it's a check
+        }, { // Leave category displayed by default
+            content: "click category switch",
+            trigger: ".js-category-switch",
+            run: 'click',
         }];
 
     steps = steps.concat(add_product_to_order('Desk Organizer'));

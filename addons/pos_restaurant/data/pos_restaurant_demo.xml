@@ -11,21 +11,148 @@
             <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]" />
         </record>
 
-        <record id="product_category_pos" model="product.category">
-            <field name="parent_id" ref="product.product_category_1"/>
-            <field name="name">PoS</field>
-        </record>
-
         <record id="drinks" model="pos.category">
               <field name="name">Drinks</field>
         </record>
 
+        <record id="product_category_pos_food" model="product.category">
+            <field name="parent_id" ref="point_of_sale.product_category_pos"/>
+            <field name="name">Food</field>
+        </record>
+
+        <record id="food" model="pos.category">
+              <field name="name">Food</field>
+        </record>
+
+        <!-- Food -->
+        <record id="pos_food_margherita" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">7.0</field>
+            <field name="name">Margherita</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-pizza.png"/>
+        </record>
+        <record id="pos_food_funghi" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">7.0</field>
+            <field name="name">Funghi</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-pizza.png"/>
+        </record>
+        <record id="pos_food_vege" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">7.0</field>
+            <field name="name">Vegetarian</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-pizza.png"/>
+        </record>
+        <record id="pos_food_bolo" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">4.5</field>
+            <field name="name">Pasta Bolognese</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-pasta.jpg"/>
+        </record>
+        <record id="pos_food_4formaggi" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">5.5</field>
+            <field name="name">Pasta 4 formaggi </field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-pasta-4f.jpg"/>
+        </record>
+        <record id="pos_food_bacon" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">7.5</field>
+            <field name="name">Bacon Burger</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-burger.jpg"/>
+        </record>
+        <record id="pos_food_cheeseburger" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">7.0</field>
+            <field name="name">Cheese Burger</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-cheeseburger.jpg"/>
+        </record>
+        <record id="pos_food_chicken" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">3.0</field>
+            <field name="name">Chicken Curry Sandwich</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-sandwich.jpg"/>
+        </record>
+        <record id="pos_food_tuna" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">3.0</field>
+            <field name="name">Spicy Tuna Sandwich</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-tuna.jpg"/>
+        </record>
+        <record id="pos_food_mozza" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">3.9</field>
+            <field name="name">Mozzarella Sandwich</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-mozza.jpg"/>
+        </record>
+        <record id="pos_food_club" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">3.4</field>
+            <field name="name">Club Sandwich</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-club.jpg"/>
+        </record>
+        <record id="pos_food_maki" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">12.0</field>
+            <field name="name">Lunch Maki 18pc</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-maki.jpg"/>
+        </record>
+        <record id="pos_food_salmon" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">13.80</field>
+            <field name="name">Lunch Salmon 20pc</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-salmon.jpg"/>
+        </record>
+        <record id="pos_food_temaki" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">14.0</field>
+            <field name="name">Lunch Temaki mix 3pc</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-temaki.jpg"/>
+        </record>
+        <record id="pos_food_chirashi" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">9.25</field>
+            <field name="name">Salmon and Avocado</field>
+            <field name="pos_categ_id" ref="food"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image" type="base64" file="pos_restaurant/static/img/th-salmon-avocado.jpg"/>
+        </record>
+
+        <!-- Drinks -->
         <record id="coke" model="product.product">
             <field name="available_in_pos">True</field>
             <field name="list_price">2.20</field>
             <field name="name">Coca-Cola</field>
             <field name="pos_categ_id" ref="drinks"/>
-            <field name="categ_id" ref="pos_restaurant.product_category_pos"/>
+            <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="image" type="base64" file="pos_restaurant/static/img/th-coke.jpg"/>
         </record>
 
@@ -34,7 +161,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Water</field>
             <field name="pos_categ_id" ref="drinks"/>
-            <field name="categ_id" ref="pos_restaurant.product_category_pos"/>
+            <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="image" type="base64" file="pos_restaurant/static/img/th-water.jpg"/>
         </record>
 
@@ -43,7 +170,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Minute Maid</field>
             <field name="pos_categ_id" ref="drinks"/>
-            <field name="categ_id" ref="pos_restaurant.product_category_pos"/>
+            <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="image" type="base64" file="pos_restaurant/static/img/th-minute_maid.jpg"/>
         </record>
 
@@ -58,6 +185,8 @@
             <field name="iface_printbill">True</field>
             <field name="iface_orderline_notes">True</field>
             <field name="printer_ids" eval="[(6, 0, [ref('pos_restaurant.kitchen_printer')])]" />
+            <field name="iface_start_categ_id" ref="drinks"/>
+            <field name="start_category">True</field>
         </record>
 
         <!-- Floors: Main Floor -->
