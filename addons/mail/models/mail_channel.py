@@ -806,7 +806,7 @@ class Channel(models.Model):
         if self.moderation_guidelines:
             self._send_guidelines(self.env.user.partner_id)
 
-        channel_info = self.channel_info()[0]
+        channel_info = self.channel_info('join')[0]
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
         return channel_info
 
