@@ -44,3 +44,18 @@ body {
 .o_underline {
     text-decoration: underline;
 }
+
+/*Total table*/
+div#total {
+    page-break-inside: avoid;
+    table {
+        tr {
+            &.o_subtotal,
+            &.o_total {
+                td {
+                    border-top: 1px solid black !important;
+                }
+            }
+        }
+    }
+}
