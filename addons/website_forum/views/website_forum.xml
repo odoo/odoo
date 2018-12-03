@@ -48,8 +48,8 @@
         </div>
 
         <div class="container mt16 website_forum mb32">
-            <div class="navbar navbar-expand-md navbar-light border forum_navbar">
-                <a class="navbar-brand pr-3 border-right text-800" t-attf-href="/forum/#{slug(forum)}">
+            <div class="navbar navbar-expand-md navbar-light">
+                <a class="navbar-brand pr-3 border-right" t-attf-href="/forum/#{slug(forum)}">
                     <span t-field="forum.name"/>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
@@ -177,7 +177,7 @@
                         <h6 class="card-header bg-secondary"><b>About This Community</b></h6>
                         <div class="card-body bg-light">
                             <span t-field="forum.description"/>
-                            <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="btn btn-primary mt-3 btn-block">Read Guidelines</a>
+                            <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="btn btn-primary mt-3">Read Guidelines</a>
                             <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="btn btn-primary mt-3 btn-block"> Back to <span t-field="forum.name"/></a>
                         </div>
                     </div>
@@ -328,13 +328,9 @@
     <t t-call="website_forum.header">
         <div t-field="forum.faq"/>
         <div class="card mb-2 bg-100">
-            <div class="card-header" id="headingFour">
-              <h4 class="mb-0">
-                <button class="btn btn-link collapsed btn-block text-left" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                  <b>Why can other people edit my questions/answers?</b> <i class="fa fa-caret-down float-right"/>
-                </button>
-              </h4>
-            </div>
+            <button class="card-header btn btn-link collapsed btn-block text-left" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              <b>Why can other people edit my questions/answers?</b> <i class="fa fa-caret-down float-right"/>
+            </button>
             <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
               <div class="card-body">
                 <p>The goal of this site is create a relevant knowledge base that would answer questions related to Odoo.</p>
@@ -405,7 +401,7 @@
 <!-- Specific Forum Layout -->
 <template id="forum_index" name="Forum">
     <t t-call="website_forum.header">
-        <h2 class="o_page_header mt0 pb4 border-bottom mb-3">
+        <h2 class="o_page_header pb4 border-bottom mb-3">
             <t t-esc="question_count"/>
                 Questions
             <t t-esc="search"/>
@@ -1043,9 +1039,9 @@
                         <span t-if="badge.level == 'silver'" class="fa fa-trophy badge-silver" title="Silver badge" role="img" aria-label="Silver badge"/>
                         <span t-if="badge.level == 'bronze'" class="fa fa-trophy badge-bronze" title="Bronze badge" role="img" aria-label="Bronwe badge"/>
                         <span>&amp;nbsp;</span>
-                        <span t-if="badge.level == 'gold'" t-field="badge.name" class="text-white bg-gold py-1 px-2 badge-pill"/>
-                        <span t-if="badge.level == 'silver'" t-field="badge.name" class="text-white bg-silver py-1 px-2 badge-pill"/>
-                        <span t-if="badge.level == 'bronze'" t-field="badge.name" class="text-white bg-bronze py-1 px-2 badge-pill"/>
+                        <span t-if="badge.level == 'gold'" t-field="badge.name" class="text-white bg-gold badge-pill"/>
+                        <span t-if="badge.level == 'silver'" t-field="badge.name" class="text-white bg-silver badge-pill"/>
+                        <span t-if="badge.level == 'bronze'" t-field="badge.name" class="text-white bg-bronze badge-pill"/>
                     </span>
                 </td><td>
                     <b t-esc="badge.stat_count_distinct"/>
@@ -1107,8 +1103,8 @@
                                                         <input type="checkbox" class="custom-control-input" t-attf-id="user(#{question.id})"/>
                                                         <label class="custom-control-label" t-attf-for="user(#{question.id})">
                                                             <div class="col-11 d-inline-flex px-1">
-                                                                <img class="d-inline img rounded o_forum_avatar" t-attf-src="/forum/user/#{question.id}/avatar" alt="Avatar"/>
-                                                                <span t-esc="question.name" class="font-weight-bold d-inline text-primary"></span>
+                                                                <img class="d-inline img o_forum_avatar" t-attf-src="/forum/user/#{question.id}/avatar" alt="Avatar"/>
+                                                                <b t-esc="question.name" class="d-inline"></b>
                                                             </div>
                                                         </label>
                                                     </div>
@@ -1128,12 +1124,12 @@
                                                 <div class="card bg-white mb-2">
                                                     <div class="card-body py-2">
                                                         <div class="row mx-0 pl-2">
-                                                            <div class="col-12 px-0 custom-control custom-checkbox o_over_checkbox pl-2">
+                                                            <div class="col-12 custom-control custom-checkbox o_over_checkbox pr-0">
                                                                 <input type="checkbox" class="custom-control-input" t-attf-id="country(#{question.id})"/>
                                                                 <label class="custom-control-label" t-attf-for="country(#{question.id})">
                                                                     <div class="px-1">
                                                                         <span t-field="question.image" t-options='{"widget": "image", "class": "country_flag"}' class="mr-2"/>
-                                                                        <span t-esc="question.name" class="text-primary"/>
+                                                                        <span t-esc="question.name"/>
                                                                     </div>
                                                                 </label>
                                                             </div>
@@ -1169,25 +1165,23 @@
                             <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive" class="btn btn-block border-danger bg-white"><i class="fa fa-times text-danger"/></a>
                         </div>
                     </div>
-                    <div class="col">
-                        <t t-if="question.parent_id">
-                            <div t-foreach="question" t-as="answer" style="display: inline-block;">
-                                <t t-call="website_forum.moderation_display_post_answer"/>
-                                <small class="text-muted">
-                                     <i t-attf-class="fa fa-user" role="img" aria-label="Question" />
-                                    <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
-                                    <span class="ml-4 mr4 fa fa-calendar"></span><span t-field="question.write_date" t-options='{"format":"short"}'/>
-                                    <t t-if="question.state == 'flagged'" class="text-black">
-                                        <span class="fa fa-flag ml-4 mr4"></span>
-                                        Flagged
-                                    </t>
-                                </small>
-                            </div>
-                        </t>
-                        <t t-if="not question.parent_id">
-                            <t t-call="website_forum.moderation_display_post_question_block"/>
-                        </t>
-                    </div>
+                    <t t-if="question.parent_id">
+                        <div t-foreach="question" t-as="answer" style="display: inline-block;">
+                            <t t-call="website_forum.moderation_display_post_answer"/>
+                            <small class="text-muted">
+                                 <i t-attf-class="fa fa-user" role="img" aria-label="Question" />
+                                <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
+                                <span class="ml-4 mr4 fa fa-calendar"></span><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                <t t-if="question.state == 'flagged'" class="text-black">
+                                    <span class="fa fa-flag ml-4 mr4"></span>
+                                    Flagged
+                                </t>
+                            </small>
+                        </div>
+                    </t>
+                    <t t-if="not question.parent_id">
+                        <t t-call="website_forum.moderation_display_post_question_block"/>
+                    </t>
                 </div>
             </div>
         </div>
@@ -1209,9 +1203,9 @@
         <div t-foreach="users" t-as="row_users" class="row">
             <div t-foreach="row_users" t-as="u" class="col-xl-4 col-md-6 col-sm-12">
                 <div  class="card o_card_people mb-4">
-                    <div class="card-header o_people bg-100">
+                    <div class="card-header o_people">
                         <div class="row mx-0">
-                            <div class="o_people_photo_container float-left col-4" t-attf-style="background-image: url('/forum/user/#{u.id}/avatar')">
+                            <div class="o_people_photo_container col-4" t-attf-style="background-image: url('/forum/user/#{u.id}/avatar')">
                                 <t t-if="u.country_id">
                                     <span t-field="u.country_id.image" t-options='{"widget": "image", "class": "country_flag_people"}'/>
                                 </t>
@@ -1363,11 +1357,11 @@
         <div class="o_profile_main row">
             <div class="col-md-4">
                 <div class="card o_card_people bg-white">
-                    <div class="card-header o_people bg-100">
-                        <div class="row mx-0">
+                    <div class="card-header o_people">
+                        <div class="row mx-auto">
                             <div class="o_people_photo_container col" t-attf-style="background-image: url('/forum/user/#{user.id}/avatar')">
                             </div>
-                            <h3 class="text-primary font-weight-bold o_card_people_name col"><span t-field="user.name"/></h3>
+                            <h3 class="text-primary o_card_people_name col"><b t-field="user.name"/></h3>
                         </div>
                     </div>
                     <div class="card-body">
@@ -1376,7 +1370,7 @@
                             <span class="float-right"><i class="fa fa-diamond text-secondary mr-2"/><b t-field="user.karma"/></span>
                         </div>
                         <div class="border-top mt-2 pt-2">
-                            <b class="mb-1 text-muted">Badges</b>
+                            <b class="text-muted">Badges</b>
                             <span class="float-right">
                                 <b class="fa fa-trophy badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
                                 <b t-esc="user.gold_badge" class=""/>
@@ -1387,7 +1381,7 @@
                             </span>
                         </div>
                         <div class="border-top mt-2 pt-2">
-                            <b class="mb-1 text-muted">Votes</b>
+                            <b class="text-muted">Votes</b>
                             <span class="float-right">
                                 <b class="fa fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
                                 <b t-esc="up_votes"/>
@@ -1402,14 +1396,14 @@
                 <b class="text-muted">Contribution</b>
                 <div class="card mt-1 mb-4 bg-100">
                     <div class="card-body">
-                        <div>
-                            <div class="col-4 d-inline-block">
+                        <div class="row mx-auto">
+                            <div class="col-4">
                                 <b class="text-primary">Member since</b>
                             </div>
                             <span t-field="user.create_date" t-options='{"format": "short"}'/>
                         </div>
-                        <div class="border-top pt-2 mt-2">
-                            <div class="col-4 d-inline-block">
+                        <div class="border-top pt-2 mt-2 row mx-auto">
+                            <div class="col-4">
                                 <b class="text-primary">Last connection</b>
                             </div>
                             <span t-field="user.login_date" t-options='{"format": "short"}'/>
@@ -1420,8 +1414,8 @@
                 <b class="text-muted">Bio</b>
                 <div class="card mt-1 mb-4 bg-100">
                     <div class="card-body">
-                        <div>
-                            <div class="col-4 d-inline-block">
+                        <div class="row mx-auto">
+                            <div class="col-4">
                                 <b class="text-primary">Location</b>
                             </div>
                             <t t-if="user.country_id"> <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}' class="mr-2"/></t>
@@ -1429,9 +1423,8 @@
                             <span t-if="user.city and user.country_id">, </span>
                             <span t-field="user.country_id"/>
                         </div>
-                        <div class="border-top pt-2 mt-2">
-
-                            <div class="col-4 d-inline-block">
+                        <div class="border-top pt-2 mt-2 row mx-auto">
+                            <div class="col-4">
                                 <b class="text-primary">Website</b>
                             </div>
                             <a t-att-href="user.website" t-if="user.website">
@@ -1508,8 +1501,8 @@
                     <li t-foreach="activities" t-as="activity" class="card bg-100 mb-2">
                         <div class="card-body">
                             <div class="row mx-0">
-                                <span t-field="activity.date" t-options='{"format": "short"}'/>
-                                <span t-esc="activity.subtype_id.name" class="badge badge-info ml-2 mr-3"/>
+                                <span t-esc="activity.subtype_id.name" class="badge badge-info mr-2 mt-1"/>
+                                <span t-field="activity.date" t-options='{"format": "short"}' class="mr-2"/>
                                 <t t-set="post" t-value="posts[activity.res_id]"/>
                                 <span t-if="post[1]">
                                     <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
@@ -1534,13 +1527,13 @@
     <table class="table mt32 mb64">
         <tr t-foreach="user.badge_ids" t-as="badge">
             <td>
-                <span class="badge badge-pill float-left">
+                <span>
                     <span t-if="badge.badge_id.level == 'gold'" class="fa fa-trophy badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
                     <span t-if="badge.badge_id.level == 'silver'" class="fa fa-trophy badge-silver" role="img" aria-label="Silver badge" title="Silver badge"/>
                     <span t-if="badge.badge_id.level == 'bronze'" class="fa fa-trophy badge-bronze" role="img" aria-label="Bronze badge" title="Bronze badge"/>
-                    <span t-if="badge.badge_id.level == 'gold'" t-field="badge.badge_id.name" class="text-white bg-gold pt4 pb4 px-2 rounded_badge"/>
-                    <span t-if="badge.badge_id.level == 'silver'" t-field="badge.badge_id.name" class="text-white bg-silver pt4 pb4 px-2 rounded_badge"/>
-                    <span t-if="badge.badge_id.level == 'bronze'" t-field="badge.badge_id.name" class="text-white bg-bronze pt4 pb4 px-2 rounded_badge"/>
+                    <span t-if="badge.badge_id.level == 'gold'" t-field="badge.badge_id.name" class="badge badge-pill text-white bg-gold"/>
+                    <span t-if="badge.badge_id.level == 'silver'" t-field="badge.badge_id.name" class="badge badge-pill text-white bg-silver"/>
+                    <span t-if="badge.badge_id.level == 'bronze'" t-field="badge.badge_id.name" class="badge badge-pill text-white bg-bronze "/>
                 </span>
             </td><td>
                 <b t-esc="badge.badge_id.stat_count_distinct"/>
