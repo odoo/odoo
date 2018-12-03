@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_res_partner_dutch" model="ir.ui.view">
+        <field name="name">res.partner.form.address.nl</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}" class="oe_edit_only"><b>Company Address:</b></div>
+                    <div>
+                        <field name="street" class="oe_read_only"/>
+                    </div>
+                    <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" class="oe_edit_only"/>
+                    <div class="oe_edit_only o_row">
+                        <label for="street_number"/>
+                        <span> </span>
+                        <field name="street_number" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                        <label for="street_number2"/>
+                        <field name="street_number2" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    </div>
+                    <field name="street2" invisible="1"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>&amp;nbsp;
+                    <field name="city" placeholder="City" class="o_address_city"
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="base.nl" model="res.country">
+        <field name="address_view_id" ref="view_res_partner_dutch"/>
+    </record>
+</odoo>
