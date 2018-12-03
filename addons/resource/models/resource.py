@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import math
 from datetime import datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
@@ -14,12 +15,15 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
-from odoo.tools import date_utils
+
+from odoo.tools import date_utils, float_utils
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
 # is not available.
 HOURS_PER_DAY = 8
+# This will generate 16th of days
+ROUNDING_FACTOR = 16
 
 
 def make_aware(dt):
@@ -397,6 +401,45 @@ class ResourceCalendar(models.Model):
                 self._leave_intervals(start_dt, end_dt, resource, domain))
 
     # --------------------------------------------------
+    # Private Methods / Helpers
+    # --------------------------------------------------
+
+    def _get_days_data(self, intervals, day_total):
+        """
+        helper function to compute duration of `intervals`
+        expressed in days and hours.
+        `day_total` is a dict {date: n_hours} with the number of hours for each day.
+        """
+        day_hours = defaultdict(float)
+        for start, stop, meta in intervals:
+            day_hours[start.date()] += (stop - start).total_seconds() / 3600
+
+        # compute number of days as quarters
+        days = sum(
+            float_utils.round(ROUNDING_FACTOR * day_hours[day] / day_total[day]) / ROUNDING_FACTOR
+            for day in day_hours
+        )
+        return {
+            'days': days,
+            'hours': sum(day_hours.values()),
+        }
+
+    def _get_day_total(self, from_datetime, to_datetime, resource=None):
+        """
+        @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
+        """
+        self.ensure_one()
+        # total hours per day:  retrieve attendances with one extra day margin,
+        # in order to compute the total hours on the first and last days
+        from_full = from_datetime - timedelta(days=1)
+        to_full = to_datetime + timedelta(days=1)
+        intervals = self._attendance_intervals(from_full, to_full, resource=resource)
+        day_total = defaultdict(float)
+        for start, stop, meta in intervals:
+            day_total[start.date()] += (stop - start).total_seconds() / 3600
+        return day_total
+
+    # --------------------------------------------------
     # External API
     # --------------------------------------------------
 
@@ -425,6 +468,32 @@ class ResourceCalendar(models.Model):
             (stop - start).total_seconds() / 3600
             for start, stop, meta in intervals
         )
+
+    def get_work_duration_data(self, from_datetime, to_datetime, compute_leaves=True, domain=None):
+        """
+            Get the working duration (in days and hours) for a given period, only
+            based on the current calendar. This method does not use resource to
+            compute it.
+
+            `domain` is used in order to recognise the leaves to take,
+            None means default value ('time_type', '=', 'leave')
+
+            Returns a dict {'days': n, 'hours': h} containing the
+            quantity of working time expressed as days and as hours.
+        """
+        # naive datetimes are made explicit in UTC
+        from_datetime, dummy = make_aware(from_datetime)
+        to_datetime, dummy = make_aware(to_datetime)
+
+        day_total = self._get_day_total(from_datetime, to_datetime)
+
+        # actual hours per day
+        if compute_leaves:
+            intervals = self._work_intervals(from_datetime, to_datetime, domain=domain)
+        else:
+            intervals = self._attendance_intervals(from_datetime, to_datetime)
+
+        return self._get_days_data(intervals, day_total)
 
     def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
         """
