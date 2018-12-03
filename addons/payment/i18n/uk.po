@@ -76,7 +76,7 @@ msgstr "<i class=\"fa fa-trash\"/> Видалити"
 #: code:addons/payment/models/payment_acquirer.py:124
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr "<i>Закрити,</i> Ваш платіж було закрито."
+msgstr "<i>Скасовано,</i> Ваш платіж було скасовано."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:120
@@ -85,7 +85,7 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
-"<i>Виконано,</i> сВаш онлайн-платіж успішно оброблено. Дякуємо за ваше "
+"<i>Виконано,</i> Ваш онлайн-платіж успішно оброблено. Дякуємо за ваше "
 "замовлення."
 
 #. module: payment
@@ -298,7 +298,7 @@ msgstr "Номер рахунку"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Acquirer"
-msgstr "Екваєр"
+msgstr "Еквайєр"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
@@ -318,12 +318,12 @@ msgstr "Посилання еквайєра"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr "Придбання"
+msgstr "Еквайєри"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr "Список покупців"
+msgstr "Список еквайєрів"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -440,7 +440,7 @@ msgstr "Модель зворотнього документу"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Зворотній хеш"
+msgstr "Зворотній геш"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -494,7 +494,7 @@ msgstr "Сума отримання вручну"
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr "Транзакція схоплення"
+msgstr "Транзакція отримання"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
@@ -582,7 +582,7 @@ msgstr "Відповідний модуль "
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
-msgstr "Підрахунок платежу Токена"
+msgstr "Токен підрахунку платежу"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
@@ -691,7 +691,7 @@ msgstr "Готово"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
-msgstr "Повідомлення \"готово\""
+msgstr "Повідомлення виконано"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -777,12 +777,12 @@ msgstr "Для вхідних платежів"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form"
-msgstr "Вікно"
+msgstr "Форма"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
-msgstr "З кнопки шаблону"
+msgstr "Шалон кнопки форми"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -964,7 +964,7 @@ msgstr "Керуйте вашими методами оплати"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr "Керувати моїми способами оплати"
+msgstr "Керуйте вашими способами оплати"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1129,8 +1129,8 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
-"Примітка. Підписки не використовують це поле в обліковому записі, він за "
-"замовчуванням використовує сервер на сервер."
+"Примітка. Підписки не використовують це поле в обліковому записі, він "
+"використовує сервер до сервера за замовчуванням."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -1262,7 +1262,7 @@ msgstr "Платіжні еквайєри"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
 msgid "Payment Flow"
-msgstr "Платіжний потік"
+msgstr "Процес оплати"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
@@ -1310,7 +1310,7 @@ msgstr "Токен оплати"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr "Платежі Токенів"
+msgstr "Токени оплати"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1398,7 +1398,7 @@ msgstr "Paypal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Paypal Merchant ID"
-msgstr "ID мерчанта Paypal "
+msgstr "ID продавця Paypal "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -1615,7 +1615,7 @@ msgstr "Коротка назва"
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr "Набирає"
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_small
@@ -1690,7 +1690,7 @@ msgstr "Повідомлення подяки"
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
-"%s одержувачі платежу не можуть брати участь в ручному режимі захоплення!"
+"%s одержувачі платежу не можуть брати участь в ручному режимі отримання!"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1786,7 +1786,7 @@ msgid ""
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
 "Цей шаблон перетворює кнопку придбання з усіма необхідними значеннями.\n"
-"                                             Він виготовлений з qWeb з наступним контекстом оцінки:"
+"                                             Він виготовлений з qWeb із наступним контекстом оцінки:"
 
 #. module: payment
 #. openerp-web
@@ -1804,7 +1804,7 @@ msgstr "Операції"
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
-msgstr "Передача інформації буде надана після вибору покупця платежу."
+msgstr "Передача інформації буде надана після вибору еквайєра платежу."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -2084,7 +2084,7 @@ msgstr "Індекс"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr "acquirer: payment.acquirer browse record"
+msgstr "еквайєр: переглянути запис payment.acquirer"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -2118,7 +2118,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr "партнер: партнер покупець переглядає запис, не обов'язково встановлює"
+msgstr "партнер: партнер-покупець переглядає запис, не обов'язково встановлює"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form

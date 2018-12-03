@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Maksym <ms@myodoo.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
@@ -7153,6 +7153,11 @@ msgstr ""
 "Ctrl+R), aby zobaczyć zmiany.</span>"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -8891,11 +8896,6 @@ msgstr "Jesteś pewien, że chcesz dokonać automatycznego połączenia kontakt�
 msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
 msgstr "Czy na pewno chcesz wykonać listę automatycznych scaleń kontaktów?"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr "Czy na pewno chcesz wczytać dane demo?"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -11605,11 +11605,9 @@ msgstr "Niepowodzenia instalacji demo"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
 msgstr ""
-"Dane demonstracyjne powinny być używane tylko w testowych bazach danych. Po "
-"załadowaniu nie można ich usunąć."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
@@ -11752,7 +11750,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -16116,7 +16113,6 @@ msgstr "Załaduj tłumaczenie"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr ""
 
@@ -19552,6 +19548,11 @@ msgid ""
 msgstr "Tylko użytkownicy z tymi uprawnieniami mogą to wykonać"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "Otwórz aplikacje"
@@ -20339,6 +20340,13 @@ msgstr "Plan kont SNC dla Portugalii"
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
 msgstr ""
 
 #. module: base
@@ -25374,6 +25382,11 @@ msgstr ""
 #: model:res.country,name:base.ye
 msgid "Yemen"
 msgstr "Jemen"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee

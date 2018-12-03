@@ -5,12 +5,13 @@
 # Translators:
 # Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -26,6 +27,9 @@ msgid ""
 "<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Сповіщення про закінчення терміну "
+"дії</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -35,17 +39,17 @@ msgstr "<span>дні</span>"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
-msgstr "Дата попередження"
+msgstr "Дата сповіщення"
 
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
 msgid "Alert Date Reached"
-msgstr ""
+msgstr "Дасягнуто дату сповіщення"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
-msgstr "Дата вжити до"
+msgstr "Дата Вжити до"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
@@ -53,8 +57,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
-"Дата визначення партій, що закінчилися, та серійних номерів за допомогою "
-"фільтру \"Попередження про закінчення терміну дії\"."
+"Дата, щоби визначити термін закінчення терміну дії партії та серійних "
+"номерів за допомогою фільтру \"Попередження про закінчення терміну дії\"."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -66,12 +70,12 @@ msgstr "Дати"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
 msgid "End of Life Date"
-msgstr "Дата кінця життя"
+msgstr "Дата закінчення терміну дії"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
-msgstr ""
+msgstr "Сповіщення про закінчення терміну дії"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -84,8 +88,7 @@ msgstr "Партія/Серійний номер"
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
 msgstr ""
-"Кількість днів до сповіщення про потребу збільшення на партії/серійному "
-"номері."
+"Кількість днів до сповіщення потрібно збільшити на партії/серійному номері."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__life_time
@@ -95,7 +98,7 @@ msgid ""
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
 "Кількість днів до того, як товари можуть стати небезпечними і не повинні "
-"споживатися. Він буде вираховуватись на партію/серійний номер."
+"споживатися. Це буде вираховуватись на партію/серійний номер."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -104,8 +107,8 @@ msgid ""
 "Number of days before the goods should be removed from the stock. It will be"
 " computed on the lot/serial number."
 msgstr ""
-"Кількість днів до того, як товари повинні бути вилучені зі складу. Він буде "
-"розраховуватись на партію/серійний номер."
+"Кількість днів до того, як товари повинні бути вилучені зі складу. Це буде "
+"вираховуватись на партію/серійний номер."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -114,6 +117,8 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+"Кількість днів до того, як товар починає псуватися, але ще не є небезпечним."
+" Це буде обчислюватися за партією/серійним номером."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -124,18 +129,18 @@ msgstr "Група забезпечення"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Product Alert Time"
-msgstr "Термін попередження товару"
+msgstr "Час сповіщення товару"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr "Попередження про закінчення терміну дії товару"
+msgstr "Сповіщення про закінчення терміну дії товару"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
 msgid "Product Life Time"
-msgstr "Термін життя товару"
+msgstr "Термін дії товару"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
@@ -174,7 +179,7 @@ msgstr "Дата повідомлення була досягнута."
 #: code:addons/product_expiry/models/production_lot.py:84
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
-msgstr ""
+msgstr "Дату сповіщення про цю партію/серійний номер було досягнуто"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
@@ -201,5 +206,5 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
-"Це дата, коли товари з цим серійним номером починають погіршуватися, але ще "
-"не є небезпечними."
+"Це дата, коли товари з цим серійним номером починають псуватися, але ще не є"
+" небезпечними."
