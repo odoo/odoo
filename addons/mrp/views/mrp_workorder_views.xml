@@ -358,10 +358,13 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
-                                <div>
-                                    <strong class="o_kanban_record_title">
+                                <div class="o_kanban_record_top">
+                                    <strong class="o_kanban_record_headings">
                                         <span><t t-esc="record.production_id.value"/></span> - <span><t t-esc="record.name.value"/></span>
                                     </strong>
+                                    <span t-attf-class="badge #{['pending'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' :['progress'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['ready'].indexOf(record.state.raw_value) > -1 ? 'badge-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-danger'}">
+                                        <t t-esc="record.state.value"/>
+                                    </span>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
