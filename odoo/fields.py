@@ -2557,8 +2557,12 @@ class Many2many(_RelationalMulti):
                 comodel = model.env[self.comodel_name]
                 model._field_inverses.add(self, invf)
                 comodel._field_inverses.add(invf, self)
-            else:
+
+            elif model._auto:
                 # add self in m2m, so that its inverse field can find it
+                if (self.relation, self.column1, self.column2) in m2m:
+                    msg = "Many2many fields %s and %s use the same table and columns"
+                    raise TypeError(msg % (self, m2m[(self.relation, self.column1, self.column2)]))
                 m2m[(self.relation, self.column1, self.column2)] = self
 
     def update_db(self, model, columns):

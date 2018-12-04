@@ -225,6 +225,11 @@ class MultiLine(models.Model):
     tags = fields.Many2many('test_new_api.multi.tag')
 
 
+class MultiLine2(models.Model):
+    _name = 'test_new_api.multi.line2'
+    _inherit = 'test_new_api.multi.line'
+
+
 class MultiTag(models.Model):
     _name = 'test_new_api.multi.tag'
     _description = 'Test New API Multi Tag'
