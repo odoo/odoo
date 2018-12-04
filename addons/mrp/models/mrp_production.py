@@ -356,8 +356,8 @@ class MrpProduction(models.Model):
         if not self.product_id:
             self.bom_id = False
         else:
-            bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id, company_id=self.company_id.id)
-            if bom.type == 'normal':
+            bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id, company_id=self.company_id.id, bom_type='normal')
+            if bom:
                 self.bom_id = bom.id
                 self.product_qty = self.bom_id.product_qty
                 self.product_uom_id = self.bom_id.product_uom_id.id

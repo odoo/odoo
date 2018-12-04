@@ -158,9 +158,15 @@ class StockMove(models.Model):
         # all grouped in the same picking.
         if not self.picking_type_id:
             return self
-        bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id, company_id=self.company_id.id)
-        if not bom or bom.type != 'phantom':
+        bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id, company_id=self.company_id.id, bom_type='phantom')
+        bom_manufact = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id, company_id=self.company_id.id, bom_type='normal')
+        if not bom or (bom_manufact and 'Manufacture' in self.product_id.route_ids.mapped('name')):
             return self
+        route_manufact = self.env['stock.warehouse']._find_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
+        if route_manufact and route_manufact.id in [x.id for x in self.product_id.route_ids]:
+            msg  = _('There is no Bill of Material of type Manufacture found for the product %s. \n'
+                     'Please define a Bill of Material of Type Manufacture for this product.') % (self.product_id.display_name)
+            self.env['stock.rule']._log_next_activity(self.product_id, msg)
         phantom_moves = self.env['stock.move']
         processed_moves = self.env['stock.move']
         if self.picking_id.immediate_transfer:
