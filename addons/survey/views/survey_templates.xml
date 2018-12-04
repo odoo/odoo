@@ -87,6 +87,15 @@
     <template id="survey.layout" name="Survey Layout">
         <t t-call="web.layout">
             <t t-set="head">
+                <script type="text/javascript">
+                    odoo.session_info = {
+                        is_admin: <t t-esc="json.dumps(request.env.user._is_admin())"/>,
+                        is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
+                        is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
+                        user_id: <t t-esc="json.dumps(request.env.user.id)" />,
+                        is_frontend: true
+                    };
+                </script>
                 <t t-call-assets="web.assets_common"/>
                 <t t-call-assets="survey.survey_assets"/>
             </t>
