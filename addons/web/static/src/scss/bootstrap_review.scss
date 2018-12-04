@@ -8,3 +8,10 @@
     // They would go over floating elements, which is never what we want.
     clear: both;
 }
+
+.card-body {
+    // BS4 colored cards do not have a very popular design. This will reset them
+    // to a BS3-like one: only the header and footer are colored and the body
+    // will use the color of a default card background with a light opacity.
+    @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+}
