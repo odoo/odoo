@@ -201,7 +201,9 @@ class StockMove(models.Model):
 
     def _generate_move_phantom(self, bom_line, product_qty, quantity_done):
         if bom_line.product_id.type in ['product', 'consu']:
-            return self.copy(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
+            move = self.copy(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
+            move._adjust_procure_method()
+            return move
         return self.env['stock.move']
 
     def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):
