@@ -90,6 +90,9 @@ odoo.define('website_sale.website_sale', function (require) {
             var product_ids = [];
             var product_dom = $(event.target).closest(".js_product").find(".js_add_cart_variants");
             var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
+            if ($('body').hasClass('editor_enable')) {
+                return;
+            }
             var attribute_value_ids = product_dom.data("attribute_value_ids");
             _.each(attribute_value_ids, function(entry) {
                 product_ids.push(entry[0]);
@@ -123,7 +126,7 @@ odoo.define('website_sale.website_sale', function (require) {
 
         $(oe_website_sale).on("change", ".oe_cart input.js_quantity[data-product-id]", function () {
           var $input = $(this);
-            if ($input.data('update_change')) {
+            if ($input.data('update_change') || $('body').hasClass('editor_enable')) {
                 return;
             }
           var value = parseInt($input.val() || 0, 10);
@@ -192,6 +195,9 @@ odoo.define('website_sale.website_sale', function (require) {
 
         // hack to add and remove from cart with json
         $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
+            if ($('body').hasClass('editor_enable')) {
+                return;
+            }
             ev.preventDefault();
             var $link = $(ev.currentTarget);
             var $input = $link.parent().find("input");
