@@ -1215,7 +1215,7 @@ class MailThread(models.AbstractModel):
 
         # 1. Check if message is a reply on a thread
         msg_references = [ref for ref in tools.mail_header_msgid_re.findall(thread_references) if 'reply_to' not in ref]
-        mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
+        mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1, order='id desc, message_id')
         is_a_reply = bool(mail_messages)
 
         # 1.1 Handle forward to an alias with a different model: do not consider it as a reply
