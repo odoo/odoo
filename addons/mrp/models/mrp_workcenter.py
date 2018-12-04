@@ -234,8 +234,8 @@ class MrpWorkcenterProductivity(models.Model):
     def _compute_duration(self):
         for blocktime in self:
             if blocktime.date_end:
-                d1 = fields.Datetime.from_string(blocktime.date_start)
-                d2 = fields.Datetime.from_string(blocktime.date_end)
+                d1 = blocktime.date_start.replace(microsecond=0)
+                d2 = blocktime.date_end.replace(microsecond=0)
                 diff = d2 - d1
                 if (blocktime.loss_type not in ('productive', 'performance')) and blocktime.workcenter_id.resource_calendar_id:
                     r = blocktime.workcenter_id.get_work_days_data(d1, d2)['hours']
