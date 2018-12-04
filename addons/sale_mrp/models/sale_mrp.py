@@ -11,19 +11,35 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
-
-        for line in self:
-            if line.qty_delivered_method == 'stock_move':
-                # In the case of a kit, we need to check if all components are shipped. Since the BOM might
-                # have changed, we don't compute the quantities but verify the move state.
-                bom = self.env['mrp.bom']._bom_find(product=line.product_id)
-                if bom and bom.type == 'phantom':
-                    moves = line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
-                    bom_delivered = all([move.state == 'done' for move in moves])
-                    if bom_delivered:
-                        line.qty_delivered = line.product_uom_qty
+        for order_line in self:
+            if order_line.qty_delivered_method == 'stock_move':
+                boms = order_line.move_ids.mapped('bom_line_id.bom_id')
+                relevant_boms = boms.filtered(lambda b: b.type == 'phantom' and (b.product_id == order_line.product_id or b.product_tmpl_id == order_line.product_id.product_tmpl_id))
+                prioritary_bom = min(relevant_boms, key=lambda b: b.sequence, default=self.env['mrp.bom'])
+                if prioritary_bom:
+                    moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
+                    qty_ratios = []
+                    order_uom_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, prioritary_bom.product_uom_id)
+                    boms, bom_sub_lines = prioritary_bom.explode(order_line.product_id, order_uom_qty)
+                    for bom_line, bom_line_data in bom_sub_lines:
+                        relevant_moves = moves.filtered(lambda m: m.bom_line_id == bom_line)
+                        if relevant_moves:
+                            qty_needed = bom_line_data['qty'] / bom_line_data['original_qty']
+                            qty_uom_needed = bom_line.product_uom_id._compute_quantity(qty_needed, bom_line.product_id.product_tmpl_id.uom_id)
+                            qty_uom_processed = 0.0
+                            relevant_delivered_moves = relevant_moves.filtered(lambda m: m.location_dest_id.usage == 'customer' and not m.origin_returned_move_id or not (m.origin_returned_move_id and m.to_refund))
+                            for move in relevant_delivered_moves:
+                                qty_uom_processed += move.product_uom._compute_quantity(move.quantity_done, move.product_tmpl_id.uom_id)
+                            relevant_return_moves = relevant_moves.filtered(lambda m: m.location_dest_id.usage != 'customer' and m.to_refund)
+                            for move in relevant_return_moves:
+                                qty_uom_processed -= move.product_uom._compute_quantity(move.quantity_done, move.product_tmpl_id.uom_id)
+                            qty_ratios.append(qty_uom_processed / qty_uom_needed)
+                        else:
+                            qty_ratios.append(0.0)
+                    if qty_ratios:
+                        order_line.qty_delivered = min(qty_ratios) // 1
                     else:
-                        line.qty_delivered = 0.0
+                        order_line.qty_delivered = 0.0
 
     @api.multi
     def _get_bom_component_qty(self, bom):
