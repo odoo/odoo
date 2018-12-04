@@ -197,6 +197,7 @@ class StockMove(models.Model):
             'quantity_done': quantity_done,
             'state': 'draft',  # will be confirmed below
             'name': self.name,
+            'bom_line_id': bom_line.id,
         }
 
     def _generate_move_phantom(self, bom_line, product_qty, quantity_done):

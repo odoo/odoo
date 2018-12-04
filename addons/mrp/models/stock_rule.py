@@ -54,6 +54,11 @@ class StockRule(models.Model):
                                               subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
+    def _get_custom_move_fields(self):
+        fields = super(StockRule, self)._get_custom_move_fields()
+        fields += ['bom_line_id']
+        return fields
+
     @api.multi
     def _get_matching_bom(self, product_id, values):
         if values.get('bom_id', False):
@@ -108,6 +113,7 @@ class ProcurementGroup(models.Model):
                 bom_line_uom = bom_line.product_uom_id
                 quant_uom =  bom_line.product_id.uom_id
                 component_qty, procurement_uom = bom_line_uom._adjust_uom_quantities(bom_line_data['qty'], quant_uom)
+                values['bom_line_id'] = bom_line.id
                 super(ProcurementGroup, self).run(bom_line.product_id, component_qty, procurement_uom, location_id, name, origin, values)
             return True
         else:
