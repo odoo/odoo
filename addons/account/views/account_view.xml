@@ -855,7 +855,7 @@
                                     <field name="amount" class="oe_inline"/>
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
-                                <field name="journal_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
+                                <field name="journal_id" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"/>
                             </group>
                         </group>
                         <div class="oe_edit_only">
@@ -876,7 +876,7 @@
                                     <field name="second_amount" class="oe_inline"/>
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
-                                <field name="second_journal_id" string="Journal" domain="[('company_id', '=', company_id)]" widget="selection"/>
+                                <field name="second_journal_id" string="Journal" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"/>
                             </group>
                         </group>
                     </sheet>
