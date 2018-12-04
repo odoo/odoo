@@ -673,6 +673,9 @@ class PaymentTransaction(models.Model):
         elif self.state == 'cancel' and self.state_message:
             message = _('The transaction %s with %s for %s has been cancelled with the following message: %s')
             message_vals.append(self.state_message)
+        elif self.state == 'error' and self.state_message:
+            message = _('The transaction %s with %s for %s has return failed with the following error message: %s')
+            message_vals.append(self.state_message)
         else:
             message = _('The transaction %s with %s for %s has been cancelled.')
         return message % tuple(message_vals)
@@ -771,6 +774,7 @@ class PaymentTransaction(models.Model):
             'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             'state_message': msg,
         })
+        self._log_payment_transaction_received()
 
     @api.multi
     def _post_process_after_done(self):
