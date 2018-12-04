@@ -3,28 +3,20 @@
 
 import logging
 import re
-import uuid
 
 from email.utils import formataddr
-from werkzeug import urls
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 emails_split = re.compile(r"[;,\n\r]+")
-email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
 
 class SurveyInvite(models.TransientModel):
     _name = 'survey.invite'
     _description = 'Survey Invitation Wizard'
-
-    def default_survey_id(self):
-        context = self.env.context
-        if context.get('model') == 'survey.survey':
-            return context.get('res_id')
 
     @api.model
     def _get_default_from(self):
@@ -52,52 +44,69 @@ class SurveyInvite(models.TransientModel):
         ondelete='set null', default=_get_default_author,
         help="Author of the message.")
     # recipients
-    partner_ids = fields.Many2many('res.partner', 'survey_mail_compose_message_res_partner_rel', 'wizard_id', 'partner_id', string='Existing contacts')
-    multi_email = fields.Text(string='List of emails', help="This list of emails of recipients will not be converted in contacts.\
+    partner_ids = fields.Many2many(
+        'res.partner', 'survey_mail_compose_message_res_partner_rel', 'wizard_id', 'partner_id', string='Recipients')
+    emails = fields.Text(string='Additional emails', help="This list of emails of recipients will not be converted in contacts.\
         Emails must be separated by commas, semicolons or newline.")
+    existing_mode = fields.Selection([
+        ('skip', 'Skip'), ('resend', 'Resend'), ('prevent', 'Prevent')],
+        string='Existing', default='skip')
     # technical info
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     # survey
-    survey_id = fields.Many2one('survey.survey', string='Survey', default=default_survey_id, required=True)
-    public = fields.Selection([('public_link', 'Share the public web link to your audience.'),
-                                ('email_public_link', 'Send by email the public web link to your audience.'),
-                                ('email_private', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
-                                string='Share options', default='public_link', required=True)
-    public_url = fields.Char(compute="_compute_survey_url", string="Public url")
-    date_deadline = fields.Date(string="Deadline to which the invitation to respond is valid",
-        help="Deadline to which the invitation to respond for this survey is valid. If the field is empty,\
-        the invitation is still valid.")
+    survey_id = fields.Many2one('survey.survey', string='Survey', required=True)
+    survey_url = fields.Char(related="survey_id.public_url", readonly=True)
+    survey_access_mode = fields.Selection(related="survey_id.access_mode", readonly=True)
+    deadline = fields.Datetime(string="Answer deadline")
 
-    @api.depends('survey_id')
-    def _compute_survey_url(self):
-        for wizard in self:
-            wizard.public_url = wizard.survey_id.public_url
-
-    @api.model
-    def default_get(self, fields):
-        res = super(SurveyInvite, self).default_get(fields)
-        context = self.env.context
-        if context.get('active_model') == 'res.partner' and context.get('active_ids'):
-            res.update({'partner_ids': context['active_ids']})
-        return res
-
-    @api.onchange('multi_email')
-    def onchange_multi_email(self):
-        emails = list(set(emails_split.split(self.multi_email or "")))
-        emails_checked = []
-        error_message = ""
+    @api.onchange('emails')
+    def _onchange_emails(self):
+        if self.emails and (self.survey_access_mode == 'internal' or (self.survey_access_mode == 'authentication' and not self.survey_id.users_can_signup)):
+            raise UserError(_('This survey does not allow external people to participate. You should create user accounts or update survey access mode accordingly.'))
+        if not self.emails:
+            return
+        valid, error = [], []
+        emails = list(set(emails_split.split(self.emails or "")))
         for email in emails:
-            email = email.strip()
-            if email:
-                if not email_validator.match(email):
-                    error_message += "\n'%s'" % email
-                else:
-                    emails_checked.append(email)
-        if error_message:
-            raise UserError(_("Incorrect Email Address: %s") % error_message)
+            email_check = tools.email_split_and_format(email)
+            if not email_check:
+                error.append(email)
+            else:
+                valid.extend(email_check)
+        if error:
+            raise UserError(_("Some emails you just entered are incorrect: %s") % (', '.join(error)))
+        self.emails = '\n'.join(valid)
 
-        emails_checked.sort()
-        self.multi_email = '\n'.join(emails_checked)
+    @api.onchange('survey_access_mode')
+    def _onchange_survey_access_mode(self):
+        if self.survey_access_mode == 'internal':
+            return {'domain': {
+                    'partner_ids': [('user_ids.groups_id', 'in', [self.env.ref('base.group_user').id])]
+                    }}
+        elif self.survey_access_mode == 'authentication':
+            if not self.survey_id.users_can_signup:
+                return {'domain': {
+                    'partner_ids': [('user_ids.groups_id', 'in', [self.env.ref('base.group_user').id, self.env.ref('base.group_portal').id])]
+                    }}
+
+    @api.onchange('partner_ids')
+    def _onchange_partner_ids(self):
+        if self.survey_access_mode == 'internal' and self.partner_ids:
+            invalid_partners = self.partner_ids.filtered(lambda partner: not partner.user_ids or not all(user.has_group('base.group_user') for user in partner.user_ids))
+            if invalid_partners:
+                raise UserError(
+                    _('The following recipients are not valid users belonging to the employee group: %s. You should create user accounts for them.' %
+                        (','.join(invalid_partners.mapped('name')))))
+        elif self.survey_access_mode == 'authentication' and self.partner_ids:
+            if not self.survey_id.users_can_signup:
+                invalid_partners = self.env['res.partner'].search([
+                    ('user_ids', '=', False),
+                    ('id', 'in', self.partner_ids.ids)
+                ])
+                if invalid_partners:
+                    raise UserError(
+                        _('The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.' %
+                            (','.join(invalid_partners.mapped('name')))))
 
     @api.onchange('template_id', 'survey_id')
     def _onchange_template_id(self):
@@ -146,119 +155,109 @@ class SurveyInvite(models.TransientModel):
     # Wizard validation and send
     #------------------------------------------------------
 
-    @api.multi
-    def send_mail_action(self):
-        return self.send_mail()
+    def _prepare_answers(self, partners, emails):
+        answers = self.env['survey.user_input']
+        existing_answers = self.env['survey.user_input'].search([
+            '&', ('survey_id', '=', self.survey_id.id),
+            '|',
+            ('partner_id', 'in', partners.ids),
+            ('email', 'in', emails)
+        ])
+        partners_done = self.env['res.partner']
+        emails_done = []
+        if existing_answers:
+            if self.existing_mode == 'prevent':
+                raise UserError(_('Some of recipients already started survey. Please update recipients list accordingly.'))
+
+            if self.existing_mode in ['skip', 'reset']:
+                partners_done = existing_answers.mapped('partner_id')
+                emails_done = existing_answers.mapped('email')
+
+            if self.existing_mode == 'reset':
+                existing_answers.write({
+                    'deadline': self.deadline,
+                    'state': 'new',
+                    'user_input_line_ids': [(5, 0)],
+                })
+                answers |= existing_answers
+
+        for new_partner in partners - partners_done:
+            answers |= self.survey_id._create_answer(partner=new_partner, deadline=self.deadline)
+        for new_email in [email for email in emails if email not in emails_done]:
+            answers |= self.survey_id._create_answer(email=new_email, deadline=self.deadline)
+
+        return answers
+
+    def _send_mail(self, answer):
+        """ Create mail specific for recipient containing notably its access token """
+        url = '%s?token=%s' % (self.survey_id.public_url, answer.token)
+
+        # post the message
+        mail_values = {
+            'email_from': self.email_from,
+            'author_id': self.author_id.id,
+            'model': None,
+            'res_id': None,
+            'subject': self.subject,
+            'body_html': self.body.replace("__URL__", url),
+            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
+            'auto_delete': True,
+        }
+        if answer.partner_id:
+            mail_values['recipient_ids'] = [(4, answer.partner_id.id)]
+        else:
+            mail_values['email_to'] = answer.email
+
+        # optional support of notif_layout in context
+        notif_layout = self.env.context.get('notif_layout', self.env.context.get('custom_layout'))
+        if notif_layout:
+            try:
+                template = self.env.ref(notif_layout, raise_if_not_found=True)
+            except ValueError:
+                _logger.warning('QWeb template %s not found when sending survey mails. Sending without layouting.' % (notif_layout))
+            else:
+                template_ctx = {
+                    'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.survey_id.title)),
+                    'model_description': self.env['ir.model']._get('survey.survey').display_name,
+                    'company': self.env.user.company_id,
+                }
+                body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                mail_values['body_html'] = self.env['mail.thread']._replace_local_links(body)
+
+        return self.env['mail.mail'].sudo().create(mail_values)
 
     @api.multi
-    def send_mail(self, auto_commit=False):
+    def action_invite(self):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed """
-
-        SurveyUserInput = self.env['survey.user_input']
+        self.ensure_one()
         Partner = self.env['res.partner']
-        Mail = self.env['mail.mail']
-        notif_layout = self.env.context.get('notif_layout', self.env.context.get('custom_layout'))
 
-        def create_response_and_send_mail(wizard, token, partner_id, email):
-            """ Create one mail by recipients and replace __URL__ by link with identification token """
-            #set url
-            url = wizard.survey_id.public_url
+        # check if __URL__ is in the text
+        if self.body.find("__URL__") < 0:
+            raise UserError(_("The content of the text don't contain '__URL__'. \
+                __URL__ is automaticaly converted into the special url of the survey."))
 
-            if token:
-                url = url + '/' + token
-
-            # post the message
-            values = {
-                'model': None,
-                'res_id': None,
-                'subject': wizard.subject,
-                'body': wizard.body.replace("__URL__", url),
-                'body_html': wizard.body.replace("__URL__", url),
-                'parent_id': None,
-                'attachment_ids': wizard.attachment_ids and [(6, 0, wizard.attachment_ids.ids)] or None,
-                'email_from': wizard.email_from or None,
-                'auto_delete': True,
-            }
-            if partner_id:
-                values['recipient_ids'] = [(4, partner_id)]
+        # compute partners and emails, try to find partners for given emails
+        valid_partners = self.partner_ids
+        valid_emails = []
+        for email in emails_split.split(self.emails or ''):
+            partner = False
+            email_normalized = tools.email_normalize(email)
+            if email_normalized:
+                partner = Partner.search([('email_normalized', '=', email_normalized)])
+            if partner:
+                valid_partners |= partner
             else:
-                values['email_to'] = email
+                email_formatted = tools.email_split_and_format(email)
+                if email_formatted:
+                    valid_emails.extend(email_formatted)
 
-            # optional support of notif_layout in context
-            if notif_layout:
-                try:
-                    template = self.env.ref(notif_layout, raise_if_not_found=True)
-                except ValueError:
-                    _logger.warning('QWeb template %s not found when sending survey mails. Sending without layouting.' % (notif_layout))
-                else:
-                    template_ctx = {
-                        'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=wizard.survey_id.title)),
-                        'model_description': self.env['ir.model']._get('survey.survey').display_name,
-                        'company': self.env.user.company_id,
-                    }
-                    body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
-                    values['body_html'] = self.env['mail.thread']._replace_local_links(body)
+        if not valid_partners and not valid_emails:
+            raise UserError(_("Please enter at least one valid recipient."))
 
-            Mail.create(values).send()
-
-        def create_token(wizard, partner_id, email):
-            if context.get("survey_resent_token"):
-                survey_user_input = SurveyUserInput.search([('survey_id', '=', wizard.survey_id.id),
-                    ('state', 'in', ['new', 'skip']), '|', ('partner_id', '=', partner_id),
-                    ('email', '=', email)], limit=1)
-                if survey_user_input:
-                    return survey_user_input.token
-            if wizard.public != 'email_private':
-                return None
-            else:
-                token = str(uuid.uuid4())
-                # create response with token
-                survey_user_input = SurveyUserInput.create({
-                    'survey_id': wizard.survey_id.id,
-                    'deadline': wizard.date_deadline,
-                    'input_type': 'link',
-                    'state': 'new',
-                    'token': token,
-                    'partner_id': partner_id,
-                    'email': email})
-                return survey_user_input.token
-
-        for wizard in self:
-            # check if __URL__ is in the text
-            if wizard.body.find("__URL__") < 0:
-                raise UserError(_("The content of the text don't contain '__URL__'. \
-                    __URL__ is automaticaly converted into the special url of the survey."))
-
-            context = self.env.context
-            if not wizard.multi_email and not wizard.partner_ids and (context.get('default_partner_ids') or context.get('default_multi_email')):
-                wizard.multi_email = context.get('default_multi_email')
-                wizard.partner_ids = context.get('default_partner_ids')
-
-            # quick check of email list
-            emails_list = []
-            if wizard.multi_email:
-                emails = set(emails_split.split(wizard.multi_email)) - set(wizard.partner_ids.mapped('email'))
-                for email in emails:
-                    email = email.strip()
-                    if email_validator.match(email):
-                        emails_list.append(email)
-
-            # remove public anonymous access
-            partner_list = []
-            for partner in wizard.partner_ids:
-                partner_list.append({'id': partner.id, 'email': partner.email})
-
-            if not len(emails_list) and not len(partner_list):
-                raise UserError(_("Please enter at least one valid recipient."))
-
-            for email in emails_list:
-                partner = Partner.search([('email', '=', email)], limit=1)
-                token = create_token(wizard, partner.id, email)
-                create_response_and_send_mail(wizard, token, partner.id, email)
-
-            for partner in partner_list:
-                token = create_token(wizard, partner['id'], partner['email'])
-                create_response_and_send_mail(wizard, token, partner['id'], partner['email'])
+        answers = self._prepare_answers(valid_partners, valid_emails)
+        for answer in answers:
+            self._send_mail(answer)
 
         return {'type': 'ir.actions.act_window_close'}

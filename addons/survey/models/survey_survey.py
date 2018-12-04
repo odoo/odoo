@@ -345,12 +345,9 @@ class Survey(models.Model):
 
         local_context = dict(
             self.env.context,
-            default_model='survey.survey',
-            default_res_id=self.id,
             default_survey_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            default_composition_mode='comment',
             notif_layout='mail.mail_notification_light',
         )
         return {

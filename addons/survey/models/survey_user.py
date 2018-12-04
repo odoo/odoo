@@ -45,7 +45,7 @@ class SurveyUserInput(models.Model):
     email = fields.Char('E-mail', readonly=True)
     # answers
     user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
-    deadline = fields.Datetime('Deadline', help="Date by which the person can open the survey and submit answers")
+    deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
     last_displayed_page_id = fields.Many2one('survey.page', string='Last displayed page')
     quizz_score = fields.Float("Score for the quiz", compute="_compute_quizz_score", default=0.0)
 
@@ -69,16 +69,20 @@ class SurveyUserInput(models.Model):
                      ('create_date', '<', an_hour_ago)]).unlink()
 
     @api.multi
-    def action_survey_resend(self):
-        """ Send again the invitation """
-        self.ensure_one()
-        local_context = {
-            'survey_resent_token': True,
-            'default_partner_ids': self.partner_id and [self.partner_id.id] or [],
-            'default_multi_email': self.email or "",
-            'default_public': 'email_private',
-        }
-        return self.survey_id.with_context(local_context).action_send_survey()
+    def action_resend(self):
+        partners = self.env['res.partner']
+        emails = []
+        for user_answer in self:
+            if user_answer.partner_id:
+                partners |= user_answer.partner_id
+            elif user_answer.email:
+                emails.append(user_answer.email)
+
+        return self.survey_id.with_context(
+            default_existing_mode='resend',
+            default_partner_ids=partners.ids,
+            default_emails=','.join(emails)
+        ).action_send_survey()
 
     @api.multi
     def action_print_answers(self):
