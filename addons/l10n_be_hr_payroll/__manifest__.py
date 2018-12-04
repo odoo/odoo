@@ -3,8 +3,8 @@
 
 {
     'name': 'Belgium - Payroll',
-    'category': 'Human Resources',
-    'depends': ['hr_payroll'],
+    'category': 'Payroll Localization',
+    'depends': ['hr_payroll', 'l10n_be'],
     'description': """
 Belgian Payroll Rules.
 ======================
