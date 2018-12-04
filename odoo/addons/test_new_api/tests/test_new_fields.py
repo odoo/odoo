@@ -633,6 +633,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.sudo(user1).tag_id, tag0.browse())
         self.assertEqual(record.sudo(user2).tag_id, tag0)
 
+        record.sudo(user1).foo = False
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, False)
+        self.assertEqual(record.sudo(user2).foo, 'default')
+
         # create company record and attribute
         company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
         attribute_record = self.env['test_new_api.company.attr'].create({
