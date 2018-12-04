@@ -90,3 +90,29 @@ class StockRule(models.Model):
         new_move_vals = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
         new_move_vals['production_id'] = False
         return new_move_vals
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def run(self, product_id, product_qty, product_uom, location_id, name, origin, values):
+        """ If 'run' is called on a kit, this override is made in order to call
+        the original 'run' method with the values of the components of that kit.
+        """
+        bom_kit = self.env['mrp.bom']._bom_find(product=product_id, bom_type='phantom')
+        if bom_kit:
+            order_qty = product_uom._compute_quantity(product_qty, bom_kit.product_uom_id, round=False)
+            qty_to_produce = ( order_qty / bom_kit.product_qty)
+            boms, bom_sub_lines = bom_kit.explode(product_id, qty_to_produce)
+            for bom_line, bom_line_data in bom_sub_lines:
+                procurement_uom = bom_line.product_uom_id
+                quant_uom = bom_line.product_id.uom_id
+                component_qty = bom_line_data['qty']
+                get_param = self.env['ir.config_parameter'].sudo().get_param
+                if procurement_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
+                    component_qty = bom_line.product_uom_id._compute_quantity(bom_line_data['qty'], quant_uom, rounding_method='HALF-UP')
+                    procurement_uom = quant_uom
+                super(ProcurementGroup, self).run(bom_line.product_id, component_qty, procurement_uom, location_id, name, origin, values)
+            return True
+        else:
+            return super(ProcurementGroup, self).run(product_id, product_qty, product_uom, location_id, name, origin, values)

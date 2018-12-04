@@ -1268,3 +1268,28 @@ class StockMove(models.Model):
             vals = self._prepare_move_line_vals(quantity=0)
             vals['qty_done'] = qty
             ml = self.env['stock.move.line'].create(vals)
+
+    def _adjust_procure_method(self):
+        """ This method will try to apply the procure method MTO on some moves if
+        a compatible MTO route is found. Else the procure method will be set to MTS
+        """
+        try:
+            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto',
+                                                                       'Make To Order')
+        except ValueError:
+            mto_route = False
+        for move in self:
+            product_id = move.product_id
+            domain = [
+                ('location_src_id', '=', move.location_id.id),
+                ('location_id', '=', move.location_dest_id.id),
+                ('action', '!=', 'push')
+            ]
+            rules = self.env['procurement.group']._search_rule(False, product_id, move.warehouse_id, domain)
+            routes = product_id.route_ids + product_id.route_from_categ_ids + move.warehouse_id.route_ids
+            if rules and (rules.procure_method == 'make_to_order'):
+                move.procure_method = rules.procure_method
+            elif mto_route and mto_route.id in [x.id for x in routes]:
+                move.procure_method = 'make_to_order'
+            else:
+                move.procure_method = 'make_to_stock'
