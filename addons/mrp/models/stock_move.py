@@ -158,8 +158,8 @@ class StockMove(models.Model):
         # all grouped in the same picking.
         if not self.picking_type_id:
             return self
-        bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id, company_id=self.company_id.id)
-        if not bom or bom.type != 'phantom':
+        bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id, company_id=self.company_id.id, bom_type='phantom')
+        if not bom:
             return self
         phantom_moves = self.env['stock.move']
         processed_moves = self.env['stock.move']

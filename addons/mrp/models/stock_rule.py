@@ -60,7 +60,7 @@ class StockRule(models.Model):
             return values['bom_id']
         return self.env['mrp.bom'].with_context(
             company_id=values['company_id'].id, force_company=values['company_id'].id
-        )._bom_find(product=product_id, picking_type=self.picking_type_id)  # TDE FIXME: context bullshit
+        )._bom_find(product=product_id, picking_type=self.picking_type_id, bom_type='normal')  # TDE FIXME: context bullshit
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, values, bom):
         return {
