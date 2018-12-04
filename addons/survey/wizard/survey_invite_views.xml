@@ -1,60 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Composition form (context['survey_resent_token'], if True, hide share option, emails list and partner_ids) -->
         <record model="ir.ui.view" id="survey_invite_view_form">
             <field name="name">survey.invite.view.form</field>
             <field name="model">survey.invite</field>
             <field name="arch" type="xml">
                 <form string="Compose Email">
-                    <group col="2">
-                        <field name="survey_id" readonly="context.get('default_survey_id')"/>
-                        <field name="public" widget="radio" invisible="context.get('survey_resent_token')" />
-                    </group>
-                    <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}" class="oe_survey_email_public">
-                        <div>
-                            You can share your survey web public link and/or send private invitations to your audience. People can answer once per invitation, and whenever they want with the public web link (in this case, the "Login Required" setting must be disabled).
-                        </div>
-                        <div>Copy, paste and share the web link below to your audience.</div>
-                        <code><field name="public_url"/></code>
-                    </group>
-                    <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
+                    <group col="1">
                         <group col="2">
+                            <field name="survey_access_mode" invisible="1"/>
+                            <field name="survey_id" readonly="context.get('default_survey_id')"/>
+                            <field name="existing_mode" widget="radio" invisible="1" />
+                            <field name="survey_url" label="Public share URL" readonly="1" widget="CopyClipboardText"
+                                 attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"
+                                 class="mb16"/>
                             <field name="partner_ids"
-                                invisible="context.get('survey_resent_token')"
+                                attrs="{'readonly': [('existing_mode', '=', 'resend')]}"
                                 widget="many2many_tags_email"
                                 placeholder="Add existing contacts..."
-                                context="{'force_email':True, 'show_email':True}" />
-                            <field name="multi_email"
-                                invisible="context.get('survey_resent_token')"
+                                context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
+                            <field name="emails"
+                                attrs="{
+                                    'invisible': [('survey_access_mode', 'in', ['authentication', 'internal'])],
+                                    'readonly': [('existing_mode', '=', 'resend')]
+                                }"
                                 placeholder="Add a list of email of recipients (will not be converted into contacts). Separated by commas, semicolons or newline..."/>
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="body" options="{'style-inline': true}"/>
-                        <group col="2">
-                            <div>
-                                <label for="attachment_ids" />
-                                <field name="attachment_ids" widget="many2many_binary" />
-                            </div>
-                            <div class="oe_survey_date_deadline">
-                                <label for="date_deadline" />
-                                <field name="date_deadline" />
-                            </div>
+                        <group>
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group>
+                                <field name="deadline"/>
+                                <field name="template_id" label="Use template"/>
+                            </group>
                         </group>
                     </group>
-                    <footer attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}">
-                        <button string="Close" class="btn-primary" special="cancel" />
-                    </footer>
-                    <footer attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
-                        <button string="Send" name="send_mail_action" type="object" class="btn-primary" />
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
-                        <group class="oe_right" col="1">
-                            <div>
-                                Use template
-                                <field name="template_id" nolabel="1"/>
-                            </div>
-                            <button icon="/email_template/static/src/img/email_template_save.png" type="object" name="save_as_template" string="Save as new template" class="oe_link" help="Save as a new template" />
-                        </group>
+                    <footer>
+                        <button string="Send" name="action_invite" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
