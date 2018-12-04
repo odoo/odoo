@@ -150,7 +150,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             partners_amount = {}
             aml_ids = cr.fetchall()
             aml_ids = aml_ids and [x[0] for x in aml_ids] or []
-            for line in self.env['account.move.line'].browse(aml_ids):
+            for line in self.env['account.move.line'].browse(aml_ids).with_context(prefetch_fields=False):
                 partner_id = line.partner_id.id or False
                 if partner_id not in partners_amount:
                     partners_amount[partner_id] = 0.0
