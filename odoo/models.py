@@ -1608,6 +1608,87 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             return False
 
     @api.model
+    def complete_field(self, field, key, field_domain=None, parent_domain=None, operator='ilike', limit=9):
+        """ Completes the m2o field ``field`` to match the provided value ``key``.
+            Only returns record references linked from a record of the current model.
+
+            :param str field: field to complete
+            :param str key: ilike value for the field to complete
+            :param field_domain: filter to apply on acceptable ``field`` records
+            :param parent_domain: filter to apply on current model records
+            :param str operator: matching operator between ``field`` and ``key``, defaults to ``ilike``
+            :param int limit: number of results to return, defaults to 9
+            :return: name_get  (results: list of (id, name))
+        """
+        field_info = self._fields[field]
+        fieldModel = self.env[field_info.comodel_name and field_info.comodel_name or field_info.model_name]
+
+        if field_info.type != 'many2one':
+            raise ValueError("Completed field must be a many2one, got %s" % field_info.type)
+
+        domain = [(field, operator, key)]
+        if field_domain:
+            for section in field_domain:
+                if isinstance(section, str):
+                    domain.append(section)
+                else:
+                    # prefix each field of the section with the name of the
+                    # field: (foo, =, 3) => ($field.foo, =, 3) this way field's
+                    # own values can be filtered from parent
+                    field_name, operator_name, value = section
+                    domain.append(("%s.%s" % (field, field_name), operator_name, value))
+
+        # apply parent object action domain.
+        if (parent_domain):
+            domain.extend(parent_domain)
+
+        fieldModel.check_access_rights('read')
+        query = self._where_calc(domain)
+        self._apply_ir_rules(query, 'read')
+        from_clause, where_clause, where_clause_params = query.get_sql()
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
+
+        if field_info.store:
+            fieldQuery = fieldModel._where_calc([])
+            fieldModel._apply_ir_rules(fieldQuery, 'read')
+            order_by = fieldModel._generate_order_by(None, fieldQuery)
+            field_from_clause, field_where_clause, field_where_clause_params = fieldQuery.get_sql()
+            field_where_str = field_where_clause and ("(%s) AND " % field_where_clause) or ''
+            limit_str = limit and ' limit %d' % limit or ''
+
+            query_str = """
+                SELECT "%(table)s"."id"
+                FROM %(field_from_clause)s
+                WHERE %(field_where_str)s EXISTS (
+                    SELECT DISTINCT "%(parent_table)s"."%(field)s"
+                    FROM %(from_clause)s %(where_str)s AND "%(parent_table)s"."%(field)s" = "%(table)s"."id"
+                )
+                %(order_by)s
+                %(limit_str)s
+            """ % {
+                'table': fieldModel._table,
+                'field_from_clause': field_from_clause,
+                'field_where_str': field_where_str,
+                'parent_table': self._table,
+                'field': field,
+                'from_clause': from_clause,
+                'where_str': where_str,
+                'order_by': order_by,
+                'limit_str': limit_str,
+            }
+            where_clause_params = field_where_clause_params + where_clause_params
+            self._cr.execute(query_str, where_clause_params)
+            return fieldModel.browse([r[0] for r in self._cr.fetchall()]).name_get()
+        else:
+            # TODO: Need to find a way to search on non stored fields, following query may return huge result
+            # maybe we can add static limit like 160 but it is not perfect solution as all 160 records may get
+            # filtered when field model's record rule are applied by name_search
+            query_str = 'SELECT DISTINCT "%s".id FROM ' % self._table + from_clause + where_str
+            self._cr.execute(query_str, where_clause_params)
+            field_ids = self.browse([r[0] for r in self._cr.fetchall()]).mapped(field).ids
+            return fieldModel._name_search(name='', args=[('id', 'in', field_ids)], operator=operator, limit=limit)
+
+    @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         """ name_search(name='', args=None, operator='ilike', limit=100) -> records
 
