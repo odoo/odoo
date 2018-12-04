@@ -27,12 +27,11 @@ var UnsplashCore = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      *
      * @param {String} query search terms
      * @param {Integer} pageSize number of image to display per page
-     * @param {Integer} pageNumber page number to retrieve
      */
-    getImages: function (query, pageSize, pageNumber) {
+    getImages: function (query, pageSize) {
         var self = this;
-        var to = pageSize * pageNumber;
-        var from = to - pageSize;
+        var from = 0;
+        var to = pageSize;
         var cachedData = this._cache[query];
 
         if (cachedData && (cachedData.images.length >= to || (cachedData.totalImages !== 0 && cachedData.totalImages < to))) {
