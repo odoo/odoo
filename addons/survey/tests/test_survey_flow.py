@@ -47,7 +47,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
         with self.sudo(self.survey_manager):
             survey = self.env['survey.survey'].create({
                 'title': 'Public Survey for Tarte Al Djotte',
-                'auth_required': False,
+                'access_mode': 'public',
             })
 
             # First page is about customer data
