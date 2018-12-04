@@ -461,20 +461,20 @@
             <tbody>
                 <t t-set="text_result" t-value="prepare_result"/>
                 <tr t-foreach="text_result" t-as="user_input">
-                    <td><a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                    <td><a t-att-href="'/survey/print/%s?token=%s' % (user_input.survey_id.id, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
                     <t t-if="question.question_type == 'free_text'">
                         <td>
-                            <a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_free_text"></a><br/>
+                            <a t-att-href="'/survey/print/%s?token=%s' % (user_input.survey_id.id, user_input.user_input_id.token)" t-field="user_input.value_free_text"></a><br/>
                         </td>
                     </t>
                     <t t-if="question.question_type == 'textbox'">
                         <td>
-                            <a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_text"></a><br/>
+                            <a t-att-href="'/survey/print/%s?token=%s' % (user_input.survey_id.id, user_input.user_input_id.token)" t-field="user_input.value_text"></a><br/>
                         </td>
                     </t>
                     <t t-if="question.question_type == 'date'">
                         <td>
-                            <a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_date"></a><br/>
+                            <a t-att-href="'/survey/print/%s?token=%s' % (user_input.survey_id.id, user_input.user_input_id.token)" t-field="user_input.value_date"></a><br/>
                         </td>
                     </t>
                 </tr>
@@ -495,7 +495,7 @@
             </thead>
             <tbody>
                 <tr t-foreach="comments" t-as="user_input">
-                    <td><a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                    <td><a t-att-href="'/survey/print/%s?token=%s' % (user_input.survey_id.id, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
                         <td>
                             <span t-field="user_input.value_text"></span><br/>
                         </td>
@@ -679,7 +679,7 @@
                     </thead>
                     <tbody>
                         <tr class="d-none" t-foreach="number_result['input_lines']" t-as="user_input">
-                            <td><a t-att-href="'%s?token=%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                            <td><a t-att-href="'/survey/print/%s?token=%s' % (user_input.survey_id.id, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
                             <td><span t-field="user_input.value_number"></span><br/></td>
                         </tr>
                     </tbody>
