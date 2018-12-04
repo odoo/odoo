@@ -238,9 +238,11 @@
 
     <template id="date" name="Date box">
         <div class="form-group">
-            <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker" t-att-name="prefix"/>
-                <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
+            <div class="input-group date" t-attf-id="datetimepicker_#{question.id}" data-target-input="nearest"
+                    t-att-data-mindate="question.validation_min_date"
+                    t-att-data-maxdate="question.validation_max_date">
+                <input type="text" class="form-control datetimepicker-input" t-attf-data-target="#datetimepicker_#{question.id}" t-att-name="prefix"/>
+                <div class="input-group-append" t-attf-data-target="#datetimepicker_#{question.id}" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                 </div>
             </div>
@@ -341,39 +343,37 @@
             <div class="wrap">
                 <div class="container">
                     <t t-call="survey.back" />
-                    <div class="row">
-                        <div class='jumbotron mt32'>
-                            <h1><span t-field='survey.title'/></h1>
-                            <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
-                        </div>
-                        <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)">
-                            <t t-foreach="survey.page_ids" t-as="page">
-                                <div class="o_page_header">
-                                    <h1 t-field='page.title' />
-                                    <t t-if="page.description"><div t-field='page.description' class="oe_no_empty"/></t>
+                    <div class='jumbotron mt32'>
+                        <h1><span t-field='survey.title'/></h1>
+                        <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
+                    </div>
+                    <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)">
+                        <t t-foreach="survey.page_ids" t-as="page">
+                            <div class="o_page_header">
+                                <h1 t-field='page.title' />
+                                <t t-if="page.description"><div t-field='page.description' class="oe_no_empty"/></t>
+                            </div>
+                            <t t-foreach='page.question_ids' t-as='question'>
+                                <t t-set="prefix" t-value="'%s_%s_%s' % (survey.id, page.id, question.id)" />
+                                <div class="js_question-wrapper" t-att-id="prefix">
+                                    <h2>
+                                        <span t-field='question.question' />
+                                        <span t-if="question.constr_mandatory" class="text-danger">*</span>
+                                        <span t-if="quizz_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
+                                    </h2>
+                                    <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
+                                    <t t-if="question.type == 'free_text'"><t t-call="survey.free_text"/></t>
+                                    <t t-if="question.type == 'textbox'"><t t-call="survey.textbox"/></t>
+                                    <t t-if="question.type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
+                                    <t t-if="question.type == 'date'"><t t-call="survey.date"/></t>
+                                    <t t-if="question.type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
+                                    <t t-if="question.type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
+                                    <t t-if="question.type == 'matrix'"><t t-call="survey.matrix"/></t>
+                                    <div class="js_errzone alert alert-danger" style="display:none;" role="alert"></div>
                                 </div>
-                                <t t-foreach='page.question_ids' t-as='question'>
-                                    <t t-set="prefix" t-value="'%s_%s_%s' % (survey.id, page.id, question.id)" />
-                                    <div class="js_question-wrapper" t-att-id="prefix">
-                                        <h2>
-                                            <span t-field='question.question' />
-                                            <span t-if="question.constr_mandatory" class="text-danger">*</span>
-                                            <span t-if="quizz_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
-                                        </h2>
-                                        <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
-                                        <t t-if="question.type == 'free_text'"><t t-call="survey.free_text"/></t>
-                                        <t t-if="question.type == 'textbox'"><t t-call="survey.textbox"/></t>
-                                        <t t-if="question.type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
-                                        <t t-if="question.type == 'date'"><t t-call="survey.date"/></t>
-                                        <t t-if="question.type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
-                                        <t t-if="question.type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
-                                        <t t-if="question.type == 'matrix'"><t t-call="survey.matrix"/></t>
-                                        <div class="js_errzone alert alert-danger" style="display:none;" role="alert"></div>
-                                    </div>
-                                </t>
-                                <hr/>
                             </t>
-                        </div>
+                            <hr/>
+                        </t>
                     </div>
                 </div>
             </div>
