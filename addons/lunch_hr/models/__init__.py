@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import lunch_cashmove
-from . import lunch_order
 from . import lunch_product
 from . import lunch_supplier

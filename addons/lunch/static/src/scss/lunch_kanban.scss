@@ -1,0 +1,48 @@
+.o_lunch_kanban {
+    .o_pink {
+        color: nth($o-colors, 10);
+    }
+
+    .o_lunch_widget {
+        display: flex;
+        overflow: auto;
+        border-bottom: 1px solid #CED4DA;
+        background-color: white;
+        min-height: 90px;
+        max-height: 90px;
+
+        .o_lunch_widget_info {
+            padding: 5px 12px;
+            margin: 4px 8px;
+            width: 300px;
+            flex: 1 1 auto;
+            overflow-y: auto;
+
+            .o_lunch_ordered {
+                color: white;
+                background-color: #F0D970;
+                padding: 1px 3px;
+                border-radius: .25em;
+            }
+
+            .o_lunch_confirmed {
+                color: white;
+                background-color: #00BA4E;
+                padding: 1px 3px;
+                border-radius: .25em;
+            }
+
+            .o_lunch_widget_title {
+                font-weight: bold;
+                font-size: initial;
+            }
+
+            .o_lunch_widget_order_button {
+                display: block;
+                width: 100%;
+                margin-bottom: 4px;
+                margin-top: 12px;
+            }
+        }
+    }
+}
