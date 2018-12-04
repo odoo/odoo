@@ -30,7 +30,7 @@
             <form string="Survey User inputs" create="false">
                 <header>
                     <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('input_type','=','manually'), ('state', '=', 'done')]}"/>
-                    <button name="action_print_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
+                    <button name="action_print_answers" states="done" string="Print" type="object"  class="oe_highlight" />
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

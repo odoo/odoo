@@ -35,13 +35,25 @@ class Survey(models.Model):
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
     # security / access
-    auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey")
+    access_mode = fields.Selection([
+        ('public', 'Everyone'),
+        ('authentication', 'Login Required'),
+        ('internal', 'Employees Only'),
+        ('token', 'Invitation only')], string='Access Mode',
+        default='authentication', required=True)
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
+    users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
     public_url = fields.Char("Public link", compute="_compute_survey_url")
     # statistics
     tot_sent_survey = fields.Integer("Number of sent surveys", compute="_compute_survey_statistic")
     tot_start_survey = fields.Integer("Number of started surveys", compute="_compute_survey_statistic")
     tot_comp_survey = fields.Integer("Number of completed surveys", compute="_compute_survey_statistic")
+
+    @api.multi
+    def _compute_users_can_signup(self):
+        signup_allowed = self.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
+        for survey in self:
+            survey.users_can_signup = signup_allowed
 
     @api.multi
     def _compute_survey_statistic(self):
@@ -125,8 +137,15 @@ class Survey(models.Model):
                 raise UserError(_('Creating token for archived surveys is not allowed.'))
             elif self.is_closed:
                 raise UserError(_('Creating token for closed surveys is not allowed.'))
-            if self.auth_required and (not user or user._is_public()):
-                raise UserError(_('Creating token for external users is not allowed for surveys requesting authentication.'))
+            if self.access_mode == 'authentication':
+                # signup possible -> should have at least a partner to create an account
+                if self.users_can_signup and not user and not partner:
+                    raise UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
+                # no signup possible -> should be a not public user (employee or portal users)
+                if not self.users_can_signup and (not user or user._is_public()):
+                    raise UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
+            if self.access_mode == 'internal' and (not user or not user.has_group('base.group_user')):
+                raise UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
 
     @api.model
     def next_page(self, user_input, page_id, go_back=False):
