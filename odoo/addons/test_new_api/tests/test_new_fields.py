@@ -1104,6 +1104,18 @@ class TestFields(common.TransactionCase):
 
 
 class TestX2many(common.TransactionCase):
+    def test_definition_many2many(self):
+        """ Test the definition of inherited many2many fields. """
+        field = self.env['test_new_api.multi.line']._fields['tags']
+        self.assertEqual(field.relation, 'test_new_api_multi_line_test_new_api_multi_tag_rel')
+        self.assertEqual(field.column1, 'test_new_api_multi_line_id')
+        self.assertEqual(field.column2, 'test_new_api_multi_tag_id')
+
+        field = self.env['test_new_api.multi.line2']._fields['tags']
+        self.assertEqual(field.relation, 'test_new_api_multi_line2_test_new_api_multi_tag_rel')
+        self.assertEqual(field.column1, 'test_new_api_multi_line2_id')
+        self.assertEqual(field.column2, 'test_new_api_multi_tag_id')
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_new_api.multi.tag']
