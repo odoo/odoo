@@ -90,7 +90,7 @@ odoo.define('website_sale.website_sale', function (require) {
             var product_ids = [];
             var product_dom = $(event.target).closest(".js_product").find("ul.js_add_cart_variants");
             var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
-            if (!product_dom.length) {
+            if (!product_dom.length || $('body').hasClass('editor_enable')) {
                 // if variants in list view, update variant price based on quantity
                 var $list_products = $(event.target).closest('.js_product').find('.js_product_change');
                 if ($list_products.length) {
@@ -145,7 +145,7 @@ odoo.define('website_sale.website_sale', function (require) {
 
         $(oe_website_sale).on("change", ".oe_cart input.js_quantity[data-product-id]", function () {
           var $input = $(this);
-            if ($input.data('update_change')) {
+            if ($input.data('update_change') || $('body').hasClass('editor_enable')) {
                 return;
             }
           var value = parseInt($input.val() || 0, 10);
@@ -214,6 +214,9 @@ odoo.define('website_sale.website_sale', function (require) {
 
         // hack to add and remove from cart with json
         $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
+            if ($('body').hasClass('editor_enable')) {
+                return;
+            }
             ev.preventDefault();
             var $link = $(ev.currentTarget);
             var $input = $link.parent().find("input");

@@ -63,9 +63,9 @@ class Property(models.Model):
 
     @api.multi
     def _update_values(self, values):
-        value = values.pop('value', None)
-        if not value:
+        if 'value' not in values:
             return values
+        value = values.pop('value')
 
         prop = None
         type_ = values.get('type')
@@ -81,7 +81,9 @@ class Property(models.Model):
             raise UserError(_('Invalid type'))
 
         if field == 'value_reference':
-            if isinstance(value, models.BaseModel):
+            if not value:
+                value = False
+            elif isinstance(value, models.BaseModel):
                 value = '%s,%d' % (value._name, value.id)
             elif isinstance(value, pycompat.integer_types):
                 field_id = values.get('fields_id')
