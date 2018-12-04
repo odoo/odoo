@@ -266,22 +266,27 @@ class SaleOrderLine(models.Model):
             if float_compare(product.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
                 if not is_available:
-                    message =  _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
-                            (self.product_uom_qty, self.product_uom.name, self.product_id.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
-                    # We check if some products are available in other warehouses.
-                    if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
-                        message += _('\nThere are %s %s available across all warehouses.\n\n') % \
-                                (self.product_id.virtual_available, product.uom_id.name)
-                        for warehouse in self.env['stock.warehouse'].search([]):
-                            quantity = self.product_id.with_context(warehouse=warehouse.id).virtual_available
-                            if quantity > 0:
-                                message += "%s: %s %s\n" % (warehouse.name, quantity, self.product_id.uom_id.name)
-                    warning_mess = {
-                        'title': _('Not enough inventory!'),
-                        'message' : message
-                    }
-                    return {'warning': warning_mess}
+                    return self._get_not_enough_inventory_warning_message(product, precision)
         return {}
+
+    def _get_not_enough_inventory_warning_message(self, product, precision):
+        message = _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
+                  (self.product_uom_qty, self.product_uom.name, self.product_id.name, product.virtual_available,
+                   product.uom_id.name, self.order_id.warehouse_id.name)
+        # We check if some products are available in other warehouses.
+        if float_compare(product.virtual_available, self.product_id.virtual_available,
+                         precision_digits=precision) == -1:
+            message += _('\nThere are %s %s available across all warehouses.\n\n') % \
+                       (self.product_id.virtual_available, product.uom_id.name)
+            for warehouse in self.env['stock.warehouse'].search([]):
+                quantity = self.product_id.with_context(warehouse=warehouse.id).virtual_available
+                if quantity > 0:
+                    message += "%s: %s %s\n" % (warehouse.name, quantity, self.product_id.uom_id.name)
+        warning_mess = {
+            'title': _('Not enough inventory!'),
+            'message': message
+        }
+        return {'warning': warning_mess}
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):

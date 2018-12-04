@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools import float_compare
 
 
@@ -65,6 +65,55 @@ class SaleOrderLine(models.Model):
                 components[product] = {'qty': qty, 'uom': to_uom.id}
         return components
 
+    def _get_not_enough_inventory_warning_message(self, product, precision):
+        # In case of a kit we have to check the virtual available quanity on each components to know if
+        # we have to trigger a warning or not
+        res = super(SaleOrderLine, self)._get_not_enough_inventory_warning_message(product, precision)
+        bom = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
+        if bom:
+            warehouse_id = self.order_id.warehouse_id
+            virtual_available = self._get_components_qty_virtual_available(product, bom, warehouse_id)
+            virtual_available_all_wh = 0.0
+            virtual_available_by_wh = {}
+            for warehouse in self.env['stock.warehouse'].search([]):
+                virtual_available_by_wh[warehouse] = self._get_components_qty_virtual_available(self.product_id, bom, warehouse)
+                virtual_available_all_wh += virtual_available_by_wh[warehouse]
+            # As negative quantities doesn't really make sense in case of kits,
+            # we hide them and set them to 0 instead.
+            virtual_available = 0 if virtual_available < 0 else virtual_available
+            virtual_available_all_wh = 0 if virtual_available_all_wh < 0 else virtual_available_all_wh
+            message = _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
+                      (self.product_uom_qty, self.product_uom.name, self.product_id.name, virtual_available,
+                       product.uom_id.name, self.order_id.warehouse_id.name)
+            # We check if some products are available in other warehouses.
+            if float_compare(virtual_available, virtual_available_all_wh,  precision_digits=precision) == -1:
+                message += _('\nThere are %s %s available across all warehouses.\n\n') % \
+                           (virtual_available_all_wh, product.uom_id.name)
+                for warehouse in self.env['stock.warehouse'].search([]):
+                    if virtual_available_by_wh[warehouse] > 0:
+                        message += "%s: %s %s\n" % (warehouse.name, virtual_available_by_wh[warehouse], self.product_id.uom_id.name)
+            warning_mess = {
+                'title': _('Not enough inventory!'),
+                'message': message
+            }
+            product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
+            if float_compare(virtual_available, product_qty, precision_digits=precision) == -1:
+                return {'warning': warning_mess}
+            return {}
+        return res
+
+    def _get_components_qty_virtual_available(self, product_id, bom, warehouse_id):
+        boms, bom_sub_lines = bom.explode(product_id, self.product_uom_qty)
+        qty_ratios = []
+        for bs_line in bom_sub_lines:
+            bom_line = bs_line[0]
+            bom_line_datas = bs_line[1]
+            qty_needed = bom_line_datas['qty'] / bom_line_datas['original_qty']
+            qty_uom_needed = bom_line.product_uom_id._compute_quantity(qty_needed, bom_line.product_id.product_tmpl_id.uom_id)
+            qty_ratios.append(bom_line.product_id.with_context(warehouse=warehouse_id.id).virtual_available / qty_uom_needed)
+        if qty_ratios:
+            return min(qty_ratios) // 1
+        return 0.0
 
     def _get_qty_procurement(self):
         self.ensure_one()
