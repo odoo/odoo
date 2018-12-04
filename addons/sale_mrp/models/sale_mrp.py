@@ -10,20 +10,50 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _compute_qty_delivered(self):
+        """ Computes the quantity delivered when a kit is sold.
+        To achieve this, this method fetch the quantities delivered of
+        each component of the kit and the quantity needed of each components to produce 1 kit.
+        Based on this, a ratio is computed for each component,
+        and the lowest one is kept to define the kit's quantity delivered.
+        """
         super(SaleOrderLine, self)._compute_qty_delivered()
-
-        for line in self:
-            if line.qty_delivered_method == 'stock_move':
-                # In the case of a kit, we need to check if all components are shipped. Since the BOM might
-                # have changed, we don't compute the quantities but verify the move state.
-                bom = self.env['mrp.bom']._bom_find(product=line.product_id)
-                if bom and bom.type == 'phantom':
-                    moves = line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
-                    bom_delivered = all([move.state == 'done' for move in moves])
-                    if bom_delivered:
-                        line.qty_delivered = line.product_uom_qty
+        for order_line in self:
+            if order_line.qty_delivered_method == 'stock_move':
+                boms = order_line.move_ids.mapped('bom_line_id.bom_id')
+                # We fetch the BoMs of type kits linked to the order_line,
+                # the we keep only the one related to the finished produst.
+                # This bom shoud be the only one since bom_line_id was written on the moves
+                relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
+                        (b.product_id == order_line.product_id or
+                        (b.product_tmpl_id == order_line.product_id.product_tmpl_id and not b.product_id)))
+                if relevant_bom:
+                    moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
+                    qty_ratios = []
+                    order_uom_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
+                    boms, bom_sub_lines = relevant_bom.explode(order_line.product_id, order_uom_qty)
+                    for bom_line, bom_line_data in bom_sub_lines:
+                        bom_line_moves = moves.filtered(lambda m: m.bom_line_id == bom_line)
+                        if bom_line_moves:
+                            # We compute the quantities needed of each components to make one kit.
+                            # Then, we collect every relevant moves related to a specific component
+                            # to know how many are considered delivered.
+                            uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                            qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
+                            delivery_moves = bom_line_moves.filtered(lambda m: m.location_dest_id.usage == 'customer' and not m.origin_returned_move_id or not (m.origin_returned_move_id and m.to_refund))
+                            return_moves = bom_line_moves.filtered(lambda m: m.location_dest_id.usage != 'customer' and m.to_refund)
+                            qty_delivered = sum(delivery_moves.mapped('product_qty')) - sum(return_moves.mapped('product_qty'))
+                            # We compute a ratio to know how many kits we can produce with this quantity of that specific component
+                            qty_ratios.append(qty_delivered / qty_per_kit)
+                        else:
+                            qty_ratios.append(0.0)
+                            break
+                    if qty_ratios:
+                        # Now that we have every ratio by components, we keep the lowest one to know how many kits we can produce
+                        # with the quantities delivered of each component. We use the euclidean division here because a 'partial kit'
+                        # doesn't make sense.
+                        order_line.qty_delivered = min(qty_ratios) // 1
                     else:
-                        line.qty_delivered = 0.0
+                        order_line.qty_delivered = 0.0
 
     @api.multi
     def _get_bom_component_qty(self, bom):
