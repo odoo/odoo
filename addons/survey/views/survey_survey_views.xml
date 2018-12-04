@@ -80,14 +80,12 @@
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
                 <field name="stage_id" />
-                <field name="designed" />
                 <field name="title" />
                 <field name="tot_sent_survey" />
                 <field name="tot_start_survey" />
                 <field name="tot_comp_survey" />
                 <field name="color" />
                 <field name="auth_required" />
-                <field name="public_url" />
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <templates>
@@ -111,12 +109,10 @@
                         <div class="o_kanban_record_bottom">
                             <ul class="list-unstyled">
                                 <li id="survey_test">
-                                    <t t-if="record.designed.raw_value"><a type="object" name="action_test_survey">Test</a></t>
-                                    <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Test</a></t>
+                                    <a type="object" name="action_test_survey">Test</a>
                                 </li>
                                 <li>
-                                    <t t-if="record.designed.raw_value"><a type="object" name="action_send_survey">Share &amp;amp; Invite</a></t>
-                                    <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Share &amp;amp; Invite</a></t>
+                                    <a type="object" name="action_send_survey">Share &amp;amp; Invite</a>
                                 </li>
                                 <li>
                                     <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>

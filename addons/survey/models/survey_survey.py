@@ -11,11 +11,8 @@ from odoo.exceptions import UserError
 
 
 class Survey(models.Model):
-    """ Settings for a multi-page/multi-question survey.
-        Each survey can have one or more attached pages, and each page can display
-        one or more questions.
-    """
-
+    """ Settings for a multi-page/multi-question survey. Each survey can have one or more attached pages
+    and each page can display one or more questions. """
     _name = 'survey.survey'
     _description = 'Survey'
     _rec_name = 'title'
@@ -24,36 +21,27 @@ class Survey(models.Model):
     def _default_stage(self):
         return self.env['survey.stage'].search([], limit=1).id
 
+    # description
     title = fields.Char('Title', required=True, translate=True)
-    page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
-    stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
-                               ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
-    auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey",
-        oldname="authenticate")
-    users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
-    tot_sent_survey = fields.Integer("Number of sent surveys", compute="_compute_survey_statistic")
-    tot_start_survey = fields.Integer("Number of started surveys", compute="_compute_survey_statistic")
-    tot_comp_survey = fields.Integer("Number of completed surveys", compute="_compute_survey_statistic")
     description = fields.Html("Description", translate=True, help="A long description of the purpose of the survey")
     color = fields.Integer('Color Index', default=0)
-    user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True)
-    designed = fields.Boolean("Is designed?", compute="_is_designed")
-    public_url = fields.Char("Public link", compute="_compute_survey_url")
-    public_url_html = fields.Char("Public link (html version)", compute="_compute_survey_url")
-    print_url = fields.Char("Print link", compute="_compute_survey_url")
-    result_url = fields.Char("Results link", compute="_compute_survey_url")
-    email_template_id = fields.Many2one('mail.template', string='Email Template', ondelete='set null')
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     quizz_mode = fields.Boolean("Quizz Mode")
     active = fields.Boolean("Active", default=True)
+    stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
+                               ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=False)
-
-    def _is_designed(self):
-        for survey in self:
-            if not survey.page_ids or not [page.question_ids for page in survey.page_ids if page.question_ids]:
-                survey.designed = False
-            else:
-                survey.designed = True
+    # content
+    page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
+    user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True)
+    # security / access
+    auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey")
+    users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
+    public_url = fields.Char("Public link", compute="_compute_survey_url")
+    # statistics
+    tot_sent_survey = fields.Integer("Number of sent surveys", compute="_compute_survey_statistic")
+    tot_start_survey = fields.Integer("Number of started surveys", compute="_compute_survey_statistic")
+    tot_comp_survey = fields.Integer("Number of completed surveys", compute="_compute_survey_statistic")
 
     @api.multi
     def _compute_survey_statistic(self):
@@ -70,13 +58,9 @@ class Survey(models.Model):
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
-        base_url = '/' if self.env.context.get('relative_url') else \
-                   self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for survey in self:
             survey.public_url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
-            survey.print_url = urls.url_join(base_url, "survey/print/%s" % (slug(survey)))
-            survey.result_url = urls.url_join(base_url, "survey/results/%s" % (slug(survey)))
-            survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, _("Click here to start survey"))
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -273,7 +257,7 @@ class Survey(models.Model):
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
             'target': 'self',
-            'url': self.with_context(relative_url=True).public_url + trail
+            'url': self.public_url + trail
         }
 
     @api.multi
@@ -317,7 +301,7 @@ class Survey(models.Model):
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
             'target': 'self',
-            'url': self.with_context(relative_url=True).print_url + trail
+            'url': '/survey/print/%s%s' % (self.id, trail)
         }
 
     @api.multi
@@ -328,7 +312,7 @@ class Survey(models.Model):
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",
             'target': 'self',
-            'url': self.with_context(relative_url=True).result_url
+            'url': '/survey/results/%s' % self.id
         }
 
     @api.multi

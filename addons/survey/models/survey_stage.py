@@ -5,8 +5,6 @@ from odoo import fields, models
 
 
 class SurveyStage(models.Model):
-    """Stages for Kanban view of surveys"""
-
     _name = 'survey.stage'
     _description = 'Survey Stage'
     _order = 'sequence,id'

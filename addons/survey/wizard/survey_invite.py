@@ -64,7 +64,6 @@ class SurveyInvite(models.TransientModel):
                                 ('email_private', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
                                 string='Share options', default='public_link', required=True)
     public_url = fields.Char(compute="_compute_survey_url", string="Public url")
-    public_url_html = fields.Char(compute="_compute_survey_url", string="Public HTML web link")
     date_deadline = fields.Date(string="Deadline to which the invitation to respond is valid",
         help="Deadline to which the invitation to respond for this survey is valid. If the field is empty,\
         the invitation is still valid.")
@@ -73,7 +72,6 @@ class SurveyInvite(models.TransientModel):
     def _compute_survey_url(self):
         for wizard in self:
             wizard.public_url = wizard.survey_id.public_url
-            wizard.public_url_html = wizard.survey_id.public_url_html
 
     @api.model
     def default_get(self, fields):
@@ -219,7 +217,6 @@ class SurveyInvite(models.TransientModel):
                 survey_user_input = SurveyUserInput.create({
                     'survey_id': wizard.survey_id.id,
                     'deadline': wizard.date_deadline,
-                    'date_create': fields.Datetime.now(),
                     'input_type': 'link',
                     'state': 'new',
                     'token': token,
