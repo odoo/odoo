@@ -111,7 +111,7 @@ class MrpBom(models.Model):
         return super(MrpBom, self).unlink()
 
     @api.model
-    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False):
+    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
         """ Finds BoM for particular product, picking and company """
         if product:
             if not product_tmpl:
@@ -126,6 +126,8 @@ class MrpBom(models.Model):
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
             domain = domain + [('company_id', '=', company_id or self.env.context.get('company_id'))]
+        if bom_type:
+            domain += [('type', '=', bom_type)]
         # order to prioritize bom with product_id over the one without
         return self.search(domain, order='sequence, product_id', limit=1)
 
@@ -168,8 +170,8 @@ class MrpBom(models.Model):
                 continue
 
             line_quantity = current_qty * current_line.product_qty
-            bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id)
-            if bom.type == 'phantom':
+            bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id, bom_type='phantom')
+            if bom:
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
                 bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
                 for bom_line in bom.bom_line_ids:
