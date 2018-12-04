@@ -5,6 +5,7 @@ from datetime import datetime
 
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
+from odoo.tools import mute_logger
 
 
 class TestSaleMrpFlow(common.TransactionCase):
@@ -25,19 +26,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.warehouse = self.env.ref('stock.warehouse0')
 
-    def test_00_sale_mrp_flow(self):
-        """ Test sale to mrp flow with diffrent unit of measure."""
-        def create_product(name, uom_id, routes=()):
-            p = Form(self.env['product.product'])
-            p.name = name
-            p.type = 'product'
-            p.uom_id = uom_id
-            p.uom_po_id = uom_id
-            p.route_ids.clear()
-            for r in routes:
-                p.route_ids.add(r)
-            return p.save()
-
         self.uom_kg = self.env['uom.uom'].search([('category_id', '=', self.categ_kgm.id), ('uom_type', '=', 'reference')], limit=1)
         self.uom_kg.write({
             'name': 'Test-KG',
@@ -51,7 +39,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.uom_unit = self.env['uom.uom'].search([('category_id', '=', self.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
         self.uom_unit.write({
             'name': 'Test-Unit',
-            'rounding': 1.0})
+            'rounding': 0.01})
         self.uom_dozen = self.UoM.create({
             'name': 'Test-DozenA',
             'category_id': self.categ_unit.id,
@@ -59,14 +47,29 @@ class TestSaleMrpFlow(common.TransactionCase):
             'uom_type': 'bigger',
             'rounding': 0.001})
 
+    def create_product(self, name, uom_id, routes=()):
+        p = Form(self.env['product.product'])
+        p.name = name
+        p.type = 'product'
+        p.uom_id = uom_id
+        p.uom_po_id = uom_id
+        p.route_ids.clear()
+        for r in routes:
+            p.route_ids.add(r)
+        return p.save()
+
+    def test_00_sale_mrp_flow(self):
+        """ Test sale to mrp flow with diffrent unit of measure."""
+
+
         # Create product A, B, C, D.
         # --------------------------
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
         route_mto = self.warehouse.mto_pull_id.route_id
-        product_a = create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
-        product_c = create_product('Product C', self.uom_kg)
-        product_b = create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
-        product_d = create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
+        product_a = self.create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
+        product_c = self.create_product('Product C', self.uom_kg)
+        product_b = self.create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
+        product_d = self.create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
 
         # ------------------------------------------------------------------------------------------
         # Bill of materials for product A, B, D.
@@ -489,3 +492,132 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Check that the cost of Good Sold entries are equal to 2* (2 * 20 + 1 * 10) = 100
         self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")
+
+    @mute_logger('odoo.tests.common.onchange')
+    def test_10_sale_mrp_kits_routes(self):
+
+        # Create a kit 'kit_1' :
+        # -----------------------
+        #
+        # kit_1 --|- component_shelf1   x3
+        #         |- component_shelf2   x2
+
+        kit_1 = self.create_product('Kit1', self.uom_unit)
+        component_shelf1 = self.create_product('Comp Shelf1', self.uom_unit)
+        component_shelf2 = self.create_product('Comp Shelf2', self.uom_unit)
+
+        with Form(self.env['mrp.bom']) as bom:
+            bom.product_tmpl_id = kit_1.product_tmpl_id
+            bom.product_qty = 1
+            bom.product_uom_id = self.uom_unit
+            bom.type = 'phantom'
+            with bom.bom_line_ids.new() as line:
+                line.product_id = component_shelf1
+                line.product_qty = 3
+                line.product_uom_id = self.uom_unit
+            with bom.bom_line_ids.new() as line:
+                line.product_id = component_shelf2
+                line.product_qty = 2
+                line.product_uom_id = self.uom_unit
+
+        # Creating 2 specific routes for each of the components of the kit
+        route_shelf1 = self.env['stock.location.route'].create({
+            'name': 'Shelf1 -> Customer',
+            'product_selectable': True,
+            'rule_ids': [(0, 0, {
+                'name': 'Shelf1 -> Customer',
+                'action': 'pull',
+                'picking_type_id': self.ref('stock.picking_type_in'),
+                'location_src_id': self.ref('stock.stock_location_components'),
+                'location_id': self.ref('stock.stock_location_customers'),
+            })],
+        })
+
+        route_shelf2 = self.env['stock.location.route'].create({
+            'name': 'Shelf2 -> Customer',
+            'product_selectable': True,
+            'rule_ids': [(0, 0, {
+                'name': 'Shelf2 -> Customer',
+                'action': 'pull',
+                'picking_type_id': self.ref('stock.picking_type_in'),
+                'location_src_id': self.ref('stock.stock_location_14'),
+                'location_id': self.ref('stock.stock_location_customers'),
+            })],
+        })
+
+        component_shelf1.write({
+            'route_ids': [(4, route_shelf1.id)]})
+        component_shelf2.write({
+            'route_ids': [(4, route_shelf2.id)]})
+
+        # Creating a sale order for 5 kits and confirming it
+        order_form = Form(self.env['sale.order'])
+        order_form.partner_id = self.env.ref('base.res_partner_2')
+        with order_form.order_line.new() as line:
+            line.product_id = kit_1
+            line.product_uom = self.uom_unit
+            line.product_uom_qty = 5
+        order = order_form.save()
+        order.action_confirm()
+
+        # Now we check that the routes of the components were applied, in order to make sure the routes set
+        # on the kit itself are ignored
+        self.assertEquals(len(order.picking_ids), 2)
+        self.assertEquals(len(order.picking_ids[0].move_lines), 1)
+        self.assertEquals(len(order.picking_ids[1].move_lines), 1)
+        moves = order.picking_ids.mapped('move_lines')
+        move_shelf1 = moves.filtered(lambda m: m.product_id == component_shelf1)
+        move_shelf2 = moves.filtered(lambda m: m.product_id == component_shelf2)
+        self.assertEquals(move_shelf1.location_id.id, self.ref('stock.stock_location_components'))
+        self.assertEquals(move_shelf1.location_dest_id.id, self.ref('stock.stock_location_customers'))
+        self.assertEquals(move_shelf2.location_id.id, self.ref('stock.stock_location_14'))
+        self.assertEquals(move_shelf2.location_dest_id.id, self.ref('stock.stock_location_customers'))
+
+    @mute_logger('odoo.tests.common.onchange')
+    def test_11_sale_mrp_explode_kits_uom_quantities(self):
+
+        # Create a kit 'kit_1' :
+        # -----------------------
+        #
+        # 2x Dozens kit_1 --|- component_unit   x6 Units
+        #                   |- component_kg     x7 Kg
+
+        kit_1 = self.create_product('Kit1', self.uom_unit)
+        component_unit = self.create_product('Comp Unit', self.uom_unit)
+        component_kg = self.create_product('Comp Kg', self.uom_kg)
+
+        with Form(self.env['mrp.bom']) as bom:
+            bom.product_tmpl_id = kit_1.product_tmpl_id
+            bom.product_qty = 2
+            bom.product_uom_id = self.uom_dozen
+            bom.type = 'phantom'
+            with bom.bom_line_ids.new() as line:
+                line.product_id = component_unit
+                line.product_qty = 6
+                line.product_uom_id = self.uom_unit
+            with bom.bom_line_ids.new() as line:
+                line.product_id = component_kg
+                line.product_qty = 7
+                line.product_uom_id = self.uom_kg
+
+        # Creating a sale order for 3 Units of kit_1 and confirming it
+        order_form = Form(self.env['sale.order'])
+        order_form.partner_id = self.env.ref('base.res_partner_2')
+        with order_form.order_line.new() as line:
+            line.product_id = kit_1
+            line.product_uom = self.uom_unit
+            line.product_uom_qty = 2
+        order = order_form.save()
+        order.action_confirm()
+
+        # Now we check that the routes of the components were applied, in order to make sure the routes set
+        # on the kit itself are ignored
+        self.assertEquals(len(order.picking_ids), 1)
+        self.assertEquals(len(order.picking_ids[0].move_lines), 2)
+
+        # Finally, we check the quantities for each component on the picking
+        move_component_unit = order.picking_ids[0].move_lines.filtered(lambda m: m.product_id == component_unit)
+        move_component_kg = order.picking_ids[0].move_lines - move_component_unit
+        self.assertEquals(move_component_unit.product_uom_qty, 0.5)
+        self.assertEquals(move_component_kg.product_uom_qty, 0.583)
+

@@ -514,24 +514,6 @@ class MrpProduction(models.Model):
             return self.location_src_id
 
     @api.multi
-    def _adjust_procure_method(self):
-        try:
-            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Make To Order'))
-        except:
-            mto_route = False
-        for move in self.move_raw_ids:
-            product = move.product_id
-            routes = product.route_ids + product.route_from_categ_ids + move.warehouse_id.route_ids
-            # TODO: optimize with read_group?
-            pull = self.env['stock.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
-                                                        ('location_id', '=', move.location_dest_id.id), ('action', '!=', 'push')], limit=1)
-            if pull and (pull.procure_method == 'make_to_order'):
-                move.procure_method = pull.procure_method
-            elif not pull: # If there is no make_to_stock rule either
-                if mto_route and mto_route.id in [x.id for x in routes]:
-                    move.procure_method = 'make_to_order'
-
-    @api.multi
     def _update_raw_move(self, bom_line, line_data):
         """ :returns update_move, old_quantity, new_quantity """
         quantity = line_data['qty']
@@ -581,7 +563,7 @@ class MrpProduction(models.Model):
                     'unit_factor': move_raw.product_uom_qty / production.product_qty
                 })
             production._generate_finished_moves()
-            production._adjust_procure_method()
+            production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
         return True
 
