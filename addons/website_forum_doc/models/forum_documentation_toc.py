@@ -8,7 +8,7 @@ class Documentation(models.Model):
     _name = 'forum.documentation.toc'
     _description = 'Documentation ToC'
     _inherit = ['website.seo.metadata']
-    _order = "parent_left"
+    _order = "sequence, name"
     _parent_order = "sequence, name"
     _parent_store = True
 
