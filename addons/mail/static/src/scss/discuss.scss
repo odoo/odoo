@@ -44,6 +44,9 @@
                 flex: 1 1 auto;
                 @include o-text-overflow;
             }
+            .o_mail_thread_typing_icon_dot {
+                background: gray('600');;
+            }
             .o_mail_sidebar_needaction, .o_mail_partner_unpin, .o_mail_channel_settings {
                 flex: 0 0 auto;
             }
@@ -129,7 +132,7 @@
                 background-color: darken(gray('900'),2%);
 
                 .o_mail_partner_unpin, .o_mail_channel_settings {
-                    opacity: $o-mail-sidebar-icon-opacity;
+                    display: inline-block;
                 }
             }
 
@@ -143,7 +146,7 @@
             }
 
             .o_mail_partner_unpin, .o_mail_channel_settings {
-                @include o-hover-opacity($default-opacity: 0, $hover-opacity: 1);
+                display: none;
             }
             &.o_unread_message {
                 color: white;

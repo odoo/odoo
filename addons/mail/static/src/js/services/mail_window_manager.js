@@ -329,8 +329,7 @@ MailManager.include({
             .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
             .on('unsubscribe_from_channel', this, this._onUnsubscribeFromChannel)
             .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter)
-            .on('update_dm_presence', this, this._onUpdateDmPresence)
-            .on('update_typing_partners', this, this._onTypingPartnersUpdated);
+            .on('update_dm_presence', this, this._onUpdateDmPresence);
 
         core.bus.on('resize', this, _.debounce(this._repositionThreadWindows.bind(this), 100));
     },
@@ -654,23 +653,6 @@ MailManager.include({
      */
     _onNewMessage: function (message) {
         this._updateThreadWindowsFromMessage(message, { keepBottom: true, passively: true });
-    },
-    /**
-     * @private
-     * @param {integer|string} threadID
-     */
-    _onTypingPartnersUpdated: function (threadID) {
-        var threadWindow = this._getThreadWindow(threadID);
-        if (!threadWindow) {
-            return;
-        }
-        var thread = this.getThread(threadID);
-        if (thread.isChannel()) {
-            // call getMentionpartnerSuggestions in order to correctly fetch members
-            thread.getMentionPartnerSuggestions().then(function () {
-                threadWindow.renderTypingNotificationBar();
-            });
-        }
     },
     /**
      * Close the thread window when unsusbscribe from a channel.

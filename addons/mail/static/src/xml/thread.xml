@@ -191,7 +191,6 @@
             <t t-if="options.displayBottomThreadFreeSpace">
                 <div class="o_thread_bottom_free_space"/>
             </t>
-            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
         </div>
     </t>
 
@@ -217,24 +216,9 @@
         <div class="o_mail_thread_content">
             <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
             <t t-set="messages" t-value="messages.slice().reverse()"/>
-            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
             <t t-call="mail.widget.Thread.Messages"/>
             <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
         </div>
-    </t>
-
-    <!--
-        @param {mail.model.AbstractThread} thread
-    -->
-    <t t-name="mail.widget.Thread.TypingNotificationBar">
-        <t t-if="options.displayOrder === ORDER.ASC">
-            <div class="o_thread_typing_notification_free_space"/>
-            <div class="o_thread_typing_notification_bar o_thread_order_asc"/>
-        </t>
-        <t t-else="">
-            <div class="o_thread_typing_notification_free_space"/>
-            <div class="o_thread_typing_notification_bar o_thread_order_desc"/>
-        </t>
     </t>
 
     <!--
@@ -550,4 +534,16 @@
             </t>
         </div>
     </t>
+
+    <!--
+        @param {mail.model.Thread} thread with typing feature
+    -->
+    <t t-name="mail.ThreadTypingIcon">
+        <span class="o_mail_thread_typing_icon" t-att-title="thread.getTypingMembersToText()">
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+        </span>
+    </t>
+
 </templates>

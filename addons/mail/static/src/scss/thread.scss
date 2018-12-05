@@ -13,26 +13,6 @@
         height: 15px;
     }
 
-    .o_thread_typing_notification_free_space {
-        flex-grow: 1,
-    }
-
-    .o_thread_typing_notification_bar {
-        flex: 0, 0, 20px;
-        background-color: rgba($white, 0.75);
-        padding: 5px;
-        text-align: center;
-        color: gray('600');
-
-        &.o_thread_order_asc {
-            @include o-position-sticky($bottom: 0px);
-        }
-
-        &.o_thread_order_desc {
-            @include o-position-sticky($top: 0px);
-        }
-    }
-
     .o_thread_tooltip_container {
         display: inline;
         position: relative;
@@ -237,5 +217,42 @@
 .o_web_client.o_touch_device {
     .o_mail_thread .o_thread_icon {
         opacity: $o-mail-thread-icon-opacity;
+    }
+}
+
+// ------------------------------------------------------------------
+// Thread typing icon: shared between discuss and chat windows
+// ------------------------------------------------------------------
+
+.o_mail_thread_typing_icon {
+    position: relative;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+
+    .o_mail_thread_typing_icon_dot {
+        display: inline-block;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: gray('800');
+        animation: o_mail_thread_typing_icon_dot 1.5s linear infinite;
+
+        &:nth-child(2) {
+            animation-delay: -1.35s;
+        }
+
+        &:nth-child(3) {
+            animation-delay: -1.2s;
+        }
+    }
+}
+
+@keyframes o_mail_thread_typing_icon_dot {
+    0%, 40%, 100% {
+        transform: initial;
+    }
+    20% {
+        transform: translateY(-5px);
     }
 }

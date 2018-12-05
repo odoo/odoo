@@ -185,12 +185,6 @@ var ThreadWidget = Widget.extend({
             dateFormat: time.getLangDatetimeFormat(),
         }));
 
-        // must be after mail.widget.Thread rendering, so that there is the
-        // DOM element for the 'is typing' notification bar
-        if (thread.hasTypingNotification()) {
-            this.renderTypingNotificationBar(thread);
-        }
-
         _.each(messages, function (message) {
             var $message = self.$('.o_thread_message[data-message-id="'+ message.getID() +'"]');
             $message.find('.o_mail_timestamp').data('date', message.getDate());
@@ -252,28 +246,6 @@ var ThreadWidget = Widget.extend({
                 duration: 200,
             });
         return done;
-    },
-    /**
-     * Render the 'is typing...' text on the typing notification bar of the
-     * thread. This is called when there is a change in the list of users
-     * typing something on this thread.
-     *
-     * @param {mail.model.AbstractThread} thread with ThreadTypingMixin
-     */
-    renderTypingNotificationBar: function (thread) {
-        if (this._currentThreadID === thread.getID()) {
-            var shouldScrollToBottomAfterRendering = this.isAtBottom();
-
-            // typing notification bar rendering
-            var $typingBar = this.$('.o_thread_typing_notification_bar');
-            var text = thread.getTypingMembersToText();
-            $typingBar.toggleClass('o_hidden', !text); // hide if no text, because of padding
-            $typingBar.text(text);
-
-            if (shouldScrollToBottomAfterRendering) {
-                this.scrollToBottom();
-            }
-        }
     },
     /**
      * Scroll to the bottom of the thread

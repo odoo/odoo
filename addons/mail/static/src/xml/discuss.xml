@@ -140,6 +140,10 @@
                     <t t-esc="_.unescape(thread.getName())"/>
                     <i t-if="thread.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
+                <t t-if="channel.hasTypingNotification() and channel.isSomeoneTyping()">
+                    <t t-set="thread" t-value="channel"/>
+                    <t t-call="mail.ThreadTypingIcon"/>
+                </t>
                 <span t-attf-class="fa fa-cog o_mail_channel_settings"
                       title="Channel settings" role="img" aria-label="Channel settings" t-att-data-thread-id="thread.getID()"/>
                 <t t-call="mail.discuss.SidebarCounter"/>

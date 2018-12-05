@@ -148,6 +148,15 @@ var ThreadTypingMixin = {
         return true;
     },
     /**
+     * Tells if someone other than current user is typing something on this
+     * thread.
+     *
+     * @returns {boolean}
+     */
+    isSomeoneTyping: function () {
+        return !(_.isEmpty(this._typingPartnerIDs));
+    },
+    /**
      * Register someone that is currently typing something in this thread.
      * If this is the current user that is typing something, don't do anything
      * (we do not have to display anything)
