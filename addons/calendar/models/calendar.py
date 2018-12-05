@@ -1541,21 +1541,26 @@ class Meeting(models.Model):
             tz = pytz.timezone(tz)
         for r in result:
             if not r.get('allday') and isinstance(r['id'], (basestring)) and tz:
-                master_id = self.browse(int(r['id'].split('-')[0]))
-                master_dst = tz.localize(api_fields.Datetime.from_string(master_id.start_datetime)).dst()
-                current_dst = tz.localize(datetime.strptime(r['id'].split('-')[1], '%Y%m%d%H%M%S')).dst()
-                if master_dst and not current_dst:
-                    delta = timedelta(hours=1)
-                elif not master_dst and current_dst:
-                    delta = timedelta(hours=-1)
-                else:
-                    delta = False
+                delta = self.get_time_dst_delta(int(r['id'].split('-')[0]), tz, r)
                 if delta:
                     for f in ['start', 'stop', 'start_datetime', 'stop_datetime']:
                         if f in r and r[f]:
                             r[f] = api_fields.Datetime.to_string(api_fields.Datetime.from_string(r[f]) + delta)
 
         return result
+
+    @api.model
+    def get_time_dst_delta(self, id, tz, record):
+        master_id = self.browse(id)
+        master_dst = tz.localize(api_fields.Datetime.from_string(master_id.start_datetime)).dst()
+        current_dst = tz.localize(datetime.strptime(record['id'].split('-')[1], '%Y%m%d%H%M%S')).dst()
+        if master_dst and not current_dst:
+            delta = timedelta(hours=1)
+        elif not master_dst and current_dst:
+            delta = timedelta(hours=-1)
+        else:
+            delta = False
+        return delta
 
     @api.multi
     def unlink(self, can_be_deleted=True):
