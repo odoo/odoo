@@ -397,7 +397,12 @@ class AccountInvoice(models.Model):
         if self.company_id.invoice_reference_type == 'invoice_number':
             seq_suffix = self.journal_id.sequence_id.suffix or ''
             regex_number = '.*?([0-9]+)%s$' % seq_suffix
-            identification_number = int(re.match(regex_number, self.number).group(1))
+            exact_match = re.match(regex_number, self.number)
+            if exact_match:
+                identification_number = int(exact_match.group(1))
+            else:
+                ran_num = str(uuid.uuid4().int)
+                identification_number = int(ran_num[:5] + ran_num[-5:])
             prefix = self.number
         else:
             #self.company_id.invoice_reference_type == 'partner'
@@ -1514,7 +1519,7 @@ class AccountInvoice(models.Model):
             res = {}
             for line in invoice.tax_line_ids:
                 res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_id.tax_group_id]['amount'] += line.amount
+                res[line.tax_id.tax_group_id]['amount'] += line.amount_total
                 res[line.tax_id.tax_group_id]['base'] += line.base
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             invoice.amount_by_group = [(

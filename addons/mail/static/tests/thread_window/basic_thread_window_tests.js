@@ -522,6 +522,116 @@ QUnit.test('do not autofocus chat window on receiving new direct message', funct
     form.destroy();
 });
 
+QUnit.test('do not auto-focus chat window on receiving new message from new DM', function (assert) {
+    assert.expect(10);
+
+    var self = this;
+    this.data['mail.channel'] = {
+        fields: {
+            name: {
+                string: "Name",
+                type: "char",
+                required: true,
+            },
+            channel_type: {
+                string: "Channel Type",
+                type: "selection",
+            },
+            channel_message_ids: {
+                string: "Messages",
+                type: "many2many",
+                relation: 'mail.message'
+            },
+            message_unread_counter: {
+                string: "Amount of Unread Messages",
+                type: "integer"
+            },
+        },
+        records: [{
+            id: 2,
+            name: "DM",
+            channel_type: "chat",
+            message_unread_counter: 1,
+            direct_partner: [{ id: 666, name: 'DemoUser1', im_status: '' }],
+            is_minimized: false,
+            state: 'open',
+        }],
+    };
+
+    var parent = this.createParent({
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_join_and_get_info') {
+                return $.when(_.extend({}, self.data['mail.channel'].records[0], { info: 'join' }));
+            }
+            if (args.method === 'channel_minimize') {
+                _.extend(self.data['mail.channel'].records[0], {
+                    is_minimized: true,
+                    state: 'open',
+                });
+            }
+            if (args.method === 'channel_seen') {
+                throw new Error('should not mark channel as seen');
+            }
+            return this._super.apply(this, arguments);
+        }
+    });
+
+    assert.strictEqual($('.o_thread_window').length, 0,
+        "should not have any DM window open");
+
+    // simulate receiving message from someone else
+    var messageData = {
+        author_id: [5, "Someone else"],
+        body: "<p>Test message</p>",
+        id: 2,
+        model: 'mail.channel',
+        res_id: 2,
+        channel_ids: [2],
+    };
+    this.data['mail.message'].records.push(messageData);
+    var notification = [[false, 'mail.channel', 2], messageData];
+    parent.call('bus_service', 'trigger', 'notification', [notification]);
+
+    assert.strictEqual($('.o_thread_window').length, 1,
+        "should have DM window open");
+    assert.strictEqual($('.o_thread_window .o_input:focus').length, 0,
+        "thread window should not have the focus on auto-open");
+    assert.ok($('.o_thread_window .o_thread_window_title').text().indexOf('(1)') !== -1,
+        "DM should display one unread message");
+
+    // simulate receiving join DM notification (cross-tab synchronization)
+    var dmInfo = _.extend({}, self.data['mail.channel'].records[0], {
+        info: 'join',
+        is_minimized: false,
+        state: 'open',
+    });
+    notification = [[false, 'res.partner', 3], dmInfo];
+    parent.call('bus_service', 'trigger', 'notification', [notification]);
+
+    assert.strictEqual($('.o_thread_window').length, 1,
+        "should still have DM window open after receiving DM info from polling");
+    assert.strictEqual($('.o_thread_window .o_input:focus').length, 0,
+        "thread window should still not have the focus after receiving DM info from polling");
+    assert.ok($('.o_thread_window .o_thread_window_title').text().indexOf('(1)') !== -1,
+        "DM should still display one unread message after receiving DM info from polling");
+
+    // simulate receiving detached DM notification (cross-tab synchronization)
+    notification = [[false, 'res.partner', 3], self.data['mail.channel'].records[0]];
+    parent.call('bus_service', 'trigger', 'notification', [notification]);
+
+    assert.strictEqual($('.o_thread_window').length, 1,
+        "should still have DM open after receiving detached info from polling");
+    assert.strictEqual($('.o_thread_window .o_input:focus').length, 0,
+        "thread window should still not have the focus after receiving detached info from polling");
+    assert.ok($('.o_thread_window .o_thread_window_title').text().indexOf('(1)') !== -1,
+        "DM should not still have one unread message after receiving detached info from polling");
+
+    parent.destroy();
+});
+
 });
 });
 });

@@ -935,6 +935,10 @@ following attributes:
   the name of a field to use in the view. If used for grouping (rather
   than aggregating)
 
+``string``
+  the name that will be used to display the field in the pivot view,
+  overrides the default python String attribute of the field.
+
 ``type``
   indicates whether the field should be used as a grouping criteria or as an
   aggregated value within a group. Possible values are:
@@ -949,6 +953,11 @@ following attributes:
     on date and datetime fields, groups by the specified interval (``day``,
     ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
     specific datetime (fixed second resolution) or date (fixed day resolution).
+
+``invisible``
+  if true, the field will not appear either in the active measures nor in the
+  selectable measures (useful for fields that do not make sense aggregated,
+  such as fields in different units, e.g. € and $).
 
 The measures are automatically generated from the model fields; only the
 aggregatable fields are used. Those measures are also alphabetically

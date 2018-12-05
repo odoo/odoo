@@ -617,7 +617,7 @@ class Partner(models.Model):
         if self._context.get('html_format'):
             name = name.replace('\n', '<br/>')
         if self._context.get('show_vat') and partner.vat:
-            name = "%s - %s" % (name, partner.vat)
+            name = "%s ‒ %s" % (name, partner.vat)
         return name
 
     @api.multi

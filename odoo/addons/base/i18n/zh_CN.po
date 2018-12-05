@@ -64,7 +64,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -7752,6 +7752,11 @@ msgid ""
 msgstr "<span class=\"o_form_label\">我们提议重载菜单来查看新菜单 (Ctrl+T 然后 Ctrl+R).\"</span>"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -9617,11 +9622,6 @@ msgstr "确实要执行自动合并你的联系人?"
 msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
 msgstr "你确定要执行自动合并列表联系人？"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr "您确定要加载演示数据么？"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -12284,9 +12284,9 @@ msgstr "演示安装特性"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
-msgstr "演示数据只应用于测试数据库。加载后，无法将其删除。"
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
@@ -12425,7 +12425,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -16984,7 +16983,6 @@ msgstr "加载翻译"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr "加载演示数据"
 
@@ -20654,6 +20652,11 @@ msgid ""
 msgstr "只有以下访问等级的用户可才做这"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "打开应用"
@@ -21552,6 +21555,13 @@ msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
 msgstr "请在当前用户上配置电子邮件，以模拟使用该发件服务器发送电子邮件消息"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1231
@@ -23753,7 +23763,7 @@ msgstr "开始配置"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "状态"
+msgstr "省/ 州"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -26466,6 +26476,11 @@ msgstr "编写动作将执行的Python代码。一些变量可供使用;有关py
 #: model:res.country,name:base.ye
 msgid "Yemen"
 msgstr "也门"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee
