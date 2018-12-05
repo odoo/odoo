@@ -223,7 +223,7 @@ QUnit.module('Bus', {
         var pollDeferredMaster = $.Deferred();
 
         var parentMaster = new Widget();
-        testUtils.addMockEnvironment(parentMaster, {
+        testUtils.mock.addMockEnvironment(parentMaster, {
             data: {},
             services: {
                 bus_service: BusService,
@@ -255,7 +255,7 @@ QUnit.module('Bus', {
         setTimeout(function () {
             var parentSlave = new Widget();
             var pollDeferredSlave = $.Deferred();
-            testUtils.addMockEnvironment(parentSlave, {
+            testUtils.mock.addMockEnvironment(parentSlave, {
                 data: {},
                 services: {
                     bus_service: BusService,
