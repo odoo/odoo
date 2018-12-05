@@ -18,7 +18,7 @@ class LunchProduct(models.Model):
             product.is_available_at = False
 
     def _search_is_available_at(self, operator, value):
-        if operator in ['=', '!=', 'ilike', 'not ilike'] and isinstance(value, pycompat.string_types):
+        if operator in ['=', '!=', 'ilike', 'not ilike'] and isinstance(value, str):
             location_ids = self.env['res.partner'].search([('name', operator, value)]).ids
 
         if operator in ['='] and not value:
@@ -27,7 +27,7 @@ class LunchProduct(models.Model):
 
         if location_ids:
             suppliers = self.env['lunch.supplier'].search([('available_location_ids', 'in', location_ids)])
-            product_ids = self.env['lunch.product'].search([('supplier', 'in', suppliers.ids)])
+            product_ids = self.env['lunch.product'].search([('supplier_id', 'in', suppliers.ids)])
             return [('id', 'in', product_ids.ids)]
 
         return expression.TRUE_DOMAIN
