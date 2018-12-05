@@ -537,10 +537,13 @@ class Channel(models.Model):
             :rtype : list(dict)
         """
         channel_infos = []
-        partner_channels = self.env['mail.channel.partner']
-        # find the channel partner state, if logged user
-        if self.env.user and self.env.user.partner_id:
-            partner_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', 'in', self.ids)])
+
+        # all relations partner_channel on those channels
+        all_partner_channel = self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids)])
+
+        # all partner infos on those channels
+        partner_infos = all_partner_channel.mapped('partner_id').read(['id', 'name', 'email'])
+
         # for each channel, build the information header and include the logged partner information
         for channel in self:
             info = {
@@ -573,17 +576,28 @@ class Channel(models.Model):
                 if last_message:
                     info['last_message'] = last_message[0].get('last_message')
 
-            # add user session state, if available and if user is logged
-            if partner_channels.ids:
-                partner_channel = partner_channels.filtered(lambda c: channel.id == c.channel_id.id)
-                if len(partner_channel) >= 1:
-                    partner_channel = partner_channel[0]
-                    info['state'] = partner_channel.fold_state or 'open'
-                    info['is_minimized'] = partner_channel.is_minimized
-                    info['seen_message_id'] = partner_channel.seen_message_id.id
+            # listeners of the channel
+            channel_partners = all_partner_channel.filtered(lambda pc: channel.id == pc.channel_id.id)
+
+            # find the channel partner state, if logged user
+            partner_channel = self.env['mail.channel.partner']
+            if self.env.user and self.env.user.partner_id:
+                partner_channel = channel_partners.filtered(lambda pc: pc.partner_id.id == self.env.user.partner_id.id)
                 # add needaction and unread counter, since the user is logged
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 info['message_unread_counter'] = channel.message_unread_counter
+
+            # add user session state, if available and if user is logged
+            if len(partner_channel.ids):
+                partner_channel = partner_channel[0]
+                info['state'] = partner_channel.fold_state or 'open'
+                info['is_minimized'] = partner_channel.is_minimized
+                info['seen_message_id'] = partner_channel.seen_message_id.id
+
+            # add members infos
+            partner_ids = channel_partners.mapped('partner_id').ids
+            info['members'] = [partner_info for partner_info in partner_infos if partner_info['id'] in partner_ids]
+
             channel_infos.append(info)
         return channel_infos
 
