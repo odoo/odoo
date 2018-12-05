@@ -198,7 +198,7 @@ class LunchOrderLine(models.Model):
         res.with_context(lunch_date=res.order_id.date)._check_supplier_availibility()
         return res
 
-    @api.model
+    @api.multi
     def write(self, vals):
         """ Override as an onchange would not apply if using the history buttons """
         res = super(LunchOrderLine, self).write(vals)
