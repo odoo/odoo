@@ -24,6 +24,7 @@ class ChannelPartner(models.Model):
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
 
+    custom_channel_name = fields.Char('Custom channel name')
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
     partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
@@ -593,6 +594,7 @@ class Channel(models.Model):
                 info['state'] = partner_channel.fold_state or 'open'
                 info['is_minimized'] = partner_channel.is_minimized
                 info['seen_message_id'] = partner_channel.seen_message_id.id
+                info['custom_channel_name'] = partner_channel.custom_channel_name
 
             # add members infos
             partner_ids = channel_partners.mapped('partner_id').ids
@@ -742,6 +744,14 @@ class Channel(models.Model):
 
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
+
+    @api.model
+    def channel_set_custom_name(self, channel_id, name=False):
+        domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.id', '=', channel_id)]
+        channel_partners = self.env['mail.channel.partner'].search(domain, limit=1)
+        channel_partners.write({
+            'custom_channel_name': name,
+        })
 
     @api.multi
     def notify_typing(self, is_typing, is_website_user=False):

@@ -112,6 +112,72 @@ var PartnerInviteDialog = Dialog.extend({
 });
 
 /**
+ * Widget : Rename Conversation Dialog
+ */
+var RenameConversationDialog = Dialog.extend({
+    dialog_title: _t("Rename conversation"),
+    template: 'mail.RenameConversationDialog',
+    /**
+     * @override
+     * @param {integer|string} channelID id of the channel
+     * @param {function} callback to call when successfully renaming
+     *   conversation.
+     */
+    init: function (parent, channelID, callback) {
+        this._channelID = channelID;
+        this._callback = callback;
+
+        this._super(parent, {
+            title: 'Rename conversation',
+            size: 'medium',
+            buttons: [{
+                text: _t("Rename"),
+                close: true,
+                classes: 'btn-primary o_mail_conversation_rename',
+                click: this._rename.bind(this),
+            }, {
+                text: _t("Discard"),
+                close: true,
+            }],
+        });
+    },
+    /**
+     * @override
+     * @returns {$.Promise}
+     */
+    start: function () {
+        var channel = this.call('mail_service', 'getChannel', this._channelID);
+        this.$('input').val(channel.getName());
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {$.Promise}
+     */
+    _rename: function () {
+        var self = this;
+        var name = this.$('input').val();
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'channel_set_custom_name',
+            args: [this._channelID],
+            kwargs: {
+                name: name,
+            }
+        }).then(function (updatedName) {
+            var channel = self.call('mail_service', 'getThread', self._channelID);
+            channel.setName(updatedName);
+            self._callback();
+        });
+    },
+});
+
+/**
  * Widget : Moderator reject message dialog
  *
  * Popup containing message title and reject message body.
@@ -1223,7 +1289,13 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @param {MouseEvent} ev
      */
     _onChannelSettingsClicked: function (ev) {
-        var threadID = $(ev.target).data('thread-id');
+        ev.stopPropagation();
+        var threadID = $(ev.currentTarget).data('thread-id');
+        var thread = this.call('mail_service', 'getThread', threadID);
+        if (thread.getType() === 'dm_chat') {
+            new RenameConversationDialog(this, threadID, this._updateThreads.bind(this)).open();
+            return;
+        }
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: 'mail.channel',
