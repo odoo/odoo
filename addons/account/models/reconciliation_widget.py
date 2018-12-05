@@ -330,6 +330,12 @@ class AccountReconciliation(models.AbstractModel):
             allowed_ids = set(Partner.browse(ids).ids)
             rows = [row for row in rows if row['partner_id'] in allowed_ids]
 
+        # Keep mode for future use in JS
+        if res_type == 'account':
+            mode = 'accounts'
+        else:
+            mode = 'customers' if account_type == 'receivable' else 'suppliers'
+
         # Fetch other data
         for row in rows:
             account = Account.browse(row['account_id'])
@@ -338,6 +344,7 @@ class AccountReconciliation(models.AbstractModel):
             partner_id = is_partner and row['partner_id'] or None
             rec_prop = aml_ids and self.env['account.move.line'].browse(aml_ids) or self._get_move_line_reconciliation_proposition(account.id, partner_id)
             row['reconciliation_proposition'] = self._prepare_move_lines(rec_prop, target_currency=currency)
+            row['mode'] = mode
             row['company_id'] = account.company_id.id
 
         # Return the partners with a reconciliation proposition first, since they are most likely to

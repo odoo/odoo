@@ -901,6 +901,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     # avoid broken transaction) and keep going
                     cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
                 except Exception as e:
+                    _logger.exception("Error while loading record")
                     info = rec_data['info']
                     message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
                     moreinfo = _('Resolve other errors first')
