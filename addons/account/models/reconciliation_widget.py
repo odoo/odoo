@@ -698,13 +698,15 @@ class AccountReconciliation(models.AbstractModel):
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
             company_currency = account_move_line[0].account_id.company_id.currency_id
-            company = account_move_line[0].account_id.company_id
-            date = fields.Date.today()
-            writeoff_currency = account_move_line[0].currency_id or company_currency
+            same_currency = False
+            currencies = list(set([aml.currency_id or company_currency for aml in account_move_line]))
+            if len(currencies) == 1 and currencies[0] != company_currency:
+                same_currency = True
+            # We don't have to convert debit/credit to currency as all values in the reconciliation widget are displayed in company currency
+            # If all the lines are in the same currency, create writeoff entry with same currency also
             for mv_line_dict in new_mv_line_dicts:
-                if writeoff_currency != company_currency:
-                    mv_line_dict['debit'] = writeoff_currency._convert(mv_line_dict['debit'], company_currency, company, date)
-                    mv_line_dict['credit'] = writeoff_currency._convert(mv_line_dict['credit'], company_currency, company, date)
+                if not same_currency:
+                    mv_line_dict['amount_currency'] = False
                 writeoff_lines += account_move_line._create_writeoff([mv_line_dict])
 
             (account_move_line + writeoff_lines).reconcile()
