@@ -81,6 +81,7 @@
             <field name="standard_price">55.0</field>
             <field name="list_price">70.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_7777</field>
@@ -93,6 +94,7 @@
             <field name="standard_price">35.0</field>
             <field name="list_price">40.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_8888</field>
@@ -105,6 +107,7 @@
             <field name="standard_price">235.0</field>
             <field name="list_price">280.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_9999</field>
@@ -117,6 +120,7 @@
             <field name="list_price">450.0</field>
             <field name="standard_price">300.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Desk combination, black-brown: chair + desk + drawer.</field>
@@ -174,6 +178,7 @@
             <field name="standard_price">500.0</field>
             <field name="list_price">750.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">160x80cm, with large legs.</field>
@@ -181,12 +186,14 @@
         <record id="product_product_4" model="product.product">
             <field name="default_code">FURN_0096</field>
             <field name="standard_price">500.0</field>
+            <field name="weight">0.01</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_3')])]"/>
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="image" type="base64" file="product/static/img/table02.png"/>
         </record>
         <record id="product_product_4b" model="product.product">
             <field name="default_code">FURN_0097</field>
+            <field name="weight">0.01</field>
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="standard_price">500.0</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_4')])]"/>
@@ -194,6 +201,7 @@
         </record>
         <record id="product_product_4c" model="product.product">
             <field name="default_code">FURN_0098</field>
+            <field name="weight">0.01</field>
             <field name="standard_price">500.0</field>
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_3')])]"/>
@@ -201,6 +209,7 @@
         </record>
         <record id="product_product_4d" model="product.product">
             <field name="default_code">DESK0004</field>
+            <field name="weight">0.01</field>
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="standard_price">500.0</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_4')])]"/>
@@ -228,6 +237,7 @@
             <field name="standard_price">600.0</field>
             <field name="list_price">147.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM06</field>
@@ -240,6 +250,7 @@
             <field name="standard_price">800.0</field>
             <field name="list_price">320.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM07</field>
@@ -253,6 +264,7 @@
             <field name="standard_price">70.0</field>
             <field name="list_price">79.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM08</field>
@@ -265,6 +277,7 @@
             <field name="standard_price">1299.0</field>
             <field name="list_price">1799.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM09</field>
@@ -278,6 +291,7 @@
             <field name="standard_price">10.0</field>
             <field name="list_price">47.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM10</field>
@@ -290,6 +304,7 @@
             <field name="standard_price">12.50</field>
             <field name="list_price">14</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM11</field>
@@ -302,6 +317,7 @@
             <field name="standard_price">14</field>
             <field name="list_price">16.50</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM12</field>
@@ -311,6 +327,7 @@
         <record id="product_product_11b" model="product.product">
             <field name="name">Conference Chair</field>
             <field name="default_code">E-COM13</field>
+            <field name="weight">0.01</field>
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
         </record>
@@ -359,6 +376,7 @@
             <field name="standard_price">18</field>
             <field name="list_price">12.50</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_0269</field>
@@ -371,6 +389,7 @@
             <field name="standard_price">78.0</field>
             <field name="list_price">85.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_1118</field>
@@ -383,6 +402,7 @@
             <field name="standard_price">20.0</field>
             <field name="list_price">25.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_8900</field>
@@ -395,6 +415,7 @@
             <field name="standard_price">1700.0</field>
             <field name="list_price">1950.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_9001</field>
@@ -406,6 +427,7 @@
             <field name="standard_price">2010.0</field>
             <field name="list_price">2100.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_7888</field>
@@ -418,6 +440,7 @@
             <field name="standard_price">876.0</field>
             <field name="list_price">885.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_0789</field>
@@ -430,6 +453,7 @@
             <field name="standard_price">2870.0</field>
             <field name="list_price">2950.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_6666</field>
@@ -442,6 +466,7 @@
             <field name="standard_price">3300.0</field>
             <field name="list_price">3645.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Drawer with two routing possiblities.</field>
@@ -455,6 +480,7 @@
             <field name="standard_price">25000.0</field>
             <field name="list_price">23500.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Dvorak keyboard&#xA;left-handed mouse</field>
@@ -468,6 +494,7 @@
             <field name="standard_price">45000.0</field>
             <field name="list_price">40000.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">raid 1, 512ECC ram</field>
@@ -481,6 +508,7 @@
             <field name="standard_price">65000.0</field>
             <field name="list_price">60000.0</field>
             <field name="type">consu</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">raid 10, 2048ECC ram</field>

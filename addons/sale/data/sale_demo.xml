@@ -734,6 +734,7 @@ Thanks!</field>
             <field name="name">Chair floor protection</field>
             <field name="categ_id" ref="product.product_category_5"/>
             <field name="list_price">12.0</field>
+            <field name="weight">0.01</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Office chairs can harm your floor: protect it.</field>
@@ -759,12 +760,14 @@ Thanks!</field>
 
         <record id="product_product_4e" model="product.product">
             <field name="default_code">DESK0005</field>
+            <field name="weight">0.01</field>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product_attribute_value_7'), ref('product.product_attribute_value_3')])]"/>
         </record>
 
         <record id="product_product_4f" model="product.product">
             <field name="default_code">DESK0006</field>
+            <field name="weight">0.01</field>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product_attribute_value_7'), ref('product.product_attribute_value_4')])]"/>
         </record>
