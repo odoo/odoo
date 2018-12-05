@@ -1338,5 +1338,65 @@ QUnit.test('quick search channels in the sidebar with more than 20 channels', fu
     });
 });
 
+QUnit.test('select emoji replaces cursor position', function (assert) {
+    assert.expect(5);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+            .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.strictEqual($general.length, 1,
+            "should have the channel item with id 1");
+        assert.hasAttrValue($general, 'title', 'general',
+            "should have the title 'general'");
+
+        // click on general
+        testUtils.dom.click($general);
+
+        // general uses basic composer, so this is the 1st composer
+        // (2nd composer is hidden)
+        var $composer = discuss.$('.o_composer_text_field').first();
+
+        testUtils.fields.editInput($composer, 'abcdefgh');
+
+        assert.strictEqual($composer.val(), "abcdefgh");
+
+        // cursor position: ab|cd|efgh (selecting c and d)
+        $composer[0].setSelectionRange(2, 4);
+
+        testUtils.dom.click(discuss.$('.o_composer_button_emoji'));
+        testUtils.dom.click(discuss.$('.o_mail_emoji[data-emoji=":)"]'));
+
+        assert.strictEqual($composer.val(), "ab :) efgh",
+            "should have inserted emoji ");
+
+        testUtils.dom.click(discuss.$('.o_composer_button_emoji'));
+        testUtils.dom.click(discuss.$('.o_mail_emoji[data-emoji=":)"]'));
+
+        assert.strictEqual($composer.val(), "ab :)  :) efgh",
+            "should have inserted emoji after previously inserted emoji");
+
+        discuss.destroy();
+        done();
+    });
+});
+
 });
 });
