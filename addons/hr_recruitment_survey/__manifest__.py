@@ -19,6 +19,7 @@
         'views/res_config_setting_views.xml',
     ],
     'demo': [
+        'data/survey_demo.xml',
         'data/hr_job_demo.xml',
     ],
     'auto_install': False,
