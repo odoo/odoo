@@ -135,7 +135,7 @@ var StatementModel = BasicModel.extend({
 
         // Onchange the partner if not already set on the statement line.
         if(!line.st_line.partner_id && line.reconciliation_proposition
-            && line.reconciliation_proposition.length == 1 && prop.partner_id){
+            && line.reconciliation_proposition.length == 1 && prop.partner_id && line.type === undefined){
             return this.changePartner(handle, {'id': prop.partner_id, 'display_name': prop.partner_name}, true)
                 .then(function (result) {
                     return $.when(self._computeLine(line), self._performMoveLine(handle));
