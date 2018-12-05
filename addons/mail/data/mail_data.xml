@@ -262,13 +262,15 @@
                     <t t-esc="access_name"/>
                 </a>
             </div>
-            <div style="margin: 0px; padding: 0px; font-size:13px;">
-                Best regards,
-            </div>
-            <div>&amp;nbsp;</div>
-            <div t-if="record.user_id and record.user_id.sudo().signature" style="font-size: 13px;">
-                <div t-raw="record.user_id.sudo().signature"/>
-            </div>
+            <t t-if="record.user_id and not record.env.user._is_superuser()">
+                <div style="margin: 0px; padding: 0px; font-size:13px;">
+                    Best regards,
+                </div>
+                <div>&amp;nbsp;</div>
+                <div t-if="record.user_id.sudo().signature" style="font-size: 13px;">
+                    <div t-raw="record.user_id.sudo().signature"/>
+                </div>
+            </t>
         </td>
     </tr>
     <!-- FOOTER -->
