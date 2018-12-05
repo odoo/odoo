@@ -430,10 +430,10 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     core.bus.trigger('link_dialog_demand', {
         $editable: $editable,
         linkInfo: linkInfo,
-        onSave: function (linkInfo) {
-            linkInfo.data.range.select();
-            $editable.data('range', linkInfo.data.range);
-            def.resolve(linkInfo.data);
+        onSave: function (ev) {
+            ev.data.data.range.select();
+            $editable.data('range', ev.data.data.range);
+            def.resolve(ev.data.data);
             $editable.trigger('keyup');
             $('.note-popover .note-link-popover').show();
         },
@@ -1157,12 +1157,13 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * @param {Object} ev.data
      */
     _onColorPickerDialogDemand: function (ev) {
-        if (ev.data.__alreadyDone) {
+        var data = ev.data;
+        if (data.__alreadyDone) {
             return;
         }
-        ev.data.__alreadyDone = true;
+        data.__alreadyDone = true;
         var colorpicker = new ColorpickerDialog(this, {
-            defaultColor: ev.data.color,
+            defaultColor: data.color,
         });
         if (ev.data.onSave) {
             colorpicker.on('colorpicker:saved', this, function (ev) {

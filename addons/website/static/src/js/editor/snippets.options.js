@@ -994,11 +994,11 @@ options.registry.gallery = options.Class.extend({
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true}, this.$target.closest('.o_editable'), null);
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
-        dialog.on('save', this, function (attachments) {
-            for (var i = 0 ; i < attachments.length; i++) {
+        dialog.on('save', this, function (ev) {
+            for (var i = 0 ; i < ev.data.data.length; i++) {
                 $('<img/>', {
                     class: 'img img-fluid',
-                    src: attachments[i].src,
+                    src: ev.data.data[i].src,
                     'data-index': ++index,
                 }).appendTo($container);
             }
