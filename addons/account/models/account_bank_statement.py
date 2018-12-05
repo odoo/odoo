@@ -434,6 +434,8 @@ class AccountBankStatementLine(models.Model):
                 moves_to_unbind.write({'statement_line_id': False})
                 for move in moves_to_unbind:
                     move.line_ids.filtered(lambda x: x.statement_id == st_line.statement_id).write({'statement_id': False})
+            if st_line.move_name:
+                st_line.move_name = None
 
         payment_to_unreconcile = payment_to_unreconcile - payment_to_cancel
         if payment_to_unreconcile:
