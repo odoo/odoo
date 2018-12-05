@@ -165,6 +165,15 @@ var BasicComposer = Widget.extend({
         this.$input.focus();
     },
     /**
+     * Get cursor position and selection
+     *
+     * @returns {Object} a current cursor position as { start: {integer}, end: {integer} }
+    */
+   getSelectionPositions: function () {
+        var InputElement = this.$input.get(0);
+        return InputElement ? dom.getSelectionRange(InputElement) : { start: 0, end: 0 };
+    },
+    /**
      * Get the state of the composer.
      *
      * This is useful in order to (re)store its state when switchng to another
@@ -666,15 +675,24 @@ var BasicComposer = Widget.extend({
         }
     },
     /**
-     * Called when an emoji is clicked -> adds it in the <input/>, focuses the
-     * <input/> and closes the emoji panel.
+     * Called when an emoji is clicked from the emoji panel.
+     * Emoji is inserted in the composer based on the position of the cursor,
+     * and it automatically focuses the composer and set the cursor position
+     * just after the newly inserted emoji.
      *
      * @private
      * @param {Event} ev
      */
     _onEmojiImageClick: function (ev) {
-        this.$input.val(this.$input.val() + " " + $(ev.currentTarget).data('emoji') + " ");
+        var cursorPosition = this.getSelectionPositions();
+        var inputVal = this.$input.val();
+        var leftSubstring = inputVal.substring(0, cursorPosition.start);
+        var rightSubstring = inputVal.substring(cursorPosition.end);
+        var newInputVal  = [leftSubstring , $(ev.currentTarget).data('emoji'), rightSubstring].join(" ");
+        var newCursorPosition = newInputVal.length - rightSubstring.length;
+        this.$input.val(newInputVal);
         this.$input.focus();
+        this.$input[0].setSelectionRange(newCursorPosition, newCursorPosition);
         this._hideEmojis();
     },
     /**
