@@ -21,7 +21,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         this._super.apply(this, arguments);
         this.activeView = false;
         this.activeTab = false;
-        this.initialTabElements = undefined;
     },
 
     start: function () {
@@ -200,17 +199,6 @@ var BaseSettingRenderer = FormRenderer.extend({
      * @param {int} index
      */
     _moveToTab: function (index) {
-        //Used to reorder the settings after a search and a tab switch
-        //Thought it would be better for the UX if the order stayed the same as the one on the left panel
-        var settingsNode = this.$('.settings')[0];
-        if(!this.initialTabElements && settingsNode){
-            //Converts an HtmlCollection into an array
-            this.initialTabElements = Array.prototype.slice.call(settingsNode.children);
-        } else { 
-            this.$('.settings')
-                .empty()
-                .append(this.initialTabElements)
-        }        
         this.currentIndex = !index || index === -1 ? 0 : (index === this.modules.length ? index - 1 : index);
         if (this.currentIndex !== -1) {
             if (this.activeView) {
@@ -248,6 +236,7 @@ var BaseSettingRenderer = FormRenderer.extend({
 
     _onKeyUpSearch: function (event) {
         this.searchText = this.searchInput.val();
+        this.activeTab.removeClass('selected');
         if (config.device.isMobile) {
             this.$('.settings_tab').addClass('o_hidden');
             this.$('.settings').addClass('d-block');
@@ -310,19 +299,13 @@ var BaseSettingRenderer = FormRenderer.extend({
     _searchSetting: function () {
         var self = this;
         this.count = 0;
-        var settings = $(this.$el.find('.settings')[0].children);
-        //Results for active module should be at the top 
-        var active_key = self.$el.find('.selected')[0].attributes['data-key'].value;
-        var selectedModule = self.$el.find('.app_settings_block[data-key="' + active_key + '"]');
-        var toInsertBefore = $(settings[1]);
-        selectedModule.insertBefore(toInsertBefore);
         _.each(this.modules, function (module) {
             self.inVisibleCount = 0;
             module.settingView.find('.o_setting_box').addClass('o_hidden');
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
             module.settingView.find('.o_settings_container').removeClass('mt16');
-            var resultSetting = module.settingView.find(".o_form_label:containsTextLike('" + self.searchText + "'), .text-muted:containsTextLike('"+ self.searchText +"')");  
+            var resultSetting = module.settingView.find("label:containsTextLike('" + self.searchText + "')");
             if (resultSetting.length > 0) {
                 resultSetting.each(function () {
                     var settingBox = $(this).closest('.o_setting_box');
