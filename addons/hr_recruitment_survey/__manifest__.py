@@ -13,7 +13,6 @@
     'data': [
         'security/hr_recruitment_survey_security.xml',
         'security/ir.model.access.csv',
-        'data/survey_survey_data.xml',
         'views/hr_job_views.xml',
         'views/hr_applicant_views.xml',
         'views/res_config_setting_views.xml',
