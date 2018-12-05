@@ -16,62 +16,92 @@
 
     <!--
         @param {string|integer} activeThreadID
-        @param {integer} moderationCounter
-        @param {integer} needactionCounter
-        @param {integer} starredCounter
+        @param {mail.model.Channel[]} channels
+        @param {boolean} isMyselfModerator
+        @param {mail.model.Mailbox} inbox
+        @param {mail.model.Mailbox} starred
+        @param {mail.model.Mailbox|undefined} moderation set if current user is moderator
+        @param {boolean} displayQuickSearch
+        @param {Object} options
     -->
     <t t-name="mail.discuss.Sidebar">
         <div class="o_mail_discuss_sidebar">
-            <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
-                 data-thread-id="mailbox_inbox">
-                <span class="o_thread_name"><i class="fa fa-inbox mr8"/>Inbox</span>
-                <t t-set="counter" t-value="needactionCounter"/>
-                <t t-call="mail.discuss.SidebarCounter"/>
-            </div>
-            <div t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
-                 data-thread-id="mailbox_starred">
-                <span class="o_thread_name"><i class="fa fa-star-o mr8"/>Starred</span>
-                <t t-set="counter" t-value="starredCounter"/>
-                <t t-call="mail.discuss.SidebarCounter"/>
-            </div>
-            <div t-if="isMyselfModerator" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
-                 data-thread-id="mailbox_moderation">
-                <span class="o_thread_name"> <i class="fa fa-envelope mr8"/>Moderation Queue</span>
-                <t t-set="counter" t-value="moderationCounter"/>
-                <t t-call="mail.discuss.SidebarCounter"/>
+            <div class="o_mail_discuss_sidebar_mailboxes">
+                <t t-call="mail.discuss.SidebarMailboxes"/>
             </div>
             <hr class="mb8"/>
-
-            <t t-set="type" t-value="'public'"/>
-            <t t-call="mail.discuss.SidebarTitle">
-                <t t-set="title">Channels</t>
-                <t t-set="icon" t-value="fa-users"/>
-            </t>
-            <t t-call="mail.discuss.SidebarItems">
-                <t t-set="displayHash" t-value="true"/>
-                <t t-set="inputPlaceholder">Add a channel</t>
-            </t>
-
-            <t t-set="type" t-value="'dm_chat'"/>
-            <t t-call="mail.discuss.SidebarTitle">
-                <t t-set="title">Direct Messages</t>
-                <t t-set="icon" t-value="fa-user"/>
-            </t>
-            <t t-call="mail.discuss.SidebarItems">
-                <t t-set="displayStatus" t-value="true"/>
-                <t t-set="inputPlaceholder">User name</t>
-            </t>
-
-            <t t-set="type" t-value="'private'"/>
-            <t t-call="mail.discuss.SidebarTitle">
-                <t t-set="title">Private Channels</t>
-                <t t-set="icon" t-value="fa-eye-slash"/>
-            </t>
-            <t t-call="mail.discuss.SidebarItems">
-                <t t-set="inputPlaceholder">Add a private channel</t>
-                <t t-set="displayHash" t-value="true"/>
-            </t>
+            <div t-if="displayQuickSearch" class="o_discuss_sidebar_quick_search">
+                <t t-set="inputPlaceholder">Quick search...</t>
+                <input t-att-placeholder="inputPlaceholder"/>
+            </div>
+            <div class="o_mail_discuss_sidebar_channels">
+                <t t-call="mail.discuss.SidebarChannels"/>
+            </div>
         </div>
+    </t>
+
+    <!--
+        @param {string|integer} activeThreadID
+        @param {boolean} isMyselfModerator
+        @param {mail.model.Mailbox} inbox
+        @param {mail.model.Mailbox} starred
+        @param {mail.model.Mailbox|undefined} moderation set if current user is moderator
+    -->
+    <t t-name="mail.discuss.SidebarMailboxes">
+        <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
+                data-thread-id="mailbox_inbox">
+            <span class="o_thread_name"><i class="fa fa-inbox mr8"/>Inbox</span>
+            <t t-set="counter" t-value="inbox.getMailboxCounter()"/>
+            <t t-call="mail.discuss.SidebarCounter"/>
+        </div>
+        <div t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
+                data-thread-id="mailbox_starred">
+            <span class="o_thread_name"><i class="fa fa-star-o mr8"/>Starred</span>
+            <t t-set="counter" t-value="starred.getMailboxCounter()"/>
+            <t t-call="mail.discuss.SidebarCounter"/>
+        </div>
+        <div t-if="isMyselfModerator" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
+                data-thread-id="mailbox_moderation">
+            <span class="o_thread_name"> <i class="fa fa-envelope mr8"/>Moderation Queue</span>
+            <t t-set="counter" t-value="moderation.getMailboxCounter()"/>
+            <t t-call="mail.discuss.SidebarCounter"/>
+        </div>
+    </t>
+
+    <!--
+        @param {string|integer} activeThreadID
+        @param {mail.model.Channel[]} channels
+    -->
+    <t t-name="mail.discuss.SidebarChannels">
+        <t t-set="type" t-value="'public'"/>
+        <t t-call="mail.discuss.SidebarTitle">
+            <t t-set="title">Channels</t>
+            <t t-set="icon" t-value="fa-users"/>
+        </t>
+        <t t-call="mail.discuss.SidebarItems">
+            <t t-set="displayHash" t-value="true"/>
+            <t t-set="inputPlaceholder">Add a channel</t>
+        </t>
+
+        <t t-set="type" t-value="'dm_chat'"/>
+        <t t-call="mail.discuss.SidebarTitle">
+            <t t-set="title">Direct Messages</t>
+            <t t-set="icon" t-value="fa-user"/>
+        </t>
+        <t t-call="mail.discuss.SidebarItems">
+            <t t-set="displayStatus" t-value="true"/>
+            <t t-set="inputPlaceholder">User name</t>
+        </t>
+
+        <t t-set="type" t-value="'private'"/>
+        <t t-call="mail.discuss.SidebarTitle">
+            <t t-set="title">Private Channels</t>
+            <t t-set="icon" t-value="fa-eye-slash"/>
+        </t>
+        <t t-call="mail.discuss.SidebarItems">
+            <t t-set="inputPlaceholder">Add a private channel</t>
+            <t t-set="displayHash" t-value="true"/>
+        </t>
     </t>
 
     <!--
@@ -87,7 +117,7 @@
         Don't display the thread type if there is no thread of such type
         and the 'add a thread' option is disabled for this type
 
-        @param {mail.model.Thread[]} threads
+        @param {mail.model.Channel[]} channels
         @param {boolean} [disableAddThread] whether the 'Add thread' action should disabled or not for the considered discuss item category
         @param {string} [icon] classname to add on title to display icon
         @param {string} title the displayed type of the discuss items (e.g. "Private Channels")
@@ -96,8 +126,8 @@
     <t t-name="mail.discuss.SidebarTitle">
         <t t-if="disableAddThread">
             <t t-set="empty" t-value="true"/>
-            <t t-foreach="threads" t-as="thread">
-                <t t-if="thread.getType() === type">
+            <t t-foreach="channels" t-as="channel">
+                <t t-if="channel.getType() === type">
                     <t t-set="empty" t-value="false"/>
                 </t>
             </t>
@@ -115,7 +145,7 @@
 
     <!--
         @param {string|integer} activeThreadID
-        @param {mail.model.Thread[]} threads
+        @param {mail.model.Channel[]} channels
         @param {boolean} disableAddThread whether the 'Add thread' action should be disable or not for the considered discuss item category
         @param {boolean} [displayHash] whether the hash ('#') character should be displayed as a prefix for item's name
         @param {boolean} [displayStatus] whether the item should display its status (should be the case only for chats)
@@ -126,29 +156,29 @@
             <span t-if="displayHash">#</span>
             <input type="text" class="o_input" t-attf-placeholder="#{inputPlaceholder}"/>
         </div>
-        <t t-foreach="threads" t-as="thread">
-            <t t-set="counter" t-value="thread.getType() === 'mailbox' ? thread.getMailboxCounter() : thread.isTwoUserThread() ? thread.getUnreadCounter() : thread.getNeedactionCounter()"/>
-            <div t-if="thread.getType() === type" t-att-data-thread-id="thread.getID()" t-att-title="thread.getName()"
-                 t-attf-class="o_mail_discuss_item #{thread.hasUnreadMessages() ? ' o_unread_message' : ''} #{(activeThreadID == thread.getID()) ? 'o_active': ''}">
+        <t t-foreach="channels" t-as="channel">
+            <t t-set="counter" t-value="channel.isTwoUserThread() ? channel.getUnreadCounter() : channel.getNeedactionCounter()"/>
+            <div t-if="channel.getType() === type" t-att-data-thread-id="channel.getID()" t-att-title="channel.getName()"
+                 t-attf-class="o_mail_discuss_item #{channel.hasUnreadMessages() ? ' o_unread_message' : ''} #{(activeThreadID == channel.getID()) ? 'o_active': ''}">
                 <span class="o_thread_name">
                     <span t-if="displayStatus">
                         <t t-call="mail.UserStatus">
-                            <t t-set="status" t-value="thread.getStatus()"/>
+                            <t t-set="status" t-value="channel.getStatus()"/>
                         </t>
                     </span>
                     <span t-if="displayHash" class="o_mail_hash">#</span>
-                    <t t-esc="_.unescape(thread.getName())"/>
-                    <i t-if="thread.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
+                    <t t-esc="_.unescape(channel.getName())"/>
+                    <i t-if="channel.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
                 <t t-if="channel.hasTypingNotification() and channel.isSomeoneTyping()">
                     <t t-set="thread" t-value="channel"/>
                     <t t-call="mail.ThreadTypingIcon"/>
                 </t>
                 <span t-attf-class="fa fa-cog o_mail_channel_settings"
-                      title="Channel settings" role="img" aria-label="Channel settings" t-att-data-thread-id="thread.getID()"/>
+                      title="Channel settings" role="img" aria-label="Channel settings" t-att-data-thread-id="channel.getID()"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
-                <span t-if="!thread.isGroupBasedSubscription()" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'd-none' : ''}"
-                      title="Leave this channel" role="img" aria-label="Leave this channel" t-att-data-thread-id="thread.getID()"/>
+                <span t-if="!channel.isGroupBasedSubscription()" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'd-none' : ''}"
+                      title="Leave this channel" role="img" aria-label="Leave this channel" t-att-data-thread-id="channel.getID()"/>
             </div>
         </t>
     </t>

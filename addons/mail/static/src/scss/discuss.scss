@@ -18,6 +18,16 @@
             width: $o-mail-chat-sidebar-width + 50px;
         }
 
+        .o_discuss_sidebar_quick_search {
+            display: flex;
+            justify-content: center;
+
+            > input {
+                border-radius: 15px;
+                flex-basis: 80%;
+            }
+        }
+
         .o_mail_sidebar_title {
             display: flex;
             padding: 6px $o-horizontal-padding 0 $o-horizontal-padding;
@@ -124,6 +134,23 @@
     .o_mail_discuss_sidebar {
         background-color: gray('900');
         color: gray('300');
+
+        .o_discuss_sidebar_quick_search {
+
+            > input:focus {
+                &::placeholder {
+                    color: transparent;
+                }
+            }
+
+            > input {
+                outline: none;
+                background-color: gray('800');
+                border: gray('600');
+                text-align: center;
+                color: gray('400');
+            }
+        }
 
         .o_mail_discuss_item {
             cursor: pointer;
