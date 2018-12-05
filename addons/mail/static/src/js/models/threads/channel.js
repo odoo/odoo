@@ -29,6 +29,10 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      * @param  {boolean} params.data.is_moderator whether the current user is
      *   moderator of this channel.
      * @param {string} [params.data.last_message_date] date in server-format
+     * @param {Object[]} [params.data.members=[]]
+     * @param {integer} [params.data.members[i].id]
+     * @param {string} [params.data.members[i].name]
+     * @param {string} [params.data.members[i].email]
      * @param {integer} [params.data.message_unread_counter]
      * @param {boolean} [params.data.moderation=false] whether the channel is
      *   moderated or not
@@ -61,7 +65,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._isModerated = data.moderation;
         this._isMyselfModerator = data.is_moderator;
         this._lastMessageDate = undefined;
-        this._members = [];
+        this._members = data.members || [];
         // Deferred that is resolved on fetched members of this channel.
         this._membersDef = undefined;
         // number of messages that are 'needaction', which is equivalent to the
