@@ -49,7 +49,8 @@ QUnit.module('Views', {
                         state: 'new',
                         lines: [
                             {id: 1, product: ['Pizza Italiana', 7.4], toppings: [], quantity: 1.0, price: 7.4}
-                        ]
+                        ],
+                        alerts: [],
                     });
                 } else if (route.startsWith('data:image/png;base64,')) {
                     return $.when();
@@ -111,7 +112,8 @@ QUnit.module('Views', {
                         state: state,
                         lines: [
                             {id: 1, product: ['Pizza Italiana', 7.4], toppings: [], quantity: 1.0, price: 7.4}
-                        ]
+                        ],
+                        alerts: [],
                     });
                 } else if (route === '/lunch/payment_message') {
                     return $.when({message: 'Hello'});
@@ -182,7 +184,8 @@ QUnit.module('Views', {
                         state: 'new',
                         lines: [
                             {id: 1, product: ['Pizza Italiana', 7.4], toppings: [], quantity: 1.0, price: 7.4}
-                        ]
+                        ],
+                        alerts: [],
                     });
                 } else if (route.startsWith('data:image/png;base64,')) {
                     return $.when();

@@ -14,6 +14,37 @@ class LunchProductCategory(models.Model):
     _description = 'Lunch Product Category'
 
     name = fields.Char('Product Category', required=True)
+    topping_ids = fields.One2many('lunch.topping', 'category_id')
+
+
+class LunchToppingType(models.Model):
+    """"""
+    _name = 'lunch.topping.type'
+    _description = 'Lunch Topping Type'
+
+    name = fields.Char('Name', required=True)
+
+
+class LunchTopping(models.Model):
+    """"""
+    _name = 'lunch.topping'
+    _description = 'Lunch Toppings'
+
+    name = fields.Char('Name', required=True)
+    price = fields.Float('Price', digits=dp.get_precision('Account'), required=True)
+    category_id = fields.Many2one('lunch.product.category')
+    type_id = fields.Many2one('lunch.topping.type')
+
+    def name_get(self):
+        currency_id = self.env.user.company_id.currency_id
+        res = dict(super(LunchTopping, self).name_get())
+        for topping in self:
+            if currency_id.position == 'before':
+                price = '%s %s' % (currency_id.symbol, topping.price)
+            else:
+                price = '%s %s' % (topping.price, currency_id.symbol)
+            res[topping.id] = '%s %s' % (topping.name, price)
+        return list(res.items())
 
 
 class LunchProduct(models.Model):
@@ -22,12 +53,11 @@ class LunchProduct(models.Model):
     _description = 'Lunch Product'
 
     name = fields.Char('Name', required=True)
-    category_id = fields.Many2one('lunch.product.category', 'Product Category')
+    category_id = fields.Many2one('lunch.product.category', 'Product Category', required=True)
     description = fields.Text('Description')
     price = fields.Float('Price', digits=dp.get_precision('Account'), required=True)
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor', required=True)
     active = fields.Boolean(default=True)
-    is_topping = fields.Boolean("This product is an extra garniture")
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
