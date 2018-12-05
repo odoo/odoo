@@ -73,7 +73,7 @@
         @param {mail.model.Channel[]} channels
     -->
     <t t-name="mail.discuss.SidebarChannels">
-        <t t-set="type" t-value="'public'"/>
+        <t t-set="type" t-value="'multi_user_channel'"/>
         <t t-call="mail.discuss.SidebarTitle">
             <t t-set="title">Channels</t>
             <t t-set="icon" t-value="fa-users"/>
@@ -91,16 +91,6 @@
         <t t-call="mail.discuss.SidebarItems">
             <t t-set="displayStatus" t-value="true"/>
             <t t-set="inputPlaceholder">User name</t>
-        </t>
-
-        <t t-set="type" t-value="'private'"/>
-        <t t-call="mail.discuss.SidebarTitle">
-            <t t-set="title">Private Channels</t>
-            <t t-set="icon" t-value="fa-eye-slash"/>
-        </t>
-        <t t-call="mail.discuss.SidebarItems">
-            <t t-set="inputPlaceholder">Add a private channel</t>
-            <t t-set="displayHash" t-value="true"/>
         </t>
     </t>
 
@@ -120,7 +110,7 @@
         @param {mail.model.Channel[]} channels
         @param {boolean} [disableAddThread] whether the 'Add thread' action should disabled or not for the considered discuss item category
         @param {string} [icon] classname to add on title to display icon
-        @param {string} title the displayed type of the discuss items (e.g. "Private Channels")
+        @param {string} title the displayed type of the discuss items (e.g. "Channels")
         @param {string} type the type of the thread
     -->
     <t t-name="mail.discuss.SidebarTitle">
@@ -134,7 +124,7 @@
         </t>
         <t t-if="!disableAddThread || !empty">
             <div class="o_mail_sidebar_title">
-                <h4 t-att-class="type == 'public' ? 'o_mail_open_channels' : ''">
+                <h4 t-att-class="type == 'multi_user_channel' ? 'o_mail_open_channels' : ''">
                     <i t-if="icon" t-attf-class="mr4 fa-fw fa #{icon}" role="img" aria-label="Channel" title="Channel"></i>
                     <b><t t-esc="title"/></b>
                 </h4>
@@ -167,6 +157,7 @@
                         </t>
                     </span>
                     <span t-if="displayHash" class="o_mail_hash">#</span>
+                    <i t-if="channel.getType() === 'multi_user_channel' and !channel.isPublic()" class="fa fa-lock" title="Private channel" role="img" aria-label="Private channel"/>
                     <t t-esc="_.unescape(channel.getName())"/>
                     <i t-if="channel.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
@@ -213,7 +204,7 @@
             <button type="button" class="btn btn-secondary o_mail_discuss_button_mark_all_read d-none d-md-inline-block" title="Mark all as read">Mark all read</button>
             <button type="button" class="btn btn-secondary o_mail_discuss_button_unstar_all" title="Unstar all messages">Unstar all</button>
             <button type="button" class="btn btn-secondary o_mail_discuss_button_dm_chat o_hidden d-md-none" title="New Message">New Message</button>
-            <button t-if="!disableAddThread" type="button" class="btn btn-secondary o_mail_discuss_button_public o_mail_discuss_button_private d-block d-md-none" title="New Channel">New Channel</button>
+            <button t-if="!disableAddThread" type="button" class="btn btn-secondary o_mail_discuss_button_multi_user_channel d-block d-md-none" title="New Channel">New Channel</button>
             <button type="button" class="btn btn-secondary o_hidden o_mail_discuss_button_select_all" title="Select all messages to moderate">Select All</button>
             <button type="button" class="btn btn-secondary o_hidden o_mail_discuss_button_unselect_all" title="Unselect all messages to moderate">Unselect All</button>
             <button type="button" data-decision="accept" class="btn btn-secondary o_mail_discuss_button_moderate_all" title="Accept selected messages">Accept</button>
@@ -253,13 +244,9 @@
                     <span class="fa fa-user"/>
                     <span class="o_tab_title">Chat</span>
                 </div>
-                <div class="o_mail_mobile_tab" data-type="public">
+                <div class="o_mail_mobile_tab" data-type="multi_user_channel">
                     <span class="fa fa-users"/>
                     <span class="o_tab_title">Channels</span>
-                </div>
-                <div class="o_mail_mobile_tab" data-type="private">
-                    <span class="fa fa-eye-slash"/>
-                    <span class="o_tab_title">Private Channels</span>
                 </div>
             </div>
         </div>
@@ -272,8 +259,8 @@
     <t t-name="mail.discuss.MobileTabPane">
         <div class="o_mail_discuss_tab_pane" t-att-data-type="type">
             <div t-if="!disableAddThread" class="o_mail_add_thread" t-att-data-type="type">
-                <span t-if="type == 'private' || type == 'public'">#</span>
-                <t t-set="inputPlaceholder" t-if="type == 'private' || type == 'public'">Add a channel</t>
+                <span t-if="type == 'multi_user_channel'">#</span>
+                <t t-set="inputPlaceholder" t-if="type == 'multi_user_channel'">Add a channel</t>
                 <t t-set="inputPlaceholder" t-if="type == 'dm_chat'">Open chat</t>
                 <input type="text" t-attf-placeholder="#{inputPlaceholder}"/>
             </div>

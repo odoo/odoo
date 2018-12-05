@@ -80,7 +80,7 @@ Discuss.include({
     _renderButtons: function () {
         var self = this;
         this._super.apply(this, arguments);
-        _.each(['dm_chat', 'public', 'private'], function (type) {
+        _.each(['dm_chat', 'multi_user_channel'], function (type) {
             var selector = '.o_mail_discuss_button_' + type;
             self.$buttons.on('click', selector, self._onAddThread.bind(self));
         });
