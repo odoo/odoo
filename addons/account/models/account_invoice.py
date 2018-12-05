@@ -908,8 +908,8 @@ class AccountInvoice(models.Model):
         if to_open_invoices.filtered(lambda inv: not inv.account_id):
             raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
         to_open_invoices.action_date_assign()
-        to_open_invoices.action_move_create()
-        return to_open_invoices.invoice_validate()
+        to_open_invoices.invoice_validate()
+        return to_open_invoices.action_move_create()
 
     @api.multi
     def action_invoice_paid(self):
@@ -1184,12 +1184,6 @@ class AccountInvoice(models.Model):
                 raise UserError(_('Please add at least one invoice line.'))
             if inv.move_id:
                 continue
-
-
-            if not inv.date_invoice:
-                inv.write({'date_invoice': fields.Date.context_today(self)})
-            if not inv.date_due:
-                inv.write({'date_due': inv.date_invoice})
             company_currency = inv.company_id.currency_id
 
             # create move lines (one per invoice line + eventual taxes and analytic lines)
@@ -1243,17 +1237,22 @@ class AccountInvoice(models.Model):
             line = inv.finalize_invoice_move_lines(line)
 
             date = inv.date or inv.date_invoice
+            move_ref = inv.reference
+            if inv.origin:
+                if move_ref:
+                    move_ref += ' (%s)' % inv.origin
+                else:
+                    move_ref = inv.origin
             move_vals = {
-                'ref': inv.reference,
+                'ref': move_ref,
                 'line_ids': line,
                 'journal_id': inv.journal_id.id,
                 'date': date,
                 'narration': inv.comment,
+                'name': inv.number,
             }
             move = account_move.create(move_vals)
-            # Pass invoice in method post: used if you want to get the same
-            # account move reference when creating the same invoice after a cancelled one:
-            move.post(invoice = inv)
+            move.post()
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
@@ -1287,12 +1286,40 @@ class AccountInvoice(models.Model):
         for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
             invoice.message_subscribe([invoice.partner_id.id])
 
+        for invoice in self:
+            vals = {'state': 'open'}
+            if not invoice.date_invoice:
+                vals['date_invoice'] = fields.Date.context_today(self)
+            if not invoice.date_due:
+                vals['date_due'] = vals.get('date_invoice', invoice.date_invoice)
+
+            if (invoice.move_name and invoice.move_name != '/'):
+                new_name = invoice.move_name
+            else:
+                new_name = False
+                journal = invoice.journal_id
+                if journal.sequence_id:
+                    # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
+                    sequence = journal.sequence_id
+                    if invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
+                        if not journal.refund_sequence_id:
+                            raise UserError(_('Please define a sequence for the credit notes'))
+                        sequence = journal.refund_sequence_id
+
+                    new_name = sequence.with_context(ir_sequence_date=invoice.date or invoice.date_invoice).next_by_id()
+                else:
+                    raise UserError(_('Please define a sequence on the journal.'))
+            #give the invoice its number directly as it's needed in _get_computed_reference()
+            invoice.number = new_name
+
             # Auto-compute reference, if not already existing and if configured on company
             if not invoice.reference and invoice.type == 'out_invoice':
-                invoice.reference = invoice._get_computed_reference()
-        self._check_duplicate_supplier_reference()
+                vals['reference'] = invoice._get_computed_reference()
 
-        return self.write({'state': 'open'})
+            invoice.write(vals)
+
+        self._check_duplicate_supplier_reference()
+        return True
 
     @api.model
     def line_get_convert(self, line, part):
