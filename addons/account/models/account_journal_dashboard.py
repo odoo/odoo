@@ -136,6 +136,8 @@ class account_journal(models.Model):
 
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
+        query_results = sorted(query_results,
+                               key=lambda k: str(k['aggr_date']))
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
                 data[index]['value'] = query_results[index].get('total')
