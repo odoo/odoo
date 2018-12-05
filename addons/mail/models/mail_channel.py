@@ -28,6 +28,7 @@ class ChannelPartner(models.Model):
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
     partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
+    fetched_message_id = fields.Many2one('mail.message', string='Last Fetched')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
@@ -599,6 +600,11 @@ class Channel(models.Model):
             # add members infos
             partner_ids = channel_partners.mapped('partner_id').ids
             info['members'] = [partner_info for partner_info in partner_infos if partner_info['id'] in partner_ids]
+            info['seen_partners_info'] = [{
+                'partner_id': cp.partner_id.id,
+                'fetched_message_id': cp.fetched_message_id.id,
+                'seen_message_id': cp.seen_message_id.id,
+            } for cp in channel_partners]
 
             channel_infos.append(info)
         return channel_infos
@@ -716,9 +722,35 @@ class Channel(models.Model):
         self.ensure_one()
         if self.channel_message_ids.ids:
             last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
-            self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({'seen_message_id': last_message_id})
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), {'info': 'channel_seen', 'id': self.id, 'last_message_id': last_message_id})
+            self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({
+                'seen_message_id': last_message_id,
+                'fetched_message_id': last_message_id,
+            })
+            data = {
+                'info': 'channel_seen',
+                'last_message_id': last_message_id,
+                'partner_id': self.env.user.partner_id.id,
+            }
+            self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
             return last_message_id
+
+    @api.multi
+    def channel_fetched(self):
+        """ Broadcast the channel_fetched notification to channel members
+        """
+        self.ensure_one()
+        if not self.channel_message_ids.ids:
+            return
+        last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
+        self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({
+            'fetched_message_id': last_message_id,
+        })
+        data = {
+            'info': 'channel_fetched',
+            'last_message_id': last_message_id,
+            'partner_id': self.env.user.partner_id.id,
+        }
+        self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
 
     @api.multi
     def channel_invite(self, partner_ids):
