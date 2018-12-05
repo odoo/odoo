@@ -1223,6 +1223,73 @@ QUnit.test('reply to message from inbox', function (assert) {
     });
 });
 
+QUnit.test('discard replying to message from inbox', function (assert) {
+    var done = assert.async();
+    assert.expect(4);
+
+    var self = this;
+    this.data['mail.message'].records = [{
+        author_id: [5, 'Demo User'],
+        body: '<p>test 1</p>',
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+        res_id: 100,
+        model: 'some.document',
+        record_name: 'SomeDocument',
+    }];
+    this.data.initMessaging = {
+        needaction_inbox_counter: 1,
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_post') {
+                assert.step(args.method);
+                assert.strictEqual(args.model, 'some.document',
+                    "should post message to correct document model");
+                assert.strictEqual(args.args[0], 100,
+                    "should post message to correct document ID");
+
+                self.data['mail.message'].records.push({
+                    author_id: [3, 'Me'],
+                    body: args.kwargs.body,
+                    id: 2,
+                    res_id: 100,
+                    model: 'some.document',
+                    record_name: 'SomeDocument',
+                });
+                return $.when(2);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        testUtils.dom.click(discuss.$('.o_thread_message_reply'));
+        assert.containsOnce(discuss, '.o_thread_selected_message',
+            "should have a message selected");
+
+        var $composer = discuss.$('.o_thread_composer_extended');
+        assert.containsOnce($composer, '.o_composer_button_discard',
+            "should have button to discard replying to message");
+
+        testUtils.dom.click($composer.find('.o_composer_button_discard'));
+        assert.isNotVisible($composer,
+            "extended composer should become hidden on discard");
+        assert.containsNone(discuss, '.o_thread_selected_message',
+            "should not longer have a message selected");
+
+        discuss.destroy();
+        done();
+    });
+});
+
 QUnit.test('no quick search channels in the sidebar with less than 20 channels', function (assert) {
     assert.expect(3);
     var done = assert.async();

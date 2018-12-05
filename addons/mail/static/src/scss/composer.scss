@@ -147,6 +147,11 @@
             }
             .o_composer_send {
                 margin-top: $o-mail-chatter-gap;
+
+                > .o_composer_button_discard:not(:hover) {
+                    background: theme-color('light');
+                    border-color: transparent;
+                }
             }
         }
 

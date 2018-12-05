@@ -259,7 +259,7 @@
         @param {integer} [options.selectedMessageID]
     -->
     <t t-name="mail.widget.Thread.Message">
-        <div t-att-class="'o_thread_message' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion' : ' o_mail_not_discussion')" t-att-data-message-id="message.getID()">
+        <div t-att-class="'o_thread_message ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ')" t-att-data-message-id="message.getID()">
             <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
                 <t t-if="message.hasAuthor()">
                     <img t-if="displayAuthorMessages[message.getID()]"
