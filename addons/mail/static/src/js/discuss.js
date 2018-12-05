@@ -243,6 +243,7 @@ var ModeratorRejectMessageDialog = Dialog.extend({
 var Discuss = AbstractAction.extend(ControlPanelMixin, {
     template: 'mail.discuss',
     custom_events: {
+        discard_extended_composer: '_onDiscardExtendedComposer',
         message_moderation: '_onMessageModeration',
         search: '_onSearch',
         update_moderation_buttons: '_onUpdateModerationButtons',
@@ -927,6 +928,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this._selectedMessage = message;
         var subject = "Re: " + message.getDocumentName();
         this._extendedComposer.setSubject(subject);
+        this._extendedComposer.showDiscardButton();
 
         if (this._thread.getType() !== 'mailbox') {
             this._basicComposer.do_hide();
@@ -1053,6 +1055,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     _unselectMessage: function () {
         this._basicComposer.do_toggle(this._thread.getType() !== 'mailbox' && !this._thread.isMassMailing());
         this._extendedComposer.do_toggle(this._thread.isMassMailing());
+        this._extendedComposer.hideDiscardButton();
 
         if (!config.device.isMobile) {
             var composer = this._thread.getType() !== 'mailbox' && this._thread.isMassMailing() ?
@@ -1313,6 +1316,14 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         var partners = this._thread.getMentionPartnerSuggestions();
         composer.mentionSetCommands(commands);
         composer.mentionSetPrefetchedPartners(partners);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onDiscardExtendedComposer: function (ev) {
+        ev.stopPropagation();
+        this._unselectMessage();
     },
     /**
      * When clicking on an item in the sidebar
