@@ -28,6 +28,7 @@ If you want to save your employees' time and avoid them to always have coins in 
         'report/lunch_order_templates.xml',
         'views/lunch_templates.xml',
         'wizard/lunch_line_wizard_views.xml',
+        'views/lunch_alert_views.xml',
         'views/lunch_cashmove_views.xml',
         'views/lunch_orders_views.xml',
         'views/lunch_product_views.xml',

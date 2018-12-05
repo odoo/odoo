@@ -285,11 +285,15 @@
             <field name="image" type="base64" file="lunch/static/img/napoli.png"/>
         </record>
 
-        <record model="lunch.product" id="product_olives">
+        <record model="lunch.topping.type" id="type_garniture">
+            <field name="name">Garniture</field>
+        </record>
+
+        <record model="lunch.topping" id="product_olives">
             <field name="name">Olives</field>
             <field name="price">0.30</field>
-            <field name="supplier_id" eval="str(ref('supplier_pizza_inn'))"/>
-            <field name="is_topping" eval="True"/>
+            <field name="category_id" ref="categ_pizza"/>
+            <field name="type_id" ref="type_garniture"/>
         </record>
 
          <record model="lunch.product" id="product_4formaggi">

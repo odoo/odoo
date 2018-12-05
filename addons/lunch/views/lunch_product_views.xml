@@ -11,8 +11,8 @@
                 <field name="description"/>
                 <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                 <group expand="0" string="Group By">
-                    <filter name="supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
-                    <filter name="category" string="Product Category" context="{'group_by': 'category_id'}"/>
+                    <filter name="group_by_supplier" string="Vendor" context="{'group_by': 'supplier_id'}"/>
+                    <filter name="group_by_category" string="Product Category" context="{'group_by': 'category_id'}"/>
                 </group>
             </search>
         </field>
@@ -48,12 +48,8 @@
                     <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
                     <label for="name"/>
                     <field name='name'/>
-                    <div>
-                        <field name="is_topping"/>
-                        <label for="is_topping"/>
-                    </div>
                     <group>
-                        <field name='category_id' attrs="{'invisible': [('is_topping', '=', True)], 'required': [('is_topping', '=', False)]}"/>
+                        <field name='category_id'/>
                         <field name='supplier_id'/>
                         <field name='price'/>
                     </group>
@@ -72,7 +68,7 @@
         <field name="name">lunch.product.kanban</field>
         <field name="model">lunch.product</field>
         <field name="arch" type="xml">
-            <kanban js_class="lunch_kanban" create="0" class="o_kanban_mobile">
+            <kanban js_class="lunch_kanban" create="0" edit="0" group_create="0" group_edit="0" group_delete="0" class="o_kanban_mobile">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="category_id"/>
@@ -115,7 +111,7 @@
         <field name="name">Product category Tree</field>
         <field name="model">lunch.product.category</field>
         <field name="arch" type="xml">
-            <tree string="Products List" editable="bottom">
+            <tree string="Products List">
                 <field name='name' string="Product Category: "/>
             </tree>
         </field>
@@ -128,7 +124,14 @@
             <form string="Products Form">
                 <sheet>
                     <group>
-                        <field name='name' string="Product Category: "/>
+                        <field name="name" string="Product Category: "/>
+                        <field name="topping_ids">
+                            <tree editable="bottom">
+                                <field name="type_id"/>
+                                <field name="name"/>
+                                <field name="price"/>
+                            </tree>
+                        </field>
                     </group>
                 </sheet>
             </form>
@@ -152,7 +155,8 @@
         <field name="name">Order</field>
         <field name="res_model">lunch.product</field>
         <field name="view_mode">kanban</field>
-        <field name="domain">[('is_topping', '=', False), ('supplier_id.available_today', '=', True)]</field>
+        <field name="search_view_id" ref="lunch_product_view_search"/>
+        <field name="domain">[('supplier_id.available_today', '=', True)]</field>
     </record>
 
     <record id="lunch_product_category_action" model="ir.actions.act_window">
