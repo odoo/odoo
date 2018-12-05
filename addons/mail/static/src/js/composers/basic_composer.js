@@ -123,6 +123,9 @@ var BasicComposer = Widget.extend({
         $(window).on(this.fileuploadID, this._onAttachmentLoaded.bind(this));
         this.on('change:attachment_ids', this, this._renderAttachments);
 
+        this.call('mail_service', 'getMailBus')
+            .on('update_typing_partners', this, this._onUpdateTypingPartners);
+
         // Mention
         this._mentionManager.prependTo(this.$('.o_composer'));
 
@@ -792,6 +795,24 @@ var BasicComposer = Widget.extend({
             default:
                 this._mentionManager.detectDelimiter();
         }
+    },
+    /**
+     * @private
+     * @param {integer|string} threadID
+     */
+    _onUpdateTypingPartners: function (threadID) {
+        if (!this.options.showTyping) {
+            return;
+        }
+        if (!this.options.thread) {
+            return;
+        }
+        if (this.options.thread.getID() !== threadID) {
+            return;
+        }
+        this.$('.o_composer_thread_typing').html(QWeb.render('mail.Composer.ThreadTyping', {
+            thread: this.options.thread,
+        }));
     },
 });
 

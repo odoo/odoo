@@ -139,6 +139,15 @@ var AbstractThreadWindow = Widget.extend({
         return this._getThreadID();
     },
     /**
+     * @returns {mail.model.Thread|undefined}
+     */
+    getThread: function () {
+        if (!this.hasThread) {
+            return undefined;
+        }
+        return this._thread;
+    },
+    /**
      * Get the status of the thread, such as the im status of a DM chat
      * ('online', 'offline', etc.). If this window has no thread, returns
      * `undefined`.
@@ -257,14 +266,6 @@ var AbstractThreadWindow = Widget.extend({
             QWeb.render('mail.AbstractThreadWindow.HeaderContent', options));
     },
     /**
-     * Render the 'is typing...' notification bar text on the thread in this
-     * thread window. This is called when there is a change in the list of users
-     * currently typing something on this thread.
-     */
-    renderTypingNotificationBar: function () {
-        this._threadWidget.renderTypingNotificationBar(this._thread);
-    },
-    /**
      * Scroll to the bottom of the thread in the thread window
      */
     scrollToBottom: function () {
@@ -339,6 +340,7 @@ var AbstractThreadWindow = Widget.extend({
     _getHeaderRenderingOptions: function () {
         return {
             status: this.getThreadStatus(),
+            thread: this.getThread(),
             title: this.getTitle(),
             unreadCounter: this.getUnreadCounter(),
             widget: this,

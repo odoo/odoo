@@ -11,6 +11,7 @@
                     <t t-set="status" t-value="widget.getThreadStatus()"/>
                     <t t-set="title" t-value="widget.getTitle()"/>
                     <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
+                    <t t-set="thread" t-value="widget.getThread()"/>
                 </t>
             </div>
             <div class="o_thread_window_content">
@@ -58,6 +59,7 @@
           name of the document.
         @param {integer} [unreadCounter] the number of unread messages on the
           thread.
+        @param {mail.model.Thread|undefined} thread
         @param {Object} widget
         @param {function} widget.isMobile function without any param that
           states whether it should render for desktop or mobile screen.
@@ -70,6 +72,7 @@
             <t t-if="status" t-call="mail.UserStatus"/>
             <t t-esc="title"/>
             <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
+            <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="mail.ThreadTypingIcon"/>
         </span>
         <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
             <a href="#" class="o_thread_window_close fa fa-close"/>

@@ -235,12 +235,14 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     start: function () {
         var self = this;
 
-        this._basicComposer = new BasicComposer(this,
-            { mentionPartnersRestricted: true }
-        );
-        this._extendedComposer = new ExtendedComposer(this,
-            { mentionPartnersRestricted: true }
-        );
+        this._basicComposer = new BasicComposer(this, {
+            mentionPartnersRestricted: true,
+            showTyping: true,
+        });
+        this._extendedComposer = new ExtendedComposer(this, {
+            mentionPartnersRestricted: true,
+            showTyping: true,
+        });
         this._basicComposer
             .on('post_message', this, this._onPostMessage)
             .on('input_focused', this, this._onComposerFocused);
@@ -1391,19 +1393,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
-     * @param {integer|string} threadID
      */
-    _onTypingPartnersUpdated: function (threadID) {
-        var self = this;
-        if (this._thread.getID() !== threadID) {
-            return;
-        }
-        if (this._thread.hasTypingNotification()) {
-            // call getMentionpartnerSuggestions in order to correctly fetch members
-            this._thread.getMentionPartnerSuggestions().then(function () {
-                self._threadWidget.renderTypingNotificationBar(self._thread);
-            });
-        }
+    _onTypingPartnersUpdated: function () {
+        this._updateThreads();
     },
     /**
      * @private
