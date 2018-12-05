@@ -15,6 +15,7 @@ import time
 import uuid
 
 from odoo import api, fields, models
+from odoo import fields as api_fields
 from odoo import tools
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -1534,6 +1535,26 @@ class Meeting(models.Model):
             for k in EXTRAFIELDS:
                 if (k in r) and (fields and (k not in fields)):
                     del r[k]
+
+        tz = self.env.context and self.env.context.get('tz')
+        if tz:
+            tz = pytz.timezone(tz)
+        for r in result:
+            if not r.get('allday') and isinstance(r['id'], (basestring)) and tz:
+                master_id = self.browse(int(r['id'].split('-')[0]))
+                master_dst = tz.localize(api_fields.Datetime.from_string(master_id.start_datetime)).dst()
+                current_dst = tz.localize(datetime.strptime(r['id'].split('-')[1], '%Y%m%d%H%M%S')).dst()
+                if master_dst and not current_dst:
+                    delta = timedelta(hours=1)
+                elif not master_dst and current_dst:
+                    delta = timedelta(hours=-1)
+                else:
+                    delta = False
+                if delta:
+                    for f in ['start', 'stop', 'start_datetime', 'stop_datetime']:
+                        if f in r and r[f]:
+                            r[f] = api_fields.Datetime.to_string(api_fields.Datetime.from_string(r[f]) + delta)
+
         return result
 
     @api.multi
