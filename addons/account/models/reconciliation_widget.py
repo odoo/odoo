@@ -82,18 +82,12 @@ class AccountReconciliation(models.AbstractModel):
         query = '''
             SELECT
                 st_line.id                          AS id,
-                partner.id                          AS partner_id
+                COALESCE(p1.id,p2.id,p3.id)         AS partner_id
             FROM account_bank_statement_line st_line
             LEFT JOIN res_partner_bank bank         ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number
-            LEFT JOIN res_partner partner           ON (
-                CASE WHEN st_line.partner_id IS NOT NULL THEN
-                    partner.id = st_line.partner_id
-                WHEN bank.partner_id IS NOT NULL THEN
-                    partner.id = bank.partner_id
-                ELSE
-                    partner.name ILIKE st_line.partner_name
-                END
-            )
+            LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id
+            LEFT JOIN res_partner p2 ON bank.partner_id=p2.id
+            LEFT JOIN res_partner p3 ON p3.name ILIKE st_line.partner_name
             WHERE st_line.id IN %s
         '''
         params = [tuple(st_lines.ids)]
