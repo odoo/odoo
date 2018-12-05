@@ -77,7 +77,7 @@ class WebsiteEventTrackController(http.Controller):
         event = event.with_context(tz=event.date_tz or 'UTC')
         local_tz = pytz.timezone(event.date_tz or 'UTC')
         days_tracks = collections.defaultdict(lambda: [])
-        for track in event.track_ids.sorted(lambda track: (track.date or '', bool(track.location_id))):
+        for track in event.track_ids.sorted(lambda track: (bool(track.date), track.date, bool(track.location_id))):
             if not track.date:
                 continue
             date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
