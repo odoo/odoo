@@ -239,7 +239,7 @@
         <td class="cell_action"><span class="fa fa-add-remove" role="img" aria-label="Set" title="Set"/></td>
         <td class="cell_account_code"><t t-esc="line.account_code"/></td>
         <td class="cell_due_date">
-            <t t-if="typeof(line.id) != 'number'">
+            <t t-if="typeof(line.id) != 'number' &amp;&amp; line.amount">
                 <span class="badge badge-secondary">New</span>
             </t>
             <t t-else="" t-esc="line.date_maturity === false ? line.date : line.date_maturity"/>
