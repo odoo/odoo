@@ -23,7 +23,7 @@ class FleetVehicle(models.Model):
     license_plate = fields.Char(track_visibility="onchange",
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
-    driver_id = fields.Many2one('res.partner', 'Driver', track_visibility="onchange", help='Driver of the vehicle', copy=False)
+    driver_id = fields.Many2one('res.partner', 'Driver', track_visibility="onchange", help='Driver of the vehicle', copy=False, auto_join=True)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         track_visibility="onchange", required=True, help='Model of the vehicle')
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
@@ -229,12 +229,7 @@ class FleetVehicle(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         domain = args or []
-        domain = expression.AND([domain, [('name', operator, name)]])
-        # we don't want to override the domain's filter on driver_id if present
-        if not any(['driver_id' in element for element in domain]):
-            partner_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=name_get_uid)
-            if partner_ids:
-                domain = expression.OR([domain, ['|', ('driver_id', 'in', partner_ids), ('driver_id', '=', False)]])
+        domain = expression.AND([domain, ['|', ('name', operator, name), ('driver_id.name', operator, name)]])
         rec = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
         return self.browse(rec).name_get()
 
