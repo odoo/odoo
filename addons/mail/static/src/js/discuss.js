@@ -1024,7 +1024,8 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             .on('update_dm_presence', this, this._onUpdateDmPresence)
             .on('activity_updated', this, this._onActivityUpdated)
             .on('update_moderation_counter', this, this._onUpdateModerationCounter)
-            .on('update_typing_partners', this, this._onTypingPartnersUpdated);
+            .on('update_typing_partners', this, this._onTypingPartnersUpdated)
+            .on('update_channel', this, this._onUpdateChannel);
     },
     /**
      * @private
@@ -1591,6 +1592,16 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _onUnstarAllClicked: function () {
         this.call('mail_service', 'unstarAll');
+    },
+    /**
+     * @private
+     * @param {integer} channelID
+     */
+    _onUpdateChannel: function (channelID) {
+        if (this._thread.getID() !== channelID) {
+            return;
+        }
+        this._fetchAndRenderThread();
     },
     /**
      * @private

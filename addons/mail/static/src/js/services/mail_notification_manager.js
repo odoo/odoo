@@ -56,9 +56,31 @@ MailManager.include({
     _handleChannelNotification: function (params) {
         if (params.data && params.data.info === 'typing_status') {
             this._handleChannelTypingNotification(params.channelID, params.data);
+        } else if (params.data && params.data.info === 'channel_fetched') {
+            this._handleChannelFetchedNotification(params.channelID, params.data);
+        } else if (params.data && params.data.info === 'channel_seen') {
+            this._handleChannelSeenNotification(params.channelID, params.data);
         } else {
             this._handleChannelMessageNotification(params.data);
         }
+    },
+    /**
+     * Called when a channel has been fetched, and the server responses with the
+     * last message fetched. Useful in order to track last message fetched.
+     *
+     * @private
+     * @param {integer} channelID
+     * @param {Object} data
+     * @param {string} data.info 'channel_fetched'
+     * @param {integer} data.last_message_id
+     * @param {integer} data.partner_id
+     */
+    _handleChannelFetchedNotification: function (channelID, data) {
+        var channel = this.getChannel(channelID);
+        if (!channel) {
+            return;
+        }
+        channel.updateSeenPartnersInfo(data);
     },
     /**
      * Called when a new or updated message is received on a channel
@@ -87,6 +109,31 @@ MailManager.include({
                 incrementUnread: channelAlreadyInCache
             });
         });
+    },
+    /**
+     * Called when a channel has been seen, and the server responses with the
+     * last message seen. Useful in order to track last message seen.
+     *
+     * @private
+     * @param {integer} channelID
+     * @param {Object} data
+     * @param {string} data.info 'channel_seen'
+     * @param {integer} data.last_message_id
+     * @param {integer} data.partner_id
+     */
+    _handleChannelSeenNotification: function (channelID, data) {
+        var channel = this.getChannel(channelID);
+        if (!channel) {
+            return;
+        }
+        channel.updateSeenPartnersInfo(data);
+        if (session.partner_id !== data.partner_id) {
+            return;
+        }
+        channel.setLastSeenMessageID(data.last_message_id);
+        if (channel.hasUnreadMessages()) {
+            channel.resetUnreadCounter();
+        }
     },
     /**
      * Called when someone starts or stops typing a message in a channel
@@ -149,25 +196,6 @@ MailManager.include({
      */
     _handlePartnerActivityUpdateNotification: function (data) {
         this._mailBus.trigger('activity_updated', data);
-    },
-    /**
-     * Called when a channel has been seen, and the server responses with the
-     * last message seen. Useful in order to track last message seen.
-     *
-     * @private
-     * @param {Object} data
-     * @param {integer} data.id ID of a channel
-     * @param {integer} [data.last_message_id] mandatory if 'id' refers to an
-     *      existing channel.
-     */
-    _handlePartnerChannelSeenNotification: function (data) {
-        var channel = this.getChannel(data.id);
-        if (channel) {
-            channel.setLastSeenMessageID(data.last_message_id);
-            if (channel.hasUnreadMessages()) {
-                channel.resetUnreadCounter();
-            }
-        }
     },
     /**
      * Called when receiving a channel state as a partner notification:
@@ -351,8 +379,6 @@ MailManager.include({
             this._handlePartnerMessageAuthorNotification(data);
         } else if (data.type === 'deletion') {
             this._handlePartnerMessageDeletionNotification(data);
-        } else if (data.info === 'channel_seen') {
-            this._handlePartnerChannelSeenNotification(data);
         } else if (data.info === 'transient_message') {
             this._handlePartnerTransientMessageNotification(data);
         } else if (data.type === 'activity_updated') {
