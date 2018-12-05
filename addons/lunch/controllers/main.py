@@ -17,6 +17,7 @@ class LunchController(http.Controller):
             'userimage': '/web/image?model=res.users&id=%s&field=image_small' % user.id,
             'is_manager': request.env.user.has_group('lunch.group_lunch_manager'),
             'users': request.env['res.users'].search_read([('groups_id', 'not in', [request.env.ref('base.group_portal').id])], ['name']),
+            'alerts': request.env['lunch.alert'].search_read([('available_today', '=', True)], ['message'])
         }
 
         order = self._get_current_order(user.id)

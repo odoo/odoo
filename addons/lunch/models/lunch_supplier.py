@@ -49,6 +49,9 @@ class LunchSupplier(models.Model):
 
     vat = fields.Char(related='partner_id.vat')
 
+    responsible_id = fields.Many2one('res.users', string="Responsible", domain=lambda self: [('groups_id', 'in', self.env.ref('lunch.group_lunch_manager').id)],
+                                 help="This is used to set a responsible for this particular vendor")
+
     image = fields.Binary(related='partner_id.image', readonly=False)
     image_medium = fields.Binary(related='partner_id.image_medium', readonly=False)
     image_small = fields.Binary(related='partner_id.image_small', readonly=False)
@@ -60,17 +63,17 @@ class LunchSupplier(models.Model):
     automatic_email_send = fields.Boolean('Automatic Email Sending')
     automatic_email_time = fields.Float('Hour')
 
-    recurrency = fields.Selection([('once', 'Specific Day'), ('reccurent', 'Reccurent')], 'Recurrency', default='once')
-    recurrency_from = fields.Float('From')
-    recurrency_to = fields.Float('To')
+    recurrency = fields.Selection([('once', 'Specific Day'), ('reccurent', 'Reccurent')], 'Recurrency', default='reccurent')
+    recurrency_from = fields.Float('From', default=7)
+    recurrency_to = fields.Float('To', default=23)
     recurrency_date = fields.Date('Day', default=fields.Date.today())
     recurrency_date_from = fields.Datetime('from', compute='_compute_recurrency_date_from', store=True)
     recurrency_date_to = fields.Datetime('to', compute='_compute_recurrency_date_to', store=True)
-    recurrency_monday = fields.Boolean('Monday')
-    recurrency_tuesday = fields.Boolean('Tuesday')
-    recurrency_wednesday = fields.Boolean('Wednesday')
-    recurrency_thursday = fields.Boolean('Thursday')
-    recurrency_friday = fields.Boolean('Friday')
+    recurrency_monday = fields.Boolean('Monday', default=True)
+    recurrency_tuesday = fields.Boolean('Tuesday', default=True)
+    recurrency_wednesday = fields.Boolean('Wednesday', default=True)
+    recurrency_thursday = fields.Boolean('Thursday', default=True)
+    recurrency_friday = fields.Boolean('Friday', default=True)
     recurrency_saturday = fields.Boolean('Saturday')
     recurrency_sunday = fields.Boolean('Sunday')
 
@@ -142,7 +145,7 @@ class LunchSupplier(models.Model):
             time_to = float_to_time(supplier.recurrency_to)
 
             if supplier.recurrency == 'once':
-                supplier.available_today = (supplier.reccurrency_date_from <= now <= supplier.reccurrency_date_to)
+                supplier.available_today = (supplier.recurrency_date_from <= now <= supplier.recurrency_date_to)
             else:
                 fieldname = 'recurrency_%s' % (WEEKDAY_TO_NAME[now.weekday()])
                 supplier.available_today = supplier[fieldname] and (time_from <= now.time() <= time_to)
