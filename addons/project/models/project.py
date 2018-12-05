@@ -67,9 +67,10 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'rating.parent.mixin']
     _order = "sequence, name, id"
     _period_number = 5
+    _rating_satisfaction_days = False  # takes all existing ratings
 
     def get_alias_model_name(self, vals):
         return vals.get('alias_model', 'project.task')
@@ -221,9 +222,6 @@ class Project(models.Model):
         help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
 
     # rating fields
-    percentage_satisfaction_task = fields.Integer(
-        compute='_compute_percentage_satisfaction_task', string="Happy % on Task", help="Satisfaction rate on task.", store=True, default=-1)
-    percentage_satisfaction_project = fields.Integer(compute="_compute_percentage_satisfaction_project", string="Happy % on Project", help="Satisfaction rate on project.", store=True, default=-1)
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
     rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer(s) Ratings', help="How to get customer feedback?\n"
                     "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
@@ -250,20 +248,6 @@ class Project(models.Model):
         for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
             project.access_warning = _(
                 "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
-
-    @api.depends('percentage_satisfaction_task')
-    def _compute_percentage_satisfaction_project(self):
-        domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
-        for project in self:
-            activity = project.tasks.rating_get_grades(domain)
-            project.percentage_satisfaction_project = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
-
-    #TODO JEM: Only one field can be kept since project only contains task
-    @api.depends('tasks.rating_ids.rating')
-    def _compute_percentage_satisfaction_task(self):
-        for project in self:
-            activity = project.tasks.rating_get_grades()
-            project.percentage_satisfaction_task = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
 
     @api.depends('rating_status', 'rating_status_period')
     def _compute_rating_request_deadline(self):
@@ -956,7 +940,7 @@ class Task(models.Model):
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="project.mt_task_rating")
 
-    def rating_get_parent(self):
+    def _rating_get_parent_field_name(self):
         return 'project_id'
 
 
