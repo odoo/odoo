@@ -12,6 +12,8 @@ var DMChat = TwoUserChannel.extend({
      * @override
      * @param {Object} params
      * @param {Object} params.data
+     * @param {string|undefined} [params.custom_channel_name] if set, use this
+     *   custom name for this DM
      * @param {Object[]} params.data.direct_partner
      * @param {integer} params.data.direct_partner[0].id
      * @param {string} params.data.direct_partner[0].im_status
@@ -23,7 +25,7 @@ var DMChat = TwoUserChannel.extend({
         var data = params.data;
 
         this._directPartnerID = data.direct_partner[0].id;
-        this._name = data.direct_partner[0].name;
+        this._name = data.custom_channel_name || data.direct_partner[0].name;
         this._status = data.direct_partner[0].im_status;
         this._type = 'dm_chat';
     },

@@ -271,6 +271,14 @@ var Thread = AbstractThread.extend(ServicesMixin, {
     markAsPreviewed: function () {
         this._previewed = true;
     },
+    /**
+     * Set the name of this thread
+     *
+     * @param {string} newName
+     */
+    setName: function (newName) {
+        this._name = newName;
+    },
 
     //--------------------------------------------------------------------------
     // Private
