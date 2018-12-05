@@ -37,6 +37,9 @@ class TestSupplier(TestsCommon):
             self.env['lunch.supplier'].invalidate_cache(['available_today'], [self.supplier_pizza_inn.id])
 
     def test_search_available_today(self):
+        '''
+            This test checks that _search_available_today returns a valid domain
+        '''
         Supplier = self.env['lunch.supplier']
 
         tests = [(self.monday_3am, 3.0, 'monday'), (self.monday_10am, 10.0, 'monday'),
@@ -44,6 +47,7 @@ class TestSupplier(TestsCommon):
                  (self.saturday_3am, 3.0, 'saturday'), (self.saturday_10am, 10.0, 'saturday'),
                  (self.saturday_1pm, 13.0, 'saturday'), (self.saturday_8pm, 20.0, 'saturday')]
 
+        # It should return an empty domain if we compare to values other than datetime
         assert Supplier._search_available_today('>', 7) == []
         assert Supplier._search_available_today('>', True) == []
 
@@ -53,6 +57,7 @@ class TestSupplier(TestsCommon):
                     ('recurrency_date_to', '>=', value), '&', '&', ('recurrency_%s' % (dayname), '=', True),
                     ('recurrency_from', '<=', rvalue), ('recurrency_to', '>=', rvalue)], 'Wrong domain generated for values (%s, %s)' % (value, rvalue)
 
+        with patch.object(fields.Datetime, 'now', return_value=self.monday_10am) as _:
             assert self.supplier_pizza_inn in Supplier.search([('available_today', '=', True)])
 
     def test_auto_email_send(self):
