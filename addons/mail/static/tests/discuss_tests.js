@@ -906,6 +906,10 @@ QUnit.test('confirm dialog when administrator leave (not chat) channel', functio
     })
     .then(function (discuss) {
         // Unsubscribe on MyChannel as administrator
+        // The unpin icon is only shown when hovering on sidebar item.
+        // helpter dom.click needs the element to be visible, hence the
+        // hack on display of this icon.
+        discuss.$('.o_mail_partner_unpin').css('display', 'block');
         testUtils.dom.click(discuss.$('.o_mail_partner_unpin'));
 
         assert.strictEqual($('.modal-dialog').length, 1,

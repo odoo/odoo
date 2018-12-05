@@ -54,7 +54,6 @@ QUnit.module('Discuss (Typing Notifications)', {
         this.patch();
 
         // Frequently used data for tests
-        this.generalChannelID = 1;
         this.myName = "Myself";
         this.myPartnerID = 30;
 
@@ -62,7 +61,7 @@ QUnit.module('Discuss (Typing Notifications)', {
             initMessaging: {
                 channel_slots: {
                     channel_channel: [{
-                        id: this.generalChannelID,
+                        id: 1,
                         channel_type: "channel",
                         name: "general",
                     }],
@@ -114,10 +113,10 @@ QUnit.module('Discuss (Typing Notifications)', {
                 records: [{
                     author_id: [this.myPartnerID, this.myName],
                     body: "<p>first message</p>",
-                    channel_ids: [this.generalChannelID],
+                    channel_ids: [1],
                     id: 100,
                     model: 'mail.channel',
-                    res_id: this.generalChannelID,
+                    res_id: 1,
                 }],
             },
         };
@@ -158,7 +157,6 @@ QUnit.test('notify is typing', function (assert) {
     assert.expect(11);
     var done = assert.async();
 
-    var self = this;
     // this is to track the step that we are testing in the `notify_typing`
     // mocked RPC
     var step = 1;
@@ -175,13 +173,13 @@ QUnit.test('notify is typing', function (assert) {
                 var channelID = args.args[0];
                 if (step === 1) {
                     // user notify that he is typing
-                    assert.strictEqual(channelID, self.generalChannelID,
+                    assert.strictEqual(channelID, 1,
                         "should send a typing notification on general channel");
                     assert.strictEqual(args.kwargs.is_typing, true,
                         "should send a currently typing notification");
                     step++;
                 } else if (step === 2) {
-                    assert.strictEqual(channelID, self.generalChannelID,
+                    assert.strictEqual(channelID, 1,
                         "should send a typing notification on general channel");
                     assert.strictEqual(args.kwargs.is_typing, false,
                         "should send a stopped typing notification");
@@ -224,12 +222,9 @@ QUnit.test('notify is typing', function (assert) {
 });
 
 QUnit.test('receive is typing notification', function (assert) {
-    assert.expect(7);
-    var done = assert.async();
+    assert.expect(10);
 
     var self = this;
-    var fetchListenersDef = $.Deferred();
-
     createDiscuss({
         id: 1,
         context: {},
@@ -240,7 +235,6 @@ QUnit.test('receive is typing notification', function (assert) {
             // when receiving an 'is typing' notification, fetch the list of
             // members of this channel if we haven't done yet.
             if (args.method === 'channel_fetch_listeners') {
-                fetchListenersDef.resolve();
                 return $.when([
                     { id: self.myPartnerID, name: self.myName },
                     { id: 42, name: "Someone" },
@@ -257,49 +251,58 @@ QUnit.test('receive is typing notification', function (assert) {
         assert.hasAttrValue($general, 'title', 'general',
             "should have the title 'general'");
 
+        // pick 1st composer (basic), not 2nd composer (extended, hidden)
+        var $composer = discuss.$('.o_thread_composer').first();
+
         // click on general
         testUtils.dom.click($general);
-        assert.containsOnce(discuss, '.o_thread_typing_notification_bar',
-                "there should be a typing notification bar on the thread");
-        assert.isNotVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be hidden by default");
+        assert.containsNone($general, '.o_mail_thread_typing_icon',
+            "should no longer show someone is typing in sidebar of discuss");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(), "",
+            "should no longer show someone is typing on the composer of active thread");
 
         self.simulateIsTyping({
-            channelID: self.generalChannelID,
+            channelID: 1,
             isTyping: true,
             partnerID: 42,
             widget: discuss,
         });
 
-        fetchListenersDef.then(function () {
-            assert.isVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be visible when someone is typing something");
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "Someone is typing...",
-                "It should display that the other user is typing something");
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.containsOnce($general, '.o_mail_thread_typing_icon',
+            "should have a thread typing icon next to general icon in the sidebar");
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "Someone is typing...",
+            "should show who is typing on hover on this thread typing icon");
+        assert.containsOnce($composer, '.o_composer_thread_typing',
+            "should show typing info on the composer of active thread");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "Someone is typing...",
+            "should show who is typing on the composer of active thread");
 
-            self.simulateIsTyping({
-                channelID: self.generalChannelID,
-                isTyping: false,
-                partnerID: 42,
-                widget: discuss,
-            });
-            assert.isNotVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be hidden when someone stops typing something");
-
-            discuss.destroy();
-            done();
+        self.simulateIsTyping({
+            channelID: 1,
+            isTyping: false,
+            partnerID: 42,
+            widget: discuss,
         });
+
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.containsNone($general, '.o_mail_thread_typing_icon',
+            "should no longer show someone is typing in sidebar of discuss");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(), "",
+            "should no longer show someone is typing on the composer of active thread");
+
+        discuss.destroy();
     });
 });
 
 QUnit.test('receive message of someone that was typing something', function (assert) {
-    assert.expect(4);
-    var done = assert.async();
+    assert.expect(6);
 
     var self = this;
-    var fetchListenersDef = $.Deferred();
-
     createDiscuss({
         id: 1,
         context: {},
@@ -310,7 +313,6 @@ QUnit.test('receive message of someone that was typing something', function (ass
             // when receiving an 'is typing' notification, fetch the list of
             // members of this channel if we haven't done yet.
             if (args.method === 'channel_fetch_listeners') {
-                fetchListenersDef.resolve();
                 return $.when([
                     { id: self.myPartnerID, name: self.myName },
                     { id: 42, name: "Someone" },
@@ -324,51 +326,56 @@ QUnit.test('receive message of someone that was typing something', function (ass
         var $general = discuss.$('.o_mail_discuss_sidebar .o_mail_discuss_item[data-thread-id=1]');
         testUtils.dom.click($general);
 
-        assert.isNotVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be hidden by default");
+        // pick 1st composer (basic), not 2nd composer (extended, hidden)
+        var $composer = discuss.$('.o_thread_composer').first();
 
         self.simulateIsTyping({
-            channelID: self.generalChannelID,
+            channelID: 1,
             isTyping: true,
             partnerID: 42,
             widget: discuss,
         });
 
-        fetchListenersDef.then(function () {
-            assert.isVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be visible when someone is typing something");
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "Someone is typing...",
-                "It should display that the other user is typing something");
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.containsOnce($general, '.o_mail_thread_typing_icon',
+            "should have a thread typing icon next to general icon in the sidebar");
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "Someone is typing...",
+            "should show who is typing on hover on this thread typing icon");
+        assert.containsOnce($composer, '.o_composer_thread_typing',
+            "should show typing info on the composer of active thread");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "Someone is typing...",
+            "should show who is typing on the composer of active thread");
 
-            // Simulate receive message from the person typing something
-            var messageData = {
-                author_id: [42, 'Someone'],
-                body: "<p>test</p>",
-                channel_ids: [self.generalChannelID],
-                id: 101,
-                model: 'mail.channel',
-                res_id: self.generalChannelID,
-            };
-            var notification = [[false, 'mail.channel', self.generalChannelID], messageData];
-            discuss.call('bus_service', 'trigger', 'notification', [notification]);
+        // Simulate receive message from the person typing something
+        var messageData = {
+            author_id: [42, 'Someone'],
+            body: "<p>test</p>",
+            channel_ids: [1],
+            id: 101,
+            model: 'mail.channel',
+            res_id: 1,
+        };
+        var notification = [[false, 'mail.channel', 1], messageData];
+        discuss.call('bus_service', 'trigger', 'notification', [notification]);
 
-            assert.isNotVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be hidden when receiving message from someone that was typing some text");
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.containsNone($general, '.o_mail_thread_typing_icon',
+            "should no longer show someone is typing in sidebar of discuss, after receiving message");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(), "",
+            "should no longer show someone is typing on the composer of active thread, after receiving message");
 
-            discuss.destroy();
-            done();
-        });
+        discuss.destroy();
     });
 });
 
 QUnit.test('do not display myself as typing', function (assert) {
-    assert.expect(3);
-    var done = assert.async();
+    assert.expect(2);
 
     var self = this;
-    var fetchListenersDef = $.Deferred();
-
     createDiscuss({
         id: 1,
         context: {},
@@ -379,7 +386,6 @@ QUnit.test('do not display myself as typing', function (assert) {
             // when receiving an 'is typing' notification, fetch the list of
             // members of this channel if we haven't done yet.
             if (args.method === 'channel_fetch_listeners') {
-                fetchListenersDef.resolve();
                 return $.when([
                     { id: self.myPartnerID, name: self.myName },
                 ]);
@@ -388,29 +394,28 @@ QUnit.test('do not display myself as typing', function (assert) {
         },
         session: { partner_id: this.myPartnerID },
     }).then(function (discuss) {
-        // click on general
+        // click on general channel
         var $general = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
         testUtils.dom.click($general);
-        assert.containsOnce(discuss, '.o_thread_typing_notification_bar',
-                "there should be a typing notification bar on the thread");
-        assert.isNotVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be hidden by default");
+        // pick 1st composer (basic), not 2nd composer (extended, hidden)
+        var $composer = discuss.$('.o_thread_composer').first();
 
         self.simulateIsTyping({
-            channelID: self.generalChannelID,
+            channelID: 1,
             isTyping: true,
             partnerID: self.myPartnerID,
             widget: discuss,
         });
 
-        fetchListenersDef.then(function () {
-            assert.isNotVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should still be hidden when I am typing something");
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.containsNone($general, '.o_mail_thread_typing_icon',
+            "should not show current user is typing in sidebar of discuss");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(), "",
+            "should not show current user is typing on the composer of active thread");
 
-            discuss.destroy();
-            done();
-        });
+        discuss.destroy();
     });
 });
 
@@ -420,12 +425,9 @@ QUnit.test('several users typing something at the same time', function (assert) 
     // have been typing something for the longest time.
     // @see mail.model.ThreadTypingMixin:getTypingMembersToText for the rule
     // applied for displaying the typing notification text.
-    assert.expect(9);
-    var done = assert.async();
+    assert.expect(10);
 
     var self = this;
-    var fetchListenersDef = $.Deferred();
-
     createDiscuss({
         id: 1,
         context: {},
@@ -436,7 +438,6 @@ QUnit.test('several users typing something at the same time', function (assert) 
             // when receiving an 'is typing' notification, fetch the list of
             // members of this channel if we haven't done yet.
             if (args.method === 'channel_fetch_listeners') {
-                fetchListenersDef.resolve();
                 return $.when([
                     { id: self.myPartnerID, name: self.myName },
                     { id: 42, name: "Someone" },
@@ -448,70 +449,85 @@ QUnit.test('several users typing something at the same time', function (assert) 
         },
         session: { partner_id: this.myPartnerID },
     }).then(function (discuss) {
-
+        // click on general channel
         var $general = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
-        assert.strictEqual($general.length, 1,
-            "should have the channel item with id 1");
-        assert.hasAttrValue($general, 'title', 'general',
-            "should have the title 'general'");
 
         // click on general
         testUtils.dom.click($general);
-        assert.containsOnce(discuss, '.o_thread_typing_notification_bar',
-                "there should be a typing notification bar on the thread");
-        assert.isNotVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be hidden by default");
+
+        // pick 1st composer (basic), not 2nd composer (extended, hidden)
+        var $composer = discuss.$('.o_thread_composer').first();
 
         self.simulateIsTyping({
-            channelID: self.generalChannelID,
+            channelID: 1,
             isTyping: true,
             partnerID: 42,
             widget: discuss,
         });
 
-        fetchListenersDef.then(function () {
-            assert.isVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be visible when someone is typing something");
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "Someone is typing...",
-                "It should display that the other user is typing something");
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.containsOnce($general, '.o_mail_thread_typing_icon',
+            "should have a thread typing icon next to general icon in the sidebar");
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "Someone is typing...",
+            "should show someone is typing on hover on this thread typing icon");
+        assert.containsOnce($composer, '.o_composer_thread_typing',
+            "should show typing info on the composer of active thread");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "Someone is typing...",
+            "should show someone is typing on the composer of active thread");
 
-            self.simulateIsTyping({
-                channelID: self.generalChannelID,
-                isTyping: true,
-                partnerID: 43,
-                widget: discuss,
-            });
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "Someone and Anonymous are typing...",
-                "It should display the two users that are typing something");
-
-            self.simulateIsTyping({
-                channelID: self.generalChannelID,
-                isTyping: true,
-                partnerID: 44,
-                widget: discuss,
-            });
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "Someone, Anonymous and more are typing...",
-                "It should display that several users are typing something");
-
-            self.simulateIsTyping({
-                channelID: self.generalChannelID,
-                isTyping: false,
-                partnerID: 42,
-                widget: discuss,
-            });
-
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "Anonymous and Shy Guy are typing...",
-                "It should omit Someone that is typing");
-
-            discuss.destroy();
-            done();
+        self.simulateIsTyping({
+            channelID: 1,
+            isTyping: true,
+            partnerID: 43,
+            widget: discuss,
         });
 
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "Someone and Anonymous are typing...",
+            "should show someone and anonymous are simultaneously typing on hover on this thread typing icon");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "Someone and Anonymous are typing...",
+            "should show someone and anonymous are simultaneously typing on the composer of active thread");
+
+        self.simulateIsTyping({
+            channelID: 1,
+            isTyping: true,
+            partnerID: 44,
+            widget: discuss,
+        });
+
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "Someone, Anonymous and more are typing...",
+            "should show 2 and more users are simultaneously typing on hover on this thread typing icon");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "Someone, Anonymous and more are typing...",
+            "should show 2 and more users are simultaneously typing on the composer of active thread");
+
+        self.simulateIsTyping({
+            channelID: 1,
+            isTyping: false,
+            partnerID: 42,
+            widget: discuss,
+        });
+
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "Anonymous and Shy Guy are typing...",
+            "should no longer show than someone is typing on hover on this thread typing icon");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "Anonymous and Shy Guy are typing...",
+            "should no longer show than someone is typing on the composer of active thread");
+
+        discuss.destroy();
     });
 });
 
@@ -520,12 +536,9 @@ QUnit.test('long typing partner A and in-between short typing partner B', functi
     // Let's suppose that A is typing a very long message. If B types a short
     // and sends it, it should display that B is typing, remove B from display
     // when receiving the message, but still keep A in the typing notification.
-    assert.expect(4);
-    var done = assert.async();
+    assert.expect(8);
 
     var self = this;
-    var fetchListenersDef = $.Deferred();
-
     createDiscuss({
         id: 1,
         context: {},
@@ -536,7 +549,6 @@ QUnit.test('long typing partner A and in-between short typing partner B', functi
             // when receiving an 'is typing' notification, fetch the list of
             // members of this channel if we haven't done yet.
             if (args.method === 'channel_fetch_listeners') {
-                fetchListenersDef.resolve();
                 return $.when([
                     { id: self.myPartnerID, name: self.myName },
                     { id: 42, name: "A" },
@@ -550,52 +562,136 @@ QUnit.test('long typing partner A and in-between short typing partner B', functi
         // click on general channel
         var $general = discuss.$('.o_mail_discuss_sidebar .o_mail_discuss_item[data-thread-id=1]');
         testUtils.dom.click($general);
+        // pick 1st composer (basic), not 2nd composer (extended, hidden)
+        var $composer = discuss.$('.o_thread_composer').first();
 
         self.simulateIsTyping({
-            channelID: self.generalChannelID,
+            channelID: 1,
             isTyping: true,
             partnerID: 42,
             widget: discuss,
         });
 
-        fetchListenersDef.then(function () {
-            assert.isVisible(discuss.$('.o_thread_typing_notification_bar'),
-                "the typing notification bar should be visible when someone is typing something");
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "A is typing...",
-                "It should display that A is typing something");
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.containsOnce($general, '.o_mail_thread_typing_icon',
+            "should have a thread typing icon next to general icon in the sidebar");
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "A is typing...",
+            "should show A is typing on hover on this thread typing icon");
+        assert.containsOnce($composer, '.o_composer_thread_typing',
+            "should show typing info on the composer of active thread");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "A is typing...",
+            "should show A is typing on the composer of active thread");
 
-            self.simulateIsTyping({
-                channelID: self.generalChannelID,
-                isTyping: true,
-                partnerID: 43,
-                widget: discuss,
-            });
-
-            // B comes after A in the display, because A is oldest typing partner.
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "A and B are typing...",
-                "It should display that A and B are typing something");
-
-            // Simulate receive message from B
-            var messageData = {
-                author_id: [43, 'Someone'],
-                body: "<p>test</p>",
-                channel_ids: [self.generalChannelID],
-                id: 101,
-                model: 'mail.channel',
-                res_id: self.generalChannelID,
-            };
-            var notification = [[false, 'mail.channel', self.generalChannelID], messageData];
-            discuss.call('bus_service', 'trigger', 'notification', [notification]);
-
-            assert.strictEqual(discuss.$('.o_thread_typing_notification_bar').text(),
-                "A is typing...",
-                "It should display that A is still typing something");
-
-            discuss.destroy();
-            done();
+        self.simulateIsTyping({
+            channelID: 1,
+            isTyping: true,
+            partnerID: 43,
+            widget: discuss,
         });
+
+        // B comes after A in the display, because A is oldest typing partner.
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "A and B are typing...",
+            "should show A and B are typing on hover on this thread typing icon");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "A and B are typing...",
+            "should show A and B are typing on the composer of active thread");
+
+        // Simulate receive message from B
+        var messageData = {
+            author_id: [43, 'Someone'],
+            body: "<p>test</p>",
+            channel_ids: [1],
+            id: 101,
+            model: 'mail.channel',
+            res_id: 1,
+        };
+        var notification = [[false, 'mail.channel', 1], messageData];
+        discuss.call('bus_service', 'trigger', 'notification', [notification]);
+
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.hasAttrValue($general.find('.o_mail_thread_typing_icon'), 'title',
+            "A is typing...",
+            "should show A is still typing on hover on this thread typing icon");
+        assert.strictEqual($composer.find('.o_composer_thread_typing').text().trim(),
+            "A is typing...",
+            "should show A is still typing on the composer of active thread");
+
+        discuss.destroy();
+    });
+});
+
+QUnit.test('receive is typing notification from unselected thread', function (assert) {
+    assert.expect(7);
+
+    this.data.initMessaging.channel_slots.channel_channel.push({
+        id: 2,
+        channel_type: "channel",
+        name: "other",
+    });
+
+    var self = this;
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            // when receiving an 'is typing' notification, fetch the list of
+            // members of this channel if we haven't done yet.
+            if (args.method === 'channel_fetch_listeners') {
+                return $.when([
+                    { id: self.myPartnerID, name: self.myName },
+                    { id: 42, name: "Someone" },
+                ]);
+            }
+            return this._super.apply(this, arguments);
+        },
+        session: { partner_id: this.myPartnerID },
+    }).then(function (discuss) {
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+        var $other = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=2]');
+        assert.strictEqual($general.length, 1,
+            "should have the channel item with id 1");
+        assert.hasAttrValue($general, 'title', 'general',
+            "should have the title 'general'");
+        assert.strictEqual($other.length, 1,
+            "should have the channel item with id 2");
+        assert.hasAttrValue($other, 'title', 'other',
+            "should have the title 'other'");
+
+        // click on general
+        testUtils.dom.click($general);
+
+        assert.containsNone($general, '.o_mail_thread_typing_icon',
+            "should no longer show someone is typing in sidebar of discuss");
+
+        self.simulateIsTyping({
+            channelID: 2,
+            isTyping: true,
+            partnerID: 42,
+            widget: discuss,
+        });
+
+        $general = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+        $other = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=2]');
+        assert.containsNone($general, '.o_mail_thread_typing_icon',
+            "should not have a thread typing icon next to general icon in the sidebar");
+        assert.containsOnce($other, '.o_mail_thread_typing_icon',
+            "should have a thread typing icon next to other icon in the sidebar");
+
+        discuss.destroy();
     });
 });
 
