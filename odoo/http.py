@@ -1539,6 +1539,13 @@ def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
     h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
     d, _, r = h.partition('.')
+
+    db_dict = json.loads(odoo.tools.config.get("db_filter_multi", "{}"))
+    if isinstance(db_dict, dict) and h in db_dict:
+        ndbs = [i for d in db_dict[h] for i in dbs if re.match(d, i)]
+        ndbs = sorted(list(set(ndbs)))
+        return ndbs
+
     if d == "www" and r:
         d = r.partition('.')[0]
     if odoo.tools.config['dbfilter']:
