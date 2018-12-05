@@ -592,7 +592,7 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
     this.data.initMessaging.channel_slots.channel_channel[0].message_unread_counter = 1;
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
@@ -633,7 +633,7 @@ QUnit.test("messaging menu widget: preview with no message should be undated", f
     this.data['mail.message'].records[0].channel_ids = [];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
@@ -664,7 +664,7 @@ QUnit.test("messaging menu widget: sort dated previews before undated previews",
     this.data.initMessaging.channel_slots.direct_message = [dm];
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
     });
@@ -752,7 +752,7 @@ QUnit.test('global counter with channel previews', function (assert) {
     this.data['mail.message'].records = messages;
 
     var messagingMenu = new MessagingMenu();
-    testUtils.addMockEnvironment(messagingMenu, {
+    testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
         session: {
