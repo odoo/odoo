@@ -60,6 +60,13 @@ Discuss.include({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @private
+     */
+    _initThreads: function () {
+        return this._updateThreads();
+    },
+    /**
      * @private
      * @returns {Boolean} true iff we currently are in the Inbox tab
      */

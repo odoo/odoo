@@ -4,12 +4,19 @@ odoo.define('im_livechat.Discuss', function (require) {
 var Discuss = require('mail.Discuss');
 
 Discuss.include({
-    _renderSidebar: function (options) {
-        // Override to sort livechat threads by last message's date
-        var threadPartition = _.partition(options.threads, function (thread) {
-            return thread.getType() === 'livechat';
+    /**
+     * Override to sort livechats by last message's date
+     *
+     * @override
+     * @private
+     * @param {mail.model.Channel[]} channels
+     * @returns {mail.model.Channel[]}
+     */
+    _sortChannels: function (channels) {
+        var partition = _.partition(channels, function (channel) {
+            return channel.getType() === 'livechat';
         });
-        threadPartition[0].sort(function (c1, c2) {
+        partition[0].sort(function (c1, c2) {
             if (!c1.hasMessages()) {
                 return -1;
             } else if (!c2.hasMessages()) {
@@ -17,8 +24,8 @@ Discuss.include({
             }
             return c2.getLastMessage().getDate().diff(c1.getLastMessage().getDate());
         });
-        options.threads = threadPartition[0].concat(threadPartition[1]);
-        return this._super(options);
+        channels = partition[0].concat(partition[1]);
+        return this._super(channels);
     },
 });
 
