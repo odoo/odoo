@@ -492,7 +492,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         var self = this;
         var $sidebar = this._renderSidebar();
         this.$('.o_mail_discuss_sidebar').html($sidebar.contents());
-        _.each(['dm_chat', 'public', 'private'], function (type) {
+        _.each(['dm_chat', 'multi_user_channel'], function (type) {
             var $input = self.$('.o_mail_add_thread[data-type=' + type + '] input');
             self._prepareAddThreadInput($input, type);
         });
@@ -573,30 +573,42 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      *
      * @private
      * @param {JQuery} $input the input to prepare
-     * @param {string} type the type of thread to create ('dm_chat', 'public' or
-     *   'private' channel)
+     * @param {string} type the type of thread to create ('dm_chat',
+     *   'multi_user_channel')
      */
     _prepareAddThreadInput: function ($input, type) {
         var self = this;
-        if (type === 'public') {
+        if (type === 'multi_user_channel') {
             $input.autocomplete({
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
                     self._searchChannel(self._lastSearchVal).done(function (result){
                         result.push({
                             label:  _.str.sprintf(
-                                        '<strong>' + _t("Create %s") + '</strong>',
+                                        '<strong>' + _t("Create %s (Public)") + '</strong>',
                                         '<em>"#' + self._lastSearchVal + '"</em>'
                             ),
-                            value: '_create',
+                            value: self._lastSearchVal,
+                            special: 'public',
+                        }, {
+                            label:  _.str.sprintf(
+                                        '<strong>' + _t("Create %s (Private)") + '</strong>',
+                                        '<em>"#' + self._lastSearchVal + '"</em>'
+                            ),
+                            value: self._lastSearchVal,
+                            special: 'private',
                         });
                         response(result);
                     });
                 },
                 select: function (ev, ui) {
                     if (self._lastSearchVal) {
-                        if (ui.item.value === '_create') {
-                            self.call('mail_service', 'createChannel', self._lastSearchVal, 'public');
+                        if (ui.item.special) {
+                            if (ui.item.special === 'public') {
+                                self.call('mail_service', 'createChannel', self._lastSearchVal, 'public');
+                            } else {
+                                self.call('mail_service', 'createChannel', self._lastSearchVal, 'private');
+                            }
                         } else {
                             self.call( 'mail_service', 'joinChannel', ui.item.id);
                         }
@@ -606,13 +618,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                     ev.preventDefault();
                 },
                 html: true,
-            });
-        } else if (type === 'private') {
-            $input.on('keyup', this, function (ev) {
-                var name = _.escape($(ev.target).val());
-                if (ev.which === $.ui.keyCode.ENTER && name) {
-                    self.call('mail_service', 'createChannel', name, 'private');
-                }
             });
         } else if (type === 'dm_chat') {
             $input.autocomplete({
