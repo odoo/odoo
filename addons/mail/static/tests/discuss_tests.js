@@ -1223,5 +1223,120 @@ QUnit.test('reply to message from inbox', function (assert) {
     });
 });
 
+QUnit.test('no quick search channels in the sidebar with less than 20 channels', function (assert) {
+    assert.expect(3);
+    var done = assert.async();
+
+    var channelsData = [];
+    _.each(_.range(0, 19), function (num) {
+        channelsData.push({
+            id: num,
+            channel_type: "channel",
+            name: "Channel" + num,
+        });
+    });
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: channelsData,
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        var $sidebar = discuss.$('.o_mail_discuss_sidebar');
+
+        var $channelsSidebar = $sidebar.find('.o_mail_discuss_sidebar_channels');
+        assert.strictEqual($channelsSidebar.length, 1,
+            "should show channels and dms in sidebar");
+        assert.strictEqual($channelsSidebar.find('.o_mail_discuss_item').length, 19,
+            "should show 19 channels in sidebar");
+        assert.strictEqual(discuss.$('.o_discuss_sidebar_quick_search').length, 0,
+            "should not display a quick search");
+
+        discuss.destroy();
+        done();
+    });
+});
+
+QUnit.test('quick search channels in the sidebar with more than 20 channels', function (assert) {
+    assert.expect(7);
+    var done = assert.async();
+
+    var channelsData = [];
+    var channelANum = 15;
+    _.each(_.range(0, channelANum), function (num) {
+        var channel = {
+            id: num,
+            channel_type: "channel",
+            name: "ChannelA" + num,
+        };
+        channelsData.push(channel);
+    });
+    var channelBNum = 5;
+    _.each(_.range(0, channelBNum), function (num) {
+        var channel = {
+            id: channelANum + num,
+            channel_type: "channel",
+            name: "ChannelB" + num,
+        };
+        channelsData.push(channel);
+    });
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: channelsData,
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        var $sidebar = discuss.$('.o_mail_discuss_sidebar');
+
+        var $channelsSidebar = $sidebar.find('.o_mail_discuss_sidebar_channels');
+        assert.strictEqual($channelsSidebar.length, 1,
+            "should show channels in sidebar");
+        assert.strictEqual($channelsSidebar.find('.o_mail_discuss_item').length, 20,
+            "should show 20 channels in sidebar");
+        assert.strictEqual(discuss.$('.o_discuss_sidebar_quick_search').length, 1,
+            "should display a quick search");
+
+        discuss.$('.o_discuss_sidebar_quick_search input').val('channelA').trigger('input');
+        $channelsSidebar = $sidebar.find('.o_mail_discuss_sidebar_channels');
+        assert.strictEqual($channelsSidebar.find('.o_mail_discuss_item').length, 15,
+            "should now show 15 channels in sidebar");
+
+        discuss.$('.o_discuss_sidebar_quick_search input').val('channelB').trigger('input');
+
+        $channelsSidebar = $sidebar.find('.o_mail_discuss_sidebar_channels');
+        assert.strictEqual($channelsSidebar.find('.o_mail_discuss_item').length, 5,
+            "should now show 5 channels in sidebar");
+
+        discuss.$('.o_discuss_sidebar_quick_search input').val('channelB4').trigger('input');
+
+        $channelsSidebar = $sidebar.find('.o_mail_discuss_sidebar_channels');
+        assert.strictEqual($channelsSidebar.find('.o_mail_discuss_item').length, 1,
+            "should now show a single channel in sidebar");
+        assert.strictEqual($channelsSidebar.find('.o_thread_name').text().replace(/\s/g, ''),
+            '#ChannelB4',
+            "should have searched the correct channel B4");
+
+        discuss.destroy();
+        done();
+    });
+});
+
 });
 });

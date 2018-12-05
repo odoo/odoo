@@ -189,11 +189,13 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         'keydown': '_onKeydown',
         'click .o_mail_open_channels': '_onPublicChannelsClick',
         'click .o_mail_partner_unpin': '_onUnpinChannel',
+        'input .o_discuss_sidebar_quick_search input': '_onInputSidebarQuickSearchInput',
     },
-
     /**
      * @override
      * @param {Object} [options]
+     * @param {integer} [options.channelQuickSearchThreshold=20] amount of
+     *   channels (dm inluded) for which a quick search appears in the sidebar.
      */
     init: function (parent, action, options) {
         this._super.apply(this, arguments);
@@ -203,6 +205,10 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.dataset = new data.DataSetSearch(this, 'mail.message');
         this.domain = [];
         this.options = options || {};
+
+        if (!('channelQuickSearchThreshold' in this.options)) {
+            this.options.channelQuickSearchThreshold = 20;
+        }
 
         this._threadsScrolltop = {};
         this._composerStates = {};
@@ -266,7 +272,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                 return self.alive(self._setThread(self._defaultThreadID));
             })
             .then(function () {
-                self._updateThreads();
+                self._initThreads();
                 self._startListening();
                 self._threadWidget.$el.on('scroll', null, _.debounce(function () {
                     if (
@@ -478,6 +484,20 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         }
      },
     /**
+     * Renders the mainside bar with current threads
+     *
+     * @private
+     */
+    _initThreads: function () {
+        var self = this;
+        var $sidebar = this._renderSidebar();
+        this.$('.o_mail_discuss_sidebar').html($sidebar.contents());
+        _.each(['dm_chat', 'public', 'private'], function (type) {
+            var $input = self.$('.o_mail_add_thread[data-type=' + type + '] input');
+            self._prepareAddThreadInput($input, type);
+        });
+    },
+    /**
      * Ensures that enough messages have been loaded to fill the entire screen
      * (this is particularily important because remaining messages can only be
      * loaded when scrolling to the top, so they can't be loaded if there is no
@@ -674,23 +694,58 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * Render the sidebar of discuss app
      *
      * @private
-     * @param {Object} options
-     * @param {mail.model.Thread[]} [options.threads=[]]
      * @returns {jQueryElement}
      */
-    _renderSidebar: function (options) {
-        var inbox = this.call('mail_service', 'getMailbox', 'inbox');
-        var starred = this.call('mail_service', 'getMailbox', 'starred');
-        var moderation = this.call('mail_service', 'getMailbox', 'moderation');
+    _renderSidebar: function () {
+        var channels = this.call('mail_service', 'getChannels');
+        channels = this._sortChannels(channels);
         var $sidebar = $(QWeb.render('mail.discuss.Sidebar', {
             activeThreadID: this._thread ? this._thread.getID() : undefined,
-            threads: options.threads,
-            needactionCounter: inbox.getMailboxCounter(),
-            starredCounter: starred.getMailboxCounter(),
-            moderationCounter: moderation ? moderation.getMailboxCounter() : 0,
+            inbox: this.call('mail_service', 'getMailbox', 'inbox'),
+            starred: this.call('mail_service', 'getMailbox', 'starred'),
+            moderation: this.call('mail_service', 'getMailbox', 'moderation'),
+            channels: channels,
             isMyselfModerator: this.call('mail_service', 'isMyselfModerator'),
+            displayQuickSearch: channels.length >= this.options.channelQuickSearchThreshold,
+            options: this.options,
         }));
         return $sidebar;
+    },
+    /**
+     * @private
+     * @param {Object} options
+     * @param {string} [options.searchChannelVal='']
+     */
+    _renderSidebarChannels: function (options) {
+        options.searchChannelVal = options.searchChannelVal || '';
+        var channels = this.call('mail_service', 'getChannels');
+        var searchChannelValLowerCase = options.searchChannelVal.toLowerCase();
+        channels = _.filter(channels, function (channel) {
+            var channelNameLowerCase = channel.getName().toLowerCase();
+            return channelNameLowerCase.indexOf(searchChannelValLowerCase) !== -1;
+        });
+        channels = this._sortChannels(channels);
+        this.$('.o_mail_discuss_sidebar_channels').html(
+            QWeb.render('mail.discuss.SidebarChannels', {
+                activeThreadID: this._thread ? this._thread.getID() : undefined,
+                channels: channels,
+                displayQuickSearch: channels.length >= this.options.channelQuickSearchThreshold,
+            })
+        );
+    },
+    /**
+     * @private
+     */
+    _renderSidebarMailboxes: function () {
+        this.$('.o_mail_discuss_sidebar_mailboxes').html(
+            QWeb.render('mail.discuss.SidebarMailboxes', {
+                activeThreadID: this._thread ? this._thread.getID() : undefined,
+                inbox: this.call('mail_service', 'getMailbox', 'inbox'),
+                starred: this.call('mail_service', 'getMailbox', 'starred'),
+                moderation: this.call('mail_service', 'getMailbox', 'moderation'),
+                isMyselfModerator: this.call('mail_service', 'isMyselfModerator'),
+            })
+        );
     },
     /**
      * @private
@@ -870,6 +925,14 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         });
     },
     /**
+     * @private
+     * @param {mail.model.Channel[]} channels
+     * @returns {mail.model.Channel[]}
+     */
+    _sortChannels: function (channels) {
+        return channels;
+    },
+    /**
      * Binds handlers on mail bus events
      *
      * @private
@@ -882,12 +945,12 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             .on('new_channel', this, this._onNewChannel)
             .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
             .on('unsubscribe_from_channel', this, this._onChannelLeft)
-            .on('update_needaction', this, this._throttledUpdateThreads)
-            .on('update_starred', this, this._throttledUpdateThreads)
-            .on('update_thread_unread_counter', this, this._throttledUpdateThreads)
-            .on('update_dm_presence', this, this._throttledUpdateThreads)
-            .on('activity_updated', this, this._throttledUpdateThreads)
-            .on('update_moderation_counter', this, this._throttledUpdateThreads)
+            .on('update_needaction', this, this._onUpdateNeedaction)
+            .on('update_starred', this, this._onUpdateStarred)
+            .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter)
+            .on('update_dm_presence', this, this._onUpdateDmPresence)
+            .on('activity_updated', this, this._onActivityUpdated)
+            .on('update_moderation_counter', this, this._onUpdateModerationCounter)
             .on('update_typing_partners', this, this._onTypingPartnersUpdated);
     },
     /**
@@ -1095,21 +1158,18 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         }
     },
     /**
-     * Renders the mainside bar with current threads
+     * Re-renders the mainside bar with current threads
      *
      * @private
+     * @param {Object} [options={}]
+     * @param {string} [options.searchChannelVal='']
      */
-    _updateThreads: function () {
+    _updateThreads: function (options) {
         var self = this;
-
-        var $sidebar = this._renderSidebar({
-            threads: _.filter(this.call('mail_service', 'getThreads'), function (thread) {
-                return thread.getType() !== 'document_thread';
-            }),
-        });
-
-        this.$('.o_mail_discuss_sidebar').html($sidebar.contents());
-        _.each(['dm_chat', 'public', 'private'], function (type) {
+        options = options || {};
+        this._renderSidebarMailboxes(options);
+        this._renderSidebarChannels(options);
+        _.each(['dm_chat', 'multi_user_channel'], function (type) {
             var $input = self.$('.o_mail_add_thread[data-type=' + type + '] input');
             self._prepareAddThreadInput($input, type);
         });
@@ -1119,6 +1179,12 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onActivityUpdated: function () {
+        this._throttleUpdateThreads();
+    },
     /**
      * @private
      * @param {MouseEvent} ev
@@ -1181,6 +1247,16 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         ev.preventDefault();
         var threadID = $(ev.currentTarget).data('thread-id');
         this._setThread(threadID);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onInputSidebarQuickSearchInput: function (ev) {
+        ev.preventDefault();
+        this._updateThreads({
+            searchChannelVal: $(ev.currentTarget).val(),
+        });
     },
     /**
      * Invite button is only for channels (not mailboxes)
@@ -1429,6 +1505,12 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.call('mail_service', 'unstarAll');
     },
     /**
+     * @private
+     */
+    _onUpdateDmPresence: function () {
+        this._throttledUpdateThreads();
+    },
+    /**
      * Update the moderation buttons.
      * This is triggered when a moderation checkbox
      * has its checked property changed.
@@ -1437,6 +1519,30 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _onUpdateModerationButtons: function () {
         this._updateModerationButtons();
+    },
+    /**
+     * @private
+     */
+    _onUpdateModerationCounter: function () {
+        this._throttledUpdateThreads();
+    },
+    /**
+     * @private
+     */
+    _onUpdateNeedaction: function () {
+        this._throttledUpdateThreads();
+    },
+    /**
+     * @private
+     */
+    _onUpdateStarred: function () {
+        this._throttledUpdateThreads();
+    },
+    /**
+     * @private
+     */
+    _onUpdateThreadUnreadCounter: function () {
+        this._throttledUpdateThreads();
     },
 });
 
