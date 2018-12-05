@@ -50,7 +50,7 @@ class _Cleaner(clean.Cleaner):
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
         # box model
-        'border', 'border-color', 'border-radius', 'border-style', 'border-width', 'border-top',
+        'border', 'border-color', 'border-radius', 'border-style', 'border-width', 'border-top', 'border-bottom',
         'height', 'width', 'max-width', 'min-width', 'min-height',
         # tables
         'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
