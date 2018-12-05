@@ -211,7 +211,8 @@ class Product(models.Model):
             # difference only if the website price is lower
             price_without_pricelist = p.list_price
             if company_id.currency_id != pricelist.currency_id:
-                price_without_pricelist = company_id.currency_id.compute(price_without_pricelist, pricelist.currency_id)
+                date = fields.Date.today()
+                price_without_pricelist = company_id.currency_id._convert(price_without_pricelist, pricelist.currency_id, company_id, date)
             price_without_pricelist = taxes.compute_all(price_without_pricelist, pricelist.currency_id)[ret]
             p.website_price_difference = True if float_compare(price_without_pricelist, p.website_price, precision_rounding=pricelist.currency_id.rounding) > 0 else False
             p.website_public_price = taxes.compute_all(p2.lst_price, quantity=qty, product=p2, partner=partner)[ret]
