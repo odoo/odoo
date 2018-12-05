@@ -1626,7 +1626,7 @@ QUnit.module('account', {
     QUnit.test('Tax on account receivable', function(assert){
         assert.expect(21);
 
-        delete this.params.data_for_manual_reconciliation_widget['[null,null]'].accounts;
+        this.params.data_for_manual_reconciliation_widget['[null,null]'].accounts = [];
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
             data: this.params.data,
