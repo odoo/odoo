@@ -168,17 +168,6 @@ var DocumentThread = Thread.extend({
         this._mustFetchMessageIDs = false;
         this._messageIDs = messageIDs;
     },
-    /**
-     * Set the name of this document thread
-     *
-     * This is useful if the name of the document related to the document thread
-     * has changed
-     *
-     * @param {string} newName
-     */
-    setName: function (newName) {
-        this._name = newName;
-    },
 
     //--------------------------------------------------------------------------
     // Private

@@ -1398,5 +1398,106 @@ QUnit.test('select emoji replaces cursor position', function (assert) {
     });
 });
 
+QUnit.test('rename DM conversation', function (assert) {
+    assert.expect(11);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_direct_message: [{
+                id: 1,
+                channel_type: "chat",
+                create_uid: 3,
+                direct_partner: [{
+                    id: 7,
+                    im_status: 'online',
+                    name: 'Demo User',
+                }],
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_set_custom_name') {
+                assert.step(args.method);
+                assert.strictEqual(args.args[0], 1);
+                assert.strictEqual(args.kwargs.name, "Demo");
+                return $.when("Demo");
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $dm = discuss.$('.o_mail_discuss_item[data-thread-id=1]');
+        assert.isVisible($dm, "should display DM in the discuss sidebar");
+        assert.strictEqual($dm.find('.o_thread_name').text().trim(), "Demo User");
+
+        // The settings icon is only shown when hovering on sidebar item.
+        // helpter dom.click needs the element to be visible, hence the
+        // hack on display of this icon.
+        discuss.$('.o_mail_channel_settings').css('display', 'block');
+        testUtils.dom.click(discuss.$('.o_mail_channel_settings'));
+
+        assert.isVisible($('.modal-dialog'));
+        assert.strictEqual($('.modal-title').text(), "Rename conversation");
+        assert.isVisible($('.o_mail_discuss_rename_channel_input'));
+        assert.strictEqual($('.o_mail_discuss_rename_channel_input').val(), "Demo User");
+
+        testUtils.fields.editInput($('.o_mail_discuss_rename_channel_input'), "Demo");
+        testUtils.dom.click($('.o_mail_conversation_rename'));
+        $dm = discuss.$('.o_mail_discuss_item[data-thread-id=1]');
+        assert.verifySteps(['channel_set_custom_name']);
+        assert.strictEqual($dm.find('.o_thread_name').text().trim(), "Demo");
+
+        discuss.destroy();
+        done();
+    });
+});
+
+QUnit.test('custom-named DM conversation', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_direct_message: [{
+                id: 1,
+                channel_type: "chat",
+                create_uid: 3,
+                direct_partner: [{
+                    id: 7,
+                    im_status: 'online',
+                    name: 'Demo User',
+                }],
+                custom_channel_name: 'My Buddy',
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+    })
+    .then(function (discuss) {
+        var $dm = discuss.$('.o_mail_discuss_item[data-thread-id=1]');
+        assert.isVisible($dm, "should display DM in the discuss sidebar");
+        assert.strictEqual($dm.find('.o_thread_name').text().trim(), "My Buddy");
+
+        discuss.destroy();
+        done();
+    });
+});
+
 });
 });
