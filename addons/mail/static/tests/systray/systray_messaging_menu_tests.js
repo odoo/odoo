@@ -595,6 +595,7 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
     testUtils.mock.addMockEnvironment(messagingMenu, {
         services: this.services,
         data: this.data,
+        session: { partner_id: 3 },
     });
 
     messagingMenu.appendTo($('#qunit-fixture'));
@@ -609,11 +610,11 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
     // Simulate received channel seen notification
     var message = {
         info: 'channel_seen',
-        id: 1,
         last_message_id: 1,
+        partner_id: 3,
     };
     var notifications = [
-        [['myDB', 'res.partner'], message]
+        [['myDB', 'mail.channel', 1], message]
     ];
     messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
 
