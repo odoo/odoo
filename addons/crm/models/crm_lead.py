@@ -1161,7 +1161,7 @@ class Lead(models.Model):
     def message_get_default_recipients(self):
         return {
             r.id : {'partner_ids': [],
-                    'email_to': r.email_from,
+                    'email_to': r.email_normalized,
                     'email_cc': False}
             for r in self.sudo()
         }
