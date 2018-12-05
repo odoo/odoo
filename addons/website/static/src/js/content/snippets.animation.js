@@ -260,18 +260,18 @@ var Animation = Widget.extend({
      * Extension of @see Widget.events
      *
      * A description of the event handlers to bind/delegate once the widget
-     * has been rendered.
+     * has been rendered::
      *
-     * 'click .hello .world': 'async _onHelloWorldClick',
-     *   _^_      _^_           _^_        _^_
-     *    |        |             |          |
-     *    |  (Optional) jQuery   |  Handler method name
-     *    |  delegate selector   |
-     *    |                      |_ (Optional) space separated options
-     *    |                          * async: use the automatic system
-     *    |_ Event name with           making handlers promise-ready (see
-     *       potential jQuery          makeButtonHandler, makeAsyncHandler)
-     *       namespaces
+     *   'click .hello .world': 'async _onHelloWorldClick',
+     *     _^_      _^_           _^_        _^_
+     *      |        |             |          |
+     *      |  (Optional) jQuery   |  Handler method name
+     *      |  delegate selector   |
+     *      |                      |_ (Optional) space separated options
+     *      |                          * async: use the automatic system
+     *      |_ Event name with           making handlers promise-ready (see
+     *         potential jQuery          makeButtonHandler, makeAsyncHandler)
+     *         namespaces
      *
      * Note: the values may be replaced by a function declaration. This is
      * however a deprecated behavior.

@@ -6,6 +6,7 @@
 # Bohdan Lisnenko, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 # Martin Trigaux, 2018
+# Oleg Pikarevskyi <o@btegri.co>, 2018
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Oleg Pikarevskyi <o@btegri.co>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,12 +84,12 @@ msgid ""
 msgstr ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Відкрита ціна  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Вартість  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Інший прайс-лист  -  </span>"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Інший прайслист  -  </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span class=\"o_form_label\">New Price =</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Нова Ціна =</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -119,7 +120,7 @@ msgstr "<strong>Опис</strong>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr "<strong>Назва прайс-листа</strong>:<br/>"
+msgstr "<strong>Назва прайслиста</strong>:<br/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
@@ -234,8 +235,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
-"Дозволяє використовувати декілька цін в залежності від правил по категоріям клієнтів. \n"
-"Приклад: 10% для роздрібних торгівців, знижка 5 грн. на цей продукт, і т. д."
+"Дозволяє використовувати кілька цін в залежності від правил по категоріям клієнтів. \n"
+"Приклад: 10% для роздрібних торговців, знижка 5 євро на цей товар, і т. д."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -334,7 +335,7 @@ msgstr "Штрих-код"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__barcode
 msgid "Barcode used for packaging identification."
-msgstr "Штрихкод використовується для ідентифікації упаковки."
+msgstr "Штрих-код використовується для ідентифікації пакування."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -420,7 +421,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
 msgid "Child Categories"
-msgstr "Дочірні Категорії"
+msgstr "Дочірні категорії"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -446,7 +447,7 @@ msgstr "Індекс кольору"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Common Product Catalog"
-msgstr "Спільний каталог продукції"
+msgstr "Спільний каталог товару"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -549,7 +550,7 @@ msgstr ""
 "Вартість використовується для складської оцінки вартості за стандартною "
 "ціною та як перша ціна встановлюється в середньому/FIFO. Також "
 "використовується як базова ціна для прайслистів. Виражається в одиниці "
-"виміру товару за замовчуванням."
+"вимірювання товару за замовчуванням."
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -671,8 +672,8 @@ msgstr "За замовчуванням %(currency)s прайслист для %
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Стандартна одиниця вимірювання, що використовується для всіх операцій з "
-"акціями."
+"Стандартна одиниця вимірювання, що використовується для всіх складських "
+"операцій."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -808,7 +809,7 @@ msgstr "Помилка! Не можна вибрати більше одного
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
 msgid "Exclude for"
-msgstr ""
+msgstr "Виключити для"
 
 #. module: product
 #: model:product.category,name:product.cat_expense
@@ -819,7 +820,7 @@ msgstr "Витрати"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
-msgstr "Явне ім'я правила для цього рядка прайс-листа."
+msgstr "Явна назва правила для цього рядка прайслиста."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -861,8 +862,8 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
-"Для правила застосування купується/продана кількість повинна бути більшою або дорівнює мінімальної кількості, зазначеній у цьому полі.\n"
-"Виражається в одиниці виміру за замовчуванням товару."
+"Для правила застосування купленої/проданої кількості повинна бути більшою або дорівнює мінімальній кількості, зазначеній у цьому полі.\n"
+"Виражається в одиниці вимірювання за замовчуванням товару."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -900,7 +901,7 @@ msgstr "Дає порядок послідовності при відображ
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid "Global"
-msgstr "Глобальне"
+msgstr "Загальне"
 
 #. module: product
 #: code:addons/product/models/product_template.py:32
@@ -975,7 +976,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
-"Якщо не вибрано, це дозволить вам приховати прайс-лист без його видалення."
+"Якщо не вибрано, це дозволить вам приховати прайслист без його видалення."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__active
@@ -1216,7 +1217,7 @@ msgstr "Управляйте елементами прайс-листа"
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "Керувати пакуваннями товару"
+msgstr "Керувати пакуванням товару"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -1226,7 +1227,7 @@ msgstr "Керувати варіантами товару"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
-msgstr "Макс. межа"
+msgstr "Макс. маржа"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
@@ -1246,7 +1247,7 @@ msgid ""
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
 msgstr ""
-"Середній розмір зображення товару. Воно автоматично змінюється у вигляді "
+"Середній розмір зображення товару. Він автоматично змінюється у вигляді "
 "зображення 128x128 пікселів зі збереженим форматом, лише якщо зображення "
 "перевищує один із цих розмірів. Використовуйте це поле у вигляді переглядів "
 "або деяких переглядів канбану."
@@ -1266,7 +1267,7 @@ msgstr "Повідомлення"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
-msgstr "Мін. межа"
+msgstr "Мін. маржа"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_min_margin
@@ -1305,7 +1306,7 @@ msgstr "Нова ціна ="
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Наступий дедлайн дії"
+msgstr "Дедлайн наступної дії"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
@@ -1317,7 +1318,7 @@ msgstr "Підсумок наступної дії"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
-msgstr "Наступний тип дії"
+msgstr "Тип наступної дії"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1392,13 +1393,13 @@ msgstr "Інша інформація"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
 #: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
-msgstr "Інший прайс-лист."
+msgstr "Інший прайслист"
 
 #. module: product
 #: selection:product.product,activity_state:0
 #: selection:product.template,activity_state:0
 msgid "Overdue"
-msgstr "Прострочено"
+msgstr "Протерміновано"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
@@ -1485,7 +1486,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist
 #: model_terms:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Price List"
-msgstr "Прайс-лист"
+msgstr "Прайслист"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
@@ -1513,7 +1514,7 @@ msgstr "Ціна:"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list__price_list
 msgid "PriceList"
-msgstr "Прайс-лист"
+msgstr "Прайслист"
 
 #. module: product
 #: model:ir.actions.report,name:product.action_report_pricelist
@@ -1524,18 +1525,18 @@ msgstr "Прайс-лист"
 #: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
-msgstr "Прайс-лист"
+msgstr "Прайслист"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_ids
 msgid "Pricelist Item"
-msgstr "Елемент прайс-листа"
+msgstr "Елемент прайслиста"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr "Вартість пункту, що застосовується до вибраної опції"
+msgstr "Вартість елемента, що застосовується до вибраної опції"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
@@ -1547,28 +1548,28 @@ msgstr "Вартість пункту, що застосовується до в
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr "Елементи прайс-листа"
+msgstr "Елементи прайслиста"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__name
 msgid "Pricelist Name"
-msgstr "Назва прайс-листа"
+msgstr "Назва прайслиста"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
 #: model:ir.model.fields,field_description:product.field_res_country_group__pricelist_ids
 msgid "Pricelists"
-msgstr "Прайс-листи"
+msgstr "Прайслисти"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr "Прайс-лист на товарі"
+msgstr "Прайслист на товарі"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr "Прайс-лист керується на"
+msgstr "Прайслист керується на"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1772,7 +1773,7 @@ msgstr "Ціна товару"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr "Прескурант товарів"
+msgstr "Прайслист товарів"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -1794,7 +1795,7 @@ msgstr "Публічна ціна"
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr "Відкритий прайс-лист"
+msgstr "Публічний прайслист"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1805,13 +1806,13 @@ msgstr "Купівля"
 #: model:ir.model.fields,field_description:product.field_product_product__description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template__description_purchase
 msgid "Purchase Description"
-msgstr "Опис закупівлі"
+msgstr "Опис купівлі"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase Unit of Measure"
-msgstr "Одиниця виміру для закупівлі"
+msgstr "Одиниця вимірювання купівлі"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list__qty1
@@ -1893,7 +1894,7 @@ msgstr "Продажна ціна"
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Sales Pricelists"
-msgstr "Прайс-лист продажів"
+msgstr "Прайслист продажів"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__categ_id
@@ -1916,7 +1917,7 @@ msgstr "Послідовність"
 #. module: product
 #: selection:product.template,type:0
 msgid "Service"
-msgstr "Сервіс"
+msgstr "Послуга"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1933,7 +1934,7 @@ msgid ""
 msgstr ""
 "Встановлює ціну так, щоби вона була кратною цій величині.\n"
 "Округлення застосовується після знижки та до надбавки.\n"
-"Щоби ці ціни закінчилися в 9.99, встановіть округлення 10, надбавка -0.01"
+"Щоби ці ціни закінчилися на 9.99, встановіть округлення на 10, надбавка -0.01"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__company_share_product
@@ -1964,7 +1965,7 @@ msgstr "Відображати прайслист на товарі"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr "Відображати прайс-листи по товарах"
+msgstr "Відображати прайслисти клієнтам"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_small
@@ -2044,12 +2045,12 @@ msgstr "Початкова дата"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
 msgid "Start date for this vendor price"
-msgstr "Розпочніть дату для цієї ціни постачальника"
+msgstr "Дату початку для цієї ціни постачальника"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
 msgid "Starting date for the pricelist item validation"
-msgstr "Дата початку перевірки позиції прайс-листа"
+msgstr "Дата початку перевірки елемента прайслиста"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_state
@@ -2061,7 +2062,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Етап заснований на діях\n"
-"Прострочений: термін виконання вже минув\n"
+"Протермінований: термін виконання вже минув\n"
 "Сьогодні: дата дії сьогодні\n"
 "Заплановано: майбутні дії."
 
@@ -2084,7 +2085,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Прайс-лист постачальника"
+msgstr "Прайслист постачальника"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__pricelist_id
@@ -2092,8 +2093,8 @@ msgstr "Прайс-лист постачальника"
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
-"Технічне поле. Використовується для пошуку на прайс-листах, не зберігаються "
-"в базі даних."
+"Технічне поле. Використовується для пошуку на прайслистах, не зберігаються в"
+" базі даних."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
@@ -2105,7 +2106,8 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr "Обчислена ціна виражається в одиниці виміру за замовчуванням товару."
+msgstr ""
+"Обчислена ціна виражається в одиниці вимірювання за замовчуванням товару."
 
 #. module: product
 #: code:addons/product/models/product_template.py:303
@@ -2118,7 +2120,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr "Перший в послідовності - це за замовчуванням."
+msgstr "Перший в послідовності встановлений за замовчуванням."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -2127,9 +2129,9 @@ msgid ""
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
-"Мінімальне значення для покупки від цього постачальника, виражене в одиниці "
-"виміру товару постачальника, якщо його немає, в одиниці виміру товару за "
-"замовчуванням."
+"Мінімальне значення для купівлі від цього постачальника, виражене в одиниці "
+"вимірювання товару постачальника, якщо його немає - в одиниці вимірювання "
+"товару за замовчуванням."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:443
@@ -2142,7 +2144,7 @@ msgstr ""
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr "Номер товарів під цією категорією (Не враховує категорії дітей)"
+msgstr "Номер товарів під цією категорією (Не враховує дочірніх категорій)"
 
 #. module: product
 #: code:addons/product/models/product_template.py:475
@@ -2242,8 +2244,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
-"Цей прейскурант використовуватиметься, не за замовчуванням, для продажу "
-"поточному партнеру"
+"Цей прайслист буде використаний, а не прайслист за замовчуванням, для "
+"продажу поточному партнеру"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2260,8 +2262,8 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
-"Назва товару цього постачальника буде використаний при друку запиту на "
-"комерційну пропозицію. Зберігайте порожнім, щоб використовувати внутрішній."
+"Назва товару цього постачальника буде використана при друку запиту на "
+"комерційну пропозицію. Зберігайте порожнім, щоби використовувати внутрішній."
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_01
@@ -2348,12 +2350,12 @@ msgstr ""
 #: model:product.template,uom_name:product.product_product_8_product_template
 #: model:product.template,uom_name:product.product_product_9_product_template
 msgid "Unit(s)"
-msgstr "шт"
+msgstr "Штука(и)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure"
-msgstr "Одиниці виміру"
+msgstr "Одиниці вимірювання"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_unread
@@ -2370,7 +2372,7 @@ msgstr "Кількість непрочитаних повідомлень"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
-msgstr "Використовувати прайс-листи для адаптації цін під клієнта"
+msgstr "Використовувати прайслисти для адаптації цін під клієнта"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2408,7 +2410,7 @@ msgstr "Інформація варіанту"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
-msgstr "Варіант ціни Екстра"
+msgstr "Варіант додаткової ціни"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
@@ -2454,7 +2456,7 @@ msgstr "Інформація постачальника"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr "Прайс-листи постачальника"
+msgstr "Прайслисти постачальника"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
@@ -2500,7 +2502,7 @@ msgstr "Об'єм"
 #: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
 msgid "Website Messages"
-msgstr "Повідомлення з вебсайту"
+msgstr "Повідомлення з веб-сайту"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__website_message_ids
@@ -2523,7 +2525,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_id
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr "Одиниця виміру ваги"
+msgstr "Одиниця вимірювання ваги"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__weight
@@ -2745,4 +2747,4 @@ msgstr "шаблон товару"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
-msgstr "по"
+msgstr "до"

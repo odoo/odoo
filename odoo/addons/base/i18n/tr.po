@@ -3,35 +3,36 @@
 # * base
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2018
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
 # Thermo Dynamic <emirhanayar2004@gmail.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
-# Levent Karakaş <levent@mektup.at>, 2018
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2018
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
-# Alper Çiftçi <inactive+alprciftci@transifex.com>, 2018
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # José Luis Sandoval Alaguna <alagunajs@gmail.com>, 2018
-# Saban Yildiz <sabany@projetgrup.com>, 2018
+# Alper Çiftçi <inactive+alprciftci@transifex.com>, 2018
 # checkyoursix <batuhan.akpinar@gmail.com>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
+# Saban Yildiz <sabany@projetgrup.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2018
 # Hüseyin Cem Aras <hcemaras@gmail.com>, 2018
 # Metin Akın <aknmetin@gmail.com>, 2018
+# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
+# Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
+# Martin Trigaux, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Umur Akın <umura@projetgrup.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
-"PO-Revision-Date: 2018-10-08 07:02+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6567,6 +6568,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -8091,11 +8097,6 @@ msgid ""
 msgstr ""
 "Kişilerinizin otomatik birleştirme listesini yürütmek istediğinizden emin "
 "misiniz ?"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -10780,8 +10781,8 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
 msgstr ""
 
 #. module: base
@@ -10923,7 +10924,6 @@ msgstr ""
 "%s de kaldırır"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -15269,7 +15269,6 @@ msgstr "Bir Çeviri Yükle"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr ""
 
@@ -17980,6 +17979,11 @@ msgstr ""
 "yapabilecektir"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "Uygulamaları Aç"
@@ -18757,6 +18761,13 @@ msgstr ""
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
 msgstr ""
 
 #. module: base
@@ -23660,6 +23671,11 @@ msgstr ""
 #: model:res.country,name:base.ye
 msgid "Yemen"
 msgstr "Yemen"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee

@@ -23,7 +23,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Замовлення на купівлю</span>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -47,7 +47,7 @@ msgstr "Правило купівлі"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr ""
+msgstr "Купуйте для постачання"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -70,6 +70,8 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
+"Залежно від встановлених модулів, це дозволить вам визначити маршрут товару:"
+" чи буде він купуватися, виготовлятися, на замовлення і т.д."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -89,12 +91,12 @@ msgstr "Пряма поставка"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "Винятки виникли в замовленні на продаж:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
-msgstr ""
+msgstr "Винятки:"
 
 #. module: purchase_stock
 #: model:ir.ui.menu,name:purchase_stock.menu_action_picking_tree_in_move
@@ -149,7 +151,7 @@ msgstr "Партія/Серійний номер"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Можуть бути необхідні дії вручну."
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
@@ -181,7 +183,7 @@ msgstr "Очікувані наступні дати доставки"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "Наступні переміщення вплинули:"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
@@ -206,12 +208,12 @@ msgstr "Шаблон товару"
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Pull & Push"
-msgstr ""
+msgstr "Переміщення"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Pull From"
-msgstr ""
+msgstr "Витягнути з"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -234,17 +236,17 @@ msgstr "Замовлення на купівлю"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "Звіт купівлі"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr ""
+msgstr "Підрахунок замовлень на купівлю"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
 msgid "Push To"
-msgstr ""
+msgstr "Перетягнути на"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -305,7 +307,7 @@ msgstr "Складське правило"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Звіт складського правила"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -386,6 +388,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
 "created to fulfill the need."
 msgstr ""
+"Коли товари необхідні в <b>%s</b>, <br/> запит на комерційну пропозицію "
+"створюється для виконання необхідності."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:257
@@ -394,6 +398,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"Ви не можете зменшити замовлену кількість нижче отриманої кількості.\n"
+"Спершу створіть повернення."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:186
@@ -414,4 +420,4 @@ msgstr "від"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
-msgstr ""
+msgstr "замовлено замість"

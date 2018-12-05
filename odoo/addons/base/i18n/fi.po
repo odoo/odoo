@@ -4,31 +4,32 @@
 # 
 # Translators:
 # Tommi Rintala <tommi.rintala@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
-# Miku Laitinen <miku.laitinen@gmail.com>, 2018
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Jussi Lehto <jussi@gulfeo.com>, 2018
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
 # Marko Happonen <marko.happonen@sprintit.fi>, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Timo Koukkari <ti.ko@netikka.fi>, 2018
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
 # Kari Lindgren <karisatu@gmail.com>, 2018
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
 # Iipponen <erno@web-veistamo.fi>, 2018
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018
+# Miku Laitinen <miku.laitinen@gmail.com>, 2018
 # Jukka Paulin <jukka.paulin@gmail.com>, 2018
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
+# Jussi Lehto <jussi@gulfeo.com>, 2018
 # Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2018
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
 # Teemu Ahonen <teemu.ahonen@web-veistamo.fi>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Mikko Salmela <salmemik@gmail.com>, 2018
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Timo Koukkari <ti.ko@netikka.fi>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
-"PO-Revision-Date: 2018-10-08 07:02+0000\n"
-"Last-Translator: Teemu Ahonen <teemu.ahonen@web-veistamo.fi>, 2018\n"
+"POT-Creation-Date: 2018-11-29 10:24+0000\n"
+"PO-Revision-Date: 2018-08-24 09:14+0000\n"
+"Last-Translator: Timo Koukkari <ti.ko@netikka.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5586,6 +5587,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -7110,11 +7116,6 @@ msgstr "Haluatko varmasti suorittaa kontaktien automaattisen yhdistämisen?"
 msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
 msgstr "Haluatko varmasti suorittaa kontaktien automaattisen yhdistämisen?"
-
-#. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -9793,8 +9794,8 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
 msgstr ""
 
 #. module: base
@@ -9931,7 +9932,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -14259,7 +14259,6 @@ msgstr "Lataa käännös"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr ""
 
@@ -16955,6 +16954,11 @@ msgstr ""
 "tämä"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr ""
@@ -17698,6 +17702,13 @@ msgstr "Portugalin SNC-tilinpäätösstandardin mukainen tilikartta"
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
 msgstr ""
 
 #. module: base
@@ -22545,6 +22556,11 @@ msgstr ""
 #: model:res.country,name:base.ye
 msgid "Yemen"
 msgstr "Jemen"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee
