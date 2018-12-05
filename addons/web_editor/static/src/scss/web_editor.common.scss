@@ -228,9 +228,3 @@ a.o_underline {
         text-decoration: underline;
     }
 }
-
-// Extend bootstrap to create background and text utilities for gray colors too
-@each $color, $value in $grays {
-    @include bg-variant(".bg-#{$color}", $value);
-    @include text-emphasis-variant(".text-#{$color}", $value);
-}
