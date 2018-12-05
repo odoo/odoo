@@ -93,7 +93,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             tax_ids = taxes.ids
 
         invoice = inv_obj.create({
-            'name': order.client_order_ref or order.name,
+            'name': order.client_order_ref,
             'origin': order.name,
             'type': 'out_invoice',
             'reference': False,
