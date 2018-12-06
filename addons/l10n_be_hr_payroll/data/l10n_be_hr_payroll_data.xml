@@ -75,11 +75,6 @@ result = contract.wage_with_holidays
         <field name="code">ChA</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
-    <record id="hr_salary_rule_category_family_reductions" model="hr.salary.rule.category">
-        <field name="name">Reduction for special family charges</field>
-        <field name="code">FamRed</field>
-        <field name="parent_id" ref="hr_payroll.DED"/>
-    </record>
     <record id="hr_salary_rule_category_spec_soc_contribution" model="hr.salary.rule.category">
         <field name="name">Special social contribution</field>
         <field name="code">SSC</field>
@@ -293,131 +288,54 @@ else:
         basic_bareme_2 = compute_basic_bareme(yearly_net_taxable_revenue - yearly_net_taxable_revenue_for_spouse)
         withholding_tax_amount = convert_to_month(max(basic_bareme_1 + basic_bareme_2 - 3381.2, 0))
 
-result = - withholding_tax_amount
+# Reduction for isolated people and for other family charges
+if employee.marital in ['divorced', 'single', 'widower'] or (employee.spouse_net_revenue &gt; 0.0 or employee.spouse_other_net_revenue &gt; 0.0):
+    if employee.marital in ['divorced', 'single', 'widower']:
+        withholding_tax_amount -= 25.0
+    if employee.marital == 'widower' or (employee.marital in ['divorced', 'single', 'widower'] and employee.dependent_children):
+        withholding_tax_amount -= 36.0
+    if employee.disabled:
+        withholding_tax_amount -= 36.0
+    if employee.other_dependent_people and employee.dependent_seniors:
+        withholding_tax_amount -= 73.0 * employee.dependent_seniors
+    if employee.other_dependent_people and employee.dependent_juniors:
+        withholding_tax_amount -= 36.0 * employee.dependent_juniors
+    if employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 225.0:
+        withholding_tax_amount -= 112.5
+    if employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 450.0:
+        withholding_tax_amount -= 225.0
+if employee.spouse_net_revenue == 0.0 and employee.spouse_other_net_revenue == 0.0:
+    if employee.disabled:
+        withholding_tax_amount -= 36.0
+    if employee.disabled_spouse_bool:
+        withholding_tax_amount -= 36.0
+    if employee.other_dependent_people and employee.dependent_seniors:
+        withholding_tax_amount -= 73.0 * employee.dependent_seniors
+    if employee.other_dependent_people and employee.dependent_juniors:
+        withholding_tax_amount -= 36.0 * employee.dependent_juniors
+
+# Child Allowances
+if employee.dependent_children:
+    if employee.dependent_children == 1:
+        withholding_tax_amount -= 36.0
+    if employee.dependent_children == 2:
+        withholding_tax_amount -= 97.0
+    if employee.dependent_children == 3:
+        withholding_tax_amount -= 253.0
+    if employee.dependent_children == 4:
+        withholding_tax_amount -= 454.0
+    if employee.dependent_children == 5:
+        withholding_tax_amount -= 677.0
+    if employee.dependent_children == 6:
+        withholding_tax_amount -= 902.0
+    if employee.dependent_children == 7:
+        withholding_tax_amount -= 1128.0
+    if employee.dependent_children &gt;= 8:
+        withholding_tax_amount -= 1371.0 + (employee.dependent_children - 8) * 251.0
+
+result = - max(withholding_tax_amount, 0.0)
+
         </field>
-    </record>
-    <record id="hr_payroll_rules_child_alw" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_child_alw"/>
-        <field name="name">Child Allowance Belgium</field>
-        <field name="code">Child.Allowance</field>
-        <field name="sequence">140</field>
-        <field name="amount_select">fix</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(employee.dependent_children) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-    </record>
-    <record id="hr_payroll_rules_child" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_child_alw"/>
-        <field name="parent_rule_id" ref="hr_payroll_rules_child_alw"/>
-        <field name="name">Child Allowance Belgium</field>
-        <field name="code">Ch.A</field>
-        <field name="amount_select">fix</field>
-        <field name="sequence">141</field>
-        <field name="note">The recipient of income is an isolated or spouse beneficiary's income has also
-                                        earned income (Schedule I / II scale)
-
-                                        A. When the gross monthly earnings do not exceed € 7,500, the withholding tax is determined according to the Schedule I.
-                                        The following reductions are then deducted from the payroll tax determined in accordance with this schedule:
-
-                                                a) Reduction for dependent children</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(employee.dependent_children) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-    </record>
-    <record id="hr_salary_rule_other_family_charges_reductions" model="hr.salary.rule">
-        <field name="category_id" ref="hr_salary_rule_category_family_reductions"/>
-        <field name="name">Other family charges reductions</field>
-        <field name="code">Oth.Fam.Red</field>
-        <field name="sequence">143</field>
-        <field name="amount_select">fix</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = True</field>
-    </record>
-    <record id="hr_salary_rule_reduction_isolated" model="hr.salary.rule">
-        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
-        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
-        <field name="name">Reduction for isolated people</field>
-        <field name="code">Red.Iso</field>
-        <field name="sequence">144</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital in ['divorced', 'single', 'widower']) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(25.00, - (categories.PP + categories.FamRed + categories.ChA))</field>
-    </record>
-    <record id="hr_salary_rule_reduction_isolated_parent" model="hr.salary.rule">
-        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
-        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
-        <field name="name">Reduction for isolated parent</field>
-        <field name="code">Red.Iso.Par</field>
-        <field name="sequence">144</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital == 'widower' or (employee.marital in ['divorced', 'single', 'widower'] and employee.dependent_children)) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(36.00, - (categories.PP + categories.FamRed + categories.ChA))</field>
-    </record>
-    <record id="hr_salary_rule_reduction_disabled" model="hr.salary.rule">
-        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
-        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
-        <field name="name">Reduction for disabled employee</field>
-        <field name="code">Red.Dis</field>
-        <field name="sequence">145</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.disabled) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(36.00, - (categories.PP + categories.FamRed + categories.ChA))</field>
-    </record>
-    <record id="hr_salary_rule_reduction_seniors" model="hr.salary.rule">
-        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
-        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
-        <field name="name">Reduction for dependent seniors</field>
-        <field name="code">Red.Seniors</field>
-        <field name="sequence">146</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.other_dependent_people and employee.dependent_seniors) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(73.0 * employee.dependent_seniors, - (categories.PP + categories.FamRed + categories.ChA))</field>
-    </record>
-    <record id="hr_salary_rule_reduction_juniors" model="hr.salary.rule">
-        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
-        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
-        <field name="name">Reduction for dependent juniors</field>
-        <field name="code">Red.Juniors</field>
-        <field name="sequence">147</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.other_dependent_people and employee.dependent_juniors) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(36.0 * employee.dependent_juniors, - (categories.PP + categories.FamRed + categories.ChA))</field>
-    </record>
-    <record id="hr_salary_rule_reduction_insufficient_net" model="hr.salary.rule">
-        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
-        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
-        <field name="name">Reduction for low spouse revenue</field>
-        <field name="code">Red.Spouse.Net</field>
-        <field name="sequence">148</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 225.0) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(110.50, - (categories.PP + categories.FamRed + categories.ChA))</field>
-    </record>
-    <record id="hr_salary_rule_reduction_insufficient_other_net" model="hr.salary.rule">
-        <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
-        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
-        <field name="name">Reduction for low spouse other revenue</field>
-        <field name="code">Red.Spouse.Oth.Net</field>
-        <field name="sequence">149</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 450.0) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(220.0, - (categories.PP + categories.FamRed + categories.ChA))</field>
-    </record>
-    <record id="hr_payroll_rules_spouse_handicap" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_div_net"/>
-        <field name="parent_rule_id" ref="hr_salary_rule_other_family_charges_reductions"/>
-        <field name="name">Disabled Spouse Allowance</field>
-        <field name="code">Sp.handicap</field>
-        <field name="sequence">150</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.disabled_spouse_bool==True) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">min(36.0, - (categories.PP + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_payroll_rules_parent_company_car" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_impos"/>
@@ -594,8 +512,6 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_salary_rule_employment_bonus_employees'),
             ref('hr_payroll_rules_employee'),
             ref('hr_payroll_rules_bareme'),
-            ref('hr_salary_rule_other_family_charges_reductions'),
-            ref('hr_payroll_rules_child_alw'),
             ref('hr_payroll_rules_ch_worker'),
             ref('hr_payroll_rules_reim_travel'),
             ref('hr_payroll_rules_mis_ex_onss_1'),
@@ -619,8 +535,6 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_payroll_rules_onss_rule'),
             ref('hr_salary_rule_employment_bonus_workers'),
             ref('hr_payroll_rules_bareme'),
-            ref('hr_payroll_rules_child_alw'),
-            ref('hr_salary_rule_other_family_charges_reductions'),
             ref('hr_payroll_rules_ch_worker'),
             ref('hr_payroll_rules_reim_travel'),
             ref('hr_payroll_rules_mis_ex_onss_1'),
