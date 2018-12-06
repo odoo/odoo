@@ -246,14 +246,14 @@ class TestCustomFields(common.TransactionCase):
         self.registry.enter_test_mode(self.cr)
         self.addCleanup(self.registry.leave_test_mode)
 
-    def create_field(self, name):
+    def create_field(self, name, *, field_type='char'):
         """ create a custom field and return it """
         model = self.env['ir.model'].search([('model', '=', self.MODEL)])
         field = self.env['ir.model.fields'].create({
             'model_id': model.id,
             'name': name,
             'field_description': name,
-            'ttype': 'char',
+            'ttype': field_type,
         })
         self.assertIn(name, self.env[self.MODEL]._fields)
         return field
@@ -385,3 +385,12 @@ class TestCustomFields(common.TransactionCase):
         # uninstall mode: unlink dependant fields
         field.with_context(_force_unlink=True).unlink()
         self.assertFalse(dependant.exists())
+
+    def test_create_binary(self):
+        """ binary custom fields should be created as attachment=True to avoid
+        bloating the DB when creating e.g. image fields via studio
+        """
+        self.create_field('x_image', field_type='binary')
+        custom_binary = self.env[self.MODEL]._fields['x_image']
+
+        self.assertTrue(custom_binary.attachment)

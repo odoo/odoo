@@ -66,7 +66,7 @@ class GamificationBadge(models.Model):
     name = fields.Char('Badge', required=True, translate=True)
     active = fields.Boolean('Active', default=True)
     description = fields.Text('Description', translate=True)
-    image = fields.Binary("Image", attachment=True, help="This field holds the image used for the badge, limited to 256x256")
+    image = fields.Binary("Image", help="This field holds the image used for the badge, limited to 256x256")
 
     rule_auth = fields.Selection([
             ('everyone', 'Everyone'),

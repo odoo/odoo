@@ -11,7 +11,7 @@ class RestaurantFloor(models.Model):
 
     name = fields.Char('Floor Name', required=True, help='An internal identification of the restaurant floor')
     pos_config_id = fields.Many2one('pos.config', string='Point of Sale')
-    background_image = fields.Binary('Background Image', attachment=True, help='A background image used to display a floor layout in the point of sale interface')
+    background_image = fields.Binary('Background Image', help='A background image used to display a floor layout in the point of sale interface')
     background_color = fields.Char('Background Color', help='The background color of the floor layout, (must be specified in a html-compatible format)', default='rgb(210, 210, 210)')
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables', help='The list of tables in this floor')
     sequence = fields.Integer('Sequence', help='Used to sort Floors', default=1)
