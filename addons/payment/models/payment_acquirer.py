@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import logging
 from datetime import datetime
+from dateutil import relativedelta
 import pprint
 
 from odoo import api, exceptions, fields, models, _
@@ -783,9 +784,11 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _cron_post_process_after_done(self):
         if not self:
+            ten_minutes_ago = datetime.now() - relativedelta.relativedelta(minutes=10)
             # we retrieve all the payment tx that need to be post processed
             self = self.search([('state', '=', 'done'),
-                                ('is_processed', '=', False)
+                                ('is_processed', '=', False),
+                                ('date', '<=', ten_minutes_ago),
                             ])
         for tx in self:
             try:
