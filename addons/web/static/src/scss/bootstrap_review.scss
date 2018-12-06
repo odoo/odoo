@@ -15,3 +15,25 @@
     // will use the color of a default card background with a light opacity.
     @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
 }
+
+// Modify modals so that their scrollable element is the modal-body (except in
+// mobile).
+@include media-breakpoint-up(sm) {
+    .modal-dialog {
+        height: 100%;
+        padding: $modal-dialog-margin-y-sm-up 0;
+        margin: 0 auto;
+    }
+    .modal-content {
+        max-height: 100%;
+    }
+    .modal-header, .modal-footer {
+        flex: 0 0 auto;
+    }
+    .modal-body {
+        overflow: auto;
+        // fix iOS issue https://github.com/scottjehl/Device-Bugs/issues/8
+        -webkit-transform: translate3d(0, 0, 0);
+        min-height: 0;
+    }
+}
