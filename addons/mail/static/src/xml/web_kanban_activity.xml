@@ -52,8 +52,8 @@
 </t>
 
 <t t-name="mail.activities-list-group-item">
-    <li t-att-data-activity-id="log.id" t-attf-class="list-group-item o_log_activity d-flex #{edit_class} #{log_last ? 'border-bottom' : ''}" role="menuitem">
-        <div class="o_activity_title">
+    <li t-attf-class="list-group-item o_log_activity d-flex #{log_last ? 'border-bottom' : ''}" role="menuitem">
+        <div t-attf-class="o_activity_title o_log_activity #{edit_class}" t-att-data-activity-id="log.id">
             <div t-attf-class="o_activity_title_entry {{! log.force_next ? 'align-items-center' : 'mb-1'}}">
                 <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
                 <strong class="text-dark"><t t-esc="log.title_action or log.activity_type_id[1]"/></strong>
@@ -74,18 +74,36 @@
                     </small>
                 </div>
             </t>
-            <div t-if="log.user_id[0] != uid and log.mail_template_ids" class="o_activity_title_entry">
+            <div t-if="log.user_id[0] != session.uid and log.mail_template_ids" class="o_activity_title_entry">
                 <span class="fa fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
                 <span><t t-esc="log.user_id[1]" /></span>
             </div>
         </div>
         <div t-if="log.can_write" class="flex-grow-1 text-right">
-        <a  t-att-data-force-next-activity="log.force_next"
-            t-att-data-previous-activity-type-id="log.activity_type_id[0]"
-            t-att-data-activity-id="log.id"
-            t-attf-href="#o_mark_done_form{{log.id}}"
-            class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle"
-            data-toggle="collapse" title="Mark as done" role="img" aria-label="Mark as done"/>
+            <t t-if="log.activity_category === 'upload_file'">
+                <a  t-att-data-force-next-activity="log.force_next"
+                    t-att-data-previous-activity-type-id="log.activity_type_id[0]"
+                    t-att-data-activity-id="log.id"
+                    class="o_mark_as_done_upload_file o_activity_link o_activity_link_kanban fa fa-upload"
+                    title="Upload file" role="img" t-att-data-fileupload-id="log.fileuploadID"/>
+                    <span class="d-none">
+                        <t t-call="HiddenInputFile">
+                            <t t-set="fileupload_id" t-value="log.fileuploadID"/>
+                            <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                            <input type="hidden" name="model" t-att-value="log.res_model"/>
+                            <input type="hidden" name="id" t-att-value="log.res_id"/>
+                            <input type="hidden" name="session_id" t-att-value="session.session_id"/>
+                        </t>
+                    </span>
+            </t>
+            <t t-else="">
+                <a  t-att-data-force-next-activity="log.force_next"
+                    t-att-data-previous-activity-type-id="log.activity_type_id[0]"
+                    t-att-data-activity-id="log.id"
+                    t-attf-href="#o_mark_done_form{{log.id}}"
+                    class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle"
+                    data-toggle="collapse" title="Mark as done" role="img" aria-label="Mark as done"/>
+            </t>
         </div>
     </li>
 </t>

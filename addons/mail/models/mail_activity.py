@@ -69,9 +69,9 @@ class MailActivityType(models.Model):
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
         string='Preceding Activities')
     category = fields.Selection([
-        ('default', 'Other')], default='default',
-        string='Category',
-        help='Categories may trigger specific behavior like opening calendar view')
+        ('default', 'Other'), ('upload_file', 'Upload Document')
+    ], default='default', string='Category',
+        help='Categories may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded')
     mail_template_ids = fields.Many2many('mail.template', string='Mails templates')
 
     #Fields for display purpose only
@@ -387,8 +387,8 @@ class MailActivity(models.Model):
         return messages.ids and messages.ids[0] or False
 
     @api.multi
-    def action_feedback(self, feedback=False):
-        messages, next_activities = self._action_done(feedback=feedback)
+    def action_feedback(self, feedback=False, attachment_ids=None):
+        messages, next_activities = self._action_done(feedback=feedback, attachment_ids=attachment_ids)
         return messages.ids and messages.ids[0] or False
 
     def action_done_schedule_next(self):
@@ -419,10 +419,11 @@ class MailActivity(models.Model):
             'target': 'new',
         }
 
-    def _action_done(self, feedback=False):
+    def _action_done(self, feedback=False, attachment_ids=None):
         """ Private implementation of marking activity as done: posting a message, deleting activity
             (since done), and eventually create the automatical next activity (depending on config).
             :param feedback: optional feedback from user when marking activity as done
+            :param attachment_ids: list of ir.attachment ids to attach to the posted mail.message
             :returns (messages, activities) where
                 - messages is a recordset of posted mail.message
                 - activities is a recordset of mail.activity of forced automically created activities
@@ -458,6 +459,7 @@ class MailActivity(models.Model):
                 },
                 subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_activities'),
                 mail_activity_type_id=activity.activity_type_id.id,
+                attachment_ids=[(4, attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
             )
             messages |= record.message_ids[0]
 
@@ -470,7 +472,6 @@ class MailActivity(models.Model):
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
     def activity_format(self):
         activities = self.read()
         mail_template_ids = set([template_id for activity in activities for template_id in activity["mail_template_ids"]])
