@@ -8,6 +8,7 @@ var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var session = require('web.session');
+var framework = require('web.framework');
 var time = require('web.time');
 
 var QWeb = core.qweb;
@@ -102,10 +103,27 @@ var setDelayLabel = function (activities){
     return activities;
 };
 
+/**
+ * Set the file upload identifier for 'upload_file' type activities
+ *
+ * @param {Array} activities list of activity Object
+ * @return {Array} : list of modified activity Object
+ */
+var setFileUploadID = function (activities) {
+    _.each(activities, function (activity) {
+        if (activity.activity_category === 'upload_file') {
+            activity.fileuploadID = _.uniqueId('o_fileupload');
+        }
+    });
+    return activities;
+};
+
 var BasicActivity = AbstractField.extend({
     events: {
         'click .o_edit_activity': '_onEditActivity',
+        'change input.o_input_file': '_onFileChanged',
         'click .o_mark_as_done': '_onMarkActivityDone',
+        'click .o_mark_as_done_upload_file': '_onMarkActivityDoneUploadFile',
         'click .o_activity_template_preview': '_onPreviewMailTemplate',
         'click .o_schedule_activity': '_onScheduleActivity',
         'click .o_activity_template_send': '_onSendMailTemplate',
@@ -139,13 +157,17 @@ var BasicActivity = AbstractField.extend({
      * @private
      * @param {Object} params
      * @param {integer} params.activityID
+     * @param {integer[]} params.attachmentIds
      * @param {string} params.feedback
+     *
+     * @return {$.Promise}
      */
     _markActivityDone: function (params) {
         var activityID = params.activityID;
-        var feedback = params.feedback;
+        var feedback = params.feedback || false;
+        var attachmentIds = params.attachmentIds || [];
 
-        this._sendActivityFeedback(activityID, feedback)
+        return this._sendActivityFeedback(activityID, feedback, attachmentIds)
             .then(this._reload.bind(this, { activity: true, thread: true }));
     },
     /**
@@ -209,14 +231,18 @@ var BasicActivity = AbstractField.extend({
      * @private
      * @param {integer} activityID
      * @param {string} feedback
+     * @param {integer[]} attachmentIds
      * @return {$.Promise}
      */
-    _sendActivityFeedback: function (activityID, feedback) {
+    _sendActivityFeedback: function (activityID, feedback, attachmentIds) {
         return this._rpc({
                 model: 'mail.activity',
                 method: 'action_feedback',
                 args: [[activityID]],
-                kwargs: {feedback: feedback},
+                kwargs: {
+                    feedback: feedback,
+                    attachment_ids: attachmentIds || [],
+                },
                 context: this.record.getContext(),
             });
     },
@@ -225,6 +251,28 @@ var BasicActivity = AbstractField.extend({
     // Handlers
     //------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Object[]} activities
+     */
+    _bindOnUploadAction: function (activities) {
+        var self = this;
+        _.each(activities, function (activity) {
+            if (activity.fileuploadID) {
+                $(window).on(activity.fileuploadID, function() {
+                    framework.unblockUI();
+                    // find the button clicked and display the feedback popup on it
+                    var files = Array.prototype.slice.call(arguments, 1);
+                    self._markActivityDone({
+                        activityID: activity.id,
+                        attachmentIds: _.pluck(files, 'id')
+                    }).then(function () {
+                        self.trigger_up('reload');
+                    });
+                });
+            }
+        });
+    },
     /** Binds a focusout handler on a bootstrap popover
      *  Useful to do some operations on the popover's HTML,
      *  like keeping the user's input for the feedback
@@ -257,7 +305,18 @@ var BasicActivity = AbstractField.extend({
         var activityID = $(ev.currentTarget).data('activity-id');
         return this._openActivityForm(activityID, this._reload.bind(this, { activity: true, thread: true }));
     },
-     /**
+    /**
+     * @private
+     * @param {FormEvent} ev
+     */
+    _onFileChanged: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        var $form = $(ev.currentTarget).closest('form');
+        $form.submit();
+        framework.blockUI();
+    },
+    /**
      * Called when marking an activity as done
      *
      * It lets the current user write a feedback in a popup menu.
@@ -282,7 +341,10 @@ var BasicActivity = AbstractField.extend({
             var $panel = self.$('#o_activity_form_' + activityID);
 
             if (!$panel.data('bs.collapse')) {
-                var $form = $(QWeb.render('mail.activity_feedback_form', { previous_activity_type_id: previousActivityTypeID, force_next: forceNextActivity}));
+                var $form = $(QWeb.render('mail.activity_feedback_form', {
+                    previous_activity_type_id: previousActivityTypeID,
+                    force_next: forceNextActivity
+                }));
                 $panel.append($form);
                 self._onMarkActivityDoneActions($markDoneBtn, $form, activityID);
 
@@ -319,7 +381,10 @@ var BasicActivity = AbstractField.extend({
                 trigger:'click',
                 placement: 'right', // FIXME: this should work, maybe a bug in the popper lib
                 content : function () {
-                    var $popover = $(QWeb.render('mail.activity_feedback_form', { previous_activity_type_id: previousActivityTypeID, force_next: forceNextActivity}));
+                    var $popover = $(QWeb.render('mail.activity_feedback_form', {
+                        previous_activity_type_id: previousActivityTypeID,
+                        force_next: forceNextActivity
+                    }));
                     self._onMarkActivityDoneActions($markDoneBtn, $popover, activityID);
                     return $popover;
                 },
@@ -364,6 +429,17 @@ var BasicActivity = AbstractField.extend({
                 self.$('#o_activity_form_' + activityID).collapse('hide');
             }
         });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onMarkActivityDoneUploadFile: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var fileuploadID = $(ev.currentTarget).data('fileupload-id');
+        var $input = this.$("[target='" + fileuploadID + "'] > input.o_input_file");
+        $input.click();
     },
     /**
      * @private
@@ -439,6 +515,19 @@ var BasicActivity = AbstractField.extend({
             })
             .then(this._reload.bind(this, {activity: true}));
     },
+    /**
+     * Unbind event triggered when a file is uploaded.
+     *
+     * @private
+     * @param {Array} activities: list of activity to unbind
+     */
+    _unbindOnUploadAction: function (activities) {
+        _.each(activities, function (activity) {
+            if (activity.fileuploadID) {
+                $(window).off(activity.fileuploadID);
+            }
+        });
+    },
 });
 
 // -----------------------------------------------------------------------------
@@ -457,11 +546,17 @@ var Activity = BasicActivity.extend({
         this._super.apply(this, arguments);
         this._activities = this.record.specialData[this.name];
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._unbindOnUploadAction();
+        return this._super.apply(this, arguments);
+    },
 
     //------------------------------------------------------------
     // Private
     //------------------------------------------------------------
-
     /**
      * @private
      * @param {Object} fieldsToReload
@@ -483,7 +578,7 @@ var Activity = BasicActivity.extend({
                 activity.note = '';
             }
         });
-        var activities = setDelayLabel(this._activities);
+        var activities = setFileUploadID(setDelayLabel(this._activities));
         if (activities.length) {
             var nbActivities = _.countBy(activities, 'state');
             this.$el.html(QWeb.render('mail.activity_items', {
@@ -494,8 +589,12 @@ var Activity = BasicActivity.extend({
                 nbOverdueActivities: nbActivities.overdue,
                 dateFormat: time.getLangDateFormat(),
                 datetimeFormat: time.getLangDatetimeFormat(),
+                session: session,
+                widget: this,
             }));
+            this._bindOnUploadAction(this._activities);
         } else {
+            this._unbindOnUploadAction(this._activities);
             this.$el.empty();
         }
     },
@@ -555,7 +654,13 @@ var KanbanActivity = BasicActivity.extend({
         this.selection = selection;
         this._setState(record);
     },
-
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._unbindOnUploadAction();
+        return this._super.apply(this, arguments);
+    },
     //------------------------------------------------------------
     // Private
     //------------------------------------------------------------
@@ -590,11 +695,14 @@ var KanbanActivity = BasicActivity.extend({
         var self = this;
         this.$('.o_activity').html(QWeb.render('mail.KanbanActivityLoading'));
         return _readActivities(this, this.value.res_ids).then(function (activities) {
+            activities = setFileUploadID(activities);
             self.$('.o_activity').html(QWeb.render('mail.KanbanActivityDropdown', {
                 selection: self.selection,
                 records: _.groupBy(setDelayLabel(activities), 'state'),
-                uid: session.uid,
+                session: session,
+                widget: self,
             }));
+            self._bindOnUploadAction(activities);
         });
     },
     /**

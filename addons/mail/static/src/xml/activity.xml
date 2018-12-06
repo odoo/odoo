@@ -83,10 +83,23 @@
         </div>
     </t>
     <t t-name="mail.activity_thread_message_tools">
-        <div t-if="activity.can_write">
-            <span class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
+        <div t-if="activity.can_write" class="o_thread_message_tools btn-group">
+            <span t-if="activity.activity_category !== 'upload_file'" class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
                 <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
                 <i class="fa fa-check"/> Mark Done </a>
+            </span>
+            <span t-if="activity.activity_category === 'upload_file'" class="o_mark_as_done_upload_file" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]" t-att-data-fileupload-id="activity.fileuploadID">
+                <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
+                <i class="fa fa-upload"/> Upload Document </a>
+            </span>
+            <span t-if="activity.activity_category === 'upload_file'" class="d-none">
+                <t t-call="HiddenInputFile">
+                    <t t-set="fileupload_id" t-value="activity.fileuploadID"/>
+                    <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                    <input type="hidden" name="model" t-att-value="activity.res_model"/>
+                    <input type="hidden" name="id" t-att-value="activity.res_id"/>
+                    <input type="hidden" name="session_id" t-att-value="session.session_id"/>
+                </t>
             </span>
             <a role="button" href="#" class="btn btn-link btn-secondary text-muted o_edit_activity o_activity_link" t-att-data-activity-id="activity.id">
                 <i class="fa fa-pencil"/> Edit

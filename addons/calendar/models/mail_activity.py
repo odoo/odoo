@@ -29,9 +29,9 @@ class MailActivity(models.Model):
         }
         return action
 
-    def _action_done(self, feedback=False):
+    def _action_done(self, feedback=False, attachment_ids=False):
         events = self.mapped('calendar_event_id')
-        messages, activities = super(MailActivity, self)._action_done(feedback=feedback)
+        messages, activities = super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
         if feedback:
             for event in events:
                 description = event.description

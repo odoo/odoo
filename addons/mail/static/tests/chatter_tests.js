@@ -82,16 +82,27 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
                     },
+                    activity_category: {
+                        string: 'Category',
+                        type: 'selection',
+                        selection: [['default', 'Other'], ['upload_file', 'Upload File']],
+                    },
                     note : { string: "Note", type: "char" },
                 },
             },
             'mail.activity.type': {
                 fields: {
                     name: { string: "Name", type: "char" },
+                    category: {
+                        string: 'Category',
+                        type: 'selection',
+                        selection: [['default', 'Other'], ['upload_file', 'Upload File']],
+                    },
                 },
                 records: [
                     { id: 1, name: "Type 1" },
                     { id: 2, name: "Type 2" },
+                    { id: 3, name: "Type 3", category: 'upload_file' },
                 ],
             },
             'mail.message': {
@@ -289,6 +300,79 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
             });
         });
     });
+});
+
+QUnit.test('Activity Done by uploading a file', function (assert) {
+    assert.expect(4);
+
+    // simulate (shortcut) the upload and trigger the event when the
+    // attachment is created serverside.
+    testUtils.mock.patch(Activity, {
+        _onMarkActivityDoneUploadFile: function (ev) {
+            var $markDoneBtn = $(ev.currentTarget);
+            var fileuploadID = $markDoneBtn.data('fileupload-id');
+
+            $(window).trigger(fileuploadID, [{
+                id:3,
+                name:"name2",
+                type:'binary',
+                mimetype:"application/x-msdos-program",
+                datas_fname:"file2.txt",
+                res_id: 5,
+                res_model: 'partner'
+            }]);
+        },
+    });
+
+    // create the activity
+    this.data['mail.activity'].records = [{
+        activity_type_id: 3,
+        id: 1,
+        can_write: true,
+        user_id: 2,
+        state: 'today',
+        note: "But I'm talkin' about Shaft",
+        activity_category: 'upload_file'
+    }];
+    this.data.partner.records[0].activity_ids = [1];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        res_id: 2,
+        arch:'<form string="Partners">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'action_feedback') {
+                var current_ids = this.data.partner.records[0].activity_ids;
+                var done_ids = args.args[0];
+                this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
+                this.data.partner.records[0].activity_state = false;
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    var $activity = form.$('.o_mail_activity[name=activity_ids]');
+    assert.containsOnce($activity, '.o_thread_message', 'There should be one activity');
+    assert.containsOnce($activity, '.o_hidden_input_file', 'There should be one hidden file upload form');
+    assert.strictEqual($activity.find('.o_thread_message .o_thread_message_note').text().trim(),
+        'But I\'m talkin\' about Shaft', 'The activity should have the right note');
+
+    // click on "upload" button
+    var $uploadBtn = $activity.find('.o_mark_as_done_upload_file');
+    testUtils.dom.click($uploadBtn);
+
+    assert.containsNone($activity, '.o_thread_message', 'The only activity should be marked as done');
+
+    testUtils.mock.unpatch(Activity);
+    form.destroy();
 });
 
 QUnit.test('attachmentBox basic rendering', function (assert) {
