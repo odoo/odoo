@@ -18,7 +18,9 @@ $yiq-text-dark: if($-is-light, null, color('text'));
 //
 // Settings for the `<body>` element.
 
-$body-bg: color('body');
+@if color('body') { // Do not default to bootstrap but to the portal value
+    $body-bg: color('body');
+}
 $body-color: color('text');
 
 // Fonts
