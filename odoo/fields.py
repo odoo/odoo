@@ -2598,7 +2598,11 @@ class Many2many(_RelationalMulti):
 
             elif model._auto:
                 # add self in m2m, so that its inverse field can find it
-                if (self.relation, self.column1, self.column2) in m2m:
+                if (
+                    (self.relation, self.column1, self.column2) in m2m
+                    and self.model_name != 'account.reconcile.model'
+                    # because 'account.reconcile.model' is not fixable in 12.0
+                ):
                     _logger.error(
                         "Many2many fields %s and %s use the same table and columns",
                         self, m2m[(self.relation, self.column1, self.column2)],
