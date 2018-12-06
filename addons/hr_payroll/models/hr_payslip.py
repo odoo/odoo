@@ -12,9 +12,6 @@ from odoo.addons.hr_payroll.models.browsable_object import BrowsableObject, Inpu
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_round
 
-BASELOCALDICT = {
-    'float_round': float_round
-}
 
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
@@ -178,6 +175,10 @@ class HrPayslip(models.Model):
 
         return res
 
+    def _get_base_local_dict(self):
+        return {
+            'float_round': float_round
+        }
 
     # YTI TODO: pass recordset as argument
     @api.model
@@ -208,7 +209,7 @@ class HrPayslip(models.Model):
         payslips = Payslips(self.employee_id.id, self, self.env)
         rules = BrowsableObject(self.employee_id.id, rules_dict, self.env)
 
-        baselocaldict = {**BASELOCALDICT, **{'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}}
+        baselocaldict = {**self._get_base_local_dict(), **{'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}}
         #get the ids of the structures on the contracts and their parent id as well
         if len(contracts) == 1 and self.struct_id:
             structures = self.struct_id._get_parent_structure()
