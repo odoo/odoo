@@ -493,7 +493,7 @@ QUnit.test('do not autofocus chat window on receiving new direct message', funct
         }
     });
 
-    var $formInput = form.$('input');
+    var $formInput = form.$('input[name=display_name]');
     $formInput.focus();
 
     assert.equal(document.activeElement, $formInput[0],

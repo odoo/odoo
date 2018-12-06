@@ -700,7 +700,7 @@ QUnit.module('account', {
         assert.ok(clientAction.widgets[1].$('.match div.load-more a:visible').length, "should display the 'load more' button");
         assert.equal(clientAction.widgets[1].$('.match div.load-more span').text(), 3, "should display 3 items remaining");
         clientAction.widgets[1].$('.match div.load-more a').trigger('click');
-        assert.containsN(clientAction.widgets[1], '.mv_line', 8, "should load 3 more records"),
+        assert.containsN(clientAction.widgets[1], '.mv_line', 8, "should load 3 more records");
         assert.notOk(clientAction.widgets[1].$('.match div.load-more a:visible').length, "should not display the 'load more' button anymore");
 
         assert.ok(clientAction.widgets[0].$('caption button.btn-secondary:visible').length, "should display the 'validate' button");

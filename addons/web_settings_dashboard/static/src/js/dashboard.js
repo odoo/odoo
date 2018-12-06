@@ -5,14 +5,13 @@ var AbstractAction = require('web.AbstractAction');
 var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
-var session = require('web.session');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
 var Dashboard = AbstractAction.extend({
-    template: 'DashboardMain',
+    contentTemplate: 'DashboardMain',
 
     init: function(){
         this.all_dashboards = ['apps', 'invitations', 'share', 'translations', 'company'];
@@ -20,7 +19,8 @@ var Dashboard = AbstractAction.extend({
     },
 
     start: function(){
-        return this.load(this.all_dashboards);
+        var superDef = this._super.apply(this, arguments);
+        return $.when(superDef, this.load(this.all_dashboards));
     },
 
     load: function(dashboards){
