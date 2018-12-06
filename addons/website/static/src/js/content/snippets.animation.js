@@ -983,7 +983,8 @@ registry.socialShare = Animation.extend({
      * @private
      */
     _renderSocial: function (social) {
-        var url = encodeURIComponent(document.URL.split(/[?#]/)[0]);  // get current url without query string
+        var url = this.$el.data('urlshare') || document.URL.split(/[?#]/)[0];
+        url = encodeURIComponent(url);
         var title = document.title.split(" | ")[0];  // get the page title without the company name
         var hashtags = ' #'+ document.title.split(" | ")[1].replace(' ','') + ' ' + this.hashtags;  // company name without spaces (for hashtag)
         var social_network = {

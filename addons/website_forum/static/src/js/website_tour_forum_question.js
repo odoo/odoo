@@ -10,7 +10,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         wait_for: base.ready(),
     }, [{
         content: "Ask the question in this forum by clicking on the button.",
-        trigger: '.btn-block a:first',
+        trigger: '.btn-lg.btn-block',
     }, {
         content: "Give your question content.",
         trigger: 'input[name=post_name]',

@@ -10,7 +10,7 @@
                   class="js_follow_email form-control"
                   placeholder="your email..."
                   groups="base.group_public"/>
-            <div class="input-group-append">
+            <div t-att-class="(request.env.user.has_group('base.group_public') and 'input-group-append ' or '') + (div_class or '')">
                 <button href="#" t-attf-class="btn btn-secondary js_unfollow_btn">Unsubscribe</button>
                 <button href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>
             </div>
