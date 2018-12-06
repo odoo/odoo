@@ -1,4 +1,4 @@
-odoo.define('document.tests', function (require) {
+odoo.define('attachment_indexation.tests', function (require) {
     "use strict";
 
     var testUtils = require('web.test_utils');
@@ -7,7 +7,7 @@ odoo.define('document.tests', function (require) {
 
     var createView = testUtils.createView;
 
-    QUnit.module('DocumentTest', {
+    QUnit.module('AttachmentIndexationTest', {
         beforeEach: function () {
             this.data = {
                 partner: {
@@ -47,7 +47,7 @@ odoo.define('document.tests', function (require) {
         }
     }, function () {
         QUnit.module('DocView');
-        QUnit.test('documentAttachmentTest', function (assert) {
+        QUnit.test('AttachmentIndexationAttachmentTest', function (assert) {
             assert.expect(3);
 
             var form = createView({
