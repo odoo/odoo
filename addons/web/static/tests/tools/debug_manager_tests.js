@@ -109,7 +109,7 @@ QUnit.module('DebugManager', {}, function () {
             'ir.default': { // We just need this to be defined
                 fields: {},
             },
-        }
+        };
 
         var form = testUtils.createView({
             View: FormView,
@@ -138,6 +138,7 @@ QUnit.module('DebugManager', {}, function () {
 
         // Simulate update debug manager from web client
         var action = {
+            controlPanelFieldsView: {},
             views: [{
                 fieldsView: {
                     view_id: 1,

@@ -12,18 +12,21 @@ odoo.define('web.AbstractController', function (require) {
  * reading localstorage, ...) has to go through the controller.
  */
 
-var AbstractAction = require('web.AbstractAction');
+var ActionMixin = require('web.ActionMixin');
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
-var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
+var mvc = require('web.mvc');
 
 var QWeb = core.qweb;
 
-var AbstractController = AbstractAction.extend(ControlPanelMixin, {
+var AbstractController = mvc.Controller.extend(ActionMixin, {
     custom_events: {
+        get_controller_query_params: '_onGetControllerQueryParams',
+        navigation_move: '_onNavigationMove',
         open_record: '_onOpenRecord',
+        search: '_onSearch',
         switch_view: '_onSwitchView',
     },
     events: {
@@ -31,50 +34,30 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
     },
 
     /**
-     * @constructor
-     * @param {Widget} parent
-     * @param {AbstractModel} model
-     * @param {AbstractRenderer} renderer
-     * @param {object} params
+     * @override
      * @param {string} params.modelName
      * @param {string} [params.controllerID] an id to ease the communication
      *   with upstream components
+     * @param {ControlPanelController} [params.controlPanel]
      * @param {any} [params.handle] a handle that will be given to the model (some id)
-     * @param {any} params.initialState the initialState
      * @param {boolean} params.isMultiRecord
      * @param {Object[]} params.actionViews
      * @param {string} params.viewType
-     * @param {boolean} params.withControlPanel set to false to hide the
-     *   ControlPanel
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.model = model;
-        this.renderer = renderer;
+        this._controlPanel = params.controlPanel;
+        this._title = params.displayName;
         this.modelName = params.modelName;
-        this.handle = params.handle;
         this.activeActions = params.activeActions;
         this.controllerID = params.controllerID;
         this.initialState = params.initialState;
         this.bannerRoute = params.bannerRoute;
-        // use a DropPrevious to correctly handle concurrent updates
-        this.dp = new concurrency.DropPrevious();
-        // those arguments are temporary, they won't be necessary as soon as the
-        // ControlPanel will be handled by the View
-        this.displayName = params.displayName;
         this.isMultiRecord = params.isMultiRecord;
-        this.searchable = params.searchable;
-        this.searchView = params.searchView;
-        this.searchViewHidden = params.searchViewHidden;
-        this.groupable = params.groupable;
-        this.enableTimeRangeMenu = params.enableTimeRangeMenu;
         this.actionViews = params.actionViews;
         this.viewType = params.viewType;
-        this.withControlPanel = params.withControlPanel !== false;
-        // override this.need_control_panel so that the ActionManager doesn't
-        // update the control panel when it isn't visible (this is a temporary
-        // hack that can be removed as soon as the CP'll be handled by the view)
-        this.need_control_panel = this.withControlPanel;
+        // use a DropPrevious to correctly handle concurrent updates
+        this.dp = new concurrency.DropPrevious();
     },
     /**
      * Simply renders and updates the url.
@@ -86,13 +69,13 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
 
         this.$el.addClass('o_view_controller');
 
-        // render the ControlPanel elements (buttons, pager, sidebar...)
-        this.controlPanelElements = this._renderControlPanelElements();
+        return this._super.apply(this, arguments).then(function () {
+            if (self._controlPanel) {
+                // render the ControlPanel elements (buttons, pager, sidebar...)
+                self.controlPanelElements = self._renderControlPanelElements();
+                self._controlPanel.$el.prependTo(self.$el);
+            }
 
-        return $.when(
-            this._super.apply(this, arguments),
-            this.renderer.appendTo(this.$el)
-        ).then(function () {
             return self._update(self.initialState);
         });
     },
@@ -106,14 +89,14 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         if (this.controlPanelElements && this.controlPanelElements.$switch_buttons) {
             this.controlPanelElements.$switch_buttons.off();
         }
-        return this._super.apply(this, arguments);
+        this._super.apply(this, arguments);
     },
     /**
      * Called each time the controller is attached into the DOM.
      */
     on_attach_callback: function () {
-        if (this.searchView) {
-            this.searchView.on_attach_callback();
+        if (this._controlPanel) {
+            this._controlPanel.on_attach_callback();
         }
         this.renderer.on_attach_callback();
     },
@@ -153,26 +136,18 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         return $.when();
     },
     /**
-     * Returns any special keys that may be useful when reloading the view to
-     * get the same effect.  This is necessary for saving the current view in
-     * the favorites.  For example, a graph view might want to add a key to
-     * save the current graph type.
+     * Export the state of the controller containing information that is shared
+     * between different controllers of a same action (like the current
+     * searchQuery of the controlPanel).
      *
      * @returns {Object}
      */
-    getContext: function () {
-        return {};
-    },
-    /**
-     * Returns a title that may be displayed in the breadcrumb area.  For
-     * example, the name of the record.
-     *
-     * note: this will be moved to AbstractAction
-     *
-     * @returns {string}
-     */
-    getTitle: function () {
-        return this.displayName;
+    exportState: function () {
+        var state = {};
+        if (this._controlPanel) {
+            state.cpState = this._controlPanel.exportState();
+        }
+        return state;
     },
     /**
      * Gives the focus to the renderer
@@ -199,7 +174,16 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      * @returns {Deferred}
      */
     reload: function (params) {
-        return this.update(params || {});
+        params = params || {};
+        var def;
+        var controllerState = params.controllerState || {};
+        var cpState = controllerState.cpState;
+        if (this._controlPanel && cpState) {
+            def = this._controlPanel.importState(cpState).then(function (searchQuery) {
+                params = _.extend({}, params, searchQuery);
+            });
+        }
+        return $.when(def).then(this.update.bind(this, params, {}));
     },
     /**
      * For views that require a pager, this method will be called to allow the
@@ -246,16 +230,16 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         // and this controller should no longer update the control panel.
         // note that this won't be necessary as soon as each controller will have
         // its own control panel
-        var cpUpdateIndex = this.cp_bus && this.cp_bus.updateIndex;
+        var cpUpdateIndex = this._controlPanel && this._controlPanel.updateIndex;
         return this.dp.add(def).then(function (handle) {
-            if (self.cp_bus && cpUpdateIndex !== self.cp_bus.updateIndex) {
+            if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
                 return;
             }
             self.handle = handle || self.handle; // update handle if we reloaded
             var state = self.model.get(self.handle);
             var localState = self.renderer.getLocalState();
             return self.dp.add(self.renderer.updateState(state, params)).then(function () {
-                if (self.cp_bus && cpUpdateIndex !== self.cp_bus.updateIndex) {
+                if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
                     return;
                 }
                 self.renderer.setLocalState(localState);
@@ -327,7 +311,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
                         js.remove();
                     });
                     return $.when.apply($, defs).then(function () {
-                        $banner.prependTo(self.$el);
+                        $banner.prependTo(self.$('> .o_content'));
                         self._$banner = $banner;
                     });
                 });
@@ -342,24 +326,20 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      * @returns {Object} an object containing the control panel jQuery elements
      */
     _renderControlPanelElements: function () {
-        var elements = {};
+        var elements = {
+            $buttons: $('<div>'),
+            $sidebar: $('<div>'),
+            $pager: $('<div>'),
+        };
 
-        if (this.withControlPanel) {
-            elements = {
-                $buttons: $('<div>'),
-                $sidebar: $('<div>'),
-                $pager: $('<div>'),
-            };
-
-            this.renderButtons(elements.$buttons);
-            this.renderSidebar(elements.$sidebar);
-            this.renderPager(elements.$pager);
-            // remove the unnecessary outer div
-            elements = _.mapObject(elements, function($node) {
-                return $node && $node.contents();
-            });
-            elements.$switch_buttons = this._renderSwitchButtons();
-        }
+        this.renderButtons(elements.$buttons);
+        this.renderSidebar(elements.$sidebar);
+        this.renderPager(elements.$pager);
+        // remove the unnecessary outer div
+        elements = _.mapObject(elements, function($node) {
+            return $node && $node.contents();
+        });
+        elements.$switch_buttons = this._renderSwitchButtons();
 
         return elements;
     },
@@ -379,6 +359,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
 
         var template = config.device.isMobile ? 'ControlPanel.SwitchButtons.Mobile' : 'ControlPanel.SwitchButtons';
         var $switchButtons = $(QWeb.render(template, {
+            viewType: this.viewType,
             views: views,
         }));
         // create bootstrap tooltips
@@ -392,13 +373,20 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             self.trigger_up('switch_view', {view_type: viewType});
         }, 200, true));
 
+        // set active view's icon as view switcher button's icon in mobile
         if (config.device.isMobile) {
-            // set active view's icon as view switcher button's icon
             var activeView = _.findWhere(views, {type: this.viewType});
             $switchButtons.find('.o_switch_view_button_icon').addClass('fa fa-lg ' + activeView.icon);
         }
 
         return $switchButtons;
+    },
+    /**
+     * @override
+     * @private
+     */
+    _startRenderer: function () {
+        return this.renderer.appendTo(this.$('.o_content'));
     },
     /**
      * This method is called after each update or when the start method is
@@ -413,23 +401,12 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      * @param {Object} state the state given by the model
      * @returns {Deferred}
      */
-    _update: function (state) {
+    _update: function () {
         // AAB: update the control panel -> this will be moved elsewhere at some point
         var cpContent = _.extend({}, this.controlPanelElements);
-        if (this.searchView) {
-            _.extend(cpContent, {
-                $searchview: this.searchView.$el,
-                $searchview_buttons: this.searchView.$buttons,
-            });
-        }
-        this.update_control_panel({
-            active_view_selector: '.o_cp_switch_' + this.viewType,
+        this.updateControlPanel({
             cp_content: cpContent,
-            hidden: !this.withControlPanel,
-            searchview: this.searchView,
-            search_view_hidden: !this.searchable || this.searchviewHidden,
-            groupable: this.groupable,
-            enableTimeRangeMenu: this.enableTimeRangeMenu,
+            title: this.getTitle(),
         });
 
         this._pushState();
@@ -479,6 +456,36 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         }
     },
     /**
+     * FIXME: this logic should be rethought
+     *
+     * Handles a context request: provides to the caller the state of the
+     * current controller.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested state
+     */
+    _onGetControllerQueryParams: function (ev) {
+        ev.stopPropagation();
+        var state = this.getOwnedQueryParams();
+        ev.data.callback(state || {});
+    },
+    /**
+     * Called mainly from the control panel when the focus should be given to
+     * the controller
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onNavigationMove : function (ev) {
+        switch(ev.data.direction) {
+            case 'down' :
+                ev.stopPropagation();
+                this.giveFocus();
+                break;
+        }
+    },
+    /**
      * When an Odoo event arrives requesting a record to be opened, this method
      * gets the res_id, and request a switch view in the appropriate mode
      *
@@ -501,6 +508,20 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             mode: ev.data.mode || 'readonly',
             model: this.modelName,
         });
+    },
+    /**
+     * Called when there is a change in the search view, so the current action's
+     * environment needs to be updated with the new domain, context and groupby.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Array[]} ev.data.domain
+     * @param {Object} ev.data.context
+     * @param {string[]} ev.data.groupby
+     */
+    _onSearch: function (ev) {
+        ev.stopPropagation();
+        this.reload(_.extend({offset: 0}, ev.data));
     },
     /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,

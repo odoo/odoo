@@ -75,7 +75,7 @@ var CalendarController = AbstractController.extend({
      * @returns {string}
      */
     getTitle: function () {
-        return this.get('title');
+        return this._title;
     },
     /**
      * Render the buttons according to the CalendarView.buttons template and
@@ -156,7 +156,7 @@ var CalendarController = AbstractController.extend({
      * @returns {Deferred}
      */
     _updateRecord: function (record) {
-        return this.model.updateRecord(record).then(this.reload.bind(this));
+        return this.model.updateRecord(record).then(this.reload.bind(this, {}));
     },
 
     //--------------------------------------------------------------------------
@@ -430,7 +430,7 @@ var CalendarController = AbstractController.extend({
             this.$buttons.find('.active').removeClass('active');
             this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
         }
-        this.set({title: this.displayName + ' (' + event.data.title + ')'});
+        this._setTitle(this.displayName + ' (' + event.data.title + ')');
     },
 });
 

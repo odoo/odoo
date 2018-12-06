@@ -87,10 +87,10 @@ var ListController = BasicController.extend({
     /*
      * @override
      */
-    getContext: function () {
-        var context = this._super.apply(this, arguments);
-        context.orderedBy = this.model.get(this.handle, {raw: true}).orderedBy || [];
-        return context;
+    getOwnedQueryParams: function () {
+        var state = this._super.apply(this, arguments);
+        var orderedBy = this.model.get(this.handle, {raw: true}).orderedBy || [];
+        return _.extend({}, state, {orderedBy: orderedBy});
     },
     /**
      * Returns the list of currently selected res_ids (with the check boxes on

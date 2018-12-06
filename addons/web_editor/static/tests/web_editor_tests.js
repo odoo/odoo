@@ -256,7 +256,7 @@ QUnit.test('html_frame does not crash when saving in edit mode (editor not loade
     });
 
     testUtils.form.clickEdit(form);
-    testUtils.fields.editInput(form.$('input'), 'trululu');
+    testUtils.fields.editInput(form.$('input.o_input.o_field_char'), 'trululu');
     testUtils.form.clickSave(form); // crash without editor fully loaded
 
     assert.verifySteps(['read']);
@@ -308,7 +308,7 @@ QUnit.test('html_frame saving in edit mode (editor and content fully loaded)', f
     });
 
     testUtils.form.clickEdit(form);
-    testUtils.fields.editInput(form.$('input'), 'trululu');
+    testUtils.fields.editInput(form.$('input.o_input.o_field_char'), 'trululu');
     testUtils.form.clickSave(form);
 
     loadDeferred.resolve(); // simulate late loading of html frame

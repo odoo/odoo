@@ -4,12 +4,13 @@ odoo.define('web.search_filters', function (require) {
 var core = require('web.core');
 var datepicker = require('web.datepicker');
 var field_utils = require('web.field_utils');
+var search_filters_registry = require('web.search_filters_registry');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var _lt = core._lt;
 
-var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
+var ExtendedSearchProposition = Widget.extend({
     template: 'SearchView.extended_search.proposition',
     events: {
         'change .o_searchview_extended_prop_field': 'changed',
@@ -25,10 +26,7 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
         },
     },
     /**
-     * @constructs instance.web.search.ExtendedSearchProposition
-     * @extends instance.web.Widget
-     *
-     * @param parent
+     * @override
      * @param fields
      */
     init: function (parent, fields) {
@@ -46,8 +44,8 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
     },
     changed: function () {
         var nval = this.$(".o_searchview_extended_prop_field").val();
-        if(this.attrs.selected === null || this.attrs.selected === undefined || nval != this.attrs.selected.name) {
-            this.select_field(_.detect(this.fields, function (x) {return x.name == nval;}));
+        if(this.attrs.selected === null || this.attrs.selected === undefined || nval !== this.attrs.selected.name) {
+            this.select_field(_.detect(this.fields, function (x) {return x.name === nval;}));
         }
     },
     operator_changed: function (e) {
@@ -71,7 +69,7 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
         }
 
         var type = field.type;
-        var Field = core.search_filters_registry.getAny([type, "char"]);
+        var Field = search_filters_registry.getAny([type, "char"]);
 
         this.value = new Field(this, field);
         _.each(this.value.operators, function (operator) {
@@ -84,8 +82,9 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
 
     },
     get_filter: function () {
-        if (this.attrs.selected === null || this.attrs.selected === undefined)
+        if (this.attrs.selected === null || this.attrs.selected === undefined) {
             return null;
+        }
         var field = this.attrs.selected,
             op_select = this.$('.o_searchview_extended_prop_op')[0],
             operator = op_select.options[op_select.selectedIndex];
@@ -172,6 +171,15 @@ var Char = Field.extend({
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
+    get_domain: function (field, operator) {
+        switch (operator.value) {
+        case '∃': return [[field.name, '!=', false]];
+        case '∄': return [[field.name, '=', false]];
+        // does not work in all cases
+        // default: return "[('" + field.name + "', '" + operator.value + "', '" + this.get_value() + "')]";
+        default: return [[field.name, operator.value, this.get_value()]];
+        }
+    },
     get_value: function () {
         return this.$el.val();
     }
@@ -358,23 +366,17 @@ var Boolean = Field.extend({
     }
 });
 
-core.search_filters_registry
-    .add('char', Char)
-    .add('text', Char)
-    .add('one2many', Char)
-    .add('many2one', Char)
-    .add('many2many', Char)
-    .add('datetime', DateTime)
-    .add('date', Date)
-    .add('integer', Integer)
-    .add('float', Float)
-    .add('monetary', Float)
-    .add('boolean', Boolean)
-    .add('selection', Selection)
-    .add('id', Id);
-
 return {
-    ExtendedSearchProposition: ExtendedSearchProposition
+    Boolean: Boolean,
+    Char: Char,
+    Date: Date,
+    DateTime: DateTime,
+    ExtendedSearchProposition: ExtendedSearchProposition,
+    Field: Field,
+    Float: Float,
+    Id: Id,
+    Integer: Integer,
+    Selection: Selection,
 };
 
 });

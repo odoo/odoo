@@ -36,8 +36,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.confirmOnDelete = params.confirmOnDelete;
         this.hasButtons = params.hasButtons;
         FieldManagerMixin.init.call(this, this.model);
-        this.handle = params.initialState.id;
         this.mode = params.mode || 'readonly';
+        this.handle = this.initialState.id;
     },
     /**
      * @override
@@ -200,6 +200,18 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             self._updateEnv();
             self._updatePager();
         });
+    },
+    /**
+     * @override
+     */
+    reload: function (params) {
+        if (params && params.controllerState) {
+            if (params.controllerState.currentId) {
+                params.currentId = params.controllerState.currentId;
+            }
+            params.ids = params.controllerState.resIds;
+        }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -369,6 +381,20 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }
     },
     /**
+     * Override to add the current record ID (currentId) and the list of ids
+     * (resIds) in the current dataPoint to the exported state.
+     *
+     * @override
+     */
+    exportState: function () {
+        var state = this._super.apply(this, arguments);
+        var env = this.model.get(this.handle, {env: true});
+        return _.extend(state, {
+            currentId: env.currentId,
+            resIds: env.ids,
+        });
+    },
+    /**
      * Returns the new sidebar env
      *
      * @private
@@ -487,7 +513,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             var sidebarEnv = this._getSidebarEnv();
             this.sidebar.updateEnv(sidebarEnv);
         }
-        this.trigger_up('env_updated', {controllerID: this.controllerID, env: env});
     },
     /**
      * Helper method, to make sure the information displayed by the pager is up

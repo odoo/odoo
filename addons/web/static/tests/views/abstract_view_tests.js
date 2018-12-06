@@ -3,9 +3,9 @@ odoo.define('web.abstract_view_tests', function (require) {
 
 var AbstractView = require('web.AbstractView');
 var ajax = require('web.ajax');
-var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
+var createActionManager = testUtils.createActionManager;
 var createAsyncView = testUtils.createAsyncView;
 
 QUnit.module('Views', {
@@ -112,22 +112,36 @@ QUnit.module('Views', {
         defs.c.resolve();
     });
 
-    QUnit.test('groupBy attribute can be a string, instead of a list of strings', function (assert) {
-        assert.expect(2);
+    QUnit.test('group_by from context can be a string, instead of a list of strings', function (assert) {
+        assert.expect(1);
 
-        var list = testUtils.createView({
-            View: ListView,
-            model: 'foo',
+        var actionManager = createActionManager({
+            actions: [{
+                id: 1,
+                name: 'Foo',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list']],
+                context: {
+                    group_by: 'bar',
+                },
+            }],
+            archs: {
+                'foo,false,list': '<tree><field name="foo"/><field name="bar"/></tree>',
+                'foo,false,search': '<search></search>',
+            },
             data: this.data,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
-            groupBy: 'bar',
-            mockRPC: function (route, args) {
-                assert.strictEqual(args.method, 'read_group');
-                assert.deepEqual(args.kwargs.groupby, ['bar']);
+            mockRPC: function(route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.groupby, ['bar']);
+                }
                 return this._super.apply(this, arguments);
             },
         });
-        list.destroy();
+
+        actionManager.doAction(1);
+
+        actionManager.destroy();
     });
 
 });

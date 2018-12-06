@@ -402,7 +402,7 @@ QUnit.module('Views', {
         // Ascending order on Date
         list.$('th.o_column_sortable:contains("Date")').click();
 
-        var listContext = list.getContext();
+        var listContext = list.getOwnedQueryParams();
         assert.deepEqual(listContext,
             {
                 orderedBy: [{
@@ -416,7 +416,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('Loading a filter with a sort attribute', function (assert) {
+    QUnit.test('loading a filter with a sort attribute', function (assert) {
         assert.expect(2);
 
         this.data.foo.fields.foo.sortable = true;
@@ -431,15 +431,6 @@ QUnit.module('Views', {
                     '<field name="foo"/>' +
                     '<field name="date"/>' +
                 '</tree>',
-            context: {
-                orderedBy: [{
-                        name: 'date',
-                        asc: true,
-                    }, {
-                        name: 'foo',
-                        asc: false,
-                }]
-            },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     if (searchReads === 0) {
@@ -453,22 +444,34 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this,arguments);
             },
+            intercepts: {
+                load_filters: function (event) {
+                    return $.when([
+                        {
+                            context: "{}",
+                            domain: "[]",
+                            id: 7,
+                            is_default: true,
+                            name: "My favorite",
+                            sort: "[\"date asc\", \"foo desc\"]",
+                            user_id: [2, "Mitchell Admin"],
+                        }, {
+                            context: "{}",
+                            domain: "[]",
+                            id: 8,
+                            is_default: false,
+                            name: "My second favorite",
+                            sort: "[\"date desc\", \"foo asc\"]",
+                            user_id: [2, "Mitchell Admin"],
+                        }
+                    ]).then(event.data.on_success);
+                },
+            },
         });
 
-        // Simulate loading a filter
-        list.update({
-            context: {
-                orderedBy: [{
-                        name: 'date',
-                        asc: false,
-                    }, {
-                        name: 'foo',
-                        asc: true,
-                    }]
-                }
-            });
-
-        list.destroy()
+        testUtils.dom.click(list.$('.o_control_panel .o_search_options button.o_favorites_menu_button'));
+        testUtils.dom.click(list.$('.o_control_panel .o_search_options .o_favorites_menu .o_menu_item').eq(1));
+        list.destroy();
     });
 
     QUnit.test('many2one field rendering', function (assert) {
@@ -1443,7 +1446,7 @@ QUnit.module('Views', {
         });
 
         // Change page
-        testUtils.dom.click(form.$('.o_pager_next'));
+        testUtils.dom.click(form.$('.o_field_widget[name=o2m] .o_pager_next'));
         assert.strictEqual(form.$('tbody tr:first').text(), 'Value 44',
             "record 44 should be first");
         assert.strictEqual(form.$('tbody tr:eq(4)').text(), 'Value 48',
@@ -1712,9 +1715,8 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_view_nocontent',
             "should not have a no content helper displayed");
         assert.containsOnce(list, 'table', "should have rendered a table");
-        assert.strictEqual(list.$el.css('height'), list.$('div.table-responsive').css('height'),
+        assert.strictEqual(list.$('.o_content').css('height'), list.$('div.table-responsive').css('height'),
             "the div for the table should take the full height");
-
 
         assert.hasClass(list.$('tbody tr:eq(0)'),'o_selected_row',
             "the date field td should be in edit mode");
@@ -2051,15 +2053,12 @@ QUnit.module('Views', {
                     assert.strictEqual(event.data.res_id, 4,
                         "'switch_view' event has been triggered");
                 },
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
             },
         });
 
         assert.strictEqual(nbRPCs.readGroup, 1, "should have done one read_group");
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
+        assert.deepEqual(list.exportState().resIds, envIDs);
 
         // basic rendering tests
         assert.containsOnce(list, 'tbody', "there should be 1 tbody");
@@ -2079,6 +2078,7 @@ QUnit.module('Views', {
         testUtils.dom.click(list.$('.o_group_header:first'));
         assert.strictEqual(nbRPCs.readGroup, 1, "should have done one read_group");
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
+        assert.deepEqual(list.exportState().resIds, envIDs);
 
         var $openGroup = list.$('tbody:nth(1)');
         assert.strictEqual(list.$('.o_group_name:first').text(), 'Value 1 (4)',
@@ -2101,6 +2101,7 @@ QUnit.module('Views', {
         testUtils.dom.click($openGroup.find('.o_group_header:nth(2)'));
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
+        assert.deepEqual(list.exportState().resIds, envIDs);
 
         var $openSubGroup = list.$('tbody:nth(2)');
         assert.containsN(list, 'tbody', 4, "there should be 4 tbodys");
@@ -2118,6 +2119,7 @@ QUnit.module('Views', {
         testUtils.dom.click(list.$('thead th:last'));
         assert.strictEqual(nbRPCs.readGroup, 2, "should have done two read_groups");
         assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
+        assert.deepEqual(list.exportState().resIds, envIDs);
 
         $openSubGroup = list.$('tbody:nth(2)');
         assert.containsN(list, 'tbody', 4, "there should be 4 tbodys");
@@ -2132,6 +2134,7 @@ QUnit.module('Views', {
         testUtils.dom.click(list.$('.o_group_header:nth(1)'));
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
+        assert.deepEqual(list.exportState().resIds, envIDs);
 
         assert.containsOnce(list, 'tbody', "there should be 1 tbody");
         assert.containsN(list, '.o_group_header', 2,
@@ -2202,14 +2205,14 @@ QUnit.module('Views', {
             "height of group header shouldn't have changed");
         assert.hasClass(list.$('.o_group_header td:last'),'o_group_pager',
             "last cell of open group header should have classname 'o_group_header'");
-        assert.strictEqual(list.$('.o_pager_value').text(), '1-3',
+        assert.strictEqual(list.$('.o_group_header .o_pager_value').text(), '1-3',
             "pager's value should be correct");
         assert.containsN(list, '.o_data_row', 3,
             "open group should display 3 records");
 
         // go to next page
-        testUtils.dom.click(list.$('.o_pager_next'));
-        assert.strictEqual(list.$('.o_pager_value').text(), '4-4',
+        testUtils.dom.click(list.$('.o_group_header .o_pager_next'));
+        assert.strictEqual(list.$('.o_group_header .o_pager_value').text(), '4-4',
             "pager's value should be correct");
         assert.containsOnce(list, '.o_data_row',
             "open group should display 1 record");
@@ -2584,7 +2587,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('display toolbar', function (assert) {
-        assert.expect(3);
+        assert.expect(6);
 
         var list = createView({
             View: ListView,
@@ -2605,13 +2608,20 @@ QUnit.module('Views', {
             },
         });
 
-        var $dropdowns = $('.o_web_client .o_control_panel .btn-group .o_dropdown_toggler_btn');
-        assert.strictEqual($dropdowns.length, 2,
-            "there should be 2 dropdowns in the toolbar.");
-        var $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[1].children;
-        assert.strictEqual($actions.length, 3,
+        var $printMenu = list.$('.o_cp_sidebar .o_dropdown:contains(Print)');
+        assert.isNotVisible($printMenu);
+        var $actionMenu = list.$('.o_cp_sidebar .o_dropdown:contains(Action)');
+        assert.isNotVisible($actionMenu);
+
+        testUtils.dom.click(list.$('.o_list_record_selector:first input'));
+
+        assert.isNotVisible($printMenu);
+        assert.isVisible($actionMenu);
+
+        testUtils.dom.click($actionMenu.find('button')); // open Action menu
+        assert.strictEqual($actionMenu.find('.dropdown-item').length, 3,
             "there should be 3 actions");
-        var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-item:nth(2)');
+        var $customAction = $actionMenu.find('.dropdown-item:last');
         assert.strictEqual($customAction.text().trim(), 'Action event',
             "the custom action should have 'Action event' as name");
 
@@ -3859,7 +3869,9 @@ QUnit.module('Views', {
         // call destroy function of controller to ensure that it correctly destroys everything
         list.__destroy();
 
-        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+        // + 1 (parent)
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 1,
+            "every widget must be destroyed exept the parent");
 
         list.destroy();
 
