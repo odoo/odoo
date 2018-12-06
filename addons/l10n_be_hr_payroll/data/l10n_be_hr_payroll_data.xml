@@ -248,32 +248,58 @@ else:
     <record id="hr_payroll_rules_bareme" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
         <field name="name">Withholding Tax</field>
-        <field name="code">B.I.</field>
-        <field name="amount_select">fix</field>
+        <field name="code">P.P</field>
         <field name="sequence">120</field>
-        <field name="condition_select">python</field>
-        <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital in ['divorced', 'single', 'widower']) or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
-    </record>
-    <record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_pp"/>
-        <field name="name">Withholding Tax</field>
-        <field name="code">B.II</field>
-        <field name="amount_select">fix</field>
-        <field name="sequence">120</field>
-        <field name="condition_select">python</field>
-        <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = ((employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='without income') and (employee.resident_bool!=True))</field>
-    </record>
-    <record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_pp"/>
-        <field name="name">Withholding Tax</field>
-        <field name="code">B.III</field>
-        <field name="amount_select">fix</field>
-        <field name="sequence">120</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = employee.resident_bool==True</field>
-        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def compute_basic_bareme(value):
+    if value &lt;= 12600.0:
+        basic_bareme = value * 0.2675
+    elif value &lt;= 18610.0:
+        basic_bareme = 3370.5 + 0.428 * (value - 12600.0)
+    elif value &lt;= 39660.0:
+        basic_bareme = 5942.78 + 0.4815 * (value - 18610.0)
+    else:
+        basic_bareme = 16078.36 + 0.535 * (value - 39660.0)
+    return float_round(basic_bareme, precision_rounding=0.01)
+
+def convert_to_month(value):
+    return float_round(value / 12.0, precision_rounding=0.01, rounding_method='DOWN')
+
+# PART 1: Withholding tax amount computation
+withholding_tax_amount = 0.0
+lower_bound = categories.GROSS - categories.GROSS % 15
+
+# yearly_gross_revenue = Revenu Annuel Brut
+yearly_gross_revenue = lower_bound * 12.0
+
+# yearly_net_taxable_amount = Revenu Annuel Net Imposable
+if yearly_gross_revenue &lt;= 15733.33:
+    yearly_net_taxable_revenue = yearly_gross_revenue * (1.0 - 0.3)
+else:
+    yearly_net_taxable_revenue = yearly_gross_revenue - 4720.0
+
+# BAREME III: Non resident
+if employee.resident_bool:
+    basic_bareme = compute_basic_bareme(yearly_net_taxable_revenue)
+    withholding_tax_amount = convert_to_month(basic_bareme)
+else:
+    # BAREME I: Isolated or spouse with income 
+    if employee.marital in ['divorced', 'single', 'widower'] or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income'):
+        basic_bareme = max(compute_basic_bareme(yearly_net_taxable_revenue) - 1690.6, 0.0)
+        withholding_tax_amount = convert_to_month(basic_bareme)
+
+    # BAREME II: spouse without income
+    if employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='without income':
+        yearly_net_taxable_revenue_for_spouse = min(yearly_net_taxable_revenue * 0.3, 10710.0)
+        basic_bareme_1 = compute_basic_bareme(yearly_net_taxable_revenue_for_spouse)
+        basic_bareme_2 = compute_basic_bareme(yearly_net_taxable_revenue - yearly_net_taxable_revenue_for_spouse)
+        withholding_tax_amount = convert_to_month(max(basic_bareme_1 + basic_bareme_2 - 3381.2, 0))
+
+result = - withholding_tax_amount
+        </field>
     </record>
     <record id="hr_salary_rule_pp_reduction_employees" model="hr.salary.rule">
         <field name="category_id" ref="hr_salary_rule_pp_reductions"/> 
@@ -607,8 +633,6 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_salary_rule_employment_bonus_employees'),
             ref('hr_payroll_rules_employee'),
             ref('hr_payroll_rules_bareme'),
-            ref('hr_payroll_rules_baremeII'),
-            ref('hr_payroll_rules_baremeIII'),
             ref('hr_salary_rule_other_family_charges_reductions'),
             ref('hr_payroll_rules_child_alw'),
             ref('hr_payroll_rules_ch_worker'),
@@ -635,8 +659,6 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_payroll_rules_onss_rule'),
             ref('hr_salary_rule_employment_bonus_workers'),
             ref('hr_payroll_rules_bareme'),
-            ref('hr_payroll_rules_baremeII'),
-            ref('hr_payroll_rules_baremeIII'),
             ref('hr_payroll_rules_child_alw'),
             ref('hr_salary_rule_other_family_charges_reductions'),
             ref('hr_payroll_rules_ch_worker'),
