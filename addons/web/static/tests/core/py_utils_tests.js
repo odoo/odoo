@@ -1254,6 +1254,13 @@ QUnit.module('core', function () {
         assert.checkAST(expr);
     });
 
+    QUnit.test("parse escaped quoted strings", function (assert) {
+        assert.expect(2);
+
+        assert.checkAST(`'\"'`, "a string containing \"");
+        assert.checkAST(`'\'`, "a string containing \'");
+    });
+
     QUnit.module('pyutils (_normalizeDomain)');
 
     QUnit.assert.checkNormalization = function (domain, normalizedDomain) {
