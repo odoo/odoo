@@ -8,7 +8,7 @@ $o-theme-layout: 'full';
 $-palettes: ();
 @each $palette in $o-color-palettes {
     $-palettes: append($-palettes, map-merge((
-        'body': null, // Default to bootstrap
+        'body': $o-portal-default-body-bg,
         'menu': #F9F9F9,
         'footer': #F9F9F9,
         'text': null, // Default to bootstrap
