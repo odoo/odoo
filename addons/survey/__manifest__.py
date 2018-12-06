@@ -36,7 +36,6 @@ sent mails with personal token for the invitation of the survey.
     'demo': [
         'data/survey_demo_user.xml',
         'data/survey_demo_feedback.xml',
-        'data/survey.user_input.csv',
         'data/survey.user_input_line.csv'
     ],
     'installable': True,
