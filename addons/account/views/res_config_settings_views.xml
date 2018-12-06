@@ -437,24 +437,41 @@
                                 </div>
                             </div>
                         </div>
-                       <h2>Default Sending Options</h2>
-                        <div class="row mt16 o_settings_container" id="send_default">
+                       <h2>Send &#38; Print</h2>
+                        <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="invoice_is_print"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="invoice_is_print"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                    <span class="o_form_label">Default Sending Options</span>
+                                    <div class="text-muted">
+                                        Those options will be checked by default
+                                    </div>
+                                    <div class="mt16">
+                                        <div class="content-group" id="send_default">
+                                            <div class="row">
+                                                <field name="invoice_is_print" class="col-lg-1 ml16"/>
+                                                <label for="invoice_is_print"/>
+                                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                            </div>
+                                            <div class="row">
+                                                <field name="invoice_is_email" class="col-lg-1 ml16"/>
+                                                <label for="invoice_is_email"/>
+                                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="invoice_is_email"/>
+                                    <field name="module_snailmail_account"/>
                                 </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="invoice_is_email"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                <div class="o_setting_right_pane" id="snailmail_settings">
+                                    <label for="module_snailmail_account"/>
+                                    <div class="text-muted">
+                                        Send invoices and payment follow-ups by post
+                                    </div>
                                 </div>
                             </div>
                         </div>
