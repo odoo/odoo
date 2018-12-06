@@ -24,6 +24,7 @@ class TestBenefit(TestPayslipBase):
             'resource_calendar_id': self.resource_calendar_id.id,
             'wage': 1000,
             'employee_id': self.richard_emp.id,
+            'struct_id': self.developer_pay_structure.id,
             'state': 'open',
         })
         self.richard_emp.resource_calendar_id = self.resource_calendar_id
@@ -40,9 +41,9 @@ class TestBenefit(TestPayslipBase):
             'benefit_type_id': self.benefit_type_leave.id
         })
         self.benefit_type = self.env['hr.benefit.type'].create({
-            'name': 'attendance',
+            'name': 'Extra attendance',
             'is_leave': False,
-            'code': 'LEAVE100'
+            'code': 'WORK200'
         })
 
     def test_no_duplicate(self):
@@ -104,6 +105,23 @@ class TestBenefit(TestPayslipBase):
         self.assertEqual(pytz.utc.localize(benefits[2].date_start), self.tz.localize(datetime.strptime('2013-11-03 00:00:00', '%Y-%m-%d %H:%M:%S')))
         self.assertEqual(pytz.utc.localize(benefits[2].date_stop), self.tz.localize(datetime.strptime('2013-11-03 23:59:59', '%Y-%m-%d %H:%M:%S')))
 
+    def test_approve_multiple_day_benefit(self):
+
+        start = datetime.strptime('2015-11-01 09:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=self.tz)
+        end = datetime.strptime('2015-11-03 18:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=self.tz)
+
+        # Benefit of type attendance should be split in three
+        benefit = self.env['hr.benefit'].create({
+            'name': '1',
+            'employee_id': self.richard_emp.id,
+            'date_start': start,
+            'date_stop': end,
+            'benefit_type_id': self.benefit_type.id,
+        })
+        benefit.action_validate(benefit.ids)
+        benefits = self.env['hr.benefit'].search([('employee_id', '=', self.richard_emp.id)])
+        self.assertTrue(all((b.state == 'validated' for b in benefits)), "Benefits should be approved")
+        self.assertEqual(len(benefits), 3, "Benefit should be split in three")
 
     def test_duplicate_global_benefit_to_attendance(self):
         start = datetime.strptime('2015-11-01 09:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=self.tz)
@@ -335,3 +353,52 @@ class TestBenefit(TestPayslipBase):
         leave_benef.action_validate(leave_benef.ids)
         data = self.richard_emp.get_benefit_days_data(self.benefit_type_leave, self.start, self.end)
         self.assertEqual(data['hours'], 0.0, "It should equal the number of hours richard should have worked")
+
+    def test_payslip_generation_with_leave(self):
+        # /!\ this is a week day => it exists an calendar attendance at this time
+        start = datetime.strptime('2015-11-02 10:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.utc) # UTC
+        end = datetime.strptime('2015-11-02 17:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.utc)
+        leave_benef = self.env['hr.benefit'].create({
+            'name': '1leave',
+            'employee_id': self.richard_emp.id,
+            'benefit_type_id': self.benefit_type_leave.id,
+            'date_start': start,
+            'date_stop': end,
+        })
+        leave_benef.action_validate(leave_benef.ids)
+        payslip_wizard = self.env['hr.payslip.employees'].create({'employee_ids': [(4, self.richard_emp.id)]})
+        payslip_wizard.with_context({'default_date_start': start.strftime('%Y-%m-%d'),'default_date_end': end.strftime('%Y-%m-%d')}).compute_sheet()
+        payslip = self.env['hr.payslip'].search([('employee_id', '=', self.richard_emp.id)])
+        work_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK100') # From default calendar.attendance
+        leave_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'LEAVE100')
+
+        self.assertTrue(work_line, "It should have a work line in the payslip")
+        self.assertTrue(leave_line, "It should have a leave line in the payslip")
+        self.assertEqual(work_line.number_of_hours, 3.0, "It should have 3 hours of work")
+        self.assertEqual(leave_line.number_of_hours, 5.0, "It should have 5 hours of leave")
+
+    def test_payslip_generation_with_extra_work(self):
+        # /!\ this is in the weekend (Sunday) => no calendar attendance at this time
+        start = datetime.strptime('2015-11-01 10:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.utc) # UTC
+        end = datetime.strptime('2015-11-01 17:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.utc)
+        benef = self.env['hr.benefit'].create({
+            'name': 'Extra',
+            'employee_id': self.richard_emp.id,
+            'benefit_type_id': self.benefit_type.id,
+            'date_start': start,
+            'date_stop': end,
+        })
+        benef.action_validate(benef.ids)
+        payslip_wizard = self.env['hr.payslip.employees'].create({'employee_ids': [(4, self.richard_emp.id)]})
+        payslip_wizard.with_context({
+            'default_date_start': start.strftime('%Y-%m-%d'),
+            'default_date_end': (end + relativedelta(days=1)).strftime('%Y-%m-%d')
+            }).compute_sheet()
+        payslip = self.env['hr.payslip'].search([('employee_id', '=', self.richard_emp.id)])
+        work_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK100') # From default calendar.attendance
+        leave_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK200')
+
+        self.assertTrue(work_line, "It should have a work line in the payslip")
+        self.assertTrue(leave_line, "It should have an extra work line in the payslip")
+        self.assertEqual(work_line.number_of_hours, 8.0, "It should have 8 hours of work") # Monday
+        self.assertEqual(leave_line.number_of_hours, 7.0, "It should have 5 hours of extra work") # Sunday
