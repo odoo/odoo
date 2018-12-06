@@ -1066,3 +1066,7 @@ table.table_desc tr td {
         background-color: rgba($value, 0.1);
     }
 }
+
+@each $media, $color in $o-social-colors {
+    @include text-emphasis-variant(".text-#{$media}", $color);
+}

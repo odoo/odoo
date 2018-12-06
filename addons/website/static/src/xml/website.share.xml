@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="website.social_hover">
-        <div class="row clearfix" style='font-size:16px'>
-            <div class="col-12 css_editable_mode_hidden">
-                <t t-foreach="medias" t-as="media">
-                    <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}" t-att-aria-label="media" t-att-title="media">
-                        <span class="fa fa-square fa-stack-2x"></span>
-                        <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
-                    </a>
-                </t>
-            </div>
+        <div class="text-nowrap css_editable_mode_hidden">
+            <t t-foreach="medias" t-as="media">
+                <a href="#"
+                    t-attf-class="fa fa-3x fa-#{media}-square text-#{media} oe_social_#{media}"
+                    t-att-title="media"
+                    t-att-aria-label="media"/>
+            </t>
         </div>
     </t>
 </templates>
