@@ -9,30 +9,24 @@ html {
         display: flex;
         flex-flow: column nowrap;
 
-        > .o_main {
+        > .o_action_manager {
+            direction: ltr; //Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
             flex: 1 1 auto;
-            display: flex;
-            min-height: 0; // Allow flex to shrink this element as much as it wants
             height: 100%;
+            overflow: hidden;
 
-            .o_main_content {
-                flex: 1 1 auto;
+            > .o_action {
+                height: 100%;
                 display: flex;
                 flex-flow: column nowrap;
-
-                .o_control_panel {
+                > .o_cp_controller {
                     flex: 0 0 auto;
                 }
-                .o_content {
+                > .o_content {
                     flex: 1 1 auto;
-                    height: 100%;
+                    position: relative;  // Allow to redistribute the 100% height to its child
                     overflow: auto;
-                    position: relative;
-
-                    > .o_view_controller {
-                        @include o-position-absolute(0, 0, 0, 0);  // Get the 100% height of its flex parent
-                        height: 100%;
-                    }
+                    height: 100%;
                 }
             }
         }

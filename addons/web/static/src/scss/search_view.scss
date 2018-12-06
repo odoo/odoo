@@ -14,6 +14,7 @@
     }
 
     .o_searchview_input_container {
+        position: relative;
         display: flex;
         flex-flow: row wrap;
 
@@ -182,7 +183,6 @@
         cursor: pointer;
     }
     .o_add_filter_menu { // apply and add buttons
-        display: none;  // Needed by the webclient
         @include o-search-options-dropdown-custom-item;
     }
 }
@@ -195,7 +195,6 @@
     max-height: calc(100vh - 125px);
     overflow: auto;
 
-    .dropdown-divider {display: none;} // hide the divider by default (no favorite)
     .o-searchview-custom-private, .o-searchview-custom-public {
         .o-remove-filter {
             @include o-position-absolute(50%, 12px);

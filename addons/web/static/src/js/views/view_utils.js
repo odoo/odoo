@@ -1,7 +1,10 @@
-odoo.define('web.viewUtils', function () {
+odoo.define('web.viewUtils', function (require) {
 "use strict";
 
-var utils = {
+var dom = require('web.dom');
+var utils = require('web.utils');
+
+var viewUtils = {
     /**
      * Returns the value of a group dataPoint, i.e. the value of the groupBy
      * field for the records in that group.
@@ -40,8 +43,45 @@ var utils = {
         }
         return true;
     },
+    /**
+     * @param {string} arch view arch
+     * @returns {Object} parsed arch
+     */
+    parseArch: function (arch) {
+        var doc = $.parseXML(arch).documentElement;
+        var stripWhitespaces = doc.nodeName.toLowerCase() !== 'kanban';
+        return utils.xml_to_json(doc, stripWhitespaces);
+    },
+    /**
+     * Renders a button according to a given arch node element.
+     *
+     * @param {Object} node
+     * @param {Object} [options]
+     * @param {string} [options.extraClass]
+     * @param {boolean} [options.textAsTitle=false]
+     * @returns {jQuery}
+     */
+    renderButtonFromNode: function (node, options) {
+        var btnOptions = {
+            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options'),
+            icon: node.attrs.icon,
+        };
+        if (options && options.extraClass) {
+            var classes = btnOptions.attrs.class ? btnOptions.attrs.class.split(' ') : [];
+            btnOptions.attrs.class = _.uniq(classes.concat(options.extraClass.split(' '))).join(' ');
+        }
+        var str = (node.attrs.string || '').replace(/_/g, '');
+        if (str) {
+            if (options && options.textAsTitle) {
+                btnOptions.attrs.title = str;
+            } else {
+                btnOptions.text = str;
+            }
+        }
+        return dom.renderButton(btnOptions);
+    },
 };
 
-return utils;
+return viewUtils;
 
 });

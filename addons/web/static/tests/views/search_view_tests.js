@@ -3,9 +3,14 @@ odoo.define('web.search_view_tests', function (require) {
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+
 var createActionManager = testUtils.createActionManager;
-var patchDate = testUtils.mock.patchDate;
+var createControlPanel = testUtils.createControlPanel;
 var createView = testUtils.createView;
+var patchDate = testUtils.mock.patchDate;
+
+var controlPanelViewParameters = require('web.controlPanelViewParameters');
+var PERIOD_OPTIONS_IDS = controlPanelViewParameters.PERIOD_OPTIONS.map(function (option) {return option.optionId;});
 
 QUnit.module('Search View', {
     beforeEach: function () {
@@ -188,21 +193,6 @@ QUnit.module('Search View', {
                 '</search>',
         };
 
-        this.periodOptions = [
-          'last_7_days',
-          'last_30_days',
-          'last_365_days',
-          'today',
-          'this_week',
-          'this_month',
-          'this_quarter',
-          'this_year',
-          'yesterday',
-          'last_week',
-          'last_month',
-          'last_quarter',
-          'last_year',
-        ];
 
         // assuming that the current time is: 2017-03-22:01:00:00
         this.periodDomains = [
@@ -265,7 +255,59 @@ QUnit.module('Search View', {
         ];
     },
 }, function () {
-    QUnit.module('Groupby Menu');
+    QUnit.test('basic rendering', function (assert) {
+        assert.expect(1);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(1);
+
+        assert.strictEqual($('.o_searchview input.o_searchview_input')[0], document.activeElement,
+            "searchview input should be focused");
+
+        actionManager.destroy();
+    });
+    QUnit.test('navigation with facets', function (assert) {
+        assert.expect(4);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(1);
+
+        // add a facet
+        testUtils.dom.click(actionManager.$('.o_dropdown_toggler_btn:contains(Group By)'));
+        testUtils.dom.click(actionManager.$('.o_menu_item a'));
+        assert.strictEqual(actionManager.$('.o_searchview .o_searchview_facet').length, 1,
+            "there should be one facet");
+        assert.strictEqual(actionManager.$('.o_searchview input.o_searchview_input')[0], document.activeElement,
+            "searchview input should be focused");
+
+        // press left to focus the facet
+        actionManager.$('.o_searchview_input_container').trigger($.Event('keydown', {
+            which: $.ui.keyCode.LEFT,
+            keyCode: $.ui.keyCode.LEFT,
+        }));
+        assert.strictEqual(actionManager.$('.o_searchview .o_searchview_facet')[0], document.activeElement,
+            "the facet should be focused");
+
+        // press right to focus the facet
+        actionManager.$('.o_searchview_input_container').trigger($.Event('keydown', {
+            which: $.ui.keyCode.RIGHT,
+            keyCode: $.ui.keyCode.RIGHT,
+        }));
+        assert.strictEqual(actionManager.$('.o_searchview input.o_searchview_input')[0], document.activeElement,
+            "searchview input should be focused");
+
+        actionManager.destroy();
+    });
+
+    QUnit.module('GroupByMenu');
 
     QUnit.test('click on groupby filter adds a facet', function (assert) {
         assert.expect(1);
@@ -275,12 +317,12 @@ QUnit.module('Search View', {
             archs: this.archs,
             data: this.data,
         });
-
         actionManager.doAction(1);
         testUtils.dom.click($('.o_dropdown_toggler_btn:contains(Group By)'));
         testUtils.dom.click($('.o_menu_item a'));
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'candle',
             'should have a facet with candle name');
+
         actionManager.destroy();
     });
 
@@ -358,14 +400,14 @@ QUnit.module('Search View', {
             data: this.data,
         });
         actionManager.doAction(4);
-        testUtils.dom.click($('div.o_graph_groupbys_menu > button'));
-        testUtils.dom.click($('div.o_graph_groupbys_menu .o_menu_item').eq(1));
-        testUtils.dom.click($('div.o_graph_groupbys_menu .o_menu_item .o_item_option > .dropdown-item').first());
-        assert.doesNotHaveClass($('div.o_graph_groupbys_menu .o_menu_item > .dropdown-item').eq(1), 'selected',
+        testUtils.dom.click($('.o_graph_controller .o_control_panel .o_cp_buttons button').eq(1));
+        testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item').eq(1));
+        testUtils.dom.click($('.o_graph_controller .o_group_by_menu .o_menu_item .o_item_option > .dropdown-item').first());
+        assert.doesNotHaveClass($('.o_graph_controller .o_group_by_menu .o_menu_item > .dropdown-item').eq(1), 'selected',
             'groupby should be unselected');
         testUtils.dom.click($('.o_search_options button span.fa-filter'));
         testUtils.dom.click($('.o_filters_menu .o_menu_item a').first());
-        assert.doesNotHaveClass($('div.o_graph_groupbys_menu .o_menu_item > .dropdown-item').eq(1), 'selected',
+        assert.doesNotHaveClass($('.o_graph_controller .o_group_by_menu .o_menu_item > .dropdown-item').eq(1), 'selected',
             'groupby should be still unselected');
         actionManager.destroy();
     });
@@ -459,7 +501,7 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
-    QUnit.module('Filters Menu');
+    QUnit.module('FilterMenu');
 
     QUnit.test('Search date and datetime fields. Support of timezones', function (assert) {
         assert.expect(4);
@@ -628,7 +670,10 @@ QUnit.module('Search View', {
         var periodOptions = $('.o_menu_item .o_item_option').map(function () {
             return $(this).data('option_id');
         }).toArray();
-        assert.deepEqual(periodOptions, this.periodOptions,
+
+
+
+        assert.deepEqual(periodOptions, PERIOD_OPTIONS_IDS,
             "13 period options should be available:");
 
         testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_7_days"]'));
@@ -660,7 +705,6 @@ QUnit.module('Search View', {
             data: this.data,
             intercepts: {
                 create_filter: function (ev) {
-                    console.log(ev.data);
                     assert.equal(
                         ev.data.filter.domain,
                         "['&', " +
@@ -676,239 +720,9 @@ QUnit.module('Search View', {
         testUtils.dom.click($('.o_filters_menu .o_menu_item a'));
         testUtils.dom.click($('.o_item_option[data-option_id="today"]'));
         testUtils.dom.click($('span.fa-star'));
-        testUtils.dom.click($('.o_favorites_menu .o_save_search'));
-        testUtils.dom.click($('.o_favorites_menu .o_save_name button'));
-        actionManager.destroy();
-    });
-
-    QUnit.test('arch order of groups of filters preserved', function (assert) {
-        assert.expect(12);
-
-        var actionManager = createActionManager({
-            actions: this.actions,
-            archs: this.archs,
-            data: this.data,
-        });
-
-        actionManager.doAction(8);
-        testUtils.dom.click($('span.fa-filter'));
-        assert.strictEqual($('.o_filters_menu .o_menu_item').length, 11);
-        for (var i = 0;  i < 11; i++) {
-            assert.strictEqual($('.o_filters_menu .o_menu_item').eq(i).text().trim(), (i+1).toString());
-        }
-        actionManager.destroy();
-    });
-
-    QUnit.test('selection via autocompletion modifies appropriately submenus', function (assert) {
-        assert.expect(4);
-
-        var actionManager = createActionManager({
-            actions: this.actions,
-            archs: this.archs,
-            data: this.data,
-        });
-
-        actionManager.doAction(9);
-
-        $('.o_searchview_input').trigger($.Event('keypress', {
-            which: 97,
-        }));
-
-        $('.o_searchview_input').trigger($.Event('keyup', {
-            which: $.ui.keyCode.ENTER,
-            keyCode: $.ui.keyCode.ENTER,
-        }));
-
-        $('.o_searchview_input').trigger($.Event('keypress', {
-            which: 103,
-        }));
-
-        $('.o_searchview_input').trigger($.Event('keyup', {
-            which: $.ui.keyCode.ENTER,
-            keyCode: $.ui.keyCode.ENTER,
-        }));
-
-        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
-            "Date Field Filter: This Month",
-            "There should be a filter facet with label 'Date Field Filter: This Month'");
-        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
-            "Date Field Groupby: Day",
-            "There should be a filter facet with label 'Date Field Groupby: Day'");
-
-        testUtils.dom.click($('button .fa-filter'));
-        testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
-        assert.strictEqual($('.o_filters_menu .o_item_option a.selected').text().trim(), "This Month",
-            "The item 'This Month' should be selected in the filters menu");
-
-        testUtils.dom.click($('button .fa-bars'));
-        testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
-        assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
-            "The item 'Day' should be selected in the groupby menu");
-
-        actionManager.destroy();
-    });
-
-    QUnit.test('save filters created via autocompletion works', function (assert) {
-        assert.expect(2);
-
-        var actionManager = createActionManager({
-            actions: this.actions,
-            archs: this.archs,
-            data: this.data,
-            intercepts: {
-                create_filter: function (ev) {
-                    assert.ok(ev.data.filter.domain === "[['foo', 'ilike', 'a']]");
-                },
-            },
-        });
-
-        actionManager.doAction(10);
-
-        $('.o_searchview_input').trigger($.Event('keypress', {
-            which: 97,
-        }));
-
-        $('.o_searchview_input').trigger($.Event('keyup', {
-            which: $.ui.keyCode.ENTER,
-            keyCode: $.ui.keyCode.ENTER,
-        }));
-
-        assert.strictEqual($('.o_searchview_input_container .o_facet_values span').text().trim(), "a");
-
-        testUtils.dom.click($('button .fa-star'));
-        testUtils.dom.click($('.o_favorites_menu a.o_save_search'));
-        testUtils.dom.click($('.o_favorites_menu div.o_save_name button'));
-
-        actionManager.destroy();
-    });
-
-    QUnit.test('time range menu stays hidden', function (assert) {
-        assert.expect(6);
-
-        var actionManager = createActionManager({
-            actions: this.actions,
-            archs: this.archs,
-            data: this.data,
-        });
-
-        actionManager.doAction(1);
-
-        // check that the fifth dropdown is the time range menu and is hidden
-        assert.isNotVisible($('.btn-group.o_dropdown').eq(4));
-        assert.hasClass($('.btn-group.o_dropdown').eq(4).children().eq(1), 'o_time_range_menu');
-        // check if search view has no facets
-        assert.strictEqual($('.o_facet_values').length, 0);
-
-        // activate groupby
-        testUtils.dom.click($('button .fa-bars'));
-        testUtils.dom.click($('.o_menu_item a').eq(0));
-        // check that there is a facet
-        assert.strictEqual($('div.o_facet_values').length, 1);
-        // check that the fifth dropdown is the time range menu and is still hidden
-        assert.isNotVisible($('.btn-group.o_dropdown').eq(4));
-        assert.hasClass($('.btn-group.o_dropdown').eq(4).children().eq(1), 'o_time_range_menu');
-        actionManager.destroy();
-    });
-
-    QUnit.test('time range menu in comparison mode', function (assert) {
-        assert.expect(43);
-
-        var self = this;
-        var nbrReadGroup = 0;
-
-        var periodOptionText, periodOptionValue;
-        var unpatchDate = patchDate(2017, 2, 22, 1, 0, 0);
-
-        var actionManager = createActionManager({
-            actions: this.actions,
-            archs: this.archs,
-            data: this.data,
-            mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/read_group') {
-                    nbrReadGroup++;
-                    var timeRangeMenuData = args.kwargs.context.timeRangeMenuData;
-                    if (timeRangeMenuData) {
-                        // nbrReadGroup % 2 === 0 is true when the read group is for data, false
-                        // for comparison data
-                        if (nbrReadGroup % 2 === 0) {
-                            assert.deepEqual(timeRangeMenuData.timeRange,
-                                self.periodDomains.shift(),
-                                "time range domain for " + periodOptionText);
-                        } else {
-                            assert.deepEqual(timeRangeMenuData.comparisonTimeRange,
-                                self.previousPeriodDomains.shift(),
-                                "comparaison time range domain for " + periodOptionText);
-                        }
-                    }
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-        // time range menu should be available in graph view
-        actionManager.doAction(4);
-
-        var $timeRangeMenu = $('.o_time_range_menu');
-        assert.strictEqual($timeRangeMenu.not('.o_hidden').length, 1,
-            "Time range menu should be visible");
-        assert.strictEqual($('.o_facet_values').length, 0,
-            "Search view has no facet");
-
-        var $periodOptions = $timeRangeMenu.find('.o_time_range_selector option');
-        var periodOptions = $periodOptions.map(function () {
-            return $(this).val();
-        }).toArray();
-        assert.deepEqual(periodOptions, this.periodOptions,
-            "13 period options should be available:");
-
-        $periodOptions.each(function () {
-            periodOptionText = $(this).text().trim();
-            periodOptionValue = $(this).val();
-            // opens time range menu dropdown
-            testUtils.dom.click($('.o_time_range_menu_button'));
-            var $timeRangeMenu = $('.o_time_range_menu');
-            // comparison is not checked by default
-            if (!$timeRangeMenu.find('.o_comparison_checkbox').is(':checked')) {
-                testUtils.dom.click($timeRangeMenu.find('.o_comparison_checkbox'));
-                assert.strictEqual($('.o_comparison_time_range_selector:visible').length, 1,
-                    "Comparison has to be checked (only at the first time)");
-            }
-            // select one period option to test it
-            $timeRangeMenu.find('.o_time_range_selector').val(periodOptionValue);
-            // apply
-            testUtils.dom.click($timeRangeMenu.find('.o_apply_range'));
-            assert.strictEqual($('.o_facet_values').text().trim(),
-                "Date: " + periodOptionText + " / Previous Period",
-                "Facet should be updated with this period: " + periodOptionValue);
-        });
-
-        unpatchDate();
-        actionManager.destroy();
-    });
-
-    QUnit.test('a default time range only in context is taken into account', function (assert) {
-        assert.expect(2);
-
-        var actionManager = createActionManager({
-            actions: this.actions,
-            archs: this.archs,
-            data: this.data,
-            mockRPC: function (route, args) {
-                // there are two read_group calls (for the groupby lists [] and ["date_field:day"])
-                if (route === '/web/dataset/call_kw/partner/read_group') {
-                    var timeRangeMenuData = args.kwargs.context.timeRangeMenuData;
-                    assert.ok(timeRangeMenuData.timeRange.length > 0, "time range should be non empty");
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        actionManager.doAction({
-            res_model: 'partner',
-            type: 'ir.actions.act_window',
-            views: [[false, 'pivot']],
-            context: {time_ranges: {range: 'today', field: 'date_field'}}
-        });
-
+        testUtils.dom.click($('.o_favorites_menu .o_add_favorite'));
+        testUtils.fields.editInput($('div.o_favorite_name input'), 'name for favorite');
+        testUtils.dom.click($('.o_favorites_menu .o_save_favorite button'));
         actionManager.destroy();
     });
 
@@ -966,17 +780,315 @@ QUnit.module('Search View', {
             assert.strictEqual(event.data.filter.name, "Awesome Test Customer Filter", "filter name should be correct");
         });
         testUtils.dom.click($('button:contains(Favorites)'));
-        testUtils.dom.click($('.o_save_search'));
-        var filterNameInput = $('.o_save_name .o_input[type="text"]:visible');
+        testUtils.dom.click($('.o_add_favorite'));
+        var filterNameInput = $('.o_favorite_name .o_input[type="text"]:visible');
         assert.strictEqual(filterNameInput.length, 1, "should display an input field for the filter name");
         testUtils.fields.editInput(filterNameInput, 'Awesome Test Customer Filter');
-        testUtils.dom.click($('.o_save_name button'));
+        testUtils.dom.click($('.o_save_favorite button'));
 
         form.destroy();
     });
 
-    QUnit.test('Customizing filter does not close the filter dropdown', function (assert) {
+    QUnit.test('save filters created via autocompletion works', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                create_filter: function (ev) {
+                    assert.ok(ev.data.filter.domain === "[['foo', 'ilike', 'a']]");
+                },
+            },
+        });
+
+        actionManager.doAction(10);
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 97,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values span').text().trim(), "a");
+
+        testUtils.dom.click($('button .fa-star'));
+        testUtils.dom.click($('.o_favorites_menu .o_add_favorite'));
+        testUtils.fields.editInput($('div.o_favorite_name input'), 'name for favorite');
+        testUtils.dom.click($('.o_favorites_menu div.o_save_favorite button'));
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('delete an active favorite remove it both in list of favorite and in search bar', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                load_filters: function (event) {
+                    return $.when([{
+                        context: "{}",
+                        domain: "[]",
+                        id: 7,
+                        is_default: true,
+                        name: "My favorite",
+                        sort: "[]",
+                        user_id: [2, "Mitchell Admin"],
+                    }]).then(event.data.on_success);
+                },
+                delete_filter: function (event) {
+                    event.data.on_success();
+                }
+            },
+        });
+
+        actionManager.doAction(6);
+        testUtils.dom.click(actionManager.$('.o_control_panel .o_search_options button.o_favorites_menu_button'));
+        assert.containsOnce(actionManager, '.o_control_panel .o_searchview_input_container .o_facet_values');
+        testUtils.dom.click(actionManager.$('.o_control_panel .o_search_options .o_favorites_menu span.o_trash_button'));
+        testUtils.modal.clickButton('Ok');
+        assert.containsNone(actionManager, '.o_control_panel .o_searchview_input_container .o_facet_values');
+        actionManager.destroy();
+    });
+
+    QUnit.test('default favorite is not activated if key search_disable_custom_filters is set to true', async function (assert) {
+        assert.expect(1);
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: '<controlpanel/>',
+            data: this.data,
+            intercepts: {
+                load_filters: function (event) {
+                    return $.when([{
+                        context: "{}",
+                        domain: "[]",
+                        id: 7,
+                        is_default: true,
+                        name: "My favorite",
+                        sort: "[]",
+                        user_id: [2, "Mitchell Admin"],
+                    }]).then(event.data.on_success);
+                },
+            },
+            context: {
+                search_disable_custom_filters: true,
+            },
+        });
+
+        assert.containsNone(controlPanel, '.o_facet_values');
+        controlPanel.destroy();
+    });
+
+    QUnit.module('Search Arch');
+
+    QUnit.test('arch order of groups of filters preserved', function (assert) {
+        assert.expect(12);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(8);
+        testUtils.dom.click($('span.fa-filter'));
+        assert.strictEqual($('.o_filters_menu .o_menu_item').length, 11);
+        for (var i = 0;  i < 11; i++) {
+            assert.strictEqual($('.o_filters_menu .o_menu_item').eq(i).text().trim(), (i+1).toString());
+        }
+        actionManager.destroy();
+    });
+
+    QUnit.module('Autocompletion');
+
+    QUnit.test('selection via autocompletion modifies appropriately submenus', function (assert) {
         assert.expect(4);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(9);
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 97,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 103,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "Date Field Filter: This Month",
+            "There should be a filter facet with label 'Date Field Filter: This Month'");
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "Date Field Groupby: Day",
+            "There should be a filter facet with label 'Date Field Groupby: Day'");
+
+        testUtils.dom.click($('button .fa-filter'));
+        testUtils.dom.click($('.o_filters_menu .o_menu_item').eq(0));
+        assert.strictEqual($('.o_filters_menu .o_item_option a.selected').text().trim(), "This Month",
+            "The item 'This Month' should be selected in the filters menu");
+
+        testUtils.dom.click($('button .fa-bars'));
+        testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
+        assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
+            "The item 'Day' should be selected in the groupby menu");
+
+        actionManager.destroy();
+    });
+
+    QUnit.module('TimeRangeMenu');
+
+    QUnit.test('time range menu stays hidden', function (assert) {
+        assert.expect(4);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+
+        // check that there is no time range menu
+        assert.containsNone(actionManager, '.o_control_panel .o_search_options .o_time_range_menu');
+        // check if search view has no facets
+        assert.strictEqual($('.o_facet_values').length, 0);
+
+        // activate groupby
+        testUtils.dom.click($('button .fa-bars'));
+        testUtils.dom.click($('.o_menu_item a').eq(0));
+        // check that there is a facet
+        assert.strictEqual($('div.o_facet_values').length, 1);
+        // check that there is still no time range menu
+        assert.containsNone(actionManager, '.o_control_panel .o_search_options .o_time_range_menu');
+        actionManager.destroy();
+    });
+
+    QUnit.test('time range menu in comparison mode', function (assert) {
+        assert.expect(43);
+
+        var self = this;
+        var nbrReadGroup = 0;
+
+        var periodOptionText, periodOptionValue;
+        var unpatchDate = patchDate(2017, 2, 22, 1, 0, 0);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/read_group') {
+                    nbrReadGroup++;
+                    var timeRangeMenuData = args.kwargs.context.timeRangeMenuData;
+                    if (timeRangeMenuData) {
+                        // nbrReadGroup % 2 === 0 is true when the read group is for data, false
+                        // for comparison data
+                        if (nbrReadGroup % 2 === 0) {
+                            assert.deepEqual(timeRangeMenuData.timeRange,
+                                self.periodDomains.shift(),
+                                "time range domain for " + periodOptionText);
+                        } else {
+                            assert.deepEqual(timeRangeMenuData.comparisonTimeRange,
+                                self.previousPeriodDomains.shift(),
+                                "comparaison time range domain for " + periodOptionText);
+                        }
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // time range menu should be available in graph view
+        actionManager.doAction(4);
+
+        var $timeRangeMenu = $('.o_time_range_menu');
+        assert.strictEqual($timeRangeMenu.not('.o_hidden').length, 1,
+            "Time range menu should be visible");
+        assert.strictEqual($('.o_facet_values').length, 0,
+            "Search view has no facet");
+
+        var $periodOptions = $timeRangeMenu.find('.o_time_range_selector option');
+        var periodOptions = $periodOptions.map(function () {
+            return $(this).val();
+        }).toArray();
+        assert.deepEqual(periodOptions, PERIOD_OPTIONS_IDS,
+            "13 period options should be available:");
+
+        $periodOptions.each(function () {
+            periodOptionText = $(this).text().trim();
+            periodOptionValue = $(this).val();
+            // opens time range menu dropdown
+            testUtils.dom.click($('.o_time_range_menu_button'));
+            var $timeRangeMenu = $('.o_time_range_menu');
+            // comparison is not checked by default
+            if (!$timeRangeMenu.find('.o_comparison_checkbox').is(':checked')) {
+                testUtils.dom.click($timeRangeMenu.find('.o_comparison_checkbox'));
+                assert.strictEqual($('.o_comparison_time_range_selector:visible').length, 1,
+                    "Comparison has to be checked (only at the first time)");
+            }
+            // select one period option to test it
+            $timeRangeMenu.find('.o_time_range_selector').val(periodOptionValue);
+            // apply
+            testUtils.dom.click($timeRangeMenu.find('.o_apply_range'));
+            assert.strictEqual($('.o_facet_values').text().trim(),
+                "Date: " + periodOptionText + " / Previous Period",
+                "Facet should be updated with this period: " + periodOptionValue);
+        });
+
+        unpatchDate();
+        actionManager.destroy();
+    });
+
+    QUnit.test('a default time range only in context is taken into account', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                // there are two read_group calls (for the groupby lists [] and ["date_field:day"])
+                if (route === '/web/dataset/call_kw/partner/read_group') {
+                    var timeRangeMenuData = args.kwargs.context.timeRangeMenuData;
+                    assert.ok(timeRangeMenuData.timeRange.length > 0, "time range should be non empty");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            context: {time_ranges: {range: 'today', field: 'date_field'}}
+        });
+        actionManager.destroy();
+    });
+
+    QUnit.test('Customizing filter does not close the filter dropdown', function (assert) {
+        assert.expect(3);
         var self = this;
 
         _.each(this.data.partner.records.slice(), function (rec) {
@@ -1002,39 +1114,30 @@ QUnit.module('Search View', {
             res_id: 1,
         });
 
-        form.$('.o_input').click();
-        $('.ui-autocomplete .ui-menu-item:contains(Search More)').mouseenter().click();
+        testUtils.fields.many2one.clickOpenDropdown('bar');
+        testUtils.fields.many2one.clickItem('bar', 'Search More');
 
-        var $modal = $('.modal-dialog.modal-lg');
-        assert.strictEqual($modal.length, 1, 'Modal Opened');
+        assert.containsOnce(document.body, '.modal');
 
-        $modal.find('.o_search_options button:contains(Filters)').click();
+        testUtils.dom.click($('.modal .o_filters_menu_button'));
 
-        var $filterDropDown = $modal.find('.o_dropdown_menu.show');
+        var $filterDropdown = $('.modal .o_filters_menu');
+        testUtils.dom.click($filterDropdown.find('.o_add_custom_filter'));
 
-        $filterDropDown.find('button:contains(Add Custom Filter)').click();
-
-        assert.ok($filterDropDown.find('button:contains(Add Custom Filter)').hasClass('o_open_menu'),
-            'The right dropdown is open');
-
-        var $filterInputs = $filterDropDown.find('.o_input');
-
-        assert.strictEqual($filterInputs.length, 3,
-            'The custom filter builder has 3 elements');
+        assert.containsN($filterDropdown, '.o_input', 3);
 
         // We really are interested in the click event
         // We do it twice on each input to make sure
         // the parent dropdown doesn't react to any of it
-        _.each($filterInputs, function (input) {
+        _.each($filterDropdown.find('input'), function (input) {
             var $input = $(input);
             $input.click();
             $input.click();
         });
 
-        assert.ok($filterDropDown.is(':visible'));
+        assert.isVisible($filterDropdown);
 
         form.destroy();
     });
-
 });
 });

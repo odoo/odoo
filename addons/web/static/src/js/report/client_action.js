@@ -4,7 +4,6 @@ odoo.define('report.client_action', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var config = require('web.config');
 var core = require('web.core');
-var ControlPanelMixin = require('web.ControlPanelMixin');
 var session = require('web.session');
 var utils = require('report.utils');
 
@@ -17,9 +16,9 @@ var AUTHORIZED_MESSAGES = [
     'report:do_action',
 ];
 
-var ReportAction = AbstractAction.extend(ControlPanelMixin, {
-
-    template: 'report.client_action',
+var ReportAction = AbstractAction.extend({
+    hasControlPanel: true,
+    contentTemplate: 'report.client_action',
 
     init: function (parent, action, options) {
         this._super.apply(this, arguments);
@@ -27,7 +26,7 @@ var ReportAction = AbstractAction.extend(ControlPanelMixin, {
         options = options || {};
 
         this.action_manager = parent;
-        this.title = options.display_name || options.name;
+        this._title = options.display_name || options.name;
 
         this.edit_mode_available = false;
         this.in_edit_mode = false;
@@ -42,7 +41,6 @@ var ReportAction = AbstractAction.extend(ControlPanelMixin, {
 
     start: function () {
         var self = this;
-        this.set('title', this.title);
         this.iframe = this.$('iframe')[0];
         return $.when(this._super.apply(this, arguments), session.is_bound).then(function () {
             var web_base_url = session['web.base.url'];
@@ -93,7 +91,7 @@ var ReportAction = AbstractAction.extend(ControlPanelMixin, {
     },
 
     _update_control_panel: function () {
-        this.update_control_panel({
+        this.updateControlPanel({
             cp_content: {
                 $buttons: this.$buttons,
             },

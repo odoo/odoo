@@ -30,13 +30,11 @@ var KanbanView = BasicView.extend({
      */
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
-
         this.loadParams.limit = this.loadParams.limit || 40;
         // in mobile, columns are lazy-loaded, so set 'openGroupByDefault' to
         // false so that they will won't be loaded by the initial load
         this.loadParams.openGroupByDefault = config.device.isMobile ? false : true;
         this.loadParams.type = 'list';
-        this.loadParams.groupBy = this.arch.attrs.default_group_by ? [this.arch.attrs.default_group_by] : (params.groupBy || []);
         var progressBar;
         utils.traverse(this.arch, function (n) {
             var isProgressBar = (n.tag === 'progressbar');
@@ -105,6 +103,11 @@ var KanbanView = BasicView.extend({
             return JSON.parse(this.arch.attrs.quick_create);
         }
         return true;
+    },
+    _updateMVCParams: function () {
+        this._super.apply(this, arguments);
+        var defaultGroupBy = this.arch.attrs.default_group_by;
+        this.loadParams.groupBy = defaultGroupBy ? [defaultGroupBy] : (this.loadParams.groupedBy || []);
     },
 });
 
