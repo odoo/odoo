@@ -197,7 +197,6 @@ class HrBenefit(models.Model):
                     values['date_stop'] = stop.astimezone(pytz.utc)
                     new_benefit = self.create(values)
                     # Write the state after the creation due to the ir.rule on benefit state
-                    # LUL TODO: Write a test for this use case
                     new_benefit.state = benefit_state
                     new_benefits |= new_benefit
 
