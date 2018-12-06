@@ -2329,6 +2329,8 @@ class Many2many(_RelationalMulti):
                     self.column2 = '%s_id' % comodel._table
             # check validity of table name
             check_pg_name(self.relation)
+        else:
+            self.relation = self.column1 = self.column2 = None
 
     def _setup_regular_full(self, model):
         super(Many2many, self)._setup_regular_full(model)
@@ -2340,8 +2342,14 @@ class Many2many(_RelationalMulti):
                 comodel = model.env[self.comodel_name]
                 model._field_inverses.add(self, invf)
                 comodel._field_inverses.add(invf, self)
-            else:
+
+            elif model._auto:
                 # add self in m2m, so that its inverse field can find it
+                if (self.relation, self.column1, self.column2) in m2m:
+                    _logger.error(
+                        "Many2many fields %s and %s use the same table and columns",
+                        self, m2m[(self.relation, self.column1, self.column2)],
+                    )
                 m2m[(self.relation, self.column1, self.column2)] = self
 
     def check_schema(self, model):
