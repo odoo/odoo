@@ -70,7 +70,7 @@ var ForumShare = sAnimations.registry.socialShare.extend({
 });
 
 sAnimations.registry.websiteForumShare = sAnimations.Class.extend({
-    selector: '#wrapwrap:has(.website_forum)',
+    selector: '.website_forum',
     read_events: {
         'click :not(.karma_required).oe_social_share_call': '_onShareCallClick',
     },

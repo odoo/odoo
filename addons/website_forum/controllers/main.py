@@ -118,7 +118,7 @@ class WebsiteForum(http.Controller):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True, sitemap=sitemap_forum)
-    def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type=None, **post):
+    def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', **post):
         if not forum.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
@@ -133,8 +133,6 @@ class WebsiteForum(http.Controller):
             domain += [('child_ids', '=', False)]
         elif filters == 'followed':
             domain += [('message_partner_ids', '=', request.env.user.partner_id.id)]
-        if post_type:
-            domain += [('post_type', '=', post_type)]
 
         if sorting:
             # check that sorting is valid
@@ -177,7 +175,6 @@ class WebsiteForum(http.Controller):
             'filters': filters,
             'sorting': sorting,
             'search': search,
-            'post_type': post_type,
         })
         return request.render("website_forum.forum_index", values)
 
@@ -187,11 +184,11 @@ class WebsiteForum(http.Controller):
         return request.render("website_forum.faq", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
-    def tag_read(self, q='', l=25, **post):
+    def tag_read(self, query='', limit=25, **post):
         data = request.env['forum.tag'].search_read(
-            domain=[('name', '=ilike', (q or '') + "%")],
+            domain=[('name', '=ilike', (query or '') + "%")],
             fields=['id', 'name'],
-            limit=int(l),
+            limit=int(limit),
         )
         return json.dumps(data)
 
@@ -209,7 +206,7 @@ class WebsiteForum(http.Controller):
         domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
         order_by = 'name'
         if active_char_tag and active_char_tag != 'all':
-            domain.append(('name', '=ilike', tools.escape_psql(active_char_tag)+'%'))
+            domain.append(('name', '=ilike', tools.escape_psql(active_char_tag) + '%'))
             order_by = 'posts_count DESC'
         tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
         # prepare values and render template
@@ -326,23 +323,22 @@ class WebsiteForum(http.Controller):
     # Post
     # --------------------------------------------------
     @http.route(['/forum/<model("forum.forum"):forum>/ask'], type='http', auth="user", website=True)
-    def forum_post(self, forum, post_type=None, **post):
+    def forum_post(self, forum, **post):
         user = request.env.user
-        if post_type not in ['question', 'link', 'discussion']:  # fixme: make dynamic
-            return werkzeug.utils.redirect('/forum/%s' % slug(forum))
         if not user.email or not tools.single_email_re.match(user.email):
             return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
         values = self._prepare_forum_values(forum=forum, searches={}, header={'ask_hide': True})
-        return request.render("website_forum.new_%s" % post_type, values)
+        return request.render("website_forum.new_question", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/new',
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="user", methods=['POST'], website=True)
-    def post_create(self, forum, post_parent=None, post_type=None, **post):
-        if post_type == 'question' and not post.get('post_name', ''):
-            return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
+    def post_create(self, forum, post_parent=None, **post):
         if post.get('content', '') == '<p><br></p>':
-            return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Question should not be empty.')})
+            return request.render('website.http_error', {
+                'status_code': _('Bad Request'),
+                'status_message': post_parent and _('Reply should not be empty.') or _('Question should not be empty.')
+            })
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
 
@@ -353,10 +349,8 @@ class WebsiteForum(http.Controller):
             'forum_id': forum.id,
             'name': post.get('post_name') or (post_parent and 'Re: %s' % (post_parent.name or '')) or '',
             'content': post.get('content', False),
-            'content_link': post.get('content_link', False),
             'parent_id': post_parent and post_parent.id or False,
-            'tag_ids': post_tag_ids,
-            'post_type': post_parent and post_parent.post_type or post_type,  # tde check in selection field
+            'tag_ids': post_tag_ids
         })
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), post_parent and slug(post_parent) or new_question.id))
 
@@ -402,22 +396,22 @@ class WebsiteForum(http.Controller):
             'post': post,
             'is_answer': bool(post.parent_id),
             'searches': kwargs,
-            'post_name': post.content_link,
             'content': post.name,
         })
-        template = "website_forum.new_link" if post.post_type == 'link' and not post.parent_id else "website_forum.edit_post"
-        return request.render(template, values)
+        return request.render("website_forum.edit_post", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
         if 'post_name' in kwargs and not kwargs.get('post_name').strip():
-            return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
+            return request.render('website.http_error', {
+                'status_code': _('Bad Request'),
+                'status_message': _('Title should not be empty.')
+            })
         post_tags = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         vals = {
             'tag_ids': post_tags,
             'name': kwargs.get('post_name'),
             'content': kwargs.get('content'),
-            'content_link': kwargs.get('content_link'),
         }
         post.write(vals)
         question = post.parent_id if post.parent_id else post
@@ -480,12 +474,15 @@ class WebsiteForum(http.Controller):
 
         Post = request.env['forum.post']
         domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
+        if kwargs.get('spam_post'):
+            domain += [('name', 'ilike', kwargs.get('spam_post'))]
         flagged_posts_ids = Post.search(domain, order='write_date DESC')
 
         values = self._prepare_forum_values(forum=forum)
         values.update({
             'posts_ids': flagged_posts_ids,
             'queue_type': 'flagged',
+            'flagged_queue_active': 1,
         })
 
         return request.render("website_forum.moderation_queue", values)
@@ -561,15 +558,19 @@ class WebsiteForum(http.Controller):
     def users(self, forum, page=1, **searches):
         User = request.env['res.users']
         step = 30
-        tag_count = User.sudo().search_count([('karma', '>', 1), ('website_published', '=', True)])
+        dom = [('karma', '>', 1), ('website_published', '=', True)]
+        tag_count = User.sudo().search_count(dom)
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
-        user_obj = User.sudo().search([('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC')
+
+        if searches.get('user'):
+            dom += [('name', 'ilike', searches.get('user'))]
+
+        user_obj = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
         users = [[] for i in range(len(user_obj) // 3 + 1)]
         for index, user in enumerate(user_obj):
             users[index // 3].append(user)
         searches['users'] = 'True'
-
         values = self._prepare_forum_values(forum=forum, searches=searches)
         values .update({
             'users': users,
