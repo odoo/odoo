@@ -1,10 +1,5 @@
 odoo.define('document.tests', function (require) {
     "use strict";
-    /**
-     * The feature tested here is disabled as it was replaced by another feature
-     * while still holding unfixed bugs and doing unnecessary rpc.
-     */
-    return;
 
     var testUtils = require('web.test_utils');
     var FormView = require('web.FormView');
@@ -78,6 +73,7 @@ odoo.define('document.tests', function (require) {
             });
 
             assert.containsN(form.sidebar, '.o_sidebar_delete_attachment', 2, "there should be two attachments");
+            testUtils.dom.click(form.sidebar.$('.o_dropdown_toggler_btn:contains("Attachment")'));
             testUtils.dom.click(form.sidebar.$('.o_sidebar_delete_attachment:eq(0)'));
             testUtils.dom.click($('.modal-footer .btn-primary'));
             assert.containsOnce(form.sidebar, '.o_sidebar_delete_attachment', "there should be only one attachment");
