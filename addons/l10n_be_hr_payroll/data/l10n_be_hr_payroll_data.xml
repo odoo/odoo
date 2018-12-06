@@ -139,14 +139,14 @@ if contract.mobile:
         <field name="code">EmpBonus.1</field>
         <field name="sequence">42</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.BRUT &lt;= 2510.47</field> 
+        <field name="condition_python">result = categories.BRUT &lt;= 2560.57</field> 
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 salary = categories.BRUT
-if salary &lt;= 1609.47:
-    result = 197.67
-elif salary &lt;= 2510.47:
-    result = 197.67 - (0.2194 * (salary - 1609.47))
+if salary &lt;= 1641.62:
+    result = 201.62
+elif salary &lt;= 2560.57:
+    result = 201.62 - (0.2194 * (salary - 1641.62))
         </field>
     </record>
     <record id="hr_salary_rule_employment_bonus_workers" model="hr.salary.rule">
@@ -155,14 +155,14 @@ elif salary &lt;= 2510.47:
         <field name="code">EmpBonus.2</field>
         <field name="sequence">42</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.BRUT + categories.ONSS &lt;= 2510.47</field> 
+        <field name="condition_python">result = categories.BRUT + &lt;= 2560.57</field> 
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 salary = categories.BRUT
-if salary &lt;= 1609.47:
-    result = 213.48
-elif salary &lt;= 2510.47:
-    result = 213.48 - (0.2369 * (salary - 1609.47))
+if salary &lt;= 1641.62:
+    result = 217.75
+elif salary &lt;= 2560.57:
+    result = 217.75 - (0.2370 * (salary - 1641.62))
         </field>
     </record>
 
