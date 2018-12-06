@@ -3,11 +3,14 @@ odoo.define('website_forum.website_forum', function (require) {
 
 var core = require('web.core');
 var sAnimations = require('website.content.snippets.animation');
+var session = require('web.session');
+var qweb = core.qweb;
 
 var _t = core._t;
 
 sAnimations.registry.websiteForum = sAnimations.Class.extend({
-    selector: '#wrapwrap:has(.website_forum)',
+    selector: '.website_forum',
+    xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
     read_events: {
         'click .karma_required': '_onKarmaRequiredClick',
         'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
@@ -19,7 +22,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         'mouseleave .o_forum_user_info': '_onUserInfoMouseLeave',
         'mouseleave .o_forum_user_bio_expand': '_onUserBioExpandMouseLeave',
         'click .flag:not(.karma_required)': '_onFlagAlertClick',
-        'click .vote_up, .vote_down:not(.karma_required)': '_onVotePostClick',
+        'click .vote_up:not(.karma_required), .vote_down:not(.karma_required)': '_onVotePostClick',
         'click .o_js_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
         'click .accept_answer:not(.karma_required)': '_onAcceptAnswerClick',
         'click .favourite_question': '_onFavoriteQuestionClick',
@@ -28,7 +31,6 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         'click .send_validation_email': '_onSendValidationEmailClick',
         'click .validated_email_close': '_onCloseValidatedEmailClick',
         'click .js_close_intro': '_onCloseIntroClick',
-        'change .link_url, .o_forum_post_link': '_onCheckPostURL',
     },
 
     /**
@@ -82,8 +84,8 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
                 dataType: 'json',
                 data: function (term) {
                     return {
-                        q: term,
-                        l: 50,
+                        query: term,
+                        limit: 50,
                     };
                 },
                 results: function (data) {
@@ -112,7 +114,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
 
         _.each($('textarea.load_editor'), function (textarea) {
             var $textarea = $(textarea);
-            var editorKarma = $textarea.data('karma') || 30;  // default value for backward compatibility
+            var editorKarma = $textarea.data('karma') || 30; // default value for backward compatibility
             if (!$textarea.val().match(/\S/)) {
                 $textarea.val('<p><br/></p>');
             }
@@ -147,6 +149,8 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
                 $el.addClass('text-success');
             }
         });
+
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -165,11 +169,11 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         }
         ev.preventDefault();
         var msg = karma + ' ' + _t("karma is required to perform this action. You can earn karma by having your answers upvoted by the community.");
-        if ($('a[href*="/login"]').length) {
+        if (session.is_website_user) {
             msg = _t("Sorry you must be logged in to perform this action");
         }
-        var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert mt8" id="karma_alert">' +
-            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+        var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">' +
+            '<button type="button" class="close notification_close" data-dismiss="alert">&times;</button>' +
             msg + '</div>');
         var $voteAlert = $('#karma_alert');
         if ($voteAlert.length) {
@@ -257,7 +261,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         this._rpc({
-            route: $link.data('href'),
+            route: $link.data('href') || $link.attr('href') || $link.attr('action'),
         }).then(function (data) {
             if (data.error) {
                 var $warning;
@@ -273,6 +277,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
                         '<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">' +
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
                             _t("This post is already flagged") +
+                            '<button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&times;</button>' +
                         '</div>'
                     );
                 } else if (data.error === 'post_non_flaggable') {
@@ -280,6 +285,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
                         '<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">' +
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
                             _t("This post can not be flagged") +
+                            '<button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&times;</button>' +
                         '</div>'
                     );
                 }
@@ -290,12 +296,12 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
             } else if (data.success) {
                 var elem = $link;
                 if (data.success === 'post_flagged_moderator') {
-                    elem.html(' Flagged');
+                    elem.data('href') && elem.html(' Flagged');
                     var c = parseInt($('#count_flagged_posts').html(), 10);
                     c++;
                     $('#count_flagged_posts').html(c);
                 } else if (data.success === 'post_flagged_non_moderator') {
-                    elem.html(' Flagged');
+                    elem.data('href') && elem.html(' Flagged');
                     var forumAnswer = elem.closest('.forum_answer');
                     forumAnswer.fadeIn(1000);
                     forumAnswer.slideUp(1000);
@@ -331,7 +337,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
                     $link.parent().append($warning);
                 }
             } else {
-                $link.parent().find('.vote_count').html(data['vote_count']);
+                $link.parent().find('.vote_count').html(data.vote_count);
                 if (data.user_vote === 0) {
                     $link.parent().find('.text-success').removeClass('text-success');
                     $link.parent().find('.text-warning').removeClass('text-warning');
@@ -432,14 +438,16 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
      * @param {Event} ev
      */
     _onCloseNotificationClick: function (ev) {
-        ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        this._rpc({
-            route: '/forum/notification_read',
-            params: {
-                notification_id: $link.attr('id'),
-            },
-        });
+        if (!session.is_website_user) {
+            ev.preventDefault();
+            var $link = $(ev.currentTarget);
+            this._rpc({
+                route: '/forum/notification_read',
+                params: {
+                    notification_id: $link.attr('id'),
+                },
+            });
+        }
     },
     /**
      * @private
@@ -477,83 +485,82 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         $('.forum_intro').slideUp();
         return true;
     },
+});
+
+sAnimations.registry.websiteForumSpam = sAnimations.Class.extend({
+    selector: '.o_wforum_moderation_queue',
+    xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
+    read_events: {
+        'click .o_wforum_select_all_spam': '_onSelectallSpamClick',
+        'click .o_wforum_mark_spam': 'async _onMarkSpamClick',
+        'input #spamSearch': '_onSpamSearchInput',
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.spamIDs = this.$('.modal').data('spam-ids');
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
      * @private
      * @param {Event} ev
      */
-    _onCheckPostURL: function (ev) {
-        ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        var displayError = function () {
-            var $warning = $(
-                '<div class="alert alert-danger alert-dismissable" style="position:absolute; margin-top: -180px; margin-left: 90px;">' +
-                    '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                    _t("Please enter valid URL. Example: http://www.odoo.com") +
-                '</div>'
-            );
-            $link.parent().append($warning);
-            $link.parents('form').find('button')[0].disabled = true;
-        };
-        var url = $link.val();
-        if (url.search('^http(s?)://.*')) {
-            url = 'http://' + url;
-        }
+    _onSelectallSpamClick: function (ev) {
+        var $spamInput = this.$('.modal .tab-pane.active input');
+        $spamInput.prop('checked', true);
+    },
 
-        // https://gist.github.com/dperini/729294
-        var regex = new RegExp(
-            "^" +
-            // protocol identifier
-            "(?:(?:https?|ftp)://)" +
-            // user:pass authentication
-            "(?:\\S+(?::\\S*)?@)?" +
-            "(?:" +
-            // IP address exclusion
-            // private & local networks
-            "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
-            "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
-            "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
-            // IP address dotted notation octets
-            // excludes loopback network 0.0.0.0
-            // excludes reserved space >= 224.0.0.0
-            // excludes network & broacast addresses
-            // (first & last IP address of each class)
-            "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
-            "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
-            "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
-            "|" +
-            // host name
-            "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
-            // domain name
-            "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
-            // TLD identifier
-            "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
-            // TLD may end with dot
-            "\\.?" +
-            ")" +
-            // port number
-            "(?::\\d{2,5})?" +
-            // resource path
-            "(?:[/?#]\\S*)?" +
-            "$", "i"
-        );
-
-        if (regex.test(url)) {
-            this._rpc({
-                route: '/forum/get_url_title',
-                params: {
-                    url: url,
-                },
-            }).then(function (data) {
-                if (data) {
-                    $('input[name="post_name"]')[0].value = data;
-                    $link.parents('form').find('button')[0].disabled = false;
-                } else {
-                    displayError();
-                }
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onSpamSearchInput: function (ev) {
+        var self = this;
+        var toSearch = $(ev.currentTarget).val();
+        return this._rpc({
+            model: 'forum.post',
+            method: 'search_read',
+            args: [
+                [['id', 'in', self.spamIDs],
+                    '|',
+                    ['name', 'ilike', toSearch],
+                    ['content', 'ilike', toSearch]],
+                ['name', 'content']
+            ],
+            kwargs: {}
+        }).then(function (o) {
+            _.each(o, function (r) {
+                r.content = $('<p>' + $(r.content).html() + '</p>').text().substring(0, 250);
             });
-        } else {
-            displayError();
-        }
+            self.$('div.post_spam').html(qweb.render('website_forum.spam_search_name', {
+                posts: o,
+            }));
+        });
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onMarkSpamClick: function (ev) {
+        var key = this.$('.modal .tab-pane.active').data('key');
+        var $inputs = this.$('.modal .tab-pane.active input.custom-control-input:checked');
+        var values = _.map($inputs, function (o) {
+            return parseInt(o.value);
+        });
+        return this._rpc({model: 'forum.post',
+            method: 'mark_as_offensive_batch',
+            args: [this.spamIDs, key, values],
+        }).then(function () {
+            window.location.reload();
+        });
     },
 });
 });
