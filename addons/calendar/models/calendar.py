@@ -1539,13 +1539,14 @@ class Meeting(models.Model):
         tz = self.env.context and self.env.context.get('tz')
         if tz:
             tz = pytz.timezone(tz)
-        for r in result:
-            if not r.get('allday') and isinstance(r['id'], (basestring)) and tz:
-                delta = self.get_time_dst_delta(int(r['id'].split('-')[0]), tz, r)
+        TIME_FIELDS_IN_EVENT = ['start', 'stop', 'start_datetime', 'stop_datetime']
+        for record in result:
+            if not record.get('allday') and isinstance(record['id'], (basestring)) and tz:
+                delta = self.get_time_dst_delta(int(record['id'].split('-')[0]), tz, record)
                 if delta:
-                    for f in ['start', 'stop', 'start_datetime', 'stop_datetime']:
-                        if f in r and r[f]:
-                            r[f] = api_fields.Datetime.to_string(api_fields.Datetime.from_string(r[f]) + delta)
+                    for field in TIME_FIELDS_IN_EVENT:
+                        if field in record and record[field]:
+                            record[field] = api_fields.Datetime.to_string(api_fields.Datetime.from_string(record[field]) + delta)
 
         return result
 
