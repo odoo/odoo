@@ -20,7 +20,6 @@
         'data/res_users_data.xml',
         'views/note_views.xml',
         'views/note_templates.xml',
-        'views/mail_activity_views.xml',
     ],
     'demo': [
         'data/note_demo.xml',
