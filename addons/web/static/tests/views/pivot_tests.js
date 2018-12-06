@@ -682,7 +682,7 @@ QUnit.module('Views', {
         assert.containsOnce(pivot, 'tbody tr',
             "should have 1 rows");
 
-        testUtils.pivot.reload(pivot, {viewGroupBys: ['product_id']});
+        testUtils.pivot.reload(pivot, {viewGroupBys: {pivotRowGroupBy: ['product_id']}});
 
         assert.containsN(pivot, '.o_pivot_cell_value', 3,
             "should have 3 cells");
@@ -746,7 +746,7 @@ QUnit.module('Views', {
 
         // expand on date:days, product
         nbReadGroups = 0;
-        testUtils.pivot.reload(pivot, {viewGroupBys: ['date:days', 'product_id']});
+        testUtils.pivot.reload(pivot, {viewGroupBys: {pivotRowGroupBy: ['date:days', 'product_id']}});
 
         assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
         assert.containsN(pivot, 'tbody tr', 8,
@@ -792,7 +792,7 @@ QUnit.module('Views', {
         });
 
         // expand on date:days, product
-        testUtils.pivot.reload(pivot, {viewGroupBys: ['date:days', 'product_id']});
+        testUtils.pivot.reload(pivot, {viewGroupBys: {pivotRowGroupBy: ['date:days', 'product_id']}});
 
         assert.containsN(pivot, 'tbody tr', 8,
             "should have 7 rows (total + 3 for December and 2 for October and April)");
@@ -1244,8 +1244,8 @@ QUnit.module('Views', {
         });
 
         def = $.Deferred();
-        testUtils.pivot.reload(pivot, {viewGroupBys: ['product_id']});
-        testUtils.pivot.reload(pivot, {viewGroupBys: ['product_id', 'customer']});
+        testUtils.pivot.reload(pivot, {viewGroupBys: {pivotRowGroupBy: ['product_id']}});
+        testUtils.pivot.reload(pivot, {viewGroupBys: {pivotRowGroupBy: ['product_id', 'customer']}});
         def.resolve();
 
         assert.containsN(pivot, '.o_pivot_cell_value', 6,
