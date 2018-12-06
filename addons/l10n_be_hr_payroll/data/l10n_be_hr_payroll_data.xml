@@ -620,7 +620,7 @@ result = -min(ip_amount * tax_rate, 11745)
         <field name="amount_python_compute">result = -contract.retained_net_amount</field>
     </record>
     <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
-        <field name="code">C.P.218</field>
+        <field name="code">CP 200</field>
         <field name="name">Belgian Employee</field>
         <field eval="[(6, 0, [
             ref('hr_payroll_rules_parent_company_car'),
