@@ -39,8 +39,6 @@ return {
     // registries
     action_registry : new Registry(),
     crash_registry: new Registry(),
-    search_filters_registry: new Registry(),
-    search_widgets_registry: new Registry(),
     serviceRegistry: new Registry(),
     /**
      * @type {String}

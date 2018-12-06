@@ -345,8 +345,8 @@ DebugManager.include({
                 action: this._action,
                 can_edit: this._can_edit_views,
                 controller: this._controller,
+                controlPanelView: this._controller && this._controller._controlPanel,
                 manager: this,
-                searchview: this._controller && this._controller.searchView,
                 view: this._controller && _.findWhere(this._action.views, {
                     type: this._controller.viewType,
                 }),

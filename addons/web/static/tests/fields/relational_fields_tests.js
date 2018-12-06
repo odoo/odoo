@@ -615,7 +615,7 @@ QUnit.module('relational_fields', {
         list.destroy();
     });
 
-    QUnit.test('widget selection,  edition and on many2one field', function (assert) {
+    QUnit.test('widget selection, edition and on many2one field', function (assert) {
         assert.expect(18);
 
         this.data.partner.onchanges = {product_id: function () {}};
@@ -640,7 +640,7 @@ QUnit.module('relational_fields', {
             },
         });
 
-        assert.ok(!form.$('select').length, "should not have a select tag in dom");
+        assert.containsNone(form.$('.o_form_view'), 'select');
         assert.strictEqual(form.$('.o_field_widget[name=product_id]').text(), 'xphone',
             "should have rendered the many2one field correctly");
         assert.strictEqual(form.$('.o_field_widget[name=trululu]').text(), '',
@@ -650,11 +650,10 @@ QUnit.module('relational_fields', {
 
         testUtils.form.clickEdit(form);
 
-        assert.containsN(form, 'select', 3,
-            "should have 3 select tag in dom");
-        assert.strictEqual(form.$('select[name="product_id"] option:contains(xphone)').length, 1,
+        assert.containsN(form.$('.o_form_view'), 'select', 3);
+        assert.containsOnce(form, 'select[name="product_id"] option:contains(xphone)',
             "should have fetched xphone option");
-        assert.strictEqual(form.$('select[name="product_id"] option:contains(xpad)').length, 1,
+        assert.containsOnce(form, 'select[name="product_id"] option:contains(xpad)',
             "should have fetched xpad option");
         assert.strictEqual(form.$('select[name="product_id"]').val(), "37",
             "should have correct product_id value");
@@ -757,7 +756,7 @@ QUnit.module('relational_fields', {
             },
         });
 
-        testUtils.fields.editSelect(form.$('select'), "false");
+        testUtils.fields.editSelect(form.$('.o_form_view select'), 'false');
         testUtils.form.clickSave(form);
 
         form.destroy();
@@ -1297,11 +1296,11 @@ QUnit.module('relational_fields', {
 
         // update foo, which will trigger an onchange and update timmy
         // -> m2mtags input should not have taken the focus
-        form.$('input:first').focus();
-        testUtils.fields.editInput(form.$('input:first'), 'trigger onchange');
+        form.$('input[name=foo]').focus();
+        testUtils.fields.editInput(form.$('input[name=foo]'), 'trigger onchange');
         assert.containsNone(form, '.o_field_many2manytags .badge',
             "should contain no tags");
-        assert.strictEqual(form.$('input:first').get(0), document.activeElement,
+        assert.strictEqual(form.$('input[name=foo]').get(0), document.activeElement,
             "foo input should have kept the focus");
 
         // add a tag -> m2mtags input should still have the focus
@@ -1864,7 +1863,6 @@ QUnit.module('relational_fields', {
 
     QUnit.test('name_create in form dialog', async function (assert) {
         assert.expect(2);
-
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -1891,7 +1889,7 @@ QUnit.module('relational_fields', {
 
         testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
         await testUtils.fields.many2one.searchAndClickItem('product_id',
-            {selector:'.modal', search:'new record'});
+            {selector: '.modal', search: 'new record'});
 
         assert.verifySteps(['name_create']);
 
@@ -1922,7 +1920,7 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
-        // Cuurent Form
+        // Current Form
         assert.equal(form.$('.o_form_uri.o_field_widget[name=reference]').text(), 'xphone',
             'the field reference of the form should have the right value');
 

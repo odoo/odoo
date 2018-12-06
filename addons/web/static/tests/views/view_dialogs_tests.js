@@ -80,11 +80,6 @@ QUnit.module('Views', {
             },
         });
 
-        testUtils.mock.intercept(parent, 'env_updated', function () {
-            throw new Error("The environment should not be propagated to the action manager");
-        });
-
-
         new dialogs.FormViewDialog(parent, {
             res_model: 'partner',
             res_id: 1,
@@ -155,10 +150,10 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'read_group') {
                     assert.deepEqual(args.kwargs, {
-                        context: {group_by: "bar"},
-                        domain: [["display_name","like","a"], ["display_name","ilike","piou"], ["foo","ilike","piou"]],
-                        fields:["display_name","foo","bar"],
-                        groupby:["bar"],
+                        context: {},
+                        domain: [["display_name","like","a"], "&", ["display_name","ilike","piou"], ["foo","ilike","piou"]],
+                        fields: ["display_name","foo","bar"],
+                        groupby: ["bar"],
                         orderby: '',
                         lazy: true
                     }, "should search with the complete domain (domain + search), and group by 'bar'");
@@ -167,8 +162,8 @@ QUnit.module('Views', {
                     search++;
                     assert.deepEqual(args, {
                         context: {},
-                        domain: [["display_name","like","a"], ["display_name","ilike","piou"], ["foo","ilike","piou"]],
-                        fields:["display_name","foo"],
+                        domain: [["display_name","like","a"], "&", ["display_name","ilike","piou"], ["foo","ilike","piou"]],
+                        fields: ["display_name","foo"],
                         model: "partner",
                         limit: 80,
                         sort: ""
@@ -177,7 +172,7 @@ QUnit.module('Views', {
                     assert.deepEqual(args, {
                         context: {},
                         domain: [["display_name","like","a"]],
-                        fields:["display_name","foo"],
+                        fields: ["display_name","foo"],
                         model: "partner",
                         limit: 80,
                         sort: ""
@@ -423,9 +418,11 @@ QUnit.module('Views', {
         assert.expect(4);
 
         testUtils.mock.patch(ListController, {
-            getContext: function () {
+            getOwnedQueryParams: function () {
                 return {
-                    shouldBeInFilterContext: true,
+                    context: {
+                        shouldBeInFilterContext: true,
+                    },
                 };
             },
         });
@@ -471,9 +468,9 @@ QUnit.module('Views', {
 
         // save filter
         testUtils.dom.click(dialog.$('.o_dropdown_toggler_btn:contains(Favorites)'));
-        testUtils.dom.click(dialog.$('.o_save_search'));
-        dialog.$('.o_save_name input[type=text]').val('some name'); // name the filter
-        testUtils.dom.click(dialog.$('.o_save_name button'));
+        testUtils.dom.click(dialog.$('.o_add_favorite'));
+        dialog.$('.o_favorite_name input[type=text]').val('some name'); // name the filter
+        testUtils.dom.click(dialog.$('.o_save_favorite button'));
 
         testUtils.mock.unpatch(ListController);
         parent.destroy();

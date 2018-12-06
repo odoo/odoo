@@ -99,7 +99,7 @@ QUnit.module('ActionManager', {
         assert.containsOnce(actionManager, '.o_form_view');
 
         // go back to lazy loaded view
-        testUtils.dom.click($('.o_control_panel .breadcrumb .breadcrumb-item:first'));
+        testUtils.dom.click(actionManager.$('.o_control_panel .breadcrumb .breadcrumb-item:first'));
         assert.containsNone(actionManager, '.o_form_view');
         assert.containsNone(actionManager, '.o_list_view');
         assert.containsOnce(actionManager, '.o_kanban_view');
@@ -125,9 +125,9 @@ QUnit.module('ActionManager', {
 
         actionManager.doAction(1);
 
-        assert.containsOnce($('.o_control_panel'), '.o_cp_switch_buttons button[data-toggle="dropdown"]');
-        assert.hasClass($('.o_cp_switch_buttons .o_cp_switch_kanban'), 'active');
-        assert.hasClass($('.o_cp_switch_buttons .o_switch_view_button_icon'), 'fa-th-large');
+        assert.containsOnce(actionManager.$('.o_control_panel'), '.o_cp_switch_buttons button[data-toggle="dropdown"]');
+        assert.hasClass(actionManager.$('.o_cp_switch_buttons .o_cp_switch_kanban'), 'active');
+        assert.hasClass(actionManager.$('.o_cp_switch_buttons .o_switch_view_button_icon'), 'fa-th-large');
 
         actionManager.destroy();
     });

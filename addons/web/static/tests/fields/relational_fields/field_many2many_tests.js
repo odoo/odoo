@@ -262,7 +262,7 @@ QUnit.module('fields', {}, function () {
                 'the removed record should not be in kanban anymore');
 
             // save the record
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
             form.destroy();
         });
 
@@ -431,7 +431,7 @@ QUnit.module('fields', {}, function () {
                 'the updated row still has the correct values');
 
             // save
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
             assert.containsN(form, '.o_list_view td.o_list_number', 2,
                 'should contain 2 subrecords');
             assert.strictEqual(form.$('.o_list_view .o_data_row td:first').text(),
@@ -545,7 +545,7 @@ QUnit.module('fields', {}, function () {
                 'new name', 'the updated row still has the correct values');
 
             // save
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
             assert.containsN(form, '.o_list_view td.o_list_number', 2,
                 'should contain 2 subrecords');
             assert.strictEqual(form.$('.o_list_view .o_data_row td:first').text(),
@@ -687,73 +687,26 @@ QUnit.module('fields', {}, function () {
                 }
             });
 
-            assert.notOk(form.$('.custom-checkbox input').eq(0).prop('checked'),
+            assert.notOk(form.$('.o_form_view .custom-checkbox input').eq(0).prop('checked'),
                 "first checkbox should not be checked");
-            assert.notOk(form.$('.custom-checkbox input').eq(1).prop('checked'),
+            assert.notOk(form.$('.o_form_view .custom-checkbox input').eq(1).prop('checked'),
                 "second checkbox should not be checked");
-            assert.ok(form.$('.custom-checkbox input').eq(2).prop('checked'),
+            assert.ok(form.$('.o_form_view .custom-checkbox input').eq(2).prop('checked'),
                 "third checkbox should be checked");
 
-            testUtils.dom.click(form.$('.custom-checkbox input:checked'));
-            testUtils.dom.click(form.$('.custom-checkbox input').first());
-            testUtils.dom.click(form.$('.custom-checkbox input').first());
-            testUtils.dom.click(form.$('.custom-checkbox input').first());
+            testUtils.dom.click(form.$('.o_form_view .custom-checkbox input:checked'));
+            testUtils.dom.click(form.$('.o_form_view .custom-checkbox input').first());
+            testUtils.dom.click(form.$('.o_form_view .custom-checkbox input').first());
+            testUtils.dom.click(form.$('.o_form_view .custom-checkbox input').first());
 
-            assert.ok(form.$('.custom-checkbox input').eq(0).prop('checked'),
+            assert.ok(form.$('.o_form_view .custom-checkbox input').eq(0).prop('checked'),
                 "first checkbox should be checked");
-            assert.notOk(form.$('.custom-checkbox input').eq(1).prop('checked'),
+            assert.notOk(form.$('.o_form_view .custom-checkbox input').eq(1).prop('checked'),
                 "second checkbox should not be checked");
-            assert.notOk(form.$('.custom-checkbox input').eq(2).prop('checked'),
+            assert.notOk(form.$('.o_form_view .custom-checkbox input').eq(2).prop('checked'),
                 "third checkbox should not be checked");
 
-            testUtils.form.clickSave(form);;
-
-            form.destroy();
-        });
-
-        QUnit.test('many2many checkboxes with default values', function (assert) {
-            assert.expect(7);
-
-            this.data.partner.fields.turtles.default = [3];
-            this.data.partner.fields.turtles.type = "many2many";
-
-            var form = createView({
-                View: FormView,
-                model: 'partner',
-                data: this.data,
-                arch: '<form string="Partners">' +
-                    '<field name="turtles" widget="many2many_checkboxes">' +
-                    '</field>' +
-                    '</form>',
-                mockRPC: function (route, args) {
-                    if (args.method === 'create') {
-                        assert.deepEqual(args.args[0].turtles, [[6, false, [1]]],
-                            "correct values should have been sent to create");
-                    }
-                    return this._super.apply(this, arguments);
-                }
-            });
-
-            assert.notOk(form.$('.custom-checkbox input').eq(0).prop('checked'),
-                "first checkbox should not be checked");
-            assert.notOk(form.$('.custom-checkbox input').eq(1).prop('checked'),
-                "second checkbox should not be checked");
-            assert.ok(form.$('.custom-checkbox input').eq(2).prop('checked'),
-                "third checkbox should be checked");
-
-            testUtils.dom.click(form.$('.custom-checkbox input:checked'));
-            testUtils.dom.click(form.$('.custom-checkbox input').first());
-            testUtils.dom.click(form.$('.custom-checkbox input').first());
-            testUtils.dom.click(form.$('.custom-checkbox input').first());
-
-            assert.ok(form.$('.custom-checkbox input').eq(0).prop('checked'),
-                "first checkbox should be checked");
-            assert.notOk(form.$('.custom-checkbox input').eq(1).prop('checked'),
-                "second checkbox should not be checked");
-            assert.notOk(form.$('.custom-checkbox input').eq(2).prop('checked'),
-                "third checkbox should not be checked");
-
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             form.destroy();
         });
@@ -904,7 +857,7 @@ QUnit.module('fields', {}, function () {
             testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
 
             // there is nothing left to save -> should not do a 'write' RPC
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             assert.verifySteps([
                 'read', // read initial record (on partner)
@@ -980,27 +933,27 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
                 'there should be 40 records displayed on page 1');
 
-            testUtils.dom.click(form.$('.o_pager_next'));
+            testUtils.dom.click(form.$('.o_field_widget[name=timmy] .o_pager_next'));
             assert.verifySteps(['read', 'onchange', 'read', 'read']);
             assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
                 '41-45 / 45', "pager should be correct");
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 5,
                 'there should be 5 records displayed on page 2');
 
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
                 '1-40 / 45', "pager should be correct");
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
                 'there should be 40 records displayed on page 1');
 
-            testUtils.dom.click(form.$('.o_pager_next'));
+            testUtils.dom.click(form.$('.o_field_widget[name=timmy] .o_pager_next'));
             assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
                 '41-45 / 45', "pager should be correct");
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 5,
                 'there should be 5 records displayed on page 2');
 
-            testUtils.dom.click(form.$('.o_pager_next'));
+            testUtils.dom.click(form.$('.o_field_widget[name=timmy] .o_pager_next'));
             assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
                 '1-40 / 45', "pager should be correct");
             assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
