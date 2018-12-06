@@ -1,4 +1,4 @@
-odoo.define('document.document', function (require) {
+odoo.define('attachment_indexation.document', function (require) {
 "use strict";
 
 var core = require('web.core');
