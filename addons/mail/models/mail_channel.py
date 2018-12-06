@@ -101,13 +101,13 @@ class Channel(models.Model):
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
     # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Photo", default=_get_default_image, attachment=True,
+    image = fields.Binary("Photo", default=_get_default_image,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium-sized photo', attachment=True,
+    image_medium = fields.Binary('Medium-sized photo',
         help="Medium-sized photo of the group. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Small-sized photo', attachment=True,
+    image_small = fields.Binary('Small-sized photo',
         help="Small-sized photo of the group. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")

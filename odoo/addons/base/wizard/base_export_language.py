@@ -25,7 +25,7 @@ class BaseLanguageExport(models.TransientModel):
                               string='File Format', required=True, default='csv')
     modules = fields.Many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id',
                                string='Apps To Export', domain=[('state','=','installed')])
-    data = fields.Binary('File', readonly=True)
+    data = fields.Binary('File', readonly=True, attachment=False)
     state = fields.Selection([('choose', 'choose'), ('get', 'get')], # choose language or get the file
                              default='choose')
 

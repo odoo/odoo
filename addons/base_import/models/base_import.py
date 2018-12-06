@@ -113,7 +113,7 @@ class Import(models.TransientModel):
     _transient_max_hours = 12.0
 
     res_model = fields.Char('Model')
-    file = fields.Binary('File', help="File to check and/or import, raw binary (not base64)")
+    file = fields.Binary('File', help="File to check and/or import, raw binary (not base64)", attachment=False)
     file_name = fields.Char('File Name')
     file_type = fields.Char('File Type')
 

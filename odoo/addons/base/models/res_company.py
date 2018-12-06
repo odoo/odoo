@@ -39,7 +39,7 @@ class Company(models.Model):
     logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
-    logo_web = fields.Binary(compute='_compute_logo_web', store=True)
+    logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self._get_user_currency())
     user_ids = fields.Many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', string='Accepted Users')
     account_no = fields.Char(string='Account No.')

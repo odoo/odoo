@@ -772,7 +772,7 @@ class IrActionsActClient(models.Model):
     params = fields.Binary(compute='_compute_params', inverse='_inverse_params', string='Supplementary arguments',
                            help="Arguments sent to the client along with "
                                 "the view tag")
-    params_store = fields.Binary(string='Params storage', readonly=True)
+    params_store = fields.Binary(string='Params storage', readonly=True, attachment=False)
 
     @api.depends('params_store')
     def _compute_params(self):

@@ -1742,7 +1742,7 @@ class Binary(Field):
     _slots = {
         'prefetch': False,              # not prefetched by default
         'context_dependent': True,      # depends on context (content or size)
-        'attachment': False,            # whether value is stored in attachment
+        'attachment': True,             # whether value is stored in attachment
     }
 
     @property

@@ -25,7 +25,7 @@ class AccountBankStatementImport(models.TransientModel):
     _name = 'account.bank.statement.import'
     _description = 'Import Bank Statement'
 
-    data_file = fields.Binary(string='Bank Statement File', required=True, help='Get you bank statements in electronic format from your bank and select them here.')
+    data_file = fields.Binary(string='Bank Statement File', attachment=False, required=True, help='Get you bank statements in electronic format from your bank and select them here.')
     filename = fields.Char()
 
     @api.multi
