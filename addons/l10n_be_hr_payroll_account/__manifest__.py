@@ -4,7 +4,7 @@
 {
     'name': 'Belgium - Payroll with Accounting',
     'category': 'Human Resources',
-    'depends': ['l10n_be_hr_payroll', 'hr_payroll_account', 'l10n_be'],
+    'depends': ['l10n_be_hr_payroll', 'hr_payroll_account'],
     'description': """
 Accounting Data for Belgian Payroll Rules.
 ==========================================

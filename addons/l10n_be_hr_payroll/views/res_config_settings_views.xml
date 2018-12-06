@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_be_hr_payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='hr_payroll_accountant']" position="after">
+                <h2>Belgian Locatization</h2>
+                <div class="row mt16 o_settings_container" id="l10n_be_hr_payroll">
+                    <div class="col-lg-6 col-12 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="default_holidays" string="Advantages"/>
+                            <div class="text-muted">
+                                Configure Default Values for Belgian Advantages
+                            </div>
+                            <group class="mt16">
+                                <label for="default_holidays"/>
+                                <div class="o_row">
+                                    <field name="default_holidays" nolabel="1"/>
+                                    <span>days / year</span>
+                                </div>
+                                <label for="default_commission_on_target"/>
+                                <div class="o_row">
+                                    <field name="default_commission_on_target" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                                <label for="default_fuel_card"/>
+                                <div class="o_row">
+                                    <field name="default_fuel_card" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                                <label for="default_representation_fees"/>
+                                <div class="o_row">
+                                    <field name="default_representation_fees" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                                <label for="default_internet"/>
+                                <div class="o_row">
+                                    <field name="default_internet" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                                <label for="default_mobile"/>
+                                <div class="o_row">
+                                    <field name="default_mobile" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                                <label for="default_internet"/>
+                                <div class="o_row">
+                                    <field name="default_internet" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                                <label for="default_mobile_plus"/>
+                                <div class="o_row">
+                                    <field name="default_mobile_plus" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                                <label for="default_meal_voucher_amount"/>
+                                <div class="o_row">
+                                    <field name="default_meal_voucher_amount" nolabel="1"/>
+                                    <span>€ / month</span>
+                                </div>
+                                <label for="default_eco_checks"/>
+                                <div class="o_row">
+                                    <field name="default_eco_checks" nolabel="1"/>
+                                    <span>€ / year</span>
+                                </div>
+                            </group>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
