@@ -120,7 +120,6 @@ var BoardController = FormController.extend({
 var BoardRenderer = FormRenderer.extend({
     custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
         do_action: '_onDoAction',
-        env_updated: '_onEnvUpdated',
         update_filters: '_onUpdateFilters',
         switch_view: '_onSwitchView',
     }),
@@ -256,6 +255,8 @@ var BoardRenderer = FormRenderer.extend({
                 var rawContext = new Context(action.context, evalContext, {lang: session.user_context.lang});
                 var context = pyUtils.eval('context', rawContext, evalContext);
                 var domain = params.domain || pyUtils.eval('domain', action.domain || '[]', action.context);
+                action.context = context;
+                action.domain = domain;
                 var viewType = params.viewType || action.views[0][1];
                 var view = _.find(action.views, function (descr) {
                     return descr[1] === viewType;
@@ -266,11 +267,14 @@ var BoardRenderer = FormRenderer.extend({
                     var View = viewRegistry.get(viewType);
                     var view = new View(viewInfo, {
                         action: action,
-                        context: context,
-                        domain: domain,
-                        groupBy: context.group_by || [],
-                        modelName: action.res_model,
                         hasSelectors: false,
+                        modelName: action.res_model,
+                        searchQuery: {
+                            context: context,
+                            domain: domain,
+                            groupBy: context.group_by || [],
+                        },
+                        withControlPanel: false,
                     });
                     return view.getController(self).then(function (controller) {
                         self._boardFormViewIDs[controller.handle] = _.first(
@@ -376,29 +380,6 @@ var BoardRenderer = FormRenderer.extend({
                 self.trigger_up('save_dashboard');
             },
         });
-    },
-    /**
-     * Intercepts (without stopping) 'do_action' events to force the
-     * 'keepSearchView' option to false, as the dashboard action has no search
-     * view, and thus there is no search view that could be re-used for the
-     * action to execute (a new one will be created instead).
-     *
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onDoAction: function (event) {
-        if (event.data.options) {
-            event.data.options.keepSearchView = false;
-        }
-    },
-    /**
-     * Stops the propagation of 'env_updated' events triggered by the controllers
-     * instantiated by the dashboard.
-     *
-     * @private
-     */
-    _onEnvUpdated: function (event) {
-        event.stopPropagation();
     },
     /**
      * @private
