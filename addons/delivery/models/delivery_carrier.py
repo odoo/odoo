@@ -119,7 +119,7 @@ class DeliveryCarrier(models.Model):
         if hasattr(self, '%s_rate_shipment' % self.delivery_type):
             res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)
             # apply margin on computed price
-            res['price'] = res['price'] * (1.0 + (float(self.margin) / 100.0))
+            res['price'] = float(res['price']) * (1.0 + (float(self.margin) / 100.0))
             # free when order is large enough
             if res['success'] and self.free_over and order._compute_amount_total_without_delivery() >= self.amount:
                 res['warning_message'] = _('Info:\nThe shipping is free because the order amount exceeds %.2f.\n(The actual shipping cost is: %.2f)') % (self.amount, res['price'])
