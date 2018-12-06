@@ -23,6 +23,13 @@
     // will use the color of a default card background with a light opacity.
     // Limitation: bg-* utilities cannot be used on card-body elements anymore.
     @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+
+    &:first-child {
+        @include border-top-radius($card-inner-border-radius);
+    }
+    &:last-child {
+        @include border-bottom-radius($card-inner-border-radius);
+    }
 }
 
 // Modify modals so that their scrollable element is the modal-body (except in
