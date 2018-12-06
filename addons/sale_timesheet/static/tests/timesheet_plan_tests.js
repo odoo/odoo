@@ -64,8 +64,8 @@ QUnit.module('Timesheet Plan', {
             "/web/dataset/call_kw/project.project",
             "/timesheet/plan"
         ]);
-        assert.strictEqual(plan.$el.text(), 'Banach-Tarski', 'should have rendered html content');
-        assert.strictEqual(plan.get('title'), 'Overview',
+        assert.strictEqual(plan.$('.o_content').text(), 'Banach-Tarski', 'should have rendered html content');
+        assert.strictEqual(plan.$('.o_control_panel .breadcrumb-item').text(), 'Overview',
             'default title should be set');
         plan.destroy();
     });
@@ -86,7 +86,7 @@ QUnit.module('Timesheet Plan', {
                 return this._super.apply(this, arguments);
             },
         });
-        assert.strictEqual(plan.get('title'), 'Fibonacci',
+        assert.strictEqual(plan.$('.o_control_panel .breadcrumb-item').text(), 'Fibonacci',
             'title should be set from the action name');
         plan.destroy();
     });

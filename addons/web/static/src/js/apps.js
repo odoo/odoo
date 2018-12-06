@@ -11,7 +11,7 @@ var _t = core._t;
 var apps_client = null;
 
 var Apps = AbstractAction.extend({
-    template: 'EmptyComponent',
+    contentTemplate: 'EmptyComponent',
     remote_action_tag: 'loempia.embed',
     failback_action_id: 'base.open_module_tree',
 
@@ -141,7 +141,7 @@ var Apps = AbstractAction.extend({
             self.on('message:unblockUI', self, function() { framework.unblockUI(); });
             self.on('message:warn', self, function(m) {self.do_warn(m.title, m.message, m.sticky); });
 
-            self.$ifr.appendTo(self.$el).css(css).addClass('apps-client');
+            self.$ifr.appendTo(self.$('.o_content')).css(css).addClass('apps-client');
 
             def.resolve();
         }, function() {

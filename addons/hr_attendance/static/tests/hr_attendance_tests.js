@@ -57,7 +57,7 @@ QUnit.module('HR Attendance', {
         assert.expect(1);
 
         var $target = $('#qunit-fixture');
-        var clientAction = new MyAttendances(null);
+        var clientAction = new MyAttendances(null, {});
         testUtils.mock.addMockEnvironment(clientAction, {
             data: this.data,
             session: {
@@ -78,7 +78,7 @@ QUnit.module('HR Attendance', {
         var $target = $('#qunit-fixture');
         var self = this;
         var rpcCount = 0;
-        var clientAction = new KioskMode(null);
+        var clientAction = new KioskMode(null, {});
         testUtils.mock.addMockEnvironment(clientAction, {
             data: this.data,
             session: {
@@ -121,7 +121,7 @@ QUnit.module('HR Attendance', {
                 },
                 next_action: "hr_attendance.hr_attendance_action_kiosk_mode",
                 barcode: barcode,
-            }
+            };
             var clientAction = new GreetingMessage(null, action);
             testUtils.mock.addMockEnvironment(clientAction, {
                 data: self.data,
@@ -146,7 +146,7 @@ QUnit.module('HR Attendance', {
             clientAction.appendTo(target);
 
             clientActions.push(clientAction);
-        };
+        }
 
         // init - mock coming from kiosk
         createGreetingMessage ($target, 1);
