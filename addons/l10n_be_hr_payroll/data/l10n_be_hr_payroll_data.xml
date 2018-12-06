@@ -187,52 +187,40 @@ result = - categories.GROSSIP * contract.ip_wage_rate / 100.0
         </field>
     </record>
 
-    <record id="hr_payroll_rules_mis_ex_onss_1" model="hr.salary.rule">
+    <record id="hr_payroll_rules_mis_ex_onss" model="hr.salary.rule">
         <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
         <field name="name">Special social cotisation</field>
-        <field name="code">M.ONSS.1</field>
+        <field name="code">M.ONSS</field>
         <field name="amount_select">fix</field>
         <field name="sequence">165</field>
-        <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital in ['divorced', 'single', 'widower']) or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='without income')) and (employee.resident_bool!=True))</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 wage = categories.BASIC
-if wage &gt;= 0.01 and wage &lt;= 1095.09:
+if employee.resident_bool:
     result = 0.0
-elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
-    result = 0.0
-elif wage &gt;= 1945.39 and wage &lt;= 2190.18:
-    result = -min((wage - 1945.38) * 0.076, 18.60)
-elif wage &gt;= 2190.19 and wage &lt;= 6038.82:
-    result = -min(18.60 + (wage - 2190.18) * 0.011, 60.94)
-else:
-    result = -60.94
-        </field>
-    </record> 
-    <record id="hr_payroll_rules_mis_ex_onss_2" model="hr.salary.rule">
-        <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
-        <field name="name">Special social cotisation</field>
-        <field name="code">M.ONSS.2</field>
-        <field name="amount_select">fix</field>
-        <field name="sequence">165</field>
-        <field name="condition_select">python</field>
-        <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-wage = categories.BASIC
-if wage &gt;= 0.01 and wage &lt;= 1095.09:
-    result = 0.0
-elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
-    result = -9.30
-elif wage &gt;= 1945.39 and wage &lt;= 2190.18:
-    result = -min(max((wage - 1945.38) * 0.076, 9.30), 18.60)
-elif wage &gt;= 2190.19 and wage &lt;= 6038.82:
-    result = -min(18.60 + (wage - 2190.18) * 0.011, 51.64)
-else:
-    result = -51.64
+elif employee.marital in ['divorced', 'single', 'widower'] or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='without income'):
+    if wage &gt;= 0.01 and wage &lt;= 1095.09:
+        result = 0.0
+    elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
+        result = 0.0
+    elif wage &gt;= 1945.39 and wage &lt;= 2190.18:
+        result = -min((wage - 1945.38) * 0.076, 18.60)
+    elif wage &gt;= 2190.19 and wage &lt;= 6038.82:
+        result = -min(18.60 + (wage - 2190.18) * 0.011, 60.94)
+    else:
+        result = -60.94
+elif employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income':
+    if wage &gt;= 0.01 and wage &lt;= 1095.09:
+        result = 0.0
+    elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
+        result = -9.30
+    elif wage &gt;= 1945.39 and wage &lt;= 2190.18:
+        result = -min(max((wage - 1945.38) * 0.076, 9.30), 18.60)
+    elif wage &gt;= 2190.19 and wage &lt;= 6038.82:
+        result = -min(18.60 + (wage - 2190.18) * 0.011, 51.64)
+    else:
+        result = -51.64
         </field>
     </record> 
     <record id="hr_payroll_rules_bareme" model="hr.salary.rule">
@@ -514,8 +502,7 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_payroll_rules_bareme'),
             ref('hr_payroll_rules_ch_worker'),
             ref('hr_payroll_rules_reim_travel'),
-            ref('hr_payroll_rules_mis_ex_onss_1'),
-            ref('hr_payroll_rules_mis_ex_onss_2'),
+            ref('hr_payroll_rules_mis_ex_onss'),
             ref('hr_salary_rule_representation_fees'),
             ref('hr_payroll_rules_suppl_net'),
             ref('hr_payroll_rules_retained_net'),
@@ -537,8 +524,7 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_payroll_rules_bareme'),
             ref('hr_payroll_rules_ch_worker'),
             ref('hr_payroll_rules_reim_travel'),
-            ref('hr_payroll_rules_mis_ex_onss_1'),
-            ref('hr_payroll_rules_mis_ex_onss_2'),
+            ref('hr_payroll_rules_mis_ex_onss'),
             ref('hr_salary_rule_representation_fees'),
             ref('hr_payroll_rules_suppl_net'),
             ref('hr_payroll_rules_retained_net'),
