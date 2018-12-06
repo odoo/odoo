@@ -114,7 +114,7 @@ class ProductProduct(models.Model):
         'product.template.attribute.value', string='Template Attribute Values', compute="_compute_product_template_attribute_value_ids")
     # image: all image fields are base64 encoded and PIL-supported
     image_variant = fields.Binary(
-        "Variant Image", attachment=True,
+        "Variant Image",
         help="This field holds the image used as image for the product variant, limited to 1024x1024px.")
     image = fields.Binary(
         "Big-sized image", compute='_compute_images', inverse='_set_image',

@@ -150,15 +150,14 @@ class PaymentAcquirer(models.Model):
     module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state', readonly=False)
 
     image = fields.Binary(
-        "Image", attachment=True,
-        help="This field holds the image used for this provider, limited to 1024x1024px")
+        "Image", help="This field holds the image used for this provider, limited to 1024x1024px")
     image_medium = fields.Binary(
-        "Medium-sized image", attachment=True,
+        "Medium-sized image",
         help="Medium-sized image of this provider. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
     image_small = fields.Binary(
-        "Small-sized image", attachment=True,
+        "Small-sized image",
         help="Small-sized image of this provider. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
@@ -502,8 +501,7 @@ class PaymentIcon(models.Model):
     name = fields.Char(string='Name')
     acquirer_ids = fields.Many2many('payment.acquirer', string="Acquirers", help="List of Acquirers supporting this payment icon.")
     image = fields.Binary(
-        "Image", attachment=True,
-        help="This field holds the image used for this payment icon, limited to 1024x1024px")
+        "Image", help="This field holds the image used for this payment icon, limited to 1024x1024px")
 
     image_payment_form = fields.Binary(
         "Image displayed on the payment form", attachment=True)

@@ -17,7 +17,7 @@ class AccountFrFec(models.TransientModel):
 
     date_from = fields.Date(string='Start Date', required=True)
     date_to = fields.Date(string='End Date', required=True)
-    fec_data = fields.Binary('FEC File', readonly=True)
+    fec_data = fields.Binary('FEC File', readonly=True, attachment=False)
     filename = fields.Char(string='Filename', size=256, readonly=True)
     export_type = fields.Selection([
         ('official', 'Official FEC report (posted entries only)'),

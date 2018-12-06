@@ -168,15 +168,15 @@ class Employee(models.Model):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
-        "Photo", default=_default_image, attachment=True,
+        "Photo", default=_default_image,
         help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
     image_medium = fields.Binary(
-        "Medium-sized photo", attachment=True,
+        "Medium-sized photo",
         help="Medium-sized photo of the employee. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
     image_small = fields.Binary(
-        "Small-sized photo", attachment=True,
+        "Small-sized photo",
         help="Small-sized photo of the employee. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")

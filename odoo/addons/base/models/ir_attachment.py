@@ -294,7 +294,7 @@ class IrAttachment(models.Model):
 
     # the field 'datas' is computed and may use the other fields below
     datas = fields.Binary(string='File Content', compute='_compute_datas', inverse='_inverse_datas')
-    db_datas = fields.Binary('Database Data')
+    db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename')
     file_size = fields.Integer('File Size', readonly=True)
     checksum = fields.Char("Checksum/SHA1", size=40, index=True, readonly=True)
