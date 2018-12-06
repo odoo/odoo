@@ -82,7 +82,7 @@
                     <label class="col-form-label col-md-3 redirect_type" for="redirect_type">Type</label>
                     <div class="col-md-6 redirect_type">
                         <select class="form-control" id="redirect_type">
-                            <option t-foreach="widget.fields.type.selection" t-as="field" t-att-value="field[0]"><t t-esc="field[0] + ': ' + field[1]" /></option>
+                            <option t-foreach="widget.fields.redirect_type.selection" t-as="field" t-att-value="field[0]"><t t-esc="field[0] + ': ' + field[1]" /></option>
                         </select>
                     </div>
                 </div>
