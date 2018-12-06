@@ -28,15 +28,18 @@ class ImLivechatReportOperator(models.Model):
             CREATE OR REPLACE VIEW im_livechat_report_operator AS (
                 SELECT
                     row_number() OVER () AS id,
-                    C.livechat_operator_id as partner_id,
-                    L.id as livechat_channel_id,
-                    count(C.id) as nbr_channel,
-                    C.id as channel_id,
-                    C.create_date as start_date,
-                    EXTRACT('epoch' FROM (max((SELECT (max(M.create_date)) FROM mail_message M JOIN mail_message_mail_channel_rel R ON (R.mail_message_id = M.id) WHERE R.mail_channel_id = C.id))-C.create_date)) as duration,
-                    EXTRACT('epoch' from ((SELECT min(M.create_date) FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id=C.livechat_operator_id AND R.mail_channel_id = C.id AND R.mail_message_id = M.id)-(SELECT min(M.create_date) FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id IS NULL AND R.mail_channel_id = C.id AND R.mail_message_id = M.id))) as time_to_answer
+                    C.livechat_operator_id AS partner_id,
+                    C.livechat_channel_id AS livechat_channel_id,
+                    COUNT(DISTINCT C.id) AS nbr_channel,
+                    C.id AS channel_id,
+                    C.create_date AS start_date,
+                    EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date)) AS duration,
+                    EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer
                 FROM mail_channel C
-                    JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id and C.livechat_operator_id is not null)
-                GROUP BY C.livechat_operator_id, L.id, C.id, C.create_date
+                    JOIN mail_message_mail_channel_rel R ON R.mail_channel_id = C.id
+                    JOIN mail_message M ON R.mail_message_id = M.id
+                    LEFT JOIN mail_message MO ON (R.mail_message_id = MO.id AND MO.author_id = C.livechat_operator_id)
+                WHERE C.livechat_channel_id IS NOT NULL
+                GROUP BY C.id, C.livechat_operator_id
             )
         """)

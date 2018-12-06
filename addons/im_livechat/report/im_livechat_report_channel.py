@@ -55,12 +55,14 @@ class ImLivechatReportChannel(models.Model):
                     to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                     to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
                     extract(dow from  C.create_date) as day_number, 
-                    EXTRACT('epoch' FROM (max((SELECT (max(M.create_date)) FROM mail_message M JOIN mail_message_mail_channel_rel R ON (R.mail_message_id = M.id) WHERE R.mail_channel_id = C.id))-C.create_date)) as duration,
-                    EXTRACT('epoch' from ((SELECT min(M.create_date) FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id=C.livechat_operator_id AND R.mail_channel_id = C.id AND R.mail_message_id = M.id)-(SELECT min(M.create_date) FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id IS NULL AND R.mail_channel_id = C.id AND R.mail_message_id = M.id))) as time_to_answer,
+                    EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date)) AS duration,
+                    EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer,
                     count(distinct C.livechat_operator_id) as nbr_speaker,
                     count(distinct M.id) as nbr_message,
                     CASE 
-                        WHEN EXISTS (select distinct M.author_id FROM mail_message M, mail_message_mail_channel_rel R WHERE M.author_id=C.livechat_operator_id AND R.mail_channel_id = C.id AND R.mail_message_id = M.id and C.livechat_operator_id = M.author_id)
+                        WHEN EXISTS (select distinct M.author_id FROM mail_message M, mail_message_mail_channel_rel R 
+                                        WHERE M.author_id=C.livechat_operator_id AND R.mail_channel_id = C.id 
+                                        AND R.mail_message_id = M.id and C.livechat_operator_id = M.author_id)
                         THEN 0
                         ELSE 1
                     END as is_without_answer,
@@ -87,10 +89,12 @@ class ImLivechatReportChannel(models.Model):
                     END as is_unrated,
                     C.livechat_operator_id as partner_id
                 FROM mail_channel C
-                    JOIN mail_message_mail_channel_rel R ON (C.id = R.mail_channel_id and C.livechat_operator_id is not null)
+                    JOIN mail_message_mail_channel_rel R ON (C.id = R.mail_channel_id)
                     JOIN mail_message M ON (M.id = R.mail_message_id)
                     JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
+                    LEFT JOIN mail_message MO ON (R.mail_message_id = MO.id AND MO.author_id = C.livechat_operator_id)
                     LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'mail.channel' and Rate.parent_res_model = 'im_livechat.channel')
+                    WHERE C.livechat_operator_id is not null
                 GROUP BY C.livechat_operator_id, C.id, C.name, C.livechat_channel_id, L.name, C.create_date, C.uuid, Rate.rating
             )
         """)
