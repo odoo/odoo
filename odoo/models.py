@@ -191,6 +191,12 @@ PREFETCH_MAX = 1000
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
+# valid SQL aggregation functions
+VALID_AGGREGATE_FUNCTIONS = {
+    'array_agg', 'count', 'count_distinct',
+    'bool_and', 'bool_or', 'max', 'min', 'avg', 'sum',
+}
+
 
 @pycompat.implements_to_string
 class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
@@ -1966,7 +1972,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 field = self._fields[fname]
                 if not (field.base_field.store and field.base_field.column_type):
                     raise UserError(_("Cannot aggregate field %r.") % fname)
-                if not func.isidentifier():
+                if func not in VALID_AGGREGATE_FUNCTIONS:
                     raise UserError(_("Invalid aggregation function %r.") % func)
             else:
                 # we have 'name', retrieve the aggregator on the field
