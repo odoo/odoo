@@ -57,6 +57,14 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             cursor: pointer;
             flex: 1 1 auto;
             @include o-text-overflow;
+
+            .o_mail_thread_typing_icon {
+                padding-left: 2px;
+
+                .o_mail_thread_typing_icon_dot {
+                    background: gray('300');
+                }
+            }
         }
 
         .o_thread_window_buttons {
@@ -75,10 +83,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         flex: 1 1 100%;
         overflow: auto;
         -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
-
-        .o_thread_typing_notification_bar {
-            background-color: rgba($o-mail-thread-window-bg, 0.75);
-        }
 
         .o_thread_date_separator {
             margin: 0px 0px 15px 0px;

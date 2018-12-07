@@ -191,7 +191,6 @@
             <t t-if="options.displayBottomThreadFreeSpace">
                 <div class="o_thread_bottom_free_space"/>
             </t>
-            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
         </div>
     </t>
 
@@ -217,24 +216,9 @@
         <div class="o_mail_thread_content">
             <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
             <t t-set="messages" t-value="messages.slice().reverse()"/>
-            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
             <t t-call="mail.widget.Thread.Messages"/>
             <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
         </div>
-    </t>
-
-    <!--
-        @param {mail.model.AbstractThread} thread
-    -->
-    <t t-name="mail.widget.Thread.TypingNotificationBar">
-        <t t-if="options.displayOrder === ORDER.ASC">
-            <div class="o_thread_typing_notification_free_space"/>
-            <div class="o_thread_typing_notification_bar o_thread_order_asc"/>
-        </t>
-        <t t-else="">
-            <div class="o_thread_typing_notification_free_space"/>
-            <div class="o_thread_typing_notification_bar o_thread_order_desc"/>
-        </t>
     </t>
 
     <!--
@@ -275,7 +259,7 @@
         @param {integer} [options.selectedMessageID]
     -->
     <t t-name="mail.widget.Thread.Message">
-        <div t-att-class="'o_thread_message' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion' : ' o_mail_not_discussion')" t-att-data-message-id="message.getID()">
+        <div t-att-class="'o_thread_message ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ')" t-att-data-message-id="message.getID()">
             <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
                 <t t-if="message.hasAuthor()">
                     <img t-if="displayAuthorMessages[message.getID()]"
@@ -297,6 +281,7 @@
                 <i t-if="!displayAuthorMessages[message.getID()] and options.displayStars and message.getType() !== 'notification'"
                     t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
                     t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as todo"/>
+                <t t-if="!displayAuthorMessages[message.getID()] and thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
             </div>
             <div class="o_thread_message_core">
                 <p t-if="displayAuthorMessages[message.getID()]" class="o_mail_info text-muted">
@@ -335,6 +320,7 @@
                         <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope-o'" t-att-data-message-id="message.getID()"/>
                     </span>
                     <span t-attf-class="o_thread_icons">
+                        <t t-if="thread.hasSeenFeature()" t-call="mail.widget.Thread.Message.SeenIcon"/>
                         <i t-if="options.displayStars and !message.isSystemNotification() and !message.needsModeration()"
                             t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
                             t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as Todo"/>
@@ -377,6 +363,70 @@
         <t t-if="options.messagesSeparatorPosition == message.getID()">
             <t t-call="mail.MessagesSeparator"/>
         </t>
+    </t>
+
+    <!--
+        Display the seen icon of a message in the thread.
+        It shows the fetch 'check' before the seen 'check'. We change the order in the template
+        so that fetch 'check' is on top of 'seen' check (z-index does not work with absolute positioning)
+
+        @param {mail.model.Thread} thread
+        @param {mail.model.Message} message
+    -->
+    <t t-name="mail.widget.Thread.Message.SeenIcon">
+        <t t-if="message.isMyselfAuthor() and message.getID() >= thread.getLastMessageIDSeenByEveryone()">
+            <span t-attf-class="o_mail_thread_message_seen_icon #{thread.hasEveryoneSeen(message) ? 'o_all_seen' : ''}" t-att-data-message-id="message.getID()">
+                <t t-if="thread.hasSomeoneFetched(message)">
+                    <i class="fa fa-check"/>
+                </t>
+                <t t-if="thread.hasSomeoneSeen(message)">
+                    <i class="fa fa-check"/>
+                </t>
+            </span>
+        </t>
+    </t>
+
+    <!--
+        Display the popover content when clicking the seen icion of a message in the thread.
+
+        List the members that have received the messages, and the members that have seen it.
+
+        @param {mail.model.Thread} thread
+        @param {mail.model.Message} message
+    -->
+    <t t-name="mail.widget.Thread.Message.SeenIconPopoverContent">
+        <div class="o_mail_thread_message_seen_icon_content">
+            <t t-if="thread.hasEveryoneSeen(message)">
+                <p>Seen by Everyone</p>
+            </t>
+            <t t-else="">
+                <t t-if="thread.hasSomeoneSeen(message)">
+                    <t t-set="seen_members" t-value="thread.getSeenMembers(message)"/>
+                    Seen by:
+                    <ul>
+                        <li t-foreach="seen_members" t-as="member">
+                            <t t-esc="member.name"/> (<t t-esc="member.email"/>)
+                        </li>
+                    </ul>
+                </t>
+                <t t-if="thread.hasSomeoneFetched(message)">
+                    <t t-if="thread.hasEveryoneFetched(message)">
+                        <p>Received by Everyone</p>
+                    </t>
+                    <t t-else="">
+                        <t t-set="fetched_members" t-value="thread.getFetchedNotSeenMembers(message)"/>
+                        <t t-if="!_.isEmpty(fetched_members)">
+                            Received by:
+                            <ul>
+                                <li t-foreach="fetched_members" t-as="member">
+                                    <t t-esc="member.name"/> (<t t-esc="member.email"/>)
+                                </li>
+                            </ul>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </div>
     </t>
 
     <!--
@@ -550,4 +600,16 @@
             </t>
         </div>
     </t>
+
+    <!--
+        @param {mail.model.Thread} thread with typing feature
+    -->
+    <t t-name="mail.ThreadTypingIcon">
+        <span class="o_mail_thread_typing_icon" t-att-title="thread.getTypingMembersToText()">
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+        </span>
+    </t>
+
 </templates>

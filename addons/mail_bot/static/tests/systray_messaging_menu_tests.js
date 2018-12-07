@@ -27,7 +27,7 @@ QUnit.module('MessagingMenu', {
         // Patch mailbot_service so that it does do not do any RPC, and
         // the detection of push notifications permissions can be simulated in
         // the test cases. By default, shows 'OdooBot has a request'
-        this.hasMailbotRequest = true;
+        this.isMailbotRequesting = true;
         testUtils.mock.patch(MailBotService, {
             /**
              * @override
@@ -37,8 +37,8 @@ QUnit.module('MessagingMenu', {
              * @override
              * @returns {boolean}
              */
-            hasRequest: function () {
-                return self.hasMailbotRequest;
+            isRequestingForNativeNotifications: function () {
+                return self.isMailbotRequesting;
             },
         });
 
@@ -82,7 +82,7 @@ QUnit.test('messaging menu widget: rendering with OdooBot has a request', functi
 QUnit.test('messaging menu widget: rendering without OdooBot has a request', function (assert) {
     assert.expect(3);
 
-    this.hasMailbotRequest = false;
+    this.isMailbotRequesting = false;
 
     var messagingMenu = new MessagingMenu();
     testUtils.mock.addMockEnvironment(messagingMenu, {

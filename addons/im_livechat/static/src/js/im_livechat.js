@@ -360,7 +360,7 @@ var LivechatButton = Widget.extend({
      */
     _onUpdatedTypingPartners: function (ev) {
         ev.stopPropagation();
-        this._chatWindow.renderTypingNotificationBar();
+        this._chatWindow.renderHeader();
     },
     /**
      * @private
