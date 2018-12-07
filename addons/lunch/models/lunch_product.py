@@ -14,15 +14,43 @@ class LunchProductCategory(models.Model):
     _description = 'Lunch Product Category'
 
     name = fields.Char('Product Category', required=True)
-    topping_ids = fields.One2many('lunch.topping', 'category_id')
+    topping_label_1 = fields.Char('Topping Label 1', required=True, default='Supplements')
+    topping_label_2 = fields.Char('Topping Label 2', required=True, default='Beverages')
+    topping_label_3 = fields.Char('Topping Label 3', required=True, default='Topping Label 3')
+    topping_ids = fields.One2many('lunch.topping', 'category_id', domain=[('label', '=', 1)], ondelete='cascade')
+    topping_ids_2 = fields.One2many('lunch.topping', 'category_id', domain=[('label', '=', 2)], ondelete='cascade')
+    topping_ids_3 = fields.One2many('lunch.topping', 'category_id', domain=[('label', '=', 3)], ondelete='cascade')
+    topping_quantity_1 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], default='0_more')
+    topping_quantity_2 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], default='0_more')
+    topping_quantity_3 = fields.Selection([
+        ('0_more', 'None or More'),
+        ('1_more', 'One or More'),
+        ('1', 'Only One')], default='0_more')
 
+    @api.model
+    def create(self, vals):
+        for topping in vals.get('topping_ids_2', []):
+            topping[2].update({'label': 2})
+        for topping in vals.get('topping_ids_3', []):
+            topping[2].update({'label': 3})
+        return super(LunchProductCategory, self).create(vals)
 
-class LunchToppingType(models.Model):
-    """"""
-    _name = 'lunch.topping.type'
-    _description = 'Lunch Topping Type'
-
-    name = fields.Char('Name', required=True)
+    def write(self, vals):
+        for topping in vals.get('topping_ids_2', []):
+            topping_values = topping[2]
+            if topping_values:
+                topping_values.update({'label': 2})
+        for topping in vals.get('topping_ids_3', []):
+            topping_values = topping[2]
+            if topping_values:
+                topping_values.update({'label': 3})
+        return super(LunchProductCategory, self).write(vals)
 
 
 class LunchTopping(models.Model):
@@ -33,16 +61,16 @@ class LunchTopping(models.Model):
     name = fields.Char('Name', required=True)
     price = fields.Float('Price', digits=dp.get_precision('Account'), required=True)
     category_id = fields.Many2one('lunch.product.category')
-    type_id = fields.Many2one('lunch.topping.type')
+    label = fields.Integer('Label Number', help="This field is a technical field", required=True, default=1)
 
     def name_get(self):
         currency_id = self.env.user.company_id.currency_id
         res = dict(super(LunchTopping, self).name_get())
         for topping in self:
             if currency_id.position == 'before':
-                price = '%s %s' % (currency_id.symbol, topping.price)
+                price = '%s%s' % (currency_id.symbol, topping.price)
             else:
-                price = '%s %s' % (topping.price, currency_id.symbol)
+                price = '%s%s' % (topping.price, currency_id.symbol)
             res[topping.id] = '%s %s' % (topping.name, price)
         return list(res.items())
 

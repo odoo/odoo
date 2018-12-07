@@ -67,13 +67,8 @@ class TestsCommon(common.TransactionCase):
             'supplier_id': self.supplier_coin_gourmand.id,
         })
 
-        self.garniture_type = self.env['lunch.topping.type'].create({
-            'name': 'Graniture',
-        })
-
         self.topping_olives = self.env['lunch.topping'].create({
             'name': 'Olives',
             'price': 0.3,
             'category_id': self.category_pizza.id,
-            'type_id': self.garniture_type.id,
         })

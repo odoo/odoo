@@ -16,8 +16,17 @@
                         <div class="flex-grow-0"><field name="price_total" widget="monetary"/></div>
                     </h2>
                     <group>
-                        <field name="available_toppings" invisible="1"/>
-                        <field name="topping_ids" attrs="{'invisible': [('available_toppings', '=', False)]}" widget="many2many_checkboxes"/>
+                        <group>
+                            <field name="available_toppings" invisible="1"/>
+                            <field name="available_toppings_2" invisible="1"/>
+                            <field name="available_toppings_3" invisible="1"/>
+                            <field name="topping_label_1" nolabel="1" attrs="{'invisible': [('available_toppings', '=', False)]}"/>
+                            <field name="topping_ids" attrs="{'invisible': [('available_toppings', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                            <field name="topping_label_2" nolabel="1" attrs="{'invisible': [('available_toppings_2', '=', False)]}"/>
+                            <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                            <field name="topping_label_3" nolabel="1" attrs="{'invisible': [('available_toppings_3', '=', False)]}"/>
+                            <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1"/>
+                        </group>
                     </group>
                     <group>
                         <field name="note"/>

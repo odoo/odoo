@@ -24,7 +24,7 @@ class LunchController(http.Controller):
         if order:
             lines = [{'id': line.id,
                       'product': (line.product_id.name, line.product_id.price),
-                      'toppings': [(topping.name, topping.price) for topping in line.topping_ids],
+                      'toppings': [(topping.name, topping.price) for topping in line.topping_ids | line.topping_ids_2 | line.topping_ids_3],
                       'quantity': line.quantity,
                       'price': line.price} for line in order.order_line_ids]
             infos.update({

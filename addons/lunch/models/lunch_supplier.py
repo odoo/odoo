@@ -52,10 +52,6 @@ class LunchSupplier(models.Model):
     responsible_id = fields.Many2one('res.users', string="Responsible", domain=lambda self: [('groups_id', 'in', self.env.ref('lunch.group_lunch_manager').id)],
                                  help="This is used to set a responsible for this particular vendor")
 
-    image = fields.Binary(related='partner_id.image', readonly=False)
-    image_medium = fields.Binary(related='partner_id.image_medium', readonly=False)
-    image_small = fields.Binary(related='partner_id.image_small', readonly=False)
-
     send_by = fields.Selection([
         ('phone', 'Phone'),
         ('mail', 'Email'),
