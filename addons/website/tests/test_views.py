@@ -561,5 +561,32 @@ class TestCowViewSaving(common.TransactionCase):
         specific_view = View.with_context(website_id=1).get_view_id('website.main_view')
         generic_view_arch = View.browse(generic_view).with_context(load_all_views=True).read_combined(['arch'])['arch']
         specific_view_arch = View.browse(specific_view).with_context(load_all_views=True, website_id=1).read_combined(['arch'])['arch']
-        self.assertEqual(generic_view_arch == '<body>GENERIC<div>VIEW<span>C</span></div></body>', True)
-        self.assertEqual(specific_view_arch == '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', True, "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")
+        self.assertEqual(generic_view_arch, '<body>GENERIC<div>VIEW<span>C</span></div></body>')
+        self.assertEqual(specific_view_arch, '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")
+
+    def test_multi_website_view_obj_active(self):
+        ''' With the following structure:
+            * A generic active parent view
+            * A generic active child view, that is inactive on website 1
+            The methods to retrieve views should return the specific inactive
+            child over the generic active one.
+        '''
+        View = self.env['ir.ui.view']
+        self.inherit_view.with_context(website_id=1).write({'active': False})
+
+        # Test _view_obj() return the inactive specific over active generic
+        inherit_view = View._view_obj(self.inherit_view.key)
+        self.assertEqual(inherit_view.active, True, "_view_obj should return the generic one")
+        inherit_view = View.with_context(website_id=1)._view_obj(self.inherit_view.key)
+        self.assertEqual(inherit_view.active, False, "_view_obj should return the specific one")
+
+        # Test get_related_views() return the inactive specific over active generic
+        # Note that we cannot test get_related_views without a website in context as it will fallback on a website with get_current_website()
+        views = View.with_context(website_id=1).get_related_views(self.base_view.key)
+        self.assertEqual(views.mapped('active'), [True, False], "get_related_views should return the specific child")
+
+        # Test filter_duplicate() return the inactive specific over active generic
+        view = View.with_context(active_test=False).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
+        self.assertEqual(view.active, True, "filter_duplicate should return the generic one")
+        view = View.with_context(active_test=False, website_id=1).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
+        self.assertEqual(view.active, False, "filter_duplicate should return the specific one")
