@@ -145,24 +145,24 @@
     </template>
 
     <!-- First page of a survey -->
-    <template id="survey_init" name="Survey">
+    <template id="survey_start" name="Survey Start">
         <t t-call="survey.layout">
             <div class="wrap">
-                <div class="oe_structure" id="oe_structure_survey_init_1"/>
+                <div class="oe_structure"/>
                 <div class="container">
                     <div class="alert alert-danger text-center no_print" t-if="test_entry">
                         <span>This is a test survey. Your answer will not be registered in the answers. </span>
                     </div>
-                    <t t-call="survey.back" />
+                    <t t-call="survey.back"/>
                     <div class='jumbotron mt32'>
-                        <h1 t-field='survey.title' />
+                        <h1 t-field='survey.title'/>
                         <div t-field='survey.description' class="oe_no_empty"/>
                         <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (survey.id, token)">
                             Start Survey
                         </a>
                     </div>
                 </div>
-                <div class="oe_structure" id="oe_structure_survey_init_2"/>
+                <div class="oe_structure"/>
             </div>
         </t>
     </template>

@@ -165,7 +165,7 @@ class Survey(http.Controller):
         # Select the right page
         if answer_sudo.state == 'new':  # Intro page
             data = {'survey': survey_sudo, 'page': None, 'token': answer_sudo.token, 'test_entry': answer_sudo.test_entry}
-            return request.render('survey.survey_init', data)
+            return request.render('survey.survey_start', data)
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey_sudo.id, answer_sudo.token))
 
