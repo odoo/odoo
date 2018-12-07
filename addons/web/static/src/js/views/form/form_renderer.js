@@ -5,6 +5,7 @@ var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -439,7 +440,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderHeaderButton: function (node) {
-        var $button = this._renderButtonFromNode(node);
+        var $button = viewUtils.renderButtonFromNode(node);
 
         // Current API of odoo for rendering buttons is "if classes are given
         // use those on top of the 'btn' and 'btn-{size}' classes, otherwise act
@@ -639,7 +640,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderStatButton: function (node) {
-        var $button = this._renderButtonFromNode(node, {
+        var $button = viewUtils.renderButtonFromNode(node, {
             extraClass: 'oe_stat_button',
         });
         $button.append(_.map(node.children, this._renderNode.bind(this)));
@@ -685,7 +686,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagButton: function (node) {
-        var $button = this._renderButtonFromNode(node);
+        var $button = viewUtils.renderButtonFromNode(node);
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);

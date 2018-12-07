@@ -74,6 +74,16 @@
     <iframe width="100%" frameborder="0" t-att-src="url"/>
 </t>
 
+<div t-name="AddToBoardMenu">
+    <button type="button" class="dropdown-item o_add_to_board o_menu_header">Add to my Dashboard</button>
+    <div t-if="widget.isOpen" class="dropdown-item-text o_add_to_board">
+        <input class="o_input o_add_to_board_input" type="text"/>
+    </div>
+    <div t-if="widget.isOpen"  class="dropdown-item-text o_add_to_board">
+        <button type="button" class="btn btn-primary o_add_to_board_confirm_button">Add</button>
+    </div>
+</div>
+
 <t t-name="SearchView.addtodashboard">
     <a href="#" class="dropdown-item o_add_to_dashboard_link o_closed_menu">Add to my Dashboard</a>
     <div class="dropdown-item-text o_add_to_dashboard">

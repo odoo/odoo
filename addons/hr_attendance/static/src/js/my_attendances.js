@@ -4,11 +4,9 @@ odoo.define('hr_attendance.my_attendances', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 
-var QWeb = core.qweb;
-var _t = core._t;
-
 
 var MyAttendances = AbstractAction.extend({
+    contentTemplate: 'HrAttendanceMyMainMenu',
     events: {
         "click .o_hr_attendance_sign_in_out_icon": function() {
             this.$('.o_hr_attendance_sign_in_out_icon').attr("disabled", "disabled");
@@ -16,7 +14,7 @@ var MyAttendances = AbstractAction.extend({
         },
     },
 
-    start: function () {
+    willStart: function () {
         var self = this;
 
         var def = this._rpc({
@@ -26,7 +24,6 @@ var MyAttendances = AbstractAction.extend({
             })
             .then(function (res) {
                 self.employee = res.length && res[0];
-                self.$el.html(QWeb.render("HrAttendanceMyMainMenu", {widget: self}));
             });
 
         return $.when(def, this._super.apply(this, arguments));

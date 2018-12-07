@@ -10,7 +10,9 @@ var Dashboard = webSettingsDashboard.Dashboard;
 
 function createDashboard(params) {
     var widget = new Widget();
-    var dashboard = new Dashboard(widget);
+    // action content not used in tests apparently
+    var action = {};
+    var dashboard = new Dashboard(widget, action);
     dashboard.all_dashboards = params.dashboards || ['invitations']; // test only user invitations
 
     testUtils.mock.addMockEnvironment(widget, params);

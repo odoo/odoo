@@ -209,7 +209,7 @@ QUnit.module('special_fields', {
                 '</form>',
         });
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('select').length, 1, "should have the select field");
+        assert.containsOnce(form, 'select[name=tz]');
         form.destroy();
     });
 

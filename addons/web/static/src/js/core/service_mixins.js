@@ -139,8 +139,8 @@ var ServicesMixin = {
         promise.abort = abort.bind(def);
         return promise;
     },
-    loadFieldView: function (dataset, view_id, view_type, options) {
-        return this.loadViews(dataset.model, dataset.get_context().eval(), [[view_id, view_type]], options).then(function (result) {
+    loadFieldView: function (modelName, context, view_id, view_type, options) {
+        return this.loadViews(modelName, context, [[view_id, view_type]], options).then(function (result) {
             return result[view_type];
         });
     },
@@ -155,11 +155,28 @@ var ServicesMixin = {
         });
         return def;
     },
-    loadFilters: function (dataset, action_id) {
+    loadFilters: function (modelName, actionId, context) {
         var def = $.Deferred();
         this.trigger_up('load_filters', {
-            dataset: dataset,
-            action_id: action_id,
+            modelName: modelName,
+            actionId: actionId,
+            context: context,
+            on_success: def.resolve.bind(def),
+        });
+        return def;
+    },
+    createFilter: function (filter) {
+        var def = $.Deferred();
+        this.trigger_up('create_filter', {
+            filter: filter,
+            on_success: def.resolve.bind(def),
+        });
+        return def;
+    },
+    deleteFilter: function (filterId) {
+        var def = $.Deferred();
+        this.trigger_up('delete_filter', {
+            filterId: filterId,
             on_success: def.resolve.bind(def),
         });
         return def;

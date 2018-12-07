@@ -20,7 +20,7 @@ var ActivityView = AbstractView.extend({
         Renderer: ActivityRenderer,
     }),
     viewType: 'activity',
-    groupable: false,
+    searchMenuTypes: ['filter', 'favorite'],
 });
 
 view_registry.add('activity', ActivityView);

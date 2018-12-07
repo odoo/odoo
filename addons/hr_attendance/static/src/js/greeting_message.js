@@ -8,7 +8,7 @@ var _t = core._t;
 
 
 var GreetingMessage = AbstractAction.extend({
-    template: 'HrAttendanceGreetingMessage',
+    contentTemplate: 'HrAttendanceGreetingMessage',
 
     events: {
         "click .o_hr_attendance_button_dismiss": function() { this.do_action(this.next_action, {clear_breadcrumbs: true}); },
@@ -61,6 +61,7 @@ var GreetingMessage = AbstractAction.extend({
         if (this.activeBarcode) {
             core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
         }
+        return this._super.apply(this, arguments);
     },
 
     welcome_message: function() {
