@@ -53,7 +53,7 @@
                             <div class="o_history_kanban_container">
                                 <div class="o_history_kanban_sub_container">
                                     <field name="message_ids" mode="kanban">
-                                        <kanban>
+                                        <kanban default_order="create_date DESC">
                                             <field name="author_id"/>
                                             <field name="body"/>
                                             <field name="create_date" groups="base.group_no_one"/>
@@ -65,7 +65,7 @@
                                                         <div class="o_kanban_image">
                                                             <div>
                                                                  <t t-if="record.author_avatar.raw_value">
-                                                                    <img t-att-src="kanban_image('mail.message', 'author_avatar', record.id.raw_value)" alt="Avatar" class="rounded-circle" width="56px" heigth="56px"/>
+                                                                    <img t-att-src="kanban_image('mail.message', 'author_avatar', record.id.raw_value)" alt="Avatar" class="rounded-circle"/>
                                                                  </t>
                                                                  <t t-else=""><img alt="Anonymous" src="/mail/static/src/img/smiley/avatar.jpg" class="rounded-circle"/></t>
                                                             </div>
