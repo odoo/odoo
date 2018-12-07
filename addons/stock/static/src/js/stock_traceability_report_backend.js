@@ -4,17 +4,18 @@ odoo.define('stock.stock_report_generic', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var session = require('web.session');
-var ControlPanelMixin = require('web.ControlPanelMixin');
-var session = require('web.session');
 var ReportWidget = require('stock.ReportWidget');
 var framework = require('web.framework');
 var crash_manager = require('web.crash_manager');
 
 var QWeb = core.qweb;
 
-var stock_report_generic = AbstractAction.extend(ControlPanelMixin, {
+var stock_report_generic = AbstractAction.extend({
+    hasControlPanel: true,
+
     // Stores all the parameters of the action.
     init: function(parent, action) {
+        this._super.apply(this, arguments);
         this.actionManager = parent;
         this.given_context = session.user_context;
         this.controller_url = action.context.url;
@@ -26,17 +27,16 @@ var stock_report_generic = AbstractAction.extend(ControlPanelMixin, {
         this.given_context.ttype = action.context.ttype || false;
         this.given_context.auto_unfold = action.context.auto_unfold || false;
         this.given_context.lot_name = action.context.lot_name || false;
-        return this._super.apply(this, arguments);
     },
     willStart: function() {
-        return this.get_html();
+        return $.when(this._super.apply(this, arguments), this.get_html());
     },
     set_html: function() {
         var self = this;
         var def = $.when();
         if (!this.report_widget) {
             this.report_widget = new ReportWidget(this, this.given_context);
-            def = this.report_widget.appendTo(this.$el);
+            def = this.report_widget.appendTo(this.$('.o_content'));
         }
         return def.then(function () {
             self.report_widget.$el.html(self.html);
@@ -78,7 +78,7 @@ var stock_report_generic = AbstractAction.extend(ControlPanelMixin, {
         var status = {
             cp_content: {$buttons: this.$buttons},
         };
-        return this.update_control_panel(status);
+        return this.updateControlPanel(status);
     },
     renderButtons: function() {
         var self = this;

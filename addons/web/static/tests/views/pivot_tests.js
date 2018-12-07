@@ -156,7 +156,7 @@ QUnit.module('Views', {
         _.extend(this.data.partner.fields, {
             foo: {string: "Foo", type: "integer", store: true},
             foo2: {string: "Foo2", type: "integer", store: true}
-        })
+        });
 
         var pivot = createView({
             View: PivotView,
@@ -171,7 +171,7 @@ QUnit.module('Views', {
         // there should be only one displayed measure as the other one is invisible
         assert.containsOnce(pivot, '.o_pivot_measure_row');
         // there should be only one measure besides count, as the other one is invisible
-        assert.containsN(document.body, '.dropdown-item', 2);
+        assert.containsN(pivot, '.o_cp_left .dropdown-item', 2);
 
         pivot.destroy();
     });
@@ -860,7 +860,7 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
-    QUnit.test('getContext correctly returns measures and groupbys', function (assert) {
+    QUnit.test('getOwnedQueryParams correctly returns measures and groupbys', function (assert) {
         assert.expect(3);
 
         var pivot = createView({
@@ -873,28 +873,34 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.deepEqual(pivot.getContext(), {
-            pivot_column_groupby: ['date:day'],
-            pivot_measures: ['foo'],
-            pivot_row_groupby: [],
+        assert.deepEqual(pivot.getOwnedQueryParams(), {
+            context: {
+                pivot_column_groupby: ['date:day'],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: [],
+            },
         }, "context should be correct");
 
         // expand header on field customer
         testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed:nth(1)'));
         testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]:first'));
-        assert.deepEqual(pivot.getContext(), {
-            pivot_column_groupby: ['date:day', 'customer'],
-            pivot_measures: ['foo'],
-            pivot_row_groupby: [],
+        assert.deepEqual(pivot.getOwnedQueryParams(), {
+            context: {
+                pivot_column_groupby: ['date:day', 'customer'],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: [],
+            },
         }, "context should be correct");
 
         // expand row on field product_id
         testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed'));
         testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first'));
-        assert.deepEqual(pivot.getContext(), {
-            pivot_column_groupby: ['date:day', 'customer'],
-            pivot_measures: ['foo'],
-            pivot_row_groupby: ['product_id'],
+        assert.deepEqual(pivot.getOwnedQueryParams(), {
+            context: {
+                pivot_column_groupby: ['date:day', 'customer'],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: ['product_id'],
+            },
         }, "context should be correct");
 
         pivot.destroy();
@@ -1195,12 +1201,16 @@ QUnit.module('Views', {
         // Set a domain
         testUtils.pivot.reload(pivot, {domain: [['product_id', '=', 41]]});
 
-        var expectedContext = {pivot_column_groupby: ['customer'],
-                               pivot_measures: ['foo'],
-                               pivot_row_groupby: ['product_id']};
+        var expectedContext = {
+            context: {
+                pivot_column_groupby: ['customer'],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: ['product_id'],
+            },
+        };
 
         // Mock 'save as favorite'
-        assert.deepEqual(pivot.getContext(), expectedContext,
+        assert.deepEqual(pivot.getOwnedQueryParams(), expectedContext,
             'The pivot view should have the right context');
 
         var $xpadHeader = pivot.$('tbody .o_pivot_header_cell_closed[data-original-title=Product]');

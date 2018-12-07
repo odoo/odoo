@@ -155,21 +155,15 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             groupBy: ['bar'],
-            intercepts: {
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
-            },
         });
 
         // check archive/restore all actions in kanban header's config dropdown
         assert.containsOnce(kanban, '.o_kanban_header:first .o_kanban_config .o_column_archive_records');
         assert.containsOnce(kanban, '.o_kanban_header:first .o_kanban_config .o_column_unarchive_records');
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         // archive the records of the first column
         assert.containsN(kanban, '.o_kanban_group:last .o_kanban_record', 3);
-        envIDs = [4];
 
         testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:last'));
         testUtils.dom.click(kanban.$('.o_kanban_group:last .o_column_archive_records'));
@@ -181,6 +175,8 @@ QUnit.module('Views', {
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
         testUtils.modal.clickButton('Ok');
         assert.containsNone(kanban, '.o_kanban_group:last .o_kanban_record', "last column should not contain any records");
+        envIDs = [4];
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
         kanban.destroy();
     });
 
@@ -819,13 +815,9 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             groupBy: ['bar'],
-            intercepts: {
-                env_updated: function (event) {
-                    assert.strictEqual(event.data.env.ids.length, nbRecords,
-                        "should update the env with the records ids");
-                },
-            }
         });
+
+        assert.strictEqual(kanban.exportState().resIds.length, nbRecords);
 
         // click to add an element and cancel the quick creation by pressing ESC
         testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
@@ -867,6 +859,7 @@ QUnit.module('Views', {
             "should have created a partner");
         assert.strictEqual(_.last(this.data.partner.records).name, "new partner",
             "should have correct name");
+        assert.strictEqual(kanban.exportState().resIds.length, nbRecords);
 
         kanban.destroy();
     });
@@ -2408,16 +2401,11 @@ QUnit.module('Views', {
                 }
                 return this._super(route, args);
             },
-            intercepts: {
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
-            },
         });
         assert.containsN(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record', 2);
         assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 2);
         assert.containsN(kanban, '.thisiseditable', 4);
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
         var $group = kanban.$('.o_kanban_group:nth-child(2)');
@@ -2427,6 +2415,8 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record');
         assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 3);
         assert.containsN(kanban, '.thisiseditable', 4);
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
+
         kanban.destroy();
     });
 
@@ -2637,24 +2627,22 @@ QUnit.module('Views', {
                         '</t></templates>' +
                     '</kanban>',
             groupBy: ['product_id'],
-            intercepts: {
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
-            },
         });
+
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         // fold the second group and check that the res_ids it contains are no
         // longer in the environment
         envIDs = [1, 3];
         testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:last'));
         testUtils.dom.click(kanban.$('.o_kanban_group:last .o_kanban_toggle_fold'));
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         // re-open the second group and check that the res_ids it contains are
         // back in the environment
         envIDs = [1, 3, 2, 4];
         testUtils.dom.click(kanban.$('.o_kanban_group:last'));
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         kanban.destroy();
     });
@@ -3182,27 +3170,6 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('if view was grouped at start, it stays grouped', function (assert) {
-        assert.expect(1);
-
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
-                        '<field name="product_id"/>' +
-                        '<templates><t t-name="kanban-box">' +
-                            '<div><field name="foo"/></div>' +
-                        '</t></templates>' +
-                    '</kanban>',
-            groupBy: ['product_id'],
-        });
-        kanban.update({groupBy: []});
-
-        assert.hasClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
-        kanban.destroy();
-    });
-
     QUnit.test('if view was not grouped at start, it can be grouped and ungrouped', function (assert) {
         assert.expect(3);
 
@@ -3217,11 +3184,13 @@ QUnit.module('Views', {
                         '</t></templates>' +
                     '</kanban>',
         });
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped', "should not be grouped");
+
+        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
         kanban.update({groupBy: ['product_id']});
-        assert.hasClass(kanban.$('.o_kanban_view'),'o_kanban_grouped', "should be grouped");
+        assert.hasClass(kanban.$('.o_kanban_view'),'o_kanban_grouped');
         kanban.update({groupBy: []});
-        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped', "should not be grouped");
+        assert.doesNotHaveClass(kanban.$('.o_kanban_view'), 'o_kanban_grouped');
+
         kanban.destroy();
     });
 
@@ -3792,7 +3761,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('resequence columns in grouped by m2o', function (assert) {
-        assert.expect(7);
+        assert.expect(6);
         this.data.product.fields.sequence = {string: "Sequence", type: "integer"};
 
         var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
@@ -3807,12 +3776,6 @@ QUnit.module('Views', {
                         '</t></templates>' +
                     '</kanban>',
             groupBy: ['product_id'],
-            intercepts: {
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
-            },
         });
 
         assert.hasClass(kanban.$('.o_kanban_view'),'ui-sortable',
@@ -3821,6 +3784,7 @@ QUnit.module('Views', {
             "should have two columns");
         assert.strictEqual(kanban.$('.o_kanban_group:first').data('id'), 3,
             "first column should be id 3 before resequencing");
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         // there is a 100ms delay on the d&d feature (jquery sortable) for
         // kanban columns, making it hard to test. So we rather bypass the d&d
@@ -3831,6 +3795,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:first').data('id'), 5,
             "first column should be id 5 after resequencing");
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         kanban.destroy();
     });
@@ -3944,16 +3909,11 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            intercepts:{
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
-            },
         });
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 2,
             "there should be 2 records in the column");
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         // load more
         envIDs = [1, 2, 3, 4]; // id 3 will be loaded
@@ -3961,14 +3921,15 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 3,
             "there should now be 3 records in the column");
-
         assert.verifySteps([[2, undefined], [2, undefined], [2, 2]],
             "the records should be correctly fetched");
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         // reload
         kanban.reload();
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 3,
             "there should still be 3 records in the column after reload");
+        assert.deepEqual(kanban.exportState().resIds, envIDs);
 
         kanban.destroy();
     });
@@ -4471,7 +4432,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('kanban with progressbars: correctly update env when archiving records', function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
         // add active field on partner model and make all records active
         this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
@@ -4493,22 +4454,16 @@ QUnit.module('Views', {
                     '</t></templates>' +
                 '</kanban>',
             groupBy: ['bar'],
-            intercepts: {
-                env_updated: function (ev) {
-                    assert.step(ev.data.env.ids);
-                },
-            },
         });
+
+        assert.deepEqual(kanban.exportState().resIds, [1, 2, 3, 4]);
 
         // archive all records of the first column
         testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:first'));
         testUtils.dom.click(kanban.$('.o_column_archive_records:visible'));
         testUtils.dom.click($('.modal-footer button:first'));
 
-        assert.verifySteps([
-            [1, 2, 3, 4],
-            [1, 2, 3],
-        ]);
+        assert.deepEqual(kanban.exportState().resIds, [1, 2, 3]);
 
         kanban.destroy();
     });
@@ -4784,7 +4739,9 @@ QUnit.module('Views', {
         // call destroy function of controller to ensure that it correctly destroys everything
         kanban.__destroy();
 
-        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+        // + 1 (parent)
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 1,
+            "every widget must be destroyed exept the parent");
 
         kanban.destroy();
 

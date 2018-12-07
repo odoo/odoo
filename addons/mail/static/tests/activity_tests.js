@@ -337,8 +337,8 @@ QUnit.test('activity view: activity widget', function (assert) {
 
     activity.destroy();
 });
-QUnit.test('activity view: no group by', function (assert) {
-    assert.expect(4);
+QUnit.test('activity view: no group_by_menu and no time_range_menu', function (assert) {
+    assert.expect(3);
 
     var actionManager = createActionManager({
         actions: [{
@@ -363,14 +363,12 @@ QUnit.test('activity view: no group by', function (assert) {
 
     actionManager.doAction(1);
 
-    assert.strictEqual($('.o_search_options .o_dropdown:visible').length, 2,
+    assert.containsN(actionManager, '.o_search_options .o_dropdown button:visible', 2,
         "only two elements should be available in view search");
-    assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
+    assert.isVisible(actionManager.$('.o_search_options .o_dropdown button.o_filters_menu_button'),
         "filter should be available in view search");
-    assert.strictEqual($('.o_search_options .o_dropdown:visible .o_favorites_menu').length, 1,
+    assert.isVisible(actionManager.$('.o_search_options .o_dropdown button.o_favorites_menu_button'),
         "favorites should be available in view search");
-    assert.strictEqual($('.o_search_options .o_dropdown:hidden .o_group_by_menu').length, 1,
-        "group by should be hidden");
     actionManager.destroy();
 });
 

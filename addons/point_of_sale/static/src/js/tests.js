@@ -50,7 +50,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         run: 'click',
     }, {
         content: 'waiting for loading to finish',
-        trigger: '.o_main_content:has(.loader:hidden)',
+        trigger: 'body:has(.loader:hidden)',
         run: function () {
             var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
             var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];
@@ -312,7 +312,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
 
     var steps = [{
             content: 'waiting for loading to finish',
-            trigger: '.o_main_content:has(.loader:hidden)',
+            trigger: 'body:has(.loader:hidden)',
             run: function () {}, // it's a check
         }, { // Leave category displayed by default
             content: "click category switch",

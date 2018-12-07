@@ -18,9 +18,6 @@ var DebouncedField = basicFields.DebouncedField;
 var JournalDashboardGraph = basicFields.JournalDashboardGraph;
 var _t = core._t;
 
-var DOM = testUtils.DOM;
-var mock = testUtils.mock;
-
 QUnit.module('fields', {}, function () {
 
 QUnit.module('basic_fields', {
@@ -166,7 +163,7 @@ QUnit.module('basic_fields', {
         });
 
         // change the value
-        testUtils.fields.editInput(form.$('input'), 'new value');
+        testUtils.fields.editInput(form.$('input[name=foo]'), 'new value');
         assert.verifySteps([], "_setValue shouldn't have been called yet");
 
         // save
@@ -236,12 +233,12 @@ QUnit.module('basic_fields', {
             "checkbox should now be unchecked");
 
         // check the checkbox by clicking on label
-        testUtils.dom.click(form.$('label:first'));
+        testUtils.dom.click(form.$('.o_form_view label:first'));
         assert.containsOnce(form, '.o_field_boolean input:checked',
             "checkbox should now be checked");
 
         // uncheck it back
-        testUtils.dom.click(form.$('label:first'));
+        testUtils.dom.click(form.$('.o_form_view label:first'));
         assert.containsNone(form, '.o_field_boolean input:checked',
             "checkbox should now be unchecked");
 
@@ -394,17 +391,17 @@ QUnit.module('basic_fields', {
         assert.containsOnce(list, 'button i.fa.fa-circle.text-muted',
             "should have 1 muted button");
 
-        assert.hasAttrValue(list.$('button').first(), 'title', "Reported in last payslips",
-            "active buttons should have proper tooltip");
-        assert.hasAttrValue(list.$('button').last(), 'title', "To Report in Payslip",
-            "inactive buttons should have proper tooltip");
+        assert.hasAttrValue(list.$('.o_list_view button').first(), 'title',
+            "Reported in last payslips", "active buttons should have proper tooltip");
+        assert.hasAttrValue(list.$('.o_list_view button').last(), 'title',
+            "To Report in Payslip", "inactive buttons should have proper tooltip");
 
         // clicking on first button to check the state is properly changed
-        testUtils.dom.click(list.$('button').first());
+        testUtils.dom.click(list.$('.o_list_view button').first());
         assert.containsN(list, 'button i.fa.fa-circle.o_toggle_button_success', 3,
             "should have 3 green buttons");
 
-        testUtils.dom.click(list.$('button').first());
+        testUtils.dom.click(list.$('.o_list_view button').first());
         assert.containsN(list, 'button i.fa.fa-circle.o_toggle_button_success', 4,
             "should have 4 green buttons");
         list.destroy();
@@ -553,14 +550,14 @@ QUnit.module('basic_fields', {
             'The value should be displayed properly.');
 
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('input').val(), '0.000',
+        assert.strictEqual(form.$('input[name=qux]').val(), '0.000',
             'The value should be rendered with correct precision.');
 
-        testUtils.fields.editInput(form.$('input'), '108.2458938598598');
-        assert.strictEqual(form.$('input').val(), '108.2458938598598',
+        testUtils.fields.editInput(form.$('input[name=qux]'), '108.2458938598598');
+        assert.strictEqual(form.$('input[name=qux]').val(), '108.2458938598598',
             'The value should not be formated yet.');
 
-        testUtils.fields.editInput(form.$('input'), '18.8958938598598');
+        testUtils.fields.editInput(form.$('input[name=qux]'), '18.8958938598598');
         testUtils.form.clickSave(form);
         assert.strictEqual(form.$('.o_field_widget').first().text(), '18.896',
             'The new value should be rounded properly.');
@@ -691,13 +688,13 @@ QUnit.module('basic_fields', {
             'The value should be displayed properly.');
 
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('input').val(), '-8.9',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '-8.9',
             'The input should be rendered without the currency symbol.');
-        assert.strictEqual(form.$('input').parent().children().first().text(), '$',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').parent().children().first().text(), '$',
             'The input should be preceded by a span containing the currency symbol.');
 
         testUtils.fields.editInput(form.$('.o_field_monetary input'), '109.2458938598598');
-        assert.strictEqual(form.$('input').val(), '109.2458938598598',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '109.2458938598598',
             'The value should not be formated yet.');
 
         testUtils.form.clickSave(form);
@@ -730,7 +727,7 @@ QUnit.module('basic_fields', {
             'Float field with option type must have a type attribute.');
         assert.hasAttrValue(form.$('.o_field_widget'), 'type', 'number',
             'Float field with option type must have a type attribute equals to "number".');
-        testUtils.fields.editInput(form.$('input'), '123456.7890');
+        testUtils.fields.editInput(form.$('input[name=qux]'), '123456.7890');
         testUtils.form.clickSave(form);
         testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('.o_field_widget').val(), '123456.789',
@@ -763,7 +760,7 @@ QUnit.module('basic_fields', {
         assert.hasAttrValue(form.$('.o_field_widget'), 'type', 'text',
             'Float field with option type must have a text type (default type).');
 
-        testUtils.fields.editInput(form.$('input'), '123456.7890');
+        testUtils.fields.editInput(form.$('input[name=qux]'), '123456.7890');
         testUtils.form.clickSave(form);
         testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('.o_field_widget').val(), '123,456.8',
@@ -1086,7 +1083,7 @@ QUnit.module('basic_fields', {
             },
         });
 
-        testUtils.fields.editInput(form.$('input'), '<script>throw Error();</script>');
+        testUtils.fields.editInput(form.$('input[name=foo]'), '<script>throw Error();</script>');
         testUtils.form.clickSave(form);
         assert.strictEqual(form.$('.o_field_widget').text(), '<script>throw Error();</script>',
             'the value should have been properly escaped');
@@ -3329,13 +3326,13 @@ QUnit.module('basic_fields', {
             'The value should be displayed properly.');
 
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('input').val(), '9.10',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '9.10',
             'The input should be rendered without the currency symbol.');
-        assert.strictEqual(form.$('input').parent().children().first().text(), '$',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').parent().children().first().text(), '$',
             'The input should be preceded by a span containing the currency symbol.');
 
         testUtils.fields.editInput(form.$('.o_field_monetary input'), '108.2458938598598');
-        assert.strictEqual(form.$('input').val(), '108.2458938598598',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '108.2458938598598',
             'The value should not be formated yet.');
 
         testUtils.form.clickSave(form);
@@ -3370,13 +3367,13 @@ QUnit.module('basic_fields', {
             'The value should be displayed properly.');
 
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('input').first().val(), '0.00',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '0.00',
             'The input should be rendered without the currency symbol.');
-        assert.strictEqual(form.$('input').parent().children().eq(1).text(), '€',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').parent().children().eq(1).text(), '€',
             'The input should be followed by a span containing the currency symbol.');
 
-        testUtils.fields.editInput(form.$('input').first(), '108.2458938598598');
-        assert.strictEqual(form.$('input').first().val(), '108.2458938598598',
+        testUtils.fields.editInput(form.$('.o_field_widget[name=qux] input'), '108.2458938598598');
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '108.2458938598598',
             'The value should not be formated yet.');
 
         testUtils.form.clickSave(form);
@@ -3427,13 +3424,13 @@ QUnit.module('basic_fields', {
             'The value should be displayed properly.');
 
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('input').first().val(), '99.1234',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '99.1234',
             'The input should be rendered without the currency symbol.');
-        assert.strictEqual(form.$('input').parent().children().eq(1).text(), 'Bs.F',
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').parent().children().eq(1).text(), 'Bs.F',
             'The input should be followed by a span containing the currency symbol.');
 
-        testUtils.fields.editInput(form.$('input').first(), '99.111111111');
-        assert.strictEqual(form.$('input').first().val(), '99.111111111',
+        testUtils.fields.editInput(form.$('.o_field_widget[name=qux] input'), '99.111111111');
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), '99.111111111',
             'The value should not be formated yet.');
 
         testUtils.form.clickSave(form);
@@ -3743,11 +3740,11 @@ QUnit.module('basic_fields', {
             'Integer field should be considered set for value 0.');
 
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('input').val(), '0',
+        assert.strictEqual(form.$('input[name=int_field]').val(), '0',
             'The value should be rendered correctly in edit mode.');
 
-        testUtils.fields.editInput(form.$('input'), '-18');
-        assert.strictEqual(form.$('input').val(), '-18',
+        testUtils.fields.editInput(form.$('input[name=int_field]'), '-18');
+        assert.strictEqual(form.$('input[name=int_field]').val(), '-18',
             'The value should be correctly displayed in the input.');
 
         testUtils.form.clickSave(form);
@@ -3831,7 +3828,7 @@ QUnit.module('basic_fields', {
         assert.hasAttrValue(form.$('.o_field_widget'), 'type', 'number',
             'Integer field with option type must have a type attribute equals to "number".');
 
-        testUtils.fields.editInput(form.$('input'), '1234567890');
+        testUtils.fields.editInput(form.$('input[name=int_field]'), '1234567890');
         testUtils.form.clickSave(form);
         testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('.o_field_widget').val(), '1234567890',
@@ -3864,7 +3861,7 @@ QUnit.module('basic_fields', {
         assert.hasAttrValue(form.$('.o_field_widget'), 'type', 'text',
             'Integer field without option type must have a text type (default type).');
 
-        testUtils.fields.editInput(form.$('input'), '1234567890');
+        testUtils.fields.editInput(form.$('input[name=int_field]'), '1234567890');
         testUtils.form.clickSave(form);
         testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('.o_field_widget').val(), '1,234,567,890',
@@ -3903,11 +3900,11 @@ QUnit.module('basic_fields', {
             'The formatted time value should be displayed properly.');
 
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('input').val(), '09:06',
+        assert.strictEqual(form.$('input[name=qux]').val(), '09:06',
             'The value should be rendered correctly in the input.');
 
-        testUtils.fields.editInput(form.$('input'), '-11:48');
-        assert.strictEqual(form.$('input').val(), '-11:48',
+        testUtils.fields.editInput(form.$('input[name=qux]'), '-11:48');
+        assert.strictEqual(form.$('input[name=qux]').val(), '-11:48',
             'The new value should be displayed properly in the input.');
 
         testUtils.form.clickSave(form);
@@ -3945,10 +3942,10 @@ QUnit.module('basic_fields', {
             'The formatted value should be displayed properly.');
 
         testUtils.form.clickEdit(form);
-        assert.strictEqual(form.$('input').val(), '4.55',
+        assert.strictEqual(form.$('input[name=qux]').val(), '4.55',
             'The value should be rendered correctly in the input.');
 
-        testUtils.fields.editInput(form.$('input'), '2.3');
+        testUtils.fields.editInput(form.$('input[name=qux]'), '2.3');
 
         testUtils.form.clickSave(form);
         assert.strictEqual(form.$('.o_field_widget').first().text(), '2.30',
@@ -4057,7 +4054,7 @@ QUnit.module('basic_fields', {
             View: ListView,
             model: 'partner',
             data: this.data,
-            arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
+            arch: '<tree editable="bottom"><field name="foo" widget="phone"/></tree>',
             config: {
                 device: {
                     size_class: config.device.SIZES.LG,

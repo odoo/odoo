@@ -128,15 +128,20 @@ return core.Class.extend({
      *
      * @param {Object} [dataset] the dataset for which the filters are loaded
      * @param {int} [action_id] the id of the action (optional)
+     * @param {Object} params
+     * @param {string} params.modelName
+     * @param {Object} params.context
+     * @param {integer} params.actionId
      * @return {Deferred} resolved with the requested filters
      */
-    load_filters: function (dataset, action_id) {
-        var key = this._gen_key(dataset.model, action_id);
+    load_filters: function (params) {
+        var key = this._gen_key(params.modelName, params.actionId);
         if (!this._cache.filters[key]) {
             this._cache.filters[key] = rpc.query({
-                args: [dataset.model, action_id],
+                args: [params.modelName, params.actionId],
                 kwargs: {
-                    context: dataset.get_context(),
+                    context: params.context || {},
+                    // get_context() de dataset
                 },
                 model: 'ir.filters',
                 method: 'get_filters',
@@ -158,26 +163,26 @@ return core.Class.extend({
                 model: 'ir.filters',
                 method: 'create_or_replace',
             })
-            .then(function (filter_id) {
+            .then(function (filterId) {
                 var key = [
                     filter.model_id,
                     filter.action_id || false,
                 ].join(',');
                 self._invalidate(self._cache.filters, key);
-                return filter_id;
+                return filterId;
             });
     },
 
     /**
      * Calls 'unlink' on 'ir_filters'.
      *
-     * @param {Object} [filter] the description of the filter to remove
+     * @param {integer} filterId, Id of the filter to remove
      * @return {Deferred}
      */
-    delete_filter: function (filter) {
+    delete_filter: function (filterId) {
         var self = this;
         return rpc.query({
-                args: [filter.id],
+                args: [filterId],
                 model: 'ir.filters',
                 method: 'unlink',
             })

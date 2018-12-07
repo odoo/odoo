@@ -6,13 +6,11 @@ odoo.define('web.GraphController', function (require) {
 
 var core = require('web.core');
 var AbstractController = require('web.AbstractController');
-var GroupByMenuInterfaceMixin = require('web.GroupByMenuInterfaceMixin');
+var GroupByMenuMixin = require('web.GroupByMenuMixin');
 
 var qweb = core.qweb;
 
-var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
-    className: 'o_graph',
-
+var GraphController = AbstractController.extend(GroupByMenuMixin,{
     /**
      * @override
      * @param {Widget} parent
@@ -24,19 +22,24 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * @param {string[]} params.groupableFields,
      */
     init: function (parent, model, renderer, params) {
-        GroupByMenuInterfaceMixin.init.call(this);
+        GroupByMenuMixin.init.call(this);
         this._super.apply(this, arguments);
         this.measures = params.measures;
         // this parameter condition the appearance of a 'Group By'
         // button in the control panel owned by the graph view.
         this.isEmbedded = params.isEmbedded;
+
         // this parameter determines what is the list of fields
         // that may be used within the groupby menu available when
         // the view is embedded
         this.groupableFields = params.groupableFields;
-        // extends custom_events key. This allow the controller
-        // to listen to information comming from the groupby menu.
-        // this is used when the view is embedded.
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$el.addClass('o_graph_controller');
+        return this._super.apply(this, arguments);
     },
     /**
      * @todo check if this can be removed (mostly duplicate with
@@ -62,18 +65,20 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * @override
      * @returns {Object}
      */
-    getContext: function () {
+    getOwnedQueryParams: function () {
         var state = this.model.get();
         return {
-            graph_measure: state.measure,
-            graph_mode: state.mode,
-            graph_groupbys: state.groupedBy,
-            // this parameter is not used anywher for now
-            // the idea would be to seperate intervals from
-            // fieldnames in groupbys. This could be done
-            // in graph view only or everywhere but this is
-            // a big refactoring.
-            graph_intervalMapping: state.intervalMapping,
+            context: {
+                graph_measure: state.measure,
+                graph_mode: state.mode,
+                graph_groupbys: state.groupedBy,
+                // this parameter is not used anywher for now
+                // the idea would be to seperate intervals from
+                // fieldnames in groupbys. This could be done
+                // in graph view only or everywhere but this is
+                // a big refactoring.
+                graph_intervalMapping: state.intervalMapping,
+            }
         };
     },
     /**
@@ -110,10 +115,10 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * override
      *
      * @private
-     * @param {string[]} groupbys
+     * @param {string[]} groupBys
      */
-    _setGroupby: function (groupbys) {
-        this.update({groupBy: groupbys});
+    _setGroupby: function (groupBys) {
+        this.update({groupBy: groupBys});
     },
 
     /**

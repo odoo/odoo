@@ -36,7 +36,8 @@ var GraphView = AbstractView.extend({
         Renderer: GraphRenderer,
     },
     viewType: 'graph',
-    enableTimeRangeMenu: 'true',
+    searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
+
     /**
      * @override
      */

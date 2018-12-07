@@ -1,11 +1,9 @@
 odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
-var Discuss = require('mail.Discuss');
 var mailTestUtils = require('mail.testUtils');
 
 var concurrency = require('web.concurrency');
-var SearchView = require('web.SearchView');
 var testUtils = require('web.test_utils');
 
 var createDiscuss = mailTestUtils.createDiscuss;
@@ -108,7 +106,7 @@ QUnit.test('basic rendering', function (assert) {
 });
 
 QUnit.test('searchview options visibility', function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     var done = assert.async();
 
     createDiscuss({
@@ -119,17 +117,17 @@ QUnit.test('searchview options visibility', function (assert) {
         services: this.services,
     })
     .then(function (discuss) {
-        var $searchviewOptions = $('.o_search_options > div');
-        var $searchviewOptionsToggler = $('.o_searchview_more.fa.fa-search-minus');
-        assert.strictEqual($searchviewOptions.length, 1,
+        assert.containsOnce(discuss, '.o_control_panel .o_search_options',
             "should have search options");
-        assert.strictEqual($searchviewOptionsToggler.length, 1,
+        assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fa'), 'fa-search-minus',
             "should have a button to toggle search options");
-        assert.strictEqual($searchviewOptions.css('display'), 'block',
-            "search options should be visible by default");
 
-        testUtils.dom.click($searchviewOptionsToggler);
-        assert.strictEqual($searchviewOptions.css('display'), 'none',
+        assert.isVisible(discuss.$('.o_control_panel .o_search_options'),
+            "search options should be visible by default");
+        testUtils.dom.click(discuss.$('.o_control_panel .o_searchview_more.fa'));
+        assert.hasClass(discuss.$('.o_control_panel .o_searchview_more.fa'), 'fa-search-plus',
+            "should have a button to toggle search options");
+        assert.isNotVisible(discuss.$('.o_control_panel .o_search_options'),
             "search options should be hidden after clicking on search option toggler");
 
         discuss.destroy();
@@ -181,7 +179,7 @@ QUnit.test('searchview filter messages', function (assert) {
 
         // interact with searchview so that there is only once message
         $('.o_searchview_input').val("ab").trigger('keyup');
-        $('.o_searchview').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
+        $('.o_searchview_input_container').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
 
         assert.strictEqual($('.o_searchview_facet').length, 1,
             "the searchview should have a facet");
@@ -193,7 +191,7 @@ QUnit.test('searchview filter messages', function (assert) {
         // interact with search view so that there are no matching messages
         testUtils.dom.click($('.o_facet_remove'));
         $('.o_searchview_input').val("abcd").trigger('keyup');
-        $('.o_searchview').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
+        $('.o_searchview_input_container').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
 
         assert.strictEqual($('.o_searchview_facet').length, 1,
             "the searchview should have a facet");
@@ -796,87 +794,6 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
         discuss.destroy();
         done();
     });
-});
-
-QUnit.test('do not crash when destroyed before start is completed', function (assert) {
-    assert.expect(3);
-    var discuss;
-
-    testUtils.mock.patch(Discuss, {
-        init: function () {
-            discuss = this;
-            this._super.apply(this, arguments);
-        },
-    });
-
-    createDiscuss({
-        id: 1,
-        context: {},
-        params: {},
-        data: this.data,
-        services: this.services,
-        mockRPC: function (route, args) {
-            if (args.method) {
-                assert.step(args.method);
-            }
-            var result = this._super.apply(this, arguments);
-            if (args.method === 'message_fetch') {
-                discuss.destroy();
-            }
-            return result;
-        },
-    });
-
-    assert.verifySteps([
-        "load_views",
-        "message_fetch"
-    ]);
-
-    testUtils.mock.unpatch(Discuss);
-});
-
-QUnit.test('do not crash when destroyed between start en end of _renderSearchView', function (assert) {
-    assert.expect(2);
-    var discuss;
-
-    testUtils.mock.patch(Discuss, {
-        init: function () {
-            discuss = this;
-            this._super.apply(this, arguments);
-        },
-    });
-
-    var def = $.Deferred();
-
-    testUtils.mock.patch(SearchView, {
-        willStart: function () {
-            var result = this._super.apply(this, arguments);
-            return def.then($.when(result));
-        },
-    });
-
-    createDiscuss({
-        id: 1,
-        context: {},
-        params: {},
-        data: this.data,
-        services: this.services,
-        mockRPC: function (route, args) {
-            if (args.method) {
-                assert.step(args.method);
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
-
-    discuss.destroy();
-    def.resolve();
-    assert.verifySteps([
-        "load_views",
-    ]);
-
-    testUtils.mock.unpatch(Discuss);
-    testUtils.mock.unpatch(SearchView);
 });
 
 QUnit.test('confirm dialog when administrator leave (not chat) channel', function (assert) {

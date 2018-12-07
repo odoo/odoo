@@ -253,17 +253,17 @@ QUnit.module('Views', {
         actionManager.doAction(1);
 
         // displays month mode by default
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");
 
         // switch to day mode
-        testUtils.dom.click(actionManager.controlPanel.$('.o_calendar_button_day'));
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
+        testUtils.dom.click($('.o_control_panel .o_calendar_button_day'));
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 12, 2016)', "should display the current day");
 
         // switch to month mode
-        testUtils.dom.click(actionManager.controlPanel.$('.o_calendar_button_month'));
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
+        testUtils.dom.click($('.o_control_panel .o_calendar_button_month'));
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 2016)', "should display the current month");
 
         actionManager.destroy();
@@ -2058,7 +2058,9 @@ QUnit.module('Views', {
         // call destroy function of controller to ensure that it correctly destroys everything
         calendar.__destroy();
 
-        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+        // + 1 (parent)
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 1,
+            "every widget must be destroyed exept the parent");
 
         calendar.destroy();
 
@@ -2116,8 +2118,8 @@ QUnit.module('Views', {
         testUtils.mock.unpatch(Dialog);
     });
 
-    QUnit.test('calendar is configured to hide the groupby menu', function (assert) {
-        assert.expect(2);
+    QUnit.test('calendar is configured to have no groupBy menu', function (assert) {
+        assert.expect(1);
 
         var archs = {
             'event,1,calendar': '<calendar class="o_calendar_test" '+
@@ -2144,9 +2146,8 @@ QUnit.module('Views', {
         });
 
         actionManager.doAction(1);
-        var $groupBy = actionManager.controlPanel.$('span.fa.fa-bars');
-        assert.strictEqual($groupBy.length, 1, 'just making sure we have the groupby menu');
-        assert.ok(!$groupBy.is(':visible'), 'groupby menu should not be visible');
+        assert.containsNone(actionManager.$('.o_control_panel .o_search_options span.fa.fa-bars'),
+            "the control panel has no groupBy menu");
         actionManager.destroy();
     });
 
