@@ -33,12 +33,12 @@ class HrExpense(models.Model):
     def _get_employee_id_domain(self):
 
         res= [('id', '=', 0)] # Nothing accepted by domain, by default
-        if self.user_has_groups('hr_expense.group_hr_expense_manager') or self.user_has_groups('account.group_account_user'):
+        if self.user_has_groups('hr_expense.group_hr_expense_user') or self.user_has_groups('account.group_account_user'):
             res = [] # Then, domain accepts everything
-        elif self.user_has_groups('hr_expense.group_hr_expense_user') and self.env.user.employee_ids:
+        elif self.user_has_groups('hr_expense.group_hr_expense_team_approver') and self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
-            res = ['|', '|', ('department_id.manager_id.id', '=', employee.id),
-                   ('parent_id.id', '=', employee.id), ('expense_manager_id.id', '=', employee.id)]
+            res = ['|', '|', '|', ('department_id.manager_id.id', '=', employee.id),
+                   ('parent_id.id', '=', employee.id), ('expense_manager_id.id', '=', employee.user_id.id), ('id', '=', employee.id)]
         elif self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = [('id', '=', employee.id)]
@@ -623,7 +623,7 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def _compute_can_reset(self):
-        is_expense_user = self.user_has_groups('hr_expense.group_hr_expense_user')
+        is_expense_user = self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         for sheet in self:
             sheet.can_reset = is_expense_user if is_expense_user else sheet.employee_id.user_id == self.env.user
 
@@ -737,15 +737,15 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def approve_expense_sheets(self):
-        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+        if not self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
         elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
-            current_managers = self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
+            current_managers = self.employee_id.expense_manager_id | self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
 
             if self.employee_id.user_id == self.env.user:
                 raise UserError(_("You cannot approve your own expenses"))
 
-            if not self.env.user in current_managers:
+            if not self.env.user in current_managers and not self.user_has_groups('hr_expense.group_hr_expense_user') and self.employee_id.expense_manager_id != self.env.user:
                 raise UserError(_("You can only approve your department expenses"))
 
         responsible_id = self.user_id.id or self.env.user.id
@@ -758,15 +758,15 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def refuse_sheet(self, reason):
-        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+        if not self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
         elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
-            current_managers = self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
+            current_managers = self.employee_id.expense_manager_id | self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
 
             if self.employee_id.user_id == self.env.user:
                 raise UserError(_("You cannot refuse your own expenses"))
 
-            if not self.env.user in current_managers:
+            if not self.env.user in current_managers and not self.user_has_groups('hr_expense.group_hr_expense_user') and self.employee_id.expense_manager_id != self.env.user:
                 raise UserError(_("You can only refuse your department expenses"))
 
         self.write({'state': 'cancel'})

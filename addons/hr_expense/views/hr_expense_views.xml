@@ -90,7 +90,7 @@
                             <field name="reference"/>
                             <field name="date"/>
                             <field name="account_id" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
-                            <field name="employee_id" groups="hr_expense.group_hr_expense_user"/>
+                            <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
@@ -208,7 +208,7 @@
                     <field name="employee_id"/>
                     <field name="product_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                    <filter string="My Team Expenses" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
+                    <filter string="My Team Expenses" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
                     <separator />
                     <filter domain="[('sheet_id', '=', False)]" string="To report" name="no_report"/>
@@ -451,11 +451,11 @@
                 <field name="can_reset" invisible="1"/>
                  <header>
                     <button name="action_submit_sheet" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_sheet_submit"/>
-                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_user" class="oe_highlight o_expense_sheet_approve"/>
+                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_team_approver" class="oe_highlight o_expense_sheet_approve"/>
                     <button name="action_sheet_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_manager" class="oe_highlight o_expense_sheet_post"/>
                     <button name="%(hr_expense.hr_expense_sheet_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_manager"/>
                     <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}"/>
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_user" />
+                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_team_approver" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
                 </header>
                 <sheet>
@@ -811,7 +811,7 @@ if records:
         <menuitem id="menu_hr_expense_my_expenses_to_submit" sequence="1" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_unsubmitted"/>
         <menuitem id="menu_hr_expense_sheet_my_reports" sequence="3" parent="menu_hr_expense_my_expenses" action="action_hr_expense_sheet_my_all"/>
 
-        <menuitem id="menu_hr_expense_report" name="Expense Reports" sequence="2" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_user"/>
+        <menuitem id="menu_hr_expense_report" name="Expense Reports" sequence="2" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_team_approver"/>
         <menuitem id="menu_hr_expense_sheet_all_to_approve" name="To Approve" sequence="1" parent="menu_hr_expense_report"
             action="action_hr_expense_sheet_all_to_approve"/>
         <menuitem id="menu_hr_expense_sheet_all_to_post" name="To Post" sequence="2" parent="menu_hr_expense_report"

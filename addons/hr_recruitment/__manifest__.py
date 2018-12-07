@@ -4,7 +4,7 @@
 {
     'name': 'Recruitment',
     'version': '1.0',
-    'category': 'Human Resources',
+    'category': 'Human Resources/Recruitment',
     'sequence': 90,
     'summary': 'Track your recruitment pipeline',
     'description': "",

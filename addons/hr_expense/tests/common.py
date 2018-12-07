@@ -74,7 +74,7 @@ class TestExpenseCommon(TestAccountNoChartCommon):
             'name': 'Batman Officer',
             'login': 'batman',
             'email': 'batman.hero@example.com',
-            'groups_id': [(6, 0, [group_employee_id, cls.env.ref('hr_expense.group_hr_expense_user').id])]
+            'groups_id': [(6, 0, [group_employee_id, cls.env.ref('hr_expense.group_hr_expense_team_approver').id])]
         })
 
         cls.emp_emp2 = cls.env['hr.employee'].create({

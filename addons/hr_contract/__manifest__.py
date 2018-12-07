@@ -4,7 +4,7 @@
 {
     'name': 'Employee Contracts',
     'version': '1.0',
-    'category': 'Human Resources',
+    'category': 'Human Resources/Contracts',
     'description': """
 Add all information on the employee form to manage contracts.
 =============================================================

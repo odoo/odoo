@@ -4,7 +4,7 @@
     'name' : 'Fleet',
     'version' : '0.1',
     'sequence': 165,
-    'category': 'Human Resources',
+    'category': 'Human Resources/Fleet',
     'website' : 'https://www.odoo.com/page/fleet',
     'summary' : 'Manage your fleet and track car costs',
     'description' : """

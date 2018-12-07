@@ -4,7 +4,7 @@
 {
     'name': 'Purchase',
     'version': '1.2',
-    'category': 'Purchase',
+    'category': 'Operations/Purchase',
     'sequence': 60,
     'summary': 'Purchase orders, tenders and agreements',
     'description': "",

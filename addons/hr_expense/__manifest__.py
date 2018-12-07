@@ -5,7 +5,7 @@
 {
     'name': 'Expenses',
     'version': '2.0',
-    'category': 'Human Resources',
+    'category': 'Accounting/Expenses',
     'sequence': 95,
     'summary': 'Submit, validate and reinvoice employee expenses',
     'description': """

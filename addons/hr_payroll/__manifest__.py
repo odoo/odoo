@@ -3,7 +3,7 @@
 
 {
     'name': 'Payroll',
-    'category': 'Human Resources',
+    'category': 'Human Resources/Payroll',
     'sequence': 38,
     'summary': 'Manage your employee payroll records',
     'description': "",
