@@ -32,8 +32,6 @@ Indian Payroll Salary Rules.
          'views/report_hr_salary_employee_bymonth_template.xml',
          'wizard/hr_salary_employee_bymonth_view.xml',
          'wizard/hr_yearly_salary_detail_view.xml',
-         'report/payment_advice_report_view.xml',
-         'report/payslip_report_view.xml',
          'views/report_hr_yearly_salary_detail_template.xml',
          'views/report_payroll_advice_template.xml',
      ],
