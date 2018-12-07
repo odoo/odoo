@@ -3958,11 +3958,24 @@ var BasicModel = AbstractModel.extend({
         }
         return def.then(function () {
             var resIDs = [];
-            // generate the current count and res_ids list by applying the changes
-            var currentCount = list.count;
             var currentResIDs = list.res_ids;
-            var effectiveLimit = (list.limit || 0) - (list.tempLimitIncrement || 0);
-            var upperBound = effectiveLimit ? Math.min(list.offset + effectiveLimit, currentCount) : currentCount;
+            // if new records have been added to the list, their virtual ids have
+            // been pushed at the end of res_ids (or at the beginning, depending
+            // on the editable property), ignoring completely the current page
+            // where the records have actually been created ; for that reason,
+            // we use orderedResIDs which is a freezed order with the virtual ids
+            // at the correct position where they were actually inserted ; however,
+            // when we use orderedResIDs, we must filter out ids that are not in
+            // res_ids, which correspond to records that have been removed from
+            // the relation (this information being taken into account in res_ids
+            // but not in orderedResIDs)
+            if (list.orderedResIDs) {
+                currentResIDs = list.orderedResIDs.filter(function (resID) {
+                    return list.res_ids.indexOf(resID) >= 0;
+                });
+            }
+            var currentCount = currentResIDs.length;
+            var upperBound = list.limit ? Math.min(list.offset + list.limit, currentCount) : currentCount;
             var fieldNames = list.getFieldNames();
             for (var i = list.offset; i < upperBound; i++) {
                 var resId = currentResIDs[i];
