@@ -1445,11 +1445,11 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         "image caption should have correct download link");
     // click on first image attachement
     testUtils.dom.click(form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first());
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1&signature=999"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1&signature=999&model=ir.attachment"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
     testUtils.dom.click($('.modal .arrow.arrow-right.move_next span'));
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1&signature=999"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1&signature=999&model=ir.attachment"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
         "Modal popup should have download button");

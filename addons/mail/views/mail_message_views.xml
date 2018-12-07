@@ -144,9 +144,7 @@
                     <field name="url"/>
                     <field name="type"/>
                     <field name="create_date"/>
-                    <field name="active"/>
                     <field name="name"/>
-                    <field name="res_model_name"/>
                     <field name="res_name"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -155,7 +153,7 @@
                                     <div class="o_kanban_image_wrapper">
                                         <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
                                         <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
-                                        <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}?field=thumbnail" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                        <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
                                         <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
                                     </div>
                                 </div>
@@ -170,13 +168,7 @@
                                             </t>
                                         </div>
                                         <div class="o_kanban_record_body">
-                                            <t t-if="record.res_model_name.raw_value">
-                                                <strong><field name="res_model_name"/></strong>
-                                                <t t-if="record.res_name.raw_value">
-                                                    <span t-att-title="record.res_name.raw_value">: <field name="res_name"/></span>
-                                                </t>
-                                            </t>
-                                            <t t-elif="record.type.raw_value == 'url'">
+                                            <t t-if="record.type.raw_value == 'url'">
                                                 <span class="o_document_url"><i class="fa fa-globe"/> <field name="url" widget="url"/></span>
                                             </t>
                                             <samp t-else="" class="text-muted"> </samp>

@@ -1563,6 +1563,12 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {hasSidebar: true},
             res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.isVisible(form.sidebar);
@@ -1703,6 +1709,12 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(form.get('title'), 'first record',
@@ -1737,6 +1749,9 @@ QUnit.module('Views', {
                     assert.strictEqual(args.kwargs.context.hey, 'hoy',
                         "should have send the correct context");
                 }
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -1759,6 +1774,12 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(form.get('title'), 'first record',
@@ -2310,6 +2331,12 @@ QUnit.module('Views', {
             arch: '<form string="Partners"><field name="foo"></field></form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
         testUtils.form.clickEdit(form);
         testUtils.fields.editInput(form.$('input[name=foo]'), 'tralala');
@@ -2639,6 +2666,12 @@ QUnit.module('Views', {
                 hasSidebar: true,
             },
             res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
@@ -2678,6 +2711,9 @@ QUnit.module('Views', {
             },
             res_id: 1,
             mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             }
@@ -4844,6 +4880,9 @@ QUnit.module('Views', {
                         "the active_ids should be an array with 1 inside.");
                     return $.when({});
                 }
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -4852,8 +4891,14 @@ QUnit.module('Views', {
         // if not only 2 dropdowns are displayed.
         var $dropdowns = $('.o_web_client .o_control_panel .btn-group .o_dropdown_toggler_btn');
         var $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[1].children;
-        assert.strictEqual($dropdowns.length, 2,
-            "there should be 2 dropdowns (print, action) in the toolbar.");
+        if ('attachment_indexation.document' in odoo.__DEBUG__.services) {
+            assert.strictEqual($dropdowns.length, 3,
+                "there should be 3 dropdowns (print, attachment, action) in the toolbar.");
+            $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[2].children;
+        } else {
+            assert.strictEqual($dropdowns.length, 2,
+                "there should be 2 dropdowns (print, action) in the toolbar.");
+        }
         assert.strictEqual($actions.length, 3,
             "there should be 3 actions");
         var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-menu:last .dropdown-item:nth(2)');
@@ -4866,7 +4911,7 @@ QUnit.module('Views', {
             assert.deepEqual(context.active_ids, [1],
                 "the active_ids should be an array with 1 inside.");
         });
-        testUtils.dom.click($dropdowns);
+        testUtils.dom.click($dropdowns.last());
         testUtils.dom.click($customAction);
 
         form.destroy();
@@ -6121,6 +6166,9 @@ QUnit.module('Views', {
             res_id: 1,
             viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'copy') {
                     return result.then(function (id) {
@@ -6769,6 +6817,9 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'unlink') {
                     assert.step('unlink');
+                }
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
                 }
                 return this._super.apply(this, arguments);
             },
