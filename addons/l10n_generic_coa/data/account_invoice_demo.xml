@@ -137,6 +137,7 @@
         <record id="demo_invoice_extract" model="account.invoice">
             <field name="user_id" ref="base.user_demo"/>
             <field name="type">in_invoice</field>
+            <field name="journal_id" search="[('type', '=', 'purchase')]"/>
         </record>
         <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
             <field name="name">in_invoice_pdf</field>
